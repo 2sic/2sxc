@@ -94,7 +94,8 @@ public class EntityController() : DnnSxcControllerBase(RealController.LogSuffix)
     [HttpPost]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public bool Upload(EntityImportDto args) => Real.Upload(args);
+    public bool Upload(EntityImportDto args)
+        => Real.Upload(args);
 
 
     ///// <inheritdoc/>

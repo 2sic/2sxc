@@ -27,11 +27,11 @@ public class CompileCodeHelper() : CodeHelperBase("Sxc.CdHlp")
 
     #region GetCode / CreateInstance
 
-    public object? GetCode(string path, NoParamOrder noParamOrder = default, string? className = default) 
+    public object? GetCode(string path, NoParamOrder npo = default, string? className = default) 
         => CreateInstance(path, name: className);
 
     /// <inheritdoc />
-    public object? CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string? name = null, string? relativePath = null, bool throwOnError = true)
+    public object? CreateInstance(string virtualPath, NoParamOrder npo = default, string? name = null, string? relativePath = null, bool throwOnError = true)
     {
         var l = Log.Fn<object?>();
 
@@ -40,7 +40,7 @@ public class CompileCodeHelper() : CodeHelperBase("Sxc.CdHlp")
 
         // usually we don't have a relative path, so we use the preset path from when this class was instantiated
         relativePath ??= _parent?.CreateInstancePath;
-        object? instance = ExCtxOrNull?.GetDynamicApi()?.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
+        object? instance = ExCtxOrNull?.GetDynamicApi()?.CreateInstance(virtualPath, npo, name, relativePath, throwOnError);
         return l.Return(instance);
     }
 

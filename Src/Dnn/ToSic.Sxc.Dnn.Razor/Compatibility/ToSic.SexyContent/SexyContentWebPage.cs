@@ -281,8 +281,8 @@ public abstract class SexyContentWebPage :
     [PrivateApi] string IGetCodePath.CreateInstancePath { get; set; }
 
     /// <inheritdoc />
-    public virtual dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
-        => RzrHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError: throwOnError);
+    public virtual dynamic CreateInstance(string virtualPath, NoParamOrder npo = default, string name = null, string relativePath = null, bool throwOnError = true)
+        => RzrHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
 
     #endregion
 

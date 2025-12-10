@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Data.Sys;
+using ToSic.Eav.Data.Sys.PropertyLookup;
 using ToSic.Eav.Data.Sys.PropertyStack;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Data.Options;
@@ -47,14 +48,14 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
     public bool ContainsKey(string name)
         => throw new NotImplementedException($"Not yet implemented on {nameof(ITypedStack)}");
 
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string? language = default)
-        => _itemHelper.IsEmpty(name, noParamOrder, isBlank: default, language: language);
+    public bool IsEmpty(string name, NoParamOrder npo = default, string? language = default)
+        => _itemHelper.IsEmpty(name, npo, isBlank: default, language: language);
 
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string? language = default)
-        => _itemHelper.IsNotEmpty(name, noParamOrder, isBlank: default, language: language);
+    public bool IsNotEmpty(string name, NoParamOrder npo = default, string? language = default)
+        => _itemHelper.IsNotEmpty(name, npo, isBlank: default, language: language);
 
     // TODO: Keys()
-    public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string>? only = default)
+    public IEnumerable<string> Keys(NoParamOrder npo = default, IEnumerable<string>? only = default)
     {
         //var keys = _stack.Sources;
         throw new NotImplementedException();
@@ -65,55 +66,55 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
     #region ITyped Value Get Methods
 
     [PrivateApi]
-    object? ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string? language)
-        => _itemHelper.Get(name: name, noParamOrder: noParamOrder, required: required, language: language);
+    object? ITyped.Get(string name, NoParamOrder npo, bool? required, string? language)
+        => _itemHelper.Get(name: name, npo: npo, required: required, language: language);
 
     [PrivateApi]
-    TValue? ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue? fallback, bool? required, string? language)
+    TValue? ITyped.Get<TValue>(string name, NoParamOrder npo, TValue? fallback, bool? required, string? language)
         where TValue : default
-        => _itemHelper.GetT(name, noParamOrder, fallback: fallback, required: required, language: language);
+        => _itemHelper.GetT(name, npo, fallback: fallback, required: required, language: language);
 
 
     [PrivateApi]
-    IRawHtmlString? ITyped.Attribute(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
-        => _itemHelper.Attribute(name, noParamOrder, fallback, required);
+    IRawHtmlString? ITyped.Attribute(string name, NoParamOrder npo, string? fallback, bool? required)
+        => _itemHelper.Attribute(name, npo, fallback, required);
 
 
     [PrivateApi]
-    DateTime ITyped.DateTime(string name, NoParamOrder noParamOrder, DateTime fallback, bool? required)
-        => _itemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+    DateTime ITyped.DateTime(string name, NoParamOrder npo, DateTime fallback, bool? required)
+        => _itemHelper.G4T(name, npo: npo, fallback: fallback, required: required);
 
     [PrivateApi]
-    string? ITyped.String(string name, NoParamOrder noParamOrder, string? fallback, bool? required, object? scrubHtml)
-        => _itemHelper.String(name, noParamOrder, fallback, required, scrubHtml);
+    string? ITyped.String(string name, NoParamOrder npo, string? fallback, bool? required, object? scrubHtml)
+        => _itemHelper.String(name, npo, fallback, required, scrubHtml);
 
     [PrivateApi]
-    int ITyped.Int(string name, NoParamOrder noParamOrder, int fallback, bool? required)
-        => _itemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+    int ITyped.Int(string name, NoParamOrder npo, int fallback, bool? required)
+        => _itemHelper.G4T(name, npo: npo, fallback: fallback, required: required);
 
     [PrivateApi]
-    bool ITyped.Bool(string name, NoParamOrder noParamOrder, bool fallback, bool? required)
-        => _itemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+    bool ITyped.Bool(string name, NoParamOrder npo, bool fallback, bool? required)
+        => _itemHelper.G4T(name, npo: npo, fallback: fallback, required: required);
 
     [PrivateApi]
-    long ITyped.Long(string name, NoParamOrder noParamOrder, long fallback, bool? required)
-        => _itemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+    long ITyped.Long(string name, NoParamOrder npo, long fallback, bool? required)
+        => _itemHelper.G4T(name, npo: npo, fallback: fallback, required: required);
 
     [PrivateApi]
-    float ITyped.Float(string name, NoParamOrder noParamOrder, float fallback, bool? required)
-        => _itemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+    float ITyped.Float(string name, NoParamOrder npo, float fallback, bool? required)
+        => _itemHelper.G4T(name, npo: npo, fallback: fallback, required: required);
 
     [PrivateApi]
-    decimal ITyped.Decimal(string name, NoParamOrder noParamOrder, decimal fallback, bool? required)
-        => _itemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+    decimal ITyped.Decimal(string name, NoParamOrder npo, decimal fallback, bool? required)
+        => _itemHelper.G4T(name, npo: npo, fallback: fallback, required: required);
 
     [PrivateApi]
-    double ITyped.Double(string name, NoParamOrder noParamOrder, double fallback, bool? required)
-        => _itemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+    double ITyped.Double(string name, NoParamOrder npo, double fallback, bool? required)
+        => _itemHelper.G4T(name, npo: npo, fallback: fallback, required: required);
 
     [PrivateApi]
-    string? ITyped.Url(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
-        => _itemHelper.Url(name, noParamOrder, fallback, required);
+    string? ITyped.Url(string name, NoParamOrder npo, string? fallback, bool? required)
+        => _itemHelper.Url(name, npo, fallback, required);
 
     [PrivateApi]
     string ITyped.ToString() => "test / debug: " + ToString();
@@ -122,7 +123,7 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
 
     #region Add-Ons for ITypedStack
 
-    ITypedItem? /*ITypedStack*/ITypedItem.Child(string name, NoParamOrder noParamOrder, bool? required, GetRelatedOptions? options)
+    ITypedItem? /*ITypedStack*/ITypedItem.Child(string name, NoParamOrder npo, bool? required, GetRelatedOptions? options)
     {
         var findResult = _helper.TryGet(name);
         return IsErrStrict(findResult.Found, required, _helper.PropsRequired)
@@ -130,7 +131,7 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
             : Cdf.AsItem(findResult.Result!, new() { EntryPropIsRequired = required ?? true, ItemIsStrict = _helper.PropsRequired });
     }
 
-    IEnumerable<ITypedItem> /*ITypedStack*/ITypedItem.Children(string? field, NoParamOrder noParamOrder, string? type, bool? required, GetRelatedOptions? options)
+    IEnumerable<ITypedItem> /*ITypedStack*/ITypedItem.Children(string? field, NoParamOrder npo, string? type, bool? required, GetRelatedOptions? options)
     {
         var findResult = _helper.TryGet(field);
         return IsErrStrict(findResult.Found, required, _helper.PropsRequired)

@@ -9,7 +9,7 @@ internal abstract class GeneratePropertyBase(CSharpGeneratorHelper helper)
     public abstract List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs);
 
     protected CodeFragment GenPropSnip(int tabs, string returnType, string name, string method,
-        NoParamOrder protector = default,
+        NoParamOrder npo = default,
         string? sourceName = default,
         string[]? summary = default,
         string[]? remarks = default,

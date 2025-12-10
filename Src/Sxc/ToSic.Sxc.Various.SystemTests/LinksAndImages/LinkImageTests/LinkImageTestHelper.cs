@@ -33,7 +33,7 @@ public class LinkImageTestHelper
         string? url = null,
         object? settings = null,
         object? factor = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? width = null,
         object? height = null,
         object? quality = null,
@@ -44,7 +44,7 @@ public class LinkImageTestHelper
     {
         // Test with Linker
         var linker = GetLinker();
-        var linkerResult = linker.Image(url: url, settings: settings, factor: factor, width: width, height: height,
+        var linkerResult = linker.ImageUrl(url: url, settings: settings, factor: factor, width: width, height: height,
             quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format,
             aspectRatio: aspectRatio);
         Equal(expected, linkerResult);//, "Failed on ImgResizeLinker");
@@ -66,7 +66,7 @@ public class LinkImageTestHelper
         string? url = null,
         object? settings = null,
         object? factor = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? width = null,
         object? height = null,
         object? quality = null,

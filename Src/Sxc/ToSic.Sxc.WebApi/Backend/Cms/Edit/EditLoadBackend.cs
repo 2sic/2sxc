@@ -101,7 +101,7 @@ public partial class EditLoadBackend(
         }
 
         // since we're retrieving data - make sure we're allowed to
-        // this is to ensure that if public forms only have create permissions, they can't access existing data
+        // this is to ensure that if public forms only have "create" permissions, they can't access existing data
         // important, this code is shared/duplicated in the EntitiesController.GetManyForEditing
         if (list.Any(set => set.Entity != null))
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out error))
@@ -150,7 +150,7 @@ public partial class EditLoadBackend(
             })
             .ToListOpt();
 
-        // Old, non functional
+        // Old, non-functional
         // Fix not-supported input-type names; map to correct name
         //foreach (var at in result.ContentTypes.SelectMany(jt => jt.AttributesSafe()))
         //    at.InputType = InputTypes.MapInputTypeV10(at.InputType);

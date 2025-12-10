@@ -7,7 +7,7 @@ partial class PageService
 {
     /// <inheritdoc />
     public string? TurnOn(object runOrSpecs,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? require = default,
         object? data = default,
         IEnumerable<object>? args = default,

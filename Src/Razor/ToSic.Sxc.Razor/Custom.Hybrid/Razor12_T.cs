@@ -41,8 +41,8 @@ public abstract class Razor12<TModel>() : OqtRazorBase<TModel>(CompatibilityLeve
     }
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
-    public dynamic? CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string? name = null, string? relativePath = null, bool throwOnError = true)
-        => RzrHlp.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
+    public dynamic? CreateInstance(string virtualPath, NoParamOrder npo = default, string? name = null, string? relativePath = null, bool throwOnError = true)
+        => RzrHlp.CreateInstance(virtualPath, npo, name, relativePath, throwOnError);
 
     #endregion
 

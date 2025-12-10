@@ -3,12 +3,14 @@
 namespace ToSic.Sxc.WebApi;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class JsonFormatterHelpers
+internal static class JsonFormatterHelpers
 {
-    public static void SetCasing(Casing casing, JsonSerializerOptions jsonSerializerOptions)
+
+    public static void SetCasing(this JsonSerializerOptions jsonSerializerOptions, Casing casing)
     {
         // this preserves casing (old behavior for 2sxc Apis)
-        if (casing == Casing.Unspecified) return;
+        if (casing == Casing.Unspecified)
+            return;
 
         var objectPreserve = casing.HasFlag(Casing.Preserve);
         jsonSerializerOptions.PropertyNamingPolicy = objectPreserve ? null : JsonNamingPolicy.CamelCase;

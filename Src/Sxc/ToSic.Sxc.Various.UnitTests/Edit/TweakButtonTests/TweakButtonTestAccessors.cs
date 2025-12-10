@@ -8,9 +8,9 @@ internal static class TweakButtonTestAccessors
         => button.Show(show);
 
     public static ITweakButton TacColor(this ITweakButton button, string color = default,
-        NoParamOrder noParamOrder = default, string background = default,
+        NoParamOrder npo = default, string background = default,
         string foreground = default)
-        => button.Color(color, noParamOrder, background, foreground);
+        => button.Color(color, npo, background, foreground);
 
     public static ITweakButton TacTooltip(this ITweakButton button, string value)
         => button.Tooltip(value);

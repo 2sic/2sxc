@@ -3,6 +3,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys;
 using ToSic.Sxc.Data.Sys.DynamicStack;
 using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sys.Utils;
 using static ToSic.Sxc.Web.Sys.WebResources.WebResourceConstants;
 
 namespace ToSic.Sxc.Services.Page.Sys;
@@ -24,8 +25,9 @@ partial class PageService
     {
         keys ??= [];
         var l = Log.Fn<string>($"{nameof(keys)}: '{string.Join(",", keys)}'");
+        FeatureKeysAdded.AddRange(keys);
 
-        // WIP #PartialCaching
+        // #PartialCaching must know about all activated features
         var doFirst = false;
         if (doFirst)
             Listeners.Activate(keys);
@@ -34,7 +36,7 @@ partial class PageService
         // This must happen in the IPageService which is per-module
         // The PageServiceShared cannot do this, because it doesn't have the WebResources which vary by module
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        if (WebResources is { } /* paranoid */) // important: DynamicEntity null-compare isn't quite right, **do not** use `!=`
+        if (WebResources is not null /* paranoid */) // important: DynamicEntity null-compare isn't quite right, **do not** use `!=`
             keys = AddResourcesFromSettings(keys);
 
         // 2. If any keys are left, they are probably preconfigured keys, so add them now
@@ -42,11 +44,11 @@ partial class PageService
             return l.ReturnAsOk("");
 
         l.A($"Remaining keys: {string.Join(",", keys)}");
-        var added = PageServiceShared.Activate(keys);
+        var added = PageServiceShared.PageFeatures.Activate(keys).ToArray();
 
         // WIP #PartialCaching
         if (!doFirst)
-            Listeners.Activate(added.ToArray());
+            Listeners.Activate(added);
 
         // also add to this specific module, as we need a few module-level features to activate in case...
         ExCtxOrNull?.GetState<IBlock>()?.BlockFeatureKeys.AddRange(added);
@@ -56,7 +58,7 @@ partial class PageService
 
     /// <inheritdoc />
     public string? Activate(
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         bool condition = true,
         params string[] features)
     {
@@ -98,6 +100,15 @@ partial class PageService
         keys = keys.Where(k => !keysToRemove.Contains(k)).ToArray();
         return l.Return(keys);
     }
+
+    /// <summary>
+    /// List of all feature keys which were ever added. Will never be cleared.
+    /// </summary>
+    public List<string> FeatureKeysAdded { get; } = [];
+
+    public bool HasFeature(string featureKey)
+        => FeatureKeysAdded.Any(f => f.EqualsInsensitive(featureKey));
+
 
     private string? CdnSource => _cdnSource.Get(() => WebResources.Get<string>(CdnSourcePublicField));
     private readonly GetOnce<string?> _cdnSource = new();

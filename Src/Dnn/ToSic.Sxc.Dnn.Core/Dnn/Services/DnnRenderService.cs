@@ -27,11 +27,11 @@ internal class DnnRenderService : RenderService
     }
 
     public override IRenderResult Module(int pageId, int moduleId,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object data = null)
     {
         var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
-        var result = base.Module(pageId, moduleId, noParamOrder, data);
+        var result = base.Module(pageId, moduleId, npo, data);
 
         // this code should be executed in PreRender of page (ensure when calling) or it is too late
         if (HttpContext.Current?.Handler is Page dnnHandler) // detect if we are on the page

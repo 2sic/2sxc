@@ -22,7 +22,8 @@ public class InstallController()
     /// <inheritdoc />
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public bool Resume() => Real.Resume();
+    public bool Resume()
+        => Real.Resume();
 
     /// <inheritdoc />
     [HttpGet]

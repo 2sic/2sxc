@@ -55,13 +55,13 @@ internal class DynamicFromDictionary<TKey, TVal>: DynamicObject, IWrapper<IDicti
     bool IHasKeys.ContainsKey(string name)
         => _ignoreCaseLookup.ContainsKey(name);
 
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string? language = default /* ignore */)
+    public bool IsEmpty(string name, NoParamOrder npo = default, string? language = default /* ignore */)
         => !_ignoreCaseLookup.TryGetValue(name, out var result) || HasKeysHelper.IsEmpty(result, blankIsEmpty: default);
 
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string? language = default /* ignore */)
+    public bool IsNotEmpty(string name, NoParamOrder npo = default, string? language = default /* ignore */)
         => _ignoreCaseLookup.TryGetValue(name, out var result) && HasKeysHelper.IsNotEmpty(result, blankIsEmpty: default);
 
 
-    IEnumerable<string> IHasKeys.Keys(NoParamOrder noParamOrder, IEnumerable<string>? only) 
-        => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, _ignoreCaseLookup.Keys);
+    IEnumerable<string> IHasKeys.Keys(NoParamOrder npo, IEnumerable<string>? only) 
+        => TypedHelpers.FilterKeysIfPossible(npo, only, _ignoreCaseLookup.Keys);
 }

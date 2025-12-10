@@ -56,10 +56,6 @@ public static class SxcCoreStartup
 
         // v13.02
         services.TryAddTransient<ILinkPaths, LinkPathsUnknown>();
-        //services.TryAddTransient<IModuleAndBlockBuilder, ModuleAndBlockBuilderUnknown>();
-
-        //// Koi, mainly so tests don't fail
-        //services.TryAddTransient<ICssFrameworkDetector, CssFrameworkDetectorUnknown>();
 
         return services;
     }

@@ -30,7 +30,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.Dependencie
 
     public AppAssetsDataSourceProvider Configure(
         AppAssetsGetSpecs specs,
-        NoParamOrder noParamOrder = default
+        NoParamOrder npo = default
         //int zoneId = default,
         //int appId = default
         //string root = default,

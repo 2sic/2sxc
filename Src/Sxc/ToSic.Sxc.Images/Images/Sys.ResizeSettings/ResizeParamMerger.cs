@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Data.Sys.PropertyLookup;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Utils;
@@ -26,7 +27,7 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
 
     internal ResizeSettings BuildResizeSettings(
         object? settings = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? factor = null,
         object? width = null,
         object? height = null,

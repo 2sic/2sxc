@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Data.Sys.PropertyStack;
+﻿using ToSic.Eav.Data.Sys.PropertyLookup;
+using ToSic.Eav.Data.Sys.PropertyStack;
 
 namespace ToSic.Sxc.Data.Sys.Stack;
 
@@ -10,7 +11,7 @@ internal class PropLookupStack(IPropertyStack stack, Func<bool> getDebug) : IPro
     public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
     {
         specs = specs.SubLog("Sxc.DynStk", getDebug());
-        path = path.KeepOrNew().Add("DynStack", specs.Field);
+        path = path.Add("DynStack", specs.Field);
 
         var l = specs.LogOrNull.Fn<PropReqResult?>(specs.Dump(), nameof(PropLookupStack));
         if (!specs.Field.HasValue())

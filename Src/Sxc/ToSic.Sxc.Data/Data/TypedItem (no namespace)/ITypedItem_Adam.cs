@@ -9,12 +9,12 @@ partial interface ITypedItem
     /// This is a folder which contains all the files and possibly folders which are uploaded on exactly this field.
     /// </summary>
     /// <param name="name">property name</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns>The Folder object</returns>
     /// <remarks>Added in 16.02</remarks>
     IFolder? Folder(string name,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         bool? required = default);
 
     /// <summary>
@@ -27,11 +27,11 @@ partial interface ITypedItem
     /// 1. If it's any other field, will return `null`
     /// </summary>
     /// <param name="name">property name</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <remarks>Added in 16.02</remarks>
     /// <returns></returns>
     IFile? File(string name,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         bool? required = default);
 }

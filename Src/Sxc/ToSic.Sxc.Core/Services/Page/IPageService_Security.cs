@@ -10,7 +10,7 @@ public partial interface IPageService
     /// Add common html attributes to a `script` or `link` tag to [enable optimizations](xref:Basics.Server.AssetOptimization.Index)
     /// and [automatically whitelist in the Content Security Policy](xref:Abyss.Security.Csp.Parts#auto-white-listing-explicit)
     /// </summary>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="optimize">Activate optimize, default is true</param>
     /// <param name="priority">Optional priority of optimization. Must be more than 100 to have an effect.</param>
     /// <param name="position">Optional position of the resource (`head`, `body`, `bottom`)</param>
@@ -20,7 +20,7 @@ public partial interface IPageService
     /// History: Created in 2sxc 13.10
     /// </remarks>
     IRawHtmlString AssetAttributes(
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         bool optimize = true,
         int priority = 0,
         string? position = null,

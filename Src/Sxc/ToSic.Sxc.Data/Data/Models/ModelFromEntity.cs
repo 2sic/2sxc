@@ -100,9 +100,9 @@ public abstract partial class ModelFromEntity: ICanWrap<IEntity>, ICanBeEntity /
         => DataModelHelpers.As<T>(_modelFactory, item);
 
     /// <inheritdoc cref="DataModelHelpers.AsList{T}"/>
-    protected IEnumerable<T>? AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = false)
+    protected IEnumerable<T>? AsList<T>(object source, NoParamOrder npo = default, bool nullIfNull = false)
         where T : class, ICanWrapData
-        => DataModelHelpers.AsList<T>(_modelFactory, source, new() { ItemIsStrict = true }, protector, nullIfNull);
+        => DataModelHelpers.AsList<T>(_modelFactory, source, new() { ItemIsStrict = true }, npo, nullIfNull);
 
     #endregion
 

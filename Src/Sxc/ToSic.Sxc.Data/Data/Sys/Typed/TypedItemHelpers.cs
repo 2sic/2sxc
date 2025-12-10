@@ -12,7 +12,7 @@ internal class TypedItemHelpers
         ICodeDataFactory cdf,
         ITypedItem item,
         string name,
-        NoParamOrder noParamOrder,
+        NoParamOrder npo,
         object? container,
         bool? toolbar,
         object? imageSettings,
@@ -31,7 +31,7 @@ internal class TypedItemHelpers
         ICodeDataFactory cdf,
         ITypedItem item,
         string name,
-        NoParamOrder noParamOrder,
+        NoParamOrder npo,
         Func<ITweakMedia, ITweakMedia>? tweak,
         object? settings,
         object? factor,
@@ -59,7 +59,7 @@ internal class TypedItemHelpers
         ICodeDataFactory cdf,
         ITypedItem item,
         string name,
-        NoParamOrder noParamOrder,
+        NoParamOrder npo,
         Func<ITweakMedia, ITweakMedia>? tweak,
         object? settings,
         object? factor,
@@ -75,7 +75,7 @@ internal class TypedItemHelpers
         var field = item.Field(name, required: true);
         if (field == null || field.Url.IsEmptyOrWs())
             return null;
-        return cdf.Img(field, tweak: tweak, settings: settings, noParamOrder: noParamOrder, factor: factor, width: width,
+        return cdf.Img(field, tweak: tweak, settings: settings, npo: npo, factor: factor, width: width,
                 imgAlt: imgAlt, imgAltFallback: imgAltFallback,
                 imgClass: imgClass, imgAttributes: imgAttributes,
                 toolbar: toolbar, recipe: recipe);

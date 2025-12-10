@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Backend.Adam;
 public class AdamCode(Generator<AdamWorkUpload, AdamWorkOptions> adamUploadGenerator, LazySvc<ISysFeaturesService> featuresLazy)
     : ServiceWithContext("AdamCode", connect: [adamUploadGenerator, featuresLazy])
 {
-    public IFile SaveInAdam(NoParamOrder noParamOrder = default,
+    public IFile SaveInAdam(NoParamOrder npo = default,
         Stream? stream = null,
         string? fileName = null,
         string? contentType = null,

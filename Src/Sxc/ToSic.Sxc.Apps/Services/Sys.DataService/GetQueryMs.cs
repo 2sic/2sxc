@@ -20,7 +20,7 @@ internal class GetQueryMs<TQuery>: ServiceBase where TQuery : Query
 
     public TQuery? GetQuery(
         string? name = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         IDataSourceLinkable? attach = default,
         object? parameters = default)
     {

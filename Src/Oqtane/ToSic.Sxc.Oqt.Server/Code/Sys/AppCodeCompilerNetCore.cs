@@ -31,7 +31,7 @@ internal class AppCodeCompilerNetCore(
 
             var result = LockAppCodeAssemblyProvider.Call(
                 conditionToGenerate: () => ShouldGenerate(assemblyPath),
-                generator: () => compiler.New().GetCompiledAssemblyFromFolder(sourceFiles, assemblyPath, symbolsPath, dllName, spec),
+                generator: () => compiler.New().GetCompiledAssemblyFromFolder(sourceFiles, assemblyPath, symbolsPath, dllName, spec, sourceRootPath),
                 cacheOrFallback: () => new AssemblyResult(assembly: new SimpleUnloadableAssemblyLoadContext().LoadFromAssemblyPath(assemblyPath))
             );
 

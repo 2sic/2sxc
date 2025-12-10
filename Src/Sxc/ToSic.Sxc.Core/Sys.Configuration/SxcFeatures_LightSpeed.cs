@@ -40,16 +40,4 @@ public partial class SxcFeatures
         LicenseRules = SxcLicenseRules.ForPatronsPerfectionistAndPerformance,
     };
 
-    public static readonly Feature SmartDataCache = new()
-    {
-        NameId = nameof(SmartDataCache),
-        Guid = new("8e4f0ea6-6574-4341-89ac-21629584dc1d"),
-        Name = "Smart Data Cache",
-        IsPublic = false,
-        Ui = false,
-        Description = "High-Performance Smart Data Cache",
-        Security = FeaturesCatalogRules.Security0Neutral,
-        LicenseRules = BuiltInFeatures.ForPatronPerformanceAutoEnabled,
-    };
-
 }

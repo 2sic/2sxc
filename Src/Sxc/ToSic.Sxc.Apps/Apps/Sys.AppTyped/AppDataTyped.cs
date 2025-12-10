@@ -35,16 +35,16 @@ internal class AppDataTyped(
     #endregion
 
     /// <inheritdoc />
-    IEnumerable<T>? IAppDataTyped.GetAll<T>(NoParamOrder protector, string? typeName, bool nullIfNotFound)
+    IEnumerable<T>? IAppDataTyped.GetAll<T>(NoParamOrder npo, string? typeName, bool nullIfNotFound)
         => ToTypedHelper.GetAllShared<T>(typeName, nullIfNotFound, false);
 
     /// <inheritdoc />
-    T? IAppDataTyped.GetOne<T>(int id, NoParamOrder protector, bool skipTypeCheck)
+    T? IAppDataTyped.GetOne<T>(int id, NoParamOrder npo, bool skipTypeCheck)
         where T : class
-        => ToTypedHelper.GetOne<T>(id, protector, skipTypeCheck);
+        => ToTypedHelper.GetOne<T>(id, npo, skipTypeCheck);
 
     /// <inheritdoc />
-    T? IAppDataTyped.GetOne<T>(Guid id, NoParamOrder protector, bool skipTypeCheck)
+    T? IAppDataTyped.GetOne<T>(Guid id, NoParamOrder npo, bool skipTypeCheck)
         where T : class
-        => ToTypedHelper.GetOne<T>(id, protector, skipTypeCheck);
+        => ToTypedHelper.GetOne<T>(id, npo, skipTypeCheck);
 }

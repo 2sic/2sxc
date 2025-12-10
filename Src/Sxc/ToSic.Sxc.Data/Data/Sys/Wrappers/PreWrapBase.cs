@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using ToSic.Eav.Data.Sys.PropertyLookup;
 using ToSic.Sxc.Data.Sys.Json;
 using ToSic.Sxc.Data.Sys.Typed;
 using static ToSic.Sxc.Data.Sys.Typed.TypedHelpers;
@@ -29,7 +30,7 @@ internal abstract class PreWrapBase(object? data) : IWrapper<object>, IHasJsonSo
 
     #region Abstract: Keys
 
-    public abstract IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string>? only = default);
+    public abstract IEnumerable<string> Keys(NoParamOrder npo = default, IEnumerable<string>? only = default);
 
     public abstract bool ContainsKey(string name);
 
@@ -37,7 +38,7 @@ internal abstract class PreWrapBase(object? data) : IWrapper<object>, IHasJsonSo
 
     #region TryGet and FindPropertyInternals
 
-    public object TryGetObject(string name, NoParamOrder noParamOrder, bool? required, [CallerMemberName] string? cName = default)
+    public object TryGetObject(string name, NoParamOrder npo, bool? required, [CallerMemberName] string? cName = default)
     {
         var result = TryGetWrap(name, wrapDefault: true);
         return IsErrStrict(result.Found, required, Settings.PropsRequired)
@@ -45,7 +46,7 @@ internal abstract class PreWrapBase(object? data) : IWrapper<object>, IHasJsonSo
             : result.Result!;
     }
 
-    public TValue? TryGetTyped<TValue>(string name, NoParamOrder noParamOrder, TValue? fallback, bool? required, [CallerMemberName] string? cName = default)
+    public TValue? TryGetTyped<TValue>(string name, NoParamOrder npo, TValue? fallback, bool? required, [CallerMemberName] string? cName = default)
     {
         var result = TryGetWrap(name, false);
         return IsErrStrict(result.Found, required, Settings.PropsRequired)

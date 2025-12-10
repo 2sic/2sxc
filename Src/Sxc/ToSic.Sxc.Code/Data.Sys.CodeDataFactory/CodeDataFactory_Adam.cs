@@ -75,7 +75,7 @@ partial class CodeDataFactory
     // TODO: MUST FINISH THIS, NOT WORKING YET
     public IHtmlTag Html(
         object thing,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? container = default,
         string? classes = default,
         bool debug = default,
@@ -84,7 +84,7 @@ partial class CodeDataFactory
         Func<ITweakInput<string>, ITweakInput<string>>? tweak = default)
         => CmsSvc.Html(
             thing,
-            noParamOrder: noParamOrder,
+            npo: npo,
             container: container,
             classes: classes,
             debug: debug,
@@ -100,7 +100,7 @@ partial class CodeDataFactory
     public IResponsivePicture Picture(
         object? link = null,
         object? settings = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakMedia, ITweakMedia>? tweak = default,
         object? factor = default,
         object? width = default,
@@ -112,13 +112,13 @@ partial class CodeDataFactory
         object? pictureAttributes = default,
         object? toolbar = default,
         object? recipe = default
-    ) => ImgSvc.Picture(link, settings, noParamOrder, tweak, factor, width, imgAlt, imgAltFallback, imgClass,
+    ) => ImgSvc.Picture(link, settings, npo, tweak, factor, width, imgAlt, imgAltFallback, imgClass,
         imgAttributes, pictureClass, pictureAttributes, toolbar, recipe);
 
     public IResponsiveImage Img(
         object? link = null,
         object? settings = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakMedia, ITweakMedia>? tweak = default,
         object? factor = default,
         object? width = default,
@@ -129,7 +129,7 @@ partial class CodeDataFactory
         object? toolbar = default,
         object? recipe = default
     )
-        => ImgSvc.Img(link, settings, noParamOrder, tweak, factor, width, imgAlt, imgAltFallback, imgClass,
+        => ImgSvc.Img(link, settings, npo, tweak, factor, width, imgAlt, imgAltFallback, imgClass,
             imgAttributes, toolbar, recipe);
 
     #endregion

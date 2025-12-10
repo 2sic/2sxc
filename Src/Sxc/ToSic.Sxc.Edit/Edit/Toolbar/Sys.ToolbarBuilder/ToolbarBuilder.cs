@@ -75,7 +75,7 @@ public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, ITo
     internal IToolbarBuilder Toolbar(
         string toolbarTemplate,
         object? target = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = default,
         object? parameters = default,

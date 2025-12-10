@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Backend.App;
 /// <inheritdoc cref="IAppDataController" />
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppDataControllerReal(LazySvc<AppContent> appContentLazy)
-    : ServiceBase("Api.DataRl", connect: [appContentLazy]), IAppDataController
+    : ServiceBase("Api.DataRl", connect: [appContentLazy])/*, IAppDataController*/
 {
     public const string LogSuffix = "Data";
 
@@ -14,8 +14,8 @@ public class AppDataControllerReal(LazySvc<AppContent> appContentLazy)
     #region Get List / all of a certain content-type
 
     /// <inheritdoc />
-    public IEnumerable<IDictionary<string, object>> GetEntities(string contentType, string? appPath = default, string? oDataSelect = default)
-        => appContentLazy.Value.Init(appPath).GetItems(contentType, appPath, oDataSelect);
+    public IEnumerable<IDictionary<string, object>> GetEntities(string contentType, string? appPath = default, Uri? uri = null)
+        => appContentLazy.Value.Init(appPath).GetItems(contentType, appPath, uri);
 
     #endregion
 
@@ -23,15 +23,15 @@ public class AppDataControllerReal(LazySvc<AppContent> appContentLazy)
     #region GetOne by ID / GUID
 
     /// <inheritdoc />
-    public IDictionary<string, object> GetOne(string contentType, string id, string? appPath = default, string? oDataSelect = default)
+    public IDictionary<string, object> GetOne(string contentType, string id, string? appPath = default, Uri? uri = null)
     {
         if(int.TryParse(id, out var intId))
             return GetAndSerializeOneAfterSecurityChecks(contentType,
-                entityApi => entityApi.GetOrThrow(contentType, intId), appPath, oDataSelect);
+                entityApi => entityApi.GetOrThrow(contentType, intId), appPath, uri);
 
         if (Guid.TryParse(id, out var guid))
             return GetAndSerializeOneAfterSecurityChecks(contentType,
-                entityApi => entityApi.GetOrThrow(contentType, guid), appPath, oDataSelect);
+                entityApi => entityApi.GetOrThrow(contentType, guid), appPath, uri);
 
 #pragma warning disable S112 // General exceptions should never be thrown
         throw new("id neither int/guid, can't process");
@@ -45,11 +45,11 @@ public class AppDataControllerReal(LazySvc<AppContent> appContentLazy)
     /// <param name="contentType"></param>
     /// <param name="getOne"></param>
     /// <param name="appPath"></param>
+    /// <param name="oDataSelect"></param>
+    /// <param name="uri"></param>
     /// <returns></returns>
-    private IDictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string? appPath, string? oDataSelect)
-    {
-        return appContentLazy.Value.Init(appPath).GetOne(contentType, getOne, appPath, oDataSelect);
-    }
+    private IDictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string? appPath, Uri? uri)
+        => appContentLazy.Value.Init(appPath).GetOne(contentType, getOne, appPath, uri);
 
     #endregion
 

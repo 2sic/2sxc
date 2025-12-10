@@ -38,7 +38,7 @@ public partial class DataService(
     }
     private IAppIdentity? _appIdentity;
         
-    public IDataService SpawnNew(NoParamOrder noParamOrder = default, IAppIdentity? appIdentity = default, int zoneId = default, int appId = default)
+    public IDataService SpawnNew(NoParamOrder npo = default, IAppIdentity? appIdentity = default, int zoneId = default, int appId = default)
     {
         // Make sure we have an AppIdentity if possible - or reuse the existing, though it could be null
         if (appIdentity == default)
@@ -70,7 +70,7 @@ public partial class DataService(
     private Func<ILookUpEngine?>? _getLookup;
 
 
-    public IDataSource GetAppSource(NoParamOrder noParamOrder = default, object? parameters = default, object? options = default)
+    public IDataSource GetAppSource(NoParamOrder npo = default, object? parameters = default, object? options = default)
     {
         var l = Log.Fn<IDataSource>($"{nameof(options)}: {options}");
         var fullOptions = OptionsMs.SafeOptions(parameters, options: options, identityRequired: true);
@@ -82,10 +82,10 @@ public partial class DataService(
     #region GetQuery
 
     public IDataSource? GetQuery(string? name = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         IDataSourceLinkable? attach = default,
         object? parameters = default)
-        => new GetQueryMs<Query>(queryManager, OptionsMs, Log).GetQuery(name, noParamOrder, attach, parameters);
+        => new GetQueryMs<Query>(queryManager, OptionsMs, Log).GetQuery(name, npo, attach, parameters);
 
     #endregion
 

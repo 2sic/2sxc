@@ -2,7 +2,7 @@
 
 internal class ToolbarRuleSettings(
 #pragma warning disable CS9113 // Parameter is unread.
-    NoParamOrder protect = default,
+    NoParamOrder npo = default,
 #pragma warning restore CS9113 // Parameter is unread.
     string? show = null,
     string? hover = null,

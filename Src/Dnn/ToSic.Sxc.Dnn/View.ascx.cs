@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.Entities.Modules;
 using System.Web.UI;
+using ToSic.Eav.Web.Sys;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Dnn.Features;
@@ -48,29 +49,39 @@ public partial class View : PortalModuleBase, IActionable
 
     #region Logging
 
-    private ILog Log => field ??= new Log("Sxc.View"); // delay creating until first use to really just track our time
-    private LogStoreEntry _logInStore;
+    /// <summary>
+    /// Get the request logging helper for this request.
+    /// </summary>
+    /// <remarks>
+    /// - Must use ServiceProvider.Build directly, as the `GetService` method would try to use the Log before it's created.
+    /// - delay creating until first use to really just track our time when needed.
+    /// </remarks>
+    private HttpRequestLoggingScoped RequestLogging => field
+        ??= ServiceProvider.Build<Generator<HttpRequestLoggingScoped, HttpRequestLoggingScoped.Opts>>()
+            .New(new() { Segment = "module", RootName = "Sxc.View" });
+
+    private ILog Log => field ??= new Log("Sxc.View", RequestLogging.RootLog);
 
     /// <summary>
-    /// 
+    /// Log Timer to use everywhere we want to track the cumulative time.
     /// </summary>
     /// <remarks>
     /// Time must be false, as it will be started/stopped as needed within the DoInTimer methods.
     /// </remarks>
-    protected ILogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"Module Title: '{ModuleConfiguration.ModuleTitle}'", timer: false));
-    private readonly GetOnce<ILogCall> _logTimer = new();
+    protected ILogCall LogTimer => field ??= Log.Fn(timer: false);
 
     #endregion
 
     /// <summary>
     /// Page Load event
     /// </summary>
-    protected void Page_Load(object sender, EventArgs e) =>
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        // Add first logging message which will become the title in the logs
+        RequestLogging.RootLog.A($"Module Title New: '{ModuleConfiguration.ModuleTitle}'");
+
         LogTimer.DoInTimer(() =>
         {
-            // add to insights-history for analytic
-            _logInStore = GetService<ILogStore>().Add("module", Log);
-
             var l = Log.Fn(message: nameof(Page_Load), timer: true);
             // todo: this should be dynamic at some future time, because normally once it's been checked, it wouldn't need checking again
             var checkPortalIsReady = true;
@@ -92,7 +103,10 @@ public partial class View : PortalModuleBase, IActionable
                     //requiresPre1025Behavior = OutputCache.Existing.EnforcePre1025;
                 }
             }
-            catch { /* ignore */ }
+            catch
+            {
+                /* ignore */
+            }
 
             #endregion
 
@@ -120,6 +134,7 @@ public partial class View : PortalModuleBase, IActionable
             });
             l.Done();
         });
+    }
 
     private DnnClientResources _dnnClientResources;
     //private bool _enforcePre1025JQueryLoading;
@@ -167,14 +182,7 @@ public partial class View : PortalModuleBase, IActionable
                     }
 
                     // Try to add page specs about the request to the log (new v16.02)
-                    try
-                    {
-                        _logInStore?.UpdateSpecs(new SpecsForLogHistory().BuildSpecsForLogHistory(Block));
-                    }
-                    catch
-                    {
-                        /* ignore */
-                    }
+                    RequestLogging.StoreEntry.TryUpdateSpecs(() => new SpecsForLogHistory().BuildSpecsForLogHistory(Block));
 
                     // call this after rendering templates, because the template may change what resources are registered
                     _dnnClientResources.AddEverything(renderResult.Features);

@@ -26,7 +26,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
     public IResponsiveImage Img(
         object? link = null,
         object? settings = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakMedia, ITweakMedia>? tweak = default,
         object? factor = null,
         object? width = default,
@@ -62,7 +62,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
     public IResponsivePicture Picture(
         object? link = default,
         object? settings = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakMedia, ITweakMedia>? tweak = default,
         object? factor = default,
         object? width = default,

@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using System.Web;
+﻿using System.Web;
 using ToSic.Eav.DataSources.Sys;
 using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Eav.WebApi.Sys.Dto;
@@ -24,16 +23,14 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public ICollection<AppDto> List(int zoneId)
-        => Real.List(zoneId);
+    public ICollection<AppDto> List(int zoneId) => Real.List(zoneId);
 
     /// <inheritdoc />
     [HttpGet]
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public ICollection<AppDto> InheritableApps()
-        => Real.InheritableApps();
+    public ICollection<AppDto> InheritableApps() => Real.InheritableApps();
 
     /// <inheritdoc />
     [HttpDelete]
@@ -62,8 +59,8 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
 
     /// <inheritdoc />
     [HttpGet]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public AppExportInfoDto Statistics(int zoneId, int appId) => Real.Statistics(zoneId, appId);
 
 
@@ -86,15 +83,15 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
 
     /// <inheritdoc />
     [HttpGet]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null) 
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null)
         => Real.GetStack(appId, part, key, view);
 
     /// <inheritdoc />
     [HttpPost]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
     [ValidateAntiForgeryToken]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
     public ImportResultDto Reset(int zoneId, int appId, bool withPortalFiles = false)
     {
         SysHlp.PreventServerTimeout600();
@@ -103,8 +100,8 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
 
     /// <inheritdoc />
     [HttpPost]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public ImportResultDto Import(int zoneId)
     {
         SysHlp.PreventServerTimeout600();
@@ -116,33 +113,16 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public IEnumerable<PendingAppDto> GetPendingApps(int zoneId) 
+    public IEnumerable<PendingAppDto> GetPendingApps(int zoneId)
         => Real.GetPendingApps(zoneId);
 
     /// <inheritdoc />
     [HttpPost]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppDto> pendingApps)
     {
         SysHlp.PreventServerTimeout600();
         return Real.InstallPendingApps(zoneId, pendingApps);
     }
-
-    /// <inheritdoc />
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [SupportedModules(DnnSupportedModuleNames)]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    [JsonFormatter(Casing = Casing.Camel)]
-    public ExtensionsResultDto Extensions(int appId) => Real.Extensions(appId);
-
-    /// <inheritdoc />
-    [HttpPut]
-    [ValidateAntiForgeryToken]
-    [SupportedModules(DnnSupportedModuleNames)]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    [JsonFormatter(Casing = Casing.Camel)]
-    public bool Extensions([FromUri] int zoneId, [FromUri] int appId, [FromUri] string name, [FromBody] JsonElement configuration)
-        => Real.Extensions(zoneId, appId, name, configuration);
 }

@@ -39,7 +39,7 @@ public abstract class MailServiceBase(LazySvc<IUser> userLazy, object[]? connect
 
     /// <inheritdoc />
     public MailMessage Create(
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? from = null,
         object? to = null,
         object? cc = null,
@@ -85,7 +85,7 @@ public abstract class MailServiceBase(LazySvc<IUser> userLazy, object[]? connect
 
     /// <inheritdoc />
     public void Send(
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? from = null,
         object? to = null,
         object? cc = null,

@@ -21,21 +21,24 @@ public class ViewController() : DnnSxcControllerBase(RealController.LogSuffix), 
     [SupportedModules(DnnSupportedModuleNames)]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public IEnumerable<ViewDetailsDto> All(int appId) => Real.All(appId);
+    public IEnumerable<ViewDetailsDto> All(int appId)
+        => Real.All(appId);
 
     /// <inheritdoc />
     [HttpGet]
     [SupportedModules(DnnSupportedModuleNames)]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public PolymorphismDto Polymorphism(int appId) => Real.Polymorphism(appId);
+    public PolymorphismDto Polymorphism(int appId)
+        => Real.Polymorphism(appId);
 
     /// <inheritdoc />
     [HttpGet, HttpDelete]
     [SupportedModules(DnnSupportedModuleNames)]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public bool Delete(int appId, int id) => Real.Delete(appId, id);
+    public bool Delete(int appId, int id)
+        => Real.Delete(appId, id);
 
     /// <inheritdoc />
     [HttpGet]
@@ -63,12 +66,14 @@ public class ViewController() : DnnSxcControllerBase(RealController.LogSuffix), 
     [SupportedModules(DnnSupportedModuleNames)]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public IEnumerable<ViewDto> Usage(int appId, Guid guid) => Real.UsagePreparations((views, blocks) =>
-    {
-        // create array with all 2sxc modules in this portal
-        var allMods = new DnnPages(Log).AllModulesWithContent(PortalSettings.PortalId);
-        Log.A($"Found {allMods.Count} modules");
+    public IEnumerable<ViewDto> Usage(int appId, Guid guid)
+        => Real.UsagePreparations((views, blocks) =>
+            {
+                // create array with all 2sxc modules in this portal
+                var allMods = new DnnPages(Log).AllModulesWithContent(PortalSettings.PortalId);
+                Log.A($"Found {allMods.Count} modules");
 
-        return views.Select(vwb => vwb.Init(blocks, allMods));
-    }).Usage(appId, guid);
+                return views.Select(vwb => vwb.Init(blocks, allMods));
+            })
+            .Usage(appId, guid);
 }

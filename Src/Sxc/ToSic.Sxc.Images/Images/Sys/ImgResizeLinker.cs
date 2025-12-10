@@ -30,14 +30,18 @@ public class ImgResizeLinker(
 
     internal readonly ResizeDimensionGenerator DimGen = dimGen;
 
+    public ICss Koi => koi.Value;
+
+    private bool UseFactors => features.Value.IsEnabled(ImageServiceUseFactors);
+
     /// <summary>
     /// Make sure this is in sync with the Link.Image
     /// </summary>
-    public string? Image(
+    public string? ImageUrl(
         string? url = default,
         object? settings = default,
         object? factor = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         IField? field = default,  // todo
         object? width = default,
         object? height = default,
@@ -55,7 +59,7 @@ public class ImgResizeLinker(
         // Modern case - all settings have already been prepared, the other settings are ignored
         if (settings is ResizeSettings.ResizeSettings resizeSettings)
         {
-            var basic = ImageOnly(url, resizeSettings, field).Url;
+            var basic = ImgResizeSettings(url, resizeSettings, field).Url;
             return l.Return(basic, "prepared:" + basic);
         }
 
@@ -64,23 +68,23 @@ public class ImgResizeLinker(
             scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
             parameters: parameters, executionContext: executionContext);
 
-        var result = ImageOnly(url, resizeSettings, field).Url;
+        var result = ImgResizeSettings(url, resizeSettings, field).Url;
         return l.Return(result, "built:" + result);
     }
         
-    internal OneResize ImageOnly(string? url, ResizeSettings.ResizeSettings settings, IHasMetadata? field)
+    internal OneResize ImgResizeSettings(string? url, ResizeSettings.ResizeSettings settings, IHasMetadata? field, string? overrideFramework = null)
     {
         var l = Log.Fn<OneResize>();
-        var srcSetSettings = settings.Find(SrcSetType.Img, features.Value.IsEnabled(ImageServiceUseFactors), koi.Value.Framework);
+        var srcSetSettings = settings.Find(SrcSetType.Img, useFactors: UseFactors, overrideFramework ?? Koi.Framework);
         return l.Return(ConstructUrl(url, settings, srcSetSettings, field), "no srcset");
     }
         
 
-    internal string? SrcSet(string? url, ResizeSettings.ResizeSettings settings, SrcSetType srcSetType, IHasMetadata? field = null)
+    internal string? SrcSet(string? url, ResizeSettings.ResizeSettings settings, SrcSetType srcSetType, IHasMetadata? field = null, string? overrideFramework = null)
     {
         var l = Log.Fn<string?>();
 
-        var srcSetSettings = settings.Find(srcSetType, features.Value.IsEnabled(ImageServiceUseFactors), koi.Value.Framework);
+        var srcSetSettings = settings.Find(srcSetType, useFactors: UseFactors, overrideFramework ?? Koi.Framework);
 
         var srcSetParts = srcSetSettings?.VariantsParsed;
 

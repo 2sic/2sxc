@@ -13,7 +13,7 @@ partial class CodeDataFactory
     #region AsTyped Implementations
 
     [return: NotNullIfNotNull(nameof(data)), NotNullIfNotNull(nameof(fallback))]
-    public ITypedItem? AsItem(object? data, Factory.ConvertItemSettings settings, NoParamOrder noParamOrder = default, ITypedItem? fallback = default)
+    public ITypedItem? AsItem(object? data, Factory.ConvertItemSettings settings, NoParamOrder npo = default, ITypedItem? fallback = default)
     {
         // If we need mock data, return a fake object
         if (settings.UseMock)
@@ -104,7 +104,7 @@ partial class CodeDataFactory
         return result;
     }
 
-    public IEnumerable<ITypedItem> AsItems(object list, Factory.ConvertItemSettings settings, NoParamOrder noParamOrder = default, IEnumerable<ITypedItem>? fallback = null) 
+    public IEnumerable<ITypedItem> AsItems(object list, Factory.ConvertItemSettings settings, NoParamOrder npo = default, IEnumerable<ITypedItem>? fallback = null) 
         => AsItemList(list, fallback, MaxRecursions, settings);
 
     private IEnumerable<ITypedItem> AsItemList(object list, IEnumerable<ITypedItem>? fallback, int recursions, Factory.ConvertItemSettings settings)

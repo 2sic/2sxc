@@ -29,7 +29,7 @@ internal class DataModelHelpers
     /// Typically, the type will be from your `AppCode.Data`.
     /// </summary>
     /// <returns></returns>
-    internal static IEnumerable<TCustom> AsList<TCustom>(IModelFactory modelFactory, object? source, ConvertItemSettings settings, NoParamOrder protector = default, bool nullIfNull = false)
+    internal static IEnumerable<TCustom> AsList<TCustom>(IModelFactory modelFactory, object? source, ConvertItemSettings settings, NoParamOrder npo = default, bool nullIfNull = false)
         where TCustom : class, ICanWrapData
     {
         var list = source switch

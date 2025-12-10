@@ -21,3 +21,10 @@ global using ToSic.Sxc.Apps.Sys.Work;
 global using ToSic.Sxc.Context.Sys;
 global using ToSic.Sys.Performance;
 global using static ToSic.Sxc.Sys.SxcLogging;
+
+
+#if NETFRAMEWORK
+global using THttpResponseType = System.Net.Http.HttpResponseMessage;
+#else
+global using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
+#endif

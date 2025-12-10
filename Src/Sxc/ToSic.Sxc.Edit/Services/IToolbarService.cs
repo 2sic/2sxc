@@ -23,7 +23,7 @@ public interface IToolbarService
     /// For guidance what to give it, also check out the [toolbar docs](xref:JsCode.Toolbars.Simple).
     /// </summary>
     /// <param name="target">_optional_ entity-like target, see [target guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Target)</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters (new v16.02)</param>
     /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
     /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
@@ -36,7 +36,7 @@ public interface IToolbarService
     /// </remarks>
     IToolbarBuilder Default(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
@@ -49,7 +49,7 @@ public interface IToolbarService
     /// For guidance what to give it, also check out the [toolbar docs](xref:JsCode.Toolbars.Simple).
     /// </summary>
     /// <param name="target">_optional_ entity-like target, see [target guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Target)</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters (new v16.02)</param>
     /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
     /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
@@ -62,7 +62,7 @@ public interface IToolbarService
     /// </remarks>
     IToolbarBuilder Empty(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
@@ -76,7 +76,7 @@ public interface IToolbarService
     /// </summary>
     /// <param name="target">The target object which should receive metadata. Must support <see cref="ToSic.Eav.Metadata.IHasMetadata"/> </param>
     /// <param name="contentTypes">Name of one or more content-types for which to generate the button(s). For many, use comma `,` to separate. If not specified, will try to lookup config (v14)</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters (new v16.02)</param>
     /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
     /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
@@ -94,7 +94,7 @@ public interface IToolbarService
     IToolbarBuilder Metadata(
         object target,
         string? contentTypes = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
@@ -109,7 +109,7 @@ public interface IToolbarService
     /// This is the same as `.Empty().Edit(...)`
     /// </summary>
     /// <param name="target">The target object which should receive metadata. Must support <see cref="ToSic.Eav.Metadata.IHasMetadata"/> </param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters (new v16.02)</param>
     /// <returns>An toolbar builder with empty configuration and just this button on it</returns>
     /// <remarks>
@@ -118,7 +118,7 @@ public interface IToolbarService
     /// </remarks>
     IToolbarBuilder Edit(
         object target,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default
     );
 }

@@ -11,8 +11,6 @@ public interface IPageServiceShared: IChangeQueue
     void AddAssets(RenderEngineResult result);
     IPageFeatures PageFeatures { get; }
 
-    // Moving CspOfModule to internal
-    //CspOfModule Csp { get; }
     string CspEphemeralMarker { get; }
 
     /// <summary>
@@ -21,18 +19,8 @@ public interface IPageServiceShared: IChangeQueue
     PageChangeModes ChangeMode { get; set; }
 
     List<HeadChange> Headers { get; }
-    //int? HttpStatusCode { get; set; }
-    //string HttpStatusMessage { get; set; }
-    List<HttpHeader> HttpHeaders { get; }
-    //IList<HeadChange> GetHeadChangesAndFlush(ILog log);
 
-    /// <summary>
-    /// Register the feature keys to be activated on the page.
-    /// </summary>
-    /// <param name="keys"></param>
-    /// <returns>The keys it just activated (after trim/filter for empty)</returns>
-    IEnumerable<string> Activate(params string[] keys);
-    //IList<PagePropertyChange> GetPropertyChangesAndFlush(ILog log);
+    List<HttpHeader> HttpHeaders { get; }
 
     /// <summary>
     /// 

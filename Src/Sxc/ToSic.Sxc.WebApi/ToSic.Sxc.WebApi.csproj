@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps.Persistence\ToSic.Eav.Apps.Persistence.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Insights\ToSic.Eav.Insights.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.WebApi\ToSic.Eav.WebApi.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj" />
@@ -32,6 +33,8 @@
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">

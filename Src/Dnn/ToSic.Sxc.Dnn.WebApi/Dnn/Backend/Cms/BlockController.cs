@@ -23,35 +23,41 @@ public class BlockController() : DnnSxcControllerBase(RealController.LogSuffix),
     /// <inheritdoc />
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public void Item([FromUri] int? index = null) => Real.Item(index);
+    public void Item([FromUri] int? index = null)
+        => Real.Item(index);
 
 
     /// <inheritdoc />
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public void App(int? appId) => Real.App(appId);
+    public void App(int? appId)
+        => Real.App(appId);
 
     /// <inheritdoc />
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public IEnumerable<AppUiInfo> Apps(string apps = null) => Real.Apps(apps);
-
-
-    /// <inheritdoc />
-    [HttpGet]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public IEnumerable<ContentTypeUiInfo> ContentTypes() => Real.ContentTypes();
+    public IEnumerable<AppUiInfo> Apps(string apps = null)
+        => Real.Apps(apps);
 
 
     /// <inheritdoc />
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public IEnumerable<TemplateUiInfo> Templates() => Real.Templates();
+    public IEnumerable<ContentTypeUiInfo> ContentTypes()
+        => Real.ContentTypes();
+
+
+    /// <inheritdoc />
+    [HttpGet]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    public IEnumerable<TemplateUiInfo> Templates()
+        => Real.Templates();
 
     /// <inheritdoc />
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-    public Guid? Template(int templateId, bool forceCreateContentGroup) => Real.Template(templateId, forceCreateContentGroup);
+    public Guid? Template(int templateId, bool forceCreateContentGroup)
+        => Real.Template(templateId, forceCreateContentGroup);
 
 
     /// <inheritdoc />
@@ -63,5 +69,6 @@ public class BlockController() : DnnSxcControllerBase(RealController.LogSuffix),
     /// <inheritdoc />
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public bool Publish(string part, int index) => Real.Publish(part, index);
+    public bool Publish(string part, int index)
+        => Real.Publish(part, index);
 }

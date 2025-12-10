@@ -12,10 +12,10 @@ public class ConvertValueService() : ServiceBase("Sxc.CnvSrv")
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
     [return: NotNullIfNotNull(nameof(fallback))]
-    public T? To<T>(object value, NoParamOrder noParamOrder = default, T? fallback = default)
+    public T? To<T>(object value, NoParamOrder npo = default, T? fallback = default)
         => value.ConvertOrFallback(fallback, numeric: OptimizeNumbers, truthy: OptimizeBoolean, fallbackOnDefault: false);
 
-    public string? ToString(object value, NoParamOrder noParamOrder = default, string? fallback = null, bool fallbackOnNull = true)
+    public string? ToString(object value, NoParamOrder npo = default, string? fallback = null, bool fallbackOnNull = true)
     {
         var result = To(value, fallback: fallback);
         return result is null && fallbackOnNull ? fallback: result;

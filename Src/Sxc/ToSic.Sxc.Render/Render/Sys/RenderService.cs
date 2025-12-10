@@ -77,7 +77,7 @@ public class RenderService(RenderService.Dependencies services) : ServiceWithCon
     /// At the moment it MUST stay internal, as it's not clear what API we want to surface
     /// </summary>
     /// <param name="parent">The parent-item containing the content-blocks and providing edit-context</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="item">The content-block item to render. Optional, by default the same item is used as the context.</param>
     /// <param name="data">TODO V16.00</param>
     /// <param name="field">Optional: </param>
@@ -85,7 +85,7 @@ public class RenderService(RenderService.Dependencies services) : ServiceWithCon
     /// <returns></returns>
     public IRawHtmlString One(
         ICanBeItem parent,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         ICanBeEntity? item = null,
         object? data = null,
         string? field = null,
@@ -106,7 +106,7 @@ public class RenderService(RenderService.Dependencies services) : ServiceWithCon
     /// Render content-blocks into a larger html-block containing placeholders
     /// </summary>
     /// <param name="parent">The parent-item containing the content-blocks and providing edit-context</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="field">Required: Field containing the content-blocks. </param>
     /// <param name="max">BETA / WIP</param>
     /// <param name="merge">Optional: html-text containing special placeholders.</param>
@@ -117,7 +117,7 @@ public class RenderService(RenderService.Dependencies services) : ServiceWithCon
     /// </remarks>
     public IRawHtmlString All(
         ICanBeItem parent,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? field = null,
         string? apps = null,
         int max = 100,
@@ -139,7 +139,7 @@ public class RenderService(RenderService.Dependencies services) : ServiceWithCon
 
 
     /// <inheritdoc />
-    public virtual IRenderResult Module(int pageId, int moduleId, NoParamOrder noParamOrder = default, object? data = null)
+    public virtual IRenderResult Module(int pageId, int moduleId, NoParamOrder npo = default, object? data = null)
     {
         var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
         // #RemoveBlocksIRenderService

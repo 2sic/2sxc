@@ -16,11 +16,6 @@ using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Backend.ImportExport;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sys.Utils;
-#if NETFRAMEWORK
-using THttpResponseType = System.Net.Http.HttpResponseMessage;
-#else
-using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
-#endif
 
 namespace ToSic.Sxc.Backend.Views;
 

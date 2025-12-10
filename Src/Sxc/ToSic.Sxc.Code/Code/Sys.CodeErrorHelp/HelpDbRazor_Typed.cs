@@ -177,7 +177,7 @@ partial class HelpDbRazor
             Name = "incorrect-dynamic-usage",
             // Detection based on the specific runtime error message parts
             Detect =
-                @"does not contain a definition for '(\S.*+)'\s+at CallSite.Target\(Closure , CallSite , Object , String \)",
+                @"does not contain a definition for '(\S+)'\s+at CallSite.Target\(Closure , CallSite , Object , String \)",
             DetectRegex = true,
             UiMessage = $"""
 

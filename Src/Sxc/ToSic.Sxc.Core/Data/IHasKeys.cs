@@ -21,7 +21,7 @@ public interface IHasKeys
     /// Get all the keys available in this Model (all the parameters passed in).
     /// This is used to sometimes run early checks if all the expected parameters have been provided.
     /// </summary>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="only">
     /// Only return the keys specified here, if found.
     /// Typical use: `only: new [] { "Key1", "Key2" }`.
@@ -29,7 +29,7 @@ public interface IHasKeys
     /// </param>
     /// <returns></returns>
     /// <remarks>Added in 16.03</remarks>
-    IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string>? only = default);
+    IEnumerable<string> Keys(NoParamOrder npo = default, IEnumerable<string>? only = default);
 
     #region IsEmpty / IsNotEmpty
 
@@ -47,7 +47,7 @@ public interface IHasKeys
     /// If you need a different kind of check, just `.Get(...)` the value and perform the checks in your code.
     /// </summary>
     /// <param name="name">the property name like `Image`; some objects also support path to sub-property like `Author.Name`</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="language">
     /// Optional language like `de`, `de-ch` or `de,en` to determine which values to check.
     /// Will ignore languages not in the data model.
@@ -64,7 +64,7 @@ public interface IHasKeys
     ///// `true` means that empty and whitespace strings return `true`,
     ///// `false` means every whitespace incl. empty strings return `false`.
     ///// </param>
-    bool IsEmpty(string name, NoParamOrder noParamOrder = default, string? language = default);
+    bool IsEmpty(string name, NoParamOrder npo = default, string? language = default);
 
     /// <summary>
     /// Check if this typed object has a property of this specified name, and has real data.
@@ -80,7 +80,7 @@ public interface IHasKeys
     /// If you need a different kind of check, just `.Get(...)` the value and perform the checks in your code.
     /// </summary>
     /// <param name="name">the property name like `Image`; some objects also support path to sub-property like `Author.Name`</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <returns>`true` if the property exists and has a real value. If it returned an empty list, it will also return `false`</returns>
     /// <param name="language">
     /// Optional language like `de`, `de-ch` or `de,en` to determine which values to check.
@@ -97,7 +97,7 @@ public interface IHasKeys
     ///// `true` means that empty and whitespace strings return `true`,
     ///// `false` means every whitespace incl. empty strings return `false`.
     ///// </param>
-    bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string? language = default);
+    bool IsNotEmpty(string name, NoParamOrder npo = default, string? language = default);
 
     #endregion
 }

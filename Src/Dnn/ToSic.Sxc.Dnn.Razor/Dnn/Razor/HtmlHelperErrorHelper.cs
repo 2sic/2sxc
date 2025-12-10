@@ -10,8 +10,17 @@ internal class HtmlHelperErrorHelper(RazorComponentBase page, bool isSystemAdmin
 {
     internal HashSet<string> ErrorPaths = new(StringComparer.InvariantCultureIgnoreCase);
 
+    /// <summary>
+    /// This exception is usually thrown when a thread is aborted, e.g. by Response.End in classic ASP.NET.
+    /// It happens on Response.Redirect(...) calls.
+    /// </summary>
+    private const bool IgnoreThreadAbortException = true;
+
     internal string TryToLogAndReWrapError(Exception renderException, string path, bool reportToDnn, string additionalLog = null)
     {
+        if (IgnoreThreadAbortException && renderException is ThreadAbortException)
+            return "thread aborted; probably Response.Redirect called";
+
         // Important to know: Once this fires, the page will stop rendering more templates
         if (reportToDnn)
             page.Log.GetContents().Ex(renderException);

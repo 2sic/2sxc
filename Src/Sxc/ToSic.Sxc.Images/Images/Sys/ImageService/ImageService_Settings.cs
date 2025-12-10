@@ -1,5 +1,6 @@
 ﻿using ToSic.Sxc.Images.Sys.ResizeSettings;
 using ToSic.Sys.Utils;
+using static Connect.Koi.CssFrameworks;
 
 namespace ToSic.Sxc.Images.Sys;
 
@@ -8,7 +9,7 @@ partial class ImageService
     /// <inheritdoc />
     public IResizeSettings Settings(
         object? settings = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakResize, ITweakResize>? tweak = default,
         object? factor = default,
         object? width = default,
@@ -20,18 +21,18 @@ partial class ImageService
         object? aspectRatio = default,
         string? parameters = default,
         object? recipe = default
-    ) => SettingsInternal(settings: settings, noParamOrder: noParamOrder, tweak: tweak,
+    ) => SettingsInternal(settings: settings, npo: npo, tweak: tweak,
         factor: factor, width: width, height: height, quality: quality,
         resizeMode: resizeMode, scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
         parameters: parameters, recipe: recipe);
 
     /// <summary>
-    /// Internal Get-Settings, with internal type.
+    /// Internal Get-Settings, with class result (not interface).
     /// </summary>
     /// <returns>an internal settings record which could be further manipulated</returns>
     internal ResizeSettings.ResizeSettings SettingsInternal(
         object? settings = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakResize, ITweakResize>? tweak = default,
         object? factor = default,
         object? width = default,
@@ -47,7 +48,7 @@ partial class ImageService
     {
         var realSettings = GetBestSettings(settings);
 
-        var almostFinal = ImgLinker.ResizeParamMerger.BuildResizeSettings(noParamOrder: noParamOrder, settings: realSettings, factor: factor,
+        var almostFinal = ImgLinker.ResizeParamMerger.BuildResizeSettings(npo: npo, settings: realSettings, factor: factor,
             width: width, height: height, quality: quality, resizeMode: resizeMode,
             scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters, advanced: AdvancedSettings.Parse(recipe));
 
@@ -93,7 +94,7 @@ partial class ImageService
     /// <inheritdoc />
     public Recipe Recipe(
         Recipe recipe,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? name = default,
         int width = default,
         string? variants = default,
@@ -107,4 +108,29 @@ partial class ImageService
     )
         => new(recipe, name: name, width: width, variants: variants, attributes: attributes, recipes: recipes, 
             setWidth: setWidth, setHeight: setHeight, forTag: forTag, forFactor: forFactor, forCss: forCss);
+
+    internal string? OverrideCssFramework
+    {
+        get
+        {
+            // If Koi knows the framework, then no need to check features
+            if (!imgLinker.Koi.IsUnknown)
+                return null;
+
+            // Get list of features, and only re-check if the count changed
+            var fka = PageService.FeatureKeysAdded;
+            if (fka.Count == _lastCheckCount)
+                return field;
+            _lastCheckCount = fka.Count;
+
+            // Determine framework override
+            // Note that BootstrapX is more of a test flag, so check it first
+            return field = fka.Contains("BootstrapX") ? "bsX"
+                : fka.Contains(nameof(Bootstrap6)) ? Bootstrap6
+                : fka.Contains(nameof(Bootstrap5)) ? Bootstrap5
+                : null;
+        }
+    }
+
+    private int _lastCheckCount;
 }

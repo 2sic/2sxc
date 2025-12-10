@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using ToSic.Eav.Data.Sys.PropertyLookup;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Cms.Data;
@@ -27,36 +28,36 @@ internal partial class TypedStack: ITypedItem
 
     bool ITypedItem.IsDemoItem => false;
 
-    IHtmlTag? ITypedItem.Html(string name, NoParamOrder noParamOrder, object? container, bool? toolbar,
+    IHtmlTag? ITypedItem.Html(string name, NoParamOrder npo, object? container, bool? toolbar,
         object? imageSettings, bool? required, bool debug, Func<ITweakInput<string>, ITweakInput<string>>? tweak)
-        => TypedItemHelpers.Html(Cdf, this, name, noParamOrder, container, toolbar, imageSettings, required, debug, tweak);
+        => TypedItemHelpers.Html(Cdf, this, name, npo, container, toolbar, imageSettings, required, debug, tweak);
 
-    IResponsivePicture? ITypedItem.Picture(string name, NoParamOrder noParamOrder,
+    IResponsivePicture? ITypedItem.Picture(string name, NoParamOrder npo,
         Func<ITweakMedia, ITweakMedia>? tweak,
         object? settings,
         object? factor, object? width, string? imgAlt, string? imgAltFallback,
         string? imgClass, object? imgAttributes, string? pictureClass,
         object? pictureAttributes, object? toolbar, object? recipe
-    ) => TypedItemHelpers.Picture(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder, tweak: tweak, settings: settings,
+    ) => TypedItemHelpers.Picture(cdf: Cdf, item: this, name: name, npo: npo, tweak: tweak, settings: settings,
         factor: factor, width: width, imgAlt: imgAlt, imgAltFallback: imgAltFallback,
         imgClass: imgClass, imgAttributes: imgAttributes, pictureClass: pictureClass,
         pictureAttributes: pictureAttributes,
         toolbar: toolbar, recipe: recipe);
 
-    IResponsiveImage? ITypedItem.Img(string name, NoParamOrder noParamOrder, Func<ITweakMedia, ITweakMedia>? tweak, object? settings, object? factor,
+    IResponsiveImage? ITypedItem.Img(string name, NoParamOrder npo, Func<ITweakMedia, ITweakMedia>? tweak, object? settings, object? factor,
         object? width, string? imgAlt, string? imgAltFallback, string? imgClass, object? imgAttributes, object? toolbar, object? recipe
-    ) => TypedItemHelpers.Img(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder, tweak: tweak, settings: settings,
+    ) => TypedItemHelpers.Img(cdf: Cdf, item: this, name: name, npo: npo, tweak: tweak, settings: settings,
         factor: factor, width: width, imgAlt: imgAlt, imgAltFallback: imgAltFallback,
         imgClass: imgClass, imgAttributes: imgAttributes,
         toolbar: toolbar, recipe: recipe);
 
 
-    GpsCoordinates ITypedItem.Gps(string name, NoParamOrder protector, bool? required)
+    GpsCoordinates ITypedItem.Gps(string name, NoParamOrder npo, bool? required)
         => GpsCoordinates.FromJson(((ITypedItem)this).String(name, required: required));
 
     #region ADAM
 
-    IField? ITypedItem.Field(string name, NoParamOrder noParamOrder, bool? required)
+    IField? ITypedItem.Field(string name, NoParamOrder npo, bool? required)
     {
         // Try to find the object which has that field with a valid value etc.
         var sourceItem = FindSubItemHavingField(name);
@@ -91,7 +92,7 @@ internal partial class TypedStack: ITypedItem
         return sourceItem;
     }
 
-    IFolder? ITypedItem.Folder(string name, NoParamOrder noParamOrder, bool? required)
+    IFolder? ITypedItem.Folder(string name, NoParamOrder npo, bool? required)
     {
         // Try to find the object which has that field with a valid value etc.
         var sourceItem = FindSubItemHavingField(name);
@@ -101,7 +102,7 @@ internal partial class TypedStack: ITypedItem
                    : null);
     }
 
-    IFile? ITypedItem.File(string name, NoParamOrder noParamOrder, bool? required)
+    IFile? ITypedItem.File(string name, NoParamOrder npo, bool? required)
     {
         // Try to find the object which has that field with a valid value etc.
         var sourceItem = FindSubItemHavingField(name);
@@ -113,40 +114,40 @@ internal partial class TypedStack: ITypedItem
 
     #endregion
 
-    //ITypedItem ITypedItem.Child(string name, NoParamOrder noParamOrder, bool? required)
-    //    => (this as ITypedStack).Child(name, noParamOrder, required);
+    //ITypedItem ITypedItem.Child(string name, NoParamOrder npo, bool? required)
+    //    => (this as ITypedStack).Child(name, npo, required);
 
-    //IEnumerable<ITypedItem> ITypedItem.Children(string field, NoParamOrder noParamOrder, string type, bool? required)
-    //    => (this as ITypedStack).Children(field, noParamOrder, type, required);
+    //IEnumerable<ITypedItem> ITypedItem.Children(string field, NoParamOrder npo, string type, bool? required)
+    //    => (this as ITypedStack).Children(field, npo, type, required);
 
-    T? ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required, GetRelatedOptions? options)
+    T? ITypedItem.Child<T>(string name, NoParamOrder npo, bool? required, GetRelatedOptions? options)
         where T : class
         => Cdf.AsCustom<T>(
             source: ((ITypedItem)this).Child(name, required: required, options: options),
-            protector: protector,
+            npo: npo,
             mock: false
         );
 
-    IEnumerable<T> ITypedItem.Children<T>(string? field, NoParamOrder protector, string? type, bool? required, GetRelatedOptions? options)
+    IEnumerable<T> ITypedItem.Children<T>(string? field, NoParamOrder npo, string? type, bool? required, GetRelatedOptions? options)
         => Cdf.AsCustomList<T>(
-            source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required, options: options),
-            protector: protector,
+            source: ((ITypedItem)this).Children(field: field, npo: npo, type: type, required: required, options: options),
+            npo: npo,
             nullIfNull: false
         );
 
     #region Not implemented: Parents, Publishing, Dyn, Presentation, Metadata
 
-    ITypedItem ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string? type, string? field, GetRelatedOptions? options)
+    ITypedItem ITypedItem.Parent(NoParamOrder npo, bool? current, string? type, string? field, GetRelatedOptions? options)
         => throw new NotImplementedException(ParentNotImplemented);
 
-    IEnumerable<ITypedItem> ITypedItem.Parents(NoParamOrder noParamOrder, string? type, string? field, GetRelatedOptions? options)
+    IEnumerable<ITypedItem> ITypedItem.Parents(NoParamOrder npo, string? type, string? field, GetRelatedOptions? options)
         => throw new NotImplementedException(ParentNotImplemented);
 
-    T? ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string? type, string? field, GetRelatedOptions? options)
+    T? ITypedItem.Parent<T>(NoParamOrder npo, bool? current, string? type, string? field, GetRelatedOptions? options)
         where T : class
         => throw new NotImplementedException(ParentNotImplemented);
 
-    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string? type, string? field, GetRelatedOptions? options)
+    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder npo, string? type, string? field, GetRelatedOptions? options)
         => throw new NotImplementedException(ParentNotImplemented);
 
     bool ITypedItem.IsPublished => throw new NotImplementedException(NotImplementedError);

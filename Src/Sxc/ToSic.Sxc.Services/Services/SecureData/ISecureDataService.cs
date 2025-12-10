@@ -29,7 +29,7 @@ public interface ISecureDataService: IHasLog, ICanDebug
     /// <param name="value">value to hash, `null` will be treated as empty string</param>
     /// <returns>the hash as a ???</returns>
     /// <remarks>Added v17.08</remarks>
-    string HashSha256(string value); //, NoParamOrder protector = default, string salt = default);
+    string HashSha256(string value); //, NoParamOrder npo = default, string salt = default);
 
     /// <summary>
     /// Hash a value using SHA512, using a FIPS compliant provider.
@@ -37,7 +37,7 @@ public interface ISecureDataService: IHasLog, ICanDebug
     /// <param name="value">value to hash, `null` will be treated as empty string</param>
     /// <returns>the hash as a ???</returns>
     /// <remarks>Added v17.08</remarks>
-    string HashSha512(string value); //, NoParamOrder protector = default, string salt = default);
+    string HashSha512(string value); //, NoParamOrder npo = default, string salt = default);
 
     // Note to my future self: HashSha3_256 and HashSha3_512 are not implemented yet
     // reason is that they are not FIPS compliant until .net 8 according to 

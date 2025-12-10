@@ -136,9 +136,13 @@
     <Exec Command="robocopy /MIR &quot;$(Source)/system/&quot; &quot;$(BuildTarget)/system/&quot;" IgnoreExitCode="true" Condition="Exists('$(Source)')"/>
     <Exec Command="robocopy /MIR &quot;$(Source)/dist/&quot; &quot;$(BuildTarget)/dist/&quot;" IgnoreExitCode="true" Condition="Exists('$(Source)')"/>-->
     <Exec Command="robocopy /S &quot;$(ProjectDir)dist/&quot; &quot;$(BuildTarget)/dist/&quot; &quot;Default.aspx&quot;" IgnoreExitCode="true"/>
-    <Exec Command="robocopy /MIR &quot;$(ProjectDir)Extensions/&quot; &quot;$(BuildTarget)/Extensions/&quot;" IgnoreExitCode="true"/>
     <Exec Command="robocopy /MIR &quot;$(ProjectDir)ImportExport/&quot; &quot;$(BuildTarget)/ImportExport/&quot;" IgnoreExitCode="true"/>
     <Exec Command="robocopy /MIR &quot;$(ProjectDir)App_LocalResources/&quot; &quot;$(BuildTarget)/App_LocalResources/&quot;" IgnoreExitCode="true"/>
+
+    <!-- 2025-11-18 2dm: since  -->
+    <!--<Exec Command="robocopy /MIR &quot;$(ProjectDir)Extensions/&quot; &quot;$(BuildTarget)/Extensions/&quot;" IgnoreExitCode="true"/>-->
+    <Exec Command="robocopy /MIR &quot;$(ProjectDir)Extensions/Imageflow/&quot; &quot;$(BuildTarget)/Extensions/Imageflow/&quot;" IgnoreExitCode="true"/>
+    <Exec Command="robocopy /MIR &quot;$(ProjectDir)Extensions/ToSic_vCard/&quot; &quot;$(BuildTarget)/Extensions/ToSic_vCard/&quot;" IgnoreExitCode="true"/>
 
     <!-- Xcopy Commands -->
     <Exec Command="xcopy &quot;$(ProjectDir)View.ascx&quot; &quot;$(BuildTarget)&quot; /y" IgnoreExitCode="true"/>

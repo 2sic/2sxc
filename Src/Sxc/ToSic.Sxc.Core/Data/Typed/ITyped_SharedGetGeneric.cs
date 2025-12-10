@@ -8,22 +8,22 @@ public partial interface ITyped : IHasKeys, ICanGetByName
     new bool ContainsKey(string name);
 
     /// <inheritdoc cref="IHasKeys.IsEmpty"/>
-    new bool IsEmpty(string name, NoParamOrder noParamOrder = default, string? language = default);
+    new bool IsEmpty(string name, NoParamOrder npo = default, string? language = default);
     // ^^^ new is just so it's in the docs
 
     /// <inheritdoc cref="IHasKeys.IsNotEmpty"/>
-    new bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string? language = default);
+    new bool IsNotEmpty(string name, NoParamOrder npo = default, string? language = default);
     // ^^^ new is just so it's in the docs
 
     /// <inheritdoc cref="IHasKeys.Keys"/>
-    new IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string>? only = default);
+    new IEnumerable<string> Keys(NoParamOrder npo = default, IEnumerable<string>? only = default);
 
 
     /// <summary>
     /// Get a property.
     /// </summary>
     /// <param name="name">the property name like `Image` - or path to sub-property like `Author.Name` (new v15)</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <param name="language">
     /// Optional language like `de`, `de-ch` or `de,en` to determine which values to check.
@@ -35,7 +35,7 @@ public partial interface ITyped : IHasKeys, ICanGetByName
     /// * parameter `languages` added in 17.10
     /// </remarks>
     object? Get(string name,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         bool? required = default,
         string? language = default
         );
@@ -52,7 +52,7 @@ public partial interface ITyped : IHasKeys, ICanGetByName
     /// Note that you don't need to specify it, if you specify the `fallback` property.
     /// </typeparam>
     /// <param name="name">the property name like `Image` - or path to sub-property like `Author.Name` (new v15)</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">the fallback value to provide if not found</param>
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <param name="language">
@@ -66,7 +66,7 @@ public partial interface ITyped : IHasKeys, ICanGetByName
     /// * parameter `languages` added in 17.10
     /// </remarks>
     TValue? Get<TValue>(string name,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         TValue? fallback = default,
         bool? required = default,
         string? language = default);

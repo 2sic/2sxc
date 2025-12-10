@@ -12,17 +12,18 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 public class AppPartsController() : DnnSxcControllerRoot(RealController.LogSuffix), IAppPartsController
 {
     private RealController Real => SysHlp.GetService<RealController>();
-    #region Parts Export/Import
 
     /// <inheritdoc />
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public ExportPartsOverviewDto Get(int zoneId, int appId, string scope) => Real.Get(zoneId: zoneId, appId: appId, scope: scope);
+    public ExportPartsOverviewDto Get(int zoneId, int appId, string scope)
+        => Real.Get(zoneId: zoneId, appId: appId, scope: scope);
 
 
     /// <inheritdoc />
     [HttpGet]
+    [AllowAnonymous] // will do security check internally
     public HttpResponseMessage Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
     {
         // Make sure the Scoped ResponseMaker has this controller context
@@ -42,10 +43,5 @@ public class AppPartsController() : DnnSxcControllerRoot(RealController.LogSuffi
         SysHlp.PreventServerTimeout600();
         return Real.Import(uploadInfo: new(Request, HttpContext.Current.Request), zoneId: zoneId, appId: appId);
     }
-
-    #endregion
-
-
-
 
 }

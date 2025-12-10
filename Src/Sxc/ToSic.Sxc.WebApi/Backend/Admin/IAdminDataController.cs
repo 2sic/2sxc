@@ -1,9 +1,4 @@
-﻿#if NETFRAMEWORK
-using THttpResponseType = System.Net.Http.HttpResponseMessage;
-#else
-using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
-#endif
-
+﻿
 namespace ToSic.Sxc.Backend.Admin;
 
 public interface IAdminDataController

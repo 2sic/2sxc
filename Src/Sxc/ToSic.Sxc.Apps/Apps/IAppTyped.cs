@@ -25,13 +25,13 @@ public interface IAppTyped: IAppIdentity
     /// Get a query in this App, optionally with more parameters and sources.
     /// </summary>
     /// <param name="name"></param>
-    /// <param name="noParamOrder"></param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="attach"></param>
     /// <param name="parameters"></param>
     /// <returns></returns>
     ITypedQuery? GetQuery(
         string? name = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         IDataSourceLinkable? attach = default,
         object? parameters = default
     );
@@ -57,7 +57,7 @@ public interface IAppTyped: IAppIdentity
     /// <summary>
     /// Get the folder of the current app, usually for creating links to assets etc.
     /// </summary>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="location">name of the app location - either `auto` (default), `site` or `shared`</param>
     /// <returns>an IFolder object which can then use `.Url`, `.PhysicalPath` etc.</returns>
     /// <remarks>
@@ -65,7 +65,7 @@ public interface IAppTyped: IAppIdentity
     ///   We may add this some day in the future.
     /// * Previously the `Folder` property returned containing the name. This is now on `.Folder().Name`.
     /// </remarks>
-    IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string? location = default);
+    IFolder FolderAdvanced(NoParamOrder npo = default, string? location = default);
 
     IFile Thumbnail { get; }
 

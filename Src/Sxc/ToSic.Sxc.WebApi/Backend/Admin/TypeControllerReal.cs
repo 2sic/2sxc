@@ -8,12 +8,6 @@ using ToSic.Sxc.Backend.ImportExport;
 using ToSic.Sys.Users;
 using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 
-#if NETFRAMEWORK
-using THttpResponseType = System.Net.Http.HttpResponseMessage;
-#else
-using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
-#endif
-
 namespace ToSic.Sxc.Backend.Admin;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -49,9 +43,15 @@ public class TypeControllerReal(
         var infos = dic
             .Select(pair =>
             {
-                var typesInScope = reader.ContentTypes.OfScope(pair.Key).ToList();
+                var typesInScope = reader.ContentTypes
+                    .OfScope(pair.Key, includeAttributeTypes: true)
+                    .ToList();
+
+                var withAncestor = typesInScope
+                    .Where(AncestorExtensions.HasAncestor)
+                    .ToList();
+
                 var count = typesInScope.Count;
-                var withAncestor = typesInScope.Where(ct => ct.HasAncestor()).ToList();
                 return new ScopeDetailsDto
                 {
                     Name = pair.Key,

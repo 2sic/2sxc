@@ -21,5 +21,26 @@ public interface IFileGeneratorSpecs
     /// </summary>
     string? Edition { get; }
 
+    /// <summary>
+    /// The moment the generation was performed.
+    /// </summary>
     DateTime DateTime { get; }
+
+    /// <summary>
+    /// Alternate namespace to use for the generated code files.
+    /// If null, just use automatic / default namespace.
+    /// </summary>
+    string? Namespace { get; init; }
+
+    /// <summary>
+    /// The target path for the generated code files.
+    /// If null, use default path.
+    /// </summary>
+    string? TargetPath { get; init; }
+
+    /// <summary>
+    /// The content types to generate files for.
+    /// If null, use all available content types in the "Default" scope + the app settings/resources.
+    /// </summary>
+    ICollection<string>? ContentTypes { get; init; }
 }

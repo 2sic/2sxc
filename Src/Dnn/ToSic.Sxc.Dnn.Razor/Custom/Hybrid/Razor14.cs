@@ -110,13 +110,13 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
     [PrivateApi] string IGetCodePath.CreateInstancePath { get; set; }
 
     /// <inheritdoc />
-    public virtual dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
-        => RzrHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError: throwOnError);
+    public virtual dynamic CreateInstance(string virtualPath, NoParamOrder npo = default, string name = null, string relativePath = null, bool throwOnError = true)
+        => RzrHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
 
     /// <inheritdoc cref="ITypedCode16.GetCode"/>
     [PrivateApi("added in 16.05, but not sure if it should be public")]
-    public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
-        => RzrHlp.GetCode(path, noParamOrder, className);
+    public dynamic GetCode(string path, NoParamOrder npo = default, string className = default)
+        => RzrHlp.GetCode(path: path, className: className);
 
     #endregion
 

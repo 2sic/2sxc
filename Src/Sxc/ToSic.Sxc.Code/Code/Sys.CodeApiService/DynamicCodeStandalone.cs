@@ -24,7 +24,7 @@ internal class DynamicCodeStandalone(IExecutionContext exCtx, ICodeDynamicApiHel
         }
     }
 
-    public dynamic? CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string? name = null,
+    public dynamic? CreateInstance(string virtualPath, NoParamOrder npo = default, string? name = null,
         string? relativePath = null, bool throwOnError = true)
         => (
                 apiHelper
@@ -32,7 +32,7 @@ internal class DynamicCodeStandalone(IExecutionContext exCtx, ICodeDynamicApiHel
                 ?? throw new InvalidOperationException(
                     "CreateInstance can only be set on a DynamicCode12Proxy which implements ICreateInstance")
             )
-            .CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
+            .CreateInstance(virtualPath, npo, name, relativePath, throwOnError);
 
     public int CompatibilityLevel => apiHelper.Cdf?.CompatibilityLevel ?? CompatibilityLevels.CompatibilityLevel12;
 

@@ -36,10 +36,10 @@ public class PageChangeSummary(
     {
         var l = Log.Fn<RenderResult>(timer: true);
         if (enableEdit)
-        {
-            pss.Activate(SxcPageFeatures.ToolbarsInternal.NameId);
-            pss.Activate(SxcPageFeatures.ToolbarsAutoInternal.NameId);
-        }
+            pss.PageFeatures.Activate([
+                SxcPageFeatures.ToolbarsInternal.NameId,
+                SxcPageFeatures.ToolbarsAutoInternal.NameId
+            ]);
 
         var assets = pss.GetAssetsAndFlush();
         var newPageFeaturesFromSettings = ((PageFeatures.PageFeatures)pss.PageFeatures).FeaturesFromSettingsGetNew(specs, Log);

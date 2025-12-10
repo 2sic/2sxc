@@ -15,9 +15,9 @@ internal class PreWrapJsonArray(CodeJsonWrapper wrapper, JsonArray jsonArray)
 
     #region Keys
 
-    public override IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string>? only = default)
+    public override IEnumerable<string> Keys(NoParamOrder npo = default, IEnumerable<string>? only = default)
         // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
-        => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, UnwrappedContents?.Select((p, i) => i.ToString()));
+        => TypedHelpers.FilterKeysIfPossible(npo, only, UnwrappedContents?.Select((p, i) => i.ToString()));
 
     public override bool ContainsKey(string name)
     {

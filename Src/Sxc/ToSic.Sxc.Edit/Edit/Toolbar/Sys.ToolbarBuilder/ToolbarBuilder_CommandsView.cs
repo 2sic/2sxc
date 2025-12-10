@@ -9,17 +9,17 @@ partial record ToolbarBuilder
 {
     public IToolbarBuilder Layout(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddAdminAction("layout", noParamOrder, ui, parameters, operation, target, tweak);
+    ) => AddAdminAction("layout", npo, ui, parameters, operation, target, tweak);
 
 
     public IToolbarBuilder Code(
         object target,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
@@ -30,17 +30,17 @@ partial record ToolbarBuilder
         if (tweak == null)
         {
             var paramsWithCode = new ObjectToUrl().SerializeWithChild(parameters, (target as string).HasValue() ? "call=" + target : "", "");
-            return AddAdminAction("code", noParamOrder, ui, paramsWithCode, operation, target, tweak);
+            return AddAdminAction("code", npo, ui, paramsWithCode, operation, target, tweak);
         }
 
         // if we have a tweak, we must place the call into that to avoid an error that parameters & tweak are provided
         ITweakButton ReTweak(ITweakButton _) => tweak(new TweakButton.TweakButton().Parameters("call", target?.ToString()));
-        return AddAdminAction("code", noParamOrder, ui, parameters, operation, target, ReTweak);
+        return AddAdminAction("code", npo, ui, parameters, operation, target, ReTweak);
     }
 
     public IToolbarBuilder Fields(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
@@ -54,38 +54,38 @@ partial record ToolbarBuilder
 
     public IToolbarBuilder Template(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddAdminAction("template", noParamOrder, ui, parameters, operation, target, tweak);
+    ) => AddAdminAction("template", npo, ui, parameters, operation, target, tweak);
 
     public IToolbarBuilder Query(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddAdminAction("query", noParamOrder, ui, parameters, operation, target, tweak);
+    ) => AddAdminAction("query", npo, ui, parameters, operation, target, tweak);
 
     public IToolbarBuilder View(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddAdminAction("view", noParamOrder, ui, parameters, operation, target, tweak);
+    ) => AddAdminAction("view", npo, ui, parameters, operation, target, tweak);
 
     public IToolbarBuilder Edition(
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? editions = default,
         Func<ITweakButton, ITweakButton>? tweak = default
     )
     {
         var paramsMergeInTweak = editions == default ? null : new { editions };
-        return AddAdminAction("edition", noParamOrder, null, paramsMergeInTweak, null, null, tweak);
+        return AddAdminAction("edition", npo, null, paramsMergeInTweak, null, null, tweak);
     }
 }

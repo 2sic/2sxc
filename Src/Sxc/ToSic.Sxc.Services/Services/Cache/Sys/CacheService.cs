@@ -47,7 +47,7 @@ internal class CacheService(
     private bool IsEnabled => _isEnabled ??= features.IsEnabled(SxcFeatures.SmartDataCache);
     private bool? _isEnabled;
 
-    public ICacheSpecs CreateSpecs(string key, NoParamOrder protector = default, string? regionName = default, bool? shared = default)
+    public ICacheSpecs CreateSpecs(string key, NoParamOrder npo = default, string? regionName = default, bool? shared = default)
     {
         var l = Log.Fn<ICacheSpecs>($"Key: {key} / Segment: {regionName}");
         var keySpecs = new CacheKeyParts
@@ -79,10 +79,10 @@ internal class CacheService(
     public bool Contains<T>(ICacheSpecs specs)
         => IsEnabled && cache.TryGet<T>(specs.Key, out _);
 
-    public T? Get<T>(ICacheSpecs specs, NoParamOrder protector = default, T? fallback = default) 
+    public T? Get<T>(ICacheSpecs specs, NoParamOrder npo = default, T? fallback = default) 
         => IsEnabled ? cache.Get(specs.Key, fallback) : fallback;
 
-    public T? GetOrSet<T>(ICacheSpecs specs, NoParamOrder protector = default, Func<T>? generate = default)
+    public T? GetOrSet<T>(ICacheSpecs specs, NoParamOrder npo = default, Func<T>? generate = default)
     {
         if (!IsEnabled)
             return generate == null ? default : generate();
@@ -114,10 +114,10 @@ internal class CacheService(
     public object? Remove(ICacheSpecs specs)
         => IsEnabled ? cache.Remove(specs.Key) : null;
 
-    //public void Set<T>(string key, T value, NoParamOrder protector = default)
+    //public void Set<T>(string key, T value, NoParamOrder npo = default)
     //    => Set(ProcessSpecs(key), value);
 
-    public void Set<T>(ICacheSpecs specs, T value, NoParamOrder protector = default)
+    public void Set<T>(ICacheSpecs specs, T value, NoParamOrder npo = default)
     {
         if (!IsEnabled || !specs.IsEnabled)
             return;

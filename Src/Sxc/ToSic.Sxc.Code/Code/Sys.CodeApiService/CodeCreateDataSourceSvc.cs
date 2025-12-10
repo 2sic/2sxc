@@ -28,7 +28,7 @@ public class CodeCreateDataSourceSvc(LazySvc<IDataSourcesService> dataSources, L
 
     // note: this code is almost identical to the IDataService code, except that `immutable` is a parameter
     // because old code left the DataSources to be mutable
-    public T CreateDataSource<T>(bool immutable, NoParamOrder noParamOrder = default, IDataSourceLinkable? attach = null, object? options = default) where T : IDataSource
+    public T CreateDataSource<T>(bool immutable, NoParamOrder npo = default, IDataSourceLinkable? attach = null, object? options = default) where T : IDataSource
     {
         // If no in-source was provided, make sure that we create one from the current app
         attach ??= DataSources.Value.CreateDefault(new DataSourceOptions

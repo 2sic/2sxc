@@ -15,9 +15,9 @@ internal abstract class CodeAnyApiHelper(ExecutionContext exCtx) : ICodeAnyApiHe
     public ICmsContext CmsContext => ExCtx.CmsContext;
     public IDataSource Data => ExCtx.Block!.Data; // If accessed, it must be working
 
-    public TService GetService<TService>(NoParamOrder protector = default, bool reuse = false, Type? type = default)
+    public TService GetService<TService>(NoParamOrder npo = default, bool reuse = false, Type? type = default)
         where TService : class
-        => ExCtx.GetService<TService>(protector, reuse, type);
+        => ExCtx.GetService<TService>(npo, reuse, type);
 
     public IDevTools DevTools => ExCtx.DevTools;
 

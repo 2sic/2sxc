@@ -43,7 +43,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     private ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
     /// <inheritdoc />
-    public override ISite Init(int siteId, ILog? parentLogOrNull)
+    public override ISite Init(int siteId, ILog parentLogOrNull)
         => TryInitPortal(new(siteId), parentLogOrNull);
 
     #endregion
@@ -116,7 +116,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     #region Culture / Languages
 
     /// <inheritdoc />
-    public override string DefaultCultureCode => _defaultLanguage ??= UnwrappedSite?.DefaultLanguage?.ToLowerInvariant();
+    public override string DefaultCultureCode => (_defaultLanguage ??= UnwrappedSite?.DefaultLanguage?.ToLowerInvariant()) ?? string.Empty;
     private string _defaultLanguage;
 
 
@@ -166,9 +166,10 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
             // Internally it wants to prefer the `language` querystring param,
             // but if it doesn't have it, then in a WebApi call it seems to not correctly take the current portal alias culture.
             // So we can't use `GetCurrentLocale` but need to use `GetLocaleOrCurrent` with the current culture code.
-            var current = !string.IsNullOrEmpty(HttpContext.Current.Request.QueryString["language"])
+            var languageQuery = HttpContext.Current?.Request?.QueryString?["language"]; // null-safe when no HTTP context
+            var current = !string.IsNullOrEmpty(languageQuery)
                 ? lc.GetCurrentLocale(Id) // This will use the querystring param if available, or work in Razor, but not in WebApi
-                : lc.GetLocaleOrCurrent(Id, CurrentCultureCode); // This will use the current culture code, which is more stable
+                : lc.GetLocaleOrCurrent(Id, CurrentCultureCode ?? DefaultCultureCode ?? System.Globalization.CultureInfo.CurrentCulture.Name); // Use known codes or thread culture when no HTTP context
             if (current != null)
             {
                 var currentCode = current.Code;

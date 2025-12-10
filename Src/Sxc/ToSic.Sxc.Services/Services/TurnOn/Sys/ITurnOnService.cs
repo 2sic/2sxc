@@ -12,12 +12,12 @@ public interface ITurnOnService: IHasLog
 {
 
     Attribute Attribute(object runOrSpecs,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? require = null,
         object? data = null);
 
     IHtmlTag Run(object runOrSpecs,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? require = null,
         object? data = null,
         IEnumerable<object>? args = default,

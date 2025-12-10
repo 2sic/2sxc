@@ -1,11 +1,6 @@
 ﻿using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Sxc.Backend.ImportExport;
 using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
-#if NETFRAMEWORK
-using THttpResponseType = System.Net.Http.HttpResponseMessage;
-#else
-using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
-#endif
 
 namespace ToSic.Sxc.Backend.Admin;
 

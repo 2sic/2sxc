@@ -167,7 +167,7 @@ public partial class BlockBuilder
                         if (renderEngineResult.ActivateJsApi)
                         {
                             l.A("template referenced 2sxc.api JS in script-tag: will enable");
-                            pageServiceShared.PageFeatures.Activate(SxcPageFeatures.JsCore.NameId);
+                            pageServiceShared.PageFeatures.Activate([SxcPageFeatures.JsCore.NameId]);
                         }
 
                         // Put all assets into the global page service for final processing later on

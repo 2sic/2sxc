@@ -51,14 +51,12 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGe
     }
     private static IEnumerable<HelpItem>? _inlineHelp;
 
-    public RichResult GenerateDataModels(int appId, string edition, string generator)
+    public RichResult GenerateDataModels(int appId, string? edition, string generator, int configurationId = 0)
     {
         var l = Log.Fn<RichResult>($"{nameof(appId)}:{appId};{nameof(edition)}:{edition}", timer: true);
 
         try
         {
-            var specs = new FileGeneratorSpecs { AppId = appId, Edition = edition };
-
             // find the generator
             var gen = generators.Value.FirstOrDefault(g => g.Name == generator);
             if (gen == null)
@@ -73,12 +71,27 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGe
             // Make sure the generator has the logger - if supported
             (gen as IHasLog)?.LinkLog(Log);
 
+            // TODO: @STV
+            // if configurationId is used, load configuration and pass to generator.
+            // Then make sure that the generator supports all params
+            // - Namespace
+            // - TargetPath
+            // - ContentTypes (to only generate for specific content types)
+
+            // Determine the specs to generate with
+            var specs = new FileGeneratorSpecs
+            {
+                AppId = appId,
+                Edition = edition
+            };
+
             // generate and save files
             fileSaver.GenerateAndSaveFiles(gen, specs);
 
             return l.Return(new RichResult
                 {
                     Ok = true,
+                    // TODO: @stv - IF CONFIGURATION ID USED, MENTION correct path
                     Message = $"Data models generated in {edition}/AppCode/Data.",
                 }
                 .WithTime(l)

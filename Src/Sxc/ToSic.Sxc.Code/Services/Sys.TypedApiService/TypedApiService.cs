@@ -35,7 +35,7 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
 
     #region App
 
-    public IAppTyped App(NoParamOrder noParamOrder = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
+    public IAppTyped App(NoParamOrder npo = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
     {
         var l = Log.Fn<IAppTyped>();
         MakeSureLogIsInHistory();

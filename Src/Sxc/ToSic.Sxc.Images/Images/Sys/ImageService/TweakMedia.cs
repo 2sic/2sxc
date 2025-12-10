@@ -25,7 +25,7 @@ internal record TweakMedia(
     }
 
     /// <inheritdoc />
-    public ITweakMedia Resize(string? name, NoParamOrder noParamOrder = default, Func<ITweakResize, ITweakResize>? tweak = default)
+    public ITweakMedia Resize(string? name, NoParamOrder npo = default, Func<ITweakResize, ITweakResize>? tweak = default)
     {
         var settings = name.HasValue() && ImageSvc != null // during tests, ImageSvc may be blank
             ? ImageSvc.ImgLinker.ResizeParamMerger.BuildResizeSettings(settings: ImageSvc.GetSettingsByName(name))
@@ -35,7 +35,7 @@ internal record TweakMedia(
     }
 
     /// <inheritdoc />
-    public ITweakMedia Resize(IResizeSettings settings, NoParamOrder noParamOrder = default, Func<ITweakResize, ITweakResize>? tweak = default)
+    public ITweakMedia Resize(IResizeSettings settings, NoParamOrder npo = default, Func<ITweakResize, ITweakResize>? tweak = default)
     {
         var retyped = settings as ResizeSettings.ResizeSettings ?? throw new ArgumentException(@"Can't properly convert to expected type", nameof(settings));
         var updated = (tweak?.Invoke(new TweakResize(retyped)) as TweakResize)?.Settings ?? retyped;
@@ -105,6 +105,31 @@ internal record TweakMedia(
 
     public ITweakMedia Toolbar(IToolbarBuilder toolbar)
         => this with { ToolbarObj = toolbar };
+
+    #endregion
+
+    #region TweakInput - attempted in v20.09 but doesn't work - reason is we would have to pass the tweak very, very deep into the system which we stopped
+
+    ///// <summary>
+    ///// Reuse the existing TweakInput to store input tweaks
+    ///// </summary>
+    //private TweakInput<string>? TweakInput { get; init; }
+
+    //[PublicApi]
+    //public ITweakMedia Input(string replace, NoParamOrder npo = default)
+    //    => this with { TweakInput = (TweakInput ?? new TweakInput<string>()).CloneWith(_ => replace) };
+
+    //[PublicApi]
+    //public ITweakMedia Input(Func<string> func, NoParamOrder npo = default)
+    //    => this with { TweakInput = (TweakInput ?? new TweakInput<string>()).CloneWith(_ => func()) };
+
+    //[PublicApi]
+    //public ITweakMedia Input(Func<string, string> func, NoParamOrder npo = default)
+    //    => this with { TweakInput = (TweakInput ?? new TweakInput<string>()).CloneWith(tv => func(tv.Value!)) };
+
+    //[PublicApi]
+    //public ITweakMedia Process(Func<ITweakData<string>, string> func, NoParamOrder npo = default)
+    //    => this with { TweakInput = (TweakInput ?? new TweakInput<string>()).CloneWith(func) };
 
     #endregion
 

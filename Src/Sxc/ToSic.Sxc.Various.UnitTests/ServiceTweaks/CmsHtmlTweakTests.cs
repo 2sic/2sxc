@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Services.Tweaks;
+﻿using ToSic.Sxc.Services.Tweaks.Sys;
 
 namespace ToSic.Sxc.Tests.ServiceTweaks;
 
@@ -16,33 +16,33 @@ public class CmsHtmlTweakTests
     public void AddingTweakDoesNotAffectOriginal()
     {
         var (tw1, tw2) = GetTweakers();
-        Equal(0, tw1.Tweaks.List.Count);
-        Equal(1, tw2.Tweaks.List.Count);
+        Equal(0, tw1.Tweaks.Count);
+        Equal(1, tw2.Tweaks.Count);
     }
 
     [Fact]
     public void AddingTweakIsCorrectType()
     {
         var (_, tw2) = GetTweakers();
-        Equal(TweakValue.NameDefault, tw2.Tweaks.List[0].NameId);
-        Equal(TweakValue.StepBefore, tw2.Tweaks.List[0].Step);
+        Equal(TweakConfigConstants.NameDefault, tw2.Tweaks[0].NameId);
+        Equal(TweakConfigConstants.StepBefore, tw2.Tweaks[0].Step);
     }
 
     [Fact]
     public void GetPreprocessIsCorrect()
     {
         var (_, tw2) = GetTweakers();
-        var preprocess = tw2.Tweaks.GetTweaksByStep(TweakValue.StepBefore);
+        var preprocess = tw2.Tweaks.GetTweaksByStep(TweakConfigConstants.StepBefore);
         Equal(1, preprocess.Count);
-        Equal(TweakValue.NameDefault, preprocess[0].NameId);
-        Equal(TweakValue.StepBefore, tw2.Tweaks.List[0].Step);
+        Equal(TweakConfigConstants.NameDefault, preprocess[0].NameId);
+        Equal(TweakConfigConstants.StepBefore, tw2.Tweaks[0].Step);
     }
 
     [Fact]
     public void GetPostProcessIsCorrect()
     {
         var (_, tw2) = GetTweakers();
-        var preprocess = tw2.Tweaks.GetTweaksByStep(TweakValue.StepAfter);
+        var preprocess = tw2.Tweaks.GetTweaksByStep(TweakConfigConstants.StepAfter);
         Equal(0, preprocess.Count);
     }
 
@@ -51,7 +51,7 @@ public class CmsHtmlTweakTests
     {
         var (_, tw2) = GetTweakers();
 
-        var processed = tw2.Preprocess("Hello");
+        var processed = tw2.Tweaks.Preprocess("Hello");
         Equal("Hello-test", processed.Value);
     }
 }

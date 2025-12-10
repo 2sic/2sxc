@@ -11,34 +11,34 @@ partial class EditService
     /// <inheritdoc />
     public IRawHtmlString? Toolbar(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? actions = null,
         string? contentType = null,
         object? condition = null,
         object? prefill = null,
         object? settings = null,
         object? toolbar = null)
-        => ToolbarInternal(false, target, noParamOrder, actions, contentType, condition, prefill, settings, toolbar)
+        => ToolbarInternal(false, target, npo, actions, contentType, condition, prefill, settings, toolbar)
             ?.Render(false);
 
     /// <inheritdoc/>
     public IRawHtmlString? TagToolbar(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? actions = null,
         string? contentType = null,
         object? condition = null,
         object? prefill = null,
         object? settings = null,
         object? toolbar = null)
-        => ToolbarInternal(true, target, noParamOrder, actions, contentType, condition, prefill, settings, toolbar)
+        => ToolbarInternal(true, target, npo, actions, contentType, condition, prefill, settings, toolbar)
             ?.Render(true);
 
     private ItemToolbarBase? ToolbarInternal(
         bool inTag,
         object? target,
         // ReSharper disable once UnusedParameter.Local
-        NoParamOrder noParamOrder,
+        NoParamOrder npo,
         string? actions,
         string? contentType,
         object? condition,

@@ -42,7 +42,7 @@ internal class DnnLinkService(
     }
 
 
-    private string Api(NoParamOrder noParamOrder = default, string path = null)
+    private string Api(NoParamOrder npo = default, string path = null)
     {
         if (string.IsNullOrEmpty(path))
             return string.Empty;

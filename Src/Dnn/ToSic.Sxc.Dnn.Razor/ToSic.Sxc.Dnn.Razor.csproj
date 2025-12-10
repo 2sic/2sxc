@@ -64,6 +64,7 @@
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.DataSources\ToSic.Eav.DataSources.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.WebApi\ToSic.Eav.WebApi.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Code.HotBuild\ToSic.Sxc.Code.HotBuild.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Custom\ToSic.Sxc.Custom.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Engines\ToSic.Sxc.Engines.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.LightSpeed\ToSic.Sxc.LightSpeed.csproj" />

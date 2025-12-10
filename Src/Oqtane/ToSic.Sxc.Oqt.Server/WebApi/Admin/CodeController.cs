@@ -21,14 +21,17 @@ public class CodeController() : OqtControllerBase(false, RealController.LogSuffi
 
     [HttpGet]
     [Authorize(Roles = RoleNames.Admin)]
-    public IEnumerable<RealController.HelpItem> InlineHelp(string language) => Real.InlineHelp(language);
+    public IEnumerable<RealController.HelpItem> InlineHelp(string language)
+        => Real.InlineHelp(language);
 
     [HttpGet]
     [Authorize(Roles = RoleNames.Host)]
-    public RichResult GenerateDataModels(int appId, string generator, string edition = default) => Real.GenerateDataModels(appId, edition, generator: generator);
+    public RichResult GenerateDataModels(int appId, string generator, string edition = null, int configurationId = 0)
+        => Real.GenerateDataModels(appId, edition, generator: generator, configurationId: configurationId);
 
     [HttpGet]
     [JsonFormatter]
     [Authorize(Roles = RoleNames.Host)]
-    public EditionsDto GetEditions(int appId) => Real.GetEditions(appId);
+    public EditionsDto GetEditions(int appId)
+        => Real.GetEditions(appId);
 }

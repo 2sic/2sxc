@@ -42,7 +42,7 @@ public interface IEditService: IHasLog // , INeedsCodeApiService
     ///
     /// If the first parameter is a <see cref="IToolbarBuilder"/> then all other parameters will be ignored. 
     /// </param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="actions">
     ///     List of actions on this toolbar. If null, will use default actions for this item.
     ///     If provided, must be comma-separated action-names - see [](xref:JsCode.Commands.Index).
@@ -78,7 +78,7 @@ public interface IEditService: IHasLog // , INeedsCodeApiService
     /// </remarks>
     IRawHtmlString? Toolbar(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? actions = null,
         string? contentType = null,
         object? condition = null,
@@ -96,7 +96,7 @@ public interface IEditService: IHasLog // , INeedsCodeApiService
     ///
     /// If the first parameter is a <see cref="IToolbarBuilder"/> then all other parameters will be ignored. 
     /// </param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="actions">
     ///     List of actions on this toolbar. If null, will use default actions for this item.
     ///     If provided, must be comma-separated action-names - see [](xref:JsCode.Commands.Index).
@@ -132,7 +132,7 @@ public interface IEditService: IHasLog // , INeedsCodeApiService
     /// </remarks>
     IRawHtmlString? TagToolbar(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? actions = null,
         string? contentType = null,
         object? condition = null,
@@ -148,7 +148,7 @@ public interface IEditService: IHasLog // , INeedsCodeApiService
     /// </summary>
     /// <param name="target">The content-item for which the new context should be.
     ///     This item usually has a field which has [](xref:Basics.Cms.InnerContent.Index)</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="field">the field of this content-item, which contains the inner-content-items</param>
     /// <param name="contentType">type name used for 'new' items in a toolbar - usually for inner-content and list-contexts</param>
     /// <param name="newGuid">the guid of a new item - use null for auto-generate</param>
@@ -163,7 +163,7 @@ public interface IEditService: IHasLog // , INeedsCodeApiService
     /// </remarks>
     IRawHtmlString? ContextAttributes(
         ICanBeEntity target, 
-        NoParamOrder noParamOrder = default, 
+        NoParamOrder npo = default, 
         string? field = null, 
         string? contentType = null,
         Guid? newGuid = null,
@@ -176,7 +176,7 @@ public interface IEditService: IHasLog // , INeedsCodeApiService
     ///// This is mainly meant for internal use
     ///// </summary>
     ///// <param name="content">the string / tags to wrap</param>
-    ///// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    ///// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     ///// <param name="tag">optional tag to use for the wrapper, default is div</param>
     ///// <param name="full">include full context (default is partial context only)</param>
     ///// <param name="enableEdit">include information needed for editing</param>
@@ -190,7 +190,7 @@ public interface IEditService: IHasLog // , INeedsCodeApiService
     ///// </remarks>
     //[PrivateApi]
     //IRawHtmlString WrapInContext(object content,
-    //    NoParamOrder noParamOrder = default,
+    //    NoParamOrder npo = default,
     //    string tag = SxcUiConstants.DefaultContextTag,
     //    bool full = false,
     //    bool? enableEdit = null,
@@ -201,7 +201,7 @@ public interface IEditService: IHasLog // , INeedsCodeApiService
     /// <summary>
     /// Ensure that the UI will load the correct assets to enable editing. See [](xref:NetCode.Razor.Edit.Enable)
     /// </summary>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="js">optional, default false. automatically true if `api` or `forms` is true<br/>
     ///     Will add the basic JS APIs ($2sxc) usually for enabling WebApi calls from your JS code. <br/>
     ///     _added in v10.20_
@@ -223,7 +223,7 @@ public interface IEditService: IHasLog // , INeedsCodeApiService
     /// 2. Enhanced with parameter jsApi in 10.20
     /// 3. Being deprecated in 12.02, as you should now use the IPageService instead for most of these features
     /// </remarks>
-    string? Enable(NoParamOrder noParamOrder = default,
+    string? Enable(NoParamOrder npo = default,
         bool? js = null,
         bool? api = null,
         bool? forms = null,

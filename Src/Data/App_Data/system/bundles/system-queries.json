@@ -8,7 +8,7 @@
       "Entities": [
         {
           "Id": 42901,
-          "Version": 26,
+          "Version": 27,
           "Guid": "d680fba2-9ab7-417a-8821-db23c15f4a2e",
           "Type": {
             "Id": "DataPipeline",
@@ -17,33 +17,33 @@
           "Attributes": {
             "String": {
               "Description": {
-                "*": "Get all apps of a zone (site)"
+                "en-us": "Get all apps of a zone (site)"
               },
               "Name": {
-                "*": "System.Apps"
+                "en-us": "System.Apps"
               },
               "Params": {
-                "*": ""
+                "en-us": ""
               },
               "StreamsOut": {
-                "*": "ListContent,Default"
+                "en-us": "ListContent,Default"
               },
               "StreamWiring": {
-                "*": "3e0daa8d-2c13-4b73-94f9-cae9d1c412e8:Default>666576b7-65f7-4d93-96ca-238ef1d336dd:Default\r\n666576b7-65f7-4d93-96ca-238ef1d336dd:Default>Out:Default"
+                "en-us": "3e0daa8d-2c13-4b73-94f9-cae9d1c412e8:Default>666576b7-65f7-4d93-96ca-238ef1d336dd:Default\r\n666576b7-65f7-4d93-96ca-238ef1d336dd:Default>Out:Default"
               },
               "TestParameters": {
-                "*": "[QueryString:ZoneId]=2"
+                "en-us": "[QueryString:ZoneId]=2"
               },
               "VisualDesignerData": {
-                "*": "{\"ShowDataSourceDetails\":true}"
+                "en-us": "{\"ShowDataSourceDetails\":true}"
               }
             },
             "Boolean": {
               "AllowEdit": {
-                "*": true
+                "en-us": true
               },
               "HiddenInQueryPicker": {
-                "*": true
+                "en-us": false
               }
             }
           },
@@ -193,7 +193,7 @@
         },
         {
           "Id": 42938,
-          "Version": 18,
+          "Version": 19,
           "Guid": "95041b6d-8669-4941-a516-47725acfe6ec",
           "Type": {
             "Id": "DataPipeline",
@@ -228,7 +228,7 @@
                 "en-us": true
               },
               "HiddenInQueryPicker": {
-                "en-us": true
+                "en-us": false
               }
             }
           },
@@ -320,7 +320,7 @@
         },
         {
           "Id": 42937,
-          "Version": 19,
+          "Version": 33,
           "Guid": "ede9fc6f-34bb-4a1f-8482-6dd0742e365f",
           "Type": {
             "Id": "DataPipeline",
@@ -329,33 +329,33 @@
           "Attributes": {
             "String": {
               "Description": {
-                "en-us": "Retrieve the content-types of an app"
+                "*": "Retrieve the content-types of an app"
               },
               "Name": {
-                "en-us": "System.ContentTypes"
+                "*": "System.ContentTypes"
               },
               "Params": {
-                "en-us": ""
+                "*": "AppId=[QueryString:AppId]\nScope=[QueryString:Scope]"
               },
               "StreamsOut": {
-                "en-us": "ListContent,Default"
+                "*": "ListContent,Default"
               },
               "StreamWiring": {
-                "en-us": "db8515d1-e8c9-4e84-a1ec-970376ea9922:Default>Out:Default"
+                "*": "db8515d1-e8c9-4e84-a1ec-970376ea9922:Default>Out:Default"
               },
               "TestParameters": {
-                "en-us": "[QueryString:AppId]=\n[QueryString:Scope]=Default"
+                "*": "[QueryString:AppId]=\n[QueryString:Scope]="
               },
               "VisualDesignerData": {
-                "en-us": "{\"ShowDataSourceDetails\":true}"
+                "*": "{\"ShowDataSourceDetails\":true}"
               }
             },
             "Boolean": {
               "AllowEdit": {
-                "en-us": true
+                "*": true
               },
               "HiddenInQueryPicker": {
-                "en-us": true
+                "*": false
               }
             }
           },
@@ -363,7 +363,7 @@
           "Metadata": [
             {
               "Id": 42978,
-              "Version": 7,
+              "Version": 14,
               "Guid": "db8515d1-e8c9-4e84-a1ec-970376ea9922",
               "Type": {
                 "Id": "DataPipelinePart",
@@ -394,7 +394,7 @@
               "Metadata": [
                 {
                   "Id": 42979,
-                  "Version": 2,
+                  "Version": 3,
                   "Guid": "d0ef68cc-151d-4cc5-bb57-1b424c9f7d19",
                   "Type": {
                     "Id": "37b25044-29bb-4c78-85e4-7b89f0abaa2c",
@@ -403,13 +403,13 @@
                   "Attributes": {
                     "String": {
                       "AppId": {
-                        "*": "[QueryString:AppId]"
+                        "en-us": "[Params:AppId]"
                       },
                       "Scope": {
-                        "*": "[QueryString:Scope]"
+                        "en-us": "[Params:Scope]"
                       },
                       "Title": {
-                        "*": ""
+                        "en-us": ""
                       }
                     }
                   },
@@ -626,7 +626,7 @@
         },
         {
           "Id": 42915,
-          "Version": 19,
+          "Version": 20,
           "Guid": "e57cfebc-2c9f-4feb-95e0-9362049b7502",
           "Type": {
             "Id": "DataPipeline",
@@ -661,7 +661,7 @@
                 "en-us": true
               },
               "HiddenInQueryPicker": {
-                "en-us": true
+                "en-us": false
               }
             }
           },
@@ -1125,7 +1125,7 @@
         },
         {
           "Id": 42900,
-          "Version": 19,
+          "Version": 20,
           "Guid": "e8a702d2-eccd-4b0f-83bd-600d8a8449d9",
           "Type": {
             "Id": "DataPipeline",
@@ -1160,7 +1160,7 @@
                 "en-us": true
               },
               "HiddenInQueryPicker": {
-                "en-us": true
+                "en-us": false
               }
             }
           },
@@ -1549,7 +1549,7 @@
         },
         {
           "Id": 166473,
-          "Version": 6,
+          "Version": 7,
           "Guid": "34693704-fa1f-48bd-a5d7-0ace93d1ee3e",
           "Type": {
             "Id": "DataPipeline",
@@ -1584,7 +1584,7 @@
                 "en-us": true
               },
               "HiddenInQueryPicker": {
-                "en-us": true
+                "en-us": false
               }
             }
           },
@@ -2255,7 +2255,7 @@
         },
         {
           "Id": 166646,
-          "Version": 7,
+          "Version": 8,
           "Guid": "310cc86c-2281-4614-8605-a423c87105e9",
           "Type": {
             "Id": "DataPipeline",
@@ -2290,7 +2290,7 @@
                 "en-us": true
               },
               "HiddenInQueryPicker": {
-                "en-us": true
+                "en-us": false
               }
             }
           },
@@ -2355,7 +2355,7 @@
         },
         {
           "Id": 169100,
-          "Version": 8,
+          "Version": 9,
           "Guid": "2317bfff-79bc-4812-89dd-0e0b9cba1cb9",
           "Type": {
             "Id": "DataPipeline",
@@ -2390,7 +2390,7 @@
                 "en-us": true
               },
               "HiddenInQueryPicker": {
-                "en-us": true
+                "en-us": false
               }
             }
           },
@@ -2613,7 +2613,7 @@
         },
         {
           "Id": 182535,
-          "Version": 13,
+          "Version": 14,
           "Guid": "ca79c11d-0c2e-422a-8bcb-0a89d493ecc0",
           "Type": {
             "Id": "DataPipeline",
@@ -2648,7 +2648,7 @@
                 "en-us": true
               },
               "HiddenInQueryPicker": {
-                "en-us": false
+                "en-us": true
               }
             }
           },
@@ -2747,7 +2747,7 @@
         },
         {
           "Id": 167720,
-          "Version": 25,
+          "Version": 26,
           "Guid": "952633f8-c04b-4592-9db9-a3e6ecf2dbb5",
           "Type": {
             "Id": "DataPipeline",
@@ -2782,7 +2782,7 @@
                 "en-us": true
               },
               "HiddenInQueryPicker": {
-                "en-us": true
+                "en-us": false
               }
             }
           },
@@ -2935,7 +2935,7 @@
         },
         {
           "Id": 184091,
-          "Version": 33,
+          "Version": 34,
           "Guid": "3d492956-301c-4ad9-afce-085b41661035",
           "Type": {
             "Id": "DataPipeline",
@@ -2944,33 +2944,33 @@
           "Attributes": {
             "String": {
               "Description": {
-                "*": "Get everything with a specific Metadata - for now Entities & ContentTypes"
+                "en-us": "Get everything with a specific Metadata - for now Entities & ContentTypes"
               },
               "Name": {
-                "*": "System.BundleDetails"
+                "en-us": "System.BundleDetails"
               },
               "Params": {
-                "*": "ConfigurationGuid=[QueryString:ConfigurationGuid]"
+                "en-us": "ConfigurationGuid=[QueryString:ConfigurationGuid]"
               },
               "StreamsOut": {
-                "*": "Default,Header,PleaseRename54247"
+                "en-us": "Default,Header,PleaseRename54247"
               },
               "StreamWiring": {
-                "*": "29f1a49c-aad2-46b7-adcc-4de99b5a4e54:Default>7e8e2c29-d170-4738-b99d-5bcfdcfdafb3:Default\r\nac245cea-8418-4a29-8ef7-76062b006c49:Default>0f5703bc-6e2f-4e02-b864-191aaf76d1d2:Default\r\n7e8e2c29-d170-4738-b99d-5bcfdcfdafb3:Default>1cdab8ab-f4ff-4965-a8bc-acdbbfafd015:Default\r\n1cdab8ab-f4ff-4965-a8bc-acdbbfafd015:Default>ac245cea-8418-4a29-8ef7-76062b006c49:Default\r\n0f5703bc-6e2f-4e02-b864-191aaf76d1d2:Default>dd5fafd6-7b3e-4fe5-874e-330381df561d:Default\r\ndd5fafd6-7b3e-4fe5-874e-330381df561d:Default>Out:Default"
+                "en-us": "29f1a49c-aad2-46b7-adcc-4de99b5a4e54:Default>7e8e2c29-d170-4738-b99d-5bcfdcfdafb3:Default\r\nac245cea-8418-4a29-8ef7-76062b006c49:Default>0f5703bc-6e2f-4e02-b864-191aaf76d1d2:Default\r\n7e8e2c29-d170-4738-b99d-5bcfdcfdafb3:Default>1cdab8ab-f4ff-4965-a8bc-acdbbfafd015:Default\r\n1cdab8ab-f4ff-4965-a8bc-acdbbfafd015:Default>ac245cea-8418-4a29-8ef7-76062b006c49:Default\r\n0f5703bc-6e2f-4e02-b864-191aaf76d1d2:Default>dd5fafd6-7b3e-4fe5-874e-330381df561d:Default\r\ndd5fafd6-7b3e-4fe5-874e-330381df561d:Default>Out:Default"
               },
               "TestParameters": {
-                "*": "[QueryString:ConfigurationGuid]=1fac6138-39c7-4ab6-9c54-9cf3e4ffd5ed"
+                "en-us": "[QueryString:ConfigurationGuid]=1fac6138-39c7-4ab6-9c54-9cf3e4ffd5ed"
               },
               "VisualDesignerData": {
-                "*": "{\"ShowDataSourceDetails\":true}"
+                "en-us": "{\"ShowDataSourceDetails\":true}"
               }
             },
             "Boolean": {
               "AllowEdit": {
-                "*": true
+                "en-us": true
               },
               "HiddenInQueryPicker": {
-                "*": false
+                "en-us": true
               }
             }
           },

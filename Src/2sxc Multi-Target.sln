@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31912.275
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11217.181
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Eav.Apps", "..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj", "{FA1B4495-6B85-400F-A5E3-0E292CCBFAE2}"
 EndProject
@@ -240,6 +240,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sys.OData", "..\..\eav-server\ToSic.Sys.OData\ToSic.Sys.OData.csproj", "{6DA3B0B5-4EFD-4D9F-2352-757B776C17CF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sys.OData.Tests", "..\..\eav-server\ToSic.Sys.OData.Tests\ToSic.Sys.OData.Tests.csproj", "{342A893E-B25F-628F-09C4-605EEFB3D879}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.WebApi.Tests", "..\..\eav-server\ToSic.Eav.WebApi.Tests\ToSic.Eav.WebApi.Tests.csproj", "{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -709,9 +711,14 @@ Global
 		{342A893E-B25F-628F-09C4-605EEFB3D879}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{342A893E-B25F-628F-09C4-605EEFB3D879}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{342A893E-B25F-628F-09C4-605EEFB3D879}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{342A893E-B25F-628F-09C4-605EEFB3D879}.Release|Any CPU.Build.0 = Release|Any CPU
 		{342A893E-B25F-628F-09C4-605EEFB3D879}.Testing|Any CPU.ActiveCfg = Testing|Any CPU
 		{342A893E-B25F-628F-09C4-605EEFB3D879}.Testing|Any CPU.Build.0 = Testing|Any CPU
+		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}.Testing|Any CPU.ActiveCfg = Testing|Any CPU
+		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}.Testing|Any CPU.Build.0 = Testing|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -830,6 +837,7 @@ Global
 		{3ADABC34-DDE6-A2CB-77E8-49E888529E11} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{6DA3B0B5-4EFD-4D9F-2352-757B776C17CF} = {55799BAC-652D-4A04-96AC-FCD790A38260}
 		{342A893E-B25F-628F-09C4-605EEFB3D879} = {55799BAC-652D-4A04-96AC-FCD790A38260}
+		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7} = {55799BAC-652D-4A04-96AC-FCD790A38260}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35

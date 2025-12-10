@@ -8,7 +8,7 @@ public class DnnLogWebApi : ActionFilterAttribute
 {
     public override bool AllowMultiple => false;
 
-    const string AlreadyLogged = "LogDetailsAlreadyHappened";
+    private const string AlreadyLogged = "LogDetailsAlreadyHappened";
 
     public override void OnActionExecuted(HttpActionExecutedContext actionContext)
     {
@@ -19,14 +19,16 @@ public class DnnLogWebApi : ActionFilterAttribute
             var reqProps = actionContext.Request.Properties;
 
             // check if already logged, and set property to prevent double-logging
-            if (reqProps.ContainsKey(AlreadyLogged)) return;
+            if (reqProps.ContainsKey(AlreadyLogged))
+                return;
             reqProps.Add(AlreadyLogged, true);
 
             // check if we have any logging details for this request
-            if (!reqProps.TryGetTyped(DnnConstants.EavLogKey, out LogStoreEntry logStoreEntry)) return;
+            if (!reqProps.TryGetTyped(EavLogKey, out LogStoreEntry logStoreEntry))
+                return;
 
             // check if we have additional context information (portal, module, etc.)
-            reqProps.TryGetValue(DnnConstants.DnnContextKey, out var dnnContext);
+            reqProps.TryGetValue(DnnContextKey, out var dnnContext);
 
             DnnLogging.LogToDnn("2sxc-Api", 
                 actionContext.Request.RequestUri.PathAndQuery,

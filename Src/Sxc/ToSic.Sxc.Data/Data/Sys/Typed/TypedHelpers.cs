@@ -36,7 +36,7 @@ public static class TypedHelpers
 
     }
 
-    public static IEnumerable<string> FilterKeysIfPossible(NoParamOrder noParamOrder, IEnumerable<string>? only, IEnumerable<string>? result)
+    public static IEnumerable<string> FilterKeysIfPossible(NoParamOrder npo, IEnumerable<string>? only, IEnumerable<string>? result)
     {
         if (result == null)
             return [];

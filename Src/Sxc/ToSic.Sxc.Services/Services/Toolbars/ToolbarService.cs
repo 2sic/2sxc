@@ -15,44 +15,44 @@ internal class ToolbarService(Generator<IToolbarBuilder> toolbarGenerator)
     /// <inheritdoc />
     public IToolbarBuilder Default(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
         object? prefill = null
-    ) => ToolbarBuilder(noParamOrder: noParamOrder, tweak: tweak, toolbarTemplate: ToolbarRuleToolbar.Default, ui: ui, parameters: parameters, prefill: prefill, context: null, target: target);
+    ) => ToolbarBuilder(npo: npo, tweak: tweak, toolbarTemplate: ToolbarRuleToolbar.Default, ui: ui, parameters: parameters, prefill: prefill, context: null, target: target);
 
 
     /// <inheritdoc />
     public IToolbarBuilder Empty(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
         object? prefill = null
-    ) => ToolbarBuilder(noParamOrder: noParamOrder, tweak: tweak, toolbarTemplate: ToolbarRuleToolbar.Empty, ui: ui, parameters: parameters, prefill: prefill, context: null, target: target);
+    ) => ToolbarBuilder(npo: npo, tweak: tweak, toolbarTemplate: ToolbarRuleToolbar.Empty, ui: ui, parameters: parameters, prefill: prefill, context: null, target: target);
 
 
     /// <inheritdoc />
     public IToolbarBuilder Metadata(
         object target,
         string? contentTypes = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
         object? prefill = null,
         string? context = null
-    ) => Empty().Metadata(target: target, contentTypes: contentTypes, noParamOrder: noParamOrder, tweak: tweak, ui: ui, parameters: parameters, prefill: prefill, context: context);
+    ) => Empty().Metadata(target: target, contentTypes: contentTypes, npo: npo, tweak: tweak, ui: ui, parameters: parameters, prefill: prefill, context: context);
 
-    public IToolbarBuilder Edit(object target, NoParamOrder noParamOrder = default, Func<ITweakButton, ITweakButton>? tweak = default)
-        => Empty().Edit(target: target, noParamOrder: noParamOrder, tweak: tweak);
+    public IToolbarBuilder Edit(object target, NoParamOrder npo = default, Func<ITweakButton, ITweakButton>? tweak = default)
+        => Empty().Edit(target: target, npo: npo, tweak: tweak);
 
 
 
     private IToolbarBuilder ToolbarBuilder(
-        NoParamOrder noParamOrder,
+        NoParamOrder npo,
         string toolbarTemplate,
         Func<ITweakButton, ITweakButton>? tweak,
         object? ui,

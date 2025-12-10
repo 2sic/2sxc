@@ -12,7 +12,7 @@ partial class DataService
 
     // IMPORTANT - this is different! from the _DynCodeRoot - as it should NOT auto attach!
     public T GetSource<T>(
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         IDataSourceLinkable? attach = default,
         object? parameters = default,
         object? options = default) where T : IDataSource
@@ -27,7 +27,7 @@ partial class DataService
     }
 
     public IDataSource GetSource(
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? name = null,
         IDataSourceLinkable? attach = null,
         object? parameters = default,

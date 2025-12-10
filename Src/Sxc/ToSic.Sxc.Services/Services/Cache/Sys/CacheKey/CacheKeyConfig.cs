@@ -15,7 +15,7 @@ public record CacheKeyConfig(): ICanEstimateSize
     public const int Disabled = -1;
     public const int EnabledWithoutTime = 0;
 
-    public CacheKeyConfig(NoParamOrder protector = default, int? seconds = null, string? varyBy = null, string? url = null, string? model = null): this()
+    public CacheKeyConfig(NoParamOrder npo = default, int? seconds = null, string? varyBy = null, string? url = null, string? model = null): this()
     {
         if (seconds != null)
             ForElevation = new() { [UserElevation.All] = seconds.Value };

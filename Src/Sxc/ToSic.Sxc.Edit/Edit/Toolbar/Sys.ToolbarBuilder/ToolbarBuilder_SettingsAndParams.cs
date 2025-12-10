@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
 partial record ToolbarBuilder
 {
     public IToolbarBuilder Settings(
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? show = default,
         string? hover = default,
         string? follow = default,
@@ -23,7 +23,7 @@ partial record ToolbarBuilder
 
     public IToolbarBuilder Parameters(
         object? target = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = default,
         object? parameters = default,

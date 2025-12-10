@@ -110,5 +110,4 @@ internal partial class LookUpForTokenTemplate(
     public virtual string Get(string key)
         => Get(key, "") ?? "";
 
-    ILookUp ICanBeLookUp.LookUp => this;
 }

@@ -8,7 +8,7 @@ partial record ToolbarBuilder
         => Utils.PrepareUi(ui, uiMerge, uiMergePrefix, Configuration?.Group, tweaks: tweaks);
 
     private ITweakButton? RunTweaksOrErrorIfCombined(
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         ITweakButton? initial = default,
         object? ui = default,

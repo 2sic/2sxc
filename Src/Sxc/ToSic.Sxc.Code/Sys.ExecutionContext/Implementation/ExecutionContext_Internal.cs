@@ -51,7 +51,7 @@ public partial class ExecutionContext
     #region Kit Handling
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public TService GetService<TService>(NoParamOrder protector = default, bool reuse = false, Type? type = default) where TService : class
+    public TService GetService<TService>(NoParamOrder npo = default, bool reuse = false, Type? type = default) where TService : class
     {
         // No reuse - just build and return, but optionally with the type specified
         if (!reuse)

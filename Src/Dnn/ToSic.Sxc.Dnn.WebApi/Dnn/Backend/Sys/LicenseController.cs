@@ -19,7 +19,8 @@ public class LicenseController() : DnnSxcControllerRoot("License"), ILicenseCont
 
     /// <inheritdoc />
     [HttpGet]
-    public IEnumerable<LicenseDto> Summary() => Real.Summary();
+    public IEnumerable<LicenseDto> Summary()
+        => Real.Summary();
 
     /// <inheritdoc />
     [HttpPost]

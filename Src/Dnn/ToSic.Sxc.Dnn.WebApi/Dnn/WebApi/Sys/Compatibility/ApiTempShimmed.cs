@@ -11,20 +11,20 @@ internal abstract class ApiTempShimmed : DnnSxcCustomControllerBase, IDynamicWeb
 
     #region Net Core Compatibility Shims - Copy this entire section to WebApi Files
 
-    public IFile SaveInAdam(NoParamOrder noParamOrder = default, Stream stream = null, string fileName = null,
+    public IFile SaveInAdam(NoParamOrder npo = default, Stream stream = null, string fileName = null,
         string contentType = null, Guid? guid = null, string field = null, string subFolder = "")
     {
         throw new NotImplementedException();
     }
 
     /// <inheritdoc cref="IDynamicWebApi.File"/>
-    public dynamic File(NoParamOrder noParamOrder = default,
+    public dynamic File(NoParamOrder npo = default,
         bool? download = null,
         string virtualPath = null,
         string contentType = null,
         string fileDownloadName = null,
         object contents = null)
-        => Shim.File(noParamOrder, download, virtualPath, contentType, fileDownloadName, contents);
+        => Shim.File(download: download, virtualPath: virtualPath, contentType: contentType, fileDownloadName: fileDownloadName, contents: contents);
 
     private WebApiCoreShim Shim => new(Request);
 

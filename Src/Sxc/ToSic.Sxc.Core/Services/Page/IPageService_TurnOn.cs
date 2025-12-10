@@ -14,7 +14,7 @@ public partial interface IPageService
     /// * either a run `string` like `window.myObject.myJs()` (must always start with window)
     /// * or an object containing all the parameters which turnOn requires
     /// </param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="require">
     /// _optional_ One or more requirements which must be met before the code starts.
     /// Can be one or many values and/or functions.
@@ -38,7 +38,7 @@ public partial interface IPageService
     /// * `args` and `addContext` added in v18.0
     /// </remarks>
     string? TurnOn(object runOrSpecs,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? require = default,
         object? data = default,
         IEnumerable<object>? args = default,

@@ -27,7 +27,7 @@ partial class CodeDataFactory: ICodeDataFactoryDeepWip
     /// Convert a list of Entities into a DynamicEntity.
     /// Only used in DynamicCodeRoot.
     /// </summary>
-    public IDynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, Factory.ConvertItemSettings settings, NoParamOrder protector = default, IEntity? parent = default, string? field = default) 
+    public IDynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, Factory.ConvertItemSettings settings, NoParamOrder npo = default, IEntity? parent = default, string? field = default) 
         => new DynamicEntity(list: list, parent: parent, field: field, appIdOrNull: null, propsRequired: settings.ItemIsStrict, cdf: this);
 
     /// <summary>

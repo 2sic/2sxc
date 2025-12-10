@@ -21,19 +21,19 @@ internal class ServerPaths: ServerPathsBase
     // As Oqtane has it's own ServerPaths
     // So we should probably drop this soon
     // ReSharper disable once ConvertToPrimaryConstructor
-    public ServerPaths(IHostingEnvironment hostingEnvironment)
+    public ServerPaths(IWebHostEnvironment hostingEnvironment)
     {
         _hostingEnvironment = hostingEnvironment;
     }
 
-    private readonly IHostingEnvironment _hostingEnvironment;
+    private readonly IWebHostEnvironment _hostingEnvironment;
 
     protected string MapContentPath(string virtualPath)
     {
         return Path.Combine(_hostingEnvironment.ContentRootPath, virtualPath);
     }
 
-    protected override string FullPathOfReference(int id)
+    protected override string? FullPathOfReference(int id)
     {
         throw new NotImplementedException("leave as not implemented, as we assume this code is never ever used");
     }

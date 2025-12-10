@@ -66,7 +66,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     /// <inheritdoc cref="ITypedCode16.GetService{TService}(NoParamOrder, string?)"/>
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
+    public TService GetService<TService>(NoParamOrder npo = default, string typeName = default) where TService : class
         => AppCodeGetNamedServiceHelper.GetService<TService>(owner: this, CodeHelper.Specs, typeName);
 
     /// <inheritdoc cref="IHasKit{TServiceKit}.Kit"/>
@@ -89,14 +89,14 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     /// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
     [NonAction]
-    public IFile SaveInAdam(NoParamOrder noParamOrder = default,
+    public IFile SaveInAdam(NoParamOrder npo = default,
         Stream stream = null,
         string fileName = null,
         string contentType = null,
         Guid? guid = null,
         string field = null,
         string subFolder = "")
-        => CtxHlp.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
+        => CtxHlp.SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
 
     #endregion
 
@@ -133,11 +133,11 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     #region As Conversions
 
     /// <inheritdoc cref="ITypedApi.AsItem" />
-    public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
+    public ITypedItem AsItem(object data, NoParamOrder npo = default, bool? propsRequired = default, bool? mock = default)
         => CodeApi.Cdf.AsItem(data, new() { ItemIsStrict = propsRequired ?? true, UseMock = mock == true });
 
     /// <inheritdoc cref="ITypedApi.AsItems" />
-    public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
+    public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder npo = default, bool? propsRequired = default)
         => CodeApi.Cdf.AsItems(list, new() { ItemIsStrict = propsRequired ?? true });
 
     /// <inheritdoc cref="ITypedApi.AsEntity" />
@@ -145,11 +145,11 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
         => CodeApi.Cdf.AsEntity(thing);
 
     /// <inheritdoc cref="ITypedApi.AsTyped" />
-    public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
+    public ITyped AsTyped(object original, NoParamOrder npo = default, bool? propsRequired = default)
         => CodeApi.Cdf.AsTyped(original, new() { EntryPropIsRequired = false, ItemIsStrict = propsRequired ?? true });
 
     /// <inheritdoc cref="ITypedApi.AsTypedList" />
-    public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
+    public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder npo = default, bool? propsRequired = default)
         => CodeApi.Cdf.AsTypedList(list, new() { EntryPropIsRequired = false, ItemIsStrict = propsRequired ?? true });
 
     /// <inheritdoc cref="ITypedApi.AsStack" />
@@ -168,7 +168,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     private CompileCodeHelper CompileCodeHlp => field ??= GetService<CompileCodeHelper>().Init(this);
 
     /// <inheritdoc cref="ITypedCode16.GetCode"/>
-    public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
+    public dynamic GetCode(string path, NoParamOrder npo = default, string className = default)
         => CompileCodeHlp.CreateInstance(path /*relativePath: (this as IGetCodePath).CreateInstancePath*/, name: className);
 
     #region MyContext & UniqueKey
@@ -200,28 +200,28 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     #region File Response / Download
 
     /// <inheritdoc cref="IDynamicWebApi.File"/>
-    public dynamic File(NoParamOrder noParamOrder = default,
+    public dynamic File(NoParamOrder npo = default,
         bool? download = null,
         string virtualPath = null,
         string contentType = null,
         string fileDownloadName = null,
         object contents = null
-    ) =>
-        new OqtWebApiShim(response: Response, this).File(noParamOrder, download, virtualPath, contentType, fileDownloadName, contents);
+    ) => new OqtWebApiShim(response: Response, owner: this)
+        .File(download: download, virtualPath: virtualPath, contentType: contentType, fileDownloadName: fileDownloadName, contents: contents);
 
     #endregion
 
     #region As / AsList WIP v17
 
     /// <inheritdoc />
-    public T As<T>(object source, NoParamOrder protector = default, bool mock = default)
+    public T As<T>(object source, NoParamOrder npo = default, bool mock = default)
         where T : class, ICanWrapData
-        => CodeApi.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
+        => CodeApi.Cdf.AsCustom<T>(source: source, npo: npo, mock: mock);
 
     /// <inheritdoc />
-    public IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
+    public IEnumerable<T> AsList<T>(object source, NoParamOrder npo = default, bool nullIfNull = default)
         where T : class, ICanWrapData
-        => CodeApi.Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
+        => CodeApi.Cdf.AsCustomList<T>(source: source, npo: npo, nullIfNull: nullIfNull);
 
     #endregion
 

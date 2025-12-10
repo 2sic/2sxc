@@ -26,7 +26,7 @@ public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPa
 
     /// <inheritdoc />
     public string To(
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         int? pageId = null,
         string? api = null,
         object? parameters = null,
@@ -111,7 +111,7 @@ public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPa
         string? url = default,
         object? settings = default,
         object? factor = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         IField? field = default,
         object? width = default,
         object? height = default,
@@ -134,7 +134,7 @@ public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPa
         // Get the image-url(s) as needed
         // Note that srcset is false, so it won't generate a bunch of sources, just one - which is how the API works
         // Anybody that wants a srcset must use the new IImageService for that
-        var imageUrl = imgLinker.Image(url: expandedUrl, settings: settings, field: field, factor: factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
+        var imageUrl = imgLinker.ImageUrl(url: expandedUrl, settings: settings, field: field, factor: factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
             scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: strParams,
             executionContext: ExCtxOrNull);
 

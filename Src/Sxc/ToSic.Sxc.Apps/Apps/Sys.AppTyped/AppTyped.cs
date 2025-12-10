@@ -55,11 +55,11 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager<T
         .Setup(Cdf);
 
     /// <inheritdoc />
-    public ITypedQuery? GetQuery(string? name = default, NoParamOrder noParamOrder = default, IDataSourceLinkable? attach = default, object? parameters = default)
+    public ITypedQuery? GetQuery(string? name = default, NoParamOrder npo = default, IDataSourceLinkable? attach = default, object? parameters = default)
     {
         var opts = new DataSourceOptionsMs(this, () => App.AppDataConfig.LookUpEngine);
         var queryMicroService = new GetQueryMs<TypedQuery>(queryManager, opts, Log);
-        var query = queryMicroService.GetQuery(name, noParamOrder, attach, parameters);
+        var query = queryMicroService.GetQuery(name, npo, attach, parameters);
         query?.Setup(Cdf);
         return query;
     }
@@ -86,7 +86,7 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager<T
     public IFolder Folder => field ??= (this as IAppTyped).FolderAdvanced();
 
     /// <inheritdoc />
-    public IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string? location = default)
+    public IFolder FolderAdvanced(NoParamOrder npo = default, string? location = default)
         => new AppAssetFolderMain(App.AppPathsForTyped, App.Folder, AppAssetsHelpers.DetermineShared(location) ?? App.AppReaderForTyped.IsShared());
 
     /// <inheritdoc />

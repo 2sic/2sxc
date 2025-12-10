@@ -7,9 +7,9 @@ public class MockPageService: IPageService
 {
     public string Activate(params string[] keys) => "";
 
-    public string Activate(NoParamOrder noParamOrder = default, bool condition = true, params string[] features) => "";
+    public string Activate(NoParamOrder npo = default, bool condition = true, params string[] features) => "";
 
-    public IRawHtmlString AssetAttributes(NoParamOrder noParamOrder = default, bool optimize = true, int priority = 0,
+    public IRawHtmlString AssetAttributes(NoParamOrder npo = default, bool optimize = true, int priority = 0,
         string position = null, bool whitelist = true) =>
         new RawHtmlString("");
 
@@ -35,13 +35,15 @@ public class MockPageService: IPageService
 
     public string AddJsonLd(object jsonObject) => "";
 
-    public string AddIcon(string path, NoParamOrder noParamOrder = default, string rel = "", int size = 0, string type = null) => "";
+    public string AddIcon(string path, NoParamOrder npo = default, string rel = "", int size = 0, string type = null) => "";
 
-    public string AddIconSet(string path, NoParamOrder noParamOrder = default, object favicon = null, IEnumerable<string> rels = null,
+    public string AddIconSet(string path, NoParamOrder npo = default, object favicon = null, IEnumerable<string> rels = null,
         IEnumerable<int> sizes = null) =>
         "";
 
-    public string TurnOn(object runOrSpecs, NoParamOrder noParamOrder = default, object require = default, object data = default,
+    public List<string> FeatureKeysAdded { get; }
+
+    public string TurnOn(object runOrSpecs, NoParamOrder npo = default, object require = default, object data = default,
         IEnumerable<object> args = default, bool condition = true, bool? noDuplicates = default, string addContext = default) =>
         "";
 

@@ -37,14 +37,14 @@ public interface ICacheService
     /// This is used for complex setups where the same specs will be reused for multiple operations.
     /// </summary>
     /// <param name="key">The main cache key (name) to use. It will be extended internally, to prevent collisions, so it can be fairly short.</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="regionName">a cache region to segment the cache into multiple regions</param>
     /// <param name="shared">
     /// If set to `true` it will make this key available on other apps which access the data with allApps = `true`.
     /// By default, each app has its own region, preventing key collisions between apps.
     /// </param>
     /// <returns></returns>
-    ICacheSpecs CreateSpecs(string key, NoParamOrder protector = default, string? regionName = default, bool? shared = default);
+    ICacheSpecs CreateSpecs(string key, NoParamOrder npo = default, string? regionName = default, bool? shared = default);
 
     /// <summary>
     /// Check if the cache contains data for the given specs.
@@ -70,39 +70,39 @@ public interface ICacheService
     /// Get data from the cache of the given type for the given specs, with optional fallback.
     /// </summary>
     /// <param name="specs"></param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback"></param>
-    T? Get<T>(ICacheSpecs specs, NoParamOrder protector = default, T? fallback = default);
+    T? Get<T>(ICacheSpecs specs, NoParamOrder npo = default, T? fallback = default);
 
     ///// <summary>
     ///// Get data from the cache of the given type for the given key, with optional fallback.
     ///// </summary>
     ///// <typeparam name="T"></typeparam>
     ///// <param name="key"></param>
-    ///// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    ///// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     ///// <param name="fallback"></param>
     ///// <returns></returns>
-    //T Get<T>(string key, NoParamOrder protector = default, T fallback = default);
+    //T Get<T>(string key, NoParamOrder npo = default, T fallback = default);
 
     ///// <summary>
     ///// Get or set data in the cache for the given key, with optional generation and specs-tweaking.
     ///// </summary>
     ///// <typeparam name="T"></typeparam>
     ///// <param name="key"></param>
-    ///// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    ///// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     ///// <param name="generate"></param>
     ///// <returns></returns>
-    //T GetOrSet<T>(string key, NoParamOrder protector = default, Func<T> generate = default);
+    //T GetOrSet<T>(string key, NoParamOrder npo = default, Func<T> generate = default);
 
     /// <summary>
     /// Get or set data in the cache for the given specs, with optional generation.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="specs"></param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="generate"></param>
     /// <returns></returns>
-    T? GetOrSet<T>(ICacheSpecs specs, NoParamOrder protector = default, Func<T>? generate = default);
+    T? GetOrSet<T>(ICacheSpecs specs, NoParamOrder npo = default, Func<T>? generate = default);
 
     /// <summary>
     /// Try to get data of the specified type from the cache for the given specs.
@@ -142,8 +142,8 @@ public interface ICacheService
     ///// <typeparam name="T"></typeparam>
     ///// <param name="key"></param>
     ///// <param name="value"></param>
-    ///// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    //void Set<T>(string key, T value, NoParamOrder protector = default);
+    ///// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    //void Set<T>(string key, T value, NoParamOrder npo = default);
 
     /// <summary>
     /// Set a value in the cache.
@@ -151,6 +151,6 @@ public interface ICacheService
     /// <typeparam name="T"></typeparam>
     /// <param name="specs"></param>
     /// <param name="value"></param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    void Set<T>(ICacheSpecs specs, T value, NoParamOrder protector = default);
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    void Set<T>(ICacheSpecs specs, T value, NoParamOrder npo = default);
 }

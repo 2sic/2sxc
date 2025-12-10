@@ -159,8 +159,8 @@ public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHe
     [PrivateApi] string IGetCodePath.CreateInstancePath { get; set; }
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
-    public virtual dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
-        => RzrHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError: throwOnError);
+    public virtual dynamic CreateInstance(string virtualPath, NoParamOrder npo = default, string name = null, string relativePath = null, bool throwOnError = true)
+        => RzrHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
 
     #endregion
 

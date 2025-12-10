@@ -5,20 +5,12 @@ using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Eav.WebApi.Sys.Languages;
-using ToSic.Eav.WebApi.Sys.Dto;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Backend.AppStack;
 using ToSic.Sxc.Backend.ImportExport;
 using ToSic.Sxc.Services;
 using ToSic.Sys.Configuration;
 using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
-using System.Text.Json;
-
-#if NETFRAMEWORK
-using THttpResponseType = System.Net.Http.HttpResponseMessage;
-#else
-using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
-#endif
 
 namespace ToSic.Sxc.Backend.Admin;
 
@@ -39,13 +31,12 @@ public class AppControllerReal(
     LazySvc<IAppReaderFactory> appReadersLazy,
     LazySvc<AppStackBackend> appStackBackendLazy,
     LazySvc<IJsonService> json,
-    IGlobalConfiguration globalConfiguration,
-    LazySvc<ExtensionsBackend> extensionsBackendLazy)
+    IGlobalConfiguration globalConfiguration)
     : Services_ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
         connect:
         [
             appsBackendLazy, workAppsRemove, exportAppLazy, importAppLazy, appBuilderLazy, resetAppLazy,
-            systemManagerLazy, languagesBackendLazy, appReadersLazy, appStackBackendLazy, json, globalConfiguration, extensionsBackendLazy
+            systemManagerLazy, languagesBackendLazy, appReadersLazy, appStackBackendLazy, json, globalConfiguration
         ])
 {
     public const string LogSuffix = "AppCon";
@@ -140,11 +131,4 @@ public class AppControllerReal(
         var result = importAppLazy.Value.InstallPendingApps(zoneId, pendingApps);
         return l.ReturnAsOk(result);
     }
-
-    // Extensions
-    public ExtensionsResultDto Extensions(int appId)
-        => extensionsBackendLazy.Value.GetExtensions(appId);
-
-    public bool Extensions(int zoneId, int appId, string name, JsonElement configuration)
-        => extensionsBackendLazy.Value.SaveExtension(zoneId, appId, name, configuration);
 }

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using ToSic.Eav.WebApi.Sys.Helpers.Json;
 using JsonOptions = ToSic.Eav.Serialization.Sys.Json.JsonOptions;
 
 
@@ -49,7 +48,8 @@ public class SystemTextJsonFormatterAttribute : ActionFilterAttribute, IControll
 
             // Oqtane 3.2.0 and older had NewtonsoftJsonOutputFormatter that we need to remove for our endpoints
             var newtonsoftJsonOutputFormatterType = Type.GetType("NewtonsoftJsonOutputFormatter");
-            if (newtonsoftJsonOutputFormatterType != null) objectResult.Formatters.RemoveType(newtonsoftJsonOutputFormatterType);
+            if (newtonsoftJsonOutputFormatterType != null)
+                objectResult.Formatters.RemoveType(newtonsoftJsonOutputFormatterType);
         }
         else
         {
@@ -60,32 +60,48 @@ public class SystemTextJsonFormatterAttribute : ActionFilterAttribute, IControll
     private static SystemTextJsonOutputFormatter SystemTextJsonMediaTypeFormatterFactory(ActionExecutedContext context)
     {
         var jsonFormatterAttribute 
-            = GetCustomAttributes(((ControllerActionDescriptor)context.ActionDescriptor).MethodInfo).OfType<JsonFormatterAttribute>().FirstOrDefault()
-              ?? GetCustomAttributes(context.Controller.GetType()).OfType<JsonFormatterAttribute>().FirstOrDefault();
+            = GetCustomAttributes(((ControllerActionDescriptor)context.ActionDescriptor).MethodInfo)
+                  .OfType<JsonFormatterAttribute>()
+                  .FirstOrDefault()
+              ?? GetCustomAttributes(context.Controller.GetType())
+                  .OfType<JsonFormatterAttribute>()
+                  .FirstOrDefault();
 
         // creating JsonConverter, JsonOptions and SystemTextJsonOutputFormatter per request
         // instead of using global, static, singleton version because this is for API only
-        var eavJsonConverterFactory = GetEavJsonConverterFactory(jsonFormatterAttribute?.EntityFormat, context);
-
-        var jsonSerializerOptions = JsonOptions.UnsafeJsonWithoutEncodingHtmlOptionsFactory(eavJsonConverterFactory);
-
-        JsonFormatterHelpers.SetCasing(jsonFormatterAttribute?.Casing ?? Casing.Unspecified, jsonSerializerOptions);
-
-        return new(jsonSerializerOptions);
+        return JsonConverterFactoryHelpers.CreateNewFormatterFactory(
+            context.HttpContext.RequestServices,
+            jsonFormatterAttribute,
+            () => Casing.Unspecified,
+            jsonSerializerOptions => new SystemTextJsonOutputFormatter(jsonSerializerOptions)
+        );
     }
 
-    private static EavJsonConverterFactory? GetEavJsonConverterFactory(EntityFormat? entityFormat, ActionExecutedContext context)
-    {
-        switch (entityFormat)
-        {
-            case null:
-            case EntityFormat.Light:
-                return context.HttpContext.RequestServices.Build<EavJsonConverterFactory>();
-            case EntityFormat.None:
-            default:
-                return null;
-        }
-    }
+
+    //private static SystemTextJsonOutputFormatter SystemTextJsonMediaTypeFormatterFactory(ActionExecutedContext context)
+    //{
+    //    var jsonFormatterAttribute 
+    //        = GetCustomAttributes(((ControllerActionDescriptor)context.ActionDescriptor).MethodInfo)
+    //              .OfType<JsonFormatterAttribute>()
+    //              .FirstOrDefault()
+    //          ?? GetCustomAttributes(context.Controller.GetType())
+    //              .OfType<JsonFormatterAttribute>()
+    //              .FirstOrDefault();
+
+    //    // creating JsonConverter, JsonOptions and SystemTextJsonOutputFormatter per request
+    //    // instead of using global, static, singleton version because this is for API only
+    //    var eavJsonConverterFactory = JsonConverterFactoryHelpers.NewEavJsonConverterFactoryOrNull(
+    //        jsonFormatterAttribute?.EntityFormat,
+    //        context.HttpContext.RequestServices
+    //    );
+
+    //    var jsonSerializerOptions = JsonOptions.UnsafeJsonWithoutEncodingHtmlOptionsFactory(eavJsonConverterFactory);
+
+    //    jsonSerializerOptions.SetCasing(jsonFormatterAttribute?.Casing ?? Casing.Unspecified);
+
+    //    return new(jsonSerializerOptions);
+    //}
+
 }
 
 #endif

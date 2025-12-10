@@ -36,7 +36,7 @@ internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IVi
     public IFolder Folder => field ??= FolderAdvanced();
 
     [PrivateApi]
-    private IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string? location = default)
+    private IFolder FolderAdvanced(NoParamOrder npo = default, string? location = default)
         => new CmsViewFolder(this, block.App, AppAssetsHelpers.DetermineShared(location) ?? _view.IsShared);
 
     [field: AllowNull, MaybeNull]

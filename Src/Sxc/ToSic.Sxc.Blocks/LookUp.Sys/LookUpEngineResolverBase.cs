@@ -6,8 +6,8 @@ using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.LookUp.Sys;
 
-public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> builtInSources, string logName, NoParamOrder protect = default, object[]? connect = default)
-    : ServiceBase(logName, protect, connect), ILookUpEngineResolver
+public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> builtInSources, string logName, NoParamOrder npo = default, object[]? connect = default)
+    : ServiceBase(logName, npo, connect), ILookUpEngineResolver
 {
     /// <summary>
     /// Get the lookup engine - if possible from cache, otherwise create a new one

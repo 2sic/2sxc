@@ -9,7 +9,7 @@ partial record ToolbarBuilder
     public IToolbarBuilder Button(
         string name,
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,

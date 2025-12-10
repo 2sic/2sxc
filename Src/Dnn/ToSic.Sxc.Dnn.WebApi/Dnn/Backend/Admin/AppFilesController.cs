@@ -49,12 +49,14 @@ public class AppFilesController() : DnnSxcControllerBase(RealController.LogSuffi
         => Real.Asset(appId: appId, template: template, templateId: templateId, path: path, global: global);
 
     [HttpGet]
-    public TemplatesDto GetTemplates(string purpose = null, string type = null) => Real.GetTemplates(purpose, type);
+    public TemplatesDto GetTemplates(string purpose = null, string type = null)
+        => Real.GetTemplates(purpose, type);
 
     [HttpGet]
     public TemplatePreviewDto Preview(int appId, string path, string templateKey, bool global = false)
         => Real.Preview(appId, path, templateKey, global);
 
     [HttpGet]
-    public AllFilesDto AppFiles(int appId, string path = null, string mask = null) => Real.AppFiles(appId, path, mask);
+    public AllFilesDto AppFiles(int appId, string path = null, string mask = null)
+        => Real.AppFiles(appId, path, mask);
 }

@@ -24,10 +24,10 @@ public class CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator)
     #endregion
 
 
-    internal DynamicJacketBase? Json2Jacket(string? json, NoParamOrder noParamOrder = default, string? fallback = default)
+    internal DynamicJacketBase? Json2Jacket(string? json, NoParamOrder npo = default, string? fallback = default)
         => IfJsonTryConvertToJacket(AsJsonNode(json, fallback)).Final;
 
-    public ITyped? JsonToTyped(string json, NoParamOrder noParamOrder = default, string? fallback = default)
+    public ITyped? JsonToTyped(string json, NoParamOrder npo = default, string? fallback = default)
     {
         if (!json.HasValue())
             return null;
@@ -37,7 +37,7 @@ public class CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator)
         return result.Final;
     }
 
-    public IEnumerable<ITyped>? JsonToTypedList(string json, NoParamOrder noParamOrder = default, string? fallback = default)
+    public IEnumerable<ITyped>? JsonToTypedList(string json, NoParamOrder npo = default, string? fallback = default)
     {
         if (!json.HasValue())
             return null;

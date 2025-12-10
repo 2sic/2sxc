@@ -119,14 +119,14 @@ public interface ITypedApi
     /// If null was provided, it will return null.
     /// </summary>
     /// <param name="data">An original object which can be converted to a TypedItem, such as a <see cref="IEntity"/> .</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertiesRequired), default `true`</param>
     /// <param name="mock">Specify that the data is fake/mock data, which should pretend to be an Item. Default is `false`</param>
     /// <returns></returns>
     /// <remarks>New in v16.02</remarks>
     ITypedItem? AsItem(
         object data,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         bool? propsRequired = default,
         bool? mock = default
     );
@@ -135,13 +135,13 @@ public interface ITypedApi
     /// Convert an object containing a list of Entities or similar to a list of <see cref="ITypedItem"/>s.
     /// </summary>
     /// <param name="list">The original list which is usually a list of <see cref="IEntity"/> objects.</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertiesRequired), default `true`</param>
     /// <returns></returns>
     /// <remarks>New in v16.01</remarks>
     IEnumerable<ITypedItem> AsItems(
         object list,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         bool? propsRequired = default
     );
 
@@ -156,19 +156,19 @@ public interface ITypedApi
     /// If you have an array of such objects, use <see cref="AsTypedList"/>.
     /// </summary>
     /// <param name="data"></param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertiesRequired), default `true`</param>
     /// <returns></returns>
-    ITyped AsTyped(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default);
+    ITyped AsTyped(object data, NoParamOrder npo = default, bool? propsRequired = default);
 
     /// <summary>
     /// Create a list
     /// </summary>
     /// <param name="list">List/Enumerable object containing a bunch of items to make typed</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertiesRequired), default `true`</param>
     /// <returns></returns>
-    IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default);
+    IEnumerable<ITyped> AsTypedList(object list, NoParamOrder npo = default, bool? propsRequired = default);
 
     /// <summary>
     /// Create a typed object which will provide all the properties of the things wrapped inside it.
@@ -194,13 +194,13 @@ public interface ITypedApi
     /// </summary>
     /// <typeparam name="T">the target type</typeparam>
     /// <param name="source">the source object - an `IEntity` or `ITypedItem`</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="mock">if `true` will return a fake when `source` is `null` - otherwise a wrapper item with empty-contents</param>
     /// <returns></returns>
     /// <remarks>
     /// Released v17.05
     /// </remarks>
-    T As<T>(object source, NoParamOrder protector = default, bool mock = false)
+    T As<T>(object source, NoParamOrder npo = default, bool mock = false)
         where T : class, ICanWrapData;
 
     /// <summary>
@@ -209,12 +209,12 @@ public interface ITypedApi
     /// </summary>
     /// <typeparam name="T">the target type</typeparam>
     /// <param name="source">the source object - a List/Enumerable of `IEntity` or `ITypedItem`</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="nullIfNull">if `true` will return null when `source` is `null` - otherwise a wrapper item with empty-contents</param>
     /// <returns></returns>
     /// <remarks>
     /// Release in v17.05
     /// </remarks>
-    IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
+    IEnumerable<T> AsList<T>(object source, NoParamOrder npo = default, bool nullIfNull = default)
         where T : class, ICanWrapData;
 }

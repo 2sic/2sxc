@@ -113,14 +113,14 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
     /// <inheritdoc cref="IDynamicCodeDocs.AsAdam" />
     public IFolder AsAdam(ICanBeEntity item, string fieldName) => CodeApi.AsAdam(item, fieldName);
 
-    public dynamic File(NoParamOrder noParamOrder = default, bool? download = null, string virtualPath = null,
+    public dynamic File(NoParamOrder npo = default, bool? download = null, string virtualPath = null,
         string contentType = null, string fileDownloadName = null, object contents = null) =>
         throw new NotSupportedException("Not implemented. " + ErrRecommendedNamespaces);
 
     /// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
-    public IFile SaveInAdam(NoParamOrder noParamOrder = default, Stream stream = null, string fileName = null, string contentType = null,
+    public IFile SaveInAdam(NoParamOrder npo = default, Stream stream = null, string fileName = null, string contentType = null,
         Guid? guid = null, string field = null, string subFolder = "")
-        => DynHlp.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
+        => DynHlp.SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
 
     #endregion
 
@@ -148,7 +148,7 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
 
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
-    public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
+    public dynamic CreateInstance(string virtualPath, NoParamOrder npo = default, string name = null, string relativePath = null, bool throwOnError = true)
         => CompileCodeHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
 
     #endregion

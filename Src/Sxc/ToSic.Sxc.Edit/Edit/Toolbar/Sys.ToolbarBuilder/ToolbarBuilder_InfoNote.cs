@@ -5,18 +5,18 @@ namespace ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
 partial record ToolbarBuilder
 {
     public IToolbarBuilder Info(
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? link = default,
         string? target = default,
         Func<ITweakButton, ITweakButton>? tweak = default
-    ) => InfoLikeButton(noParamOrder: noParamOrder,
+    ) => InfoLikeButton(npo: npo,
         verb: "info",
         paramsMergeInTweak: link != default ? new { link, target } : null,
         tweak: tweak);
 
 
     private IToolbarBuilder InfoLikeButton(
-        NoParamOrder noParamOrder,
+        NoParamOrder npo,
         string verb,
         object? paramsMergeInTweak,
         Func<ITweakButton, ITweakButton>? tweak

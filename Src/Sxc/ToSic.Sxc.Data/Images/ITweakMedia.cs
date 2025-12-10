@@ -1,4 +1,5 @@
 ﻿using ToSic.Sxc.Edit.Toolbar;
+using ToSic.Sxc.Services.Tweaks;
 
 namespace ToSic.Sxc.Images;
 
@@ -30,22 +31,24 @@ public interface ITweakMedia
     /// Name of an existing configuration, such as "Lightbox".
     /// If not specified (null) will default to "Content".
     /// </param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="tweak">Tweak API to customize further settings</param>
     public ITweakMedia Resize(
         string? name,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakResize, ITweakResize>? tweak = default
     );
 
     ITweakMedia Resize(
         IResizeSettings settings,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakResize, ITweakResize>? tweak = default
     );
     // Note: Recipe is missing
 
     #endregion
+
+    #region Lightbox
 
     /// <summary>
     /// Force Lightbox to be enabled (or disabled)
@@ -63,6 +66,10 @@ public interface ITweakMedia
 
     ITweakMedia LightboxDescription(string description);
 
+    #endregion
+
+    #region Img
+
     ITweakMedia ImgClass(string imgClass);
 
     ITweakMedia ImgAlt(string alt);
@@ -75,6 +82,10 @@ public interface ITweakMedia
 
     ITweakMedia ImgAttributes(object attributes);
 
+    #endregion
+
+    #region Picture
+
     ITweakMedia PictureClass(string pictureClass);
 
     ITweakMedia PictureAttributes(IDictionary<string, string> attributes);
@@ -83,7 +94,27 @@ public interface ITweakMedia
 
     ITweakMedia PictureAttributes(object attributes);
 
+    #endregion
+
+    #region Toolbar
+
     ITweakMedia Toolbar(bool enabled);
 
     ITweakMedia Toolbar(IToolbarBuilder toolbar);
+
+    #endregion
+
+    #region TweakInput - attempted in v20.09 but doesn't work - reason is we would have to pass the tweak very, very deep into the system which we stopped
+
+    ///// <inheritdoc cref="ITweakInput{IInput}.Input(IInput, NoParamOrder)"/>
+    //ITweakMedia Input(string replace, NoParamOrder npo = default);
+
+    ///// <inheritdoc cref="ITweakInput{IInput}.Input(Func{IInput}, NoParamOrder)"/>
+    //ITweakMedia Input(Func<string> func, NoParamOrder npo = default);
+
+    ///// <inheritdoc cref="ITweakInput{IInput}.Input(Func{IInput, IInput}, NoParamOrder)"/>
+    //ITweakMedia Input(Func<string, string> func, NoParamOrder npo = default);
+
+
+    #endregion
 }

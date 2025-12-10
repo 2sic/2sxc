@@ -125,14 +125,14 @@ public partial interface IPageService
     /// Add an Icon header tag to the Page. 
     /// </summary>
     /// <param name="path">Path to the image/icon file</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="rel">the rel-text, default is 'icon'. common terms are also 'shortcut icon' or 'apple-touch-icon'</param>
     /// <param name="size">Will be used in size='#x#' tag; only relevant if you want to provide multiple separate sizes</param>
     /// <param name="type">An optional type. If not provided, will be auto-detected from known types or remain empty</param>
     /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.AddIcon(...)`</returns>
     string AddIcon(
         string path,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string rel = "",
         int size = 0,
         string? type = null);
@@ -141,18 +141,22 @@ public partial interface IPageService
     /// Add a set of icons to the page
     /// </summary>
     /// <param name="path">Path to the image/icon file</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="favicon">path to favicon, default is '/favicon.ico' </param>
     /// <param name="rels"></param>
     /// <param name="sizes"></param>
     /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.AddIconSet(...)`</returns>
     string AddIconSet(
         string path,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? favicon = null,
         IEnumerable<string>? rels = null,
         IEnumerable<int>? sizes = null);
 
     #endregion
 
+    /// <summary>
+    /// List of all feature keys which were ever added. Will never be cleared.
+    /// </summary>
+    internal List<string> FeatureKeysAdded { get; }
 }

@@ -6,15 +6,15 @@ namespace ToSic.Sxc.Data.Sys.Typed;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class HasKeysHelper
 {
-    public static bool IsEmpty(ITyped item, string name, NoParamOrder noParamOrder, bool? blankIs)
+    public static bool IsEmpty(ITyped item, string name, NoParamOrder npo, bool? blankIs)
     {
-        var value = item.Get(name, noParamOrder, required: false);
+        var value = item.Get(name, npo, required: false);
         return IsEmpty(value, blankIs);
     }
 
-    public static bool IsNotEmpty(ITyped item, string name, NoParamOrder noParamOrder, bool? blankIs)
+    public static bool IsNotEmpty(ITyped item, string name, NoParamOrder npo, bool? blankIs)
     {
-        var value = item.Get(name, noParamOrder, required: false);
+        var value = item.Get(name, npo, required: false);
         return IsNotEmpty(value, blankIs);
     }
 

@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.Entities;
+using ToSic.Eav.Data.Sys.PropertyLookup;
 using ToSic.Eav.Metadata;
 using ToSic.Sxc.Data.Sys.Dynamic;
 using ToSic.Sxc.Data.Sys.Factory;

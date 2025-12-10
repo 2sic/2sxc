@@ -12,7 +12,7 @@ public interface IPageFeatures
     /// </summary>
     /// <param name="keys"></param>
     /// <returns>The keys it just activated (after trim/filter for empty)</returns>
-    IEnumerable<string> Activate(params string[] keys);
+    IEnumerable<string> Activate(string[] keys);
         
     /// <summary>
     /// Get a list of all features incl. dependent features for adding to the page
@@ -36,13 +36,4 @@ public interface IPageFeatures
     /// </summary>
     /// <param name="newFeature"></param>
     void FeaturesFromSettingsAdd(PageFeatureFromSettings newFeature);
-
-    ///// <summary>
-    ///// Get the manual features which were added - skip those which were previously already added
-    ///// </summary>
-    ///// <param name="specs"></param>
-    ///// <param name="log"></param>
-    ///// <returns></returns>
-    //List<PageFeatureFromSettings> FeaturesFromSettingsGetNew(RenderSpecs specs, ILog log);
-
 }

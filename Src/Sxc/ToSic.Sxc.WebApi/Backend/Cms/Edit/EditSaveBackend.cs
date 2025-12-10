@@ -148,8 +148,8 @@ public class EditSaveBackend(
     private Dictionary<Guid, int> DoSave(WorkEntities workAppEntities, List<BundleWithHeader<IEntity>> items, bool forceSaveAsDraft)
     {
         // only save entities that are
-        // a) not in a group
-        // b) in a group where the slot isn't marked as empty
+        // a. not in a group
+        // b. in a group where the slot isn't marked as empty
         var entitiesToSave = items
             .Where(e => !e.Header.IsContentBlockMode || !e.Header.IsEmpty)
             .ToList();

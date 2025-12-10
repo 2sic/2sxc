@@ -30,13 +30,13 @@ public partial interface IToolbarBuilder
     /// 
     /// </summary>
     /// <param name="root"></param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="message">Optional message or a resources key such as `Resources.ToolbarShowingDemo`</param>
     /// <returns></returns>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP 16.02")]
     IToolbarBuilder DetectDemo(
         ICanBeEntity root,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? message = default);
 
     /// <summary>
@@ -69,7 +69,7 @@ public partial interface IToolbarBuilder
     /// <summary>
     /// Specify an audience for the toolbar - to activate even if the user wouldn't normally see it.
     /// </summary>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="everyone">default is `null`, set to true to make everybody see this.</param>
     /// <param name="roleNames">list/array of role names which should _also_ see the toolbar (new v20)</param>
     /// <param name="denyRoleNames">list/array of role names which should _never_ see the toolbar - has precedence over allow (new v20)</param>
@@ -85,7 +85,7 @@ public partial interface IToolbarBuilder
     /// * updated with roleNames/denyRoleNames v20
     /// </remarks>
     IToolbarBuilder Audience(
-        NoParamOrder protector = default,
+        NoParamOrder npo = default,
         bool? everyone = default,
         IEnumerable<string>? roleNames = default,
         IEnumerable<string>? denyRoleNames = default);

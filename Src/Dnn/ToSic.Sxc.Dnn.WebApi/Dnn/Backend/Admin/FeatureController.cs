@@ -21,7 +21,8 @@ public class FeatureController() : DnnSxcControllerRoot(RealController.LogSuffix
 
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public FeatureStateDto Details(string nameId) => Real.Details(nameId);
+    public FeatureStateDto Details(string nameId)
+        => Real.Details(nameId);
 
     /// <summary>
     /// POST updated features JSON configuration.
@@ -31,5 +32,6 @@ public class FeatureController() : DnnSxcControllerRoot(RealController.LogSuffix
     /// </remarks>
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public bool SaveNew([FromBody] List<FeatureStateChange> changes) => Real.SaveNew(changes);
+    public bool SaveNew([FromBody] List<FeatureStateChange> changes)
+        => Real.SaveNew(changes);
 }

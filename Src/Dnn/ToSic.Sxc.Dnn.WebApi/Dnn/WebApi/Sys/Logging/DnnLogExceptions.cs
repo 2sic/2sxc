@@ -16,13 +16,14 @@ public class DnnLogExceptions : ExceptionFilterAttribute
         try
         {
             LogStoreEntry logEntry = null;
-            if (context.Request?.Properties.TryGetTyped(DnnConstants.EavLogKey, out LogStoreEntry logEntryObj) ?? false)
+            if (context.Request?.Properties.TryGetTyped(EavLogKey, out LogStoreEntry logEntryObj) ?? false)
                 logEntry = logEntryObj;
-            if (logEntry != null) // context.Request?.Properties.ContainsKey(DnnConstants.EavLogKey) ?? false)
+
+            if (logEntry != null)
             {
                 // must to ContainsKey checks, otherwise we get too many errors which is a problem while debugging
                 // var log = logEntry.Log; // context.Request.Properties[DnnConstants.EavLogKey] as ILog;
-                var dnnContext = context.Request.Properties.TryGetValue(DnnConstants.DnnContextKey, out var ctxObj)
+                var dnnContext = context.Request.Properties.TryGetValue(DnnContextKey, out var ctxObj)
                     ? ctxObj as IDnnContext
                     : null;
                 DnnLogging.LogToDnn("2sxc-Api", "Auto-Log Exception", logEntry.Log, dnnContext, force: true);

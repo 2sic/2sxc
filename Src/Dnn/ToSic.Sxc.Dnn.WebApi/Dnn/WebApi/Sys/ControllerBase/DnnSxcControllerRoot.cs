@@ -4,7 +4,7 @@ using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
-[DnnLogWebApi, JsonOnlyResponse]
+[DnnLogWebApi, ConfigureJsonOnlyResponse]
 [PrivateApi("This controller is never used publicly, you can rename any time you want")]
 // Can't hide in Intellisense, because that would hide it for all derived classes too
 // [ShowApiWhenReleased(ShowApiMode.Never)]

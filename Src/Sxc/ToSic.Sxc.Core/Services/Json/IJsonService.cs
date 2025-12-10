@@ -71,7 +71,7 @@ public interface IJsonService
     /// > For arrays, use <see cref="ToTypedList"/>.
     /// </summary>
     /// <param name="json">The string containing json</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">
     /// Alternate string to use, if the original json can't parse.
     /// Can also be null or the word "error" if you would prefer an error to be thrown.
@@ -85,7 +85,7 @@ public interface IJsonService
     /// New in 16.02
     /// </remarks>
     [PublicApi]
-    ITyped? ToTyped(string json, NoParamOrder noParamOrder = default, string? fallback = default, bool? propsRequired = default);
+    ITyped? ToTyped(string json, NoParamOrder npo = default, string? fallback = default, bool? propsRequired = default);
 
     /// <summary>
     /// Creates a list of <see cref="ITyped"/> wrappers around a json string containing an array of objects.
@@ -96,7 +96,7 @@ public interface IJsonService
     /// > For arrays, use <see cref="ToTypedList"/>.
     /// </summary>
     /// <param name="json">The string containing json</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">
     /// Alternate string to use, if the original json can't parse.
     /// Can also be null or the word "error" if you would prefer an error to be thrown.
@@ -109,6 +109,6 @@ public interface IJsonService
     /// <remarks>
     /// New in 16.04
     /// </remarks>
-    IEnumerable<ITyped>? ToTypedList(string json, NoParamOrder noParamOrder = default, string? fallback = default,
+    IEnumerable<ITyped>? ToTypedList(string json, NoParamOrder npo = default, string? fallback = default,
         bool? propsRequired = default);
 }

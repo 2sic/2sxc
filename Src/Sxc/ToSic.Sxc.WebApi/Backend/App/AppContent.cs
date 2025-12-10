@@ -12,6 +12,7 @@ using ToSic.Eav.WebApi.Sys.App;
 using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sxc.Apps.Sys.Api01;
 using ToSic.Sxc.Data.Sys.Convert;
+using ToSic.Sys.OData;
 using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Utils;
 using static ToSic.Eav.Apps.Sys.Api01.SaveApiAttributes;
@@ -52,7 +53,7 @@ public class AppContent(
 
     #region Get Items
 
-    public IEnumerable<IDictionary<string, object>> GetItems(string contentType, string? appPath = default, string? oDataSelect = default)
+    public IEnumerable<IDictionary<string, object>> GetItems(string contentType, string? appPath = default, Uri? fullRequest = null)
     {
         var l = Log.Fn<IEnumerable<IDictionary<string, object>>>($"get entities type:{contentType}, path:{appPath}");
 
@@ -61,7 +62,7 @@ public class AppContent(
 
         var includeDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
         var result = api
-            .GetEntities(AppReader, contentType, includeDrafts, oDataSelect)
+            .GetEntities(AppReader, contentType, includeDrafts, fullRequest)
             .ToListOpt();
         return l.Return(result, "found: " + result.Count);
     }
@@ -76,8 +77,7 @@ public class AppContent(
     /// ...then process/finish
     /// </summary>
     /// <returns></returns>
-    public IDictionary<string, object> GetOne(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, 
-        string? appPath, string? oDataSelect)
+    public IDictionary<string, object> GetOne(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string? appPath, Uri? uri = null)
     {
         Log.A($"get and serialize after security check type:{contentType}, path:{appPath}");
 
@@ -89,7 +89,7 @@ public class AppContent(
         if (!permCheck.EnsureAny(GrantSets.ReadDraft))
             itm = getOne(AppReader.GetListPublished());
 
-        return InitEavAndSerializer(AppReader.AppId, Context.Permissions.IsContentAdmin, oDataSelect).Convert(itm)!;
+        return InitEavAndSerializer(AppReader.AppId, Context.Permissions.IsContentAdmin, uri).Convert(itm)!;
     }
 
 
@@ -223,7 +223,7 @@ public class AppContent(
 
     #region helpers / initializers to prep the EAV and Serializer
 
-    private IConvertToEavLight InitEavAndSerializer(int appId, bool userMayEdit, string? oDataSelect)
+    private IConvertToEavLight InitEavAndSerializer(int appId, bool userMayEdit, Uri? uri)
     {
         var l = Log.Fn<IConvertToEavLight>($"init eav for a#{appId}");
         // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
@@ -231,8 +231,8 @@ public class AppContent(
         ser.WithGuid = true;
         var converter = (ConvertToEavLightWithCmsInfo)ser;
         converter.WithEdit = userMayEdit;
-        if (oDataSelect.HasValue())
-            converter.AddSelectFields([.. oDataSelect.CsvToArrayWithoutEmpty()]);
+        if (uri is not null)
+            converter.AddSelectFields([.. SystemQueryOptionsParser.Parse(uri).Select]);
 
         return l.Return(ser);
     }

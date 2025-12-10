@@ -103,7 +103,8 @@ public class OqtStartup : IServerStartup
         globalConfig.AssetsVirtualUrl($"~/Modules/{OqtConstants.PackageName}/assets/");
         globalConfig.SharedAppsFolder($"/{OqtConstants.AppRoot}/{OqtConstants.SharedAppFolder}/"); // "/2sxc/Shared"
         globalConfig.TempAssemblyFolder(Path.Combine(env.ContentRootPath, FolderConstants.DataFolderProtected, FolderConstants.TempAssemblyFolder)); // ".../App_Data/2sxc.bin"
-        globalConfig.CryptoFolder(Path.Combine(env.ContentRootPath, FolderConstants.DataFolderProtected, FolderConstants.CryptoFolder));
+        globalConfig.CshtmlAssemblyFolder(Path.Combine(env.ContentRootPath, FolderConstants.DataFolderProtected, FolderConstants.CshtmlAssemblyFolder)); // ".../App_Data/2sxc.bin.cshtml"
+        globalConfig.CryptoFolder(Path.Combine(env.ContentRootPath, FolderConstants.DataFolderProtected, FolderConstants.CryptoFolder)); // ".../App_Data/2sxc.crypto"
 
         // ensure we have an instance
         var assemblyResolver = serviceProvider.Build<AssemblyResolver>();

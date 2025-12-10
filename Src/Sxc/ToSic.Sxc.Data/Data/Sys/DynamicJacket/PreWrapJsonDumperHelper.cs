@@ -1,6 +1,7 @@
 ﻿using System.Text.Json.Nodes;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.PropertyDump;
+using ToSic.Eav.Data.Sys.PropertyLookup;
 
 namespace ToSic.Sxc.Data.Sys.DynamicJacket;
 internal class PreWrapJsonDumperHelper

@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Dnn.Install;
 
 partial class DnnEnvironmentInstaller
 {
-    public string? UpgradeMessages()
+    public string UpgradeMessages()
     {
         // Upgrade success check - show message if upgrade did not run successfully
         if (UpgradeComplete(false))

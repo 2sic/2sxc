@@ -9,7 +9,7 @@ internal static class ImageServiceTestAccessors
 
     public static IResizeSettings SettingsTac(this IImageService parent,
         object? settings = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakResize, ITweakResize>? tweak = null,
         object? factor = null,
         object? width = null,
@@ -21,7 +21,7 @@ internal static class ImageServiceTestAccessors
         object? aspectRatio = null,
         string? parameters = null,
         object? recipe = null
-    ) => parent.Settings(settings: settings, noParamOrder: noParamOrder, tweak: tweak,
+    ) => parent.Settings(settings: settings, npo: npo, tweak: tweak,
         factor: factor, width: width, height: height,
         quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
         parameters: parameters, recipe: recipe);

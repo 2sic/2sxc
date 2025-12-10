@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Nodes;
 using ToSic.Eav.Data.Sys.PropertyDump;
+using ToSic.Eav.Data.Sys.PropertyLookup;
 using ToSic.Eav.Data.Sys.PropertyStack;
 using ToSic.Sxc.Data.Sys.Typed;
 
@@ -16,8 +17,8 @@ internal class PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item)
 
     #region Keys
 
-    public override IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string>? only = default) 
-        => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, item.Select(p => p.Key));
+    public override IEnumerable<string> Keys(NoParamOrder npo = default, IEnumerable<string>? only = default) 
+        => TypedHelpers.FilterKeysIfPossible(npo, only, item.Select(p => p.Key));
 
     public override bool ContainsKey(string name)
     {

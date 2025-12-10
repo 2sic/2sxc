@@ -25,8 +25,10 @@ public record ResponsiveImage: ResponsiveBase
     private Img GenerateImg()
     {
         var img = base.Img;
-        if (!string.IsNullOrEmpty(SrcSet)) img = img.Srcset(SrcSet);
-        if (!string.IsNullOrEmpty(Sizes)) img = img.Sizes(Sizes);
+        if (!string.IsNullOrEmpty(SrcSet))
+            img = img.Srcset(SrcSet);
+        if (!string.IsNullOrEmpty(Sizes))
+            img = img.Sizes(Sizes);
         return img;
     }
 

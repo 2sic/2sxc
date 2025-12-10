@@ -9,7 +9,7 @@ public interface IRenderingHelper: IHasLog
     IRenderingHelper Init(IBlock block);
 
     string WrapInContext(string? content,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         int instanceId = 0,
         int contentBlockId = 0,
         bool editContext = false,

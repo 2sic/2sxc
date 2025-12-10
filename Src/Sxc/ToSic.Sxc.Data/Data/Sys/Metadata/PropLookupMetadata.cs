@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Metadata;
+﻿using ToSic.Eav.Data.Sys.PropertyLookup;
+using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Data.Sys.Metadata;
 
@@ -11,7 +12,7 @@ internal class PropLookupMetadata(IHasMetadata parent, Func<bool> getDebug) : IP
         // check Entity is null (in cases where null-objects are asked for properties)
         if (parent.Metadata == null! /* paranoid */)
             return l.Return(PropReqResult.Null(path),"no parent with metadata");
-        path = path.KeepOrNew().Add("DynEnt", specs.Field);
+        path = path.Add("DynEnt", specs.Field);
 
         // Note: most of the following lines are copied from Metadata
         var list = parent.Metadata;

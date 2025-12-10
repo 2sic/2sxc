@@ -12,7 +12,7 @@ public class RazorConfiguration(RenderSpecs renderSpecs, ILog parentLog): Helper
     // It is currently empty and serves as a temporary structure for potential future use.
     // The class may be expanded with properties and methods as needed in the future.
 
-    public string? PartialCache(NoParamOrder protector = default,
+    public string? PartialCache(NoParamOrder npo = default,
         int? seconds = null,
         string? watch = null,
         string? varyBy = null,
