@@ -31,8 +31,6 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
         => Real.InstallPreflight(new(Request, HttpContext.Current.Request), appId, editions);
 
     /// <inheritdoc />
-    // Not sure why ActionName was used here - seems redundant? name change not needed?
-    //[ActionName("installExtension")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
