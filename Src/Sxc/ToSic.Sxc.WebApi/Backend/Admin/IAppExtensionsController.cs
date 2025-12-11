@@ -25,11 +25,12 @@ public interface IAppExtensionsController<out THttpResponse>
     /// <summary>
     /// Install app extension zip.
     /// </summary>
+    /// <param name="zoneId">Zone identifier</param>
     /// <param name="appId">App identifier</param>
     /// <param name="editions">Optional comma-delimited list of editions to install into (empty or null = root).</param>
     /// <param name="overwrite">Overwrite existing files if true</param>
     /// <returns>true if installation succeeded</returns>
-    bool Install(int appId, string editions = "", bool overwrite = false);
+    bool Install(int zoneId, int appId, string editions = "", bool overwrite = false);
 
     /// <summary>
     /// Preflight installation of an extension zip downloaded from a URL.
@@ -42,12 +43,13 @@ public interface IAppExtensionsController<out THttpResponse>
     /// <summary>
     /// Install app extension zip downloaded from a URL.
     /// </summary>
+    /// <param name="zoneId">Zone identifier</param>
     /// <param name="appId">App identifier</param>
     /// <param name="urls">Remote URLs to extension packages (first is used)</param>
     /// <param name="editions">Optional comma-delimited list of editions to install into (empty or null = root).</param>
     /// <param name="overwrite">Overwrite existing files if true</param>
     /// <returns>true if installation succeeded</returns>
-    bool InstallFrom(int appId, string[] urls, string editions = "", bool overwrite = false);
+    bool InstallFrom(int zoneId, int appId, string[] urls, string editions = "", bool overwrite = false);
 
     /// <summary>
     /// Inspect endpoint mirroring DNN behavior.
