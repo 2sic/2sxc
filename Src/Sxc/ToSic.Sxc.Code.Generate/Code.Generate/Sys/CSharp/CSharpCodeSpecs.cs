@@ -19,7 +19,7 @@ internal record CSharpCodeSpecs: FileGeneratorSpecs
     /// <summary>
     /// Namespace for the data classes
     /// </summary>
-    public string DataNamespace { get; init; } = FolderConstants.AppCodeFolder + ".Data";
+    public string DataNamespace { get; init; } = $"{FolderConstants.AppCodeFolder}.Data";
 
     public string NamespaceAutoGen { get; init; } = DefAutoGenNamespace;
 
