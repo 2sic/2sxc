@@ -1,5 +1,5 @@
 ﻿<p>
-    <b>2sxc v20.00.09 - MoT Release ⚠️</b>
+    <b>2sxc v20.00.10 - MoT Release ⚠️</b>
     <br><br>
     2sxc v20 cleans up a lot of old APIs, so it's called a <a href="https://go.2sxc.org/mot">MoT release</a> (Moment of Truth).
     <br><br>
