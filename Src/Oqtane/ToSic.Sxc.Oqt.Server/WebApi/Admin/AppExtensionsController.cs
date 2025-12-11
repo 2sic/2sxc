@@ -50,20 +50,20 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
     /// <inheritdoc />
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool Install(int appId, [FromQuery] string editions = "", bool overwrite = false)
+    public bool Install(int zoneId, int appId, [FromQuery] string editions = "", bool overwrite = false)
     {
         HotReloadEnabledCheck.Check();
-        return Real.Install(new(Request), appId, editions, overwrite);
+        return Real.Install(new(Request), zoneId, appId, editions, overwrite);
     }
 
     /// <inheritdoc />
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool InstallFrom(int appId, [FromBody] string[] urls, [FromQuery] string editions = "", bool overwrite = false)
+    public bool InstallFrom(int zoneId, int appId, [FromBody] string[] urls, [FromQuery] string editions = "", bool overwrite = false)
     {
         HotReloadEnabledCheck.Check();
-        return Real.InstallFrom(urls, appId, editions, overwrite);
+        return Real.InstallFrom(urls, zoneId, appId, editions, overwrite);
     }
 
     /// <inheritdoc />
