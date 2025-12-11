@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Data.Sys;
 using ToSic.Sxc.Sys;
 using ToSic.Sys.Users;
 
@@ -39,6 +40,7 @@ public abstract class CSharpGeneratorBase(IUser user, IAppReaderFactory appReadF
             DateTime = parameters.DateTime,
             Namespace = parameters.Namespace,
             TargetPath = parameters.TargetPath,
+            Scope = parameters.Scope ?? ScopeConstants.Default,
             ContentTypes = parameters.ContentTypes,
             AppContentTypes = appReader,
             AppName = appReader.Specs.Name,

@@ -32,6 +32,20 @@ internal abstract class CSharpModelsGeneratorBase(IUser user, IAppReaderFactory 
     protected virtual void Setup(IFileGeneratorSpecs parameters)
     {
         Specs = BuildDerivedSpecs(parameters);
+
+        var types = ScopeConstants.Default.EqualsInsensitive(Specs.Scope)
+            ? GetContentTypesInDefaultScope()
+            : GetContentTypesInOtherScope();
+
+        types = FilterSelectedContentTypes(types);
+
+        Specs = Specs with { ExportedContentContentTypes = types };
+
+        CodeGenHelper = new(Specs, Log);
+    }
+
+    private List<IContentType> GetContentTypesInDefaultScope()
+    {
         var appContentTypes = Specs.AppContentTypes;
 
         // Prepare Content Types and add to Specs, so the generators know what is available
@@ -59,13 +73,14 @@ internal abstract class CSharpModelsGeneratorBase(IUser user, IAppReaderFactory 
             .ToList();
 
         types.AddRange(appConfigTypes);
-
-        types = FilterSelectedContentTypes(types);
-
-        Specs = Specs with { ExportedContentContentTypes = types };
-
-        CodeGenHelper = new(Specs, Log);
+        return types;
     }
+
+    private List<IContentType> GetContentTypesInOtherScope()
+        => Specs.AppContentTypes.ContentTypes
+            .OfScope(Specs.Scope)
+            .ToList();
+
     private List<IContentType> FilterSelectedContentTypes(List<IContentType> types)
     {
         if (Specs.ContentTypes == null)

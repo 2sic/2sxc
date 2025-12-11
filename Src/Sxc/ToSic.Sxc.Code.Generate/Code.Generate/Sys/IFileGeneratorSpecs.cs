@@ -39,6 +39,11 @@ public interface IFileGeneratorSpecs
     string? TargetPath { get; init; }
 
     /// <summary>
+    /// Get the scope of the Content Type (like sections in a DB)
+    /// </summary>
+    string? Scope { get; init; }
+
+    /// <summary>
     /// The content types to generate files for.
     /// If null, use all available content types in the "Default" scope + the app settings/resources.
     /// </summary>

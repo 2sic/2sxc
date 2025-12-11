@@ -1,8 +1,10 @@
 ﻿using System.Reflection;
 using ToSic.Eav.Apps.Sys.AppJson;
+using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sxc.Code.Sys.Documentation;
+using ToSic.Sys.Utils;
 using ToSic.Sys.Utils.Assemblies;
 
 namespace ToSic.Sxc.Backend.Admin;
@@ -93,7 +95,7 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGe
                     );
 
                 // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
-                if (!DataCopilotConfigurationContentType.Equals(configuration.Type?.Name, StringComparison.OrdinalIgnoreCase))
+                if (!DataCopilotConfigurationContentType.EqualsInsensitive(configuration.Type?.Name))
                     return l.Return(new RichResult
                         {
                             Ok = false,
@@ -106,6 +108,7 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGe
                 {
                     Namespace = Sanitize(configuration.Get<string>("Namespace")),
                     TargetPath = Sanitize(configuration.Get<string>("TargetFolder")),
+                    Scope = Sanitize(configuration.Get<string>("Scope")) ?? ScopeConstants.Default,
                     ContentTypes = Normalize(configuration.Get<string>("ContentTypes"))
                 };
             }
@@ -116,7 +119,7 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGe
             return l.Return(new RichResult
                 {
                     Ok = true,
-                    Message = $"Data models generated in {specs.Edition}/{specs.TargetPath}.",
+                    Message = $"Data models generated in {specs.Edition}/{specs.TargetPath ?? "AppCode/Data"}.",
                 }
                 .WithTime(l)
             );
