@@ -10012,7 +10012,7 @@
                           "en-us": "string-dropdown-query"
                         },
                         "Name": {
-                          "en-us": "Scope"
+                          "en-us": "Data Scope (to pick Content-Types from)"
                         },
                         "Notes": {
                           "en-us": ""
