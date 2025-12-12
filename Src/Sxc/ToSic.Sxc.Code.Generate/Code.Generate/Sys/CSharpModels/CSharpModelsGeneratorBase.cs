@@ -85,7 +85,9 @@ internal abstract class CSharpModelsGeneratorBase(IUser user, IAppReaderFactory 
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-        return selected?.Any() == true ? selected : null;
+        return selected?.Any() == true
+            ? selected
+            : null;
     }
 
     private List<IContentType> GetSelectedContentTypes(HashSet<string> selected)
@@ -96,11 +98,9 @@ internal abstract class CSharpModelsGeneratorBase(IUser user, IAppReaderFactory 
             .Where(ct => selected.Contains(ct.NameId))
             .ToList();
 
-        if (filtered.Any())
-            return filtered;
-
-        Log.A($"No content types matched selection '{string.Join(", ", selected)}'.");
-        return [];
+        return filtered.Any()
+            ? filtered
+            : []; // No content types matched selection
     }
 
     protected abstract IGeneratedFile? CreateFileGenerator(IContentType type, string className);
