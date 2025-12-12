@@ -403,8 +403,8 @@
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
               <name>System.Diagnostics.DiagnosticSource.dll</name>
-              <!-- v4.0.4.0 -->
-              <version>4.6.26515.06</version>
+              <!-- v9.0.11 -->
+              <version>9.0.1125.51716</version>
             </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
