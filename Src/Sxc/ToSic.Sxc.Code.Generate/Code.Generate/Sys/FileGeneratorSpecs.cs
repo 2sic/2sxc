@@ -21,8 +21,5 @@ internal record FileGeneratorSpecs : IFileGeneratorSpecs
     public string? TargetPath { get; init; }
 
     /// <inheritdoc />
-    public string? Scope { get; init; }
-
-    /// <inheritdoc />
     public ICollection<string>? ContentTypes { get; init; }
 }

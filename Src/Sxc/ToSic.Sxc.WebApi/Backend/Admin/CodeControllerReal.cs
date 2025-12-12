@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using ToSic.Eav.Apps.Sys.AppJson;
-using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sxc.Code.Sys.Documentation;
@@ -108,7 +107,6 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGe
                 {
                     Namespace = Sanitize(configuration.Get<string>("Namespace")),
                     TargetPath = Sanitize(configuration.Get<string>("TargetFolder")),
-                    Scope = Sanitize(configuration.Get<string>("Scope")) ?? ScopeConstants.Default,
                     ContentTypes = Normalize(configuration.Get<string>("ContentTypes"))
                 };
             }

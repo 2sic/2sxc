@@ -33,11 +33,11 @@ internal abstract class CSharpModelsGeneratorBase(IUser user, IAppReaderFactory 
     {
         Specs = BuildDerivedSpecs(parameters);
 
-        var types = ScopeConstants.Default.EqualsInsensitive(Specs.Scope)
-            ? GetContentTypesInDefaultScope()
-            : GetContentTypesInOtherScope();
+        var selected = GetSelectedContentTypeNameIds();
 
-        types = FilterSelectedContentTypes(types);
+        var types = selected == null
+            ? GetContentTypesInDefaultScope()
+            : GetSelectedContentTypes(selected);
 
         Specs = Specs with { ExportedContentContentTypes = types };
 
@@ -53,6 +53,7 @@ internal abstract class CSharpModelsGeneratorBase(IUser user, IAppReaderFactory 
         var types = appContentTypes.ContentTypes
             .OfScope(ScopeConstants.Default)
             .ToList();
+
         appContentTypes.TryGetContentType(AppLoadConstants.TypeAppResources).DoIfNotNull(types.Add);
         appContentTypes.TryGetContentType(AppLoadConstants.TypeAppSettings).DoIfNotNull(types.Add);
 
@@ -76,32 +77,30 @@ internal abstract class CSharpModelsGeneratorBase(IUser user, IAppReaderFactory 
         return types;
     }
 
-    private List<IContentType> GetContentTypesInOtherScope()
-        => Specs.AppContentTypes.ContentTypes
-            .OfScope(Specs.Scope)
-            .ToList();
-
-    private List<IContentType> FilterSelectedContentTypes(List<IContentType> types)
+    private HashSet<string>? GetSelectedContentTypeNameIds()
     {
-        if (Specs.ContentTypes == null)
-            return types;
-
-        var selected = Specs.ContentTypes
+        var selected = Specs.ContentTypes?
             .Where(name => !string.IsNullOrWhiteSpace(name))
             .Select(name => name.Trim())
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-        if (!selected.Any())
-            return types;
+        return selected?.Any() == true ? selected : null;
+    }
 
-        var filtered = types
-            .Where(ct => selected.Contains(ct.NameId) || selected.Contains(ct.Name))
+    private List<IContentType> GetSelectedContentTypes(HashSet<string> selected)
+    {
+        var appContentTypes = Specs.AppContentTypes;
+
+        var filtered = appContentTypes.ContentTypes
+            .Where(ct => selected.Contains(ct.NameId))
             .ToList();
 
-        return filtered.Any()
-            ? filtered
-            : types;
+        if (filtered.Any())
+            return filtered;
+
+        Log.A($"No content types matched selection '{string.Join(", ", selected)}'.");
+        return [];
     }
 
     protected abstract IGeneratedFile? CreateFileGenerator(IContentType type, string className);
