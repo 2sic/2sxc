@@ -319,12 +319,23 @@ public class ExtensionExportService(
 
         foreach (var guid in guidList)
         {
-            // Export bundle entity as JSON
-            var (export, fileContent) = bundlesExport.CreateBundleExport(guid, 2);
-            var bundlePath = Path.Combine(bundlesDir, export.FileName);
-            var zipPath =
-                $"{FolderConstants.AppExtensionsFolder}/{extensionName}/{FolderConstants.DataFolderProtected}/{FolderConstants.DataSubFolderSystem}/{AppDataFoldersConstants.BundlesFolder}/{export.FileName}";
-            files.Add((bundlePath, zipPath, fileContent));
+            try
+            {
+                // Export bundle entity as JSON
+                var (export, fileContent) = bundlesExport.CreateBundleExport(guid, 2);
+                var bundlePath = Path.Combine(bundlesDir, export.FileName);
+                var zipPath =
+                    $"{FolderConstants.AppExtensionsFolder}/{extensionName}/{FolderConstants.DataFolderProtected}/{FolderConstants.DataSubFolderSystem}/{AppDataFoldersConstants.BundlesFolder}/{export.FileName}";
+                files.Add((bundlePath, zipPath, fileContent));
+            }
+            catch (KeyNotFoundException ex)
+            {
+                var wrapped = new KeyNotFoundException(
+                    $"Data bundle '{guid}' referenced by extension '{extensionName}' was not found in app {appId}. " +
+                    $"Update or remove the entry in extension.json:dataBundles. Details: {ex.Message}", ex);
+                l.Ex(wrapped);
+                throw wrapped;
+            }
         }
 
         return l.ReturnAsOk(files);
