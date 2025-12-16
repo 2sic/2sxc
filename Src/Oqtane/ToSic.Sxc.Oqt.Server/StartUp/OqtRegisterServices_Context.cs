@@ -20,6 +20,7 @@ partial class OqtRegisterServices
     private static IServiceCollection AddSxcOqtContext(this IServiceCollection services)
     {
         // Context: Things which are relevant for determining the context
+        services.TryAddScoped<IOqtTenantContext, OqtTenantContext>();
         services.TryAddScoped<ISite, OqtSite>();
         services.TryAddScoped<IPage, OqtPage>();
         services.TryAddScoped<IUser, OqtUser>();

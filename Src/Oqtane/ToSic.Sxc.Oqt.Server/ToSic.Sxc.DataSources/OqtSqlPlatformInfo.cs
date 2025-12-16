@@ -1,22 +1,49 @@
 ﻿using Oqtane.Infrastructure;
 using Oqtane.Shared;
 using ToSic.Eav.DataSources.Sys;
+using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Oqt.Server.ToSic.Sxc.DataSources;
 
-internal class OqtSqlPlatformInfo(LazySvc<IConfigManager> configManager) : SqlPlatformInfo
+internal class OqtSqlPlatformInfo(
+    LazySvc<IConfigManager> configManager,
+    LazySvc<IOqtTenantContext> tenantContext) : SqlPlatformInfo
 {
-    public override string DefaultConnectionStringName => SettingKeys.ConnectionStringKey;
+    // Make the default connection-string name tenant-aware.
+    // If the current tenant has a named connection, use that; otherwise fall back to Oqtane default.
+    public override string DefaultConnectionStringName
+        => tenantContext.Value.Get() is { } ctx && ctx.ConnectionStringName.HasValue()
+            ? ctx.ConnectionStringName
+            : SettingKeys.ConnectionStringKey;
 
     public override string FindConnectionString(string name)
     {
-        if (name.EqualsInsensitive(DefaultConnectionStringName))
-            return configManager.Value.GetSetting("ConnectionStrings:" + SettingKeys.ConnectionStringKey, "");
+        if (tenantContext.Value.Get() is { } tenantContextInfo && tenantContextInfo.ConnectionString.HasValue())
+        {
+            if (name.EqualsInsensitive(SettingKeys.ConnectionStringKey))
+                return tenantContextInfo.ConnectionString;
 
-        // TODO
-        // Where are all the connection strings stored, I think base... doesn't work
-        // Where would the site connection string be?
+            if (tenantContextInfo.ConnectionStringName.HasValue() && name.EqualsInsensitive(tenantContextInfo.ConnectionStringName))
+                return tenantContextInfo.ConnectionString;
+        }
+
+        var config = configManager.Value;
+        if (name.EqualsInsensitive(SettingKeys.ConnectionStringKey))
+        {
+            var defaultConnection = config.GetConnectionString();
+            if (defaultConnection.HasValue())
+                return defaultConnection;
+        }
+
+        var resolved = config.GetConnectionString(name);
+        if (resolved.HasValue())
+            return resolved;
+
+        resolved = config.GetSetting($"ConnectionStrings:{name}", "");
+        if (resolved.HasValue())
+            return resolved;
+
         return base.FindConnectionString(name);
     }
 

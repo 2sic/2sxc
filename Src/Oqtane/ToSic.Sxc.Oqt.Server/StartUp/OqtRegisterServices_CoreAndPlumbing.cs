@@ -1,9 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Sxc.Apps.Sys.Installation;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Code.Sys;
+using ToSic.Sxc.Oqt.Server.Configuration;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Server.Integration;
@@ -15,6 +17,7 @@ using ToSic.Sxc.Sys.Integration.Installation;
 using ToSic.Sxc.Sys.Integration.Paths;
 using ToSic.Sxc.Web.Sys.Http;
 using ToSic.Sys.Capabilities.Platform;
+using ToSic.Sys.Configuration;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;
 
@@ -83,6 +86,17 @@ partial class OqtRegisterServices
         services.AddScoped<IOqtSxcRenderService, OqtSxcRenderService>();
         services.AddScoped<IRenderInfoService, RenderInfoService>();
         services.AddScoped<IOqtTurnOnService, OqtTurnOnService>();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Replace default IGlobalConfiguration with OqtGlobalConfiguration which resolves ConnectionString per tenant.
+    /// </summary>
+    private static IServiceCollection AddOqtGlobalConfiguration(this IServiceCollection services)
+    {
+        services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.Replace(ServiceDescriptor.Transient<IGlobalConfiguration, OqtGlobalConfiguration>());
 
         return services;
     }
