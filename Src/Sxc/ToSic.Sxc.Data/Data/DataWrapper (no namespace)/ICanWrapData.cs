@@ -9,7 +9,7 @@
 /// To help the developer understand what is allowed for `TModel` we must mark all objects which are supported, and this is done with this interface.
 ///
 /// So any class which is meant to wrap data from an <see cref="IEntity"/> or <see cref="ITypedItem"/> should implement this interface.
-/// Typical use is for custom data such as classes inheriting from <see cref="Custom.Data.CustomItem"/>
+/// Typical use is for custom data such as classes inheriting from [](xref:Custom.Data.CustomItem)
 /// which takes an entity and then provides a strongly typed wrapper around it.
 /// 
 /// History

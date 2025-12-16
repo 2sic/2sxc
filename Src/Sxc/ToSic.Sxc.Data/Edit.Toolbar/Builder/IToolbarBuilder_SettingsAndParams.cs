@@ -48,7 +48,7 @@ public partial interface IToolbarBuilder
     /// Many options
     /// 1. An Entity-like thing which would be used to prepare default params like `entityId`
     /// 1. A string, which would be the same as using the term on the `parameters`
-    /// 1. A object - especially an anonymous object like `new { id = 7, show = true }`
+    /// 1. An object - especially an anonymous object like `new { id = 7, show = true }`
     /// </param>
     /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>

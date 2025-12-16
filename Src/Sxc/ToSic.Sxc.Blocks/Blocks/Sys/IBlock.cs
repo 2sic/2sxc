@@ -50,7 +50,7 @@ public interface IBlock: IAppIdentity
     IApp App { get; }
 
     /// <summary>
-    /// The DataSource which delivers data for this block (will be used by the <see cref="IEngine"/> together with the View)
+    /// The DataSource which delivers data for this block (will be used by the [](xref:ToSic.Sxc.Engines.IEngine) together with the View)
     /// </summary>
     IDataSource Data { get; }
 

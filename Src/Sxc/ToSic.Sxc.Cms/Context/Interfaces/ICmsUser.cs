@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Context;
 /// * v14.08/v14.09 added ca. 5 properties
 /// * v18 enhanced to serialize - so it can be returned by a WebApi Controller
 /// * v20 inheriting from <see cref="IUserModel"/> now, so most properties are from there and many properties were added
-/// * v20 especially the <see cref="ICmsUser.Roles"/> is new and useful
+/// * v20 especially the <see cref="IUserModel.Roles"/> is new and useful
 /// </remarks>
 [PublicApi]
 public interface ICmsUser: IUserModel, IHasMetadata
