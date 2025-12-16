@@ -144,5 +144,17 @@ partial class HelpDbRazor
             UiMessage = "The old List ToSic.Sxc.Blocks.IRenderService has been replaced/renamed with ToSic.Sxc.Services.IRenderService."
         },
 
+        // New v21 - removal of the mock: parameter
+        new CodeHelp
+        {
+            Name = "Detect use of old GetBestValue - with the parameter name",
+            // Full error is something like: "error CS1739: The best overload for 'GetBestValue' does not have a parameter named 'resolveHyperlinks' at System.Web.Compilation.AssemblyBuilder.Compile()"
+            //Detect = @"error CS1739: The best overload for 'AsItem' does not have a parameter named 'mock'",
+            Detect = @"does not have a parameter named 'mock'",
+            UiMessage =
+                "Your code seems to use an old 'AsItem' or 'As' overload to create mock data. This was a bad design choice, please use Convert.ToMock(...) instead.",
+        },
+
+
     ];
 }

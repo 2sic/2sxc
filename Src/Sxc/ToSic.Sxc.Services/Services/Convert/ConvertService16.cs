@@ -15,10 +15,12 @@ internal class ConvertService16(
     : ServiceWithContext("Sxc.CnvSrv", connect: [cnvSvc, code, json]), IConvertService16
 {
 
-    #region New v17 As conversions
 
     [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
+
+    #region ToMock() new v21
+
 
     public ITypedItem ToMockItem(object data, NoParamOrder npo = default, bool? propsRequired = default)
         => Cdf.AsItem(data, new() { ItemIsStrict = true, UseMock = true})!;
@@ -27,23 +29,27 @@ internal class ConvertService16(
         where T : class, ICanWrapData
         => Cdf.AsCustom<T>(source: data, mock: true);
 
-    /// <summary>
-    /// EXPERIMENTAL
-    /// </summary>
-    /// <returns></returns>
-    [PrivateApi("WIP, don't publish yet")]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    T IConvertService16.As<T>(ICanBeEntity source, NoParamOrder npo, bool mock)
-        => Cdf.AsCustom<T>(source: source, mock: mock)!;
+    #endregion
 
-    /// <summary>
-    /// EXPERIMENTAL
-    /// </summary>
-    /// <returns></returns>
-    [PrivateApi("WIP, don't publish yet")]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    IEnumerable<T> IConvertService16.AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder npo, bool nullIfNull)
-        => Cdf.AsCustomList<T>(source: source, npo: npo, nullIfNull: nullIfNull);
+    #region New v17 As conversions - removed again for v21, was never published
+
+    ///// <summary>
+    ///// EXPERIMENTAL
+    ///// </summary>
+    ///// <returns></returns>
+    //[PrivateApi("WIP, don't publish yet")]
+    //[ShowApiWhenReleased(ShowApiMode.Never)]
+    //T IConvertService16.As<T>(ICanBeEntity source, NoParamOrder npo)
+    //    => Cdf.AsCustom<T>(source: source, npo: npo)!;
+
+    ///// <summary>
+    ///// EXPERIMENTAL
+    ///// </summary>
+    ///// <returns></returns>
+    //[PrivateApi("WIP, don't publish yet")]
+    //[ShowApiWhenReleased(ShowApiMode.Never)]
+    //IEnumerable<T> IConvertService16.AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder npo, bool nullIfNull)
+    //    => Cdf.AsCustomList<T>(source: source, npo: npo, nullIfNull: nullIfNull);
 
     #endregion
 

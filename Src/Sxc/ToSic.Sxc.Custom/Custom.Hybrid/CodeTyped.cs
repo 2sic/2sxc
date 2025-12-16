@@ -145,7 +145,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, ITypedCode16
     #region As Conversions
 
     /// <inheritdoc cref="ITypedApi.AsItem" />
-    public ITypedItem AsItem(object data, NoParamOrder npo = default, bool? propsRequired = default, bool? mock = default)
+    public ITypedItem AsItem(object data, NoParamOrder npo = default, bool? propsRequired = default)
         => CodeApi().Cdf.AsItem(data, new() { ItemIsStrict = propsRequired ?? true })!;
 
     /// <inheritdoc cref="ITypedApi.AsItems" />
@@ -203,9 +203,9 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, ITypedCode16
     private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
 
     /// <inheritdoc />
-    public T As<T>(object source, NoParamOrder npo = default, bool mock = false)
+    public T As<T>(object source, NoParamOrder npo = default)
         where T : class, ICanWrapData
-        => Cdf.AsCustom<T>(source: source, npo: npo, mock: mock)!;
+        => Cdf.AsCustom<T>(source: source, npo: npo)!;
 
     /// <inheritdoc />
     public IEnumerable<T> AsList<T>(object source, NoParamOrder npo = default, bool nullIfNull = default)

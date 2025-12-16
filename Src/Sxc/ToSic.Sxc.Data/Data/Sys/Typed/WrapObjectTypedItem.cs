@@ -195,9 +195,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     T? ITypedItem.Child<T>(string name, NoParamOrder npo, bool? required, GetRelatedOptions? options)
         where T : class
         => Cdf.AsCustom<T>(
-            source: (this as ITypedItem).Child(name, required: required, options: options),
-            npo: npo,
-            mock: false
+            source: (this as ITypedItem).Child(name, required: required, options: options)
         );
 
     IEnumerable<T> ITypedItem.Children<T>(string? field, NoParamOrder npo, string? type, bool? required, GetRelatedOptions? options)
@@ -210,8 +208,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     T? ITypedItem.Parent<T>(NoParamOrder npo, bool? current, string? type, string? field, GetRelatedOptions? options)
         where T : class
         => Cdf.AsCustom<T>(
-            source: (this as ITypedItem).Parent(current: current, type: type ?? typeof(T).Name, field: field, options: options),
-            mock: false
+            source: (this as ITypedItem).Parent(current: current, type: type ?? typeof(T).Name, field: field, options: options)
         );
 
     IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder npo, string? type, string? field, GetRelatedOptions? options)

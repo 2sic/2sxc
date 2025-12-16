@@ -203,7 +203,7 @@ internal partial class Metadata: ITypedItem
     /// <inheritdoc />
     T? ITypedItem.Child<T>(string name, NoParamOrder npo, bool? required, GetRelatedOptions? options)
         where T : class
-        => Cdf.AsCustom<T>(source: (this as ITypedItem).Child(name, required: required, options: options), npo: npo, mock: false);
+        => Cdf.AsCustom<T>(source: (this as ITypedItem).Child(name, required: required, options: options), npo: npo);
 
     /// <inheritdoc />
     IEnumerable<T> ITypedItem.Children<T>(string? field, NoParamOrder npo, string? type, bool? required, GetRelatedOptions? options)
@@ -217,7 +217,8 @@ internal partial class Metadata: ITypedItem
     T? ITypedItem.Parent<T>(NoParamOrder npo, bool? current, string? type, string? field, GetRelatedOptions? options)
         where T : class
         => Cdf.AsCustom<T>(
-            source: (this as ITypedItem).Parent(npo: npo, current: current, type: type ?? typeof(T).Name, field: field, options: options), npo: npo, mock: false
+            source: (this as ITypedItem).Parent(npo: npo, current: current, type: type ?? typeof(T).Name, field: field, options: options),
+            npo: npo
         );
 
     /// <inheritdoc />

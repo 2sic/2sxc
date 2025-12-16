@@ -141,17 +141,21 @@ public interface IConvertService16
     /// </summary>
     IJsonService Json { get; }
 
-    #region New v17 As conversions
+    #region New v17 As conversions - currently disabled, as the public API should be using the ITypedApiService which is safer
 
-    [PrivateApi("WIP, don't publish yet")]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    T As<T>(ICanBeEntity source, NoParamOrder npo = default, bool mock = false)
-        where T : class, ICanWrapData;
+    //[PrivateApi("WIP, don't publish yet")]
+    //[ShowApiWhenReleased(ShowApiMode.Never)]
+    //T As<T>(ICanBeEntity source, NoParamOrder npo = default)
+    //    where T : class, ICanWrapData;
 
-    [PrivateApi("WIP, don't publish yet")]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder npo = default, bool nullIfNull = default)
-        where T : class, ICanWrapData;
+    //[PrivateApi("WIP, don't publish yet")]
+    //[ShowApiWhenReleased(ShowApiMode.Never)]
+    //IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder npo = default, bool nullIfNull = default)
+    //    where T : class, ICanWrapData;
+
+    #endregion
+
+    #region ToMock - new v21
 
     /// <summary>
     /// Convert anonymous objects to be a mock TypedItem - for fallback when some original data may be missing.

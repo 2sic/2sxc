@@ -81,8 +81,8 @@ public abstract class RazorTyped<TModel>()
     #region As Conversions
 
     /// <inheritdoc cref="ITypedApi.AsItem" />
-    public ITypedItem AsItem(object data, NoParamOrder npo = default, bool? propsRequired = default, bool? mock = default)
-        => CodeApi.Cdf.AsItem(data, new() { ItemIsStrict = propsRequired ?? true, UseMock = mock == true })!;
+    public ITypedItem AsItem(object data, NoParamOrder npo = default, bool? propsRequired = default)
+        => CodeApi.Cdf.AsItem(data, new() { ItemIsStrict = propsRequired ?? true })!;
 
     /// <inheritdoc cref="ITypedApi.AsItems" />
     public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder npo = default, bool? propsRequired = default)
@@ -169,9 +169,9 @@ public abstract class RazorTyped<TModel>()
     #region As / AsList WIP v17
 
     /// <inheritdoc />
-    public T As<T>(object source, NoParamOrder npo = default, bool mock = false)
+    public T As<T>(object source, NoParamOrder npo = default)
         where T : class, ICanWrapData
-        => CodeApi.Cdf.AsCustom<T>(source: source, npo: npo, mock: mock)!;
+        => CodeApi.Cdf.AsCustom<T>(source: source, npo: npo)!;
 
     /// <inheritdoc />
     public IEnumerable<T> AsList<T>(object source, NoParamOrder npo = default, bool nullIfNull = default)

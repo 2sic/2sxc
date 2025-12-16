@@ -356,9 +356,7 @@ internal class TypedItemOfEntity(IEntity entity, ICodeDataFactory cdf, bool prop
     T? ITypedItem.Child<T>(string name, NoParamOrder npo, bool? required, GetRelatedOptions? options)
         where T : class
         => Cdf.AsCustom<T>(
-            source: ((ITypedItem)this).Child(name, required: required, options: options),
-            npo: npo,
-            mock: false
+            source: ((ITypedItem)this).Child(name, required: required, options: options)
         );
 
     /// <inheritdoc />
