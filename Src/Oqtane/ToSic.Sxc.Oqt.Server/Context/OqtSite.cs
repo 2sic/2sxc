@@ -100,7 +100,8 @@ internal sealed class OqtSite: Site<Site>
     public override string Name => UnwrappedSite.Name;
 
     [PrivateApi]
-    public override string AppsRootPhysical => string.Format(OqtConstants.AppRootPublicBase, Id);
+    public override string AppsRootPhysical
+        => string.Format(OqtConstants.AppRootTenantSiteBase, Alias.TenantId, Id);
 
     [PrivateApi]
     public override string AppAssetsLinkTemplate => OqtPageOutput.GetSiteRoot(_aliasResolver.Alias)

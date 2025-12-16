@@ -71,7 +71,7 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
                             $"Error: missing required 'alias' route value.", "Not Found");
             }
 
-            var aliasPart = OqtServerPaths.GetAppRootWithSiteId(alias.SiteId);
+            var aliasPart = OqtServerPaths.GetAppRootWithTenantAndSiteId(alias.TenantId, alias.SiteId);
 
             #endregion
 
@@ -141,7 +141,7 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
     public static string GetDllName(string controllerFolder, string apiFile)
     {
         return
-            $"DynCode_{controllerFolder.Replace(@"\", "_")}_{System.IO.Path.GetFileNameWithoutExtension(apiFile)}";
+            $"DynCode_{controllerFolder.Replace(@"\", "_")}_{Path.GetFileNameWithoutExtension(apiFile)}";
     }
 
     private static string GetEdition(RouteValueDictionary values)

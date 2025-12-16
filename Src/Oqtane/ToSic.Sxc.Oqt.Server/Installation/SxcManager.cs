@@ -7,6 +7,7 @@ using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
 using System.Reflection;
+using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
 using File = System.IO.File;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
@@ -25,7 +26,7 @@ public class SxcManager(
     IServiceScopeFactory serviceScopeFactory,
     IWebHostEnvironment environment,
     IConfigManager configManager,
-    ILogger<SxcManager> filelogger) : IInstallable
+    ILogger<SxcManager> logger) : IInstallable
 {
     private const string CleanInstallMigrationId = "ToSic.Sxc.Install";
     private const string MigrationPrefix = "ToSic.Sxc.";
@@ -73,6 +74,9 @@ public class SxcManager(
             case "20-00-00":
                 Upgrade_20_00_00(tenant, scope, version);
                 break;
+            case "20-00-10":
+                Upgrade_20_00_10(tenant, scope, version);
+                break;
         }
     }
 
@@ -89,6 +93,29 @@ public class SxcManager(
         ];
 
         RemoveAssemblies(tenant, assemblies, version);
+    }
+
+    private void Upgrade_20_00_10(Tenant tenant, IServiceScope scope, string version)
+    {
+        LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(Upgrade_20_00_10)} {version}");
+
+        if (tenant.Name != TenantNames.Master)
+        {
+            LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(Upgrade_20_00_10)} skipped because tenant '{tenant.Name}' is not '{TenantNames.Master}'.");
+            return;
+        }
+
+        try
+        {
+            var appRoot = Path.Combine(environment.ContentRootPath, OqtConstants.AppRoot);
+            var destinationBase = Path.Combine(appRoot, OqtConstants.TenantsFolderName, tenant.TenantId.ToString(), OqtConstants.SitesFolderName);
+
+            MoveSubfoldersToDestinationBase(appRoot, destinationBase, version);
+        }
+        catch (Exception ex)
+        {
+            LogError($"2sxc {EavSystemInfo.VersionString} install error: {version} Upgrade Error moving 2sxc folders - {ex}");
+        }
     }
 
     private void RemoveAssemblies(Tenant tenant, string[] assemblies, string version)
@@ -113,6 +140,174 @@ public class SxcManager(
                 }
             }
         }
+    }
+
+    private void MoveSubfoldersToDestinationBase(string sourceRoot, string destinationBase, string version)
+    {
+        LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(MoveSubfoldersToDestinationBase)} source:'{sourceRoot}', dest:'{destinationBase}', version:{version}");
+
+        if (!Directory.Exists(sourceRoot))
+        {
+            LogWarn($"2sxc {EavSystemInfo.VersionString} install: {version} Source folder not found, skipping: '{sourceRoot}'");
+            return;
+        }
+
+        Directory.CreateDirectory(destinationBase);
+
+        foreach (var directory in Directory.GetDirectories(sourceRoot))
+        {
+            var folderName = Path.GetFileName(directory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+            if (string.IsNullOrWhiteSpace(folderName)) continue;
+
+            // Don't try to move the new structure folder back into itself.
+            if (folderName.Equals(OqtConstants.TenantsFolderName, StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            var target = Path.Combine(destinationBase, folderName);
+            try
+            {
+                var success = MoveDirectoryWithRetry(source: directory, target: target, version: version);
+                if (!success)
+                    LogError($"2sxc {EavSystemInfo.VersionString} install error: {version} Could not move folder '{directory}' -> '{target}'. Manual intervention may be required.");
+            }
+            catch (Exception ex)
+            {
+                LogError($"2sxc {EavSystemInfo.VersionString} install error: {version} Unexpected error moving folder '{directory}' -> '{target}' - {ex}");
+            }
+        }
+    }
+
+    private bool MoveDirectoryWithRetry(string source, string target, string version)
+    {
+        const int maxAttempts = 10;
+        for (var attempt = 1; attempt <= maxAttempts; attempt++)
+        {
+            try
+            {
+                MoveDirectoryMerged(source, target, version);
+                return true;
+            }
+            catch (IOException ex) when (attempt < maxAttempts)
+            {
+                LogWarn($"2sxc {EavSystemInfo.VersionString} install: {version} Move attempt {attempt}/{maxAttempts} IO error, retrying '{source}' -> '{target}': {ex.Message}");
+                Thread.Sleep(150 * attempt);
+            }
+            catch (UnauthorizedAccessException ex) when (attempt < maxAttempts)
+            {
+                LogWarn($"2sxc {EavSystemInfo.VersionString} install: {version} Move attempt {attempt}/{maxAttempts} access error, retrying '{source}' -> '{target}': {ex.Message}");
+                Thread.Sleep(150 * attempt);
+            }
+            catch (Exception ex) when (attempt < maxAttempts)
+            {
+                LogWarn($"2sxc {EavSystemInfo.VersionString} install: {version} Move attempt {attempt}/{maxAttempts} error, retrying '{source}' -> '{target}': {ex.Message}");
+                Thread.Sleep(150 * attempt);
+            }
+        }
+
+        // Final attempt failed - don't throw, so we can continue with other folders.
+        try
+        {
+            MoveDirectoryMerged(source, target, version);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            LogError($"2sxc {EavSystemInfo.VersionString} install error: {version} Failed moving folder '{source}' -> '{target}' after {maxAttempts} attempts - {ex.Message}");
+            return false;
+        }
+    }
+
+    private void MoveDirectoryMerged(string source, string target, string version)
+    {
+        if (!Directory.Exists(source))
+            return;
+
+        if (!Directory.Exists(target))
+        {
+            try
+            {
+                LogInfo($"2sxc {EavSystemInfo.VersionString} install: {version} Moving folder '{source}' -> '{target}'");
+                Directory.Move(source, target);
+                return;
+            }
+            catch (IOException ex)
+            {
+                LogWarn($"2sxc {EavSystemInfo.VersionString} install: {version} Could not move folder directly, will merge instead '{source}' -> '{target}': {ex.Message}");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                LogWarn($"2sxc {EavSystemInfo.VersionString} install: {version} Could not move folder directly due to access, will merge instead '{source}' -> '{target}': {ex.Message}");
+            }
+
+            Directory.CreateDirectory(target);
+        }
+
+        LogInfo($"2sxc {EavSystemInfo.VersionString} install: {version} Merging folder '{source}' -> '{target}'");
+
+        foreach (var subDir in Directory.GetDirectories(source))
+        {
+            var name = Path.GetFileName(subDir.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+            if (string.IsNullOrWhiteSpace(name)) continue;
+
+            var success = MoveDirectoryWithRetry(subDir, Path.Combine(target, name), version);
+            if (!success)
+                LogError($"2sxc {EavSystemInfo.VersionString} install error: {version} Could not move subfolder '{subDir}' into '{target}'.");
+        }
+
+        foreach (var file in Directory.GetFiles(source))
+        {
+            var name = Path.GetFileName(file);
+            if (string.IsNullOrWhiteSpace(name)) continue;
+
+            var destinationFile = Path.Combine(target, name);
+            if (File.Exists(destinationFile))
+            {
+                LogWarn($"2sxc {EavSystemInfo.VersionString} install: {version} Skipping file because destination already exists: '{destinationFile}'");
+                continue;
+            }
+
+            MoveFileWithRetry(file, destinationFile, version);
+        }
+
+        // Try clean up the now-empty folder. Ignore errors in case something is still locked.
+        try
+        {
+            if (Directory.GetFileSystemEntries(source).Length == 0)
+            {
+                Directory.Delete(source, recursive: false);
+                LogInfo($"2sxc {EavSystemInfo.VersionString} install: {version} Removed empty folder '{source}'");
+            }
+        }
+        catch (Exception ex)
+        {
+            LogWarn($"2sxc {EavSystemInfo.VersionString} install: {version} Could not delete folder '{source}': {ex.Message}");
+        }
+    }
+
+    private void MoveFileWithRetry(string sourceFile, string targetFile, string version)
+    {
+        const int maxAttempts = 10;
+        for (var attempt = 1; attempt <= maxAttempts; attempt++)
+        {
+            try
+            {
+                LogInfo($"2sxc {EavSystemInfo.VersionString} install: {version} Moving file '{sourceFile}' -> '{targetFile}'");
+                File.Move(sourceFile, targetFile);
+                return;
+            }
+            catch (IOException ex) when (attempt < maxAttempts)
+            {
+                LogWarn($"2sxc {EavSystemInfo.VersionString} install: {version} File move attempt {attempt}/{maxAttempts} IO error, retrying '{sourceFile}' -> '{targetFile}': {ex.Message}");
+                Thread.Sleep(150 * attempt);
+            }
+            catch (UnauthorizedAccessException ex) when (attempt < maxAttempts)
+            {
+                LogWarn($"2sxc {EavSystemInfo.VersionString} install: {version} File move attempt {attempt}/{maxAttempts} access error, retrying '{sourceFile}' -> '{targetFile}': {ex.Message}");
+                Thread.Sleep(150 * attempt);
+            }
+        }
+
+        LogError($"2sxc {EavSystemInfo.VersionString} install error: {version} Failed moving file '{sourceFile}' -> '{targetFile}' after {maxAttempts} attempts.");
     }
 
 
@@ -206,8 +401,8 @@ public class SxcManager(
 
 
     #region Logging helpers
-    private void LogInfo(string message) => filelogger.Log(LogLevel.Information, Utilities.LogMessage(this, message));
-    private void LogWarn(string message) => filelogger.Log(LogLevel.Warning, Utilities.LogMessage(this, message));
-    private void LogError(string message) => filelogger.LogError(Utilities.LogMessage(this, message)); 
+    private void LogInfo(string message) => logger.Log(LogLevel.Information, Utilities.LogMessage(this, message));
+    private void LogWarn(string message) => logger.Log(LogLevel.Warning, Utilities.LogMessage(this, message));
+    private void LogError(string message) => logger.LogError(Utilities.LogMessage(this, message)); 
     #endregion
 }
