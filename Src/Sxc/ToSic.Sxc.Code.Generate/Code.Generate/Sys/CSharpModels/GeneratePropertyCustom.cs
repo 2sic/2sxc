@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Data.Sys.ContentTypes;
-using ToSic.Sxc.Cms.Data;
+﻿using ToSic.Sxc.Cms.Data;
 
 namespace ToSic.Sxc.Code.Generate.Sys;
 
@@ -9,7 +8,7 @@ internal class GeneratePropertyCustom(CSharpGeneratorHelper helper) : GeneratePr
 
     public override List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs)
     {
-        if (attribute.InputType() != "custom-gps")
+        if (attribute.InputType != "custom-gps")
             return [];
 
         var name = attribute.Name;
