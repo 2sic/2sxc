@@ -40,8 +40,10 @@ internal record ResponsiveSpecsOfTarget(
         // Handle null and already-typed scenarios
         switch (target)
         {
-            case null: return new(null, null, null, new HasLink(""), null);
-            case ResponsiveSpecsOfTarget already: return already;
+            case null:
+                return new(null, null, null, new HasLink(""), null);
+            case ResponsiveSpecsOfTarget already:
+                return already;
         }
 
         // Figure out what field it's from - either because it's a hyperlink - or an image inside a WYSIWYG field
@@ -58,7 +60,8 @@ internal record ResponsiveSpecsOfTarget(
                            ?? ImageDecorator.GetOrNull(mdProvider, []);
 
         // get the image decorator of the field of the content-type - e.g. the WYSIWYG field or Hyperlink field
-        var inputImgDecorator = ImageDecorator.GetOrNull(field?.Parent.Type[field.Name], []);
+        // Note: Parent / Type should never be null, except when the data is being mocked.
+        var inputImgDecorator = ImageDecorator.GetOrNull(field?.Parent?.Type?[field.Name], []);
 
         // figure out the link - either because it's already an IHasLink object, or it's possibly a string (or null-link)
         var link = target as IHasLink

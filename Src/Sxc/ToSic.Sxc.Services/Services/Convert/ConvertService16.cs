@@ -1,12 +1,8 @@
-﻿using ToSic.Sxc.Data.Sys.Factory;
+﻿using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Services.Sys.ConvertService;
 using ToSic.Sxc.Sys.ExecutionContext;
-
-// 2024-01-22 2dm
-// Remove all convert methods which are just missing the optional parameters, to make the API smaller.
-// Assume it has no side effects, must watch.
-// Remove this note 2024-Q3 (ca. July)
 
 namespace ToSic.Sxc.Services;
 
@@ -23,6 +19,13 @@ internal class ConvertService16(
 
     [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
+
+    public ITypedItem ToMockItem(object data, NoParamOrder npo = default, bool? propsRequired = default)
+        => Cdf.AsItem(data, new() { ItemIsStrict = true, UseMock = true})!;
+
+    public T ToMock<T>(object data, NoParamOrder npo = default, bool? propsRequired = default)
+        where T : class, ICanWrapData
+        => Cdf.AsCustom<T>(source: data, mock: true);
 
     /// <summary>
     /// EXPERIMENTAL
@@ -48,35 +51,34 @@ internal class ConvertService16(
 
     //public bool OptimizeBoolean => true;
 
-    //public T To<T>(object value) => value.ConvertOrDefault<T>(numeric: OptimizeNumbers, truthy: OptimizeBoolean);
 
-    public T? To<T>(object value, NoParamOrder npo = default, T? fallback = default) => cnvSvc.To(value, npo, fallback);
+    public T? To<T>(object value, NoParamOrder npo = default, T? fallback = default)
+        => cnvSvc.To(value, npo, fallback);
 
-    //public int ToInt(object value) => _cnvSvc.To<int>(value);
-    public int ToInt(object value, NoParamOrder npo = default, int fallback = 0) => cnvSvc.To(value, fallback: fallback);
+    public int ToInt(object value, NoParamOrder npo = default, int fallback = 0)
+        => cnvSvc.To(value, fallback: fallback);
 
-    //public Guid ToGuid(object value) => _cnvSvc.To<Guid>(value);
-    public Guid ToGuid(object value, NoParamOrder npo = default, Guid fallback = default) => cnvSvc.To(value, fallback: fallback);
+    public Guid ToGuid(object value, NoParamOrder npo = default, Guid fallback = default)
+        => cnvSvc.To(value, fallback: fallback);
 
-    //public float ToFloat(object value) => _cnvSvc.To<float>(value);
-    public float ToFloat(object value, NoParamOrder npo = default, float fallback = default) => cnvSvc.To(value, fallback: fallback);
+    public float ToFloat(object value, NoParamOrder npo = default, float fallback = default)
+        => cnvSvc.To(value, fallback: fallback);
 
-    //public decimal ToDecimal(object value) => _cnvSvc.To<decimal>(value);
-    public decimal ToDecimal(object value, NoParamOrder npo = default, decimal fallback = default) => cnvSvc.To(value, fallback: fallback);
+    public decimal ToDecimal(object value, NoParamOrder npo = default, decimal fallback = default)
+        => cnvSvc.To(value, fallback: fallback);
 
-    //public double ToDouble(object value) => _cnvSvc.To<double>(value);
-    public double ToDouble(object value, NoParamOrder npo = default, double fallback = default) => cnvSvc.To(value, fallback: fallback);
+    public double ToDouble(object value, NoParamOrder npo = default, double fallback = default)
+        => cnvSvc.To(value, fallback: fallback);
 
-    //public bool ToBool(object value) => _cnvSvc.To<bool>(value);
-    public bool ToBool(object value, NoParamOrder npo = default, bool fallback = false) => cnvSvc.To(value, fallback: fallback);
+    public bool ToBool(object value, NoParamOrder npo = default, bool fallback = false)
+        => cnvSvc.To(value, fallback: fallback);
         
-    //public string ToString(object value) => _cnvSvc.To<string>(value);
 
     public string? ToString(object value, NoParamOrder npo = default, string? fallback = default, bool fallbackOnNull = true) 
         => cnvSvc.ToString(value, npo, fallback, fallbackOnNull);
 
-    //public string ForCode(object value) => _code.Value.ForCode(value);
-    public string? ForCode(object value, NoParamOrder npo = default, string? fallback = default) => code.Value.ForCode(value, npo, fallback);
+    public string? ForCode(object value, NoParamOrder npo = default, string? fallback = default)
+        => code.Value.ForCode(value, npo, fallback);
         
 
     public IJsonService Json => json.Value;
