@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.AppJson;
+using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Sxc.Backend.Admin;
@@ -62,6 +63,7 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
         // Register LazySvc wrappers for basic services using factory overloads (DI will provide sp when resolving)
         services.AddSingleton(sp => new LazySvc<IAppReaderFactory>(sp));
         services.AddSingleton(sp => new LazySvc<IJsonService>(sp));
+        services.AddSingleton(sp => new LazySvc<AppCachePurger>(sp));
         services.AddSingleton<IEnumerable<IFileGenerator>>(_ => Array.Empty<IFileGenerator>());
         services.AddSingleton(sp => new LazySvc<IEnumerable<IFileGenerator>>(sp));
         services.AddSingleton<IAppJsonConfigurationService, FakeAppJsonConfigurationService>();
@@ -99,7 +101,8 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
             sp.GetRequiredService<IGlobalConfiguration>(),
             sp.GetRequiredService<ExtensionManifestService>(),
             sp.GetRequiredService<LazySvc<ExtensionInspectBackend>>(),
-            sp.GetRequiredService<LazySvc<CodeControllerReal>>()));
+            sp.GetRequiredService<LazySvc<CodeControllerReal>>(),
+            sp.GetRequiredService<LazySvc<AppCachePurger>>()));
 
         var sp = services.BuildServiceProvider() 
             ?? throw new InvalidOperationException("Failed to build service provider");
