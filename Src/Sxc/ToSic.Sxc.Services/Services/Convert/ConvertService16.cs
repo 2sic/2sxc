@@ -21,33 +21,21 @@ internal class ConvertService16(
 
     #region ToMock() new v21
 
-
-    public ITypedItem ToMockItem(object data, NoParamOrder npo = default, bool? propsRequired = default)
+    ITypedItem IConvertService16.ToMockItem(object data, NoParamOrder npo, bool? propsRequired)
         => Cdf.AsItem(data, new() { ItemIsStrict = true, UseMock = true})!;
 
-    public T ToMock<T>(object data, NoParamOrder npo = default, bool? propsRequired = default)
-        where T : class, ICanWrapData
+    T IConvertService16.ToMock<T>(object data, NoParamOrder npo, bool? propsRequired)
         => Cdf.AsCustom<T>(source: data, mock: true);
 
     #endregion
 
-    #region New v17 As conversions - removed again for v21, was never published
+    #region New v17 As conversions - used in Content App etc.
 
-    /// <summary>
-    /// EXPERIMENTAL
-    /// </summary>
-    /// <returns></returns>
-    [PrivateApi("WIP, don't publish yet")]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
+    /// <inheritdoc/>
     T IConvertService16.As<T>(ICanBeEntity source, NoParamOrder npo)
         => Cdf.AsCustom<T>(source: source, npo: npo)!;
 
-    /// <summary>
-    /// EXPERIMENTAL
-    /// </summary>
-    /// <returns></returns>
-    [PrivateApi("WIP, don't publish yet")]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
+    /// <inheritdoc/>
     IEnumerable<T> IConvertService16.AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder npo, bool nullIfNull)
         => Cdf.AsCustomList<T>(source: source, npo: npo, nullIfNull: nullIfNull);
 
@@ -89,12 +77,4 @@ internal class ConvertService16(
 
     public IJsonService Json => json.Value;
 
-
-    #region Invisible Converts for backward compatibility - 2dm removed 2024-01-22 since it's not in the interface and can't be in use - del 2024-Q3
-
-    //public int ToInt32(object value) => ToInt(value);
-
-    //public float ToSingle(object value) => ToFloat(value);
-
-    #endregion
 }
