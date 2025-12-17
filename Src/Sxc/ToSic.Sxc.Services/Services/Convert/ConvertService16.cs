@@ -33,23 +33,23 @@ internal class ConvertService16(
 
     #region New v17 As conversions - removed again for v21, was never published
 
-    ///// <summary>
-    ///// EXPERIMENTAL
-    ///// </summary>
-    ///// <returns></returns>
-    //[PrivateApi("WIP, don't publish yet")]
-    //[ShowApiWhenReleased(ShowApiMode.Never)]
-    //T IConvertService16.As<T>(ICanBeEntity source, NoParamOrder npo)
-    //    => Cdf.AsCustom<T>(source: source, npo: npo)!;
+    /// <summary>
+    /// EXPERIMENTAL
+    /// </summary>
+    /// <returns></returns>
+    [PrivateApi("WIP, don't publish yet")]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    T IConvertService16.As<T>(ICanBeEntity source, NoParamOrder npo)
+        => Cdf.AsCustom<T>(source: source, npo: npo)!;
 
-    ///// <summary>
-    ///// EXPERIMENTAL
-    ///// </summary>
-    ///// <returns></returns>
-    //[PrivateApi("WIP, don't publish yet")]
-    //[ShowApiWhenReleased(ShowApiMode.Never)]
-    //IEnumerable<T> IConvertService16.AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder npo, bool nullIfNull)
-    //    => Cdf.AsCustomList<T>(source: source, npo: npo, nullIfNull: nullIfNull);
+    /// <summary>
+    /// EXPERIMENTAL
+    /// </summary>
+    /// <returns></returns>
+    [PrivateApi("WIP, don't publish yet")]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    IEnumerable<T> IConvertService16.AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder npo, bool nullIfNull)
+        => Cdf.AsCustomList<T>(source: source, npo: npo, nullIfNull: nullIfNull);
 
     #endregion
 

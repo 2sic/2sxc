@@ -141,17 +141,15 @@ public interface IConvertService16
     /// </summary>
     IJsonService Json { get; }
 
-    #region New v17 As conversions - currently disabled, as the public API should be using the ITypedApiService which is safer
+    #region New v17 As conversions - used in Content App etc.
 
-    //[PrivateApi("WIP, don't publish yet")]
-    //[ShowApiWhenReleased(ShowApiMode.Never)]
-    //T As<T>(ICanBeEntity source, NoParamOrder npo = default)
-    //    where T : class, ICanWrapData;
-
-    //[PrivateApi("WIP, don't publish yet")]
-    //[ShowApiWhenReleased(ShowApiMode.Never)]
-    //IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder npo = default, bool nullIfNull = default)
-    //    where T : class, ICanWrapData;
+    /// <inheritdoc cref="ITypedApi.As{T}"/>
+    T As<T>(ICanBeEntity source, NoParamOrder npo = default)
+        where T : class, ICanWrapData;
+    
+    /// <inheritdoc cref="ITypedApi.AsList{T}"/>
+    IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder npo = default, bool nullIfNull = default)
+        where T : class, ICanWrapData;
 
     #endregion
 
