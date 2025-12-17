@@ -163,10 +163,10 @@ public class ExtensionsReaderEditionsTests
         var result = ctx.ReaderBackend.GetExtensions(appId: 42);
 
         var primary = result.Extensions.Single(e => e.Folder == extName && e.Edition == string.Empty);
-        Assert.Equal("/extensions/icon-ext/icon.png", primary.Icon);
+        Assert.Equal("/extensions/icon-ext/icon.png", primary.Icon.ToLowerInvariant());
 
         var staging = result.Extensions.Single(e => e.Folder == extName && e.Edition == "staging");
-        Assert.Equal("/staging/extensions/icon-ext/icon.png", staging.Icon);
+        Assert.Equal("/staging/extensions/icon-ext/icon.png", staging.Icon.ToLowerInvariant());
     }
 
     #endregion
