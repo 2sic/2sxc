@@ -1,5 +1,3 @@
-
-
 using ToSic.Eav.Sys;
 // ReSharper disable once CheckNamespace
 
@@ -133,6 +131,42 @@ public class ExtensionsReaderEditionsTests
         Assert.Contains(extensions, e => e.Edition == "staging");
         Assert.Contains(extensions, e => e.Edition == "live");
         Assert.Contains(extensions, e => e.Edition == "dev");
+    }
+
+    [Fact]
+    public void GetExtensions_ReturnsIconUrlsPerEdition()
+    {
+        using var ctx = ExtensionsReaderTestContext.Create();
+
+        const string extName = "icon-ext";
+        const string inputType = "string-icon";
+
+        ctx.SetupExtension(extName, new
+        {
+            version = "1.0.0",
+            inputTypeInside = inputType,
+            editionsSupported = true
+        });
+
+        var primaryIcon = Path.Combine(ctx.TempRoot, FolderConstants.AppExtensionsFolder, extName, "icon.png");
+        File.WriteAllText(primaryIcon, "icon-primary");
+
+        ctx.SetupEdition("staging", extName, new
+        {
+            version = "1.0.0-staging",
+            inputTypeInside = inputType
+        });
+
+        var stagingIcon = Path.Combine(ctx.TempRoot, "staging", FolderConstants.AppExtensionsFolder, extName, "icon.png");
+        File.WriteAllText(stagingIcon, "icon-staging");
+
+        var result = ctx.ReaderBackend.GetExtensions(appId: 42);
+
+        var primary = result.Extensions.Single(e => e.Folder == extName && e.Edition == string.Empty);
+        Assert.Equal("/extensions/icon-ext/icon.png", primary.Icon);
+
+        var staging = result.Extensions.Single(e => e.Folder == extName && e.Edition == "staging");
+        Assert.Equal("/staging/extensions/icon-ext/icon.png", staging.Icon);
     }
 
     #endregion
