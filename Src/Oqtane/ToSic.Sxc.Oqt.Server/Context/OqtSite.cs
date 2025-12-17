@@ -111,7 +111,7 @@ internal sealed class OqtSite: Site<Site>
 
 
     /// <inheritdoc />
-    public override string ContentPath => string.Format(OqtConstants.ContentRootPublicBase, UnwrappedSite.TenantId, Id);
+    public override string ContentPath => string.Format(OqtConstants.ContentRootPublicBase, Alias.TenantId, Id);
 
     public override int ZoneId
     {
