@@ -3,6 +3,7 @@ using System.Text.Json;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using static ToSic.Eav.Sys.FolderConstants;
 using static ToSic.Sxc.ImportExport.Package.Sys.PackageIndexFile;
+using static ToSic.Sxc.ImportExport.Package.Sys.PackageInstallFile;
 using static ToSic.Sxc.WebApi.Tests.Extensions.ExportExtensionTestHelpers;
 
 // ReSharper disable once CheckNamespace
@@ -359,7 +360,7 @@ public class ExportExtensionTests
         
         foreach (var entry in zip.Entries.Where(e => !string.IsNullOrEmpty(e.Name)))
         {
-            if (!entry.FullName.StartsWith("install-package.json")
+            if (!entry.FullName.Equals(FileName, StringComparison.OrdinalIgnoreCase)
                 && !entry.FullName.StartsWith(DataFolderProtected))
                 Assert.StartsWith($"{AppExtensionsFolder}/", entry.FullName);
         }
