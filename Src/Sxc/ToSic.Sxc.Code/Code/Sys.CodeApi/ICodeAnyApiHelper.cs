@@ -34,8 +34,9 @@ public interface ICodeAnyApiHelper
     /// This should ensure that an Edit service requested through Kit14 and Kit16 are both the same, etc.
     /// </summary>
     /// <typeparam name="TService"></typeparam>
-    /// <param name="protector"></param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="reuse">if true, then a service requested multiple times will return the same instance</param>
+    /// <param name="type">rare option: type name of the service to create; probably not relevant any more today</param>
     /// <returns></returns>
     [PrivateApi("new v17.02")]
     TService GetService<TService>(NoParamOrder npo = default, bool reuse = false, Type? type = default) where TService : class;

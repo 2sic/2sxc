@@ -148,7 +148,7 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
     /// Vary by Parameters is an overload we only use in testing.
     /// </summary>
     /// <param name="parameters"></param>
-    /// <param name="protector"></param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="names"></param>
     /// <param name="caseSensitive"></param>
     /// <returns></returns>
