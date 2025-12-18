@@ -41,7 +41,7 @@ END
 GO
 
 -- =====================================================================
--- TsDynDataRelationship: add ChildExternalId + TransDeletedId to support undelete
+-- TsDynDataRelationship: add ChildExternalId to support undelete
 -- =====================================================================
 
 -- Add ChildExternalId column on existing installations
@@ -58,53 +58,40 @@ BEGIN
 END
 GO
 
--- Add TransDeletedId column on existing installations
+-- Remove TransDeletedId (was a short-lived experiment)
 IF OBJECT_ID('[dbo].[TsDynDataRelationship]', 'U') IS NOT NULL
-    AND NOT EXISTS (
-        SELECT *
-        FROM sys.columns
-        WHERE Name = N'TransDeletedId'
-          AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataRelationship]')
-    )
 BEGIN
-    PRINT '... Adding column [TransDeletedId] to [dbo].[TsDynDataRelationship]';
-    ALTER TABLE [dbo].[TsDynDataRelationship] ADD [TransDeletedId] [int] NULL;
-END
-GO
-
--- Add FK to TsDynDataTransaction for TransDeletedId
-IF OBJECT_ID('[dbo].[TsDynDataRelationship]', 'U') IS NOT NULL
-    AND EXISTS (
-        SELECT *
-        FROM sys.columns
-        WHERE Name = N'TransDeletedId'
-          AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataRelationship]')
-    )
-    AND NOT EXISTS (
+    IF EXISTS (
         SELECT *
         FROM sys.foreign_keys
         WHERE name = 'FK_TsDynDataRelationship_TsDynDataTransactionDeleted'
           AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataRelationship]')
     )
-BEGIN
-    PRINT '... Adding FK FK_TsDynDataRelationship_TsDynDataTransactionDeleted';
-    ALTER TABLE [dbo].[TsDynDataRelationship] WITH CHECK ADD CONSTRAINT [FK_TsDynDataRelationship_TsDynDataTransactionDeleted]
-        FOREIGN KEY([TransDeletedId]) REFERENCES [dbo].[TsDynDataTransaction] ([TransactionId]);
-    ALTER TABLE [dbo].[TsDynDataRelationship] CHECK CONSTRAINT [FK_TsDynDataRelationship_TsDynDataTransactionDeleted];
-END
-GO
+    BEGIN
+        PRINT '... Dropping FK FK_TsDynDataRelationship_TsDynDataTransactionDeleted';
+        ALTER TABLE [dbo].[TsDynDataRelationship] DROP CONSTRAINT [FK_TsDynDataRelationship_TsDynDataTransactionDeleted];
+    END
 
--- Add index for TransDeletedId
-IF OBJECT_ID('[dbo].[TsDynDataRelationship]', 'U') IS NOT NULL
-    AND NOT EXISTS (
+    IF EXISTS (
         SELECT *
         FROM sys.indexes
         WHERE name = 'IX_TsDynDataRelationship_TransDeletedId'
           AND object_id = OBJECT_ID('[dbo].[TsDynDataRelationship]')
     )
-BEGIN
-    PRINT '... Adding index IX_TsDynDataRelationship_TransDeletedId';
-    CREATE NONCLUSTERED INDEX [IX_TsDynDataRelationship_TransDeletedId] ON [dbo].[TsDynDataRelationship] ([TransDeletedId] ASC)
-    WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+    BEGIN
+        PRINT '... Dropping index IX_TsDynDataRelationship_TransDeletedId';
+        DROP INDEX [IX_TsDynDataRelationship_TransDeletedId] ON [dbo].[TsDynDataRelationship];
+    END
+
+    IF EXISTS (
+        SELECT *
+        FROM sys.columns
+        WHERE Name = N'TransDeletedId'
+          AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataRelationship]')
+    )
+    BEGIN
+        PRINT '... Dropping column [TransDeletedId] from [dbo].[TsDynDataRelationship]';
+        ALTER TABLE [dbo].[TsDynDataRelationship] DROP COLUMN [TransDeletedId];
+    END
 END
 GO
