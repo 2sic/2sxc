@@ -101,7 +101,7 @@ public class AppExtensionsControllerReal(
     }
 
     /// <summary>
-    /// Inspect endpoint mirroring DNN behavior.
+    /// Inspect endpoint
     /// </summary>
     /// <param name="appId">App identifier</param>
     /// <param name="name">Extension folder name</param>

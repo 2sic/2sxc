@@ -14,6 +14,7 @@ using ToSic.Sys.Coding;
 using ToSic.Sys.DI;
 using ToSic.Sys.Logging;
 using ToSic.Eav.Apps.Sys.FileSystemState;
+using static ToSic.Sxc.ImportExport.Package.Sys.PackageIndexFile;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
@@ -98,6 +99,40 @@ internal sealed class ExportExtensionTestContext : IDisposable
 
         var json = JsonSerializer.Serialize(sanitized, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(jsonPath, json, new UTF8Encoding(false));
+    }
+
+    public void SetExtensionsBundled(string name, string bundledCommaSeparated)
+    {
+        var jsonPath = Path.Combine(TempRoot, FolderConstants.AppExtensionsFolder, name,
+            FolderConstants.DataFolderProtected, FolderConstants.AppExtensionJsonFile);
+        var json = File.ReadAllText(jsonPath);
+
+        using var doc = JsonDocument.Parse(json);
+        var root = doc.RootElement.ValueKind == JsonValueKind.Object
+            ? doc.RootElement
+            : throw new InvalidOperationException("extension.json root must be an object");
+
+        var dict = root
+            .EnumerateObject()
+            .ToDictionary(p => p.Name, p => p.Value.Clone(), StringComparer.Ordinal);
+
+        using var bundledDoc = JsonDocument.Parse(JsonSerializer.Serialize(bundledCommaSeparated));
+        dict["extensionsBundled"] = bundledDoc.RootElement.Clone();
+
+        var newJson = JsonSerializer.Serialize(dict, new JsonSerializerOptions
+        {
+            WriteIndented = true,
+        });
+
+        File.WriteAllText(jsonPath, newJson, new UTF8Encoding(false));
+    }
+
+    public void WriteInstalledLockFile(string name, string lockJson)
+    {
+        var lockPath = Path.Combine(TempRoot, FolderConstants.AppExtensionsFolder, name,
+            FolderConstants.DataFolderProtected, LockFileName);
+        Directory.CreateDirectory(Path.GetDirectoryName(lockPath)!);
+        File.WriteAllText(lockPath, lockJson, new UTF8Encoding(false));
     }
 
     private static readonly JsonElement JsonNullElement = JsonDocument.Parse("null").RootElement.Clone();
