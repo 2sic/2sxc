@@ -23,7 +23,7 @@ public class ExtensionsReaderEditionsTests
             editionsSupported = false
         });
         
-        var result = ctx.ReaderBackend.GetExtensions(appId: 42);
+        var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
         
         Assert.NotNull(result);
         var extensions = result.Extensions.Where(e => e.Folder == extName).ToList();
@@ -45,7 +45,7 @@ public class ExtensionsReaderEditionsTests
             inputTypeInside = "string-test"
         });
         
-        var result = ctx.ReaderBackend.GetExtensions(appId: 42);
+        var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
         
         var extensions = result.Extensions.Where(e => e.Folder == extName).ToList();
         Assert.Single(extensions);
@@ -76,7 +76,7 @@ public class ExtensionsReaderEditionsTests
             editionName = "Staging"
         });
         
-        var result = ctx.ReaderBackend.GetExtensions(appId: 42);
+        var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
         
         var extensions = result.Extensions.Where(e => e.Folder == extName).ToList();
         Assert.Equal(2, extensions.Count);
@@ -122,7 +122,7 @@ public class ExtensionsReaderEditionsTests
             inputTypeInside = inputType
         });
         
-        var result = ctx.ReaderBackend.GetExtensions(appId: 42);
+        var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
         
         var extensions = result.Extensions.Where(e => e.Folder == extName).ToList();
         Assert.Equal(4, extensions.Count);
@@ -160,7 +160,7 @@ public class ExtensionsReaderEditionsTests
         var stagingIcon = Path.Combine(ctx.TempRoot, "staging", FolderConstants.AppExtensionsFolder, extName, "icon.png");
         File.WriteAllText(stagingIcon, "icon-staging");
 
-        var result = ctx.ReaderBackend.GetExtensions(appId: 42);
+        var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
 
         var primary = result.Extensions.Single(e => e.Folder == extName && e.Edition == string.Empty);
         Assert.Equal("/extensions/icon-ext/icon.png", primary.Icon.ToLowerInvariant());
@@ -276,7 +276,7 @@ public class ExtensionsReaderEditionsTests
             customProp = "test-value",
             nestedObj = new { key = "value" }
         });
-        var result = ctx.ReaderBackend.GetExtensions(appId: 42);
+        var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
         var extensions = result.Extensions.Where(e => e.Folder == extName).ToList();
         var stagingEdition = extensions.Single(e => e.Edition == "staging");
         var config = stagingEdition.Configuration;
@@ -307,7 +307,7 @@ public class ExtensionsReaderEditionsTests
             editionsSupported = true
         });
         
-        var result = ctx.ReaderBackend.GetExtensions(appId: 42);
+        var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
         
         var extensions = result.Extensions.Where(e => e.Folder == extName).ToList();
         Assert.Single(extensions);
@@ -346,7 +346,7 @@ public class ExtensionsReaderEditionsTests
             editionsSupported = false
         });
         
-        var result = ctx.ReaderBackend.GetExtensions(appId: 42);
+        var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
         
         Assert.Equal(3, result.Extensions.Count);
 
