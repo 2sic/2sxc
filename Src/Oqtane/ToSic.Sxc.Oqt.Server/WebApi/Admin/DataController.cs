@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Oqt.Server.Controllers;
 
@@ -25,6 +26,7 @@ public class DataController() : OqtStatefulControllerBase(DataControllerReal.Log
 {
     private DataControllerReal Real => GetService<DataControllerReal>();
 
+    /// <inheritdoc />
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public IActionResult BundleExport(int appId, Guid exportConfiguration, int indentation = 0)
@@ -34,19 +36,34 @@ public class DataController() : OqtStatefulControllerBase(DataControllerReal.Log
         return Real.BundleExport(appId, exportConfiguration, indentation);
     }
 
+    /// <inheritdoc />
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
     public ImportResultDto BundleImport(int zoneId, int appId)
         => Real.BundleImport(new(Request), zoneId, appId);
 
+    /// <inheritdoc />
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public bool BundleSave(int appId, Guid exportConfiguration, int indentation = 0)
         => Real.BundleSave(appId, exportConfiguration, indentation);
 
+    /// <inheritdoc />
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public bool BundleRestore(string fileName, int zoneId, int appId)
         => Real.BundleRestore(fileName, zoneId, appId);
+
+    /// <inheritdoc />
+    [HttpGet]
+    [Authorize(Roles = RoleNames.Host)]
+    public IReadOnlyList<WorkEntityRecycleBin.RecycleBinItem> GetRecycleBin(int appId)
+        => Real.GetRecycleBin(appId);
+
+    /// <inheritdoc />
+    [HttpGet]
+    [Authorize(Roles = RoleNames.Host)]
+    public void Recycle(int appId, int transactionId)
+        => Real.Recycle(appId, transactionId);
 }
