@@ -23,7 +23,8 @@ internal class DnnPageChanges(LazySvc<IFeaturesService> featuresService, Generat
     {
         var l = Log.Fn<int>("Will apply PageChanges");
 
-        if (renderResult == null) return 0;
+        if (renderResult == null)
+            return 0;
 
         var dnnPage = new DnnHtmlPage();
 
@@ -34,7 +35,8 @@ internal class DnnPageChanges(LazySvc<IFeaturesService> featuresService, Generat
 
         var resourceFeatures = ResourceFeatures(dnnPage, renderResult.FeaturesFromResources);
 
-        try{
+        try
+        {
             var httpHeaderChanges = ApplyHttpHeaders(page, renderResult);
             count += httpHeaderChanges;
         }
@@ -103,15 +105,19 @@ internal class DnnPageChanges(LazySvc<IFeaturesService> featuresService, Generat
         // Register CSP changes for applying once all modules have been prepared
         // Note that in cached scenarios, CspEnabled is true, but it may have been turned off since
         if (result.CspEnabled && featuresService.Value.IsEnabled(SxcFeatures.ContentSecurityPolicy.NameId))
-            PageCsp(result.CspEnforced).Add(result.CspParameters);
+            PageCsp(result.CspEnforced).Add(result.CspParameters ?? []);
 
-        if (page?.Response == null) return l.Return(0, "error, HttpResponse is null");
-        if (page.Response.HeadersWritten) return l.Return(0, "error, to late for adding http headers");
-        if (httpHeaders.SafeNone()) return l.Return(0, "ok, no headers to add");
+        if (page?.Response == null)
+            return l.Return(0, "error, HttpResponse is null");
+        if (page.Response.HeadersWritten)
+            return l.Return(0, "error, to late for adding http headers");
+        if (httpHeaders.SafeNone())
+            return l.Return(0, "ok, no headers to add");
 
         foreach (var httpHeader in httpHeaders)
         {
-            if (string.IsNullOrWhiteSpace(httpHeader.Name)) continue;
+            if (string.IsNullOrWhiteSpace(httpHeader.Name))
+                continue;
             Log.A($"add http header: {httpHeader.Name}:{httpHeader.Value}");
             // TODO: The CSP header can only exist once
             // So to do this well, we'll need to merge them in future, 
@@ -157,7 +163,8 @@ internal class DnnPageChanges(LazySvc<IFeaturesService> featuresService, Generat
     {
         try
         {
-            if (page?.Response == null || result?.HttpStatusCode == null) return;
+            if (page?.Response == null || result?.HttpStatusCode == null)
+                return;
         }
         catch (Exception ex)
         {
@@ -172,7 +179,8 @@ internal class DnnPageChanges(LazySvc<IFeaturesService> featuresService, Generat
         page.Response.StatusCode = code;
         // Skip IIS & upstream redirects to a custom 404 so the Dnn page is preserved
         page.Response.TrySkipIisCustomErrors = true;
-        if (result.HttpStatusMessage == null) return;
+        if (result.HttpStatusMessage == null)
+            return;
 
         Log.A($"Custom status Description '{result.HttpStatusMessage}'.");
         page.Response.StatusDescription = result.HttpStatusMessage;
@@ -180,13 +188,13 @@ internal class DnnPageChanges(LazySvc<IFeaturesService> featuresService, Generat
 
 
     public void AttachAssets(IList<ClientAsset> ass, Page page)
-    {
-        ass.ToList().ForEach(a =>
+        => ass.ToList().ForEach(a =>
         {
-            if (a.IsJs) RegisterJsScript(page, a);
-            else ClientResourceManager.RegisterStyleSheet(page, a.Url, a.Priority, DnnProviderName(a.PosInPage));
+            if (a.IsJs)
+                RegisterJsScript(page, a);
+            else
+                ClientResourceManager.RegisterStyleSheet(page, a.Url, a.Priority, DnnProviderName(a.PosInPage));
         });
-    }
 
     /// <summary>
     /// Register JS script with additional html attributes.
@@ -204,36 +212,39 @@ internal class DnnPageChanges(LazySvc<IFeaturesService> featuresService, Generat
     /// <param name="clientAsset"></param>
     private void RegisterJsScript(Page page, ClientAsset clientAsset)
     {
+        ClientResourceManager.RegisterScript(page, clientAsset.Url, clientAsset.Priority);
+
         var include = new DnnJsInclude 
         {
             ForceProvider = DnnProviderName(clientAsset.PosInPage), 
             Priority = clientAsset.Priority, 
             FilePath = clientAsset.Url, 
             AddTag = false
-        }; // direct dependency on ClientDependency.Core.dll (included in default DNN installation)
-        if (clientAsset.HtmlAttributes.Count > 0)
+        };
+        
+        // direct dependency on ClientDependency.Core.dll (included in default DNN installation)
+        if (clientAsset.HtmlAttributes?.Count > 0)
         {
             // Convert HtmlAttributes dictionary to string.
             // The syntax for the string must be: key1:value1, key2:value2   etc...
             // Used to set the HtmlAttributes on DnnJsInclude class via a string.
             // This is DNN (and ClientDependency) supported way to provide additional HtmlAttributes
             // https://github.com/Shazwazza/ClientDependency/wiki/Html-Attributes
-            var list = clientAsset.HtmlAttributes.Select(a => $"{a.Key}:{(!string.IsNullOrEmpty(a.Value) ? a.Value : a.Key)}").ToList();
+            var list = clientAsset.HtmlAttributes
+                .Select(a => $"{a.Key}:{(!string.IsNullOrEmpty(a.Value) ? a.Value : a.Key)}")
+                .ToList();
             var htmlAttributesAsString = string.Join(",", list);
             include.HtmlAttributesAsString = htmlAttributesAsString;
         }
         page.FindControl("ClientResourceIncludes")?.Controls.Add(include);
     }
 
-    private string DnnProviderName(string position)
-    {
-        switch (position.ToLowerInvariant())
+    private static string DnnProviderName(string position)
+        => position.ToLowerInvariant() switch
         {
-            case AddToBody: return DnnBodyProvider.DefaultName;
-            case AddToHead: return DnnPageHeaderProvider.DefaultName;
-            case AddToBottom: return DnnFormBottomProvider.DefaultName;
-            default: return "";
-        }
-    }
-
+            AddToBody => DnnBodyProvider.DefaultName,
+            AddToHead => DnnPageHeaderProvider.DefaultName,
+            AddToBottom => DnnFormBottomProvider.DefaultName,
+            _ => ""
+        };
 }
