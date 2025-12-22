@@ -127,17 +127,18 @@ public class AppExtensionsControllerReal(
     /// <returns>HTTP response containing the file data.</returns>
     public THttpResponseType Download(int appId, string name)
         => exportExtensionLazy.Value.Export(appId, name);
-    
+
     /// <summary>
     /// Delete an extension and optionally its data.
     /// </summary>
+    /// <param name="zoneId">Zone identifier</param>
     /// <param name="appId">App identifier</param>
     /// <param name="name">Extension folder name</param>
     /// <param name="edition">Optional edition name</param>
     /// <param name="force">Force deletion even when files or data changed.</param>
     /// <param name="withData">Delete related data when true (requires force).</param>
     /// <returns>true if deleted</returns>
-    public bool Delete(int appId, string name, string? edition = null, bool force = false, bool withData = false)
-        => deleteLazy.Value.DeleteExtension(appId, name, edition, force, withData);
+    public bool Delete(int zoneId, int appId, string name, string? edition = null, bool force = false, bool withData = false)
+        => deleteLazy.Value.DeleteExtension(zoneId, appId, name, edition, force, withData);
 }
 

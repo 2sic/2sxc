@@ -79,11 +79,12 @@ public interface IAppExtensionsController<out THttpResponse>
     /// <summary>
     /// Delete an extension and optionally its data.
     /// </summary>
+    /// <param name="zoneId">Zone identifier</param>
     /// <param name="appId">App identifier</param>
     /// <param name="name">Extension folder name</param>
     /// <param name="edition">Optional edition name</param>
     /// <param name="force">Force deletion even when files or data changed.</param>
     /// <param name="withData">Delete related data when true (requires force).</param>
     /// <returns>true if deleted</returns>
-    bool Delete(int appId, string name, string? edition = null, bool force = false, bool withData = false);
+    bool Delete(int zoneId, int appId, string name, string? edition = null, bool force = false, bool withData = false);
 }

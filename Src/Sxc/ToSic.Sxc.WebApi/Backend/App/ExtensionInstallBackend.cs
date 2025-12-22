@@ -80,9 +80,8 @@ public class ExtensionInstallBackend(
                         throw new InvalidOperationException(installResult.Error ?? $"install failed:'{folderName}'");
                 }
 
-                // Extension if it includes data, reload the app data
-                if (manifestValidation.Manifest?.DataInside == true)
-                    appCachePurgerLazy.Value.Purge(zoneId, appId);
+                // app-state refresh should happen on every install
+                appCachePurgerLazy.Value.Purge(zoneId, appId);
 
                 installed.Add(folderName);
             }

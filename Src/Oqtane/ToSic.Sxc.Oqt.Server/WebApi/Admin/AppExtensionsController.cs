@@ -101,6 +101,6 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
     [HttpDelete]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool Delete(int appId, string name, string edition = null, bool force = false, bool withData = false)
-        => Real.Delete(appId, name, edition, force, withData);
+    public bool Delete(int zoneId, int appId, string name, string edition = null, bool force = false, bool withData = false)
+        => Real.Delete(zoneId, appId, name, edition, force, withData);
 }

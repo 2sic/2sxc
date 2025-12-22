@@ -1,3 +1,4 @@
+using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Sys;
@@ -14,14 +15,15 @@ public class ExtensionDeleteBackend(
     IAppPathsMicroSvc appPathSvc,
     ExtensionManifestService manifestService,
     LazySvc<ExtensionInspectBackend> inspectorLazy,
-    LazySvc<EntityApi> entityApiLazy)
-    : ServiceBase("Bck.ExtDel", connect: [appReadersLazy, site, appPathSvc, manifestService, inspectorLazy, entityApiLazy])
+    LazySvc<EntityApi> entityApiLazy,
+    LazySvc<AppCachePurger> appCachePurgerLazy)
+    : ServiceBase("Bck.ExtDel", connect: [appReadersLazy, site, appPathSvc, manifestService, inspectorLazy, entityApiLazy, appCachePurgerLazy])
 {
     private ReadOnlyFileHelper ReadOnlyHelper => field ??= new(Log);
 
-    public bool DeleteExtension(int appId, string name, string? edition, bool force, bool withData)
+    public bool DeleteExtension(int zoneId, int appId, string name, string? edition, bool force, bool withData)
     {
-        var l = Log.Fn<bool>($"a:{appId}, name:{name}, edition:{edition}, force:{force}, withData:{withData}");
+        var l = Log.Fn<bool>($"z:{zoneId}, a:{appId}, name:{name}, edition:{edition}, force:{force}, withData:{withData}");
 
         if (string.IsNullOrWhiteSpace(name) || !ExtensionFolderNameValidator.IsValid(name))
             throw l.Ex(new ArgumentException("invalid extension name", nameof(name)));
@@ -62,6 +64,9 @@ public class ExtensionDeleteBackend(
             DeleteData(appReader, appId, contentTypesWithData);
 
         DeleteFiles(appPaths.PhysicalPath, editionSegment, name);
+
+        // app-state refresh should happen on every uninstall
+        appCachePurgerLazy.Value.Purge(zoneId, appId);
 
         return l.ReturnTrue("deleted");
     }
