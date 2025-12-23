@@ -37,9 +37,15 @@ public abstract class CSharpGeneratorBase(IUser user, IAppReaderFactory appReadF
             AppId = parameters.AppId,
             Edition = parameters.Edition ?? "",
             DateTime = parameters.DateTime,
+            Namespace = parameters.Namespace,
+            TargetPath = parameters.TargetPath,
+            ContentTypes = parameters.ContentTypes,
             AppContentTypes = appReader,
             AppName = appReader.Specs.Name,
         };
+        if (!string.IsNullOrWhiteSpace(parameters.Namespace))
+            specs = specs with { DataNamespace = parameters.Namespace! };
+
         return specs;
     }
     

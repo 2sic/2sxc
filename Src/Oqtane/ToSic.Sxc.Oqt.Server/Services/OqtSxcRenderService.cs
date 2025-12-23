@@ -5,6 +5,7 @@ using Oqtane.Repository;
 using Oqtane.Security;
 using Oqtane.Shared;
 using System.Globalization;
+using Oqtane.Services;
 using ToSic.Sxc.Oqt.Server.Blocks;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Plumbing;
@@ -18,7 +19,7 @@ public class OqtSxcRenderService(
     IHttpContextAccessor accessor,
     Generator<IOqtSxcViewBuilder> oqtSxcViewBuilder,
     AliasResolver aliasResolver,
-    ISiteRepository sites,
+    ISiteService sites,
     IPageRepository pages,
     IModuleRepository modules,
     IModuleDefinitionRepository definitions,
@@ -39,7 +40,7 @@ public class OqtSxcRenderService(
             // Set User culture
             if (@params.Culture != CultureInfo.CurrentUICulture.Name) OqtCulture.SetCulture(@params.Culture);
 
-            var site = sites.GetSite(alias.SiteId);
+            var site = sites.GetSiteAsync(alias.SiteId).GetAwaiter().GetResult();
             if (site == null)
                 return Forbidden("Unauthorized Site Get Attempt {SiteId}", alias.SiteId);
 

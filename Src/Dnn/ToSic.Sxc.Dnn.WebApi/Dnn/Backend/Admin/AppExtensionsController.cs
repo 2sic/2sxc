@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 
 [DnnLogExceptions]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppExtensionsController() : DnnSxcControllerBase(RealController.LogSuffix), IAppExtensionsController<HttpResponseMessage>
+public class AppExtensionsController() : DnnSxcControllerBase(RealController.LogSuffix), IAppExtensionsController
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
@@ -46,18 +46,18 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public bool Install(int appId, string editions = "", bool overwrite = false)
-        => Real.Install(new(Request, HttpContext.Current.Request), appId, editions, overwrite);
+    public bool Install(int zoneId, int appId, string editions = "", bool overwrite = false)
+        => Real.Install(new(Request, HttpContext.Current.Request), zoneId, appId, editions, overwrite);
 
     /// <inheritdoc />
     [HttpPost]
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public bool InstallFrom(int appId, [FromBody] string[] urls, string editions = "", bool overwrite = false)
+    public bool InstallFrom(int zoneId, int appId, [FromBody] string[] urls, string editions = "", bool overwrite = false)
     {
         SysHlp.PreventServerTimeout600();
-        return Real.InstallFrom(urls, appId, editions, overwrite);
+        return Real.InstallFrom(urls, zoneId, appId, editions, overwrite);
     }
 
     /// <inheritdoc />

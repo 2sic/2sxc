@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Data.Models;
 /// * Allow the model to be used with all content types `*`
 /// * Automatically find the best stream of data to use with the model, if it doesn't match the model name
 /// 
-/// Typical use is for custom data such as classes inheriting from <see cref="Custom.Data.CustomItem"/>
+/// Typical use is for custom data such as classes inheriting from [](xref:Custom.Data.CustomItem)
 /// which takes an entity and then provides a strongly typed wrapper around it.
 /// 
 /// History: New / WIP in v19.01

@@ -1,7 +1,7 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
     
-    <package name="2sxc" type="Module" version="20.00.09">
+    <package name="2sxc" type="Module" version="21.00.00">
       <friendlyName> Content</friendlyName>
       <description>2sxc is a DNN Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
@@ -61,10 +61,15 @@
               <name>20.00.05.SqlDataProvider</name>
               <version>20.00.05</version>
             </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>21.00.00.SqlDataProvider</name>
+              <version>21.00.00</version>
+            </script>
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>20.00.09</version>
+              <version>21.00.00</version>
             </script>
           </scripts>
         </component>
@@ -403,8 +408,8 @@
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
               <name>System.Diagnostics.DiagnosticSource.dll</name>
-              <!-- v4.0.4.0 -->
-              <version>4.6.26515.06</version>
+              <!-- v9.0.11 -->
+              <version>9.0.1125.51716</version>
             </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
@@ -553,7 +558,7 @@
     </package>
 
     
-    <package name="2sxc-app" type="Module" version="20.00.09">
+    <package name="2sxc-app" type="Module" version="21.00.00">
       <friendlyName> App</friendlyName>
       <description>2sxc App is an extension that allows to install and use a 2sxc app.</description>
       <iconFile>icon-app.png</iconFile>

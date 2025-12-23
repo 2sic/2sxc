@@ -294,7 +294,7 @@ public interface ITypedRazorModel: IHasKeys
     ///// Get a stack which was passed to this
     ///// </summary>
     ///// <param name="name"></param>
-    ///// <param name="protector"></param>
+    ///// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     ///// <param name="fallback"></param>
     ///// <param name="required"></param>
     ///// <returns></returns>

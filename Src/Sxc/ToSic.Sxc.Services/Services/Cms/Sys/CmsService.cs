@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Data.Sys.ContentTypes;
-using ToSic.Razor.Blade;
+﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services.Sys;
@@ -74,7 +73,7 @@ internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
     private IHtmlTag HtmlString(IContentType contentType, IContentTypeAttribute attribute, IField field, string? value, object? imageSettings, CmsServiceContainerHelper cntHelper, bool debug)
     {
         var l = Log.Fn<IHtmlTag>($"Attribute: {attribute.Name}");
-        var inputType = attribute.InputType();
+        var inputType = attribute.InputType;
         if (debug) l.A($"Field type is: {ValueTypes.String}:{inputType}");
 
         // Not WYSIWYG = normal string, no toolbar by default

@@ -1,5 +1,3 @@
-
-
 using ToSic.Eav.Sys;
 // ReSharper disable once CheckNamespace
 
@@ -25,7 +23,7 @@ public class ExtensionsReaderEditionsTests
             editionsSupported = false
         });
         
-        var result = ctx.ReaderBackend.GetExtensions(appId: 42);
+        var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
         
         Assert.NotNull(result);
         var extensions = result.Extensions.Where(e => e.Folder == extName).ToList();
@@ -47,7 +45,7 @@ public class ExtensionsReaderEditionsTests
             inputTypeInside = "string-test"
         });
         
-        var result = ctx.ReaderBackend.GetExtensions(appId: 42);
+        var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
         
         var extensions = result.Extensions.Where(e => e.Folder == extName).ToList();
         Assert.Single(extensions);
@@ -78,7 +76,7 @@ public class ExtensionsReaderEditionsTests
             editionName = "Staging"
         });
         
-        var result = ctx.ReaderBackend.GetExtensions(appId: 42);
+        var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
         
         var extensions = result.Extensions.Where(e => e.Folder == extName).ToList();
         Assert.Equal(2, extensions.Count);
@@ -124,7 +122,7 @@ public class ExtensionsReaderEditionsTests
             inputTypeInside = inputType
         });
         
-        var result = ctx.ReaderBackend.GetExtensions(appId: 42);
+        var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
         
         var extensions = result.Extensions.Where(e => e.Folder == extName).ToList();
         Assert.Equal(4, extensions.Count);
@@ -133,6 +131,42 @@ public class ExtensionsReaderEditionsTests
         Assert.Contains(extensions, e => e.Edition == "staging");
         Assert.Contains(extensions, e => e.Edition == "live");
         Assert.Contains(extensions, e => e.Edition == "dev");
+    }
+
+    [Fact]
+    public void GetExtensions_ReturnsIconUrlsPerEdition()
+    {
+        using var ctx = ExtensionsReaderTestContext.Create();
+
+        const string extName = "icon-ext";
+        const string inputType = "string-icon";
+
+        ctx.SetupExtension(extName, new
+        {
+            version = "1.0.0",
+            inputTypeInside = inputType,
+            editionsSupported = true
+        });
+
+        var primaryIcon = Path.Combine(ctx.TempRoot, FolderConstants.AppExtensionsFolder, extName, "icon.png");
+        File.WriteAllText(primaryIcon, "icon-primary");
+
+        ctx.SetupEdition("staging", extName, new
+        {
+            version = "1.0.0-staging",
+            inputTypeInside = inputType
+        });
+
+        var stagingIcon = Path.Combine(ctx.TempRoot, "staging", FolderConstants.AppExtensionsFolder, extName, "icon.png");
+        File.WriteAllText(stagingIcon, "icon-staging");
+
+        var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
+
+        var primary = result.Extensions.Single(e => e.Folder == extName && e.Edition == string.Empty);
+        Assert.Equal("/extensions/icon-ext/icon.png", primary.Icon.ToLowerInvariant());
+
+        var staging = result.Extensions.Single(e => e.Folder == extName && e.Edition == "staging");
+        Assert.Equal("/staging/extensions/icon-ext/icon.png", staging.Icon.ToLowerInvariant());
     }
 
     #endregion
@@ -242,7 +276,7 @@ public class ExtensionsReaderEditionsTests
             customProp = "test-value",
             nestedObj = new { key = "value" }
         });
-        var result = ctx.ReaderBackend.GetExtensions(appId: 42);
+        var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
         var extensions = result.Extensions.Where(e => e.Folder == extName).ToList();
         var stagingEdition = extensions.Single(e => e.Edition == "staging");
         var config = stagingEdition.Configuration;
@@ -273,7 +307,7 @@ public class ExtensionsReaderEditionsTests
             editionsSupported = true
         });
         
-        var result = ctx.ReaderBackend.GetExtensions(appId: 42);
+        var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
         
         var extensions = result.Extensions.Where(e => e.Folder == extName).ToList();
         Assert.Single(extensions);
@@ -312,7 +346,7 @@ public class ExtensionsReaderEditionsTests
             editionsSupported = false
         });
         
-        var result = ctx.ReaderBackend.GetExtensions(appId: 42);
+        var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
         
         Assert.Equal(3, result.Extensions.Count);
 

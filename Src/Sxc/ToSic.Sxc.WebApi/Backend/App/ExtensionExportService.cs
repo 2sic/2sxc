@@ -72,28 +72,59 @@ public class ExtensionExportService(
                            $"{FolderConstants.AppExtensionJsonFile} could not be loaded"));
         l.A($"{FolderConstants.AppExtensionJsonFile} loaded: version:'{manifest.Version}'");
 
-        // 3. Modify manifest for export
-        var modifiedManifest = ModifyExtensionManifest(manifest, appId);
-        l.A($"Modified manifest: version:'{modifiedManifest.Version}', isInstalled:{modifiedManifest.IsInstalled}");
+        // 3. Determine all extensions to export (primary + bundled)
+        // Note: ExtensionsBundled is stored as a comma-separated string (no spaces) in the manifest.
+        var bundled = manifest.ExtensionsBundled
+            .UseFallbackIfNoValue(string.Empty)
+            .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(s => s.Trim())
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .ToList();
+        var allExtensions = new List<string> { name };
+        foreach (var bundledName in bundled)
+        {
+            if (string.IsNullOrWhiteSpace(bundledName))
+                continue;
 
-        // compute extension data path under the extension folder (protected data folder)
-        var extensionDataPath = Path.Combine(extensionPath, FolderConstants.DataFolderProtected);
+            var cleaned = bundledName.Trim();
+            if (cleaned.Equals(name, StringComparison.OrdinalIgnoreCase))
+                continue;
+            if (!ExtensionFolderNameValidator.IsValid(cleaned))
+                throw l.Ex(new ArgumentException($"Invalid bundled extension name: {cleaned}", nameof(name)));
+            if (allExtensions.Any(e => e.Equals(cleaned, StringComparison.OrdinalIgnoreCase)))
+                continue;
 
-        // 4. Collect files to include
-        var filesToInclude = CollectFilesToInclude(extensionPath, modifiedManifest, appPaths, name);
+            allExtensions.Add(cleaned);
+        }
 
-        // 5. Handle data bundles
-        var bundles = ExportDataBundlesIfNeeded(modifiedManifest, extensionDataPath, name, appId);
+        // 4. Build export specs for each extension
+        // Primary extension must exist; bundled extensions are best-effort (skip missing)
+        var exports = new List<ExtensionExportSpec>();
+        foreach (var ext in allExtensions)
+        {
+            try
+            {
+                exports.Add(BuildExtensionExport(appId, ext, appPaths));
+            }
+            catch (Exception ex)
+                when (ext != name
+                      && (ex is DirectoryNotFoundException
+                          || ex is FileNotFoundException))
+            {
+                l.A($"Skipping bundled extension '{ext}' because it wasn't found or is incomplete. Details: {ex.Message}");
+            }
+        }
 
-        // 6. Create ZIP using Zipping helper
-        var versionString = modifiedManifest.Version.UseFallbackIfNoValue(DefaultVersion);
-        var fileName = string.Format(ZipFileNameFormat, name, versionString);
+        // 5. Create ZIP using Zipping helper (file name based on the primary extension)
+        var primaryVersionString = exports.First().VersionString;
+        var fileName = string.Format(ZipFileNameFormat, name, primaryVersionString);
 
-        using var memoryStream = CreateZipArchive(filesToInclude, bundles, modifiedManifest, name, versionString);
+        using var memoryStream = CreateZipArchive(exports, name, primaryVersionString);
         memoryStream.Position = 0;
         var fileBytes = memoryStream.ToArray();
 
-        l.A($"Created ZIP with {filesToInclude.Count} files, size: {fileBytes.Length} bytes");
+        var totalFiles = exports.Sum(e => e.FilesToInclude.Count);
+        l.A($"Created ZIP with {exports.Count} extensions and {totalFiles} files, size: {fileBytes.Length} bytes");
 
 #if NETFRAMEWORK
 
@@ -105,6 +136,17 @@ public class ExtensionExportService(
 #endif
     }
 
+    private sealed record ExtensionExportSpec(
+        string ExtensionName,
+        string VersionString,
+        List<(string sourcePath, string zipPath)> FilesToInclude,
+        List<(string sourcePath, string zipPath, string content)> Bundles,
+        string ExtensionJsonZipPath,
+        string ExtensionJsonContent,
+        string LockJsonZipPath,
+        string LockJsonContent
+    );
+
     private JsonSerializerOptions JsonSerializationIndented => field ??= new()
     {
         WriteIndented = true,
@@ -113,54 +155,114 @@ public class ExtensionExportService(
 
     private string ToNiceJson(object data) => JsonSerializer.Serialize(data, JsonSerializationIndented);
 
-    private MemoryStream CreateZipArchive(List<(string sourcePath, string zipPath)> filesToInclude,
-        List<(string sourcePath, string zipPath, string content)> bundles,
-        ExtensionManifest manifest,
-        string extensionName,
-        string versionString)
+    private MemoryStream CreateZipArchive(
+        List<ExtensionExportSpec> exports,
+        string primaryExtensionName,
+        string primaryVersionString)
     {
-        var l = Log.Fn<MemoryStream>($"files:{filesToInclude.Count}, ext:{extensionName}");
+        var l = Log.Fn<MemoryStream>($"exts:{exports.Count}, primary:{primaryExtensionName}");
 
         var memoryStream = new MemoryStream();
         using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
         {
             var zipping = new Zipping(l);
 
-            // Add collected files using helper
-            zipping.AddFiles(archive, filesToInclude);
-            l.A($"Added {filesToInclude.Count} files to ZIP");
-
-            // Add modified extension.json
-            var basePath = $"{FolderConstants.AppExtensionsFolder}/{extensionName}/{FolderConstants.DataFolderProtected}";
-            var extensionJsonPath = $"{basePath}/{FolderConstants.AppExtensionJsonFile}";
-            var finalJsonString = ExtensionManifestSerializer.Serialize(manifest, JsonSerializationIndented);
-            zipping.AddTextEntry(archive, extensionJsonPath, finalJsonString, new UTF8Encoding(false));
-            l.A($"Added modified {FolderConstants.AppExtensionJsonFile} to ZIP");
-
-            // Handle data bundles
-            foreach (var (_, zipPath, content) in bundles)
+            // Add collected files using helper (deduplicate zip paths)
+            var allFiles = new List<(string sourcePath, string zipPath)>();
+            var addedZipPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var export in exports)
             {
-                zipping.AddTextEntry(archive, zipPath, content, new UTF8Encoding(false));
-                l.A($"Added data bundle to ZIP: {zipPath}");
+                foreach (var file in export.FilesToInclude)
+                {
+                    if (!addedZipPaths.Add(file.zipPath))
+                        continue;
+                    allFiles.Add(file);
+                }
             }
 
-            // Create and add extension.lock file
-            var lockData = CreateLockObject(filesToInclude, bundles, versionString, finalJsonString);
-            var lockJsonPath = $"{basePath}/{PackageIndexFile.LockFileName}";
-            var lockJson = ToNiceJson(lockData);
-            zipping.AddTextEntry(archive, lockJsonPath, lockJson, new UTF8Encoding(false));
+            zipping.AddFiles(archive, allFiles);
+            l.A($"Added {allFiles.Count} files to ZIP");
 
-            // Create and add 2sxc-package.json file
-            var packageData = CreatePackageObject(extensionName, extensionJsonPath, lockJsonPath, lockJson);
+            // Add extension.json + bundles + lock files for each extension
+            foreach (var export in exports)
+            {
+                zipping.AddTextEntry(archive, export.ExtensionJsonZipPath, export.ExtensionJsonContent, new UTF8Encoding(false));
+
+                foreach (var (_, zipPath, content) in export.Bundles)
+                    zipping.AddTextEntry(archive, zipPath, content, new UTF8Encoding(false));
+
+                zipping.AddTextEntry(archive, export.LockJsonZipPath, export.LockJsonContent, new UTF8Encoding(false));
+            }
+
+            // Create and add package-install.json listing all extensions
+            var packageData = CreatePackageObject(exports);
             var packageJson = ToNiceJson(packageData);
             zipping.AddTextEntry(archive, PackageInstallFile.FileName, packageJson, new UTF8Encoding(false));
-
-            l.A($"Added {PackageIndexFile.LockFileName} lock file to ZIP");
         }
 
         return l.ReturnAsOk(memoryStream);
     }
 
+    private ExtensionExportSpec BuildExtensionExport(int appId, string extensionName, IAppPaths appPaths)
+    {
+        var l = Log.Fn<ExtensionExportSpec>($"a#{appId}, ext:'{extensionName}'");
+
+        var extensionPath = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppExtensionsFolder, extensionName);
+        if (!Directory.Exists(extensionPath))
+            throw l.Ex(new DirectoryNotFoundException($"Extension folder not found: {extensionName}"));
+
+        var extensionManifestFile = manifestService.GetManifestFile(new(extensionPath));
+        if (!extensionManifestFile.Exists)
+            throw l.Ex(new FileNotFoundException($"{FolderConstants.AppExtensionJsonFile} not found in extension: {extensionName}"));
+
+        var originalManifest = manifestService.LoadManifest(extensionManifestFile)
+                              ?? throw l.Ex(new InvalidOperationException(
+                                  $"{FolderConstants.AppExtensionJsonFile} could not be loaded"));
+
+        // Decide if we should modify (for export / installation) or keep as-is
+        // - if not installed -> modify (set isInstalled=true and expand release references)
+        // - if installed -> keep exact json + lock (if present)
+        var isInstalled = originalManifest.IsInstalled ?? false;
+        var effectiveManifest = isInstalled
+            ? originalManifest
+            : ModifyExtensionManifest(originalManifest, appId);
+
+        var versionString = effectiveManifest.Version.UseFallbackIfNoValue(DefaultVersion);
+        var extensionDataPath = Path.Combine(extensionPath, FolderConstants.DataFolderProtected);
+
+        // Read extension.json content (exact for installed extensions)
+        var extensionJsonDiskPath = Path.Combine(extensionDataPath, FolderConstants.AppExtensionJsonFile);
+        var extensionJsonContent = isInstalled
+            ? File.ReadAllText(extensionJsonDiskPath)
+            : ExtensionManifestSerializer.Serialize(effectiveManifest, JsonSerializationIndented);
+
+        // Collect files to include (never include extension.json or package-index.json from disk)
+        var filesToInclude = CollectFilesToInclude(extensionPath, effectiveManifest, appPaths, extensionName);
+
+        // Handle data bundles
+        var bundles = ExportDataBundlesIfNeeded(effectiveManifest, extensionDataPath, extensionName, appId);
+
+        // Lock file content (exact for installed extensions if it exists)
+        var basePath = $"{FolderConstants.AppExtensionsFolder}/{extensionName}/{FolderConstants.DataFolderProtected}";
+        var extensionJsonZipPath = $"{basePath}/{FolderConstants.AppExtensionJsonFile}";
+        var lockJsonZipPath = $"{basePath}/{PackageIndexFile.LockFileName}";
+
+        var lockJsonDiskPath = Path.Combine(extensionDataPath, PackageIndexFile.LockFileName);
+        var lockJsonContent = isInstalled && File.Exists(lockJsonDiskPath)
+            ? File.ReadAllText(lockJsonDiskPath)
+            : ToNiceJson(CreateLockObject(extensionName, filesToInclude, bundles, versionString, extensionJsonZipPath, extensionJsonContent));
+
+        return l.ReturnAsOk(new ExtensionExportSpec(
+            ExtensionName: extensionName,
+            VersionString: versionString,
+            FilesToInclude: filesToInclude,
+            Bundles: bundles,
+            ExtensionJsonZipPath: extensionJsonZipPath,
+            ExtensionJsonContent: extensionJsonContent,
+            LockJsonZipPath: lockJsonZipPath,
+            LockJsonContent: lockJsonContent
+        ));
+    }
 
     private ExtensionManifest ModifyExtensionManifest(ExtensionManifest manifest, int appId)
     {
@@ -243,9 +345,13 @@ public class ExtensionExportService(
 
         var files = new List<(string, string)>();
 
-        // 1. Always include /extensions/[name] folder (except App_Data which we handle separately)
+        // 1. Always include /extensions/[name] folder (except App_Data/extension.json and App_Data/package-index.json which we handle separately)
         AddDirectoryFiles(extensionPath, extensionPath, $"{FolderConstants.AppExtensionsFolder}/{extensionName}", files,
-            exclude: [$"{FolderConstants.DataFolderProtected}\\{FolderConstants.AppExtensionJsonFile}"]);
+            exclude:
+            [
+                $"{FolderConstants.DataFolderProtected}\\{FolderConstants.AppExtensionJsonFile}",
+                $"{FolderConstants.DataFolderProtected}\\{PackageIndexFile.LockFileName}",
+            ]);
 
         // 2. Check for hasAppCode setting
         if (manifest.AppCodeInside)
@@ -319,12 +425,23 @@ public class ExtensionExportService(
 
         foreach (var guid in guidList)
         {
-            // Export bundle entity as JSON
-            var (export, fileContent) = bundlesExport.CreateBundleExport(guid, 2);
-            var bundlePath = Path.Combine(bundlesDir, export.FileName);
-            var zipPath =
-                $"{FolderConstants.AppExtensionsFolder}/{extensionName}/{FolderConstants.DataFolderProtected}/{FolderConstants.DataSubFolderSystem}/{AppDataFoldersConstants.BundlesFolder}/{export.FileName}";
-            files.Add((bundlePath, zipPath, fileContent));
+            try
+            {
+                // Export bundle entity as JSON
+                var (export, fileContent) = bundlesExport.CreateBundleExport(guid, 2);
+                var bundlePath = Path.Combine(bundlesDir, export.FileName);
+                var zipPath =
+                    $"{FolderConstants.AppExtensionsFolder}/{extensionName}/{FolderConstants.DataFolderProtected}/{FolderConstants.DataSubFolderSystem}/{AppDataFoldersConstants.BundlesFolder}/{export.FileName}";
+                files.Add((bundlePath, zipPath, fileContent));
+            }
+            catch (KeyNotFoundException ex)
+            {
+                var wrapped = new KeyNotFoundException(
+                    $"Data bundle '{guid}' referenced by extension '{extensionName}' was not found in app {appId}. " +
+                    $"Update or remove the entry in extension.json:dataBundles. Details: {ex.Message}", ex);
+                l.Ex(wrapped);
+                throw wrapped;
+            }
         }
 
         return l.ReturnAsOk(files);
@@ -366,8 +483,13 @@ public class ExtensionExportService(
         l.Done($"Added {files.Count} files to collection");
     }
 
-    private object CreateLockObject(List<(string sourcePath, string zipPath)> files,
-        List<(string sourcePath, string zipPath, string content)> bundles, string version, string finalExtensionJson)
+    private object CreateLockObject(
+        string extensionName,
+        List<(string sourcePath, string zipPath)> files,
+        List<(string sourcePath, string zipPath, string content)> bundles,
+        string version,
+        string extensionJsonZipPath,
+        string finalExtensionJson)
     {
         var l = Log.Fn<object>($"Creating {PackageIndexFile.LockFileName} file");
 
@@ -391,11 +513,10 @@ public class ExtensionExportService(
                 })
         );
 
-        // Also add the modified extension.json hash
-        var path = Path.GetFileName(Path.GetDirectoryName(files.FirstOrDefault().zipPath) ?? "");
+        // Also add the (final) extension.json hash
         fileList.Add(new()
         {
-            File = $"/{FolderConstants.AppExtensionsFolder}/{path}/{FolderConstants.DataFolderProtected}/{FolderConstants.AppExtensionJsonFile}",
+            File = $"/{extensionJsonZipPath}",
             Hash = Sha256.Hash(finalExtensionJson)
         });
 
@@ -408,7 +529,7 @@ public class ExtensionExportService(
         });
     }
 
-    private PackageInstallFile CreatePackageObject(string extensionName, string extensionJsonPath, string lockPath, string lockJson)
+    private PackageInstallFile CreatePackageObject(List<ExtensionExportSpec> exports)
     {
         var l = Log.Fn<PackageInstallFile>();
 
@@ -426,11 +547,16 @@ public class ExtensionExportService(
             },
             Extensions =
             [
-                new(extensionName, extensionJsonPath, lockPath, Sha256.Hash(lockJson)),
+                .. exports.Select(e => new PackageInstallExtension(
+                    Name: e.ExtensionName,
+                    DefinitionFile: e.ExtensionJsonZipPath,
+                    IndexFile: e.LockJsonZipPath,
+                    IndexFileHash: Sha256.Hash(e.LockJsonContent)
+                )),
             ],
         };
 
-        return l.Return(package, $"Created package object for {extensionName}");
+        return l.Return(package, $"Created package object for {exports.Count} extensions");
     }
 
 }

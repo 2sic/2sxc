@@ -18,6 +18,8 @@ public class ExtensionReaderBackend(
     LazySvc<CodeControllerReal> codeLazy)
     : ServiceBase("Bck.ExtRead", connect: [appReadersLazy, site, appPathSvc, jsonLazy, manifestService, codeLazy])
 {
+    private const string IconFileName = "icon.png";
+
     public ExtensionsResultDto GetExtensions(int appId)
     {
         var l = Log.Fn<ExtensionsResultDto>($"a#{appId}");
@@ -78,7 +80,8 @@ public class ExtensionReaderBackend(
                     {
                         Folder = folderName,
                         Edition = editionName,
-                        Configuration = configuration
+                        Configuration = configuration,
+                        Icon = GetIconUrl(appPaths, editionName, dir)
                     });
 
                     primaryManifests[folderName] = configuration;
@@ -115,7 +118,8 @@ public class ExtensionReaderBackend(
                 {
                     Folder = folderName,
                     Edition = editionName,
-                    Configuration = configuration
+                    Configuration = configuration,
+                    Icon = GetIconUrl(appPaths, editionName, dir)
                 });
                 Log.A($"registered edition '{EditionLabel(editionName)}' for extension '{folderName}'");
             }
@@ -196,5 +200,37 @@ public class ExtensionReaderBackend(
             && inputType.ValueKind == JsonValueKind.String
             ? inputType.GetString()
             : null;
+    }
+
+    private string GetIconUrl(IAppPaths appPaths, string editionName, string extensionDir)
+    {
+        var iconPath = Path.Combine(extensionDir, IconFileName);
+        if (!File.Exists(iconPath))
+            return "";
+
+        var folderName = Path.GetFileName(extensionDir);
+        var relativePath = BuildRelativeIconPath(appPaths, editionName, folderName);
+        return relativePath;
+    }
+
+    private static string BuildRelativeIconPath(IAppPaths appPaths, string editionName, string folderName)
+    {
+        var baseRelative = appPaths.RelativePath.ForwardSlash().Trim('/');
+
+        var parts = new List<string>();
+        if (!baseRelative.IsEmpty())
+            parts.Add(baseRelative);
+        if (!editionName.IsEmpty())
+            parts.Add(editionName);
+
+        parts.Add(FolderConstants.AppExtensionsFolder);
+        parts.Add(folderName);
+        parts.Add(IconFileName);
+
+        var relativePath = string.Join("/", parts)
+            .TrimPrefixSlash()
+            .PrefixSlash();
+
+        return relativePath;
     }
 }

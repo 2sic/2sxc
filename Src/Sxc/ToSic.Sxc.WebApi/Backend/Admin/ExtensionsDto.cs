@@ -17,8 +17,11 @@ public class ExtensionDto
     public required string Folder { get; init; }
 
     [JsonPropertyName("edition")]
-    public required string Edition { get; init; } = string.Empty;
+    public required string Edition { get; init; } = "";
 
     [JsonPropertyName("configuration")]
     public required ExtensionManifest Configuration { get; init; }
+
+    [JsonPropertyName("icon")]
+    public string Icon { get; init; } = "";
 }

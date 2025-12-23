@@ -1,5 +1,5 @@
 ﻿using Oqtane.Models;
-using Oqtane.Repository;
+using Oqtane.Services;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.Site;
@@ -24,7 +24,7 @@ internal sealed class OqtSite: Site<Site>
     /// Constructor for DI
     /// </summary>
     public OqtSite(AliasResolver aliasResolver,
-        LazySvc<ISiteRepository> siteRepository,
+        LazySvc<ISiteService> siteService,
         LazySvc<IServerPaths> serverPaths,
         LazySvc<IZoneMapper> zoneMapper,
         LazySvc<OqtCulture> oqtCulture,
@@ -32,7 +32,7 @@ internal sealed class OqtSite: Site<Site>
     {
         ConnectLogs([
             _aliasResolver = aliasResolver,
-            _siteRepository = siteRepository,
+            _siteService = siteService,
             _serverPaths = serverPaths,
             _zoneMapper = zoneMapper,
             _oqtCulture = oqtCulture,
@@ -41,7 +41,7 @@ internal sealed class OqtSite: Site<Site>
     }
 
     private readonly AliasResolver _aliasResolver;
-    private readonly LazySvc<ISiteRepository> _siteRepository;
+    private readonly LazySvc<ISiteService> _siteService;
     private readonly LazySvc<IServerPaths> _serverPaths;
     private readonly LazySvc<IZoneMapper> _zoneMapper;
     private readonly LazySvc<OqtCulture> _oqtCulture;
@@ -58,11 +58,11 @@ internal sealed class OqtSite: Site<Site>
 
     public override ISite Init(int siteId, ILog? parentLogOrNull)
     {
-        UnwrappedSite = _siteRepository.Value.GetSite(siteId);
+        UnwrappedSite = _siteService.Value.GetSiteAsync(siteId).GetAwaiter().GetResult();
         return this;
     }
 
-    protected override Site UnwrappedSite => base.UnwrappedSite ??= _siteRepository.Value.GetSite(Alias.SiteId);
+    protected override Site UnwrappedSite => base.UnwrappedSite ??= _siteService.Value.GetSiteAsync(Alias.SiteId).GetAwaiter().GetResult();
     private Alias Alias => _aliasResolver.Alias;
     public override Site GetContents() => UnwrappedSite;
 
@@ -100,7 +100,8 @@ internal sealed class OqtSite: Site<Site>
     public override string Name => UnwrappedSite.Name;
 
     [PrivateApi]
-    public override string AppsRootPhysical => string.Format(OqtConstants.AppRootPublicBase, Id);
+    public override string AppsRootPhysical
+        => string.Format(OqtConstants.AppRootTenantSiteBase, Alias.TenantId, Id);
 
     [PrivateApi]
     public override string AppAssetsLinkTemplate => OqtPageOutput.GetSiteRoot(_aliasResolver.Alias)
@@ -110,7 +111,7 @@ internal sealed class OqtSite: Site<Site>
 
 
     /// <inheritdoc />
-    public override string ContentPath => string.Format(OqtConstants.ContentRootPublicBase, UnwrappedSite.TenantId, Id);
+    public override string ContentPath => string.Format(OqtConstants.ContentRootPublicBase, Alias.TenantId, Id);
 
     public override int ZoneId
     {

@@ -453,7 +453,7 @@ public class ExtensionInstallBackendTest
                 writer.Write("console.log('ac');");
             }
 
-            var codeFile = zip.CreateEntry($"AppCode/extensions/{folder}/Helper.cs");
+            var codeFile = zip.CreateEntry($"AppCode/Extensions/{folder}/Helper.cs");
             using (var stream = codeFile.Open())
             {
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false));
@@ -471,7 +471,7 @@ public class ExtensionInstallBackendTest
                     {
                         new { file = $"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionJsonFile}", hash = Sha256.Hash($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}") },
                         new { file = $"{AppExtensionsFolder}/{folder}/dist/script.js", hash = Sha256.Hash("console.log('ac');") },
-                        new { file = $"AppCode/extensions/{folder}/Helper.cs", hash = Sha256.Hash("public class Helper { public static string Hi() => \"hi\"; }") }
+                        new { file = $"AppCode/Extensions/{folder}/Helper.cs", hash = Sha256.Hash("public class Helper { public static string Hi() => \"hi\"; }") }
                     }
                 };
                 writer.Write(ctx.JsonSvc.ToJson(lockData, indentation: 2));

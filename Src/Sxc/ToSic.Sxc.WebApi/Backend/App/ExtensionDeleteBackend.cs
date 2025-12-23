@@ -1,3 +1,4 @@
+using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Sys;
@@ -14,8 +15,9 @@ public class ExtensionDeleteBackend(
     IAppPathsMicroSvc appPathSvc,
     ExtensionManifestService manifestService,
     LazySvc<ExtensionInspectBackend> inspectorLazy,
-    LazySvc<EntityApi> entityApiLazy)
-    : ServiceBase("Bck.ExtDel", connect: [appReadersLazy, site, appPathSvc, manifestService, inspectorLazy, entityApiLazy])
+    LazySvc<EntityApi> entityApiLazy,
+    LazySvc<AppCachePurger> appCachePurgerLazy)
+    : ServiceBase("Bck.ExtDel", connect: [appReadersLazy, site, appPathSvc, manifestService, inspectorLazy, entityApiLazy, appCachePurgerLazy])
 {
     private ReadOnlyFileHelper ReadOnlyHelper => field ??= new(Log);
 
@@ -62,6 +64,9 @@ public class ExtensionDeleteBackend(
             DeleteData(appReader, appId, contentTypesWithData);
 
         DeleteFiles(appPaths.PhysicalPath, editionSegment, name);
+
+        // app-state refresh should happen on every uninstall
+        appCachePurgerLazy.Value.Purge(appReader.ZoneId, appId);
 
         return l.ReturnTrue("deleted");
     }

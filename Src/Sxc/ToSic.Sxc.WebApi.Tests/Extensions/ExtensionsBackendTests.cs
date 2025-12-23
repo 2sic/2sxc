@@ -53,6 +53,7 @@ public class ExtensionsBackendTests
         var foo = result.Extensions.FirstOrDefault(e => e.Folder == extensionName);
         Assert.NotNull(foo);
         Assert.NotNull(foo.Configuration);
+        Assert.Empty(foo.Icon);
 
         var expectedJson = ExtensionManifestSerializer.Serialize(manifest);
         var actualJson = ctx.JsonSvc.ToJson(foo.Configuration);
@@ -61,6 +62,7 @@ public class ExtensionsBackendTests
         var bar = result.Extensions.FirstOrDefault(e => e.Folder == "bar");
         Assert.NotNull(bar);
         Assert.NotNull(bar.Configuration);
+        Assert.Empty(bar.Icon);
     }
 
     [Fact]
@@ -88,6 +90,7 @@ public class ExtensionsBackendTests
         var item = result.Extensions.FirstOrDefault(e => e.Folder == folder);
         Assert.NotNull(item);
         Assert.NotNull(item.Configuration);
+        Assert.Empty(item.Icon);
 
         var expected = ExtensionManifestSerializer.Serialize(manifest);
         var actual = ctx.JsonSvc.ToJson(item.Configuration);

@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Edit.Toolbar;
 /// </summary>
 /// <remarks>
 /// Your code cannot construct this object by itself, as it usually needs additional information.
-/// To get a `ToolbarBuilder`, use the <see cref="Services.IToolbarService"/>.
+/// To get a `ToolbarBuilder`, use the [](xref:ToSic.Sxc.Services.IToolbarService).
 ///
 /// * uses the [](xref:NetCode.Conventions.Functional)
 /// 
@@ -18,17 +18,4 @@ namespace ToSic.Sxc.Edit.Toolbar;
 /// * most commands extended with [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) in v15.07
 /// </remarks>
 [PublicApi]
-public partial interface IToolbarBuilder: IRawHtmlString, IHasLog // , INeedsCodeApiService
-{
-    //[PrivateApi("internal use only")]
-    //IToolbarBuilder Toolbar(
-    //    string toolbarTemplate,
-    //    object target = default,
-    //    NoParamOrder npo = default,
-    //    Func<ITweakButton, ITweakButton> tweak = default,
-    //    object ui = default,
-    //    object parameters = default,
-    //    object prefill = default
-    //);
-
-}
+public partial interface IToolbarBuilder: IRawHtmlString, IHasLog;

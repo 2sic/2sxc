@@ -209,9 +209,10 @@ public interface IParameters: IReadOnlyDictionary<string, string>, ITyped
     /// <summary>
     /// Special sorted ToString - for the moment not public
     /// </summary>
-    /// <param name="protector"></param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="sort"></param>
     /// <returns></returns>
+    // ReSharper disable once MethodOverloadWithOptionalParameter
     string ToString(NoParamOrder npo = default, bool sort = false);
 
     #endregion

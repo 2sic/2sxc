@@ -10,7 +10,7 @@ public interface IRazorConfiguration
     /// <summary>
     /// Configure output of Razor partials caching.
     /// </summary>
-    /// <param name="protector"></param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="seconds">sliding seconds to keep the cache, like `60`, `300`, `3600`</param>
     /// <param name="watch">what to watch for to flush the cache - recommended: `data,folder`</param>
     /// <param name="varyBy">what to vary the cache by, like `user,module`</param>

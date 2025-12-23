@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Services;
 /// 
 /// * New in v20
 /// </remarks>
-[WorkInProgressApi("Still WIP v20.00")]
+[PublicApi]
 public interface ITypedApiService
 {
     ///// <summary>

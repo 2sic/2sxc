@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Data.Sys.ContentTypes;
-using ToSic.Sys.Utils;
+﻿using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.Cms;
 
@@ -18,7 +17,7 @@ internal class LoadSettingsForPickerSources() : LoadSettingsProviderBase($"{SxcL
         // Find all attributes which show a picker
         var pickerAttributes = parameters.ContentTypes
             .SelectMany(ct => ct.Attributes
-                .Where(a => PickerNames.Contains(a.InputType()))
+                .Where(a => PickerNames.Contains(a.InputType))
             )
             .ToListOpt();
 

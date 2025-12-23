@@ -4,6 +4,7 @@ using Oqtane.Models;
 using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sys.Utils;
+using File = System.IO.File;
 
 namespace ToSic.Sxc.Oqt.Server.Adam;
 
@@ -56,18 +57,20 @@ public class OqtAssetsFileHelper() : ServiceBase(OqtConstants.OqtLogPrefix + ".F
         if (appName.StartsWith(".") || filePath.StartsWith(".") || Path.GetDirectoryName(filePath).Backslash().Contains(@"\.")) 
             return l.Return(string.Empty, "folders or subfolder that start with . are not allowed");
 
-        var fullFilePath = route switch
+        string fullFilePath = route switch
         {
             "" => AdamPathWithoutAppName(contentRootPath, alias, filePath),
             RouteAdam => AdamPath(contentRootPath, alias, appName, filePath),
             RouteAssets => SxcPath(contentRootPath, alias, appName, filePath),
-            RouteShared => SharedPath(contentRootPath, appName, filePath),
+            RouteShared => SharedPath(contentRootPath, alias, appName, filePath),
+
             _ => SxcPath(contentRootPath, alias, appName, filePath),
         };
 
-        // Check that file exist in file system.
-        var exists = System.IO.File.Exists(fullFilePath);
-        return l.Return(exists ? fullFilePath : string.Empty, exists? "found" : "file not found");
+        // Check that file exists in file system.
+        return File.Exists(fullFilePath) 
+            ? l.Return(fullFilePath, "found")
+            : l.Return(string.Empty, "file not found");
     }
 
     private static bool IsKnownRiskyExtension(string fileName)
@@ -83,9 +86,9 @@ public class OqtAssetsFileHelper() : ServiceBase(OqtConstants.OqtLogPrefix + ".F
         => Path.Combine(contentRootPath, string.Format(OqtConstants.ContentRootPublicBase, alias.TenantId, alias.SiteId), "adam", appName, filePath).Backslash();
 
     private static string SxcPath(string contentRootPath, Alias alias, string appName, string filePath)
-        => Path.Combine(contentRootPath, string.Format(OqtConstants.AppRootPublicBase, alias.SiteId), appName, filePath).Backslash();
+        => Path.Combine(contentRootPath, string.Format(OqtConstants.AppRootTenantSiteBase, alias.TenantId, alias.SiteId), appName, filePath).Backslash();
 
-    private static string SharedPath(string contentRootPath, string appName, string filePath)
-        => Path.Combine(contentRootPath, string.Format(OqtConstants.AppRootPublicBase, "Shared"), appName, filePath).Backslash();
+    private static string SharedPath(string contentRootPath, Alias alias, string appName, string filePath)
+        => Path.Combine(contentRootPath, string.Format(OqtConstants.AppRootTenantSiteBase, alias.TenantId, OqtConstants.SharedAppFolder), appName, filePath).Backslash();
 
 }

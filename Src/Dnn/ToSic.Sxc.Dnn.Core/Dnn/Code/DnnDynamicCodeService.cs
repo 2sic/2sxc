@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Dnn.Code;
 /// </summary>
 internal class DnnDynamicCodeService: DynamicCodeService
 {
-    public new class MyScopedServices(
+    public class MyScopedServices(
         LazySvc<IPageServiceShared> pageServiceShared,
         LazySvc<PageChangeSummary> pageChangeSummary,
         LazySvc<DnnPageChanges> dnnPageChanges,

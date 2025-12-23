@@ -121,14 +121,15 @@ public interface ITypedApi
     /// <param name="data">An original object which can be converted to a TypedItem, such as a <see cref="IEntity"/> .</param>
     /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertiesRequired), default `true`</param>
-    /// <param name="mock">Specify that the data is fake/mock data, which should pretend to be an Item. Default is `false`</param>
     /// <returns></returns>
-    /// <remarks>New in v16.02</remarks>
+    /// <remarks>
+    /// New in v16.02
+    /// Parameter `mock` removed in v21 (breaking, but probably never used in the wild); use `Convert.ToMock()` instead
+    /// </remarks>
     ITypedItem? AsItem(
         object data,
         NoParamOrder npo = default,
-        bool? propsRequired = default,
-        bool? mock = default
+        bool? propsRequired = default
     );
 
     /// <summary>
@@ -195,12 +196,12 @@ public interface ITypedApi
     /// <typeparam name="T">the target type</typeparam>
     /// <param name="source">the source object - an `IEntity` or `ITypedItem`</param>
     /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    /// <param name="mock">if `true` will return a fake when `source` is `null` - otherwise a wrapper item with empty-contents</param>
     /// <returns></returns>
     /// <remarks>
     /// Released v17.05
+    /// Parameter `mock` removed in v21 (breaking, but probably never used in the wild); use `Convert.ToMock()` instead
     /// </remarks>
-    T As<T>(object source, NoParamOrder npo = default, bool mock = false)
+    T As<T>(object source, NoParamOrder npo = default)
         where T : class, ICanWrapData;
 
     /// <summary>

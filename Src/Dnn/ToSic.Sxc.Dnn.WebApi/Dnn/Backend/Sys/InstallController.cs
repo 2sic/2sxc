@@ -8,13 +8,13 @@ namespace ToSic.Sxc.Dnn.Backend.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class InstallController()
-    : DnnSxcControllerRoot(RealController.LogSuffix), IInstallController<HttpResponseMessage>
+    : DnnSxcControllerRoot(RealController.LogSuffix), IInstallController
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
     /// <summary>
     /// Make sure that these requests don't land in the normal api-log.
-    /// Otherwise each log-access would re-number what item we're looking at
+    /// Otherwise, each log-access would re-number what item we're looking at
     /// </summary>
     protected override string HistoryLogGroup => "web-api.install";
 

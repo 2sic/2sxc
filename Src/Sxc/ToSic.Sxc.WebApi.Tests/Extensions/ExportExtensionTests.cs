@@ -3,6 +3,7 @@ using System.Text.Json;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using static ToSic.Eav.Sys.FolderConstants;
 using static ToSic.Sxc.ImportExport.Package.Sys.PackageIndexFile;
+using static ToSic.Sxc.ImportExport.Package.Sys.PackageInstallFile;
 using static ToSic.Sxc.WebApi.Tests.Extensions.ExportExtensionTestHelpers;
 
 // ReSharper disable once CheckNamespace
@@ -69,6 +70,144 @@ public class ExportExtensionTests
         using var zipStream = new MemoryStream(fileResult!.FileContents);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
         Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"/{DataFolderProtected}/{LockFileName}", StringComparison.OrdinalIgnoreCase));
+#endif
+    }
+
+    #endregion
+
+    #region Bundled Extensions Tests
+
+    [Fact]
+    public void Export_IncludesBundledExtensions_AndListsAllInPackageInstall()
+    {
+        using var ctx = ExportExtensionTestContext.Create();
+
+        const string extName = "primary-ext";
+        ctx.SetupExtension(extName, new ExtensionManifest
+        {
+            Version = "1.0.0",
+            IsInstalled = false,
+            AppCodeInside = false,
+            DataInside = false,
+        });
+        ctx.SetExtensionsBundled(extName, "bundle-a,bundle-b");
+        ctx.CreateExtensionFiles(extName, ("primary.txt", "primary"));
+
+        ctx.SetupExtension("bundle-a", new ExtensionManifest
+        {
+            Version = "2.0.0",
+            IsInstalled = false,
+            AppCodeInside = false,
+            DataInside = false,
+        });
+        ctx.CreateExtensionFiles("bundle-a", ("a.txt", "a"));
+
+        ctx.SetupExtension("bundle-b", new ExtensionManifest
+        {
+            Version = "3.0.0",
+            IsInstalled = true,
+            AppCodeInside = false,
+            DataInside = false,
+        });
+        ctx.CreateExtensionFiles("bundle-b", ("b.txt", "b"));
+
+        // Simulate previous installation lock file which should be included unchanged
+        const string installedLock = "{\n  \"version\": \"3.0.0\",\n  \"files\": []\n}";
+        ctx.WriteInstalledLockFile("bundle-b", installedLock);
+
+        var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
+
+#if !NETFRAMEWORK
+        var fileResult = result as FileContentResult;
+        Assert.NotNull(fileResult);
+        using var zipStream = new MemoryStream(fileResult!.FileContents);
+        using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
+
+        // Verify files from all 3 extensions are present
+        Assert.Contains(zip.Entries, e => e.FullName.Equals($"{AppExtensionsFolder}/{extName}/dist/primary.txt", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(zip.Entries, e => e.FullName.Equals($"{AppExtensionsFolder}/bundle-a/dist/a.txt", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(zip.Entries, e => e.FullName.Equals($"{AppExtensionsFolder}/bundle-b/dist/b.txt", StringComparison.OrdinalIgnoreCase));
+
+        // Verify extension.json exists for each
+        Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"{AppExtensionsFolder}/{extName}/{DataFolderProtected}/{AppExtensionJsonFile}", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"{AppExtensionsFolder}/bundle-a/{DataFolderProtected}/{AppExtensionJsonFile}", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"{AppExtensionsFolder}/bundle-b/{DataFolderProtected}/{AppExtensionJsonFile}", StringComparison.OrdinalIgnoreCase));
+
+        // Verify lock file exists for each
+        Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"{AppExtensionsFolder}/{extName}/{DataFolderProtected}/{LockFileName}", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"{AppExtensionsFolder}/bundle-a/{DataFolderProtected}/{LockFileName}", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"{AppExtensionsFolder}/bundle-b/{DataFolderProtected}/{LockFileName}", StringComparison.OrdinalIgnoreCase));
+
+        // Verify installed lock json preserved
+        var bundleBLockEntry = zip.Entries.Single(e => e.FullName.EndsWith($"{AppExtensionsFolder}/bundle-b/{DataFolderProtected}/{LockFileName}", StringComparison.OrdinalIgnoreCase));
+        using (var lockStream = bundleBLockEntry.Open())
+        using (var reader = new StreamReader(lockStream))
+        {
+            var lockText = reader.ReadToEnd();
+            Assert.Contains("\"version\": \"3.0.0\"", lockText);
+            Assert.Contains("\"files\": []", lockText);
+        }
+
+        // Verify package-install.json lists all extensions
+        var package = GetJsonFileFromZip(zip, FileName);
+        Assert.True(package.ContainsKey("extensions"));
+        var exts = package.GetElement("extensions");
+        Assert.Equal(JsonValueKind.Array, exts.ValueKind);
+        var names = exts.EnumerateArray().Select(e => e.GetProperty("name").GetString()).ToList();
+        Assert.Contains(extName, names);
+        Assert.Contains("bundle-a", names);
+        Assert.Contains("bundle-b", names);
+        Assert.Equal(3, names.Count);
+#endif
+    }
+
+    [Fact]
+    public void Export_SkipsMissingBundledExtensions()
+    {
+        using var ctx = ExportExtensionTestContext.Create();
+
+        const string extName = "primary-ext";
+        ctx.SetupExtension(extName, new ExtensionManifest
+        {
+            Version = "1.0.0",
+            IsInstalled = false,
+            AppCodeInside = false,
+            DataInside = false,
+        });
+
+        // One missing, one present
+        ctx.SetExtensionsBundled(extName, "text-ext2,bundle-a");
+
+        ctx.SetupExtension("bundle-a", new ExtensionManifest
+        {
+            Version = "2.0.0",
+            IsInstalled = false,
+            AppCodeInside = false,
+            DataInside = false,
+        });
+
+        var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
+
+#if !NETFRAMEWORK
+        var fileResult = result as FileContentResult;
+        Assert.NotNull(fileResult);
+        using var zipStream = new MemoryStream(fileResult!.FileContents);
+        using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
+
+        // Present bundled extension should be included
+        Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"{AppExtensionsFolder}/bundle-a/{DataFolderProtected}/{AppExtensionJsonFile}", StringComparison.OrdinalIgnoreCase));
+
+        // Missing bundled extension should not appear anywhere
+        Assert.DoesNotContain(zip.Entries, e => e.FullName.Contains($"{AppExtensionsFolder}/text-ext2/", StringComparison.OrdinalIgnoreCase));
+
+        // package-install.json should only list primary + existing bundled
+        var package = GetJsonFileFromZip(zip, FileName);
+        var exts = package.GetElement("extensions");
+        var names = exts.EnumerateArray().Select(e => e.GetProperty("name").GetString()).ToList();
+        Assert.Contains(extName, names);
+        Assert.Contains("bundle-a", names);
+        Assert.DoesNotContain("text-ext2", names);
+        Assert.Equal(2, names.Count);
 #endif
     }
 
@@ -359,7 +498,7 @@ public class ExportExtensionTests
         
         foreach (var entry in zip.Entries.Where(e => !string.IsNullOrEmpty(e.Name)))
         {
-            if (!entry.FullName.StartsWith("install-package.json")
+            if (!entry.FullName.Equals(FileName, StringComparison.OrdinalIgnoreCase)
                 && !entry.FullName.StartsWith(DataFolderProtected))
                 Assert.StartsWith($"{AppExtensionsFolder}/", entry.FullName);
         }

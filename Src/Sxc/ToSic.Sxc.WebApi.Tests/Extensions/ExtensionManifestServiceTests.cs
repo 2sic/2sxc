@@ -38,8 +38,8 @@ public class ExtensionManifestServiceTests : IDisposable
 
         var manifestPath = Path.Combine(dataDir, FolderConstants.AppExtensionJsonFile);
         var manifestJson = @"{
-            ""inputTypeInside"": ""string-font-icon"",
-            ""inputTypeAssets"": {
+            ""name"": ""string-font-icon"",
+            ""inputFieldAssets"": {
                 ""default"": ""index.js""
             },
             ""version"": ""1.0.0"",
@@ -78,8 +78,9 @@ public class ExtensionManifestServiceTests : IDisposable
 
         var manifestPath = Path.Combine(dataDir, FolderConstants.AppExtensionJsonFile);
         var manifestJson = @"{
-            //""inputTypeInside"": ""string-wysiwyg"",
-            ""inputTypeAssets"": [
+            // Comment to verify comment-tolerant parsing
+            ""name"": ""string-wysiwyg"",
+            ""inputFieldAssets"": [
                 ""styles.css"",
                 ""editor.js"",
                 ""config.json""
@@ -113,7 +114,6 @@ public class ExtensionManifestServiceTests : IDisposable
         
         // Assert
         Assert.NotNull(manifest);
-        //Assert.Equal("string-wysiwyg", manifest.InputTypeInside);
         Assert.Equal("string-wysiwyg", manifest.Name);
         Assert.Equal("2.5.1", manifest.Version);
         Assert.True(manifest.EditionsSupported);
@@ -134,9 +134,9 @@ public class ExtensionManifestServiceTests : IDisposable
 
         var manifestPath = Path.Combine(dataDir, FolderConstants.AppExtensionJsonFile);
         var manifestJson = @"{
-            ""inputTypeInside"": ""string-test"",
+            ""name"": ""string-test"",
             ""version"": ""1.0.0"",
-            ""inputTypeAssets"": { ""js"": ""main.js"" }
+            ""inputFieldAssets"": { ""js"": ""main.js"" }
         }";
         File.WriteAllText(manifestPath, manifestJson, new UTF8Encoding(false));
 
@@ -167,7 +167,7 @@ public class ExtensionManifestServiceTests : IDisposable
 
         var manifestPath = Path.Combine(dataDir, FolderConstants.AppExtensionJsonFile);
         var manifestJson = @"{
-            ""inputTypeInside"": ""string-minimal"",
+            ""name"": ""string-minimal"",
             ""version"": ""1.0.0""
         }";
         File.WriteAllText(manifestPath, manifestJson, new UTF8Encoding(false));
@@ -195,7 +195,7 @@ public class ExtensionManifestServiceTests : IDisposable
 
         var manifestPath = Path.Combine(dataDir, FolderConstants.AppExtensionJsonFile);
         var manifestJson = @"{
-            ""inputTypeInside"": ""string-font-icon"",
+            ""name"": ""string-font-icon"",
             ""version"": ""1.2.3"",
             ""editionsSupported"": true
         }";
@@ -206,7 +206,6 @@ public class ExtensionManifestServiceTests : IDisposable
 
         // Assert
         Assert.NotNull(result);
-        //Assert.Equal("string-font-icon", result.InputTypeInside);
         Assert.Equal("string-font-icon", result.Name);
         Assert.Equal("1.2.3", result.Version);
         Assert.True(result.EditionsSupported);

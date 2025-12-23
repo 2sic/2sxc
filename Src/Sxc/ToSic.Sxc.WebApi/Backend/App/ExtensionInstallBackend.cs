@@ -1,3 +1,4 @@
+using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.ImportExport.Sys.Zip;
@@ -16,8 +17,9 @@ public class ExtensionInstallBackend(
     IGlobalConfiguration globalConfiguration,
     ExtensionManifestService manifestService,
     LazySvc<ExtensionInspectBackend> inspectorLazy,
-    LazySvc<CodeControllerReal> codeLazy)
-    : ServiceBase("Bck.ExtZip", connect: [appReadersLazy, site, appPathSvc, globalConfiguration, manifestService, inspectorLazy, codeLazy])
+    LazySvc<CodeControllerReal> codeLazy,
+    LazySvc<AppCachePurger> appCachePurgerLazy)
+    : ServiceBase("Bck.ExtZip", connect: [appReadersLazy, site, appPathSvc, globalConfiguration, manifestService, inspectorLazy, codeLazy, appCachePurgerLazy])
 {
     private ReadOnlyFileHelper ReadOnlyHelper => field ??= new(Log);
     private ExtensionValidationHelper Validation => field ??= new(manifestService, Log);
@@ -25,7 +27,7 @@ public class ExtensionInstallBackend(
     private ExtensionInstallHelper Copier => field ??= new(ReadOnlyHelper, Log);
     private ExtensionPreflightHelper Preflight => field ??= new(manifestService, inspectorLazy, Log);
 
-    public bool InstallExtensionZip(int appId, Stream zipStream, bool overwrite = false, string? originalZipFileName = null, string editions = null!)
+    public bool InstallExtensionZip(int zoneId, int appId, Stream zipStream, bool overwrite = false, string? originalZipFileName = null, string editions = null!)
     {
         var l = Log.Fn<bool>($"a:{appId}, overwrite:{overwrite}, ofn:'{originalZipFileName}'");
 
@@ -77,6 +79,9 @@ public class ExtensionInstallBackend(
                     if (!installResult.Success)
                         throw new InvalidOperationException(installResult.Error ?? $"install failed:'{folderName}'");
                 }
+
+                // app-state refresh should happen on every install
+                appCachePurgerLazy.Value.Purge(zoneId, appId);
 
                 installed.Add(folderName);
             }

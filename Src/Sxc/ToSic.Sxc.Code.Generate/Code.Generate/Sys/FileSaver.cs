@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Context;
+using ToSic.Eav.Sys;
 
 namespace ToSic.Sxc.Code.Generate.Sys;
 
@@ -31,16 +32,42 @@ public class FileSaver(ISite site, IAppReaderFactory appReadFac, IAppPathsMicroS
 
             var basePath = Path.Combine(physicalPath, addPath);
 
+            if (specs.TargetPath.HasValue())
+            {
+                var target = specs.TargetPath!;
+                l.A($"custom TargetPath: '{target}'");
+
+                if (target.ContainsPathTraversal())
+                    throw new($"Invalid target path '{target}' - {PathFixer.PathTraversalMayNotContainMessage}");
+
+                var find = $"{FolderConstants.AppCodeFolder}\\{addPath}";
+                if (basePath.EndsWith(find))
+                {
+                    basePath = (basePath.Substring(0, basePath.Length - find.Length) + "\\" + target.TrimPrefixSlash())
+                        .FlattenSlashes();
+
+                    l.A($"custom BasePath: '{basePath}'");
+                }
+            }
+
+            // normalized
+            basePath = new DirectoryInfo(basePath).FullName;
+
             // ensure the folder for the file exists - it could be different for each file
             Directory.CreateDirectory(basePath);
 
-            var fullPath = Path.Combine(basePath, classSb.FileName);
-            File.WriteAllText(fullPath, classSb.Body);
+            var fileFullPath = new FileInfo(Path.Combine(basePath, classSb.FileName)).FullName;
+            l.A($"filePath: '{fileFullPath}'");
+
+            File.WriteAllText(fileFullPath, classSb.Body);
         }
 
         // Update the code-generator.log file
         if (classFiles.Any())
-            File.AppendAllText(Path.Combine(physicalPath, "code-generator.log"), $"{DateTime.Now:u}: Code generated. Generator: {generator.Name} v{generator.Version}\n");
+            File.AppendAllText(
+                Path.Combine(physicalPath, "code-generator.log"),
+                $"{DateTime.Now:u}: Code generated. Generator: {generator.Name} v{generator.Version} {specs}\n"
+            );
 
         l.Done();
     }

@@ -101,7 +101,7 @@ public class OqtStartup : IServerStartup
         globalConfig.TemporaryFolder(Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", FolderConstants.TemporaryFolder));
         globalConfig.InstructionsFolder(Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", FolderConstants.InstructionsFolder));
         globalConfig.AssetsVirtualUrl($"~/Modules/{OqtConstants.PackageName}/assets/");
-        globalConfig.SharedAppsFolder($"/{OqtConstants.AppRoot}/{OqtConstants.SharedAppFolder}/"); // "/2sxc/Shared"
+        globalConfig.SharedAppsFolder($"/{OqtConstants.AppRoot}/{OqtConstants.TenantsFolderName}/1/{OqtConstants.SitesFolderName}/{OqtConstants.SharedAppFolder}/"); // "/2sxc/Tenants/1/Sites/Shared"
         globalConfig.TempAssemblyFolder(Path.Combine(env.ContentRootPath, FolderConstants.DataFolderProtected, FolderConstants.TempAssemblyFolder)); // ".../App_Data/2sxc.bin"
         globalConfig.CshtmlAssemblyFolder(Path.Combine(env.ContentRootPath, FolderConstants.DataFolderProtected, FolderConstants.CshtmlAssemblyFolder)); // ".../App_Data/2sxc.bin.cshtml"
         globalConfig.CryptoFolder(Path.Combine(env.ContentRootPath, FolderConstants.DataFolderProtected, FolderConstants.CryptoFolder)); // ".../App_Data/2sxc.crypto"

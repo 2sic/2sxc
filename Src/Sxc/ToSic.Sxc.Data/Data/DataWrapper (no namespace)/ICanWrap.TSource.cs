@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Data;
 /// This is more specific than the <see cref="ICanWrapData"/>, since that is just a marker interface.
 /// This one specifies that the object has the necessary `Setup()` method to receive the data of the expected type.
 /// 
-/// Typical use is for custom data such as classes inheriting from <see cref="Custom.Data.CustomItem"/>
+/// Typical use is for custom data such as classes inheriting from [](xref:Custom.Data.CustomItem)
 /// which takes an entity and then provides a strongly typed wrapper around it.
 /// 
 /// History

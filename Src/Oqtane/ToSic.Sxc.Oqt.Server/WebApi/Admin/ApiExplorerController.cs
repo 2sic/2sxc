@@ -45,9 +45,11 @@ public class ApiExplorerController() : OqtStatefulControllerBase(RealController.
     private Assembly GetCompiledAssembly(string path)
     {
         // get path from root
-        var siteId = GetService<SiteState>()?.Alias?.SiteId ?? GetService<AliasResolver>().Alias.SiteId;
+        var alias = GetService<SiteState>()?.Alias ?? GetService<AliasResolver>().Alias;
+        var siteId = alias.SiteId;
+        var tenantId = alias.TenantId;
         var appFolder = GetService<AppFolderLookupForWebApi>().GetAppFolder();
-        var pathFromRoot = OqtServerPaths.GetAppApiPath(siteId, appFolder, path);
+        var pathFromRoot = OqtServerPaths.GetAppApiPath(tenantId, siteId, appFolder, path);
 
         // Figure out the current edition
         var blockOrNull = CtxHlp.BlockOptional;

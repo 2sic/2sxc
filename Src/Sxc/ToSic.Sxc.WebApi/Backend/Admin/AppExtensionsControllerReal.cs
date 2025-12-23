@@ -50,11 +50,12 @@ public class AppExtensionsControllerReal(
     /// Install app extension zip.
     /// </summary>
     /// <param name="uploadInfo">Uploaded ZIP file containing the extension package</param>
+    /// <param name="zoneId"></param>
     /// <param name="appId">App identifier</param>
     /// <param name="editions">Optional list of editions to install into (empty or null = root)</param>
     /// <param name="overwrite">Overwrite existing files if true</param>
     /// <returns>true if installation succeeded</returns>
-    public bool Install(HttpUploadedFile uploadInfo, int appId, string editions = "", bool overwrite = false)
+    public bool Install(HttpUploadedFile uploadInfo, int zoneId, int appId, string editions = "", bool overwrite = false)
     {
         var l = Log.Fn<bool>($"a:{appId}, editions:'{editions}', overwrite:{overwrite}");
 
@@ -65,7 +66,7 @@ public class AppExtensionsControllerReal(
         if (stream == null!)
             throw l.Ex(new NullReferenceException("File Stream is null, upload canceled"));
 
-        var ok = zipLazy.Value.InstallExtensionZip(appId, stream, overwrite, originalZipFileName: fileName, editions: editions);
+        var ok = zipLazy.Value.InstallExtensionZip(zoneId, appId, stream, overwrite, originalZipFileName: fileName, editions: editions);
         return l.ReturnAsOk(ok);
     }
 
@@ -87,7 +88,7 @@ public class AppExtensionsControllerReal(
     /// <summary>
     /// Install app extension zip downloaded from the provided URL(s).
     /// </summary>
-    public bool InstallFrom(string[] urls, int appId, string editions = "", bool overwrite = false)
+    public bool InstallFrom(string[] urls, int zoneId, int appId, string editions = "", bool overwrite = false)
     {
         var l = Log.Fn<bool>($"a:{appId}, editions:'{editions}', overwrite:{overwrite}");
 
@@ -95,12 +96,12 @@ public class AppExtensionsControllerReal(
         using var stream = download.Stream;
 
         // Install the downloaded package into the target app/edition(s).
-        var ok = zipLazy.Value.InstallExtensionZip(appId, stream, overwrite, originalZipFileName: download.FileName, editions: editions);
+        var ok = zipLazy.Value.InstallExtensionZip(zoneId, appId, stream, overwrite, originalZipFileName: download.FileName, editions: editions);
         return l.Return(ok, $"url:'{download.Url}'");
     }
 
     /// <summary>
-    /// Inspect endpoint mirroring DNN behavior.
+    /// Inspect endpoint
     /// </summary>
     /// <param name="appId">App identifier</param>
     /// <param name="name">Extension folder name</param>
@@ -126,7 +127,7 @@ public class AppExtensionsControllerReal(
     /// <returns>HTTP response containing the file data.</returns>
     public THttpResponseType Download(int appId, string name)
         => exportExtensionLazy.Value.Export(appId, name);
-    
+
     /// <summary>
     /// Delete an extension and optionally its data.
     /// </summary>

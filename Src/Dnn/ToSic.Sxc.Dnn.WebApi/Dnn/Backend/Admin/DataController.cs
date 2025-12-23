@@ -1,4 +1,5 @@
 ﻿using System.Web;
+using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.WebApi.Sys.Dto;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Dnn.WebApi.Sys;
@@ -23,9 +24,7 @@ public class DataController() : DnnSxcControllerBase(DataControllerReal.LogSuffi
 {
     private DataControllerReal Real => SysHlp.GetService<DataControllerReal>();
 
-    /// <summary>
-    /// Bundle Export
-    /// </summary>
+    /// <inheritdoc />
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public HttpResponseMessage BundleExport(int appId, Guid exportConfiguration, int indentation = 0)
@@ -35,9 +34,7 @@ public class DataController() : DnnSxcControllerBase(DataControllerReal.LogSuffi
         return Real.BundleExport(appId, exportConfiguration, indentation);
     }
 
-    /// <summary>
-    /// Bundle Import
-    /// </summary>
+    /// <inheritdoc />
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
@@ -47,19 +44,29 @@ public class DataController() : DnnSxcControllerBase(DataControllerReal.LogSuffi
         return Real.BundleImport(new(Request, HttpContext.Current.Request), zoneId, appId);
     }
 
-    /// <summary>
-    /// Bundle Save
-    /// </summary>
+    /// <inheritdoc />
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public bool BundleSave(int appId, Guid exportConfiguration, int indentation = 0)
         => Real.BundleSave(appId, exportConfiguration, indentation);
 
-    /// <summary>
-    /// Bundle Restore
-    /// </summary>
+    /// <inheritdoc />
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public bool BundleRestore(string fileName, int zoneId, int appId)
         => Real.BundleRestore(fileName, zoneId, appId);
+
+    /// <inheritdoc />
+    [HttpGet]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+    public IReadOnlyList<WorkEntityRecycleBin.RecycleBinItem> GetRecycleBin(int appId)
+        => Real.GetRecycleBin(appId);
+
+
+    /// <inheritdoc />
+    [HttpGet]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+    public void Recycle(int appId, int transactionId)
+        => Real.Recycle(appId, transactionId);
+
 }

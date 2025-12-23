@@ -13,7 +13,7 @@ internal class CSharpDataModelGenerator(CSharpDataModelsGenerator dmg, IContentT
           // See also: https://go.2sxc.org/copilot-data
           // To extend it, create a "{{ClassName}}.cs" with this contents:
           /*
-          namespace AppCode.Data
+          namespace {{dmg.Specs.DataNamespace}}
           {
             public partial class {{ClassName}}
             {

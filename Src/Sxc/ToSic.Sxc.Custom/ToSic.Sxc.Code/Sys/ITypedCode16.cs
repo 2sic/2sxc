@@ -31,7 +31,7 @@ public interface ITypedCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IHas
     /// Advanced GetService which can do more than the standard GetService.
     /// </summary>
     /// <typeparam name="TService"></typeparam>
-    /// <param name="protector"></param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="typeName">Optional fully qualified type name to get the class based on a string identifier.</param>
     /// <remarks>New in 17.06.01</remarks>
     /// <returns></returns>
@@ -85,8 +85,7 @@ public interface ITypedCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IHas
     ITypedItem AsItem(
         object data,
         NoParamOrder npo = default,
-        bool? propsRequired = default,
-        bool? mock = default
+        bool? propsRequired = default
     );
 
     /// <inheritdoc cref="ITypedApi.AsItems"/>
@@ -169,7 +168,7 @@ public interface ITypedCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IHas
     #region As Conversions
 
     /// <inheritdoc cref="ITypedApi.As{T}"/>
-    T As<T>(object source, NoParamOrder npo = default, bool mock = default)
+    T As<T>(object source, NoParamOrder npo = default)
         where T : class, ICanWrapData;
 
     /// <inheritdoc cref="ITypedApi.AsList{T}"/>

@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Data.Models;
 /// ```
 /// </example>
 /// <remarks>
-/// This is much lighter than the <see cref="CustomItem"/> which also wraps data, as it doesn't have any predefined properties and doesn't have the <see cref="ITypedItem"/> APIs.
+/// This is much lighter than the [](xref:Custom.Data.CustomItem) which also wraps data, as it doesn't have any predefined properties and doesn't have the <see cref="ITypedItem"/> APIs.
 /// 
 /// History
 /// 

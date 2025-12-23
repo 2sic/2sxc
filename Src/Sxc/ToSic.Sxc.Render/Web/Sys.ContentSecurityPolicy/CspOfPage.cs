@@ -6,12 +6,15 @@ public class CspOfPage(Generator<CspParameterFinalizer> cspParameterFinalizer)
 {
     public List<CspParameters> CspParameters { get; } = [];
 
-    public void Add(IList<CspParameters> additional) => CspParameters.AddRange(additional);
+    public void Add(IList<CspParameters> additional)
+        => CspParameters.AddRange(additional);
 
     /// <summary>
     /// Name of the CSP header to be added, based on the report-only aspect
     /// </summary>
-    public string HeaderName(bool isEnforced) => isEnforced ? CspConstants.CspHeaderNamePolicy : CspConstants.CspHeaderNameReport;
+    public string HeaderName(bool isEnforced) => isEnforced
+        ? CspConstants.CspHeaderNamePolicy
+        : CspConstants.CspHeaderNameReport;
 
 
     public string? CspHttpHeader()

@@ -1,12 +1,8 @@
-﻿using ToSic.Sxc.Data.Sys.Factory;
+﻿using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Services.Sys.ConvertService;
 using ToSic.Sxc.Sys.ExecutionContext;
-
-// 2024-01-22 2dm
-// Remove all convert methods which are just missing the optional parameters, to make the API smaller.
-// Assume it has no side effects, must watch.
-// Remove this note 2024-Q3 (ca. July)
 
 namespace ToSic.Sxc.Services;
 
@@ -19,26 +15,27 @@ internal class ConvertService16(
     : ServiceWithContext("Sxc.CnvSrv", connect: [cnvSvc, code, json]), IConvertService16
 {
 
-    #region New v17 As conversions
 
     [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
 
-    /// <summary>
-    /// EXPERIMENTAL
-    /// </summary>
-    /// <returns></returns>
-    [PrivateApi("WIP, don't publish yet")]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    T IConvertService16.As<T>(ICanBeEntity source, NoParamOrder npo, bool mock)
-        => Cdf.AsCustom<T>(source: source, mock: mock)!;
+    #region ToMock() new v21
 
-    /// <summary>
-    /// EXPERIMENTAL
-    /// </summary>
-    /// <returns></returns>
-    [PrivateApi("WIP, don't publish yet")]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
+    ITypedItem IConvertService16.ToMockItem(object data, NoParamOrder npo, bool? propsRequired)
+        => Cdf.AsItem(data, new() { ItemIsStrict = true, UseMock = true})!;
+
+    T IConvertService16.ToMock<T>(object data, NoParamOrder npo, bool? propsRequired)
+        => Cdf.AsCustom<T>(source: data, mock: true);
+
+    #endregion
+
+    #region New v17 As conversions - used in Content App etc.
+
+    /// <inheritdoc/>
+    T IConvertService16.As<T>(ICanBeEntity source, NoParamOrder npo)
+        => Cdf.AsCustom<T>(source: source, npo: npo)!;
+
+    /// <inheritdoc/>
     IEnumerable<T> IConvertService16.AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder npo, bool nullIfNull)
         => Cdf.AsCustomList<T>(source: source, npo: npo, nullIfNull: nullIfNull);
 
@@ -48,45 +45,36 @@ internal class ConvertService16(
 
     //public bool OptimizeBoolean => true;
 
-    //public T To<T>(object value) => value.ConvertOrDefault<T>(numeric: OptimizeNumbers, truthy: OptimizeBoolean);
 
-    public T? To<T>(object value, NoParamOrder npo = default, T? fallback = default) => cnvSvc.To(value, npo, fallback);
+    public T? To<T>(object value, NoParamOrder npo = default, T? fallback = default)
+        => cnvSvc.To(value, npo, fallback);
 
-    //public int ToInt(object value) => _cnvSvc.To<int>(value);
-    public int ToInt(object value, NoParamOrder npo = default, int fallback = 0) => cnvSvc.To(value, fallback: fallback);
+    public int ToInt(object value, NoParamOrder npo = default, int fallback = 0)
+        => cnvSvc.To(value, fallback: fallback);
 
-    //public Guid ToGuid(object value) => _cnvSvc.To<Guid>(value);
-    public Guid ToGuid(object value, NoParamOrder npo = default, Guid fallback = default) => cnvSvc.To(value, fallback: fallback);
+    public Guid ToGuid(object value, NoParamOrder npo = default, Guid fallback = default)
+        => cnvSvc.To(value, fallback: fallback);
 
-    //public float ToFloat(object value) => _cnvSvc.To<float>(value);
-    public float ToFloat(object value, NoParamOrder npo = default, float fallback = default) => cnvSvc.To(value, fallback: fallback);
+    public float ToFloat(object value, NoParamOrder npo = default, float fallback = default)
+        => cnvSvc.To(value, fallback: fallback);
 
-    //public decimal ToDecimal(object value) => _cnvSvc.To<decimal>(value);
-    public decimal ToDecimal(object value, NoParamOrder npo = default, decimal fallback = default) => cnvSvc.To(value, fallback: fallback);
+    public decimal ToDecimal(object value, NoParamOrder npo = default, decimal fallback = default)
+        => cnvSvc.To(value, fallback: fallback);
 
-    //public double ToDouble(object value) => _cnvSvc.To<double>(value);
-    public double ToDouble(object value, NoParamOrder npo = default, double fallback = default) => cnvSvc.To(value, fallback: fallback);
+    public double ToDouble(object value, NoParamOrder npo = default, double fallback = default)
+        => cnvSvc.To(value, fallback: fallback);
 
-    //public bool ToBool(object value) => _cnvSvc.To<bool>(value);
-    public bool ToBool(object value, NoParamOrder npo = default, bool fallback = false) => cnvSvc.To(value, fallback: fallback);
+    public bool ToBool(object value, NoParamOrder npo = default, bool fallback = false)
+        => cnvSvc.To(value, fallback: fallback);
         
-    //public string ToString(object value) => _cnvSvc.To<string>(value);
 
     public string? ToString(object value, NoParamOrder npo = default, string? fallback = default, bool fallbackOnNull = true) 
         => cnvSvc.ToString(value, npo, fallback, fallbackOnNull);
 
-    //public string ForCode(object value) => _code.Value.ForCode(value);
-    public string? ForCode(object value, NoParamOrder npo = default, string? fallback = default) => code.Value.ForCode(value, npo, fallback);
+    public string? ForCode(object value, NoParamOrder npo = default, string? fallback = default)
+        => code.Value.ForCode(value, npo, fallback);
         
 
     public IJsonService Json => json.Value;
 
-
-    #region Invisible Converts for backward compatibility - 2dm removed 2024-01-22 since it's not in the interface and can't be in use - del 2024-Q3
-
-    //public int ToInt32(object value) => ToInt(value);
-
-    //public float ToSingle(object value) => ToFloat(value);
-
-    #endregion
 }
