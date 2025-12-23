@@ -21,9 +21,9 @@ public class ExtensionDeleteBackend(
 {
     private ReadOnlyFileHelper ReadOnlyHelper => field ??= new(Log);
 
-    public bool DeleteExtension(int zoneId, int appId, string name, string? edition, bool force, bool withData)
+    public bool DeleteExtension(int appId, string name, string? edition, bool force, bool withData)
     {
-        var l = Log.Fn<bool>($"z:{zoneId}, a:{appId}, name:{name}, edition:{edition}, force:{force}, withData:{withData}");
+        var l = Log.Fn<bool>($"a:{appId}, name:{name}, edition:{edition}, force:{force}, withData:{withData}");
 
         if (string.IsNullOrWhiteSpace(name) || !ExtensionFolderNameValidator.IsValid(name))
             throw l.Ex(new ArgumentException("invalid extension name", nameof(name)));
@@ -66,7 +66,7 @@ public class ExtensionDeleteBackend(
         DeleteFiles(appPaths.PhysicalPath, editionSegment, name);
 
         // app-state refresh should happen on every uninstall
-        appCachePurgerLazy.Value.Purge(zoneId, appId);
+        appCachePurgerLazy.Value.Purge(appReader.ZoneId, appId);
 
         return l.ReturnTrue("deleted");
     }
