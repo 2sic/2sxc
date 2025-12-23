@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class InstallController()
-    : OqtStatefulControllerBase(RealController.LogSuffix), IInstallController<IActionResult>
+    : OqtStatefulControllerBase(RealController.LogSuffix), IInstallController
 {
     private RealController Real => GetService<RealController>();
 

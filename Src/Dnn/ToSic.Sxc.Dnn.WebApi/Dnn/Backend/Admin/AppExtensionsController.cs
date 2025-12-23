@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 
 [DnnLogExceptions]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppExtensionsController() : DnnSxcControllerBase(RealController.LogSuffix), IAppExtensionsController<HttpResponseMessage>
+public class AppExtensionsController() : DnnSxcControllerBase(RealController.LogSuffix), IAppExtensionsController
 {
     private RealController Real => SysHlp.GetService<RealController>();
 

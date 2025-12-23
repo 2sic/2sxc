@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 // we can't set this globally (only needed for imports)
 [DnnLogExceptions]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), IAppController<HttpResponseMessage>
+public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), IAppController
 {
     private RealController Real => SysHlp.GetService<RealController>();
 

@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Backend.Admin;
 /// <summary>
 /// Controller interface for App Extensions endpoints separated from the main App controller.
 /// </summary>
-public interface IAppExtensionsController<out THttpResponse>
+public interface IAppExtensionsController
 {
     /// <summary>
     /// Get all App Extensions and their configuration (if any).
@@ -74,7 +74,7 @@ public interface IAppExtensionsController<out THttpResponse>
     /// <param name="appId">App identifier</param>
     /// <param name="name">Extension folder name</param>
     /// <returns>HTTP response containing the file data.</returns>
-    THttpResponse Download(int appId, string name);
+    THttpResponseType Download(int appId, string name);
 
     /// <summary>
     /// Delete an extension and optionally its data.
