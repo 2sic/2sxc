@@ -4881,6 +4881,33 @@
                   "TargetType": 5,
                   "String": "a0f44af0-6750-40c9-9ad9-4a07b6eda8b3"
                 }
+              },
+              {
+                "Id": 184344,
+                "Version": 1,
+                "Guid": "f204d371-c1ed-41fe-a8b1-c4d59ce34121",
+                "Type": {
+                  "Id": "e2f569c9-d1dd-4458-a54e-4aaf53e9ae3c",
+                  "Name": "LanguagesDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "Title": {
+                      "en-us": "Disable Translation"
+                    }
+                  },
+                  "Boolean": {
+                    "Enabled": {
+                      "en-us": false
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "a0f44af0-6750-40c9-9ad9-4a07b6eda8b3"
+                }
               }
             ],
             "Attributes": [
@@ -5319,7 +5346,7 @@
                           "en-us": false
                         },
                         "Required": {
-                          "en-us": false
+                          "en-us": true
                         },
                         "VisibleInEditUI": {
                           "en-us": true
@@ -8106,7 +8133,7 @@
                     "Attributes": {
                       "Boolean": {
                         "DefaultCollapsed": {
-                          "en-us": false
+                          "en-us": true
                         }
                       }
                     },
@@ -8420,7 +8447,7 @@
                           "en-us": ""
                         },
                         "DefaultValue": {
-                          "en-us": "20.00.09"
+                          "en-us": "21.00.00"
                         },
                         "InputType": {
                           "en-us": "string-default"
@@ -8619,7 +8646,7 @@
                           "en-us": ""
                         },
                         "DefaultValue": {
-                          "en-us": "09.11.02"
+                          "en-us": ""
                         },
                         "InputType": {
                           "en-us": "string-default"
@@ -8818,7 +8845,7 @@
                           "en-us": ""
                         },
                         "DefaultValue": {
-                          "en-us": "06.02.00"
+                          "en-us": ""
                         },
                         "InputType": {
                           "en-us": "string-default"
@@ -8935,7 +8962,7 @@
                           "en-us": "Dependencies"
                         },
                         "Notes": {
-                          "en-us": ""
+                          "en-us": "<p>Dependencies tell the system to include other things (such as extensions) in the export.&nbsp;</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
@@ -8983,7 +9010,7 @@
                     "Attributes": {
                       "Boolean": {
                         "DefaultCollapsed": {
-                          "en-us": false
+                          "en-us": true
                         }
                       }
                     },
@@ -9402,6 +9429,33 @@
                     },
                     "Link": {
                       "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "1d91a2c0-4d5d-4197-8cb8-d4bfebf72f15"
+                }
+              },
+              {
+                "Id": 184345,
+                "Version": 1,
+                "Guid": "ae4a22cb-1409-4d82-8b97-ef926d4ffb4b",
+                "Type": {
+                  "Id": "e2f569c9-d1dd-4458-a54e-4aaf53e9ae3c",
+                  "Name": "LanguagesDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "Title": {
+                      "en-us": "Disable Translation"
+                    }
+                  },
+                  "Boolean": {
+                    "Enabled": {
+                      "en-us": false
                     }
                   }
                 },
