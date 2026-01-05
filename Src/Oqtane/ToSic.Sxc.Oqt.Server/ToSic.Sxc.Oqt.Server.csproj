@@ -71,19 +71,7 @@
   <ItemGroup>
     <!-- stv - SQL scripts have to be included as embedded resources -->
     <!-- to be executed as part of oqtane installation or upgrade procedure -->
-    <EmbeddedResource Include="Scripts\ToSic.Sxc.12.00.00.sql" />
-    <EmbeddedResource Include="Scripts\ToSic.Sxc.12.05.00.sql" />
-    <EmbeddedResource Include="Scripts\ToSic.Sxc.13.00.00.sql" />
-    <EmbeddedResource Include="Scripts\ToSic.Sxc.13.01.00.sql" />
-    <EmbeddedResource Include="Scripts\ToSic.Sxc.15.00.00.sql" />
-    <EmbeddedResource Include="Scripts\ToSic.Sxc.16.07.01.sql" />
-    <EmbeddedResource Include="Scripts\ToSic.Sxc.18.03.00.sql" />
-    <EmbeddedResource Include="Scripts\ToSic.Sxc.19.00.00.sql" />
-    <EmbeddedResource Include="Scripts\ToSic.Sxc.20.00.00.sql" />
-    <EmbeddedResource Include="Scripts\ToSic.Sxc.20.00.05.sql" />
-    <EmbeddedResource Include="Scripts\ToSic.Sxc.21.00.00.sql" />
-    <EmbeddedResource Include="Scripts\ToSic.Sxc.Install.sql" />
-    <EmbeddedResource Include="Scripts\ToSic.Sxc.Uninstall.sql" />
+    <EmbeddedResource Include="Scripts\*.sql" />
   </ItemGroup>
 
   <ItemGroup>
