@@ -15,18 +15,19 @@ partial class DnnEnvironmentInstaller
             throw l.Done(new Exception("There seems to be an upgrade running - please wait. If you still see this message after 3-4 minutes, please restart the web application."));
         }
 
-        _installLogger.LogStep("", "FinishAbortedUpgrade starting", false);
-        _installLogger.LogStep("", "Will handle " + UpgradeVersionList.Length + " versions");
+        var logger = new DnnInstallLoggerForVersion(_installLogger, "");
+        logger.LogUnimportant("FinishAbortedUpgrade starting");
+        logger.LogAuto("Will handle " + UpgradeVersionList.Length + " versions");
         // Run upgrade again for all versions that do not have a corresponding logfile
         foreach (var upgradeVersion in UpgradeVersionList)
         {
             var complete = IsUpgradeComplete(upgradeVersion, true, "- check for FinishAbortedUpgrade");
-            _installLogger.LogStep("", "Status for version " + upgradeVersion + " is " + complete);
+            logger.LogAuto("Status for version " + upgradeVersion + " is " + complete);
             if (!complete)
                 UpgradeModule(upgradeVersion, false);
         }
 
-        _installLogger.LogStep("", "FinishAbortedUpgrade done", false);
+        logger.LogUnimportant("FinishAbortedUpgrade done");
 
         _installLogger.CloseLogFiles();
         // Restart application

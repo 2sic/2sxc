@@ -95,7 +95,7 @@ partial class DnnEnvironmentInstaller
             // only set this on the last upgraded version, to prevent crazy updating the client-resource-cache while upgrading
             if (version == EavSystemInfo.VersionString)
             {
-                IncreaseClientDependencyVersion(version);
+                IncreaseClientDependencyVersion(logger);
 
                 // Reset Upgrade complete so it's regenerated
                 UpgradeCompleteCache.Reset();
@@ -446,13 +446,13 @@ partial class DnnEnvironmentInstaller
         }
     }
 
-    private void IncreaseClientDependencyVersion(string version)
+    private void IncreaseClientDependencyVersion(DnnInstallLoggerForVersion logger)
     {
-        _installLogger.LogStep(version, "ClientResourceManager- seems to be last item in version-list, will clear");
+        logger.LogAuto("ClientResourceManager- seems to be last item in version-list, will clear");
 
         HostController.Instance.IncrementCrmVersion(true);
         DataCache.ClearCache();
 
-        _installLogger.LogStep(version, "ClientResourceManager- done clearing");
+        logger.LogAuto("ClientResourceManager- done clearing");
     }
 }
