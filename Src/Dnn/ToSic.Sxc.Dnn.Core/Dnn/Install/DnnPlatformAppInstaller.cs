@@ -33,7 +33,8 @@ internal class DnnPlatformAppInstaller(
                 var primaryAppId = appsCatalog.Value.DefaultAppIdentity(site.ZoneId);
                 // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                 var contentViews = workViews.New(primaryAppId).GetAll();
-                if (contentViews.Any()) return null;
+                if (contentViews.Any())
+                    return null;
             }
             catch
             {
@@ -45,7 +46,8 @@ internal class DnnPlatformAppInstaller(
             site,
             module.Id,
             appSpecsOrNull: null,
-            forContentApp);
+            forContentApp
+        );
 
         // Set src to iframe
         return l.ReturnAsOk(gettingStartedSrc);

@@ -17,7 +17,7 @@ public class ExternalLinksService(SystemFingerprint fingerprint, IPlatformInfo p
     /// Link to a page in the 2sxc.org destination such as getting started, app-home, etc.
     /// </summary>
     /// <returns>a link</returns>
-    public string LinkToDestination(ExternalSxcDestinations destination, ISite site, int moduleId, IAppSpecs appSpecsOrNull, bool isContentApp)
+    public string LinkToDestination(ExternalSxcDestinations destination, ISite site, int moduleId, IAppSpecs? appSpecsOrNull, bool isContentApp)
     {
         var destinationPart = "";
         if (destination == ExternalSxcDestinations.AutoConfigure)
@@ -26,6 +26,7 @@ public class ExternalLinksService(SystemFingerprint fingerprint, IPlatformInfo p
         else if (destination == ExternalSxcDestinations.Features) 
             destinationPart = "&destination=features";
 
+        // ReSharper disable once StringLiteralTypo
         var link = "//gettingstarted.2sxc.org/router.aspx?"
                    + $"Platform={platformInfo.Name}"
                    // note: Version ToString max 3, as Oqtane only has 3 version numbers, otherwise error
