@@ -19,7 +19,8 @@ internal class DnnInstallLogger: ServiceBase
     internal void CloseLogFiles()
     {
         var l = Log.Fn($"Closing: {DateTime.Now.Ticks}");
-        if (_fileStreamWriterCached == null) return;
+        if (_fileStreamWriterCached == null)
+            return;
 
         _fileStreamWriterCached.Close();
         _fileStreamWriterCached.Dispose();
@@ -42,7 +43,7 @@ internal class DnnInstallLogger: ServiceBase
                               + "-" + AppDomain.CurrentDomain.Id
                               + (attempts == 0 ? "" : $"-{attempts}");
 
-        var logFileName = HostingEnvironment.MapPath($"{logFileNameBase}.log.resources");
+        var logFileName = HostingEnvironment.MapPath($"{logFileNameBase}.log.resources")!;
         l.A($"{nameof(logFileName)}: {logFileName}");
 
         StreamWriter streamWriter = null;
@@ -63,59 +64,57 @@ internal class DnnInstallLogger: ServiceBase
                 streamWriter = null;
             }
             l.A($"Will try again, current attempt count is {attempts}");
-            if (attempts < 3) return OpenLogFiles(++attempts);
+            if (attempts < 3)
+                return OpenLogFiles(++attempts);
         }
 
         return l.Return(streamWriter);
     }
 
 
-
-    internal string FormatLogMessage(string version, string message)
-        => DateTime.UtcNow.ToString(@"yyyy-MM-ddTHH\:mm\:ss") + " " + version + " - " + message;
-        
-
     internal void LogStep(string version, string message, bool isImportant = true)
     {
         var l = Log.Fn($"{nameof(version)} '{version}': {message}");
         var niceLine = FormatLogMessage(version, message);
 
-        if (!isImportant && !_saveUnimportantDetails) return;
+        if (!isImportant && !_saveUnimportantDetails)
+            return;
 
         FileStreamWriter.WriteLine(niceLine);
         FileStreamWriter.Flush();
         l.Done();
     }
 
+    private string FormatLogMessage(string version, string message)
+        => DateTime.UtcNow.ToString(@"yyyy-MM-ddTHH\:mm\:ss") + " " + version + " - " + message;
 
     internal void LogVersionCompletedToPreventRerunningTheUpgrade(string version)
     {
         var l = Log.Fn();
         EnsureLogDirectoryExists();
 
-        var logFilePath = HostingEnvironment.MapPath(DnnConstants.LogDirectory + version + ".resources");
+        var logFilePath = HostingEnvironment.MapPath(DnnConstants.LogDirectory + version + ".resources")!;
         if (!File.Exists(logFilePath))
             File.AppendAllText(logFilePath, DateTime.UtcNow.ToString(@"yyyy-MM-ddTHH\:mm\:ss.fffffffzzz"), Encoding.UTF8);
         l.Done();
     }
 
-    private static void EnsureLogDirectoryExists() => CreateDirectory(HostingEnvironment.MapPath(DnnConstants.LogDirectory));
+    private static void EnsureLogDirectoryExists()
+        => CreateDirectory(HostingEnvironment.MapPath(DnnConstants.LogDirectory)!);
 
     internal void DeleteAllLogFiles()
     {
-        if (Exists(HostingEnvironment.MapPath(DnnConstants.LogDirectory)))
+        if (!Exists(HostingEnvironment.MapPath(DnnConstants.LogDirectory)))
+            return;
+
+        var files = new List<string>(GetFiles(HostingEnvironment.MapPath(DnnConstants.LogDirectory)!));
+        foreach (var x in files)
         {
-            var files = new List<string>(GetFiles(HostingEnvironment.MapPath(DnnConstants.LogDirectory)));
-            files.ForEach(x =>
+            try
             {
-                try
-                {
-                    File.Delete(x);
-                }
-                catch
-                {
-                }
-            });
+                File.Delete(x);
+            }
+            catch { /* ignore */ }
         }
     }
 

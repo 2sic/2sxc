@@ -15,14 +15,13 @@ internal partial class DnnEnvironmentInstaller : ServiceBase, IEnvironmentInstal
     /// <summary>
     /// Instance initializers...
     /// </summary>
-    public DnnEnvironmentInstaller(ILogStore logStore, DnnInstallLogger installLogger, LazySvc<IGlobalConfiguration> globalConfiguration, LazySvc<IAppJsonConfigurationService> appJsonService) : base("Dnn.InstCo")
+    public DnnEnvironmentInstaller(ILogStore logStore, DnnInstallLogger installLogger, LazySvc<IGlobalConfiguration> globalConfiguration, LazySvc<IAppJsonConfigurationService> appJsonService)
+        : base("Dnn.InstCo", connect: [appJsonService, installLogger, globalConfiguration])
     {
         _appJsonService = appJsonService;
+        _installLogger = installLogger;
+        _globalConfiguration = globalConfiguration;
         logStore.Add(LogNames.LogStoreInstallation, Log);
-        ConnectLogs([
-            _installLogger = installLogger,
-            _globalConfiguration = globalConfiguration
-        ]);
     }
 
 }
