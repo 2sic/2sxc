@@ -73,7 +73,7 @@ partial class DnnEnvironmentInstaller
                     break;
 
                 case "21.00.00":
-                    DeleteObsoleteFolder(version);
+                    DeleteFolderToSic_SexyContent_ObsoleteV21(version);
                     break;
 
                     // case "20.xx.xx":
@@ -410,25 +410,26 @@ partial class DnnEnvironmentInstaller
         }
     }
 
-    private void DeleteObsoleteFolder(string version)
+    private void DeleteFolderToSic_SexyContent_ObsoleteV21(string version)
     {
         var oldSysFolderRootFullPath = HostingEnvironment.MapPath(DnnConstants.OldSysFolderRootVirtual).TrimLastSlash() + "_OBSOLETE";
-        _installLogger.LogStep(version, $"{nameof(DeleteObsoleteFolder)} - Attempting to delete old system folder: '{oldSysFolderRootFullPath}'.");
+        var nameOfMethod = nameof(DeleteFolderToSic_SexyContent_ObsoleteV21);
+        _installLogger.LogStep(version, $"{nameOfMethod} - Attempting to delete old system folder: '{oldSysFolderRootFullPath}'.");
         try
         {
             if (Directory.Exists(oldSysFolderRootFullPath))
             {
                 Directory.Delete(oldSysFolderRootFullPath, true);
-                _installLogger.LogStep(version, $"{nameof(DeleteObsoleteFolder)} - Old system folder deleted successfully.");
+                _installLogger.LogStep(version, $"{nameOfMethod} - Old system folder deleted successfully.");
             }
             else
             {
-                _installLogger.LogStep(version, $"{nameof(DeleteObsoleteFolder)} - Old system folder does not exist, nothing to delete.");
+                _installLogger.LogStep(version, $"{nameOfMethod} - Old system folder does not exist, nothing to delete.");
             }
         }
         catch (Exception e)
         {
-            _installLogger.LogStep(version, $"{nameof(DeleteObsoleteFolder)} - Error during deletion of old system folder - {e.Message}");
+            _installLogger.LogStep(version, $"{nameOfMethod} - Error during deletion of old system folder - {e.Message}");
         }
     }
 
