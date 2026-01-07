@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneCulture;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Blocks.Output;
 using ToSic.Sxc.Oqt.Server.Context;
@@ -33,6 +34,9 @@ partial class OqtRegisterServices
 
         services.TryAddScoped<OqtSecurity>();
         services.TryAddScoped<IJsApiService, OqtJsApiService>();
+
+        // must be Transient (scoped cause StackOverflowException infinite recursion)
+        services.TryAddTransient<IRuntimeKeyService, OqtRuntimeKeyService>();
 
         return services;
     }
