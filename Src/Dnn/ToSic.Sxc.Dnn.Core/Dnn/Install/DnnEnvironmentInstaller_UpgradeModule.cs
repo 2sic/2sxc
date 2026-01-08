@@ -30,9 +30,10 @@ partial class DnnEnvironmentInstaller
         // Abort upgrade if it's already done - if version is 01.00.00, the module has probably been uninstalled - continue in this case.
         if (/*version != "01.00.00" &&*/ IsUpgradeComplete(version, true, "- Check on Start UpgradeModule"))
         {
-            logger.LogAuto("Apparently trying to update this version, but this versions upgrade is apparently completed, will abort");
-            throw new("2sxc upgrade for version " + version +
-                      " started, but it looks like the upgrade for this version is already complete. Aborting upgrade.");
+            logger.LogAuto("Upgrade already completed for this version (marker exists); skipping");
+            if (closeWhenDone)
+                _installLogger.CloseLogFiles();
+            return l.ReturnAndLog(version);
         }
         logger.LogAuto("Upgrade status check OK (marker not found yet, so upgrade should run)");
 

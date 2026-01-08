@@ -83,25 +83,24 @@ partial class DnnEnvironmentInstaller
         set
         {
             var logger = new DnnInstallLoggerForVersion(_installLogger, "");
+            logger.LogAuto($"Upgrade running flag => {value}");
+
             try
             {
-                logger.LogAuto($"Upgrade running flag => {value}");
-
+                var fileLock = new DnnFileLock();
                 if (value)
-                    new DnnFileLock().Set();
+                    fileLock.Set();
                 else
-                    new DnnFileLock().Release();
+                    fileLock.Release();
+            }
+            catch (Exception ex)
+            {
+                logger.LogAuto($"Upgrade running flag => {value} (error: {ex.GetType().Name}: {ex.Message})");
+                throw;
+            }
 
-                logger.LogAuto($"Upgrade running flag => {value} (done)");
-            }
-            catch
-            {
-                logger.LogAuto($"Upgrade running flag => {value} (error)");
-            }
-            finally
-            {
-                _running = value;
-            }
+            _running = value;
+            logger.LogAuto($"Upgrade running flag => {value} (done)");
         }
     }
 }
