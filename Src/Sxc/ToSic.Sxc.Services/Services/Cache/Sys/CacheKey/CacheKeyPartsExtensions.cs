@@ -42,11 +42,14 @@ public static class CacheKeyPartsExtensions
         if (keyParts.Main.StartsWith(DefaultPrefix))
             return keyParts.Main;
 
+        var appKey = keyParts.RuntimeKey.HasValue()
+            ? keyParts.RuntimeKey
+            : keyParts.AppId.ToString();
         var isMagicOverride = keyParts.Main.StartsWith(CacheSpecConstants.PrefixForDontPrefix);
         var prefix = isMagicOverride
             ? keyParts.Main.TrimStart('*')
             : DefaultPrefix +
-              (keyParts.AppId == CacheKeyParts.NoApp ? "" : Sep + "App:" + keyParts.AppId) +
+              (keyParts.AppId == CacheKeyParts.NoApp ? "" : Sep + "App:" + appKey) +
               $"{Sep}{SegmentPrefix}{keyParts.RegionName.NullIfNoValue() ?? DefaultSegment}{Sep}{keyParts.Main}";
 
         return prefix;

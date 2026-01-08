@@ -56,7 +56,8 @@ public class ApiExplorerController() : OqtStatefulControllerBase(RealController.
         var edition = blockOrNull
             .NullOrGetWith(b => GetService<PolymorphConfigReader>().UseViewEditionOrGet(b));
 
-        var spec = new HotBuildSpec(blockOrNull?.AppId ?? KnownAppsConstants.AppIdEmpty, edition: edition, appName: blockOrNull?.AppOrNull?.Name);
+        var runtimeKey = blockOrNull?.Context.AppReaderRequired?.Specs.RuntimeKey;
+        var spec = new HotBuildSpec(blockOrNull?.AppId ?? KnownAppsConstants.AppIdEmpty, edition: edition, appName: blockOrNull?.AppOrNull?.Name, runtimeKey: runtimeKey);
 
         Log.A($"Controller path from root: {pathFromRoot}");
 
