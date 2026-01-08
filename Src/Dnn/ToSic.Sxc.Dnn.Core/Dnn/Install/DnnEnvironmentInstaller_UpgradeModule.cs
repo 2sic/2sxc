@@ -34,16 +34,16 @@ partial class DnnEnvironmentInstaller
             throw new("2sxc upgrade for version " + version +
                       " started, but it looks like the upgrade for this version is already complete. Aborting upgrade.");
         }
-        logger.LogAuto("version / upgrade-complete test passed");
+        logger.LogAuto("Upgrade status check OK (marker not found yet, so upgrade should run)");
 
         l.A("Will check if IsUpgradeRunning");
         if (IsUpgradeRunning)
         {
-            logger.LogAuto("Apparently upgrade is running, will abort");
+            logger.LogAuto("Another upgrade process appears to be running, will abort");
             throw new("2sxc upgrade for version " + version +
                       " started, but the upgrade is already running. Aborting upgrade.");
         }
-        logger.LogAuto("is-upgrade-running test passed");
+        logger.LogAuto("Upgrade running check OK (no concurrent upgrade detected)");
 
         IsUpgradeRunning = true;
         logger.LogAuto("----- Upgrade to " + version + " started -----");

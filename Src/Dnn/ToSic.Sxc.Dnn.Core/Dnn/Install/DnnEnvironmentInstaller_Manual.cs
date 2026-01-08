@@ -22,7 +22,7 @@ partial class DnnEnvironmentInstaller
         foreach (var upgradeVersion in UpgradeVersionList)
         {
             var complete = IsUpgradeComplete(upgradeVersion, true, "- check for FinishAbortedUpgrade");
-            logger.LogAuto("Status for version " + upgradeVersion + " is " + complete);
+            logger.LogAuto($"Upgrade marker for {upgradeVersion}: {(complete ? "exists" : "not found")}");
             if (!complete)
                 UpgradeModule(upgradeVersion, false);
         }

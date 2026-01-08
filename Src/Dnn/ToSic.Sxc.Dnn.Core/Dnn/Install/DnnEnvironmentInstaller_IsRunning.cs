@@ -38,15 +38,18 @@ partial class DnnEnvironmentInstaller
         var complete = false;
         try
         {
-            if (alwaysLogToFile)
-                logger.LogUnimportant($"checking {note}");
             var versionFilePath = HostingEnvironment.MapPath($"{DnnConstants.LogDirectory}{version}.resources");
-            l.A($"Checking file: '{versionFilePath}'");
+            l.A($"Checking upgrade marker: '{versionFilePath}'");
+
+            if (alwaysLogToFile)
+                logger.LogUnimportant($"Check upgrade marker file {note}");
+
             complete = File.Exists(versionFilePath);
+
             if (alwaysLogToFile || !complete)
             {
-                logger.LogAuto($"File checked: '{versionFilePath}'");
-                logger.LogUnimportant($"{complete}");
+                logger.LogAuto($"Upgrade marker {(complete ? "exists" : "not found")}: '{versionFilePath}'");
+                logger.LogUnimportant($"Upgrade complete: {complete}");
             }
         }
         catch (Exception ex)
@@ -54,7 +57,7 @@ partial class DnnEnvironmentInstaller
             l.Ex(ex);
             try
             {
-                logger.LogAuto("Error checking if install is completed");
+                logger.LogAuto("Error checking upgrade marker file (install status unknown)");
             }
             catch { /* ignore */ }
         }
@@ -72,7 +75,7 @@ partial class DnnEnvironmentInstaller
     {
         get
         {
-            var l = Log.Fn<bool>($"Was already set: {_running.HasValue}");
+            var l = Log.Fn<bool>($"Cached value set: {_running.HasValue}");
             var result = _running ??= new DnnFileLock().IsSet;
             return l.ReturnAndLog(result);
         }
@@ -82,17 +85,18 @@ partial class DnnEnvironmentInstaller
             var logger = new DnnInstallLoggerForVersion(_installLogger, "");
             try
             {
-                logger.LogAuto($"set upgrade running - {value}");
+                logger.LogAuto($"Upgrade running flag => {value}");
 
                 if (value)
                     new DnnFileLock().Set();
                 else
                     new DnnFileLock().Release();
-                logger.LogAuto($"set upgrade running - {value} - done");
+
+                logger.LogAuto($"Upgrade running flag => {value} (done)");
             }
             catch
             {
-                logger.LogAuto($"set upgrade running - {value} - error!");
+                logger.LogAuto($"Upgrade running flag => {value} (error)");
             }
             finally
             {
