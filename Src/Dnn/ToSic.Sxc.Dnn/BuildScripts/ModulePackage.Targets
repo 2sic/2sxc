@@ -30,7 +30,6 @@
       <TempPackagePdbFolder>$(MSBuildProjectDirectory)\ModulePackages\TempPdb</TempPackagePdbFolder>
       <DnnInstallPackage Condition=" '$(DnnInstallPackage)' == '' ">../../../InstallPackages/Dnn-Installer</DnnInstallPackage>
       <FinalZipFileName>$(PackageName).$(Version)_Install.zip</FinalZipFileName>
-      <!-- 2026-01-08 stv: since '2sxc-sources\_latest' is not in use anymore we use '2sxc-sources\$(Version)' -->
       <SourceVersionFolder>$(Source)..\$(Version)</SourceVersionFolder>
     </PropertyGroup>
 
@@ -82,11 +81,13 @@
 
       <!-- all js + css + html etc. stuff from assets-->
       <InstallInclude Include="$(Source)readme.md" Exclude="@(DefaultExclude)" />
-      <InstallIncludeJsJs Include="$(SourceVersionFolder)\js\**\*.*" Exclude="$(SourceVersionFolder)\js\**\*.map" />
+      <InstallIncludeJsJs Include="$(Source)\js\**\*.*" Exclude="$(Source)\js\**\*.map" />
       <!-- 2025-11-25 2dm for v20.09 - moving wysiwyg & gps to /extensions -->
       <!--<InstallIncludeSystem Include="$(Source)\system\**\*.*" Exclude="$(Source)\system\**\*.map" />-->
-      <InstallIncludeJsExtensions Include="$(SourceVersionFolder)\extensions\**\*.*" Exclude="$(SourceVersionFolder)\extensions\**\*.map" />
-      <InstallIncludeJsDist Include="$(SourceVersionFolder)\dist\**\*.*" Exclude="$(SourceVersionFolder)\dist\**\*.map" />
+      <InstallIncludeJsExtensions Include="$(Source)\extensions\**\*.*" Exclude="$(Source)\extensions\**\*.map" />
+      <InstallIncludeJsDist Include="$(Source)\dist\**\*.*" Exclude="$(Source)\dist\**\*.map" />
+      <!-- WIP - turnOn map files must be included for now-->
+      <InstallIncludeJsDist Include="$(Source)\turnOn\*.*" />
 
       <!-- all global types and queries -->
       <InstallInclude Include="..\..\Data\**\App_Data\new-app\**\*.*" />
