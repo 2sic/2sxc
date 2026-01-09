@@ -295,27 +295,27 @@
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
               <name>Microsoft.EntityFrameworkCore.Abstractions.dll</name>
-              <!-- v2.1.1.0 -->
-              <version>2.1.1.18157</version>
+              <!-- v2.3.0.0 -->
+              <version>2.3.0.25014</version>
             </assembly>
             <!-- ToSic.Eav.Persistence.Efc PackageReference -->
             <assembly>
               <name>Microsoft.EntityFrameworkCore.dll</name>
-              <!-- v2.1.1.0 -->
-              <version>2.1.1.18157</version>
+              <!-- v2.3.0.0 -->
+              <version>2.3.0.25014</version>
             </assembly>
             <!-- ToSic.Eav.Persistence.Efc PackageReference -->
             <!-- Microsoft.EntityFrameworkCore.SqlServer transitive dependency -->
             <assembly>
               <name>Microsoft.EntityFrameworkCore.Relational.dll</name>
-              <!-- v2.1.1.0 -->
-              <version>2.1.1.18157</version>
+              <!-- v2.3.0.0 -->
+              <version>2.3.0.25014</version>
             </assembly>
             <!-- ToSic.Eav.Persistence.Efc PackageReference -->
             <assembly>
               <name>Microsoft.EntityFrameworkCore.SqlServer.dll</name>
-              <!-- v2.1.1.0 -->
-              <version>2.1.1.18157</version>
+              <!-- v2.3.0.0 -->
+              <version>2.3.0.25014</version>
             </assembly>
             <!-- Microsoft.Extensions.Caching.Memory transitive dependency -->
             <assembly>
