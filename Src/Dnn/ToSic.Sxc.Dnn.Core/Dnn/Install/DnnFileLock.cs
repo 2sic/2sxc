@@ -6,29 +6,16 @@ internal class DnnFileLock
 {
     internal string LockFileName => HostingEnvironment.MapPath(DnnConstants.LogDirectory + "lock.resources");
     internal string LockFolder => HostingEnvironment.MapPath(DnnConstants.LogDirectory);
-
-    private static readonly object LockObj = new();
-    private static FileStream _lockFile;
-
+    private FileStream _lockFile;
     // Acquire lock
-    internal FileStream Set()
-    {
-        lock (LockObj)
-        {
-            return _lockFile ??= new(LockFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
-        }
-    }
+    internal FileStream Set() => _lockFile ??= new(LockFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
 
     // Close and dispose lock
     internal void Release()
     {
-        lock (LockObj)
-        {
-            _lockFile?.Close();
-            _lockFile?.Dispose();
-            _lockFile = null;
-        }
-
+        _lockFile?.Close();
+        _lockFile?.Dispose();
+        _lockFile = null;
         try
         {
             // try delete

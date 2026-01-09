@@ -18,7 +18,7 @@
     <RootNamespace>ToSic.Sxc.Dnn</RootNamespace>
     <AssemblyName>ToSic.Sxc.Dnn</AssemblyName>
     <!--For reasons unknown, this is relevant, even though we import the specs with the correct moniker-->
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <TargetFrameworkProfile />
 
     <!-- This places the EAV DLLs here, for the copy-deploy during Dev to work -->
@@ -37,28 +37,28 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetNuke.Core" Version="9.6.1">
+    <PackageReference Include="DotNetNuke.Core" Version="10.2.1">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="DotNetNuke.DependencyInjection" Version="9.6.1">
+    <PackageReference Include="DotNetNuke.DependencyInjection" Version="10.2.1">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="DotNetNuke.Web" Version="9.6.1">
+    <PackageReference Include="DotNetNuke.Web" Version="10.2.1">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="DotNetNuke.Web.Client" Version="9.6.1">
+    <PackageReference Include="DotNetNuke.Web.Client" Version="10.2.1">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.1">
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1">
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.3">
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.3.0">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.AspNet.WebApi.WebHost" Version="5.2.3">
+    <PackageReference Include="Microsoft.AspNet.WebApi.WebHost" Version="5.3.0">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="MSBuildTasks">
@@ -164,6 +164,7 @@
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <TargetFramework>net48</TargetFramework>
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets')" />
 

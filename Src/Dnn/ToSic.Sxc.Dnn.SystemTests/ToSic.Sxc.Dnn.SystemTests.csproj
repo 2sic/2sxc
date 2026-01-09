@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetNuke.Web" Version="9.13.9" />
+    <PackageReference Include="DotNetNuke.Web" Version="10.2.1" />
   </ItemGroup>
 
   <ItemGroup>
