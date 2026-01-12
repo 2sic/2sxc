@@ -16,64 +16,70 @@ partial class DnnEnvironmentInstaller
     {
         var l = Log.Fn<string>($"{nameof(version)}: {version}, {nameof(closeWhenDone)}: {closeWhenDone}");
 
+        var logger = new DnnInstallLoggerForVersion(_installLogger, version);
+
         // if upgrade has to run
         if (!OldFolderExists() && (new Version(version) <= new Version(20, 0, 0)))
         {
-            _installLogger.LogStep(version, "Upgrade skipped because clean Install detected (installation of everything until and including 20.00.00 has been done by 00.00.01.SqlDataProvider)");
+            logger.LogAuto("Upgrade skipped because clean Install detected (installation of everything until and including 20.00.00 has been done by 00.00.01.SqlDataProvider)");
             _installLogger.LogVersionCompletedToPreventRerunningTheUpgrade(version);
             return version;
         }
-        _installLogger.LogStep(version, "UpgradeModule starting", false);
+        logger.LogUnimportant("UpgradeModule starting");
 
         // Abort upgrade if it's already done - if version is 01.00.00, the module has probably been uninstalled - continue in this case.
         if (/*version != "01.00.00" &&*/ IsUpgradeComplete(version, true, "- Check on Start UpgradeModule"))
         {
-            _installLogger.LogStep(version, "Apparently trying to update this version, but this versions upgrade is apparently completed, will abort");
-            throw new("2sxc upgrade for version " + version +
-                      " started, but it looks like the upgrade for this version is already complete. Aborting upgrade.");
+            logger.LogAuto("Upgrade already completed for this version (marker exists); skipping");
+            if (closeWhenDone)
+                _installLogger.CloseLogFiles();
+            return l.ReturnAndLog(version);
         }
-        _installLogger.LogStep(version, "version / upgrade-complete test passed");
+        logger.LogAuto("Upgrade status check OK (marker not found yet, so upgrade should run)");
 
         l.A("Will check if IsUpgradeRunning");
         if (IsUpgradeRunning)
         {
-            _installLogger.LogStep(version, "Apparently upgrade is running, will abort");
+            logger.LogAuto("Another upgrade process appears to be running, will abort");
             throw new("2sxc upgrade for version " + version +
                       " started, but the upgrade is already running. Aborting upgrade.");
         }
-        _installLogger.LogStep(version, "is-upgrade-running test passed");
+        logger.LogAuto("Upgrade running check OK (no concurrent upgrade detected)");
 
         IsUpgradeRunning = true;
-        _installLogger.LogStep(version, "----- Upgrade to " + version + " started -----");
+        logger.LogAuto("----- Upgrade to " + version + " started -----");
 
         try
         {
             switch (version)
             {
                 case "01.00.00":
-                    MigrateUpgradeFolder(version);
-                    AddObsoleteFile(version);
-                    AddObsolete2SxcJs(version);
+                    MigrateUpgradeFolder(logger);
+                    AddObsoleteFile(logger);
+                    AddObsolete2SxcJs(logger);
                     break;
 
                 // case "15.00.00": // moved to 15.02 because of we accidentally skipped upgrades in 15.01 - see bug #2997
                 // case "15.02.00": // originally moved to here, but the Settings.Installation.LastVersionWithServerChanges had not been upgraded
                 //                  this results in no file being created for 15.02, so the "IsUpgradeComplete" always fails
                 case "15.02.00":    // Set to 15.04 because otherwise the log file is not created if you already have a 15.02+ (necessary to verify UpgradeComplete)
-                    MigrateOldDataFoldersAndRelatedV15_02_00(version);
-                    DataTimelineCleaningDataAndChangeSchemaForCJsonV15_02_00(version);
+                    MigrateOldDataFoldersAndRelatedV15_02_00(logger);
+                    DataTimelineCleaningDataAndChangeSchemaForCJsonV15_02_00(logger);
                     break;
 
                 case "20.00.00":
-                    MigrateSystemCustomFolderV20_00_00(version);
+                    MigrateSystemCustomFolderV20_00_00(logger);
                     break;
 
                 case "20.00.01":
-                    MigrateAppExtensionsFolderV20_00_01(version);
+                    MigrateAppExtensionsFolderV20_00_01(logger);
                     break;
 
-                case "21.00.00":
-                    DeleteObsoleteFolder(version);
+                // Do v21, 22 etc. here before v23
+
+                // In future v23, remove the old /DesktopModules/ToSic_SexyContent folder completely
+                case "23.00.00":
+                    DeleteFolderToSic_SexyContent_ObsoleteV23Future(logger, version);
                     break;
 
                     // case "20.xx.xx":
@@ -83,48 +89,50 @@ partial class DnnEnvironmentInstaller
                     // If you don't do these two things, various problems will appear
 
             }
-            _installLogger.LogStep(version, "version-list check / switch done", false);
+            logger.LogUnimportant("version-list check / switch done");
 
             // Increase ClientDependency version upon each upgrade (System and all Portals)
             // prevents browsers caching old JS and CSS files for editing, which could cause several errors
             // only set this on the last upgraded version, to prevent crazy updating the client-resource-cache while upgrading
             if (version == EavSystemInfo.VersionString)
             {
-                IncreaseClientDependencyVersion(version);
+                IncreaseClientDependencyVersion(logger);
 
                 // Reset Upgrade complete so it's regenerated
                 UpgradeCompleteCache.Reset();
                 var getNewStatus = UpgradeComplete(true);
-                _installLogger.LogStep(version, $"updated upgrade-complete status to {getNewStatus}");
+                logger.LogAuto($"updated upgrade-complete status to {getNewStatus}");
             }
 
             _installLogger.LogVersionCompletedToPreventRerunningTheUpgrade(version);
-            _installLogger.LogStep(version, "----- Upgrade to " + version + " completed -----");
+            logger.LogAuto("----- Upgrade to " + version + " completed -----");
 
         }
         catch (Exception e)
         {
-            _installLogger.LogStep(version, "Upgrade failed - " + e.Message);
+            logger.LogAuto("Upgrade failed - " + e.Message);
             throw;
         }
         finally
         {
             IsUpgradeRunning = false;
         }
-        _installLogger.LogStep(version, "UpgradeModule done / returning");
+        logger.LogAuto("UpgradeModule done / returning");
         if (closeWhenDone)
             _installLogger.CloseLogFiles();
 
         return l.ReturnAndLog(version);
     }
 
-    private bool OldFolderExists() => _isUpgrade ??= Directory.Exists(HostingEnvironment.MapPath(DnnConstants.OldSysFolderRootVirtual).TrimLastSlash());
+    private bool OldFolderExists() => _isUpgrade
+        ??= Directory.Exists(HostingEnvironment.MapPath(DnnConstants.OldSysFolderRootVirtual).TrimLastSlash());
     private bool? _isUpgrade;
 
-    private string OldSysFolderRootFullPath(string version) => _oldSysFolderRootFullPath ??= GetOldSysFolder(version);
+    private string OldSysFolderRootFullPath(DnnInstallLoggerForVersion logger) => _oldSysFolderRootFullPath
+        ??= GetOldSysFolder(logger);
     private static string _oldSysFolderRootFullPath;
 
-    private void DataTimelineCleaningDataAndChangeSchemaForCJsonV15_02_00(string version)
+    private void DataTimelineCleaningDataAndChangeSchemaForCJsonV15_02_00(DnnInstallLoggerForVersion logger)
     {
         // ToSic_EAV_DataTimeline cleaning data and change schema for CJson
         try
@@ -163,15 +171,15 @@ partial class DnnEnvironmentInstaller
             sqlCommand150000.CommandTimeout = 0; // disable sql execution command timeout on sql server
             sqlCommand150000.ExecuteNonQuery();
 
-            _installLogger.LogStep(version, $"{nameof(DataTimelineCleaningDataAndChangeSchemaForCJsonV15_02_00)} - Data cleaning and schema change for CJson completed successfully.");
+            logger.LogAuto("Data cleaning and schema change for CJson completed successfully.");
         }
         catch (Exception e)
         {
-            _installLogger.LogStep(version, $"{nameof(DataTimelineCleaningDataAndChangeSchemaForCJsonV15_02_00)} - Error during timeline data cleaning - {e.Message}");
+            logger.LogAuto($"Error during timeline data cleaning - {e.Message}");
         }
     }
 
-    private void MigrateOldDataFoldersAndRelatedV15_02_00(string version)
+    private void MigrateOldDataFoldersAndRelatedV15_02_00(DnnInstallLoggerForVersion logger)
     {
         try
         {
@@ -185,7 +193,7 @@ partial class DnnEnvironmentInstaller
             if (Directory.Exists(oldDataCustomFolder) && !Directory.Exists(dataCustomFolder))
             {
                 Directory.Move(oldDataCustomFolder, dataCustomFolder);
-                _installLogger.LogStep(version, $"{nameof(MigrateOldDataFoldersAndRelatedV15_02_00)} - Old .data-custom folder migrated to new location: '{dataCustomFolder}'");
+                logger.LogAuto($"Old .data-custom folder migrated to new location: '{dataCustomFolder}'");
             }
 
             // migrate old .databeta folder
@@ -194,71 +202,71 @@ partial class DnnEnvironmentInstaller
             if (Directory.Exists(oldDataBetaFolder) && !Directory.Exists(dataBetaFolder))
             {
                 Directory.Move(oldDataBetaFolder, dataBetaFolder);
-                _installLogger.LogStep(version, $"{nameof(MigrateOldDataFoldersAndRelatedV15_02_00)} - Old .databeta folder migrated to new location: '{dataBetaFolder}'");
+                logger.LogAuto($"Old .databeta folder migrated to new location: '{dataBetaFolder}'");
             }
         }
         catch (Exception e)
         {
-            _installLogger.LogStep(version, $"{nameof(MigrateOldDataFoldersAndRelatedV15_02_00)} - Error during migration of old data folders - {e.Message}");
+            logger.LogAuto($"Error during migration of old data folders - {e.Message}");
         }
     }
 
-    private string GetOldSysFolder(string version)
+    private string GetOldSysFolder(DnnInstallLoggerForVersion logger)
     {
         var oldSysFolderRootFullPath = HostingEnvironment.MapPath(DnnConstants.OldSysFolderRootVirtual).TrimLastSlash();
         try
         {
             if (Directory.Exists(oldSysFolderRootFullPath))
             {
-                _installLogger.LogStep(version, $"{nameof(GetOldSysFolder)} - Old system folder.");
+                logger.LogAuto("Old system folder.");
                 return oldSysFolderRootFullPath;
             }
-            _installLogger.LogStep(version, $"{nameof(GetOldSysFolder)} - Old system folder does not exist.");
+            logger.LogAuto("Old system folder does not exist.");
         }
         catch (Exception e)
         {
-            _installLogger.LogStep(version, $"{nameof(GetOldSysFolder)} - Error during migration - {e.Message}\n" +
+            logger.LogAuto($"Error during migration - {e.Message}\n" +
                 $"{e.Source}\n" +
                 $"{e.InnerException?.Message}");
         }
         return oldSysFolderRootFullPath;
     }
 
-    private void AddObsoleteFile(string version)
+    private void AddObsoleteFile(DnnInstallLoggerForVersion logger)
     {
         var obsoleteFilename = "OBSOLETE.txt";
 
         try
         {
             // add OBSOLETE.txt with appropriate text - remove folder in v21
-            var obsoleteFilePath = Path.Combine(OldSysFolderRootFullPath(version), obsoleteFilename);
+            var obsoleteFilePath = Path.Combine(OldSysFolderRootFullPath(logger), obsoleteFilename);
             if (!File.Exists(obsoleteFilePath))
             {
                 var obsoleteText = $"This folder is OBSOLETE as of 2sxc v20.\n" +
-                                   $"It will be removed in v21.\n" +
+                                   $"It will be removed in v23.\n" +
                                    $"The folder was marked as obsolete on {DateTime.Now:yyyy-MM-dd HH:mm:ss} for backup purposes, but it is no longer in use.\n";
 
                 File.WriteAllText(obsoleteFilePath, obsoleteText);
 
-                _installLogger.LogStep(version, $"{nameof(AddObsoleteFile)} - {obsoleteFilename} created with text:\n{obsoleteText}");
+                logger.LogAuto($"{obsoleteFilename} created with text:\n{obsoleteText}");
             }
             else
-                _installLogger.LogStep(version, $"{nameof(AddObsoleteFile)} - {obsoleteFilename} already exists, nothing to do.");
+                logger.LogAuto($"{obsoleteFilename} already exists, nothing to do.");
         }
         catch (Exception e)
         {
-            _installLogger.LogStep(version, $"{nameof(AddObsoleteFile)} - Error during migration - {e.Message}.");
+            logger.LogAuto($"Error during migration - {e.Message}.");
         }
     }
 
-    private void AddObsolete2SxcJs(string version)
+    private void AddObsolete2SxcJs(DnnInstallLoggerForVersion logger)
     {
         var obsoleteFilename = @"js\2sxc.api.min.js";
 
         try
         {
             // add 2sxc.api.min.js appropriate text - remove folder in v21
-            var obsoleteFilePath = Path.Combine(OldSysFolderRootFullPath(version), obsoleteFilename);
+            var obsoleteFilePath = Path.Combine(OldSysFolderRootFullPath(logger), obsoleteFilename);
             if (File.Exists(obsoleteFilePath))
             {
                 var obsoleteText =
@@ -276,22 +284,22 @@ partial class DnnEnvironmentInstaller
 ";
                 File.WriteAllText(obsoleteFilePath, obsoleteText); // overwrite existing content
 
-                _installLogger.LogStep(version, $"{nameof(AddObsolete2SxcJs)} - '{obsoleteFilename}' overwrite existing content with text:\n{obsoleteText}");
+                logger.LogAuto($"'{obsoleteFilename}' overwrite existing content with text:\n{obsoleteText}");
             }
             else
-                _installLogger.LogStep(version, $"{nameof(AddObsolete2SxcJs)} - '{obsoleteFilename}' not exists, nothing to do.");
+                logger.LogAuto($"'{obsoleteFilename}' not exists, nothing to do.");
         }
         catch (Exception e)
         {
-            _installLogger.LogStep(version, $"{nameof(AddObsolete2SxcJs)} - Error during migration - {e.Message}.");
+            logger.LogAuto($"Error during migration - {e.Message}.");
         }
     }
-    private void MigrateSystemCustomFolderV20_00_00(string version)
+    private void MigrateSystemCustomFolderV20_00_00(DnnInstallLoggerForVersion logger)
     {
         try
         {
             var oldSystemCustomFolder = Path.Combine(
-                OldSysFolderRootFullPath(version),
+                OldSysFolderRootFullPath(logger),
                 FolderConstants.DataFolderProtected,
                 FolderConstants.DataSubFolderSystemCustom
             );
@@ -301,24 +309,24 @@ partial class DnnEnvironmentInstaller
             if (Directory.Exists(oldSystemCustomFolder))
             {
                 Helpers.DirectoryCopy(oldSystemCustomFolder, systemCustomFolder, true);
-                _installLogger.LogStep(version, $"{nameof(MigrateSystemCustomFolderV20_00_00)} - Old '{FolderConstants.DataSubFolderSystemCustom}' folder migrated to new location: " + systemCustomFolder);
+                logger.LogAuto($"Old '{FolderConstants.DataSubFolderSystemCustom}' folder migrated to new location: " + systemCustomFolder);
             }
             else
-                _installLogger.LogStep(version, $"{nameof(MigrateSystemCustomFolderV20_00_00)} - Old '{FolderConstants.DataSubFolderSystemCustom}' folder does not exist.");
+                logger.LogAuto($"Old '{FolderConstants.DataSubFolderSystemCustom}' folder does not exist.");
         }
         catch (Exception e)
         {
-            _installLogger.LogStep(version, $"{nameof(MigrateSystemCustomFolderV20_00_00)} - Error during migration - " + e.Message);
+            logger.LogAuto($"Error during migration - {e.Message}");
         }
     }
 
     // Migrate the 'system' (AppExtensions) folder
-    private void MigrateAppExtensionsFolderV20_00_01(string version)
+    private void MigrateAppExtensionsFolderV20_00_01(DnnInstallLoggerForVersion logger)
     {
         try
         {
             var oldAppExtensionsFolder = Path.Combine(
-                OldSysFolderRootFullPath(version),
+                OldSysFolderRootFullPath(logger),
                 FolderConstants.AppExtensionsLegacyFolder
             );
 
@@ -330,33 +338,33 @@ partial class DnnEnvironmentInstaller
             if (Directory.Exists(oldAppExtensionsFolder))
             {
                 Helpers.DirectoryCopy(oldAppExtensionsFolder, newAppExtensionsFolder, true);
-                _installLogger.LogStep(version, $"{nameof(MigrateAppExtensionsFolderV20_00_01)} - Old '{FolderConstants.AppExtensionsLegacyFolder}' folder migrated to new location: " + newAppExtensionsFolder);
+                logger.LogAuto($"Old '{FolderConstants.AppExtensionsLegacyFolder}' folder migrated to new location: {newAppExtensionsFolder}");
 
-                RenameAllOldDataSubfolders(version, newAppExtensionsFolder);
+                RenameAllOldDataSubfolders(logger, newAppExtensionsFolder);
             }
             else
-                _installLogger.LogStep(version, $"{nameof(MigrateAppExtensionsFolderV20_00_01)} - Old '{FolderConstants.AppExtensionsLegacyFolder}' folder does not exist.");
+                logger.LogAuto($"Old '{FolderConstants.AppExtensionsLegacyFolder}' folder does not exist.");
         }
         catch (Exception e)
         {
-            _installLogger.LogStep(version, $"{nameof(MigrateAppExtensionsFolderV20_00_01)} - Error during migration - {e.Message}");
+            logger.LogAuto($"Error during migration - {e.Message}");
         }
     }
 
     // Rename all old '.data' subfolders to 'App_Data' that are in appExtension subfolders in 'system' folder
-    private void RenameAllOldDataSubfolders(string version, string newAppExtensionsFolder)
+    private void RenameAllOldDataSubfolders(DnnInstallLoggerForVersion logger, string newAppExtensionsFolder)
     {
-        _installLogger.LogStep(version, $"{nameof(RenameAllOldDataSubfolders)} - Start renaming in app extensions subfolders from '{FolderConstants.DataFolderProtected}' to '{FolderConstants.DataFolderProtected}'");
+        logger.LogAuto($"Start renaming in app extensions subfolders from '{FolderConstants.DataFolderProtected}' to '{FolderConstants.DataFolderProtected}'");
 
         new DirectoryInfo(newAppExtensionsFolder).GetDirectories()
             .SelectMany(appExtensionDirectory => appExtensionDirectory.GetDirectories(FolderConstants.DataFolderOld))
-            .ForEach(oldDotDataDirectory => RenameOldDotDataToAppData(version, oldDotDataDirectory));
+            .ForEach(oldDotDataDirectory => RenameOldDotDataToAppData(logger, oldDotDataDirectory));
 
-        _installLogger.LogStep(version, $"{nameof(RenameAllOldDataSubfolders)} - Finish renaming in app extensions subfolders from '{FolderConstants.DataFolderProtected}' to '{FolderConstants.DataFolderProtected}'");
+        logger.LogAuto($"Finish renaming in app extensions subfolders from '{FolderConstants.DataFolderProtected}' to '{FolderConstants.DataFolderProtected}'");
     }
 
     // Rename old '.data' folder to 'App_Data'
-    private void RenameOldDotDataToAppData(string version, DirectoryInfo oldDotDataDirectory)
+    private void RenameOldDotDataToAppData(DnnInstallLoggerForVersion logger, DirectoryInfo oldDotDataDirectory)
     {
         var destDirName = Path.Combine(oldDotDataDirectory.Parent!.FullName, FolderConstants.DataFolderProtected);
         try
@@ -364,30 +372,30 @@ partial class DnnEnvironmentInstaller
             if (!Directory.Exists(destDirName))
             {
                 oldDotDataDirectory.MoveTo(destDirName);
-                _installLogger.LogStep(version, $"{nameof(RenameOldDotDataToAppData)} - Renamed: '{oldDotDataDirectory.FullName}'");
+                logger.LogAuto($"Renamed: '{oldDotDataDirectory.FullName}'");
             }
             else
             {
                 // fallback strategy if directory already exists
                 Helpers.DirectoryCopy(oldDotDataDirectory.FullName, destDirName, true);
                 oldDotDataDirectory.Delete(true);
-                _installLogger.LogStep(version, $"{nameof(RenameOldDotDataToAppData)} - Coped and deleted: '{oldDotDataDirectory.FullName}'");
+                logger.LogAuto($"Coped and deleted: '{oldDotDataDirectory.FullName}'");
             }
             
         }
         catch (Exception ex)
         {
-            _installLogger.LogStep(version, $"{nameof(RenameOldDotDataToAppData)} - Error during renaming: '{oldDotDataDirectory.FullName}' - {ex.Message}");
+            logger.LogAuto($"Error during renaming: '{oldDotDataDirectory.FullName}' - {ex.Message}");
         }
     }
 
-    private void MigrateUpgradeFolder(string version)
+    private void MigrateUpgradeFolder(DnnInstallLoggerForVersion logger)
     {
         try
         {
             const string upgrade = "Upgrade";
             var oldUpgradeFolder = Path.Combine(
-                OldSysFolderRootFullPath(version),
+                OldSysFolderRootFullPath(logger),
                 upgrade
                 );
 
@@ -399,46 +407,53 @@ partial class DnnEnvironmentInstaller
             if (Directory.Exists(oldUpgradeFolder))
             {
                 Helpers.DirectoryCopy(oldUpgradeFolder, upgradeFolder, true);
-                _installLogger.LogStep(version, $"{nameof(MigrateUpgradeFolder)} - Old system '{upgrade}' folder migrated to new location: " + upgradeFolder);
+                logger.LogAuto($"Old system '{upgrade}' folder migrated to new location: " + upgradeFolder);
             }
             else
-                _installLogger.LogStep(version, $"{nameof(MigrateUpgradeFolder)} - Old system '{upgrade}' folder does not exist.");
+                logger.LogAuto($"Old system '{upgrade}' folder does not exist.");
         }
         catch (Exception e)
         {
-            _installLogger.LogStep(version, $"{nameof(MigrateUpgradeFolder)} - Error during migration - {e.Message}");
+            logger.LogAuto($"Error during migration - {e.Message}");
         }
     }
 
-    private void DeleteObsoleteFolder(string version)
+    /// <summary>
+    /// Clean up special /system folder which was moved in v20 and is obsolete now.
+    /// At v20 we don't remove everything, so people can still find their code if they had anything custom.
+    /// But we will do a clean-up in v23 or later.
+    /// </summary>
+    /// <param name="logger"></param>
+    /// <param name="version"></param>
+    private void DeleteFolderToSic_SexyContent_ObsoleteV23Future(DnnInstallLoggerForVersion logger, string version)
     {
-        var oldSysFolderRootFullPath = HostingEnvironment.MapPath(DnnConstants.OldSysFolderRootVirtual).TrimLastSlash() + "_OBSOLETE";
-        _installLogger.LogStep(version, $"{nameof(DeleteObsoleteFolder)} - Attempting to delete old system folder: '{oldSysFolderRootFullPath}'.");
+        var oldSysFolderRootFullPath = HostingEnvironment.MapPath(DnnConstants.OldSysFolderRootVirtual).TrimLastSlash();
+        logger.LogAuto($"Attempting to delete old system folder: '{oldSysFolderRootFullPath}'.");
         try
         {
             if (Directory.Exists(oldSysFolderRootFullPath))
             {
                 Directory.Delete(oldSysFolderRootFullPath, true);
-                _installLogger.LogStep(version, $"{nameof(DeleteObsoleteFolder)} - Old system folder deleted successfully.");
+                logger.LogAuto($"Old system folder deleted successfully.");
             }
             else
             {
-                _installLogger.LogStep(version, $"{nameof(DeleteObsoleteFolder)} - Old system folder does not exist, nothing to delete.");
+                logger.LogAuto($"Old system folder does not exist, nothing to delete.");
             }
         }
         catch (Exception e)
         {
-            _installLogger.LogStep(version, $"{nameof(DeleteObsoleteFolder)} - Error during deletion of old system folder - {e.Message}");
+            logger.LogAuto($"Error during deletion of old system folder - {e.Message}");
         }
     }
 
-    private void IncreaseClientDependencyVersion(string version)
+    private void IncreaseClientDependencyVersion(DnnInstallLoggerForVersion logger)
     {
-        _installLogger.LogStep(version, "ClientResourceManager- seems to be last item in version-list, will clear");
+        logger.LogAuto("ClientResourceManager- seems to be last item in version-list, will clear");
 
         HostController.Instance.IncrementCrmVersion(true);
         DataCache.ClearCache();
 
-        _installLogger.LogStep(version, "ClientResourceManager- done clearing");
+        logger.LogAuto("ClientResourceManager- done clearing");
     }
 }

@@ -20,12 +20,15 @@ partial class DnnEnvironmentInstaller
                 : "Module upgrade did not complete successfully. Please login as host user to finish the upgrade.";
     }
 
-    private bool UpgradeComplete(bool alwaysLogToFile) => UpgradeCompleteCache.Get(() => IsUpgradeComplete(LastVersionWithServerChanges, alwaysLogToFile, "- first check"));
+    private bool UpgradeComplete(bool alwaysLogToFile)
+        => UpgradeCompleteCache.Get(() => IsUpgradeComplete(LastVersionWithServerChanges, alwaysLogToFile, "- first check"));
     private static readonly GetOnce<bool> UpgradeCompleteCache = new();
 
     private bool IsUpgradeComplete(string version, bool alwaysLogToFile, string note = "")
     {
         var l = Log.Fn<bool>(message: $"{note} Log to file even if all is ok: {alwaysLogToFile}", timer: true);
+        var logger = new DnnInstallLoggerForVersion(_installLogger, version);
+
         // 2023-03-23 2dm
         // Previously this created a file on every startup, because it logged trying to find the status.
         // This sometimes resulted in exceptions simply because the file was locked - so to avoid this
@@ -35,20 +38,27 @@ partial class DnnEnvironmentInstaller
         var complete = false;
         try
         {
-            if (alwaysLogToFile) _installLogger.LogStep(version, $"{nameof(IsUpgradeComplete)} checking {note}", false);
             var versionFilePath = HostingEnvironment.MapPath($"{DnnConstants.LogDirectory}{version}.resources");
-            l.A($"Checking file: '{versionFilePath}'");
+            l.A($"Checking upgrade marker: '{versionFilePath}'");
+
+            if (alwaysLogToFile)
+                logger.LogUnimportant($"Check upgrade marker file {note}");
+
             complete = File.Exists(versionFilePath);
+
             if (alwaysLogToFile || !complete)
             {
-                _installLogger.LogStep(version, $"File checked: '{versionFilePath}'");
-                _installLogger.LogStep(version, $"{nameof(IsUpgradeComplete)}: {complete}", false);
+                logger.LogAuto($"Upgrade marker {(complete ? "exists" : "not found")}: '{versionFilePath}'");
+                logger.LogUnimportant($"Upgrade complete: {complete}");
             }
         }
         catch (Exception ex)
         {
             l.Ex(ex);
-            try { _installLogger.LogStep(version, "Error checking if install is completed"); }
+            try
+            {
+                logger.LogAuto("Error checking upgrade marker file (install status unknown)");
+            }
             catch { /* ignore */ }
         }
         return l.ReturnAndLog(complete);
@@ -65,30 +75,32 @@ partial class DnnEnvironmentInstaller
     {
         get
         {
-            var l = Log.Fn<bool>($"Was already set: {_running.HasValue}");
+            var l = Log.Fn<bool>($"Cached value set: {_running.HasValue}");
             var result = _running ??= new DnnFileLock().IsSet;
             return l.ReturnAndLog(result);
         }
+
         set
         {
+            var logger = new DnnInstallLoggerForVersion(_installLogger, "");
+            logger.LogAuto($"Upgrade running flag => {value}");
+
             try
             {
-                _installLogger.LogStep("", "set upgrade running - " + value);
-
+                var fileLock = new DnnFileLock();
                 if (value)
-                    new DnnFileLock().Set();
+                    fileLock.Set();
                 else
-                    new DnnFileLock().Release();
-                _installLogger.LogStep("", "set upgrade running - " + value + " - done");
+                    fileLock.Release();
             }
-            catch
+            catch (Exception ex)
             {
-                _installLogger.LogStep("", "set upgrade running - " + value + " - error!");
+                logger.LogAuto($"Upgrade running flag => {value} (error: {ex.GetType().Name}: {ex.Message})");
+                throw;
             }
-            finally
-            {
-                _running = value;
-            }
+
+            _running = value;
+            logger.LogAuto($"Upgrade running flag => {value} (done)");
         }
     }
 }

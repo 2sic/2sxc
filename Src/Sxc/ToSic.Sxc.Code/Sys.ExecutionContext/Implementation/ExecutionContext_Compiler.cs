@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Code.Sys.HotBuild;
+﻿using ToSic.Sxc.Apps.Sys;
+using ToSic.Sxc.Code.Sys.HotBuild;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
 
@@ -17,7 +18,8 @@ public partial class ExecutionContext
 
         // Compile
         var compiler = Services.CodeCompilerLazy.Value;
-        var spec = new HotBuildSpec(App.AppId, _editionForHotBuild, App.Name);
+        var runtimeKey = (App as IAppWithInternal)?.AppReader.Specs.RuntimeKey;
+        var spec = new HotBuildSpec(App.AppId, _editionForHotBuild, App.Name, runtimeKey);
         var instance = compiler.InstantiateClass(virtualPath, spec, className: name, relativePath: relativePath, throwOnError: throwOnError);
 
         if (instance == null)

@@ -25,7 +25,7 @@ public class SxcManager(
     ISqlRepository sql,
     IServiceScopeFactory serviceScopeFactory,
     IWebHostEnvironment environment,
-    IConfigManager configManager,
+    //IConfigManager configManager,
     ILogger<SxcManager> logger) : IInstallable
 {
     private const string CleanInstallMigrationId = "ToSic.Sxc.Install";
@@ -72,15 +72,15 @@ public class SxcManager(
         switch (version.Replace(".", "-"))
         {
             case "20-00-00":
-                Upgrade_20_00_00(tenant, scope, version);
+                Upgrade_20_00_00(tenant, version);
                 break;
             case "20-00-10":
-                Upgrade_20_00_10(tenant, scope, version);
+                Upgrade_20_00_10(tenant, version);
                 break;
         }
     }
 
-    private void Upgrade_20_00_00(Tenant tenant, IServiceScope scope, string version)
+    private void Upgrade_20_00_00(Tenant tenant, string version)
     {
         LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(Upgrade_20_00_00)} {version}");
 
@@ -95,7 +95,7 @@ public class SxcManager(
         RemoveAssemblies(tenant, assemblies, version);
     }
 
-    private void Upgrade_20_00_10(Tenant tenant, IServiceScope scope, string version)
+    private void Upgrade_20_00_10(Tenant tenant, string version)
     {
         LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(Upgrade_20_00_10)} {version}");
 

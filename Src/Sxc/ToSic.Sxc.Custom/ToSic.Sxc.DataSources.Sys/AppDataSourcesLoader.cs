@@ -105,7 +105,7 @@ internal class AppDataSourcesLoader(
         // Figure out the current edition
         var edition = FigureEdition().TrimLastSlash();
 
-        var spec = new HotBuildSpec(appSpecs.AppId, edition: edition, appSpecs?.Name);
+        var spec = new HotBuildSpec(appSpecs.AppId, edition: edition, appSpecs?.Name, appSpecs?.RuntimeKey);
 
         return l.ReturnAsOk(spec);
     }

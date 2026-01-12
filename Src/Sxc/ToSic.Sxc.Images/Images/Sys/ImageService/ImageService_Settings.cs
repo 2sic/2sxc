@@ -114,7 +114,7 @@ partial class ImageService
         get
         {
             // If Koi knows the framework, then no need to check features
-            if (!imgLinker.Koi.IsUnknown)
+            if (!ImgLinker.Koi.IsUnknown)
                 return null;
 
             // Get list of features, and only re-check if the count changed

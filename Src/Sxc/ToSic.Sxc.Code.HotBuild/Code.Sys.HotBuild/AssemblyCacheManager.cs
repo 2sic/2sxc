@@ -17,7 +17,7 @@ public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : Servi
         return (Get(cacheKey), cacheKey);
     }
 
-    private static string KeyAppCode(HotBuildSpec spec) => $"{GlobalCacheRoot}app:{spec.AppId}.edition:{spec.Edition}.AppCode";
+    private static string KeyAppCode(HotBuildSpec spec) => $"{GlobalCacheRoot}app:{spec.AppKeyForCache}.edition:{spec.Edition}.AppCode";
 
     #endregion
 
@@ -29,7 +29,7 @@ public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : Servi
         return (memoryCacheService.Get<List<AssemblyResult>>(cacheKey), cacheKey);
     }
 
-    private static string KeyDependency(HotBuildSpec spec) => $"{GlobalCacheRoot}app:{spec.AppId}.edition:{spec.Edition}.dep:{DependenciesLoader.DependenciesFolder}";
+    private static string KeyDependency(HotBuildSpec spec) => $"{GlobalCacheRoot}app:{spec.AppKeyForCache}.edition:{spec.Edition}.dep:{DependenciesLoader.DependenciesFolder}";
 
     #endregion
 

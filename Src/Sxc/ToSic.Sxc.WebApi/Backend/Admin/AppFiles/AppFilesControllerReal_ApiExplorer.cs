@@ -41,7 +41,7 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
             try
             {
                 // get AppCode assembly
-                var spec = new HotBuildSpec(appId, edition: edition, app.Folder);
+                var spec = new HotBuildSpec(appId, edition: edition, app.Folder, app.RuntimeKey);
                 l.A($"{spec}");
                 var (result, _) = appCodeLoader.Value.GetAppCode(spec);
                 appCodeAssembly = result?.Assembly;

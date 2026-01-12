@@ -22,5 +22,8 @@ internal class GeneratePropertyCustom(CSharpGeneratorHelper helper) : GeneratePr
         ];
     }
 
-    private List<string> UsingCustomData { get; } = [typeof(GpsCoordinates).Namespace];
+    private List<string> UsingCustomData { get; } =
+    [
+        typeof(GpsCoordinates).Namespace!,
+    ];
 }

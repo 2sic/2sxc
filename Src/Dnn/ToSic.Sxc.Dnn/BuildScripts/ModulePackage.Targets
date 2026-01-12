@@ -11,11 +11,6 @@
   <!-- The Dnn Build Package - Should only run after release compile -->
   <Target Name="PackageModule" AfterTargets="Build" DependsOnTargets="BuildConfigTarget" Condition=" '$(Configuration)|$(Platform)|$(SourceExist)' == 'Release|AnyCPU|true' ">
 
-    <Message Text="DnnBuild: Starting DNN Build" Importance="high" />
-    <Message Text="DnnBuild: Will get Assets from $(Source)" Importance="high" />
-
-    <Error Condition="!Exists('$(Source)')" Text="DnnBuild: ERROR: Assets folder not found at $(Source)" />
-
     <!-- Properties / Variables for the DNN Build which we need early on-->
     <PropertyGroup>
       <DnnManifestFile>DnnPackageBuilder/ToSic.Sxc.Dnn.dnn</DnnManifestFile>
@@ -26,6 +21,8 @@
       <Output TaskParameter="Value" PropertyName="Version" />
     </XmlRead>
 
+    <Message Text="DnnBuild: Starting DNN Build version $(Version)" Importance="high" />
+
     <PropertyGroup>
       <PackageName>ToSic.Sxc.Dnn</PackageName>
       <TempPackageFolder>$(MSBuildProjectDirectory)\ModulePackages\Temp</TempPackageFolder>
@@ -33,8 +30,27 @@
       <TempPackagePdbFolder>$(MSBuildProjectDirectory)\ModulePackages\TempPdb</TempPackagePdbFolder>
       <DnnInstallPackage Condition=" '$(DnnInstallPackage)' == '' ">../../../InstallPackages/Dnn-Installer</DnnInstallPackage>
       <FinalZipFileName>$(PackageName).$(Version)_Install.zip</FinalZipFileName>
-      <SourceMapsFolder>$(Source)..\$(Version)</SourceMapsFolder>
+      <SourceVersionFolder>$(Source)..\$(Version)</SourceVersionFolder>
     </PropertyGroup>
+
+    <Error Condition="!Exists('$(Source)')" Text="DnnBuild: ERROR: Assets folder not found at $(Source)" />
+
+    <!-- Auto-deploy the externalized map files -->
+    <!-- New in 2020-09 From now on we'll also publish the built js files to sources.2sxc.org and not include them in 2sxc-repo any more -->
+    <ItemGroup>
+      <!--include the dist, js and system folders, but as a subfolder (that's why the strange syntax) -->
+      <ExternalSourceMaps Include="$(Source)\*dist\**\*.*" />
+      <ExternalSourceMaps Include="$(Source)\*js\**\*.*" />
+      <ExternalSourceMaps Include="$(Source)\*extensions\**\*.*" />
+    </ItemGroup>
+
+    <!-- Only deploy files if we actually found any in '2sxc-sources/_latest' -->
+    <Message Text="DnnBuild: Copying all Assets to versioned folder $(SourceVersionFolder)" Importance="high" Condition=" '@(ExternalSourceMaps)' != '' " />
+    <RemoveDir Directories="$(SourceVersionFolder)" Condition=" '@(ExternalSourceMaps)' != '' " />
+    <Copy SourceFiles="@(ExternalSourceMaps)" DestinationFolder="$(SourceVersionFolder)\%(RecursiveDir)" Condition=" '@(ExternalSourceMaps)' != '' " />
+
+    <Error Condition="!Exists('$(SourceVersionFolder)')" Text="DnnBuild: ERROR: Source version $(Version) assets folder not found at $(SourceVersionFolder)" />
+    <Message Text="DnnBuild: Will get source version $(Version) assets from $(SourceVersionFolder)" Importance="high" />
 
     <ItemGroup>
       <DefaultExclude Include="**\bin\**" />
@@ -288,27 +304,12 @@
     </CreateItem>
     <Zip Files="@(AssemblyHelperContent)" WorkingDirectory="$(TempPackagePdbFolder)" ZipFileName="$(TempPackageFolder)\tosic.bin.debug-helpers.zip" />
 
-
     <!-- Create the Install package -->
     <Message Text="DnnBuild: Creating final Zip file $(FinalZipFileName) in $(DnnInstallPackage)" Importance="high" />
     <CreateItem Include="$(TempPackageFolder)\**\*.*">
       <Output TaskParameter="Include" ItemName="OutputContent" />
     </CreateItem>
     <Zip Files="@(OutputContent)" WorkingDirectory="$(TempPackageFolder)" ZipFileName="$(DnnInstallPackage)/$(FinalZipFileName)" />
-
-
-    <!-- Auto-deploy the externalized map files to another repo-->
-    <!-- New in 2020-09 From now on we'll also publish the built js files to sources.2sxc.org and not include them in 2sxc-repo any more -->
-    <Message Text="DnnBuild: Copying all Assets to versioned folder $(SourceMapsFolder)" Importance="high" />
-    <ItemGroup>
-      <!--include the dist, js and system folders, but as a subfolder (that's why the strange syntax) -->
-      <ExternalSourceMaps Include="$(Source)\*dist\**\*.*" />
-      <ExternalSourceMaps Include="$(Source)\*js\**\*.*" />
-      <ExternalSourceMaps Include="$(Source)\*system\**\*.*" />
-    </ItemGroup>
-    <RemoveDir Directories="$(SourceMapsFolder)" />
-    <Copy SourceFiles="@(ExternalSourceMaps)" DestinationFolder="$(SourceMapsFolder)\%(RecursiveDir)" />
-
 
     <!-- Cleanup -->
     <Message Text="DnnBuild: Clean-up temporary folders" Importance="high" />

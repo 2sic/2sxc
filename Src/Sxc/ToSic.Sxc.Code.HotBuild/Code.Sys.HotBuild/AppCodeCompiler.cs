@@ -193,9 +193,10 @@ public abstract class AppCodeCompiler(
             ? Path.Combine(globalConfiguration.TempAssemblyFolder(), spec.SharedSuffix)
             : globalConfiguration.TempAssemblyFolder();
         var edition = NormalizeForFolder(spec.Edition, "root");
+        var appKey = spec.RuntimeKey ?? $"{spec.AppId:0000}";
         var cacheFolder = Path.Combine(
             root,
-            $"{spec.AppId:0000}-{edition}");
+            $"{appKey}-{edition}");
 
         Directory.CreateDirectory(cacheFolder);
         return cacheFolder;

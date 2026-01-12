@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Services.Cache.Sys.CacheKey;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.Configuration;
@@ -44,6 +45,9 @@ internal class CacheService(
     private int AppId => _appId ??= ExCtxOrNull?.GetApp().AppId ?? -1;
     private int? _appId;
 
+    private string? AppRuntimeKey => _appRuntimeKey ??= ResolveAppRuntimeKey();
+    private string? _appRuntimeKey;
+
     private bool IsEnabled => _isEnabled ??= features.IsEnabled(SxcFeatures.SmartDataCache);
     private bool? _isEnabled;
 
@@ -53,6 +57,7 @@ internal class CacheService(
         var keySpecs = new CacheKeyParts
         {
             AppId = shared == true ? CacheKeyParts.NoApp : AppId,
+            RuntimeKey = shared == true ? null : AppRuntimeKey,
             Main = key,
             RegionName = regionName,
         };
@@ -71,6 +76,17 @@ internal class CacheService(
             },
         };
         return l.Return(specs);
+    }
+
+    private string? ResolveAppRuntimeKey()
+    {
+        var app = ExCtxOrNull?.GetApp();
+        if (app is IAppWithInternal appWithInternal)
+            return appWithInternal.AppReader.Specs.RuntimeKey;
+
+        return AppId > 0
+            ? appReaders.Value.Get(AppId).Specs.RuntimeKey
+            : null;
     }
 
     public bool Contains(ICacheSpecs specs)
