@@ -656,7 +656,6 @@ Global
 		{2715DFC3-147E-4FF1-84FF-3413F945A3D2}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
 		{2715DFC3-147E-4FF1-84FF-3413F945A3D2}.Testing|Any CPU.Build.0 = Debug|Any CPU
 		{4974EA0B-2303-4BA4-B57E-EE69FA3F0089}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4974EA0B-2303-4BA4-B57E-EE69FA3F0089}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4974EA0B-2303-4BA4-B57E-EE69FA3F0089}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4974EA0B-2303-4BA4-B57E-EE69FA3F0089}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
 		{4974EA0B-2303-4BA4-B57E-EE69FA3F0089}.Testing|Any CPU.Build.0 = Debug|Any CPU
@@ -709,12 +708,10 @@ Global
 		{6DA3B0B5-4EFD-4D9F-2352-757B776C17CF}.Testing|Any CPU.ActiveCfg = Testing|Any CPU
 		{6DA3B0B5-4EFD-4D9F-2352-757B776C17CF}.Testing|Any CPU.Build.0 = Testing|Any CPU
 		{342A893E-B25F-628F-09C4-605EEFB3D879}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{342A893E-B25F-628F-09C4-605EEFB3D879}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{342A893E-B25F-628F-09C4-605EEFB3D879}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{342A893E-B25F-628F-09C4-605EEFB3D879}.Testing|Any CPU.ActiveCfg = Testing|Any CPU
 		{342A893E-B25F-628F-09C4-605EEFB3D879}.Testing|Any CPU.Build.0 = Testing|Any CPU
 		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}.Testing|Any CPU.ActiveCfg = Testing|Any CPU
@@ -840,7 +837,7 @@ Global
 		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7} = {55799BAC-652D-4A04-96AC-FCD790A38260}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
+		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 	EndGlobalSection
 EndGlobal
