@@ -48,7 +48,8 @@ public static class StartupWebApi
         services.TryAddTransient<ExtensionWriterBackend>();
         services.TryAddTransient<ExtensionInstallBackend>();
         services.TryAddTransient<ExtensionDownloadBackend>();
-        services.TryAddTransient<ExtensionManifestService>();
+        // commented out, already registered in Eav.Apps.Persistence
+        //services.TryAddTransient<ExtensionManifestService>();
         services.TryAddTransient<ExtensionInspectBackend>();
         services.TryAddTransient<ExtensionDeleteBackend>();
         services.TryAddTransient<EntityBackend>();
