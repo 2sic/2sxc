@@ -1,5 +1,6 @@
 using System.Web;
 using ToSic.Eav.Apps.Sys.FileSystemState;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Dnn.WebApi.Sys;
@@ -98,7 +99,7 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
     //[SupportedModules(DnnSupportedModuleNames)]
     [DnnAuthorize(StaticRoles = "Administrators")]
     public HttpResponseMessage Download(int appId, string name)
-        => Real.Download(appId, name);
+        => Real.Download(appId, name).ToHttpResponse();
 
     /// <inheritdoc />
     [HttpDelete]

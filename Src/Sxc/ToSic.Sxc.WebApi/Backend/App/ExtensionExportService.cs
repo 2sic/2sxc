@@ -12,10 +12,6 @@ using ToSic.Sxc.ImportExport.Package.Sys;
 using ToSic.Sys.Security.Encryption;
 using ToSic.Sys.Utils;
 
-#if NETCOREAPP
-using Microsoft.AspNetCore.Mvc;
-#endif
-
 namespace ToSic.Sxc.Backend.App;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -38,9 +34,9 @@ public class ExtensionExportService(
     /// </summary>
     private const string DefaultVersion = "00.00.01";
 
-    public THttpResponseType Export(int appId, string name)
+    public FileToUploadToClient Export(int appId, string name)
     {
-        var l = Log.Fn<THttpResponseType>($"export extension a#{appId}, name:'{name}'");
+        var l = Log.Fn<FileToUploadToClient>($"export extension a#{appId}, name:'{name}'");
 
         if (string.IsNullOrWhiteSpace(name))
             throw l.Ex(new ArgumentException(@"Extension name is required", nameof(name)));
@@ -126,14 +122,20 @@ public class ExtensionExportService(
         var totalFiles = exports.Sum(e => e.FilesToInclude.Count);
         l.A($"Created ZIP with {exports.Count} extensions and {totalFiles} files, size: {fileBytes.Length} bytes");
 
-#if NETFRAMEWORK
+        return l.ReturnAsOk(new()
+        {
+            FileName = fileName,
+            ContentType = MimeTypeConstants.FallbackType,
+            FileBytes = fileBytes
+        });
 
-        return l.ReturnAsOk(HttpFileHelper.GetAttachmentHttpResponseMessage(fileName, MimeTypeConstants.FallbackType,
-            new MemoryStream(fileBytes)));
-#else
-        return l.ReturnAsOk(new FileContentResult(fileBytes, MimeTypeConstants.FallbackType) { FileDownloadName =
- fileName });
-#endif
+//#if NETFRAMEWORK
+//        return l.ReturnAsOk(HttpFileHelper.GetAttachmentHttpResponseMessage(fileName, MimeTypeConstants.FallbackType,
+//            new MemoryStream(fileBytes)));
+//#else
+//        return l.ReturnAsOk(new FileContentResult(fileBytes, MimeTypeConstants.FallbackType) { FileDownloadName =
+// fileName });
+//#endif
     }
 
     private sealed record ExtensionExportSpec(

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.Apps.Sys.FileSystemState;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -95,7 +96,7 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
     [HttpGet]
     [Authorize(Roles = RoleNames.Admin)]
     public IActionResult Download(int appId, string name)
-        => Real.Download(appId, name);
+        => Real.Download(appId, name).ToHttpResponse();
 
     /// <inheritdoc />
     [HttpDelete]
