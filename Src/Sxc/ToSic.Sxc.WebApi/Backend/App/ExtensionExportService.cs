@@ -104,8 +104,6 @@ public class ExtensionExportService(
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        allExtensions = new[] { name }.Concat(allExtensions).ToList();
-
         // Old, less functional way:
         //var allExtensions = new List<string> { name };
         //foreach (var bundledName in bundled)
