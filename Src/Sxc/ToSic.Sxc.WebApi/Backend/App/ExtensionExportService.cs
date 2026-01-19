@@ -49,7 +49,8 @@ public class ExtensionExportService(
         // 1. Validate and get paths
         var appReader = appReadersLazy.Value.Get(appId);
         var appPaths = appPathSvc.Get(appReader, site);
-        var extensionPath = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppExtensionsFolder, name);
+        var extensionsRoot = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppExtensionsFolder);
+        var extensionPath = GetActualCasedPath(extensionsRoot, name);
 
         if (!Directory.Exists(extensionPath))
             throw l.Ex(new DirectoryNotFoundException($"Extension folder not found: {name}"));
@@ -217,9 +218,15 @@ public class ExtensionExportService(
     {
         var l = Log.Fn<ExtensionExportSpec>($"a#{appId}, ext:'{extensionName}'");
 
-        var extensionPath = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppExtensionsFolder, extensionName);
-        if (!Directory.Exists(extensionPath))
+        var extensionsRoot = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppExtensionsFolder);
+        var extensionPath = GetActualCasedPath(extensionsRoot, extensionName);
+        var extensionDirectory = new DirectoryInfo(extensionPath);
+        if (!extensionDirectory.Exists)
             throw l.Ex(new DirectoryNotFoundException($"Extension folder not found: {extensionName}"));
+
+        // use actual casing from file system to preserve paths in the export
+        extensionPath = extensionDirectory.FullName;
+        var extensionFolderName = extensionDirectory.Name;
 
         var extensionManifestFile = manifestService.GetManifestFile(new(extensionPath));
         if (!extensionManifestFile.Exists)
@@ -247,13 +254,13 @@ public class ExtensionExportService(
             : ExtensionManifestSerializer.Serialize(effectiveManifest, JsonSerializationIndented);
 
         // Collect files to include (never include extension.json or package-index.json from disk)
-        var filesToInclude = CollectFilesToInclude(extensionPath, effectiveManifest, appPaths, extensionName);
+        var filesToInclude = CollectFilesToInclude(extensionPath, effectiveManifest, appPaths, extensionFolderName);
 
         // Handle data bundles
-        var bundles = ExportDataBundlesIfNeeded(effectiveManifest, extensionDataPath, extensionName, appId);
+        var bundles = ExportDataBundlesIfNeeded(effectiveManifest, extensionDataPath, extensionFolderName, appId);
 
         // Lock file content (exact for installed extensions if it exists)
-        var basePath = $"{FolderConstants.AppExtensionsFolder}/{extensionName}/{FolderConstants.DataFolderProtected}";
+        var basePath = $"{FolderConstants.AppExtensionsFolder}/{extensionFolderName}/{FolderConstants.DataFolderProtected}";
         var extensionJsonZipPath = $"{basePath}/{FolderConstants.AppExtensionJsonFile}";
         var lockJsonZipPath = $"{basePath}/{PackageIndexFile.LockFileName}";
 
@@ -263,7 +270,7 @@ public class ExtensionExportService(
             : ToNiceJson(CreatePackageIndexFile(filesToInclude, bundles, versionString, extensionJsonZipPath, extensionJsonContent));
 
         return l.ReturnAsOk(new ExtensionExportSpec(
-            ExtensionName: extensionName,
+            ExtensionName: extensionFolderName,
             VersionString: versionString,
             FilesToInclude: filesToInclude,
             Bundles: bundles,
@@ -417,15 +424,35 @@ public class ExtensionExportService(
 
     private List<(string, string)> TryAddAppCodeFiles(List<(string, string)> files, IAppPaths appPaths, string extensionName)
     {
-        var appCodeExtPath = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, extensionName);
-        if (!Directory.Exists(appCodeExtPath))
+        var appCodeExtensionsRoot = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder);
+        var appCodeExtPath = GetActualCasedPath(appCodeExtensionsRoot, extensionName);
+        var appCodeExtDir = new DirectoryInfo(appCodeExtPath);
+        if (!appCodeExtDir.Exists)
             return files;
 
         var more = AddDirectoryFiles(appCodeExtPath, appCodeExtPath,
-            $"{FolderConstants.AppCodeFolder}/{FolderConstants.AppExtensionsFolder}/{extensionName}");
+            $"{FolderConstants.AppCodeFolder}/{FolderConstants.AppExtensionsFolder}/{appCodeExtDir.Name}");
         return more.Any()
             ? files.Concat(more).ToList()
             : files;
+    }
+
+    private static string GetActualCasedPath(string parentPath, string folderName)
+    {
+        var parent = new DirectoryInfo(parentPath);
+        if (!parent.Exists)
+            return Path.Combine(parentPath, folderName);
+
+        // Important: constructing DirectoryInfo from a string does NOT correct casing.
+        // To get the actual on-disk casing (Windows/macOS case-insensitive FS), we must
+        // ask the filesystem for existing entries and use the returned Name/FullName.
+        //
+        // EnumerateDirectories() is lazy (streaming): it doesn't allocate an array like
+        // GetDirectories(), and it can stop early once FirstOrDefault finds a match.
+        var match = parent.EnumerateDirectories()
+            .FirstOrDefault(d => d.Name.Equals(folderName, StringComparison.OrdinalIgnoreCase));
+
+        return match?.FullName ?? Path.Combine(parentPath, folderName);
     }
 
 
