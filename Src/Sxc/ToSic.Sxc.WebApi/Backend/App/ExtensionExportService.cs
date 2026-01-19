@@ -75,32 +75,14 @@ public class ExtensionExportService(
             .Split([','], StringSplitOptions.RemoveEmptyEntries)
             .Select(s => s.Trim())
             .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Select(bundledName => ExtensionFolderNameValidator.IsValid(bundledName)
+                ? bundledName
+                : throw l.Ex(new ArgumentException($@"Invalid bundled extension name: {bundledName}", nameof(name))))
+            .OrderBy(s => s, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
         var allExtensions = new[] { name }
-            .Concat(bundled
-                .Select(bundledName =>
-                {
-                    // Already handled above
-                    //if (string.IsNullOrWhiteSpace(bundledName))
-                    //    return null;
-
-                    // Already handled above
-                    //var cleaned = bundledName.Trim();
-                    if (bundledName.Equals(name, StringComparison.OrdinalIgnoreCase))
-                        return null;
-
-                    if (!ExtensionFolderNameValidator.IsValid(bundledName))
-                        throw l.Ex(new ArgumentException($@"Invalid bundled extension name: {bundledName}",
-                            nameof(name)));
-
-                    //if (allExtensions.Any(e => e.Equals(cleaned, StringComparison.OrdinalIgnoreCase)))
-                    //    return null;
-
-                    return bundledName;
-                })
-                .Where(f => f != null!)
-            )
+            .Concat(bundled)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 
