@@ -110,6 +110,10 @@ public class ExtensionDeleteBackend(
         if (appCodePath.HasValue())
             DeleteDirectorySafe(appCodePath);
 
+        var appCodeExtensionFolderNamePath = ExtensionEditionHelper.GetExtensionAppCodePath(appRoot, ExtensionValidationHelper.AppCodeExtensionFolderName(extensionName), edition);
+        if (appCodeExtensionFolderNamePath.HasValue())
+            DeleteDirectorySafe(appCodeExtensionFolderNamePath);
+
         l.Done();
     }
 

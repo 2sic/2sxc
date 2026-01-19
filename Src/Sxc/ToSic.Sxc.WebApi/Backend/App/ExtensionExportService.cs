@@ -50,7 +50,7 @@ public class ExtensionExportService(
         var appReader = appReadersLazy.Value.Get(appId);
         var appPaths = appPathSvc.Get(appReader, site);
         var extensionsRoot = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppExtensionsFolder);
-        var extensionPath = GetActualCasedPath(extensionsRoot, name);
+        var extensionPath = ExtensionValidationHelper.GetActualCasedPath(extensionsRoot, name);
 
         if (!Directory.Exists(extensionPath))
             throw l.Ex(new DirectoryNotFoundException($"Extension folder not found: {name}"));
@@ -219,7 +219,7 @@ public class ExtensionExportService(
         var l = Log.Fn<ExtensionExportSpec>($"a#{appId}, ext:'{extensionName}'");
 
         var extensionsRoot = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppExtensionsFolder);
-        var extensionPath = GetActualCasedPath(extensionsRoot, extensionName);
+        var extensionPath = ExtensionValidationHelper.GetActualCasedPath(extensionsRoot, extensionName);
         var extensionDirectory = new DirectoryInfo(extensionPath);
         if (!extensionDirectory.Exists)
             throw l.Ex(new DirectoryNotFoundException($"Extension folder not found: {extensionName}"));
@@ -415,7 +415,7 @@ public class ExtensionExportService(
             files = TryAddAppCodeFiles(files, appPaths, extensionName);
 
             // Also check for hyphen-less version of extension name for AppCode folder, since C# would have that convention
-            files = TryAddAppCodeFiles(files, appPaths, extensionName.Replace("-", ""));
+            files = TryAddAppCodeFiles(files, appPaths, ExtensionValidationHelper.AppCodeExtensionFolderName(extensionName));
         }
 
         l.A($"Collected {files.Count} files");
@@ -425,7 +425,7 @@ public class ExtensionExportService(
     private List<(string, string)> TryAddAppCodeFiles(List<(string, string)> files, IAppPaths appPaths, string extensionName)
     {
         var appCodeExtensionsRoot = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder);
-        var appCodeExtPath = GetActualCasedPath(appCodeExtensionsRoot, extensionName);
+        var appCodeExtPath = ExtensionValidationHelper.GetActualCasedPath(appCodeExtensionsRoot, extensionName);
         var appCodeExtDir = new DirectoryInfo(appCodeExtPath);
         if (!appCodeExtDir.Exists)
             return files;
@@ -436,25 +436,6 @@ public class ExtensionExportService(
             ? files.Concat(more).ToList()
             : files;
     }
-
-    private static string GetActualCasedPath(string parentPath, string folderName)
-    {
-        var parent = new DirectoryInfo(parentPath);
-        if (!parent.Exists)
-            return Path.Combine(parentPath, folderName);
-
-        // Important: constructing DirectoryInfo from a string does NOT correct casing.
-        // To get the actual on-disk casing (Windows/macOS case-insensitive FS), we must
-        // ask the filesystem for existing entries and use the returned Name/FullName.
-        //
-        // EnumerateDirectories() is lazy (streaming): it doesn't allocate an array like
-        // GetDirectories(), and it can stop early once FirstOrDefault finds a match.
-        var match = parent.EnumerateDirectories()
-            .FirstOrDefault(d => d.Name.Equals(folderName, StringComparison.OrdinalIgnoreCase));
-
-        return match?.FullName ?? Path.Combine(parentPath, folderName);
-    }
-
 
     private List<(string bundlePath, string zipFile, string fileContents)> ExportDataBundlesIfNeeded(
         ExtensionManifest manifest,
