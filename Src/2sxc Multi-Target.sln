@@ -243,6 +243,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sys.OData.Tests", "..
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.WebApi.Tests", "..\..\eav-server\ToSic.Eav.WebApi.Tests\ToSic.Eav.WebApi.Tests.csproj", "{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.LookUp.Tests", "..\..\eav-server\ToSic.Eav.LookUp.Tests\ToSic.Eav.LookUp.Tests.csproj", "{DF78EFBE-9330-4DFE-9996-835147C6D609}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.LookUp.TestHelpers", "..\..\eav-server\ToSic.Eav.LookUp.TestHelpers\ToSic.Eav.LookUp.TestHelpers.csproj", "{6784F6B4-98EF-4476-B2A5-4CE6413BF086}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -719,6 +723,14 @@ Global
 		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}.Testing|Any CPU.ActiveCfg = Testing|Any CPU
 		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}.Testing|Any CPU.Build.0 = Testing|Any CPU
+		{DF78EFBE-9330-4DFE-9996-835147C6D609}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF78EFBE-9330-4DFE-9996-835147C6D609}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF78EFBE-9330-4DFE-9996-835147C6D609}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF78EFBE-9330-4DFE-9996-835147C6D609}.Testing|Any CPU.Build.0 = Debug|Any CPU
+		{6784F6B4-98EF-4476-B2A5-4CE6413BF086}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6784F6B4-98EF-4476-B2A5-4CE6413BF086}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6784F6B4-98EF-4476-B2A5-4CE6413BF086}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
+		{6784F6B4-98EF-4476-B2A5-4CE6413BF086}.Testing|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -838,9 +850,11 @@ Global
 		{6DA3B0B5-4EFD-4D9F-2352-757B776C17CF} = {55799BAC-652D-4A04-96AC-FCD790A38260}
 		{342A893E-B25F-628F-09C4-605EEFB3D879} = {55799BAC-652D-4A04-96AC-FCD790A38260}
 		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7} = {55799BAC-652D-4A04-96AC-FCD790A38260}
+		{DF78EFBE-9330-4DFE-9996-835147C6D609} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{6784F6B4-98EF-4476-B2A5-4CE6413BF086} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
+		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 	EndGlobalSection
 EndGlobal
