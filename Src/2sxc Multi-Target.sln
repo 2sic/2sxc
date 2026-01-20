@@ -247,6 +247,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.LookUp.Tests", ".
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.LookUp.TestHelpers", "..\..\eav-server\ToSic.Eav.LookUp.TestHelpers\ToSic.Eav.LookUp.TestHelpers.csproj", "{6784F6B4-98EF-4476-B2A5-4CE6413BF086}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sys.Caching.Tests", "..\..\eav-server\ToSic.Sys.Caching.Tests\ToSic.Sys.Caching.Tests.csproj", "{03B8F8AA-EA03-4A6E-8B58-C8A011A3900C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -731,6 +733,10 @@ Global
 		{6784F6B4-98EF-4476-B2A5-4CE6413BF086}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6784F6B4-98EF-4476-B2A5-4CE6413BF086}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
 		{6784F6B4-98EF-4476-B2A5-4CE6413BF086}.Testing|Any CPU.Build.0 = Debug|Any CPU
+		{03B8F8AA-EA03-4A6E-8B58-C8A011A3900C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03B8F8AA-EA03-4A6E-8B58-C8A011A3900C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03B8F8AA-EA03-4A6E-8B58-C8A011A3900C}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
+		{03B8F8AA-EA03-4A6E-8B58-C8A011A3900C}.Testing|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -852,9 +858,10 @@ Global
 		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7} = {55799BAC-652D-4A04-96AC-FCD790A38260}
 		{DF78EFBE-9330-4DFE-9996-835147C6D609} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{6784F6B4-98EF-4476-B2A5-4CE6413BF086} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{03B8F8AA-EA03-4A6E-8B58-C8A011A3900C} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
 		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
 	EndGlobalSection
 EndGlobal
