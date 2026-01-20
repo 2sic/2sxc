@@ -14,7 +14,7 @@ public class CmsServiceTests(ICodeDataFactory cdf, ExecutionContext exCtx, /*ICm
 #if NETCOREAPP
     [field: System.Diagnostics.CodeAnalysis.AllowNull, System.Diagnostics.CodeAnalysis.MaybeNull]
 #endif
-    public IContentType TstDataContentType => field ??= contentTypeFactory.Create(typeof(MockHtmlContentType));
+    public IContentType TstDataContentType => field ??= contentTypeFactory.CreateTac<MockHtmlContentType>();
 
     [Theory]
     [InlineData(null, "", "")]
