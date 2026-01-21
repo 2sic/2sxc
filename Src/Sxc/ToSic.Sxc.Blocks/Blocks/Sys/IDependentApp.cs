@@ -1,6 +1,4 @@
-﻿using ToSic.Sys.Caching;
-
-namespace ToSic.Sxc.Blocks.Sys;
+﻿namespace ToSic.Sxc.Blocks.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IDependentApp

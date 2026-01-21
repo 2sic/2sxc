@@ -13,7 +13,6 @@ using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Sys.ConvertService;
 using ToSic.Sxc.Services.Tweaks;
-using ToSic.Sys.Performance;
 using static ToSic.Sxc.Data.Sys.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data.Sys.Typed;

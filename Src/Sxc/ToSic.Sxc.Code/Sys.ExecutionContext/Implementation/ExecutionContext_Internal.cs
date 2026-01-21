@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using ToSic.Eav.Apps;
+﻿using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Apps;
@@ -11,7 +10,6 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.CodeDataFactory;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services.Sys;
-using ToSic.Sys.Users;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;

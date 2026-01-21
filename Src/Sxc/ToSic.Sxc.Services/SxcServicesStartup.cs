@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Render.Sys.ModuleHtml;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.Cache.Sys;
 using ToSic.Sxc.Services.Cms.Sys;
 using ToSic.Sxc.Services.DataServices;
