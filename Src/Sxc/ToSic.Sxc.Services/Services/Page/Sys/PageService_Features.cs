@@ -116,7 +116,7 @@ partial class PageService
     private DynamicEntity WebResources => _webResources.Get(() => (DynamicEntity)Settings.Get(WebResourcesNode)!)!;
     private readonly GetOnce<DynamicEntity> _webResources = new();
 
-    private DynamicStack Settings => _settings.Get(() => (ExCtx.GetState<IDynamicStack>(ExecutionContextStateNames.Settings) as DynamicStack)!)!;
+    private DynamicStack Settings => _settings.Get(() => (ExCtx.GetDataStack<IDynamicStack>(ExecutionContextStateNames.Settings) as DynamicStack)!)!;
     private readonly GetOnce<DynamicStack> _settings = new();
 
 }

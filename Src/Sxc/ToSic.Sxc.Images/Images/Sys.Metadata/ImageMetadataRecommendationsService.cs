@@ -28,7 +28,7 @@ class ImageMetadataRecommendationsService(IFeaturesService featuresSvc) : Servic
 
     public string[] GetImageRecommendations()
     {
-        var settings = ExCtxOrNull?.GetState<ITypedStack>(ExecutionContextStateNames.AllSettings);
+        var settings = ExCtxOrNull?.GetDataStack<ITypedStack>(ExecutionContextStateNames.AllSettings);
         if (settings == null || !featuresSvc.IsEnabled(BuiltInFeatures.CopyrightManagement.NameId))
             return ImageRecommendationsBasic;
 

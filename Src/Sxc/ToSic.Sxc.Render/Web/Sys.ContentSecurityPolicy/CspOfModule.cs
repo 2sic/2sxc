@@ -63,7 +63,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
     /// </summary>
     private CspSettingsReader SiteCspSettings => _siteCspSettings.Get(Log, () =>
     {
-        var pageSettings = ExCtxOrNull?.GetState<IDynamicStack>(ExecutionContextStateNames.Settings)
+        var pageSettings = ExCtxOrNull?.GetDataStack<IDynamicStack>(ExecutionContextStateNames.Settings)
             ?.GetStack(AppStackConstants.PartSiteSystem, AppStackConstants.PartGlobalSystem, AppStackConstants.PartPresetSystem);
         return new CspSettingsReader(pageSettings, user, UrlIsDevMode, Log);
     })!;

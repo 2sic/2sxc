@@ -48,7 +48,7 @@ partial record ToolbarBuilder
 
         var tlb = this with { Rules = rules };
         var keyOrMessage = Configuration?.DemoMessage;
-        var allResources = ExCtx.GetState<ITypedStack>(ExecutionContextStateNames.AllResources);
+        var allResources = ExCtx.GetDataStack<ITypedStack>(ExecutionContextStateNames.AllResources);
         var message = keyOrMessage == null
             ? allResources.Get<string>($"{AppStackConstants.RootNameResources}.Toolbar.IsDemoSubItem")
             : keyOrMessage.StartsWith($"{AppStackConstants.RootNameResources}.")

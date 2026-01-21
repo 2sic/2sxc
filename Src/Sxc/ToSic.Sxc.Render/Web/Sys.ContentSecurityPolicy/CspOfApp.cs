@@ -55,7 +55,7 @@ public class CspOfApp : ServiceWithContext
         var l = Log.Fn<string?>(AppId.ToString());
 
         // Get Stack
-        if (ExCtxOrNull?.GetState<IDynamicStack>(ExecutionContextStateNames.Settings) is not { } stack) 
+        if (ExCtxOrNull?.GetDataStack<IDynamicStack>(ExecutionContextStateNames.Settings) is not { } stack) 
             return l.ReturnNull("no stack");
 
         // Enable this for detailed debugging

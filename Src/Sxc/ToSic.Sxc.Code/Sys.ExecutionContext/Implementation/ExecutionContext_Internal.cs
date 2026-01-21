@@ -126,9 +126,6 @@ public partial class ExecutionContext
 
     public TState GetState<TState>() where TState : class
     {
-        //if (typeof(TState) == typeof(IUser))
-        //    return (TState)CmsContext.User;
-
         if (typeof(TState) == typeof(ICmsContext))
             return (TState)CmsContext;
 
@@ -154,7 +151,7 @@ public partial class ExecutionContext
             $"Can't get state of type {typeof(TState).Name} - only {nameof(IApp)}, {nameof(IDataSource)}, {nameof(IBlock)} and {nameof(IAppTyped)} are supported");
     }
 
-    public TState GetState<TState>(string name) where TState : class
+    public TState GetDataStack<TState>(string name) where TState : class
     {
         if (typeof(TState) == typeof(IDynamicStack) && name == ExecutionContextStateNames.Settings)
             return (TState)Settings;
