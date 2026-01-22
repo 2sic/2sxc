@@ -2,6 +2,7 @@
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Sxc.Services.GoogleMaps.Sys;
 using ToSic.Sys.Capabilities.Features;
+using ToSic.Sys.Wrappers;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Backend.Cms;
@@ -20,7 +21,7 @@ internal class LoadSettingsForGpsDefaults(
         {
             var getMaps = parameters.ContextOfApp.AppSettings.InternalGetPath(googleMapsSettings.SettingsIdentifier);
             coordinates = getMaps?.GetFirstResultEntity() is { } mapsEntity
-                ? googleMapsSettings.Init(mapsEntity).DefaultCoordinates
+                ? googleMapsSettings.Setup(mapsEntity).DefaultCoordinates
                 : MapsCoordinates.Defaults;
         }
 

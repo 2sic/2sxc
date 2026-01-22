@@ -20,9 +20,15 @@ namespace ToSic.Sxc.Data.Sys.Metadata;
 
 [PrivateApi("Hide implementation")]
 internal partial class Metadata(IMetadata metadata, ICodeDataFactory cdf)
-    : // DynamicEntity(metadata, null, "Metadata(virtual-field)", KnownAppsConstants.TransientAppId, propsRequired: false, cdf),
-        ITypedMetadata, IHasPropLookup, IHasJsonSource
+    : ITypedMetadata, IHasPropLookup, IHasJsonSource
 {
+    #region Setup
+
+    void IWrapperSetup<IEntity>.SetupContents(IEntity source)
+        => throw new NotSupportedException($"SetupContents is not supported for {GetType().Name}, as it requires more information.");
+
+    #endregion
+
     #region Additions when going TypedOnly
 
     private readonly bool _propsRequired = false;

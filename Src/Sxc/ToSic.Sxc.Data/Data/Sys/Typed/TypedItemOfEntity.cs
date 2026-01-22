@@ -33,7 +33,8 @@ internal class TypedItemOfEntity(IEntity entity, ICodeDataFactory cdf, bool prop
 {
     #region Setup
 
-    // internal TypedItemOfEntity
+    void IWrapperSetup<IEntity>.SetupContents(IEntity source)
+        => throw new NotSupportedException($"SetupContents is not supported for {GetType().Name}, as it requires more information.");
 
     public IEntity Entity { get; } = entity;
     private ICodeDataFactory Cdf { get; } = cdf;
@@ -41,6 +42,7 @@ internal class TypedItemOfEntity(IEntity entity, ICodeDataFactory cdf, bool prop
     #endregion
 
     public bool Debug { get; set; }
+
 
     public override string ToString() => $"{GetType().Name}: '{((ITypedItem)this).Title}' ({Entity})";
 
