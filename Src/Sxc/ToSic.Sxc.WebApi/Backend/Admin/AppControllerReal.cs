@@ -70,8 +70,8 @@ public class AppControllerReal(
         return l.ReturnTrue("ok");
     }
 
-    public THttpResponseType Export(AppExportSpecs specs)
-        => exportAppLazy.Value.Export(specs) as THttpResponseType;
+    public FileToUploadToClient Export(AppExportSpecs specs)
+        => exportAppLazy.Value.Export(specs);
 
     public bool SaveData(AppExportSpecs specs)
         => exportAppLazy.Value.SaveDataForVersionControl(specs);
