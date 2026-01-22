@@ -1,9 +1,10 @@
 ﻿using ToSic.Eav.Data.Sys.Entities;
+using ToSic.Eav.Model;
 
 namespace ToSic.Sxc.Polymorphism.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public record PolymorphismConfiguration : RecordOfEntityWithIds
+public record PolymorphismConfiguration : ModelOfEntity
 {
     public PolymorphismConfiguration(IEnumerable<IEntity>? list): base(list?.FirstOrDefaultOfType(Name))
     { }

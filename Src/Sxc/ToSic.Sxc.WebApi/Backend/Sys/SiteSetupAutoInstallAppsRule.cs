@@ -1,9 +1,10 @@
 ﻿using ToSic.Eav.Data.Sys.Entities;
+using ToSic.Eav.Model;
 using ToSic.Eav.WebApi.Sys.Install;
 
 namespace ToSic.Sxc.Backend.Sys;
 
-internal record SiteSetupAutoInstallAppsRule : RecordOfEntityWithIds
+internal record SiteSetupAutoInstallAppsRule : ModelOfEntity
 {
     public SiteSetupAutoInstallAppsRule(IEntity entity) : base(entity) { }
 

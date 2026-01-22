@@ -1,11 +1,12 @@
 ﻿using ToSic.Eav.Data.Sys.Entities;
+using ToSic.Eav.Model;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.GoogleMaps.Sys;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public record GoogleMapsSettings : RecordOfEntityWithLog
+public record GoogleMapsSettings : ModelOfEntityWithLog
 {
     public GoogleMapsSettings(IJsonService jsonService)
         : base(null! /* Entity must be added later */, null, $"{SxcLogName}.GMapSt")

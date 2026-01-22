@@ -1,12 +1,13 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.Data.Sys.Entities;
+using ToSic.Eav.Model;
 using ToSic.Sxc.Services.OutputCache;
 
 namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public record LightSpeedDecorator : RecordOfEntityWithIds, IOutputCacheSettings
+public record LightSpeedDecorator : ModelOfEntity, IOutputCacheSettings
 {
     /// <summary>
     /// Nice name. If it ever changes, remember to also update UI as it has references to it.

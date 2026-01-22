@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Data.Sys.Entities;
+using ToSic.Eav.Model;
 using ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
 
 namespace ToSic.Sxc.Edit.Toolbar.Sys;
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.Edit.Toolbar.Sys;
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public record ToolbarButtonDecorator : RecordOfEntityBase
+public record ToolbarButtonDecorator : ModelOfEntityCore
 {
     public ToolbarButtonDecorator(IEntity entity) : base(entity) { }
 

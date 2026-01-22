@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.Sys.Entities;
+﻿using ToSic.Eav.Model;
 
 namespace ToSic.Sxc.Images.Sys;
 
@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Images.Sys;
 /// Created ca. v16.08
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
-public record CopyrightSettings : RecordOfEntityBase
+public record CopyrightSettings : ModelOfEntityCore
 {
     public static string TypeNameId = "aed871cf-220b-4330-b368-f1259981c9c8";
     public static string NiceTypeName = "⚙️CopyrightSettings";

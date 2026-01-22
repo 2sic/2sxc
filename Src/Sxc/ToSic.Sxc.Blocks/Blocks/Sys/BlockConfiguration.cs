@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataSource.Sys.Query;
+using ToSic.Eav.Model;
 using ToSic.Sxc.Blocks.Sys.Views;
 
 // ReSharper disable ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
@@ -9,7 +10,7 @@ using ToSic.Sxc.Blocks.Sys.Views;
 namespace ToSic.Sxc.Blocks.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public record BlockConfiguration: RecordOfEntityWithLog, IAppIdentity
+public record BlockConfiguration: ModelOfEntityWithLog, IAppIdentity
 {
     public  int ZoneId { get; }
     public  int AppId { get; }

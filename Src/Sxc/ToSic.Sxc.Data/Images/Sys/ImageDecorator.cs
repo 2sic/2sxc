@@ -1,11 +1,12 @@
 ﻿using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.Metadata;
+using ToSic.Eav.Model;
 
 namespace ToSic.Sxc.Images.Sys;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public record ImageDecorator : RecordOfEntityBase, IImageDecorator
+public record ImageDecorator : ModelOfEntityCore, IImageDecorator
 {
     public ImageDecorator(IEntity entity, string?[] languageCodes) : base(entity)
     {

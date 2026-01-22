@@ -1,6 +1,6 @@
-﻿using ToSic.Eav.Data.Sys.Entities;
-using ToSic.Eav.DataSource.Sys.Query;
+﻿using ToSic.Eav.DataSource.Sys.Query;
 using ToSic.Eav.Metadata;
+using ToSic.Eav.Model;
 using ToSic.Sxc.Apps.Sys.Assets;
 using static ToSic.Sxc.Blocks.Sys.Views.ViewConstants;
 
@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Blocks.Sys.Views;
 
 [PrivateApi("Internal implementation - don't publish")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public record View : RecordOfEntityWithLog, IView
+public record View : ModelOfEntityWithLog, IView
 {
     public View(IEntity templateEntity,
         string?[] languageCodes,

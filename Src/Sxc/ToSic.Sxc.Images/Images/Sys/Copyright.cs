@@ -1,10 +1,11 @@
 ﻿using ToSic.Eav.Data.Sys.Entities;
+using ToSic.Eav.Model;
 
 namespace ToSic.Sxc.Images.Sys;
 
 // TODO: LOCATION / NAMESPACE not final
 [PrivateApi("WIP v16.08")]
-public record Copyright : RecordOfEntityBase
+public record Copyright : ModelOfEntityCore
 {
     public Copyright(IEntity entity) : base(entity) { }
 
