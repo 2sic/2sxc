@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataSource.Sys.Query;
+using ToSic.Eav.Metadata;
 using ToSic.Sxc.Apps.Sys.Assets;
 using static ToSic.Sxc.Blocks.Sys.Views.ViewConstants;
 
@@ -8,14 +9,19 @@ namespace ToSic.Sxc.Blocks.Sys.Views;
 
 [PrivateApi("Internal implementation - don't publish")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class View(
-    IEntity templateEntity,
-    string?[] languageCodes,
-    ILog parentLog,
-    Generator<QueryDefinitionBuilder>? qDefBuilder,
-    bool isReplaced = false)
-    : EntityBasedWithLog(templateEntity, languageCodes, parentLog, "Sxc.View"), IView
+public record View : RecordOfEntityWithLog, IView
 {
+    public View(IEntity templateEntity,
+        string?[] languageCodes,
+        ILog parentLog,
+        Generator<QueryDefinitionBuilder>? qDefBuilder,
+        bool isReplaced = false) : base(templateEntity, /*languageCodes,*/ parentLog, "Sxc.View")
+    {
+        LookupLanguages = languageCodes;
+        _qDefBuilder = qDefBuilder;
+        IsReplaced = isReplaced;
+    }
+
     private IEntity? GetBestRelationship(string key)
         => Entity.Children(key).FirstOrDefault();
 
@@ -74,15 +80,17 @@ public class View(
     {
         var queryRaw = GetBestRelationship(FieldPipeline);
         var query = queryRaw != null
-            ? (qDefBuilder ?? throw new ArgumentException(
+            ? (_qDefBuilder ?? throw new ArgumentException(
                 @"Query Definition builder is null. View is probably from PiggyBack cache. To use it, you must first Recreate it with the WorkViews",
-                nameof(qDefBuilder))
+                nameof(_qDefBuilder))
             ).New().Create(queryRaw, Entity.AppId)
             : null;
         return (queryRaw, query);
     });
 
     private readonly GetOnce<(IEntity? QueryEntity, QueryDefinition? Definition)> _queryInfo = new();
+    private readonly Generator<QueryDefinitionBuilder>? _qDefBuilder;
+
 
     public string UrlIdentifier => Get(FieldNameInUrl, "");
 
@@ -108,5 +116,7 @@ public class View(
     /// <inheritdoc />
     public string SearchIndexingStreams => Get(FieldSearchStreams, "");
 
-    public bool IsReplaced => isReplaced;
+    public bool IsReplaced { get; }
+
+    public IMetadata Metadata => Entity.Metadata;
 }

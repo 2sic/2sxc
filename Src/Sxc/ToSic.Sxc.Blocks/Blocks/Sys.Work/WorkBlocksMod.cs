@@ -31,7 +31,7 @@ public class WorkBlocksMod(
 
         l.A($"exists, create for group#{blockConfiguration.Guid} with template#{templateId}");
         workEntUpdate.New(AppWorkCtx).UpdateParts(
-            blockConfiguration.Entity.EntityId,
+            blockConfiguration.Id,
             new Dictionary<string, object> { { ViewParts.TemplateContentType, new List<int?> { templateId } } },
             new()
         );
@@ -42,7 +42,10 @@ public class WorkBlocksMod(
     public void AddEmptyItem(BlockConfiguration block, int? index, bool forceDraft)
     {
         workFieldList.New(AppWorkCtx.AppReader)
-            .FieldListUpdate(block.Entity, ViewParts.ContentPair, forceDraft,
+            .FieldListUpdate(
+                (block as ICanBeEntity).Entity,
+                ViewParts.ContentPair,
+                forceDraft,
                 lists =>
                 {
                     // hitting (+) if the list is empty add two demo items (because we already see one demo item)

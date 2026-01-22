@@ -5,9 +5,13 @@ namespace ToSic.Sxc.Images.Sys;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ImageDecorator(IEntity entity, string?[] languageCodes)
-    : EntityBasedType(entity, languageCodes), IImageDecorator
+public record ImageDecorator : RecordOfEntityBase, IImageDecorator
 {
+    public ImageDecorator(IEntity entity, string?[] languageCodes) : base(entity)
+    {
+        LookupLanguages = languageCodes;
+    }
+
     #region Constants and Type Names
 
     public static string TypeNameId = "cb27a0f2-f921-48d0-a3bc-37c0e77b1d0c";

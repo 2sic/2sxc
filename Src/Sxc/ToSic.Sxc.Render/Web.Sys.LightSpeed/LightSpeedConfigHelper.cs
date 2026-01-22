@@ -8,8 +8,8 @@ internal class LightSpeedConfigHelper(ILog? parentLog) : HelperBase(parentLog, "
     public LightSpeedDecorator GetLightSpeedConfigOfApp(IAppReader? appReader)
     {
         var l = Log.Fn<LightSpeedDecorator>();
-        var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(appReader/*, Log*/);
-        return l.Return(decoFromPiggyBack, $"has decorator: {decoFromPiggyBack.Entity != null!}");
+        var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(appReader);
+        return l.Return(decoFromPiggyBack, $"has decorator: {(decoFromPiggyBack as ICanBeEntity)?.Entity != null!}");
     }
 
     public LightSpeedDecorator? ViewConfigOrNull(IBlock? block)

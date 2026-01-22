@@ -6,13 +6,15 @@ using ToSic.Sxc.Services.OutputCache;
 namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class LightSpeedDecorator(IEntity? entity) : EntityBasedType(entity!), IOutputCacheSettings
+public record LightSpeedDecorator : RecordOfEntityWithIds, IOutputCacheSettings
 {
     /// <summary>
     /// Nice name. If it ever changes, remember to also update UI as it has references to it.
     /// </summary>
     public static string NiceName = "LightSpeedOutputDecorator";
     public static string TypeNameId = "be34f64b-7d1f-4ad0-b488-dabbbb01a186";
+
+    public LightSpeedDecorator(IEntity? entity) : base(entity!) { }
 
     public bool IsEnabled => GetThis(false);
 
@@ -47,6 +49,6 @@ public class LightSpeedDecorator(IEntity? entity) : EntityBasedType(entity!), IO
                 return new LightSpeedDecorator(decoEntityOrNullPb);
             })
             .Value;
-        return decoFromPiggyBack ?? new LightSpeedDecorator(null);
+        return decoFromPiggyBack ?? new LightSpeedDecorator(null as IEntity);
     }
 }

@@ -3,17 +3,17 @@
 namespace ToSic.Sxc.Polymorphism.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class PolymorphismConfiguration(IEntity? entity) : EntityBasedType(entity!)
+public record PolymorphismConfiguration : RecordOfEntityWithIds
 {
-    public PolymorphismConfiguration(IEnumerable<IEntity>? list): this(list?.FirstOrDefaultOfType(Name))
+    public PolymorphismConfiguration(IEnumerable<IEntity>? list): base(list?.FirstOrDefaultOfType(Name))
     { }
 
     public const string StaticName = "3937fa17-ef2d-40a7-b089-64164eb10bab";
     public const string Name = "2sxcPolymorphismConfiguration";
 
-    public string Mode => GetThisIfEntity("");
+    public string Mode => GetThis("");
 
-    public string UsersWhoMaySwitchEditions => GetThisIfEntity("");
+    public string UsersWhoMaySwitchEditions => GetThis("");
 
     [field: AllowNull, MaybeNull]
     public List<int> UsersWhoMaySwitch => field ??= new Func<List<int>>(() => UsersWhoMaySwitchEditions

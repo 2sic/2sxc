@@ -63,7 +63,7 @@ public partial class ListControllerReal(
     {
         var block = ctxService.BlockRequired();
         var target = parent == null
-            ? block.Configuration.Entity
+            ? (block.Configuration as ICanBeEntity)?.Entity
             : block.Context.AppReaderRequired.List.One(parent.Value);
 
         return target == null

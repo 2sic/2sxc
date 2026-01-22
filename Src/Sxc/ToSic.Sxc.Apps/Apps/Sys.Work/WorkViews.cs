@@ -82,7 +82,7 @@ public class WorkViews(
                 // Never save the View or the ViewInfoForPathSelect, as that would also preserve an old Service used in the View
                 return new
                 {
-                    v.Entity,
+                    (v as ICanBeEntity)?.Entity,
                     v.Name,
                     urlIdentifier,
                     isRegex,
@@ -141,9 +141,9 @@ public class WorkViews(
                     Name = ct.Name,
                     IsHidden = visible.All(t => t.ContentType != ct.NameId),   // must check if *any* template is visible, otherwise tell the UI that it's hidden
                     Thumbnail = thumbnail,
-                    Properties = details?.Entity == null
+                    Properties = (details as ICanBeEntity)?.Entity == null
                         ? null
-                        : dataToFormatLight.Convert(details.Entity),
+                        : dataToFormatLight.Convert((details as ICanBeEntity).Entity),
                     IsDefault = ct.Metadata.HasType(KnownDecorators.IsDefaultDecorator),
                 };
             })

@@ -65,7 +65,7 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
             {
                 l.A("Generate query");
                 var query = queryLazy.Value;
-                query.Init(block.App.ZoneId, block.App.AppId, view.Query.Entity, configLookUp, contextDataSource);
+                query.Init(block.App.ZoneId, block.App.AppId, (view.Query as ICanBeEntity).Entity, configLookUp, contextDataSource);
                 l.A("attaching");
                 contextDataSource.SetOut(query);
             }

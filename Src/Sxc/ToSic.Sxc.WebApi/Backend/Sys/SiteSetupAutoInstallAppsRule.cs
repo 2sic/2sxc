@@ -3,8 +3,10 @@ using ToSic.Eav.WebApi.Sys.Install;
 
 namespace ToSic.Sxc.Backend.Sys;
 
-internal class SiteSetupAutoInstallAppsRule(IEntity entity) : EntityBasedType(entity)
+internal record SiteSetupAutoInstallAppsRule : RecordOfEntityWithIds
 {
+    public SiteSetupAutoInstallAppsRule(IEntity entity) : base(entity) { }
+
     public const string TargetGuid = "guid";
     public const string TargetAll = "all";
     public const string TargetUrl = "url";
@@ -21,9 +23,8 @@ internal class SiteSetupAutoInstallAppsRule(IEntity entity) : EntityBasedType(en
 
     public string Url => GetThis("");
 
-    public AppInstallRuleDto GetRuleDto() =>
-        new()
-        {
+    public AppInstallRuleDto GetRuleDto() => new()
+    {
         name = Title,
         appGuid = AppGuid,
         mode = Mode,

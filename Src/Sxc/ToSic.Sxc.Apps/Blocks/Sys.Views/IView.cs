@@ -1,14 +1,15 @@
 ﻿using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataSource.Sys.Query;
+using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Blocks.Sys.Views;
 
 /// <summary>
-/// Defines a view configuration which is loaded from a <see cref="EntityBasedType"/>.
+/// Defines a view configuration which is loaded from an entity.
 /// </summary>
 [PrivateApi("Was Public API till v17, but I can't see any reason why people would have used it since it would go through ICmsView")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IView: IEntityBasedType
+public interface IView: IModelOfEntity, IHasMetadata
 {
     /// <summary>
     /// The name, localized in the current UI language.

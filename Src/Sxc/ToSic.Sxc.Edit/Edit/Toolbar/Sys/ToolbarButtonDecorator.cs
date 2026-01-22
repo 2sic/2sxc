@@ -11,8 +11,10 @@ namespace ToSic.Sxc.Edit.Toolbar.Sys;
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ToolbarButtonDecorator(IEntity entity) : EntityBasedType(entity)
+public record ToolbarButtonDecorator : RecordOfEntityBase
 {
+    public ToolbarButtonDecorator(IEntity entity) : base(entity) { }
+
     public static string TypeName = "ToolbarButtonDecorator";
     public static string TypeNameId = "acc185a7-f300-4468-bce8-d6a64038989d";
 

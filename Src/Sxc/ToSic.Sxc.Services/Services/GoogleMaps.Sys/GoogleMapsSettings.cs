@@ -5,8 +5,14 @@ namespace ToSic.Sxc.Services.GoogleMaps.Sys;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class GoogleMapsSettings(IJsonService jsonService) : EntityBasedService($"{SxcLogName}.GMapSt")
+public record GoogleMapsSettings : RecordOfEntityWithLog
 {
+    public GoogleMapsSettings(IJsonService jsonService)
+        : base(null! /* Entity must be added later */, null, $"{SxcLogName}.GMapSt")
+    {
+        _jsonService = jsonService;
+    }
+
     public static string TypeIdentifier = "f5764f60-2621-4a5d-9391-100fbe664640";
 
     public string SettingsIdentifier => "Settings.GoogleMaps";
@@ -19,6 +25,7 @@ public class GoogleMapsSettings(IJsonService jsonService) : EntityBasedService($
 
     public MapsCoordinates DefaultCoordinates => _defCoords.Get(GetMapsCoordinates)!;
     private readonly GetOnce<MapsCoordinates> _defCoords = new();
+    private readonly IJsonService _jsonService;
 
     private MapsCoordinates GetMapsCoordinates()
     {
@@ -28,7 +35,7 @@ public class GoogleMapsSettings(IJsonService jsonService) : EntityBasedService($
             return l.Return(MapsCoordinates.Defaults, "no json");
         try
         {
-            var result = jsonService.To<MapsCoordinates>(json)
+            var result = _jsonService.To<MapsCoordinates>(json)
                 ?? MapsCoordinates.Defaults;
             return l.Return(result, "from json");
         }
