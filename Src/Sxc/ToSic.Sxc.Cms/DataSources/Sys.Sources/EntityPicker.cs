@@ -109,7 +109,7 @@ public class EntityPicker : DataSourceBase
         foreach (var contentType in typesWithoutDefault)
         {
             var name = contentType.Name;
-            var outStream = new DataStream(Services.CacheService, this, name, () => list.OfType(contentType), true);
+            var outStream = new DataStream(Services.CacheService, this, name, () => list.AllOfType(contentType), true);
             outList.Add(name, outStream);
         }
 
@@ -175,7 +175,7 @@ public class EntityPicker : DataSourceBase
                 {
                     var withDrafts = permCheckType.EnsureAny(GrantSets.ReadDraft);
                     var entitiesSvc = _workEntities.New(this, showDrafts: withDrafts);
-                    var ofType = entitiesSvc.AppWorkCtx.Data.List.OfType(type).ToList();
+                    var ofType = entitiesSvc.AppWorkCtx.Data.List.AllOfType(type).ToList();
                     result.AddRange(ofType);
                     lType.Done($"{ofType.Count}");
                 }

@@ -46,7 +46,7 @@ public record LightSpeedDecorator : ModelOfEntity, IOutputCacheSettings
             .GetOrGenerate(appState, $"decorator-{TypeNameId}", () =>
             {
                 //log.A("Debug WIP - remove once this has proven to work; get LightSpeed PiggyBack - recreate");
-                var decoEntityOrNullPb = appState.Metadata?.FirstOrDefaultOfType(TypeNameId);
+                var decoEntityOrNullPb = appState.Metadata?.OneOfType(TypeNameId);
                 return new LightSpeedDecorator(decoEntityOrNullPb);
             })
             .Value;

@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Polymorphism.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public record PolymorphismConfiguration : ModelOfEntity
 {
-    public PolymorphismConfiguration(IEnumerable<IEntity>? list): base(list?.FirstOrDefaultOfType(Name))
+    public PolymorphismConfiguration(IEnumerable<IEntity>? list): base(list?.OneOfType(Name))
     { }
 
     public const string StaticName = "3937fa17-ef2d-40a7-b089-64164eb10bab";
