@@ -54,10 +54,4 @@ public class WrapObjectDynamic: DynamicObject, IWrapper<object>, IPropertyLookup
 
     public dynamic? Get(string name)
         => PreWrap.TryGetWrap(name, true).Result;
-
-    // #DropUseOfDumpProperties
-    //[PrivateApi]
-    //public List<PropertyDumpItem> _DumpNameWipDroppingMostCases(PropReqSpecs specs, string path)
-    //    => PreWrap._DumpNameWipDroppingMostCases(specs, path);
-
 }

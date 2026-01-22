@@ -27,9 +27,4 @@ internal class PropLookupWithPathEntity(IEntity entity, ICanDebug canDebug) :
             : PropertyStack.TraversePath(specs, path, Entity);
         return l.Return(propRequest, $"{nameof(isPath)}: {isPath}");
     }
-
-    // #DropUseOfDumpProperties
-    //public List<PropertyDumpItem> _DumpNameWipDroppingMostCases(PropReqSpecs specs, string path) 
-    //    => Entity?._DumpNameWipDroppingMostCases(specs, path) ?? [];
-
 }

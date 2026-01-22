@@ -51,10 +51,6 @@ public class AppStackBackend(
         // Build Sources List
         var settings = dataStackService.Init(appReader).GetStack(partName, viewSettingsMixin);
 
-        // Dump results
-        // #DropUseOfDumpProperties
-        //var results = settings._DumpNameWipDroppingMostCases(new(null, languages, true, Log), null);
-
         var results = dumperService.Dump(settings, new(null!, languages, true, Log), null!);
         return results;
     }
