@@ -73,9 +73,6 @@ public abstract partial class ModelFromItem : ICanWrap<ITypedItem>, ICanBeItem, 
     [ShowApiWhenReleased(ShowApiMode.Never)]
     IEntity ICanBeEntity.Entity => _item.Entity;
 
-    // #RemoveBlocksIRenderService
-    //object? ICanBeItem.TryGetBlock() => _item.TryGetBlock();
-
     //IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= ((IHasPropLookup)((ICanBeItem)this).Item).PropertyLookup;
     //private IPropertyLookup _propLookup;
 

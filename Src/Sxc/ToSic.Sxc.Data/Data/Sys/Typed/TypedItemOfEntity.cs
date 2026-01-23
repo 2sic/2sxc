@@ -70,8 +70,6 @@ internal class TypedItemOfEntity(IEntity entity, ICodeDataFactory cdf, bool prop
     IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= new(Entity, canDebug: this);
     private PropLookupWithPathEntity? _propLookup;
 
-    // #RemoveBlocksIRenderService
-    //[PrivateApi] object? ICanBeItem.TryGetBlock() => Cdf?.BlockAsObjectOrNull;
     ITypedItem ICanBeItem.Item => this;
 
     #endregion

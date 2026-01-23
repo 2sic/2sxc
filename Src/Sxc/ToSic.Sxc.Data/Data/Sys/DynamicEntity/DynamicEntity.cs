@@ -225,8 +225,6 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
 
     #endregion
 
-    // #RemoveBlocksIRenderService
-    //[PrivateApi] object? ICanBeItem.TryGetBlock() => Cdf?.BlockAsObjectOrNull;
     [PrivateApi] ITypedItem ICanBeItem.Item => TypedItem;
 
 
