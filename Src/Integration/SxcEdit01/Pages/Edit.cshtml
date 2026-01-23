@@ -52,7 +52,7 @@
     var dynCodeSvc = ServiceProvider.Build<IDynamicCodeService>();
     var dynCode = dynCodeSvc.OfApp(appIdentity);
 
-    var entityWithAdam = dynCode.App.Data.List.One(IntegrationConstants.ItemWithImagesId);
+    var entityWithAdam = dynCode.App.Data.List.GetOne(IntegrationConstants.ItemWithImagesId);
     var folder2 = dynCode.AsAdam(entityWithAdam, IntegrationConstants.ImagesField);
 }
 <h3>Files in @dynCode.AsDynamic(entityWithAdam).EntityTitle </h3>

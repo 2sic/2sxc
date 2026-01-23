@@ -104,10 +104,10 @@ public class WorkViews(
 
 
     public IView Get(int templateId)
-        => ViewOfEntity(ViewEntities.One(templateId), templateId, withServices: true);
+        => ViewOfEntity(ViewEntities.GetOne(templateId), templateId, withServices: true);
 
     public IView Get(Guid guid)
-        => ViewOfEntity(ViewEntities.One(guid), guid, withServices: true);
+        => ViewOfEntity(ViewEntities.GetOne(guid), guid, withServices: true);
 
     public IView Recreate(IView originalWithoutServices) => 
            ViewOfEntity(originalWithoutServices.Entity, originalWithoutServices.Id, withServices: true);

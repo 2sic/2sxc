@@ -15,7 +15,7 @@ public class AdamConfiguration(IAppReaderFactory appReaders)
     {
         var found = appReaders.GetSystemPreset()
             .List
-            .OneOfType(AdamConstants.TypeName)?
+            .GetOne(AdamConstants.TypeName)?
             .Get<string>(AdamConstants.ConfigFieldRootFolder);
 
         return found ?? AdamConstants.AdamFolderMask;

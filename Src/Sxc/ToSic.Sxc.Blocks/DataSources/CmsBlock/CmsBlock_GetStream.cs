@@ -50,7 +50,7 @@ public sealed partial class CmsBlock
 
                     // check if it "exists" in the in-stream. if not, then it's probably unpublished
                     // so try revert back to the demo-item (assuming it exists...)
-                    if (contentEntity == null || !originals.Has(contentEntity.EntityId))
+                    if (contentEntity == null || !originals.Contains(contentEntity.EntityId))
                     {
                         contentEntity = cDemoItem;
                         isDemoItem = true;  // mark demo-items for demo-item detection in template #1792
@@ -58,7 +58,7 @@ public sealed partial class CmsBlock
 
                     // now check again...
                     // ...we can't deliver entities that are not delivered by base (original stream), so continue
-                    if (contentEntity == null || !originals.Has(contentEntity.EntityId))
+                    if (contentEntity == null || !originals.Contains(contentEntity.EntityId))
                         continue;
 
                     // use demo-entities where available
@@ -69,7 +69,7 @@ public sealed partial class CmsBlock
 
                     try
                     {
-                        var itm = originals.One(entityId)!;
+                        var itm = originals.GetOne(entityId)!;
                         entitiesToDeliver.Add(EntityInBlockDecorator.Wrap(
                             entity: itm,
                             fieldName: null,
@@ -127,13 +127,13 @@ public sealed partial class CmsBlock
             // Try to find presentationList entity
             var presentationId =
                 presItems.Count - 1 >= itemIndex && presItems[itemIndex] != null &&
-                originals.Has(presItems[itemIndex]!.EntityId)
+                originals.Contains(presItems[itemIndex]!.EntityId)
                     ? presItems[itemIndex]!.EntityId
                     : new int?();
 
             // If there is no presentationList entity, take default entity
             if (presentationId.HasValue)
-                return originals.One(presentationId.Value);
+                return originals.GetOne(presentationId.Value);
 
             return null;
         }

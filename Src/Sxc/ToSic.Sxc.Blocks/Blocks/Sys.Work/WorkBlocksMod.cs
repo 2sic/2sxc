@@ -81,7 +81,7 @@ public class WorkBlocksMod(
 
         #region attach to the current list of items
 
-        var cbEnt = AppWorkCtx.AppReader.List.One(parentId)
+        var cbEnt = AppWorkCtx.AppReader.List.GetOne(parentId)
             ?? throw new NullReferenceException($"Tried to use the just-created entity with id '{parentId}' but can't find it.");
         var blockList = cbEnt.Children(field);
 

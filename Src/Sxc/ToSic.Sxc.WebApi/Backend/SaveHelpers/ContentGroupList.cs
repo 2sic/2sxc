@@ -187,7 +187,7 @@ public class ContentGroupList(
             if (identifier is { Parent: not null, Field: not null })
             {
                 // look up type
-                var target = AppCtx.AppReader.List.One(identifier.Parent.Value)!;
+                var target = AppCtx.AppReader.List.GetOne(identifier.Parent.Value)!;
                 var field = target.Type[identifier.Field]!;
                 identifier.ContentTypeName = field.EntityFieldItemTypePrimary();
                 newItems.Add(identifier);
@@ -214,7 +214,7 @@ public class ContentGroupList(
             return l.ReturnFalse("no parent");
 
         // get the entity and determine if it's a content-block. If yes, that should affect the differences in load/save
-        var entity = AppCtx.AppReader.List.One(identifier.Parent.Value)!;
+        var entity = AppCtx.AppReader.List.GetOne(identifier.Parent.Value)!;
         return l.Return(entity.Type.Name == WorkBlocks.BlockTypeName, "type name should match");
     }
 

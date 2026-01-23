@@ -40,11 +40,11 @@ internal class DataSourceToTypedHelper(ICodeDataFactory cdf, IDataSource dataSou
     /// <inheritdoc />
     public T? GetOne<T>(int id, NoParamOrder npo, bool skipTypeCheck)
         where T : class, ICanWrapData
-        => cdf.GetOne<T>(() => dataSource.List.One(id), id, skipTypeCheck);
+        => cdf.GetOne<T>(() => dataSource.List.GetOne(id), id, skipTypeCheck);
 
     /// <inheritdoc />
     public T? GetOne<T>(Guid id, NoParamOrder npo, bool skipTypeCheck)
         where T : class, ICanWrapData
-        => cdf.GetOne<T>(() => dataSource.List.One(id), id, skipTypeCheck);
+        => cdf.GetOne<T>(() => dataSource.List.GetOne(id), id, skipTypeCheck);
 
 }

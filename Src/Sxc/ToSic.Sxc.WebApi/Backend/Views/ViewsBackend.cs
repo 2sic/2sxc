@@ -33,7 +33,7 @@ public class ViewsBackend(
             .Select(view =>
             {
                 var lightspeed = view.Metadata
-                    .OneOfType(LightSpeedDecorator.TypeNameId)
+                    .GetOne(LightSpeedDecorator.TypeNameId)
                     .NullOrGetWith(lsEntity => new LightSpeedDecorator(lsEntity)
                         .Map(lightSpeedDeco => new AppMetadataDto
                         {

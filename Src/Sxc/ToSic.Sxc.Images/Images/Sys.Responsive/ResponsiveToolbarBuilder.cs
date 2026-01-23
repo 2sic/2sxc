@@ -52,7 +52,7 @@ internal class ResponsiveToolbarBuilder(ILog parentLog) : HelperBase(parentLog, 
 
                     // Check if we have special resize metadata
                     var md = target.HasMdOrNull.Metadata
-                        .OneOfType(ImageDecorator.NiceTypeName)
+                        .GetOne(ImageDecorator.NiceTypeName)
                         .NullOrGetWith(imgDeco => new ImageDecorator(imgDeco, []));
 
                     // Try to add note

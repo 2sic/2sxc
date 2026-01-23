@@ -144,7 +144,7 @@ public class AppContent(
             dataController.Update(id.Value, cleanedNewItem!);
 
         return InitEavAndSerializer(AppReader.AppId, Context.Permissions.IsContentAdmin, null)
-            .Convert(AppReader.List.One(id.Value)!)!;
+            .Convert(AppReader.List.GetOne(id.Value)!)!;
     }
 
     private bool AddParentRelationship(IDictionary<string, object?> valuesCaseInsensitive, int addedEntityId)

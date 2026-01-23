@@ -61,7 +61,7 @@ public class AppStackBackend(
         if (viewGuid == null)
             return null;
 
-        var viewEnt = appState.List.One(viewGuid.Value)
+        var viewEnt = appState.List.GetOne(viewGuid.Value)
                       ?? throw new($"Tried to get view but not found. Guid was {viewGuid}");
         
         var view = new View(viewEnt, languages, Log, qDefBuilder);

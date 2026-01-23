@@ -83,7 +83,7 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGe
 
             if (configurationId > 0)
             {
-                var configuration = appReaders.Value.Get(appId).List.One(configurationId);
+                var configuration = appReaders.Value.Get(appId).List.GetOne(configurationId);
                 if (configuration == null)
                     return l.Return(new RichResult
                         {

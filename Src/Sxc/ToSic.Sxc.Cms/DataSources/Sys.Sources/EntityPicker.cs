@@ -109,7 +109,7 @@ public class EntityPicker : DataSourceBase
         foreach (var contentType in typesWithoutDefault)
         {
             var name = contentType.Name;
-            var outStream = new DataStream(Services.CacheService, this, name, () => list.AllOfType(contentType), true);
+            var outStream = new DataStream(Services.CacheService, this, name, () => list.GetAll(contentType), true);
             outList.Add(name, outStream);
         }
 
@@ -175,7 +175,7 @@ public class EntityPicker : DataSourceBase
                 {
                     var withDrafts = permCheckType.EnsureAny(GrantSets.ReadDraft);
                     var entitiesSvc = _workEntities.New(this, showDrafts: withDrafts);
-                    var ofType = entitiesSvc.AppWorkCtx.Data.List.AllOfType(type).ToList();
+                    var ofType = entitiesSvc.AppWorkCtx.Data.List.GetAll(type).ToList();
                     result.AddRange(ofType);
                     lType.Done($"{ofType.Count}");
                 }
@@ -263,9 +263,9 @@ public class EntityPicker : DataSourceBase
             IEntity? found = null;
             // check if id is int or guid
             if (Guid.TryParse(id, out var guid))
-                found = list.One(guid);
+                found = list.GetOne(guid);
             else if (int.TryParse(id, out var intId))
-                found = list.One(intId);
+                found = list.GetOne(intId);
             if (found != null)
                 result.Add(found);
         }
