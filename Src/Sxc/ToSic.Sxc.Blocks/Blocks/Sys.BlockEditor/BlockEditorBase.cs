@@ -11,16 +11,11 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.Depe
 {
     #region DI and Construction
 
-    public class Dependencies(
-        GenWorkPlus<WorkBlocks> appBlocks,
-        GenWorkDb<WorkBlocksMod> workBlocksMod,
-        GenWorkDb<WorkEntityPublish> publisher)
-        : DependenciesBase(connect: [workBlocksMod, appBlocks, publisher])
-    {
-        public GenWorkDb<WorkBlocksMod> WorkBlocksMod { get; } = workBlocksMod;
-        public GenWorkDb<WorkEntityPublish> Publisher { get; } = publisher;
-        public GenWorkPlus<WorkBlocks> AppBlocks { get; } = appBlocks;
-    }
+    public record Dependencies(
+        GenWorkPlus<WorkBlocks> AppBlocks,
+        GenWorkDb<WorkBlocksMod> WorkBlocksMod,
+        GenWorkDb<WorkEntityPublish> Publisher)
+        : DependenciesRecord(connect: [WorkBlocksMod, AppBlocks, Publisher]);
 
     internal BlockEditorBase(Dependencies services, object[] connect) : base(services, "CG.RefMan", connect: connect)
     { }

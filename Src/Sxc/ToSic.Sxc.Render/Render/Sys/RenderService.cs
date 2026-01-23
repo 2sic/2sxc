@@ -29,22 +29,14 @@ public class RenderService(RenderService.Dependencies services) : ServiceWithCon
 {
     #region Constructor & ConnectToRoot
 
-    public class Dependencies(
-        Generator<IEditService> editGenerator,
-        LazySvc<IModuleAndBlockBuilder> builder,
-        Generator<SimpleRenderer> simpleRenderer,
-        Generator<InTextContentBlockRenderer> inTextRenderer,
-        Generator<IBlockBuilder> blockBuilderGenerator,
-        LazySvc<ILogStore> logStore)
-        : DependenciesBase(connect: [editGenerator, builder, simpleRenderer, inTextRenderer, logStore, blockBuilderGenerator])
-    {
-        public Generator<InTextContentBlockRenderer> InTextRenderer { get; } = inTextRenderer;
-        public Generator<IBlockBuilder> BlockBuilderGenerator { get; } = blockBuilderGenerator;
-        public Generator<SimpleRenderer> SimpleRenderer { get; } = simpleRenderer;
-        public Generator<IEditService> EditGenerator { get; } = editGenerator;
-        public LazySvc<IModuleAndBlockBuilder> Builder { get; } = builder;
-        public LazySvc<ILogStore> LogStore { get; } = logStore;
-    }
+    public record Dependencies(
+        Generator<IEditService> EditGenerator,
+        LazySvc<IModuleAndBlockBuilder> Builder,
+        Generator<SimpleRenderer> SimpleRenderer,
+        Generator<InTextContentBlockRenderer> InTextRenderer,
+        Generator<IBlockBuilder> BlockBuilderGenerator,
+        LazySvc<ILogStore> LogStore)
+        : DependenciesRecord(connect: [EditGenerator, Builder, SimpleRenderer, InTextRenderer, LogStore, BlockBuilderGenerator]);
 
     // ReSharper disable once InconsistentNaming
 

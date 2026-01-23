@@ -11,14 +11,8 @@ public abstract class SxcImportExportEnvironmentBase: EavImportExportEnvironment
 {
     #region constructor / DI
 
-    public class Dependencies(ISite site, IAppReaderFactory appReaders, IAppsCatalog appsCatalog, IAppPathsMicroSvc appPaths)
-        : DependenciesBase(connect: [site, appReaders, appPaths])
-    {
-        internal readonly IAppPathsMicroSvc AppPaths = appPaths;
-        internal readonly IAppsCatalog AppsCatalog = appsCatalog;
-        internal readonly IAppReaderFactory AppReaders = appReaders;
-        internal readonly ISite Site = site;
-    }
+    public record Dependencies(ISite Site, IAppReaderFactory AppReaders, IAppsCatalog AppsCatalog, IAppPathsMicroSvc AppPaths)
+        : DependenciesRecord(connect: [Site, AppReaders, AppPaths]);
 
 
     /// <summary>

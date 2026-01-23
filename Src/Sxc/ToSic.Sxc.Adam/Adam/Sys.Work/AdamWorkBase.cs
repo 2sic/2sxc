@@ -11,13 +11,11 @@ public abstract class AdamWorkBase(AdamWorkBase.Dependencies services, string lo
 {
     #region MyServices / Init
 
-    public class Dependencies(LazySvc<AdamContext> adamContext, ISxcAppCurrentContextService ctxService, AdamGenericHelper adamGenericHelper)
-        : DependenciesBase(connect: [adamContext, ctxService, adamGenericHelper])
-    {
-        public LazySvc<AdamContext> AdamContext { get; } = adamContext;
-        public ISxcAppCurrentContextService CtxService { get; } = ctxService;
-        public AdamGenericHelper AdamGenericHelper { get; } = adamGenericHelper;
-    }
+    public record Dependencies(
+        LazySvc<AdamContext> AdamContext,
+        ISxcAppCurrentContextService CtxService,
+        AdamGenericHelper AdamGenericHelper)
+        : DependenciesRecord(connect: [AdamContext, CtxService, AdamGenericHelper]);
 
     public void Setup(AdamWorkOptions options)
     {

@@ -24,14 +24,10 @@ public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, ITo
 
     #region Constructors and Init
 
-    public class Dependencies(
-        LazySvc<ToolbarButtonDecoratorHelper> toolbarButtonHelper,
-        LazySvc<IAppsCatalog> appsCatalog)
-        : DependenciesBase(connect: [toolbarButtonHelper, appsCatalog])
-    {
-        internal LazySvc<ToolbarButtonDecoratorHelper> ToolbarButtonHelper { get; } = toolbarButtonHelper;
-        public LazySvc<IAppsCatalog> AppsCatalog { get; } = appsCatalog;
-    }
+    public record Dependencies(
+        LazySvc<ToolbarButtonDecoratorHelper> ToolbarButtonHelper,
+        LazySvc<IAppsCatalog> AppsCatalog)
+        : DependenciesRecord(connect: [ToolbarButtonHelper, AppsCatalog]);
 
     /// <summary>
     /// Public constructor for DI

@@ -16,12 +16,8 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
 {
     private IContextOfApp _context = null!;
 
-    public class Dependencies(LazySvc<AdamContext> adamContext, ISxcAppCurrentContextService ctxService)
-        : DependenciesBase(connect: [adamContext, ctxService])
-    {
-        public LazySvc<AdamContext> AdamContext { get; } = adamContext;
-        public ISxcAppCurrentContextService CtxService { get; } = ctxService;
-    }
+    public record Dependencies(LazySvc<AdamContext> AdamContext, ISxcAppCurrentContextService CtxService)
+        : DependenciesRecord(connect: [AdamContext, CtxService]);
 
     protected AdamDataSourceProvider(Dependencies services) : base(services, $"{SxcLogName}.AdamDs")
     { }

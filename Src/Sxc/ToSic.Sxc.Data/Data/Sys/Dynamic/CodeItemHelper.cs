@@ -61,7 +61,7 @@ internal class CodeItemHelper(GetAndConvertHelper helper, ITyped data)
     public IRawHtmlString? Attribute(string name, NoParamOrder npo, string? fallback, bool? required)
     {
         var result = Get(name, npo, required);
-        var strValue = Helper.Cdf.Services.ForCode.ForCode(result, fallback: fallback);
+        var strValue = Helper.Cdf.Services.ForCode.Value.ForCode(result, fallback: fallback);
         return strValue is null
             ? null
             : new RawHtmlString(WebUtility.HtmlEncode(strValue));
@@ -70,7 +70,7 @@ internal class CodeItemHelper(GetAndConvertHelper helper, ITyped data)
     public string? String(string name, NoParamOrder npo, string? fallback, bool? required, object? scrubHtml = default)
     {
         var value = G4T(name, npo: npo, fallback: fallback, required: required);
-        return TypedItemHelpers.MaybeScrub(value, scrubHtml, () => Helper.Cdf.Services.Scrub);
+        return TypedItemHelpers.MaybeScrub(value, scrubHtml, () => Helper.Cdf.Services.Scrub.Value);
     }
 
 

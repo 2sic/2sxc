@@ -19,21 +19,14 @@ public abstract class EngineBase : ServiceBase<EngineBase.Dependencies>, IEngine
 {
     #region MyServices
 
-    public class Dependencies(
-        IServerPaths serverPaths,
-        IBlockResourceExtractor blockResourceExtractor,
-        EngineCheckTemplate engineCheckTemplate,
-        EnginePolymorphism enginePolymorphism,
-        EngineAppRequirements engineAppRequirements)
-        : DependenciesBase(connect:
-            [serverPaths, blockResourceExtractor, engineCheckTemplate, engineAppRequirements, enginePolymorphism])
-    {
-        internal EngineAppRequirements EngineAppRequirements { get; } = engineAppRequirements;
-        internal EnginePolymorphism EnginePolymorphism { get; } = enginePolymorphism;
-        internal EngineCheckTemplate EngineCheckTemplate { get; } = engineCheckTemplate;
-        public IServerPaths ServerPaths { get; } = serverPaths;
-        internal IBlockResourceExtractor BlockResourceExtractor { get; } = blockResourceExtractor;
-    }
+    public record Dependencies(
+        IServerPaths ServerPaths,
+        IBlockResourceExtractor BlockResourceExtractor,
+        EngineCheckTemplate EngineCheckTemplate,
+        EnginePolymorphism EnginePolymorphism,
+        EngineAppRequirements EngineAppRequirements)
+        : DependenciesRecord(connect:
+            [ServerPaths, BlockResourceExtractor, EngineCheckTemplate, EngineAppRequirements, EnginePolymorphism]);
 
     #endregion
 
