@@ -24,7 +24,7 @@ internal partial class Metadata(IMetadata metadata, ICodeDataFactory cdf)
 {
     #region Setup
 
-    void IWrapperSetup<IEntity>.SetupContents(IEntity source)
+    bool IWrapperSetup<IEntity>.SetupContents(IEntity? source)
         => throw new NotSupportedException($"SetupContents is not supported for {GetType().Name}, as it requires more information.");
 
     #endregion
