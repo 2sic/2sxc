@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Data.Models;
 /// - Released in v19.01 (BETA)
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still beta, name may change to DataModelWithItem or something")]
-public abstract partial class ModelFromItem : ICanWrap<ITypedItem>, ICanBeItem, ICanBeEntity
+public abstract partial class ModelFromItem : ICanWrap<ITypedItem>, ICanBeItem, ICanBeEntity, INeedsFactory
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 

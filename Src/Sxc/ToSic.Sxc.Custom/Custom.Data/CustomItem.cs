@@ -61,7 +61,7 @@ namespace Custom.Data;
 /// </remarks>
 [PublicApi]
 [ModelSource(ContentTypes = ModelSourceAttribute.ForAnyContentType)]
-public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLookup
+public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLookup, INeedsFactory
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 

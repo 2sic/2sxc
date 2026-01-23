@@ -40,26 +40,33 @@ partial class CodeDataFactory: IModelFactory
         var bestType = DataModelAnalyzer.GetTargetType<TCustom>();
         var newT = ActivatorUtilities.CreateInstance(serviceProvider, bestType) as TCustom;
 
-        settings ??= new() { ItemIsStrict = true };
-
         switch (newT)
         {
+            // 1. Direct setup from the data type specified, no further conversions
             // Should be an ITypedItemWrapper, but not enforced in the signature
             case ICanWrap<TData> withMatchingSetup:
                 withMatchingSetup.Setup(item, this);
                 return newT;
+
+            // 2. Setup from Item, a more complex object which already has more features
             // In some cases the type of the data is already a model, so we need to unwrap it
             case ICanWrap<ITypedItem> forItem when item is ICanBeItem canBeItem:
                 forItem.Setup(canBeItem.Item, this);
                 return newT;
+
+            // 3. Setup from Entity, the most basic object
             // DataModelOfEntity can also be filled from Typed (but ATM not the other way around)
             case ICanWrap<IEntity> forEntity when item is ICanBeEntity canBeEntity:
                 forEntity.Setup(canBeEntity.Entity, this);
                 return newT;
+
+            // 4. Setup from item, when starting with an entity
             // In some cases we can only wrap an item, but the data is an entity-based model
             case ICanWrap<ITypedItem> forTypedItem when item is ICanBeEntity canBeEntity:
+                settings ??= new() { ItemIsStrict = true };
+                var asItem = AsItem(canBeEntity.Entity, settings);
                 // TODO: #ConvertItemSettings
-                forTypedItem.Setup(AsItem(canBeEntity.Entity, settings), this);
+                forTypedItem.Setup(asItem, this);
                 return newT;
             default:
                 throw new($"The custom type {typeof(TCustom).Name} does not implement 'ICanWrap<TData>'. This is probably a mistake.");
