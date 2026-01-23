@@ -17,8 +17,7 @@ public class CodeHelperTypedData(CompileCodeHelperSpecs helperSpecs, string? log
 {
     public bool DefaultStrict = true;
 
-    [field: AllowNull, MaybeNull]
-    internal ContextData Data => field ??= (ContextData)ExCtx.GetState<IDataSource>();
+    [field: AllowNull, MaybeNull] internal ContextData Data => field ??= ExCtx.GetContextData();
 
     [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();

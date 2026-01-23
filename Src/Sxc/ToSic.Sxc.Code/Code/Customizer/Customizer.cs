@@ -37,7 +37,7 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
             return typed;
 
         // Get and cache for reuse
-        var cmsContext = (CmsContext)ExCtx.GetState<ICmsContext>();
+        var cmsContext = (CmsContext)ExCtx.GetCmsContext();
         var created = new CmsView<TSettings, TResources>(cmsContext, cmsContext.BlockInternal, false);
         _view = created;
         return created;
@@ -55,7 +55,7 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
         if (_myItem is TCustomType typed)
             return typed;
 
-        var firstEntity = (ExCtx.GetState<IDataSource>() as ContextData)?.MyItems.FirstOrDefault();
+        var firstEntity = ExCtx.GetContextData()?.MyItems.FirstOrDefault();
         var created = Cdf.AsCustom<TCustomType>(firstEntity);
         _myItem = created;
         return created;
@@ -70,7 +70,7 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
             return typed;
         
         // Get and cache for reuse
-        var items = (ExCtx.GetState<IDataSource>() as ContextData)?.MyItems ?? [];
+        var items = ExCtx.GetContextData()?.MyItems ?? [];
         var created = Cdf.AsCustomList<TCustomType>(items, default, nullIfNull: false);
         _myItems = created;
         return created;
@@ -85,7 +85,7 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
             return typed;
 
         // Get and cache for reuse
-        var header = (ExCtx.GetState<IDataSource>() as ContextData)?.MyHeaders.FirstOrDefault();
+        var header = ExCtx.GetContextData()?.MyHeaders.FirstOrDefault();
         var created = Cdf.AsCustom<TCustomType>(header);
         _myHeader = created;
         return created;

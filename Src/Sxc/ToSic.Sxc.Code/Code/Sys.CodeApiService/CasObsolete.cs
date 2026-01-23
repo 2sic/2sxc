@@ -73,7 +73,7 @@ public class CodeApiServiceObsolete(IExecutionContext dynCode)
     //{
     //    dynCode.Log.A("try to build old List");
 
-    //    var block = dynCode.GetState<IBlock>();
+    //    var block = dynCode.GetBlock();
     //    if (!block.DataIsReady || !block.ViewIsReady)
     //        return [];
 

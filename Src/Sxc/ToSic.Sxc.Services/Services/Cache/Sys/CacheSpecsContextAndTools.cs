@@ -46,18 +46,18 @@ internal record CacheSpecsContextAndTools : HelperRecordBase
     #region Retrieved / Calculated values for Re-Use
 
     [field: AllowNull, MaybeNull]
-    public ICmsUser User => field ??= ExCtx.GetState<ICmsContext>().User;
+    public ICmsUser User => field ??= ExCtx.GetCmsContext().User;
 
     public UserElevation UserElevation => _userElevation ??= User?.GetElevation() ?? UserElevation.Unknown;
     private UserElevation? _userElevation;
 
     [field: AllowNull, MaybeNull]
-    public ICmsModule Module => field ??= ExCtx.GetState<ICmsContext>().Module;
+    public ICmsModule Module => field ??= ExCtx.GetCmsContext().Module;
 
     [field: AllowNull, MaybeNull]
-    public ICmsPage Page => field ??= ExCtx.GetState<ICmsContext>().Page;
+    public ICmsPage Page => field ??= ExCtx.GetCmsContext().Page;
 
-    public ISite? Site => field ??= ExCtx.GetState<IContextOfBlock>()?.Site;
+    public ISite? Site => field ??= ExCtx.GetContextOfBlock()?.Site;
 
     [field: AllowNull, MaybeNull]
     internal IAppReader AppReader => field ??= ExCtx.GetState<IAppReader>();

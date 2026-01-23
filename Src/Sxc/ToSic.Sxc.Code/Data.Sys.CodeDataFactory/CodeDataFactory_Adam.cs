@@ -33,7 +33,7 @@ partial class CodeDataFactory
         if (ExCtxOrNull is null)
             throw new($"Can't create App Context for {nameof(AdamManager)} in {nameof(ICodeDataFactory)} - no block, no App");
 
-        IContextOfApp contextOfApp = ExCtx.GetState<IContextOfBlock>();
+        IContextOfApp contextOfApp = ExCtx.GetContextOfBlock();
         // TODO: @2dm - find out / document why this could even be null
         if (contextOfApp == null)
         {

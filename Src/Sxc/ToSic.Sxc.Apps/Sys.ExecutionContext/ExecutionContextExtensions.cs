@@ -1,7 +1,7 @@
 ﻿using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
-public static class IExecutionContextGetApp
+public static class ExecutionContextExtensions
 {
     /// <summary>
     /// Special helper to ensure that AppState is always a Sxc IApp.

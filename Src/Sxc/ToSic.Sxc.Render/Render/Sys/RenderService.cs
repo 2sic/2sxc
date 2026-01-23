@@ -6,6 +6,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Render.Sys.RenderBlock;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Sys;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 
 namespace ToSic.Sxc.Render.Sys;
@@ -95,7 +96,7 @@ public class RenderService(RenderService.Dependencies services) : ServiceWithCon
         // #RemoveBlocksIRenderService
         //MakeSureLogIsInHistory();
         //var block = parent.GetRequiredBlockForRender();
-        var block = ExCtx.GetState<IBlock>();
+        var block = ExCtx.GetBlock();
         var simpleRenderer = services.SimpleRenderer.New();
         return Tag.Custom(field == null
             ? simpleRenderer.Render(block, item.Entity, data: data) // without field edit-context
@@ -129,7 +130,7 @@ public class RenderService(RenderService.Dependencies services) : ServiceWithCon
         // #RemoveBlocksIRenderService
         //MakeSureLogIsInHistory();
         //var block = parent.GetRequiredBlockForRender();
-        var block = ExCtx.GetState<IBlock>(); 
+        var block = ExCtx.GetBlock();
         var editService = GetEditService(block);
         return Tag.Custom(merge == null
             ? services.SimpleRenderer.New().RenderListWithContext(block, parent.Entity, field, apps, max, editService)

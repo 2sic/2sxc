@@ -1,6 +1,7 @@
 ﻿using ToSic.Sxc.Context;
 using ToSic.Sxc.Render.Sys.ModuleHtml;
 using ToSic.Sxc.Services.Sys;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Services.OutputCache;
 
@@ -12,7 +13,7 @@ internal class OutputCacheService(IModuleHtmlService moduleHtmlService)
 {
     public int ModuleId
     {
-        get => _moduleId ??= ExCtx.GetState<ICmsContext>()?.Module?.Id ?? 0;
+        get => _moduleId ??= ExCtx.GetCmsContext()?.Module?.Id ?? 0;
         set => _moduleId = value;
     }
     private int? _moduleId;
