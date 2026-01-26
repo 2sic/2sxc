@@ -50,7 +50,7 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.Dependencie
     /// <summary>
     /// Constructor with the option to provide a log name.
     /// </summary>
-    /// <param name="services">All the needed services - see [](xref:NetCode.Conventions.MyServices)</param>
+    /// <param name="services">All the needed services - see [](xref:NetCode.Conventions.Dependencies)</param>
     /// <param name="logName">Optional name for logging such as `My.JsonDS`</param>
     protected DataSource16(Dependencies services, string? logName = default): base(services, logName ?? "Cus.HybDs")
     {
