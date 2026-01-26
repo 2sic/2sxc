@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Data;
 
-namespace ToSic.Sxc.Code.Generate.Sys;
+namespace ToSic.Sxc.Code.Generate.Data;
 internal class ModelGeneratorConstants
 {
     /// <summary>

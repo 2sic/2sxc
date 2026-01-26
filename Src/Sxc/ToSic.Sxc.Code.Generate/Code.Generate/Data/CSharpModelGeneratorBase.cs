@@ -1,7 +1,8 @@
 using System.Text;
 using ToSic.Eav.Data.Sys;
+using ToSic.Sxc.Code.Generate.Sys;
 
-namespace ToSic.Sxc.Code.Generate.Sys;
+namespace ToSic.Sxc.Code.Generate.Data;
 
 /// <summary>
 /// Abstract base class for C# model generators (both DataModel and CustomModel)

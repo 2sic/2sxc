@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Data;
+﻿using ToSic.Sxc.Code.Generate.Data;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Code.Generate.Sys;
 

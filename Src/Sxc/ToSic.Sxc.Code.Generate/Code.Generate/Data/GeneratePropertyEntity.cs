@@ -1,6 +1,7 @@
-﻿using ToSic.Sxc.Data;
+﻿using ToSic.Sxc.Code.Generate.Sys;
+using ToSic.Sxc.Data;
 
-namespace ToSic.Sxc.Code.Generate.Sys;
+namespace ToSic.Sxc.Code.Generate.Data;
 
 internal class GeneratePropertyEntity(CSharpGeneratorHelper helper) : GeneratePropertyBase(helper)
 {

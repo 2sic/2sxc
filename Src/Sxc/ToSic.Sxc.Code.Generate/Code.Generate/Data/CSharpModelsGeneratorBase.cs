@@ -3,10 +3,11 @@ using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.Ancestors;
 using ToSic.Eav.Data.Sys.ContentTypes;
+using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sys.Performance;
 using ToSic.Sys.Users;
 
-namespace ToSic.Sxc.Code.Generate.Sys;
+namespace ToSic.Sxc.Code.Generate.Data;
 
 /// <summary>
 /// Base class for C# models (data/custom) generators.

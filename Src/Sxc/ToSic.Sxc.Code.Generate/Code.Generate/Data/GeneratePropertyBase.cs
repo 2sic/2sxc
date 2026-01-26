@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Code.Generate.Sys;
+﻿using ToSic.Sxc.Code.Generate.Sys;
+
+namespace ToSic.Sxc.Code.Generate.Data;
 
 internal abstract class GeneratePropertyBase(CSharpGeneratorHelper helper)
 {

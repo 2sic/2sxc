@@ -1,7 +1,8 @@
 using ToSic.Eav.Apps;
+using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sys.Users;
 
-namespace ToSic.Sxc.Code.Generate.Sys;
+namespace ToSic.Sxc.Code.Generate.Data;
 
 /// <summary>
 /// Experimental

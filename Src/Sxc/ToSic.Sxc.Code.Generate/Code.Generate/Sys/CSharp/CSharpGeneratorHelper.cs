@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using ToSic.Sxc.Code.Generate.Data;
 
 namespace ToSic.Sxc.Code.Generate.Sys;
 
