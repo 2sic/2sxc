@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Code.Generate.Sys;
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class CSharpDataModelsGenerator(IUser user, IAppReaderFactory appReadFac)
+internal class CSharpTypedDataModelsGenerator(IUser user, IAppReaderFactory appReadFac)
     : CSharpModelsGeneratorBase(user, appReadFac, SxcLogName + ".DMoGen") // IFileGenerator is inherited from base
 {
     #region Information for the interface
@@ -24,5 +24,5 @@ internal class CSharpDataModelsGenerator(IUser user, IAppReaderFactory appReadFa
     protected internal override CSharpCodeSpecs BuildDerivedSpecs(IFileGeneratorSpecs parameters) => BuildSpecs(parameters);
 
     protected override IGeneratedFile? CreateFileGenerator(IContentType type, string className) 
-        => new CSharpDataModelGenerator(this, type, className).PrepareFile();
+        => new CSharpTypedDataModelGenerator(this, type, className).PrepareFile();
 }

@@ -13,8 +13,8 @@ public static class SxcCodeGenerateStartup
     public static IServiceCollection AddSxcCodeGen(this IServiceCollection services)
     {
         // v17 Code Generators
-        services.TryAddTransient<CSharpDataModelsGenerator>();  // direct registration
-        services.AddTransient<IFileGenerator, CSharpDataModelsGenerator>(); // with interface and no try, so all can be listed in DI
+        services.TryAddTransient<CSharpTypedDataModelsGenerator>();  // direct registration
+        services.AddTransient<IFileGenerator, CSharpTypedDataModelsGenerator>(); // with interface and no try, so all can be listed in DI
         services.AddTransient<IFileGenerator, RazorViewsGenerator>(); // with interface and no try, so all can be listed in DI
         services.AddTransient<IFileGenerator, CSharpServicesGenerator>(); // with interface and no try, so all can be listed in DI
         services.AddTransient<IFileGenerator, WebApiGenerator>(); // with interface and no try, so all can be listed in DI
