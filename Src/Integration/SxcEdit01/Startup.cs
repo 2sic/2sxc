@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ToSic.Sxc.Backend;
+using ToSic.Sxc.Run.Startup;
+using ToSic.Sys.Configuration;
 
 namespace IntegrationSamples.SxcEdit01
 {

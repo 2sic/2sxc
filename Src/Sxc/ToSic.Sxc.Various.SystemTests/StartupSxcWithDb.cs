@@ -25,7 +25,7 @@ public class StartupSxcWithDb
             .AddFixtureHelpers()
             .AddDataSourceTestHelpers()
             // 2sxc core
-            .AddSxcCoreNew()
+            .AddSxcCore()
             .AddSxcApps()
             .AddSxcEdit()
             .AddSxcData()
@@ -42,7 +42,7 @@ public class StartupSxcWithDb
             .AddSxcLightSpeed()
             .AddSxcAppsFallbacks()
 
-            .AddEavEverything()
-            .AddEavEverythingFallbacks();
+            .AddEavAll()
+            .AddEavAllFallbacks();
 
 }

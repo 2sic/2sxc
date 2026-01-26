@@ -51,5 +51,5 @@ public class Startup
             .AddEavCoreLibAndSys()
 
             // Fallbacks for services which were not implemented - must come last
-            .AddEavEverythingFallbacks();
+            .AddEavAllFallbacks();
 }

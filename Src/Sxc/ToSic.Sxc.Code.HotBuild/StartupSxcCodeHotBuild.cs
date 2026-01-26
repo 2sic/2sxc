@@ -5,7 +5,8 @@ using ToSic.Sxc.Code.Sys.HotBuild;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Run.Startup;
 
-public static class SxcCodeHotBuildStartup
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
+public static class StartupSxcCodeHotBuild
 {
     public static IServiceCollection AddSxcCodeHotBuild(this IServiceCollection services)
     {

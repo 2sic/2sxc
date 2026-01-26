@@ -76,11 +76,11 @@ public class OqtStartup : IServerStartup
             .AddSxcWeb()
             .AddSxcLightSpeed()             // LightSpeed services
             .AddSxcCodeGen()                // Code generation services
-            .AddSxcCoreNew()
+            .AddSxcCore()
             .AddSxcAppsFallbacks()
             .AddSxcCoreFallbacks()
-            .AddEavEverything()             // Core EAV services
-            .AddEavEverythingFallbacks()
+            .AddEavAll()             // Core EAV services
+            .AddEavAllFallbacks()
             .AddEavWebApiTypedAfterEav()
             .AddOqtAppWebApi()              // Oqtane App WebAPI stuff
             .AddRazorBlade();               // RazorBlade helpers for Razor in the edition used by Oqtane

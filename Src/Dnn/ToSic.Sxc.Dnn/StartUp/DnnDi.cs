@@ -67,7 +67,7 @@ public static class DnnDi
             .AddSxcWeb()
             .AddSxcLightSpeed()
             .AddSxcCodeGen() // Code generation services
-            .AddSxcCoreNew();
+            .AddSxcCore();
 
         l.A("Will start with 2sxc Fallbacks and RazorBlade parts");
         services
@@ -77,8 +77,8 @@ public static class DnnDi
 
         l.A("Will start with EAV and WebApi Typed parts");
         services
-            .AddEavEverything()
-            .AddEavEverythingFallbacks()
+            .AddEavAll()
+            .AddEavAllFallbacks()
             .AddEavWebApiTypedAfterEav();
 
         // Remember this for later, when we must start the Static Dependency Injection

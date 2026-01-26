@@ -10,10 +10,10 @@ using ToSic.Sys.Boot;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Run.Startup;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
 public static class SxcCoreStartup
 {
-    public static IServiceCollection AddSxcCoreNew(this IServiceCollection services)
+    public static IServiceCollection AddSxcCore(this IServiceCollection services)
     {
         services.TryAddScoped<ILinkPaths, LinkPaths>();
 

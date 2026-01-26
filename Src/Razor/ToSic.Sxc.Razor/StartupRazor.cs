@@ -9,10 +9,9 @@ using ToSic.Sxc.Razor.DotNetOverrides;
 namespace ToSic.Sxc.Run.Startup;
 
 // ReSharper disable once InconsistentNaming
-[ShowApiWhenReleased(ShowApiMode.Never)]
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
 public static class StartupRazor
 {
-    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcRazor(this IServiceCollection services)
     {
         // 2sxc Razor Parts

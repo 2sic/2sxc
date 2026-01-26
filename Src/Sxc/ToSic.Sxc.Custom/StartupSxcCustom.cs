@@ -8,6 +8,7 @@ using ToSic.Sxc.Services;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Run.Startup;
 
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
 public static class StartupSxcCustom
 {
     public static IServiceCollection AddSxcCustom(this IServiceCollection services)
