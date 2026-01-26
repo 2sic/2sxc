@@ -8,7 +8,7 @@ using ToSic.Sxc.Data.Sys.Wrappers;
 namespace ToSic.Sxc.Run.Startup;
 
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
-public static class SxcDataStartup
+public static class StartupSxcData
 {
     public static IServiceCollection AddSxcData(this IServiceCollection services)
     {

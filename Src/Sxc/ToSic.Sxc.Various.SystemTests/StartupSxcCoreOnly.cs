@@ -49,7 +49,7 @@ public class StartupSxcCoreOnly
             .AddEavDataStack()
             .AddEavData()
             // EAV Core and Downstream
-            .AddEavCoreLibAndSys()
+            .AddAllLibAndSys()
 
             .AddSxcAppsFallbacks()
             .AddEavDataBuildFallbacks()

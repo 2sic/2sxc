@@ -11,7 +11,7 @@ using ToSic.Sys.Boot;
 namespace ToSic.Sxc.Run.Startup;
 
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
-public static class SxcCoreStartup
+public static class StartupSxcCore
 {
     public static IServiceCollection AddSxcCore(this IServiceCollection services)
     {

@@ -48,7 +48,7 @@ public class Startup
             .AddEavData()
 
             // EAV Core and Downstream
-            .AddEavCoreLibAndSys()
+            .AddAllLibAndSys()
 
             // Fallbacks for services which were not implemented - must come last
             .AddEavAllFallbacks();
