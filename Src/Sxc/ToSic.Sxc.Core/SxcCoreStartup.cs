@@ -7,12 +7,12 @@ using ToSic.Sxc.Sys.Integration.Installation;
 using ToSic.Sxc.Sys.Integration.Paths;
 using ToSic.Sys.Boot;
 
-namespace ToSic.Sxc;
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Run.Startup;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public static class SxcCoreStartup
 {
-    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcCoreNew(this IServiceCollection services)
     {
         services.TryAddScoped<ILinkPaths, LinkPaths>();
@@ -44,8 +44,7 @@ public static class SxcCoreStartup
     /// <remarks>
     /// All calls in here MUST use TryAddTransient, and never without the Try
     /// </remarks>
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    public static IServiceCollection AddSxcCoreFallbackServices(this IServiceCollection services)
+    public static IServiceCollection AddSxcCoreFallbacks(this IServiceCollection services)
     {
         // basic environment, pages, modules etc.
         services.TryAddTransient<IEnvironmentInstaller, EnvironmentInstallerUnknown>();

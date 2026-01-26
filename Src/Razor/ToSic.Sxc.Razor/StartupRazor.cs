@@ -6,7 +6,7 @@ using ToSic.Sxc.Razor;
 using ToSic.Sxc.Razor.DotNetOverrides;
 
 // ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Startup;
+namespace ToSic.Sxc.Run.Startup;
 
 // ReSharper disable once InconsistentNaming
 [ShowApiWhenReleased(ShowApiMode.Never)]

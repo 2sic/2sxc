@@ -8,12 +8,13 @@ using ToSic.Sxc.Adam.Sys.Storage;
 using ToSic.Sxc.Adam.Sys.Work;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc;
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Run.Startup;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public static class SxcAdamStartup
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
+public static class StartupSxcAdam
 {
-    [ShowApiWhenReleased(ShowApiMode.Never)]
+
     public static IServiceCollection AddSxcAdam(this IServiceCollection services)
     {
         // Adam stuff
@@ -35,12 +36,11 @@ public static class SxcAdamStartup
 
         //// Add possibly missing fallback services
         //// This must always be at the end here so it doesn't accidentally replace something we actually need
-        services.AddSxcAdamFallbackServices();
+        services.AddSxcAdamFallbacks();
 
         return services;
     }
 
-    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcAdamWork<TFolder, TFile>(this IServiceCollection services)
     {
         // Helper Services
@@ -73,8 +73,7 @@ public static class SxcAdamStartup
     /// <remarks>
     /// All calls in here MUST use TryAddTransient, and never without the Try
     /// </remarks>
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    public static IServiceCollection AddSxcAdamFallbackServices(this IServiceCollection services)
+    public static IServiceCollection AddSxcAdamFallbacks(this IServiceCollection services)
     {
         // ADAM basics
         // TODO: this doesn't warn yet, there should be an AdamFileSystemUnknown(WarnUseOfUnknown<AdamFileSystemUnknown> warn)

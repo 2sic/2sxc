@@ -1,18 +1,16 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Sxc.Images;
 using ToSic.Sxc.Images.Sys;
 using ToSic.Sxc.Images.Sys.Metadata;
 using ToSic.Sxc.Images.Sys.ResizeSettings;
 using ToSic.Sxc.Services;
 
 // ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Startup;
+namespace ToSic.Sxc.Run.Startup;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public static class SxcImagesStartup
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
+public static class StartupSxcImages
 {
-    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcImages(this IServiceCollection services)
     {
         // new in v12.02/12.04 Image Link Resize Helper

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.Startup;
-using ToSic.Sxc.Startup;
+using ToSic.Eav.Run.Startup;
+using ToSic.Sxc.Run.Startup;
 
 #pragma warning disable CA1822
 
@@ -26,7 +26,7 @@ public class StartupSxcCoreOnly
             .AddDataSourceTestHelpers()
             // First add the "Fallbacks" since these don't have Dnn/Oqtane specific implementations
             // Without this, some of the link tests will fail
-            .AddSxcCoreFallbackServices()
+            .AddSxcCoreFallbacks()
 
             // 2sxc core
             .AddSxcApps()
@@ -46,12 +46,12 @@ public class StartupSxcCoreOnly
 
             .AddEavPersistence()
             .AddEavDataBuild()
-            .AddEavDataStackDumping()
+            .AddEavDataStack()
             .AddEavData()
             // EAV Core and Downstream
             .AddEavCoreLibAndSys()
 
-            .AddSxcAppsFallbackServices()
+            .AddSxcAppsFallbacks()
             .AddEavDataBuildFallbacks()
             .AddEavDataFallbacks()
             .AddAllLibAndSysFallbacks();

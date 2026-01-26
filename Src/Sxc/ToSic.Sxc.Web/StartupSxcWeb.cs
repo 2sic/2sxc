@@ -12,12 +12,11 @@ using ToSic.Sxc.Web.Sys.EditUi;
 using ToSic.Sxc.Web.Sys.Http;
 
 // ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Startup;
+namespace ToSic.Sxc.Run.Startup;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public static class SxcWebStartup
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
+public static class StartupSxcWeb
 {
-    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcWeb(this IServiceCollection services)
     {
         // v15 EditUi Resources
@@ -63,7 +62,6 @@ public static class SxcWebStartup
     }
 
 
-    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddKoi(this IServiceCollection services)
     {
         services.TryAddTransient<Connect.Koi.KoiCss.Dependencies>();
@@ -72,7 +70,6 @@ public static class SxcWebStartup
         return services;
     }
 
-    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddNetVariations(this IServiceCollection services)
     {
 #if NETFRAMEWORK

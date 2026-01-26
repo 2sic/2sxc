@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Render.Sys.JsContext;
 using ToSic.Sxc.Render.Sys.RenderBlock;
@@ -11,12 +10,12 @@ using ToSic.Sxc.Web.Sys.PageFeatures;
 using ToSic.Sxc.Web.Sys.PageService;
 using ToSic.Sxc.Web.Sys.PageServiceShared;
 
-namespace ToSic.Sxc;
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Run.Startup;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public static class SxcRenderStartup
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
+public static class StartupSxcRender
 {
-    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcRender(this IServiceCollection services)
     {
         services.TryAddTransient<Services.IRenderService, RenderService>();  // new 12.05
@@ -62,12 +61,12 @@ public static class SxcRenderStartup
         services.TryAddTransient<BlockCachingHelper>();
 
         // Fallbacks
-        services.AddSxcRenderFallback();
+        services.AddSxcRenderFallbacks();
 
         return services;
     }
 
-    public static IServiceCollection AddSxcRenderFallback(this IServiceCollection services)
+    public static IServiceCollection AddSxcRenderFallbacks(this IServiceCollection services)
     {
         // v16
         services.TryAddScoped<IJsApiService, JsApiServiceUnknown>();

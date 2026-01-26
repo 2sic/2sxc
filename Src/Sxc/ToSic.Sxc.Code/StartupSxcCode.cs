@@ -20,12 +20,11 @@ using ToSic.Sxc.Services.Sys.TypedApiService;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 // ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Startup;
+namespace ToSic.Sxc.Run.Startup;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public static class SxcCodeStartup
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
+public static class StartupSxcCode
 {
-    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcCode(this IServiceCollection services)
     {
         services.TryAddTransient<CodeErrorHelpService>();

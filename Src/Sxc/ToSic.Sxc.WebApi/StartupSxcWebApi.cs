@@ -28,8 +28,8 @@ using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Backend;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public static class StartupWebApi
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
+public static class StartupSxcWebApi
 {
     public static IServiceCollection AddSxcWebApi(this IServiceCollection services)
     {

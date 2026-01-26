@@ -4,12 +4,11 @@ using ToSic.Sxc.Data.Sys.DynamicJacket;
 using ToSic.Sxc.Data.Sys.Typed;
 using ToSic.Sxc.Data.Sys.Wrappers;
 
-namespace ToSic.Sxc;
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Run.Startup;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class SxcDataStartup
 {
-    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcData(this IServiceCollection services)
     {
 

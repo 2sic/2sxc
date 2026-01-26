@@ -14,12 +14,12 @@ using ToSic.Sxc.LookUp.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users.Permissions;
 
-namespace ToSic.Sxc;
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Run.Startup;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public static class SxcBlocksStartup
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
+public static class StartupSxcBlocks
 {
-    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcBlocks(this IServiceCollection services)
     {
         // Note: not sure if this is the best way, it's connected to the blocks needing services
@@ -66,12 +66,12 @@ public static class SxcBlocksStartup
         services.TryAddTransient<WorkBlocksMod>();
         services.TryAddTransient<WorkBlockViewsGet>();
 
-        services.AddSxcBlocksFallback();
+        services.AddSxcBlocksFallbacks();
 
         return services;
     }
 
-    public static IServiceCollection AddSxcBlocksFallback(this IServiceCollection services)
+    public static IServiceCollection AddSxcBlocksFallbacks(this IServiceCollection services)
     {
 
         services.TryAddTransient<IModuleAndBlockBuilder, ModuleAndBlockBuilderUnknown>();

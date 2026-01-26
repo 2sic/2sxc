@@ -7,12 +7,13 @@ using ToSic.Sxc.Apps.Sys.AppTyped;
 using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Apps.Sys.Work;
 
-namespace ToSic.Sxc;
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Run.Startup;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public static class SxcAppsStartup
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
+public static class StartupSxcApps
 {
-    [ShowApiWhenReleased(ShowApiMode.Never)]
+
     public static IServiceCollection AddSxcApps(this IServiceCollection services)
     {
         // App Dependencies
@@ -44,8 +45,7 @@ public static class SxcAppsStartup
         return services;
     }
 
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    public static IServiceCollection AddSxcAppsFallbackServices(this IServiceCollection services)
+    public static IServiceCollection AddSxcAppsFallbacks(this IServiceCollection services)
     {
         services.TryAddTransient<IAppDataConfigProvider, AppDataConfigProviderUnknown>();
 

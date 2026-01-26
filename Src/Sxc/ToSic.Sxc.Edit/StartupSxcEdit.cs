@@ -6,12 +6,12 @@ using ToSic.Sxc.Edit.Toolbar.Sys;
 using ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc;
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Run.Startup;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public static class SxcEditStartup
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
+public static class StartupSxcEdit
 {
-    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcEdit(this IServiceCollection services)
     {
         services.TryAddTransient<IEditService, EditService>();

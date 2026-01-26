@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav;
-using ToSic.Eav.Startup;
+using ToSic.Eav.Run.Startup;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sys.Capabilities.Platform;
 using ToSic.Testing.Shared.Platforms;
@@ -44,7 +44,7 @@ public class Startup
             // EAV Core
             //.AddEavDataPersistence()
             .AddEavDataBuild()
-            .AddEavDataStackDumping()
+            .AddEavDataStack()
             .AddEavData()
 
             // EAV Core and Downstream

@@ -19,12 +19,11 @@ using ToSic.Sxc.Services.User.Sys;
 using ToSic.Sxc.Web;
 
 // ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Startup;
+namespace ToSic.Sxc.Run.Startup;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public static class SxcServicesStartup
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
+public static class StartupSxcServices
 {
-    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcServices(this IServiceCollection services)
     {
         // new in v12.02 - PageService & Page Features

@@ -6,12 +6,10 @@ using ToSic.Sxc.DataSources.Sys;
 using ToSic.Sxc.Services;
 
 // ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Startup;
+namespace ToSic.Sxc.Run.Startup;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public static class SxcCustomStartup
+public static class StartupSxcCustom
 {
-    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcCustom(this IServiceCollection services)
     {
         // Loader of AppDataSources

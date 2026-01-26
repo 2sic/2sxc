@@ -4,12 +4,11 @@ using ToSic.Sxc.Engines;
 using ToSic.Sxc.Polymorphism.Sys;
 
 // ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Startup;
+namespace ToSic.Sxc.Run.Startup;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public static class SxcEnginesStartup
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
+public static class StartupSxcEngines
 {
-    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcEngines(this IServiceCollection services)
     {
         services.TryAddTransient<EngineFactory>();

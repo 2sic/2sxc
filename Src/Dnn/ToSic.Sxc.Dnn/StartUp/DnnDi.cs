@@ -1,14 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav;
-using ToSic.Eav.Startup;
+using ToSic.Eav.Run.Startup;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Backend;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.Dnn.Startup;
-using ToSic.Sxc.Startup;
+using ToSic.Sxc.Run.Startup;
 
 
 namespace ToSic.Sxc.Dnn.StartUp;
@@ -71,8 +71,8 @@ public static class DnnDi
 
         l.A("Will start with 2sxc Fallbacks and RazorBlade parts");
         services
-            .AddSxcAppsFallbackServices()
-            .AddSxcCoreFallbackServices()
+            .AddSxcAppsFallbacks()
+            .AddSxcCoreFallbacks()
             .AddRazorBlade();
 
         l.A("Will start with EAV and WebApi Typed parts");

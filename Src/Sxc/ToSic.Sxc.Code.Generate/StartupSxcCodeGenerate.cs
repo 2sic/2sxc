@@ -5,12 +5,11 @@ using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sxc.Code.Generate.Sys.CSharpBaseClasses;
 
 // ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Startup;
+namespace ToSic.Sxc.Run.Startup;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public static class SxcCodeGenerateStartup
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
+public static class StartupSxcCodeGenerate
 {
-    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcCodeGen(this IServiceCollection services)
     {
         // v17 Code Generators

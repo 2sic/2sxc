@@ -8,12 +8,11 @@ using ToSic.Sxc.DataSources.Sys.AppAssets;
 using ToSic.Sxc.DataSources.Sys.Pages;
 
 // ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Startup;
+namespace ToSic.Sxc.Run.Startup;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public static class SxcCmsStartup
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
+public static class StartupSxcCms
 {
-    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcCms(this IServiceCollection services)
     {
         services.TryAddTransient<IPagePublishing, BasicPagePublishing>();
