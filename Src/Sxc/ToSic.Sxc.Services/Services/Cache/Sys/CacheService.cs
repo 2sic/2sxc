@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Services.Cache.Sys.CacheKey;
@@ -34,10 +35,11 @@ namespace ToSic.Sxc.Services.Cache.Sys;
 /// <param name="cache"></param>
 internal class CacheService(
     MemoryCacheService cache,
-    LazySvc<IAppReaderFactory> appReaders,
+    IRuntimeKeyService runtimeKeyService,
+    LazySvc<IAppsCatalog> appsCatalog,
     Generator<IAppPathsMicroSvc> appPathsLazy,
     ISysFeaturesService features
-    ) : ServiceWithContext($"{SxcLogName}.CchSvc", connect: [cache, appReaders]), ICacheService
+    ) : ServiceWithContext($"{SxcLogName}.CchSvc", connect: [cache, runtimeKeyService, appsCatalog]), ICacheService
 {
     /// <summary>
     /// AppId to use in key generation, so it won't collide with other apps.
@@ -84,9 +86,18 @@ internal class CacheService(
         if (app is IAppWithInternal appWithInternal)
             return appWithInternal.AppReader.Specs.RuntimeKey;
 
-        return AppId > 0
-            ? appReaders.Value.Get(AppId).Specs.RuntimeKey
-            : null;
+        if (AppId <= 0)
+            return null;
+
+        try
+        {
+            var identity = appsCatalog.Value.AppIdentity(AppId);
+            return runtimeKeyService.AppRuntimeKey(identity);
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     public bool Contains(ICacheSpecs specs)
