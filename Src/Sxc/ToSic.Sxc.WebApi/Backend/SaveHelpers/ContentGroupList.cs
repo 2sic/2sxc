@@ -170,7 +170,7 @@ public class ContentGroupList(
 
                 //var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(identifier.GetParentEntityOrError());
                 var contentGroup = appBlocks.GetBlockConfig(identifier.GetParentEntityOrError());
-                var contentTypeName = (contentGroup.View as View)?.GetTypeStaticName(identifier.Field!) ?? "";
+                var contentTypeName = contentGroup.View?.GetTypeStaticName(identifier.Field!) ?? "";
 
                 // if there is no content-type for this, then skip it (don't deliver anything)
                 if (contentTypeName == "")

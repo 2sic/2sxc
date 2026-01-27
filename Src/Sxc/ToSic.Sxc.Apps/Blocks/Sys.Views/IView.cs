@@ -65,8 +65,9 @@ public interface IView: IModelOfEntity, IHasMetadata
     /// </summary>
     [PrivateApi] bool UseForList { get; }
 
-    [PrivateApi] bool PublishData { get; }
-    [PrivateApi] string StreamsToPublish { get; }
+    // Publishing was removed a long time ago, commented out v21
+    //[PrivateApi] bool PublishData { get; }
+    //[PrivateApi] string StreamsToPublish { get; }
 
     /// <summary>
     /// The query which provides data to this view. 

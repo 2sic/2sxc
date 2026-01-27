@@ -68,7 +68,7 @@ public record BlockConfiguration: ModelOfEntityWithLog, IAppIdentity
                                  .FirstOrDefault();
             return field = viewEntity == null
                 ? null
-                : new View(viewEntity, LookupLanguages, Log, _qDefBuilder);
+                : new View(viewEntity, LookupLanguages, _qDefBuilder);
         }
     }
 

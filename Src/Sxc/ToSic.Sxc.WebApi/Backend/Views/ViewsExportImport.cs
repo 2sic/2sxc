@@ -51,7 +51,7 @@ public class ViewsExportImport(
         var appPaths = appPathSvc.Get(appReader, context.Site);
 
         // Attach files
-        var view = new View(bundle.Entity!, [context.Site.CurrentCultureCode], Log, qDefBuilder);
+        var view = new View(bundle.Entity!, [context.Site.CurrentCultureCode], qDefBuilder);
 
         if (!string.IsNullOrEmpty(view.Path))
         {

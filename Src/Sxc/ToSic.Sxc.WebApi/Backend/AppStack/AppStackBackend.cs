@@ -64,7 +64,7 @@ public class AppStackBackend(
         var viewEnt = appState.List.GetOne(viewGuid.Value)
                       ?? throw new($"Tried to get view but not found. Guid was {viewGuid}");
         
-        var view = new View(viewEnt, languages, Log, qDefBuilder);
+        var view = new View(viewEnt, languages, qDefBuilder);
         var viewStackPart = realName == RootNameSettings
             ? view.Settings
             : view.Resources;

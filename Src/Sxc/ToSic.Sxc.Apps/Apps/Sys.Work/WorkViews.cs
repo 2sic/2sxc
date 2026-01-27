@@ -115,7 +115,7 @@ public class WorkViews(
     private IView ViewOfEntity(IEntity? templateEntity, object templateId, bool withServices = true, bool isReplacement = false)
         => templateEntity == null
             ? throw new("The template with id '" + templateId + "' does not exist.")
-            : new View(templateEntity, [cultureResolver.CurrentCultureCode], Log, withServices ? qDefBuilder : null, isReplaced: isReplacement);
+            : new View(templateEntity, [cultureResolver.CurrentCultureCode], withServices ? qDefBuilder : null, isReplaced: isReplacement);
 
 
     // todo: check if this call could be replaced with the normal ContentTypeController.Get to prevent redundant code
