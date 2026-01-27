@@ -3,16 +3,25 @@
 namespace ToSic.Sxc.Images.Sys;
 
 /// <summary>
-/// Internal object to read image copyright metadata.
+/// System Settings regarding Copyright Configuration of an App/Site
 /// </summary>
 /// <remarks>
-/// Created ca. v16.08
+/// * Created ca. v16.08
+/// * As of v21 not actively used in code, but in this structure to ensure consistency
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 public record CopyrightSettings : ModelOfEntityCore
 {
-    public static string TypeNameId = "aed871cf-220b-4330-b368-f1259981c9c8";
-    public static string NiceTypeName = "⚙️CopyrightSettings";
+    /// <summary>
+    /// Where these settings are placed in the Settings structure - for use as prefix when accessing settings.
+    /// </summary>
+    /// <remarks>
+    /// To be used like `SettingsPath + "." + KeyName`
+    /// </remarks>
+    public const string SettingsPath = "Copyright";
+
+    public const string TypeNameId = "aed871cf-220b-4330-b368-f1259981c9c8";
+    public const string NiceTypeName = "⚙️CopyrightSettings";
 
     public CopyrightSettings(IEntity entity) : base(entity) { }
 

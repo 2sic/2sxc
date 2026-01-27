@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Data.Sys.Entities;
-using ToSic.Sxc.Blocks.Sys.Views;
+﻿using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Blocks.Sys.Work;
 
 namespace ToSic.Sxc.Blocks.Sys.BlockEditor;
