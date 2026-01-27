@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Data;
+﻿using ToSic.Eav.Model;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Models;
 
 namespace ToSic.Sxc.DataTests.ModelTests;
@@ -61,7 +62,7 @@ public class DataModelAnalyzerTests
 
     private const string ForContentType1 = "Abc";
     private const string StreamName1 = "AbcStream";
-    [ModelSource(ContentTypes = ForContentType1, Streams = StreamName1)]
+    [ModelSource(ContentType = ForContentType1, Stream = StreamName1)]
     // ReSharper disable once ArrangeTypeMemberModifiers
     class Decorated: ICanWrapData;
 
@@ -89,7 +90,7 @@ public class DataModelAnalyzerTests
 
     private const string ForContentTypeReDecorated = "ReDec";
     private const string StreamNameReDecorated = "ReDecStream";
-    [ModelSource(ContentTypes = ForContentTypeReDecorated, Streams = StreamNameReDecorated + ",Abc")]
+    [ModelSource(ContentType = ForContentTypeReDecorated, Stream = StreamNameReDecorated + ",Abc")]
     // ReSharper disable once ClassNeverInstantiated.Local
     // ReSharper disable once ArrangeTypeMemberModifiers
     class InheritReDecorated : InheritDecorated;
@@ -104,7 +105,7 @@ public class DataModelAnalyzerTests
 
     private const string ForContentTypeIDecorated = "IDec";
     private const string StreamNameIDecorated= "IRedecStream";
-    [ModelSource(ContentTypes = ForContentTypeIDecorated, Streams = StreamNameIDecorated)]
+    [ModelSource(ContentType = ForContentTypeIDecorated, Stream = StreamNameIDecorated)]
     interface IDecorated: ICanWrapData;
 
     [Fact]

@@ -1,6 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.PropertyLookup;
+using ToSic.Eav.Model;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
@@ -60,7 +61,7 @@ namespace Custom.Data;
 /// * It's not abstract, even if the most common case is to inherit, as there are cases where you want to use it directly.
 /// </remarks>
 [PublicApi]
-[ModelSource(ContentTypes = ModelSourceAttribute.ForAnyContentType)]
+[ModelSource(ContentType = ModelSourceAttribute.ForAnyContentType)]
 public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLookup, INeedsFactory
 {
     #region Explicit Interfaces for internal use - Setup, etc.

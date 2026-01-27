@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Data.Sys.Factory;
+﻿using ToSic.Eav.Model;
+using ToSic.Sxc.Data.Sys.Factory;
 
 namespace ToSic.Sxc.Data.Models.Sys;
 
@@ -16,8 +17,8 @@ public class DataModelAnalyzer
         ContentTypeNames.Get<TCustom, ModelSourceAttribute>(a =>
         {
             // If we have an attribute, use the value provided (unless not specified)
-            if (a?.ContentTypes != null)
-                return a.ContentTypes;
+            if (a?.ContentType != null)
+                return a.ContentType;
 
             // If no attribute, use name of type
             var type = typeof(TCustom);
@@ -38,7 +39,7 @@ public class DataModelAnalyzer
     /// <typeparam name="TCustom"></typeparam>
     /// <returns></returns>
     public static List<string> GetContentTypeNamesList<TCustom>() where TCustom : ICanWrapData
-        => ContentTypeNamesList.Get<TCustom, ModelSourceAttribute>(a => UseSpecifiedNameOrDeriveFromType<TCustom>(a?.ContentTypes));
+        => ContentTypeNamesList.Get<TCustom, ModelSourceAttribute>(a => UseSpecifiedNameOrDeriveFromType<TCustom>(a?.ContentType));
     private static readonly ClassAttributeLookup<List<string>> ContentTypeNamesList = new();
 
     /// <summary>
@@ -47,7 +48,7 @@ public class DataModelAnalyzer
     /// <typeparam name="TCustom"></typeparam>
     /// <returns></returns>
     public static List<string> GetStreamNameList<TCustom>() where TCustom : ICanWrapData
-        => StreamNames.Get<TCustom, ModelSourceAttribute>(attribute => UseSpecifiedNameOrDeriveFromType<TCustom>(attribute?.Streams));
+        => StreamNames.Get<TCustom, ModelSourceAttribute>(attribute => UseSpecifiedNameOrDeriveFromType<TCustom>(attribute?.Stream));
 
     private static List<string> UseSpecifiedNameOrDeriveFromType<TCustom>(string? names)
         where TCustom : ICanWrapData
