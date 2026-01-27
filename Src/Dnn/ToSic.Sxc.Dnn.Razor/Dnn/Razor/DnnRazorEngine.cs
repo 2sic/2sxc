@@ -2,6 +2,8 @@
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Engines.Sys;
+using ToSic.Sxc.Render.Sys.Output;
 using ToSic.Sxc.Render.Sys.Specs;
 
 namespace ToSic.Sxc.Dnn.Razor;
@@ -19,17 +21,21 @@ namespace ToSic.Sxc.Dnn.Razor;
 [EngineDefinition(Name = "Razor")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 // ReSharper disable once UnusedMember.Global
-internal class DnnRazorEngine(EngineBase.Dependencies helpers, DnnRazorCompiler razorCompiler)
-    : EngineBase(helpers, connect: [razorCompiler]),
-        IRazorEngine, IEngine
+internal class DnnRazorEngine(
+    EngineSpecsService engineSpecsService,
+    IBlockResourceExtractor blockResourceExtractor,
+    EngineAppRequirements engineAppRequirements,
+    DnnRazorCompiler razorCompiler)
+    : ServiceBase("Dnn.RzEng", connect: [engineSpecsService, blockResourceExtractor, engineAppRequirements, razorCompiler]),
+        IRazorEngine
 {
     /// <inheritdoc />
-    public override RenderEngineResult Render(IBlock block, RenderSpecs specs)
+    public RenderEngineResult Render(IBlock block, RenderSpecs specs)
     {
         var l = Log.Fn<RenderEngineResult>(timer: true);
 
         // Prepare everything
-        var engineSpecs = Services.EngineSpecsService.GetSpecs(block);
+        var engineSpecs = engineSpecsService.GetSpecs(block);
 
         // after Base.init also init the compiler (requires objects which were set up in base.Init)
         razorCompiler.SetupCompiler(engineSpecs);
@@ -44,13 +50,13 @@ internal class DnnRazorEngine(EngineBase.Dependencies helpers, DnnRazorCompiler 
         }
 
         // check if rendering is possible, or throw exceptions...
-        var preFlightResult = Services.EngineAppRequirements.CheckExpectedNoRenderConditions(engineSpecs);
+        var preFlightResult = engineAppRequirements.CheckExpectedNoRenderConditions(engineSpecs);
         if (preFlightResult != null)
             return l.Return(preFlightResult, "error");
 
         // Render and process / return
         var renderedTemplate = DnnRenderImplementation(entryRazorComponent, specs);
-        var result = Services.BlockResourceExtractor.Process(renderedTemplate);
+        var result = blockResourceExtractor.Process(renderedTemplate);
         return l.ReturnAsOk(result);
     }
 

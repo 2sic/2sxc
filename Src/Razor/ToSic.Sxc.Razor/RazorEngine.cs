@@ -6,6 +6,7 @@ using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Engines.Sys;
 using ToSic.Sxc.Render.Sys;
+using ToSic.Sxc.Render.Sys.Output;
 using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Sys.ExecutionContext;
 
@@ -17,28 +18,31 @@ namespace ToSic.Sxc.Razor;
 [PrivateApi("used to be marked as internal, but it doesn't make sense to show in docs")]
 [EngineDefinition(Name = "Razor")]
 internal class RazorEngine(
-    EngineBase.Dependencies services,
+    EngineSpecsService engineSpecsService,
+    IBlockResourceExtractor blockResourceExtractor,
+    EngineAppRequirements engineAppRequirements,
     LazySvc<IRazorRenderer> razorRenderer,
     LazySvc<IExecutionContextFactory> codeRootFactory,
     LazySvc<CodeErrorHelpService> errorHelp,
     LazySvc<IRenderingHelper> renderingHelper)
-    : EngineBase(services, connect: [codeRootFactory, errorHelp, renderingHelper, razorRenderer]), IRazorEngine
+    : ServiceBase("Sxc.RzrEng", connect: [engineSpecsService, blockResourceExtractor, engineAppRequirements, codeRootFactory, errorHelp, renderingHelper, razorRenderer]),
+        IRazorEngine
 {
     /// <inheritdoc />
-    public override RenderEngineResult Render(IBlock block, RenderSpecs specs)
+    public RenderEngineResult Render(IBlock block, RenderSpecs specs)
     {
         var l = Log.Fn<RenderEngineResult>(timer: true);
 
         // Prepare everything
-        var engineSpecs = Services.EngineSpecsService.GetSpecs(block);
+        var engineSpecs = engineSpecsService.GetSpecs(block);
 
         // check if rendering is possible, or throw exceptions...
-        var preFlightResult = Services.EngineAppRequirements.CheckExpectedNoRenderConditions(engineSpecs);
+        var preFlightResult = engineAppRequirements.CheckExpectedNoRenderConditions(engineSpecs);
         if (preFlightResult != null)
             return l.Return(preFlightResult, "error");
 
         var renderedTemplate = RenderEntryRazor(engineSpecs, specs);
-        var result = Services.BlockResourceExtractor.Process(renderedTemplate);
+        var result = blockResourceExtractor.Process(renderedTemplate);
         return l.ReturnAsOk(result);
     }
 

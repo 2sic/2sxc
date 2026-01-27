@@ -14,6 +14,7 @@ using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Engines.Sys;
 using ToSic.Sxc.Engines.Sys.Token;
 using ToSic.Sxc.LookUp.Sys;
+using ToSic.Sxc.Render.Sys.Output;
 using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Utils.Culture;
@@ -28,11 +29,13 @@ namespace ToSic.Sxc.Engines;
 [EngineDefinition(Name = "Token")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class TokenEngine(
-    EngineBase.Dependencies services,
+    EngineSpecsService engineSpecsService,
+    IBlockResourceExtractor blockResourceExtractor,
+    EngineAppRequirements engineAppRequirements,
     IServerPaths serverPaths,
     LazySvc<IExecutionContextFactory> codeRootFactory,
     Generator<IAppDataConfigProvider> tokenEngineWithContext)
-    : EngineBase(services, connect: [codeRootFactory, tokenEngineWithContext]),
+    : ServiceBase("Sxc.TokEng", connect: [engineSpecsService, blockResourceExtractor, engineAppRequirements, codeRootFactory, tokenEngineWithContext]),
         ITokenEngine
         
 {
@@ -87,24 +90,24 @@ public class TokenEngine(
     private TokenReplace _tokenReplace = null!;
 
     /// <inheritdoc />
-    public override RenderEngineResult Render(IBlock block, RenderSpecs specs)
+    public RenderEngineResult Render(IBlock block, RenderSpecs specs)
     {
         var l = Log.Fn<RenderEngineResult>(timer: true);
 
         // Prepare everything
-        var engineSpecs = Services.EngineSpecsService.GetSpecs(block);
+        var engineSpecs = engineSpecsService.GetSpecs(block);
         _executionContext = codeRootFactory.Value
             .New(null, engineSpecs.Block, Log, CompatibilityLevels.CompatibilityLevel9Old);
         _dynamicApiSvc = _executionContext.GetDynamicApi();
         InitTokenReplace(engineSpecs);
 
         // check if rendering is possible, or throw exceptions...
-        var preFlightResult = Services.EngineAppRequirements.CheckExpectedNoRenderConditions(engineSpecs);
+        var preFlightResult = engineAppRequirements.CheckExpectedNoRenderConditions(engineSpecs);
         if (preFlightResult != null)
             return l.Return(preFlightResult, "error");
 
         var renderedTemplate = RenderEntryRazor(engineSpecs, specs);
-        var result = Services.BlockResourceExtractor.Process(renderedTemplate);
+        var result = blockResourceExtractor.Process(renderedTemplate);
         return l.ReturnAsOk(result);
     }
 
