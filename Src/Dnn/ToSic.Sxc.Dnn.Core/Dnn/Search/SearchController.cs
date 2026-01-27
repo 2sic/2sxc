@@ -157,23 +157,7 @@ internal class SearchController(
                 /* Old mode v06.02 - 12.01 using the Engine or Razor which customizes */
                 // Build the engine, as that's responsible for calling inner search stuff
                 var engine = engineFactory.CreateEngine(view);
-                // #RemovedV20 #ModulePublish
-//                if (engine is IEngineDnnOldCompatibility oldEngine)
-//                {
-//#pragma warning disable CS0618
-//                    oldEngine.Init(Block, Purpose.IndexingForSearch);
-
-//                    // Only run CustomizeData() if we're in the older, classic model of search-indexing
-//                    // The new model v12.02 won't need this
-//                    l.A("Will run CustomizeData() in the Razor Engine which will call it in the Razor if exists");
-//                    oldEngine.CustomizeData();
-
-//                    // check if the cshtml has search customizations
-//                    l.A("Will run CustomizeSearch() in the Razor Engine which will call it in the Razor if exists");
-//                    oldEngine.CustomizeSearch(SearchItems, Block.Context.Module, beginDate);
-//#pragma warning restore CS0618
-//                } else
-                    engine.Init(Block);
+                engine.Init(Block);
 
             }
         }

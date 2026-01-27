@@ -2,7 +2,6 @@
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Engines.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
 
 namespace ToSic.Sxc.Dnn.Razor;
@@ -20,11 +19,9 @@ namespace ToSic.Sxc.Dnn.Razor;
 [EngineDefinition(Name = "Razor")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 // ReSharper disable once UnusedMember.Global
-internal partial class DnnRazorEngine(EngineBase.Dependencies helpers, DnnRazorCompiler razorCompiler)
+internal class DnnRazorEngine(EngineBase.Dependencies helpers, DnnRazorCompiler razorCompiler)
     : EngineBase(helpers, connect: [razorCompiler]),
         IRazorEngine
-        // #RemovedV20 #ModulePublish
-        //, IEngineDnnOldCompatibility
 {
     /// <inheritdoc />
     [PrivateApi]
@@ -76,28 +73,7 @@ internal partial class DnnRazorEngine(EngineBase.Dependencies helpers, DnnRazorC
         var razorBuild = razorCompiler.InitWebpage(templatePath, exitIfNoHotBuild: false);
         var pageToInit = razorBuild.Instance;
 
-        // #RemovedV20 #ModulePublish
-        //        if (pageToInit is RazorComponent rzrPage)
-        //        {
-        //#pragma warning disable CS0618
-        //            rzrPage.Purpose = Purpose;
-        //#pragma warning restore CS0618
-        //        }
-
-        // #RemovedV20 #ModulePublish
-        //#pragma warning disable 618, CS0612
-        //        if (pageToInit is SexyContentWebPage oldPage)
-        //            oldPage.InstancePurpose = (InstancePurposes)Purpose;
-        //#pragma warning restore 618, CS0612
-
         return l.ReturnAsOk(new(pageToInit, razorBuild.UsesHotBuild));
 
     }
-
-
-    ///// <summary>
-    ///// Special old mechanism to always request jQuery and Rvt
-    ///// </summary>
-    //public bool OldAutoLoadJQueryAndRvt => EntryRazorComponent.CompatibilityLevel <= CompatibilityLevels.MaxLevelForAutoJQuery;
-
 }

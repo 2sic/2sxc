@@ -7,28 +7,4 @@
 [PrivateApi("Made private in v16.02 since it shouldn't be used any more")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely. There are now better ways of doing this")]
-public abstract class RazorComponentCode: RazorComponent
-{
-    // #RemovedV20 #ModulePublish
-
-//    /// <inheritdoc />
-//    [PrivateApi]
-//    [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely. There are now better ways of doing this")]
-//    public override void CustomizeData() { }
-
-//#pragma warning disable 618
-//    /// <inheritdoc />
-//    [PrivateApi]
-//    [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely. There are now better ways of doing this")]
-//    public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate)
-//    {
-//        CustomizeSearch(searchInfos, moduleInfo as IContainer, beginDate);
-//    }
-
-//    [PrivateApi]
-//    [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely. There are now better ways of doing this")]
-//    public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo, DateTime beginDate) { }
-//#pragma warning restore 618
-
-
-}
+public abstract class RazorComponentCode: RazorComponent;
