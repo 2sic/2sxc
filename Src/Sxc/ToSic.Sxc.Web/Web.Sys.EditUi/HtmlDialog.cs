@@ -13,6 +13,8 @@ namespace ToSic.Sxc.Web.Sys.EditUi;
 public class HtmlDialog
 {
     public const string PageIdInUrl = "pageId";
+    public const string TenantIdInUrl = "tenantId";
+    public const string AliasIdInUrl = "aliasId";
     public const string WithPublicKey = "wpk";
 
     public const string BasePlaceholder = "@base";

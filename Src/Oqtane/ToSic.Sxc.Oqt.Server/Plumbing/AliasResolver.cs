@@ -89,7 +89,7 @@ public class AliasResolver(
         if (request == null) return l.ReturnFalse("request is NULL");
 
         // Find and build Alias
-        siteState.Alias = FindAndBuildAlias(siteId, request);
+        siteState.Alias = FindAlias();
 
         // Store it
         UpdateHttpContextItem(Constants.HttpContextAliasKey, siteState.Alias);
@@ -97,59 +97,12 @@ public class AliasResolver(
         return l.Return(siteState.Alias != null, $"resolved to siteState.Alias:'{siteState.Alias?.Name}'");
     }
 
-    /// <summary>
-    /// Because Site can have many Aliases, default one is not always the right one,
-    /// so we try to find the right one based on the request.
-    /// </summary>
-    /// <param name="siteId"></param>
-    /// <param name="request"></param>
-    /// <returns></returns>
-    private Alias FindAndBuildAlias(int? siteId, HttpRequest request)
+    private Alias FindAlias()
     {
-        var l = Log.Fn<Alias>($"{nameof(siteId)}:{siteId}");
+        var l = Log.Fn<Alias>();
 
-        Alias alias;
-
-        if (request == null) return l.ReturnNull("request is NULL");
-
-        // Try to get alias with info for HttpRequest and eventual SiteId.
-        if (siteId.HasValue || (request.Path is { HasValue: true, Value: not null } /*&& request.Path.Value.Contains("/_blazor")*/))
-        {
-            var url = $"{request.Host}";
-            l.A($"url:{url}");
-
-            var aliases = aliasRepository.Value.GetAliases().ToList(); // cached by Oqtane
-            l.A($"aliases:{aliases.Count}");
-
-            if (siteId.HasValue) // acceptable solution
-            {
-                alias = aliases
-                    .OrderByDescending(a => /*a.IsDefault*/ a.Name.Length) // TODO: a.IsDefault DESC after upgrade to Oqt v3.0.3+
-                    //.ThenByDescending(a => a.Name.Length)
-                    .ThenBy(a => a.Name)
-                    .FirstOrDefault(a =>
-                        a.SiteId == siteId.Value &&
-                        a.Name.StartsWith(url, StringComparison.InvariantCultureIgnoreCase));
-                AddMissingProperties(alias, request);
-                l.A($"siteId:{siteId} => siteState.Alias:'{siteState.Alias?.Name}'");
-            }
-            else // fallback solution, wrong site is possible
-            {
-                alias = tenantManager.Value.GetAlias(); // get alias (note that this also sets SiteState.Alias)
-                l.A($"siteId is NULL => siteState.Alias:'{siteState.Alias?.Name}'");
-            }
-        }
-        else // great solution
-        {
-            var url = $"{request.Host}{request.Path}";
-            l.A($"url:{url}");
-            var aliases = aliasRepository.Value.GetAliases().ToList(); // cached by Oqtane
-            alias = aliases.OrderByDescending(a => a.Name.Length)
-                .ThenBy(a => a.Name)
-                .FirstOrDefault(a => url.StartsWith(a.Name, StringComparison.InvariantCultureIgnoreCase));
-            AddMissingProperties(alias, request);
-            l.A($"siteId is NULL and path is NULL => siteState.Alias:'{siteState.Alias?.Name}'");
-        }
+        var alias= tenantManager.Value.GetAlias(); // get alias (note that this also sets SiteState.Alias)
+        l.A($"siteState.Alias:'{siteState.Alias?.Name}'");
 
         return l.ReturnAsOk(alias);
     }
