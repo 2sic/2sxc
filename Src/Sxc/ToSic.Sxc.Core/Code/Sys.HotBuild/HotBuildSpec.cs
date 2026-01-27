@@ -24,8 +24,7 @@ public class HotBuildSpec(int appId, string? edition, string? appName, string? r
     /// <summary>
     /// App key for cache keys (runtime key when available, otherwise AppId).
     /// </summary>
-    public string AppKeyForCache => _appKeyForCache ??= runtimeKey ?? AppId.ToString();
-    private string? _appKeyForCache;
+    public string AppKeyForCache => field ??= runtimeKey ?? AppId.ToString();
 
     /// <summary>
     /// Override ToString for better debugging

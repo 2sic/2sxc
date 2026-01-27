@@ -1,12 +1,7 @@
-﻿using ToSic.Eav.Environment.Sys.ServerPaths;
-using ToSic.Sxc.Apps.Sys;
-using ToSic.Sxc.Apps.Sys.Paths;
-using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Blocks.Sys.Views;
+﻿using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Engines.Sys;
 using ToSic.Sxc.Render.Sys.Output;
 using ToSic.Sxc.Render.Sys.Specs;
-using IApp = ToSic.Sxc.Apps.IApp;
-using IDataSource = ToSic.Eav.DataSource.IDataSource;
 
 namespace ToSic.Sxc.Engines;
 
@@ -20,24 +15,17 @@ public abstract class EngineBase : ServiceBase<EngineBase.Dependencies>, IEngine
     #region MyServices
 
     public record Dependencies(
-        IServerPaths ServerPaths,
+        EngineSpecsService EngineSpecsService,
         IBlockResourceExtractor BlockResourceExtractor,
-        EngineCheckTemplate EngineCheckTemplate,
-        EnginePolymorphism EnginePolymorphism,
         EngineAppRequirements EngineAppRequirements)
         : DependenciesRecord(connect:
-            [ServerPaths, BlockResourceExtractor, EngineCheckTemplate, EngineAppRequirements, EnginePolymorphism]);
+            [EngineSpecsService, BlockResourceExtractor, EngineAppRequirements]);
 
     #endregion
 
     #region Constructor and DI
 
-    [PrivateApi] protected IView View = null!;
-    [PrivateApi] protected string TemplatePath = null!;
-    [PrivateApi] protected string? Edition;
-    [PrivateApi] protected IApp App = null!;
-    [PrivateApi] protected IDataSource DataSource = null!;
-    [PrivateApi] protected IBlock Block = null!;
+    [PrivateApi] protected EngineSpecs EngineSpecs = null!;
 
     /// <summary>
     /// Empty constructor, so it can be used in dependency injection
@@ -51,46 +39,12 @@ public abstract class EngineBase : ServiceBase<EngineBase.Dependencies>, IEngine
     public virtual void Init(IBlock block)
     {
         var l = Log.Fn();
-
-        // Do various pre-checks and path variations
-        var view = block.View!;
-        var appReader = block.Context.AppReaderRequired;
-        var appPathRootInInstallation = block.App.PathSwitch(view.IsShared, PathTypes.PhysRelative);
-        var (polymorphPathOrNull, edition) = Services.EnginePolymorphism
-            .PolymorphTryToSwitchPath(appPathRootInInstallation, view, appReader);
-
-        var templatePath = polymorphPathOrNull
-                           ?? Path.Combine(appPathRootInInstallation, view.Path).ToAbsolutePathForwardSlash();
-
-        // Throw Exception if Template does not exist
-        if (!File.Exists(Services.ServerPaths.FullAppPath(templatePath)))
-            throw new RenderingException(new()
-            {
-                Name = "Template File Not Found",
-                Detect = "",
-                LinkCode = "err-template-not-found",
-                UiMessage = $"The template file '{templatePath}' does not exist.",
-            });
-
-        // check common errors
-        Services.EngineCheckTemplate.CheckExpectedTemplateErrors(view, appReader);
-
-        // check access permissions - before initializing or running data-code in the template
-        Services.EngineCheckTemplate.ThrowIfViewPermissionsDenyAccess(view, block.Context);
-
-        // All ok, set properties
-        Block = block;
-        View = view;
-        Edition = edition;
-        TemplatePath = templatePath;
-        App = Block.App;
-        DataSource = Block.Data;
-
+        EngineSpecs = Services.EngineSpecsService.GetSpecs(block);
         l.Done();
     }
 
     [PrivateApi]
-    protected abstract (string? Contents, List<Exception>? Exception) RenderEntryRazor(RenderSpecs specs);
+    protected abstract (string? Contents, List<Exception>? Exception) RenderEntryRazor(EngineSpecs engineSpecs, RenderSpecs specs);
 
     /// <inheritdoc />
     public virtual RenderEngineResult Render(RenderSpecs specs)
@@ -98,11 +52,11 @@ public abstract class EngineBase : ServiceBase<EngineBase.Dependencies>, IEngine
         var l = Log.Fn<RenderEngineResult>(timer: true);
             
         // check if rendering is possible, or throw exceptions...
-        var preFlightResult = CheckExpectedNoRenderConditions();
+        var preFlightResult = CheckExpectedNoRenderConditions(EngineSpecs);
         if (preFlightResult != null)
             return l.Return(preFlightResult, $"error: {preFlightResult.ErrorCode}");
 
-        var renderedTemplate = RenderEntryRazor(specs);
+        var renderedTemplate = RenderEntryRazor(EngineSpecs, specs);
         var resourceExtractor = Services.BlockResourceExtractor;
         var result = resourceExtractor.Process(renderedTemplate.Contents ?? "");
         if (renderedTemplate.Exception != null)
@@ -114,18 +68,19 @@ public abstract class EngineBase : ServiceBase<EngineBase.Dependencies>, IEngine
         return l.ReturnAsOk(result);
     }
 
-    private RenderEngineResult? CheckExpectedNoRenderConditions()
+    private RenderEngineResult? CheckExpectedNoRenderConditions(EngineSpecs engineSpecs)
     {
         var l = Log.Fn<RenderEngineResult>();
 
         // Check App Requirements (new 16.08)
+        var block = engineSpecs.Block;
         var appReqProblems = Services.EngineAppRequirements
-            .GetMessageForRequirements(Block.Context.AppReaderRequired);
+            .GetMessageForRequirements(block.Context.AppReaderRequired);
         if (appReqProblems != null)
             return l.Return(appReqProblems, "error");
 
-
-        if (View.ContentType == "" || View.ContentItem != null || Block.Configuration.Content.Any(e => e != null))
+        var view = engineSpecs.View;
+        if (view.ContentType == "" || view.ContentItem != null || block.Configuration.Content.Any(e => e != null))
             return l.ReturnNull("all ok");
 
         var result = new RenderEngineResult

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Engines.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -23,10 +24,10 @@ internal class RazorEngine(
     : EngineBase(services, connect: [codeRootFactory, errorHelp, renderingHelper, razorRenderer]), IRazorEngine
 {
     /// <inheritdoc/>
-    protected override (string? Contents, List<Exception>? Exception) RenderEntryRazor(RenderSpecs specs)
+    protected override (string? Contents, List<Exception>? Exception) RenderEntryRazor(EngineSpecs engineSpecs, RenderSpecs specs)
     {
         var l = Log.Fn<(string?, List<Exception>?)>();
-        var task = RenderTask(specs);
+        var task = RenderTask(engineSpecs, specs);
         try
         {
             task.Wait();
@@ -35,7 +36,7 @@ internal class RazorEngine(
             if (result.Exception == null)
                 return l.ReturnAsOk((result.TextWriter?.ToString(), null));
 
-            var errorMessage = renderingHelper.Value.Init(Block).DesignErrorMessage([result.Exception], true);
+            var errorMessage = renderingHelper.Value.Init(engineSpecs.Block).DesignErrorMessage([result.Exception], true);
             return l.Return((errorMessage, [result.Exception]));
         }
         catch (Exception ex)
@@ -46,17 +47,17 @@ internal class RazorEngine(
     }
 
     [PrivateApi]
-    private async Task<(TextWriter? TextWriter, Exception? Exception)> RenderTask(RenderSpecs specs)
+    private async Task<(TextWriter? TextWriter, Exception? Exception)> RenderTask(EngineSpecs engineSpecs, RenderSpecs specs)
     {
         Log.A("will render into TextWriter");
         RazorView? page = null;
         try
         {
-            if (string.IsNullOrEmpty(TemplatePath))
+            if (string.IsNullOrEmpty(engineSpecs.TemplatePath))
                 return (null, null);
 
             var result = await razorRenderer.Value.RenderToStringAsync(
-                TemplatePath,
+                engineSpecs,
                 specs.Data,
                 rzv =>
                 {
@@ -65,14 +66,12 @@ internal class RazorEngine(
                         return;
 
                     var dynCode = codeRootFactory.Value
-                        .New(asSxc, Block, Log,
+                        .New(asSxc, engineSpecs.Block, Log,
                             compatibilityFallback: CompatibilityLevels.CompatibilityLevel12);
 
                     asSxc.ConnectToRoot(dynCode);
                     // Note: Don't set the purpose here any more, it's a deprecated feature in 12+
-                },
-                App,
-                new(App.AppId, Edition, App.Name)
+                }
             );
             var writer = new StringWriter();
             await writer.WriteAsync(result);

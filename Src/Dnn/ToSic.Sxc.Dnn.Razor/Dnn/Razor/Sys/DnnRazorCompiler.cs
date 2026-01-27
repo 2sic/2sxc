@@ -45,10 +45,10 @@ internal class DnnRazorCompiler(
     protected HotBuildSpec HotBuildSpecs;
     [PrivateApi] protected IBlock Block;
 
-    internal void SetupCompiler(HotBuildSpec specs, IBlock block)
+    internal void SetupCompiler(EngineSpecs engineSpecs)
     {
-        HotBuildSpecs = specs;
-        Block = block;
+        HotBuildSpecs = engineSpecs.ToHotBuildSpec();
+        Block = engineSpecs.Block;
     }
 
 

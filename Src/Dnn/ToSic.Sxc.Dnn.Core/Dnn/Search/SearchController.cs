@@ -116,7 +116,7 @@ internal class SearchController(
     /// <summary>The SearchItems will be initialized, and must exist for the search-index to provide data.</summary>
     public Dictionary<string, List<ISearchItem>> SearchItems;
 
-    private string _edition = default;
+    private string _edition;
 
     /// <summary>
     /// Get search info for each dnn module containing 2sxc data
@@ -127,8 +127,7 @@ internal class SearchController(
         var l = Log.Fn<List<SearchDocument>>();
         // Turn off logging into history by default - the template code can reactivate this if desired
         var logWithPreserve = Log as Log;
-        if (logWithPreserve != null)
-            logWithPreserve.Preserve = false;
+        logWithPreserve?.Preserve = false;
 
         // Log with infos, to ensure errors are caught
         var exitMessage = InitAllAndVerifyIfOk(module);
@@ -254,20 +253,20 @@ internal class SearchController(
     /// </summary>
     private void AttachDnnLookUpsToData(IDataSource dataSource, DnnSite site, ModuleInfo dnnModule)
     {
-        if (dataSource.Configuration?.LookUpEngine != null)
+        if (dataSource.Configuration?.LookUpEngine == null)
+            return;
+
+        Log.A("Will try to attach dnn providers to DataSource LookUps");
+        try
         {
-            Log.A("Will try to attach dnn providers to DataSource LookUps");
-            try
-            {
-                var getLookups = dnnLookUpEngineResolver.Value;
-                var dnnLookUps = (getLookups as DnnLookUpEngineResolver)?.LookUpEngineOfPortalSettings(site.GetContents(), dnnModule.ModuleID);
-                ((LookUpEngine) dataSource.Configuration.LookUpEngine).Link(dnnLookUps);
-            }
-            catch (Exception e)
-            {
-                // Log but keep going, as it's bad, but the lookups may not be important for this module
-                Log.Ex(e);
-            }
+            var getLookups = dnnLookUpEngineResolver.Value;
+            var dnnLookUps = (getLookups as DnnLookUpEngineResolver)?.LookUpEngineOfPortalSettings(site.GetContents(), dnnModule.ModuleID);
+            ((LookUpEngine) dataSource.Configuration.LookUpEngine).Link(dnnLookUps);
+        }
+        catch (Exception e)
+        {
+            // Log but keep going, as it's bad, but the lookups may not be important for this module
+            Log.Ex(e);
         }
     }
 

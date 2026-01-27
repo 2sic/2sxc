@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.LookUp.Sys;
 using ToSic.Eav.LookUp.Sys.Engines;
@@ -10,6 +11,7 @@ using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Data.Sys.Factory;
+using ToSic.Sxc.Engines.Sys;
 using ToSic.Sxc.Engines.Sys.Token;
 using ToSic.Sxc.LookUp.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
@@ -27,6 +29,7 @@ namespace ToSic.Sxc.Engines;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class TokenEngine(
     EngineBase.Dependencies services,
+    IServerPaths serverPaths,
     LazySvc<IExecutionContextFactory> codeRootFactory,
     Generator<IAppDataConfigProvider> tokenEngineWithContext)
     : EngineBase(services, connect: [codeRootFactory, tokenEngineWithContext]),
@@ -88,15 +91,15 @@ public class TokenEngine(
     {
         base.Init(block);
         _executionContext = codeRootFactory.Value
-            .New(null, Block, Log, CompatibilityLevels.CompatibilityLevel9Old);
+            .New(null, EngineSpecs.Block, Log, CompatibilityLevels.CompatibilityLevel9Old);
         _dynamicApiSvc = _executionContext.GetDynamicApi();
         InitTokenReplace();
     }
 
     private void InitTokenReplace()
     {
-        var specs = new SxcAppDataConfigSpecs { BlockForLookupOrNull = Block };
-        var appDataConfig = tokenEngineWithContext.New().GetDataConfiguration((Block.App as SxcAppBase)!, specs);
+        var specs = new SxcAppDataConfigSpecs { BlockForLookupOrNull = EngineSpecs.Block };
+        var appDataConfig = tokenEngineWithContext.New().GetDataConfiguration((EngineSpecs.App as SxcAppBase)!, specs);
 
         var lookUpEngine = new LookUpEngine(appDataConfig.LookUpEngine, Log, sources: [
             new LookUpForTokenTemplate(ViewParts.ListContentLower, _dynamicApiSvc.Header, CultureInfo),
@@ -114,9 +117,9 @@ public class TokenEngine(
 
 
     [PrivateApi]
-    protected override (string Contents, List<Exception>? Exception) RenderEntryRazor(RenderSpecs specs)
+    protected override (string Contents, List<Exception>? Exception) RenderEntryRazor(EngineSpecs engineSpecs, RenderSpecs specs)
     {
-        var templateSource = File.ReadAllText(Services.ServerPaths.FullAppPath(TemplatePath));
+        var templateSource = File.ReadAllText(serverPaths.FullAppPath(engineSpecs.TemplatePath));
         // Convert old <repeat> elements to the new ones
         templateSource = _upgrade6To7Dict.Aggregate(templateSource,
             (current, var) => current.Replace(var.Key, var.Value)
@@ -126,7 +129,8 @@ public class TokenEngine(
         var repeatsMatches = RepeatRegex.Matches(templateSource);       
         var repeatsRendered = new List<string>();
         foreach (Match match in repeatsMatches)
-            repeatsRendered.Add(RenderRepeat(match.Groups[RegexToken.SourceName].Value.ToLowerInvariant(),
+            repeatsRendered.Add(RenderRepeat(engineSpecs,
+                match.Groups[RegexToken.SourceName].Value.ToLowerInvariant(),
                 match.Groups[RegexToken.StreamName].Value,
                 match.Groups[RegexToken.Template].Value));
 
@@ -150,17 +154,17 @@ public class TokenEngine(
     }
 
 
-    private string RenderRepeat(string sourceName, string streamName, string template)
+    private string RenderRepeat(EngineSpecs engineSpecs, string sourceName, string streamName, string template)
     {
         if (string.IsNullOrEmpty(template))
             return "";
 
         var builder = new StringBuilder();
 
-        if (!DataSource.Out.ContainsKey(streamName))
+        if (!engineSpecs.DataSource.Out.ContainsKey(streamName))
             throw new ArgumentException("Was not able to implement REPEAT because I could not find Data:" + streamName + ". Please check spelling the pipeline delivering data to this template.");
 
-        var dataItems = DataSource[streamName]!.List.ToImmutableOpt();
+        var dataItems = engineSpecs.DataSource[streamName]!.List.ToImmutableOpt();
         var itemsCount = dataItems.Count;
         for (var i = 0; i < itemsCount; i++)
         {

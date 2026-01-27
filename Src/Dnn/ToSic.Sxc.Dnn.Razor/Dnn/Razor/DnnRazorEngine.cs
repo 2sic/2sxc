@@ -2,6 +2,7 @@
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Engines.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
 
 namespace ToSic.Sxc.Dnn.Razor;
@@ -30,10 +31,10 @@ internal class DnnRazorEngine(EngineBase.Dependencies helpers, DnnRazorCompiler 
         var l = Log.Fn();
         base.Init(block);
         // after Base.init also init the compiler (requires objects which were set up in base.Init)
-        razorCompiler.SetupCompiler(new(App.AppId, Edition, App.Name), Block);
+        razorCompiler.SetupCompiler(EngineSpecs);
         try
         {
-            EntryRazorComponent = InitWebpageAndOldProperties(TemplatePath)?.Instance;
+            EntryRazorComponent = InitWebpageAndOldProperties(EngineSpecs.TemplatePath)?.Instance;
         }
         // Catch web.config Error on DNNs upgraded to 7
         catch (ConfigurationErrorsException exc)
@@ -52,7 +53,7 @@ internal class DnnRazorEngine(EngineBase.Dependencies helpers, DnnRazorCompiler 
 
 
     [PrivateApi]
-    protected override (string, List<Exception>) RenderEntryRazor(RenderSpecs specs)
+    protected override (string, List<Exception>) RenderEntryRazor(EngineSpecs engineSpecs, RenderSpecs specs)
     {
         var (writer, exceptions) = DnnRenderImplementation(EntryRazorComponent, specs);
         return (writer.ToString(), exceptions);
