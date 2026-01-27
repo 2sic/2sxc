@@ -4,7 +4,9 @@ using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Apps.Sys.FileSystemState;
+using ToSic.Eav.Apps.Sys.Loaders;
 using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.Data.Sys.Dimensions;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Code.Generate.Sys;
@@ -59,10 +61,13 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
         services.AddSingleton<IGlobalConfiguration, FakeGlobalConfiguration>();
         services.AddSingleton<ISite>(site);
         services.AddSingleton<IAppPathsMicroSvc>(appPathSvc);
+        services.AddSingleton<IAppsCatalog, FakeAppsCatalog>();
 
         // Register LazySvc wrappers for basic services using factory overloads (DI will provide sp when resolving)
         services.AddSingleton(sp => new LazySvc<IAppReaderFactory>(sp));
         services.AddSingleton(sp => new LazySvc<IJsonService>(sp));
+        services.AddSingleton<AppsCacheSwitch>(sp => new FakeAppsCacheSwitch());
+        services.AddSingleton<AppCachePurger>(sp => new AppCachePurger(sp.GetRequiredService<IAppsCatalog>(), sp.GetRequiredService<AppsCacheSwitch>()));
         services.AddSingleton(sp => new LazySvc<AppCachePurger>(sp));
         services.AddSingleton<IEnumerable<IFileGenerator>>(_ => Array.Empty<IFileGenerator>());
         services.AddSingleton(sp => new LazySvc<IEnumerable<IFileGenerator>>(sp));
@@ -144,7 +149,7 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
         public IAppReader GetSystemPreset()
             => null!;
         public IAppIdentityPure AppIdentity(int appId)
-            => throw new NotImplementedException();
+            => new AppIdentityPure(1, appId);
         public IAppReader GetZonePrimary(int zoneId)
             => throw new NotImplementedException();
         public IAppReader? TryGet(IAppIdentity appIdentity)
@@ -189,9 +194,10 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
             JsonElement je => je.GetRawText(),
             _ => JsonSerializer.Serialize(item, Options)
         };
-        public string ToJson(object item, int indentation) => JsonSerializer.Serialize(item, 
-            new JsonSerializerOptions(Options) { WriteIndented = indentation > 0 });
-        public T? To<T>(string json) => JsonSerializer.Deserialize<T>(json, Options);
+        public string ToJson(object item, int indentation)
+            => JsonSerializer.Serialize(item, new JsonSerializerOptions(Options) { WriteIndented = indentation > 0 });
+        public T? To<T>(string json)
+            => JsonSerializer.Deserialize<T>(json, Options);
         public object? ToObject(string json)
         {
             try
@@ -204,9 +210,9 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
                 return null;
             }
         }
-        public ITyped ToTyped(string json, NoParamOrder noParamOrder = default, string? fallback = default, bool? propsRequired = default) 
+        public ITyped ToTyped(string json, NoParamOrder noParamOrder = default, string? fallback = default, bool? propsRequired = default)
             => throw new NotImplementedException();
-        public IEnumerable<ITyped> ToTypedList(string json, NoParamOrder noParamOrder = default, string? fallback = default, bool? propsRequired = default) 
+        public IEnumerable<ITyped> ToTypedList(string json, NoParamOrder noParamOrder = default, string? fallback = default, bool? propsRequired = default)
             => throw new NotImplementedException();
     }
 
@@ -239,7 +245,8 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
             Directory.CreateDirectory(tempFolder);
         }
 
-        public string? GetThis(string? key = null) => _values.TryGetValue(key!, out var value) ? value : null;
+        public string? GetThis(string? key = null)
+            => _values.TryGetValue(key!, out var value) ? value : null;
 
         public string? GetThisOrSet(Func<string> generator, string? key = null)
         {
@@ -251,7 +258,8 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
             return value;
         }
 
-        public string GetThisErrorOnNull(string? key = null) => GetThis(key) ?? throw new InvalidOperationException($"Config key '{key}' is null");
+        public string GetThisErrorOnNull(string? key = null)
+            => GetThis(key) ?? throw new InvalidOperationException($"Config key '{key}' is null");
 
         public string? SetThis(string? value, string? key = null)
         {
@@ -266,12 +274,74 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
         {
         }
 
-        public AppJsonConfiguration? GetAppJson(int appId, bool useShared) => null;
+        public AppJsonConfiguration? GetAppJson(int appId, bool useShared)
+            => null;
 
-        public string AppJsonCacheKey(int appId, bool useShared) => string.Empty;
+        public string AppJsonCacheKey(int appId, bool useShared)
+            => string.Empty;
 
         public ICollection<string> ExcludeSearchPatterns(string sourceFolder, int appId, bool useShared)
             => Array.Empty<string>();
+    }
+
+    private class FakeAppsCatalog : IAppsCatalog
+    {
+        public IReadOnlyDictionary<int, string> Apps(int zoneId)
+            => new Dictionary<int, string>();
+
+        public IReadOnlyDictionary<int, Zone> Zones
+            => new Dictionary<int, Zone>();
+
+        public Zone Zone(int zoneId)
+            => new Zone(zoneId, 1, 2, new Dictionary<int, string>(), new List<DimensionDefinition>());
+
+        public IAppIdentityPure DefaultAppIdentity(int zoneId)
+            => new AppIdentityPure(zoneId, 1);
+
+        public IAppIdentityPure PrimaryAppIdentity(int zoneId)
+            => new AppIdentityPure(zoneId, 2);
+
+        public IAppIdentityPure AppIdentity(int appId)
+            => new AppIdentityPure(1, appId);
+
+        public string AppNameId(IAppIdentity appIdentity)
+            => Guid.NewGuid().ToString();
+    }
+
+    private class FakeAppsCacheSwitch : AppsCacheSwitch
+    {
+        private readonly FakeAppsCacheSwitchable _fakeValue = new();
+
+        public FakeAppsCacheSwitch() : base(null!, null!, null!, null!)
+        {
+            // Use reflection to inject the fake value into the private _value field
+            var field = typeof(AppsCacheSwitch).GetField("_value", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (field != null)
+            {
+                var getOnce = field.GetValue(this);
+                var resetMethod = getOnce?.GetType().GetMethod("Reset", new[] { typeof(IAppsCacheSwitchable) });
+                resetMethod?.Invoke(getOnce, new object[] { _fakeValue });
+            }
+        }
+    }
+
+    private class FakeAppsCacheSwitchable : IAppsCacheSwitchable
+    {
+        // IAppsCache methods
+        public void Purge(IAppIdentity app) { }
+        public void PurgeZones() { }
+        public IAppStateCache Get(IAppIdentity app, IAppLoaderTools tools) => null!;
+        IReadOnlyDictionary<int, Zone> IAppsCache.Zones(IAppLoaderTools tools) => new Dictionary<int, Zone>();
+        int IAppsCache.ZoneIdOfApp(int appId, IAppLoaderTools tools) => 1;
+        public bool Has(IAppIdentity app) => false;
+        void IAppsCache.Update(IAppIdentity app, IEnumerable<int> entities, ILog log, IAppLoaderTools tools) { }
+        public void Add(IAppStateCache appState) { }
+        public void Load(IAppIdentity app, string primaryLanguage, IAppLoaderTools tools) { }
+        
+        // ISwitchableService methods
+        public bool IsViable() => true;
+        public int Priority { get; } = 0;
+        public string NameId { get; } = "Fake";
     }
 
     #endregion
