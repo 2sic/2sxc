@@ -34,25 +34,28 @@ internal class DnnRazorEngine(
     {
         var l = Log.Fn<RenderEngineResult>(timer: true);
 
-        // Prepare everything
+        // Prepare #1: Specs
         var engineSpecs = engineSpecsService.GetSpecs(block);
 
-        // after Base.init also init the compiler (requires objects which were set up in base.Init)
+        // Preflight: check if rendering is possible, or throw exceptions...
+        var preFlightResult = engineAppRequirements.CheckExpectedNoRenderConditions(engineSpecs);
+        if (preFlightResult != null)
+            return l.ReturnAsError(preFlightResult);
+
+        // Prepare #2: after Base.init also init the compiler (requires objects which were set up in base.Init)
         razorCompiler.SetupCompiler(engineSpecs);
+
+        // Prepare #3: The entry component
         RazorComponentBase entryRazorComponent;
         try
         {
-            entryRazorComponent = InitWebpageAndOldProperties(engineSpecs.TemplatePath)?.Instance;
+            var razorBuild = razorCompiler.InitWebpage(engineSpecs.TemplatePath, exitIfNoHotBuild: false);
+            entryRazorComponent = razorBuild.Instance;
         }
         catch (ConfigurationErrorsException exc)    // Catch web.config Error on DNNs upgraded to 7
         {
             throw l.Done(new Exception("Configuration Error. Your web.config seems to be wrong in the 2sxc folder.", exc));
         }
-
-        // check if rendering is possible, or throw exceptions...
-        var preFlightResult = engineAppRequirements.CheckExpectedNoRenderConditions(engineSpecs);
-        if (preFlightResult != null)
-            return l.Return(preFlightResult, "error");
 
         // Render and process / return
         var renderedTemplate = DnnRenderImplementation(entryRazorComponent, specs);
@@ -70,16 +73,5 @@ internal class DnnRazorEngine(
             Html = writer.ToString(),
             ExceptionsOrNull = exceptions
         };
-    }
-
-
-    private RazorBuildTempResult<RazorComponentBase> InitWebpageAndOldProperties(string templatePath)
-    {
-        var l = Log.Fn<RazorBuildTempResult<RazorComponentBase>>();
-        var razorBuild = razorCompiler.InitWebpage(templatePath, exitIfNoHotBuild: false);
-        var pageToInit = razorBuild.Instance;
-
-        return l.ReturnAsOk(new(pageToInit, razorBuild.UsesHotBuild));
-
     }
 }

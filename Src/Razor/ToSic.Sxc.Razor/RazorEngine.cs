@@ -33,14 +33,15 @@ internal class RazorEngine(
     {
         var l = Log.Fn<RenderEngineResult>(timer: true);
 
-        // Prepare everything
+        // Prepare #1: Specs
         var engineSpecs = engineSpecsService.GetSpecs(block);
 
-        // check if rendering is possible, or throw exceptions...
+        // Preflight: check if rendering is possible, or throw exceptions...
         var preFlightResult = engineAppRequirements.CheckExpectedNoRenderConditions(engineSpecs);
         if (preFlightResult != null)
-            return l.Return(preFlightResult, "error");
+            return l.ReturnAsError(preFlightResult);
 
+        // Render and process / return
         var renderedTemplate = RenderEntryRazor(engineSpecs, specs);
         var result = blockResourceExtractor.Process(renderedTemplate);
         return l.ReturnAsOk(result);

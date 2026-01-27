@@ -37,7 +37,6 @@ public class TokenEngine(
     Generator<IAppDataConfigProvider> tokenEngineWithContext)
     : ServiceBase("Sxc.TokEng", connect: [engineSpecsService, blockResourceExtractor, engineAppRequirements, codeRootFactory, tokenEngineWithContext]),
         ITokenEngine
-        
 {
     #region Replacement List to still support old Tokens
 
@@ -84,56 +83,51 @@ public class TokenEngine(
         | RegexOptions.IgnorePatternWhitespace);
     #endregion
 
-    private IExecutionContext _executionContext = null!;
-    private ICodeDynamicApiHelper _dynamicApiSvc = null!;
-
-    private TokenReplace _tokenReplace = null!;
-
     /// <inheritdoc />
     public RenderEngineResult Render(IBlock block, RenderSpecs specs)
     {
         var l = Log.Fn<RenderEngineResult>(timer: true);
 
-        // Prepare everything
+        // Prepare #1: Specs
         var engineSpecs = engineSpecsService.GetSpecs(block);
-        _executionContext = codeRootFactory.Value
-            .New(null, engineSpecs.Block, Log, CompatibilityLevels.CompatibilityLevel9Old);
-        _dynamicApiSvc = _executionContext.GetDynamicApi();
-        InitTokenReplace(engineSpecs);
 
-        // check if rendering is possible, or throw exceptions...
+        // Preflight: check if rendering is possible, or throw exceptions...
         var preFlightResult = engineAppRequirements.CheckExpectedNoRenderConditions(engineSpecs);
         if (preFlightResult != null)
-            return l.Return(preFlightResult, "error");
+            return l.ReturnAsError(preFlightResult);
 
-        var renderedTemplate = RenderEntryRazor(engineSpecs, specs);
+        // Prepare #2: Helpers etc.
+        var executionContext = codeRootFactory.Value.New(
+            null,
+            engineSpecs.Block,
+            Log,
+            CompatibilityLevels.CompatibilityLevel9Old
+        );
+        var cdf = executionContext.GetCdf();
+        var cultureInfo = CultureHelpers.SafeCultureInfo(cdf.Dimensions);
+        var rootLookups = InitTokenReplace(executionContext.GetDynamicApi(), engineSpecs, cultureInfo);
+
+        // Render and process / return
+        var renderedTemplate = RenderTokenTemplate(engineSpecs, specs, cdf, cultureInfo, rootLookups);
         var result = blockResourceExtractor.Process(renderedTemplate);
         return l.ReturnAsOk(result);
     }
 
 
-    private void InitTokenReplace(EngineSpecs engineSpecs)
+    private LookUpEngine InitTokenReplace(ICodeDynamicApiHelper codeApiHelper, EngineSpecs engineSpecs, CultureInfo cultureInfo)
     {
         var specs = new SxcAppDataConfigSpecs { BlockForLookupOrNull = engineSpecs.Block };
         var appDataConfig = tokenEngineWithContext.New().GetDataConfiguration((engineSpecs.App as SxcAppBase)!, specs);
 
-        var lookUpEngine = new LookUpEngine(appDataConfig.LookUpEngine, Log, sources: [
-            new LookUpForTokenTemplate(ViewParts.ListContentLower, _dynamicApiSvc.Header, CultureInfo),
-            new LookUpForTokenTemplate(ViewParts.ContentLower, _dynamicApiSvc.Content, CultureInfo),
+        return new(appDataConfig.LookUpEngine, Log, sources: [
+            new LookUpForTokenTemplate(ViewParts.ListContentLower, codeApiHelper.Header, cultureInfo),
+            new LookUpForTokenTemplate(ViewParts.ContentLower, codeApiHelper.Content, cultureInfo),
         ]);
-
-        _tokenReplace = new(lookUpEngine);
     }
-
-    [field: AllowNull, MaybeNull]
-    private ICodeDataFactory Cdf => field ??= _executionContext.GetCdf();
-
-    [field: AllowNull, MaybeNull]
-    private CultureInfo CultureInfo => field ??= CultureHelpers.SafeCultureInfo(Cdf.Dimensions);
 
 
     [PrivateApi]
-    protected RenderEngineResultRaw RenderEntryRazor(EngineSpecs engineSpecs, RenderSpecs specs)
+    protected RenderEngineResultRaw RenderTokenTemplate(EngineSpecs engineSpecs, RenderSpecs specs, ICodeDataFactory cdf, CultureInfo cultureInfo, LookUpEngine rootLookups)
     {
         var l = Log.Fn<RenderEngineResultRaw>();
         var templateSource = File.ReadAllText(serverPaths.FullAppPath(engineSpecs.TemplatePath));
@@ -146,7 +140,11 @@ public class TokenEngine(
         var repeatsMatches = RepeatRegex.Matches(templateSource);       
         var repeatsRendered = new List<string>();
         foreach (Match match in repeatsMatches)
-            repeatsRendered.Add(RenderRepeat(engineSpecs,
+            repeatsRendered.Add(RenderRepeat(
+                engineSpecs,
+                cdf,
+                cultureInfo,
+                rootLookups,
                 match.Groups[RegexToken.SourceName].Value.ToLowerInvariant(),
                 match.Groups[RegexToken.StreamName].Value,
                 match.Groups[RegexToken.Template].Value));
@@ -155,7 +153,7 @@ public class TokenEngine(
         // the templates contained with placeholders, so the templates in the <repeat>s 
         // are not rendered twice)
         var template = RepeatRegex.Replace(templateSource, RepeatPlaceholder);
-        var rendered = RenderSection(template, new Dictionary<string, ILookUp>());
+        var rendered = RenderSection(template, rootLookups, new Dictionary<string, ILookUp>());
 
         // Insert <repeat>s rendered to the template target
         var repeatsIndexes = FindAllIndexesOfString(rendered, RepeatPlaceholder);
@@ -171,7 +169,7 @@ public class TokenEngine(
     }
 
 
-    private string RenderRepeat(EngineSpecs engineSpecs, string sourceName, string streamName, string template)
+    private string RenderRepeat(EngineSpecs engineSpecs, ICodeDataFactory cdf, CultureInfo cultureInfo, LookUpEngine rootLookups, string sourceName, string streamName, string template)
     {
         if (string.IsNullOrEmpty(template))
             return "";
@@ -186,25 +184,25 @@ public class TokenEngine(
         for (var i = 0; i < itemsCount; i++)
         {
             // Create property sources for the current data item (for the current data item and its list information)
-            var dynEntity = Cdf.AsDynamic(dataItems.ElementAt(i), new() { ItemIsStrict = false });
+            var dynEntity = cdf.AsDynamic(dataItems.ElementAt(i), new() { ItemIsStrict = false });
             var propertySources = new Dictionary<string, ILookUp>
             {
-                { sourceName, new LookUpForTokenTemplate(sourceName, dynEntity, CultureInfo, i, itemsCount) }
+                { sourceName, new LookUpForTokenTemplate(sourceName, dynEntity, cultureInfo, i, itemsCount) }
             };
-            builder.Append(RenderSection(template, propertySources));
+            builder.Append(RenderSection(template, rootLookups, propertySources));
         }
 
         return builder.ToString();
     }
 
-    private string RenderSection(string template, IDictionary<string, ILookUp> valuesForThisInstanceOnly)
+    private string RenderSection(string template, LookUpEngine rootLookups, IDictionary<string, ILookUp> valuesForThisInstanceOnly)
     {
         var l = Log.Fn<string>($"{nameof(valuesForThisInstanceOnly)}: {valuesForThisInstanceOnly.Count}");
         if (string.IsNullOrEmpty(template))
             return l.Return("", "empty");
 
         // Get the existing sources and remove the ones which would be duplicate
-        var sources = _tokenReplace.LookupEngine.Sources.ToList();
+        var sources = rootLookups.Sources.ToList();
         foreach (var src in valuesForThisInstanceOnly)
         {
             var lookup = sources.GetSource(src.Key);
@@ -213,7 +211,7 @@ public class TokenEngine(
         }
 
         // Create a new lookup engine with the new sources; but skip the original sources; only use the downstream
-        var newEngine = new LookUpEngine(_tokenReplace.LookupEngine, Log, sources: [..valuesForThisInstanceOnly.Values, ..sources], skipOriginalSource: true);
+        var newEngine = new LookUpEngine(rootLookups, Log, sources: [..valuesForThisInstanceOnly.Values, ..sources], skipOriginalSource: true);
         var tokenReplace = new TokenReplace(newEngine);
 
         // Render
