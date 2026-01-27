@@ -1,5 +1,6 @@
 ﻿using Custom.Razor.Sys;
 using Microsoft.AspNetCore.Mvc.Razor;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Engines;
@@ -23,6 +24,13 @@ internal class RazorEngine(
     LazySvc<IRenderingHelper> renderingHelper)
     : EngineBase(services, connect: [codeRootFactory, errorHelp, renderingHelper, razorRenderer]), IRazorEngine
 {
+    public override void Init(IBlock block)
+    {
+        var l = Log.Fn();
+        EngineSpecs = Services.EngineSpecsService.GetSpecs(block);
+        l.Done();
+    }
+
     /// <inheritdoc/>
     protected override (string? Contents, List<Exception>? Exception) RenderEntryRazor(EngineSpecs engineSpecs, RenderSpecs specs)
     {

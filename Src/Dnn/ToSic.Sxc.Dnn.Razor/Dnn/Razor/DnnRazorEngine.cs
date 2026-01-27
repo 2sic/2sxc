@@ -29,7 +29,8 @@ internal class DnnRazorEngine(EngineBase.Dependencies helpers, DnnRazorCompiler 
     public override void Init(IBlock block)
     {
         var l = Log.Fn();
-        base.Init(block);
+        //base.Init(block);
+        EngineSpecs = Services.EngineSpecsService.GetSpecs(block);
         // after Base.init also init the compiler (requires objects which were set up in base.Init)
         razorCompiler.SetupCompiler(EngineSpecs);
         try

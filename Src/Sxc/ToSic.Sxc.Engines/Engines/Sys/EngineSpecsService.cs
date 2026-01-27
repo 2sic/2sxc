@@ -11,6 +11,12 @@ public class EngineSpecsService(
     EngineCheckTemplate engineCheckTemplate
 ) : ServiceBase("Sxc.EgSpec", connect: [serverPaths, enginePolymorphism, engineCheckTemplate])
 {
+    /// <summary>
+    /// Do various preflight checks and create the Engine Specs according to the information in the BlockSpecs
+    /// </summary>
+    /// <param name="block"></param>
+    /// <returns></returns>
+    /// <exception cref="RenderingException"></exception>
     public EngineSpecs GetSpecs(IBlock block)
     {
         var l = Log.Fn<EngineSpecs>();

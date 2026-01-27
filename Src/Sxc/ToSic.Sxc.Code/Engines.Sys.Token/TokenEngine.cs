@@ -89,7 +89,8 @@ public class TokenEngine(
     [PrivateApi]
     public override void Init(IBlock block)
     {
-        base.Init(block);
+        //base.Init(block);
+        EngineSpecs = Services.EngineSpecsService.GetSpecs(block);
         _executionContext = codeRootFactory.Value
             .New(null, EngineSpecs.Block, Log, CompatibilityLevels.CompatibilityLevel9Old);
         _dynamicApiSvc = _executionContext.GetDynamicApi();

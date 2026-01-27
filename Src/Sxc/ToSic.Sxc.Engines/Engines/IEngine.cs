@@ -19,5 +19,5 @@ public interface IEngine: IHasLog
     /// Renders a template, returning a string with the rendered template.
     /// </summary>
     /// <returns>The string - usually HTML - which the engine created. </returns>
-    RenderEngineResult Render(RenderSpecs specs);
+    RenderEngineResult Render(IBlock block, RenderSpecs specs);
 }

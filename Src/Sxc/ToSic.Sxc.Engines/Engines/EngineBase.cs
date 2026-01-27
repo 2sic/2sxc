@@ -36,29 +36,23 @@ public abstract class EngineBase : ServiceBase<EngineBase.Dependencies>, IEngine
 
     #endregion
 
-    public virtual void Init(IBlock block)
-    {
-        var l = Log.Fn();
-        EngineSpecs = Services.EngineSpecsService.GetSpecs(block);
-        l.Done();
-    }
+    public abstract void Init(IBlock block);
 
     [PrivateApi]
     protected abstract (string? Contents, List<Exception>? Exception) RenderEntryRazor(EngineSpecs engineSpecs, RenderSpecs specs);
 
     /// <inheritdoc />
-    public virtual RenderEngineResult Render(RenderSpecs specs)
+    public virtual RenderEngineResult Render(IBlock block, RenderSpecs specs)
     {
         var l = Log.Fn<RenderEngineResult>(timer: true);
             
         // check if rendering is possible, or throw exceptions...
-        var preFlightResult = CheckExpectedNoRenderConditions(EngineSpecs);
+        var preFlightResult = Services.EngineAppRequirements.CheckExpectedNoRenderConditions(EngineSpecs);
         if (preFlightResult != null)
-            return l.Return(preFlightResult, $"error: {preFlightResult.ErrorCode}");
+            return l.Return(preFlightResult, "error");
 
         var renderedTemplate = RenderEntryRazor(EngineSpecs, specs);
-        var resourceExtractor = Services.BlockResourceExtractor;
-        var result = resourceExtractor.Process(renderedTemplate.Contents ?? "");
+        var result = Services.BlockResourceExtractor.Process(renderedTemplate.Contents ?? "");
         if (renderedTemplate.Exception != null)
             result = result with
             {
@@ -66,33 +60,6 @@ public abstract class EngineBase : ServiceBase<EngineBase.Dependencies>, IEngine
                 ExceptionsOrNull = result.ExceptionsOrNull ?? renderedTemplate.Exception,
             };
         return l.ReturnAsOk(result);
-    }
-
-    private RenderEngineResult? CheckExpectedNoRenderConditions(EngineSpecs engineSpecs)
-    {
-        var l = Log.Fn<RenderEngineResult>();
-
-        // Check App Requirements (new 16.08)
-        var block = engineSpecs.Block;
-        var appReqProblems = Services.EngineAppRequirements
-            .GetMessageForRequirements(block.Context.AppReaderRequired);
-        if (appReqProblems != null)
-            return l.Return(appReqProblems, "error");
-
-        var view = engineSpecs.View;
-        if (view.ContentType == "" || view.ContentItem != null || block.Configuration.Content.Any(e => e != null))
-            return l.ReturnNull("all ok");
-
-        var result = new RenderEngineResult
-        {
-            Html = EngineMessages.ToolbarForEmptyTemplate,
-            ActivateJsApi = false,
-            Assets = [],
-            ErrorCode = null,
-            ExceptionsOrNull = null, // should be null, to indicate no exceptions
-        };
-        return l.Return(result, "error");
-
     }
 
 }

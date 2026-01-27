@@ -152,7 +152,7 @@ public partial class BlockBuilder
                         l.A("standard case, found template, will render");
                         var engine = GetEngine()
                                      ?? throw new("Engine missing, probably no view configured.");
-                        var renderEngineResult = engine.Render(specs);
+                        var renderEngineResult = engine.Render(Block, specs);
                         body = renderEngineResult.Html;
                         if (renderEngineResult.ExceptionsOrNull != null)
                             exceptions.AddRange(renderEngineResult.ExceptionsOrNull);
@@ -295,7 +295,7 @@ public partial class BlockBuilder
     /// In some cases, the engine is needed early on to be sure if we need to do some overrides, but execution should then be later on Render()
     /// </summary>
     /// <returns></returns>
-    public IEngine? GetEngine()
+    private IEngine? GetEngine()
     {
         var l = Log.Fn<IEngine>(timer: true);
         if (_engine != null)

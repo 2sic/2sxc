@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Metadata.Requirements.Sys;
+using ToSic.Sxc.Engines.Sys;
 using ToSic.Sys.Requirements;
 
 namespace ToSic.Sxc.Engines;
@@ -8,7 +9,33 @@ namespace ToSic.Sxc.Engines;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class EngineAppRequirements(IRequirementsService requirements) : EngineRequirementsBase("Eng.AppReq", connect: [requirements])
 {
-    internal bool RequirementsMet(IAppReader appReader) 
+    public RenderEngineResult? CheckExpectedNoRenderConditions(EngineSpecs engineSpecs)
+    {
+        var l = Log.Fn<RenderEngineResult>();
+
+        // Check App Requirements (new 16.08)
+        var block = engineSpecs.Block;
+        var appReqProblems = GetMessageForRequirements(block.Context.AppReaderRequired);
+        if (appReqProblems != null)
+            return l.Return(appReqProblems, "error");
+
+        var view = engineSpecs.View;
+        if (view.ContentType == "" || view.ContentItem != null || block.Configuration.Content.Any(e => e != null))
+            return l.ReturnNull("all ok");
+
+        var result = new RenderEngineResult
+        {
+            Html = EngineMessages.ToolbarForEmptyTemplate,
+            ActivateJsApi = false,
+            Assets = [],
+            ErrorCode = null,
+            ExceptionsOrNull = null, // should be null, to indicate no exceptions
+        };
+        return l.Return(result, "error");
+
+    }
+
+    private bool RequirementsMet(IAppReader appReader) 
         => !RequirementsStatus(appReader).SafeAny();
 
     private List<RequirementStatus> RequirementsStatus(IAppReader appReader)
