@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Data;
+﻿using ToSic.Eav.Model.Sys;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Models.Sys;
 
 namespace ToSic.Sxc.DataTests.ModelTests;
