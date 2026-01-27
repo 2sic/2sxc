@@ -21,4 +21,5 @@ public interface IBlockResourceExtractor: IHasLog
     /// </returns>
     RenderEngineResult Process(string html, ClientAssetsExtractSettings settings);
 
+    RenderEngineResult Process(RenderEngineResultRaw resultRaw);
 }

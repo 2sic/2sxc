@@ -86,21 +86,33 @@ public class TokenEngine(
 
     private TokenReplace _tokenReplace = null!;
 
-    [PrivateApi]
-    public override void Init(IBlock block)
+    /// <inheritdoc />
+    public override RenderEngineResult Render(IBlock block, RenderSpecs specs)
     {
-        //base.Init(block);
-        EngineSpecs = Services.EngineSpecsService.GetSpecs(block);
+        var l = Log.Fn<RenderEngineResult>(timer: true);
+
+        // Prepare everything
+        var engineSpecs = Services.EngineSpecsService.GetSpecs(block);
         _executionContext = codeRootFactory.Value
-            .New(null, EngineSpecs.Block, Log, CompatibilityLevels.CompatibilityLevel9Old);
+            .New(null, engineSpecs.Block, Log, CompatibilityLevels.CompatibilityLevel9Old);
         _dynamicApiSvc = _executionContext.GetDynamicApi();
-        InitTokenReplace();
+        InitTokenReplace(engineSpecs);
+
+        // check if rendering is possible, or throw exceptions...
+        var preFlightResult = Services.EngineAppRequirements.CheckExpectedNoRenderConditions(engineSpecs);
+        if (preFlightResult != null)
+            return l.Return(preFlightResult, "error");
+
+        var renderedTemplate = RenderEntryRazor(engineSpecs, specs);
+        var result = Services.BlockResourceExtractor.Process(renderedTemplate);
+        return l.ReturnAsOk(result);
     }
 
-    private void InitTokenReplace()
+
+    private void InitTokenReplace(EngineSpecs engineSpecs)
     {
-        var specs = new SxcAppDataConfigSpecs { BlockForLookupOrNull = EngineSpecs.Block };
-        var appDataConfig = tokenEngineWithContext.New().GetDataConfiguration((EngineSpecs.App as SxcAppBase)!, specs);
+        var specs = new SxcAppDataConfigSpecs { BlockForLookupOrNull = engineSpecs.Block };
+        var appDataConfig = tokenEngineWithContext.New().GetDataConfiguration((engineSpecs.App as SxcAppBase)!, specs);
 
         var lookUpEngine = new LookUpEngine(appDataConfig.LookUpEngine, Log, sources: [
             new LookUpForTokenTemplate(ViewParts.ListContentLower, _dynamicApiSvc.Header, CultureInfo),
@@ -118,8 +130,9 @@ public class TokenEngine(
 
 
     [PrivateApi]
-    protected override (string Contents, List<Exception>? Exception) RenderEntryRazor(EngineSpecs engineSpecs, RenderSpecs specs)
+    protected RenderEngineResultRaw RenderEntryRazor(EngineSpecs engineSpecs, RenderSpecs specs)
     {
+        var l = Log.Fn<RenderEngineResultRaw>();
         var templateSource = File.ReadAllText(serverPaths.FullAppPath(engineSpecs.TemplatePath));
         // Convert old <repeat> elements to the new ones
         templateSource = _upgrade6To7Dict.Aggregate(templateSource,
@@ -151,7 +164,7 @@ public class TokenEngine(
                 .Remove(repeatsIndexes[i], RepeatPlaceholder.Length)
                 .Insert(repeatsIndexes[i], repeatsRendered[i]);
 
-        return (renderedBuilder.ToString(), null);
+        return l.Return(new() { Html = renderedBuilder.ToString(), ExceptionsOrNull = null });
     }
 
 

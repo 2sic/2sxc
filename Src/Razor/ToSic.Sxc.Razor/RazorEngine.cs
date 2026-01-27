@@ -24,17 +24,28 @@ internal class RazorEngine(
     LazySvc<IRenderingHelper> renderingHelper)
     : EngineBase(services, connect: [codeRootFactory, errorHelp, renderingHelper, razorRenderer]), IRazorEngine
 {
-    public override void Init(IBlock block)
+    /// <inheritdoc />
+    public override RenderEngineResult Render(IBlock block, RenderSpecs specs)
     {
-        var l = Log.Fn();
-        EngineSpecs = Services.EngineSpecsService.GetSpecs(block);
-        l.Done();
+        var l = Log.Fn<RenderEngineResult>(timer: true);
+
+        // Prepare everything
+        var engineSpecs = Services.EngineSpecsService.GetSpecs(block);
+
+        // check if rendering is possible, or throw exceptions...
+        var preFlightResult = Services.EngineAppRequirements.CheckExpectedNoRenderConditions(engineSpecs);
+        if (preFlightResult != null)
+            return l.Return(preFlightResult, "error");
+
+        var renderedTemplate = RenderEntryRazor(engineSpecs, specs);
+        var result = Services.BlockResourceExtractor.Process(renderedTemplate);
+        return l.ReturnAsOk(result);
     }
 
     /// <inheritdoc/>
-    protected override (string? Contents, List<Exception>? Exception) RenderEntryRazor(EngineSpecs engineSpecs, RenderSpecs specs)
+    private RenderEngineResultRaw RenderEntryRazor(EngineSpecs engineSpecs, RenderSpecs specs)
     {
-        var l = Log.Fn<(string?, List<Exception>?)>();
+        var l = Log.Fn<RenderEngineResultRaw>();
         var task = RenderTask(engineSpecs, specs);
         try
         {
@@ -42,15 +53,27 @@ internal class RazorEngine(
             var result = task.Result;
 
             if (result.Exception == null)
-                return l.ReturnAsOk((result.TextWriter?.ToString(), null));
+                return l.ReturnAsOk(new ()
+                {
+                    Html = result.TextWriter?.ToString() ?? "",
+                    ExceptionsOrNull  = null
+                });
 
             var errorMessage = renderingHelper.Value.Init(engineSpecs.Block).DesignErrorMessage([result.Exception], true);
-            return l.Return((errorMessage, [result.Exception]));
+            return l.Return(new ()
+            {
+                Html = errorMessage ?? "",
+                ExceptionsOrNull = [result.Exception]
+            });
         }
         catch (Exception ex)
         {
             var myEx = task.Exception?.InnerException ?? ex;
-            return l.Return((myEx.ToString(), [myEx]));
+            return l.Return(new ()
+            {
+                Html = myEx.ToString(),
+                ExceptionsOrNull = [myEx]
+            });
         }
     }
 

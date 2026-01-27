@@ -151,14 +151,15 @@ internal class SearchController(
                 customizeSearch.CustomizeSearch(SearchItems, Block.Context.Module, beginDate);
                 l.A("Executed CustomizeSearch");
             }
-            else
-            {
-                /* Old mode v06.02 - 12.01 using the Engine or Razor which customizes */
-                // Build the engine, as that's responsible for calling inner search stuff
-                var engine = engineFactory.CreateEngine(view);
-                engine.Init(Block);
+            // 2026-01-27 2dm v21 - old search implementation has been deprecated in v20
+            //else
+            //{
+            //    /* Old mode v06.02 - 12.01 using the Engine or Razor which customizes */
+            //    // Build the engine, as that's responsible for calling inner search stuff
+            //    var engine = engineFactory.CreateEngine(view);
+            //    engine.Init(Block);
 
-            }
+            //}
         }
         catch (Exception e)
         {

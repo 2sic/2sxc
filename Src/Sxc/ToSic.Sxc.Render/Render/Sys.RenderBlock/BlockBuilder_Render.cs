@@ -304,7 +304,7 @@ public partial class BlockBuilder
         if (!Block.ViewIsReady)
             return l.ReturnNull("no data / view");
         _engine = Services.EngineFactory.CreateEngine(Block.View);
-        _engine.Init(Block);
+        //_engine.Init(Block);
         return l.Return(_engine, "created");
     }
     private IEngine? _engine;

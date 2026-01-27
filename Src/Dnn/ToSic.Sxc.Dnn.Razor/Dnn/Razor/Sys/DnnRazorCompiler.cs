@@ -148,7 +148,8 @@ internal class DnnRazorCompiler(
     public RazorBuildTempResult<RazorComponentBase> InitWebpage(string templatePath, bool exitIfNoHotBuild)
     {
         var l = Log.Fn<RazorBuildTempResult<RazorComponentBase>>();
-        if (string.IsNullOrEmpty(templatePath)) return l.ReturnNull("null path");
+        if (string.IsNullOrEmpty(templatePath))
+            return l.ReturnNull("null path");
 
         // Try to build, but exit if we don't use HotBuild
         var razorBuild = CreateWebPageInstance(templatePath);

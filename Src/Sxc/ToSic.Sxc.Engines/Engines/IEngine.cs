@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Engines;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IEngine: IHasLog
 {
-    void Init(IBlock block);
+    //void Init(IBlock block);
 
     /// <summary>
     /// Renders a template, returning a string with the rendered template.

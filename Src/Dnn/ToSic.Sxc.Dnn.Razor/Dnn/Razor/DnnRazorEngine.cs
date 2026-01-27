@@ -2,7 +2,6 @@
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Engines.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
 
 namespace ToSic.Sxc.Dnn.Razor;
@@ -22,50 +21,49 @@ namespace ToSic.Sxc.Dnn.Razor;
 // ReSharper disable once UnusedMember.Global
 internal class DnnRazorEngine(EngineBase.Dependencies helpers, DnnRazorCompiler razorCompiler)
     : EngineBase(helpers, connect: [razorCompiler]),
-        IRazorEngine
+        IRazorEngine, IEngine
 {
     /// <inheritdoc />
-    [PrivateApi]
-    public override void Init(IBlock block)
+    public override RenderEngineResult Render(IBlock block, RenderSpecs specs)
     {
-        var l = Log.Fn();
-        //base.Init(block);
-        EngineSpecs = Services.EngineSpecsService.GetSpecs(block);
+        var l = Log.Fn<RenderEngineResult>(timer: true);
+
+        // Prepare everything
+        var engineSpecs = Services.EngineSpecsService.GetSpecs(block);
+
         // after Base.init also init the compiler (requires objects which were set up in base.Init)
-        razorCompiler.SetupCompiler(EngineSpecs);
+        razorCompiler.SetupCompiler(engineSpecs);
+        RazorComponentBase entryRazorComponent;
         try
         {
-            EntryRazorComponent = InitWebpageAndOldProperties(EngineSpecs.TemplatePath)?.Instance;
+            entryRazorComponent = InitWebpageAndOldProperties(engineSpecs.TemplatePath)?.Instance;
         }
-        // Catch web.config Error on DNNs upgraded to 7
-        catch (ConfigurationErrorsException exc)
+        catch (ConfigurationErrorsException exc)    // Catch web.config Error on DNNs upgraded to 7
         {
             throw l.Done(new Exception("Configuration Error. Your web.config seems to be wrong in the 2sxc folder.", exc));
         }
-        l.Done();
+
+        // check if rendering is possible, or throw exceptions...
+        var preFlightResult = Services.EngineAppRequirements.CheckExpectedNoRenderConditions(engineSpecs);
+        if (preFlightResult != null)
+            return l.Return(preFlightResult, "error");
+
+        // Render and process / return
+        var renderedTemplate = DnnRenderImplementation(entryRazorComponent, specs);
+        var result = Services.BlockResourceExtractor.Process(renderedTemplate);
+        return l.ReturnAsOk(result);
     }
 
-    [PrivateApi]
-    private RazorComponentBase EntryRazorComponent
-    {
-        get => Log.Getter(() => field);
-        set => Log.Do(cName: $"set{nameof(EntryRazorComponent)}", action: () => field = value);
-    }
 
-
-    [PrivateApi]
-    protected override (string, List<Exception>) RenderEntryRazor(EngineSpecs engineSpecs, RenderSpecs specs)
-    {
-        var (writer, exceptions) = DnnRenderImplementation(EntryRazorComponent, specs);
-        return (writer.ToString(), exceptions);
-    }
-
-    private (TextWriter writer, List<Exception> exceptions) DnnRenderImplementation(RazorComponentBase webpage, RenderSpecs specs)
+    private RenderEngineResultRaw DnnRenderImplementation(RazorComponentBase webpage, RenderSpecs specs)
     {
         ILogCall<(TextWriter writer, List<Exception> exceptions)> l = Log.Fn<(TextWriter, List<Exception>)>();
-        var writer = new StringWriter();
-        var result = razorCompiler.Render(webpage, writer, specs);
-        return l.ReturnAsOk(result);
+        var (writer, exceptions) = razorCompiler.Render(webpage, new StringWriter(), specs);
+        return new ()
+        {
+            Html = writer.ToString(),
+            ExceptionsOrNull = exceptions
+        };
     }
 
 
