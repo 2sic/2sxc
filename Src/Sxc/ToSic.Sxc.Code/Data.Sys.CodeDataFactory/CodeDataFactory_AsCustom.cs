@@ -39,7 +39,7 @@ partial class CodeDataFactory: IModelFactory
         if (item is TCustom t)
             return t;
 
-        var bestType = DataModelAnalyzer.GetTargetType<TCustom>();
+        var bestType = ModelAnalyseUse.GetTargetType<TCustom>();
         var newT = ActivatorUtilities.CreateInstance(serviceProvider, bestType) as TCustom;
 
         switch (newT)
