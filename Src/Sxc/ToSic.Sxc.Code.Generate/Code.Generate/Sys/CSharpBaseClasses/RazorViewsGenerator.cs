@@ -40,9 +40,7 @@ public class RazorViewsGenerator(IUser user, IAppReaderFactory appReadFac)
 
     private GeneratedFile AppRazors(CSharpCodeSpecs cSharpSpecs, string baseName)
     {
-        var prefix = cSharpSpecs.Prefix ?? "";
-        var suffix = cSharpSpecs.Suffix ?? "";
-        var className = $"{prefix}{baseName}{suffix}";
+        var className = $"{cSharpSpecs.Prefix}{baseName}{cSharpSpecs.Suffix}";
         var (_, appSnip, allUsings) = BaseClassHelper.BaseClassTools(cSharpSpecs, Log);
 
         var file = new GeneratedFile

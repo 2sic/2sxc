@@ -41,9 +41,7 @@ public class CSharpServicesGenerator(IUser user, IAppReaderFactory appReadFac)
 
     internal GeneratedFile CSharpServiceBase(CSharpCodeSpecs cSharpSpecs, string baseName, string baseClass, string nsAndPath)
     {
-        var prefix = cSharpSpecs.Prefix ?? "";
-        var suffix = cSharpSpecs.Suffix ?? "";
-        var className = $"{prefix}{baseName}{suffix}";
+        var className = $"{cSharpSpecs.Prefix}{baseName}{cSharpSpecs.Suffix}";
         var (_, appSnip, allUsings) = BaseClassHelper.BaseClassTools(cSharpSpecs, Log);
 
         var file = new GeneratedFile

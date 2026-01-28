@@ -11,17 +11,17 @@ internal class CSharpCustomModelGenerator(CSharpCustomModelsGenerator cmg, ICont
 {
     #region Overrides
 
-    protected override string ClassSuffix => Specs.DataClassGeneratedSuffix; // "Model"
+    protected override string ClassSuffix => Specs.Suffix ?? ""; // Specs.BaseClassSuffix; // "Model"
 
     protected override string GenerateFileIntroComment(string userName) =>
         $$"""
           // DO NOT MODIFY THIS FILE - IT IS AUTO-GENERATED
           // See also: https://go.2sxc.org/copilot-data
-          // To extend it, create a "{{Prefix}}{{BaseName}}{{Suffix}}.cs" with this contents:
+          // To extend it, create a "{{ClassName}}.cs" with this contents:
           /*
           namespace AppCode.Data
           {
-            public partial class {{Prefix}}{{BaseName}}{{Suffix}}
+            public partial class {{ClassName}}
             {
               // Add your own properties and methods here
             }
@@ -37,12 +37,12 @@ internal class CSharpCustomModelGenerator(CSharpCustomModelsGenerator cmg, ICont
         var remarks = GenerateCommonScopeRemarks();
         return CodeGenHelper.CodeComment(Specs.TabsClass,
                    $"""
-                    This is a generated custom model class for {Prefix}{BaseName}{Suffix} {GetScopeDescription()}
+                    This is a generated custom model class for {ClassName} {GetScopeDescription()}
                     To extend/modify it, see instructions above.
                     """)
                + CodeGenHelper.XmlComment(Specs.TabsClass, summary:
                    $"""
-                    {Prefix}{BaseName}{Suffix} custom model. <br/>
+                    {ClassName} custom model. <br/>
                     Re-generate whenever you change the ContentType. <br/>
                     <br/>
                     This is a lightweight model that inherits from CustomModel. <br/>
@@ -54,7 +54,7 @@ internal class CSharpCustomModelGenerator(CSharpCustomModelsGenerator cmg, ICont
 
     protected override string GenerateAutoGenClassComment() =>
         CodeGenHelper.XmlComment(Specs.TabsClass,
-            summary: $"Auto-Generated *base* class for '{Prefix}{BaseName}{Suffix}' in data scope '{Type.Scope}'. " +
+            summary: $"Auto-Generated *base* class for '{ClassName}' in data scope '{Type.Scope}'. " +
                      $"It uses special names to avoid accidental use.");
 
     #endregion

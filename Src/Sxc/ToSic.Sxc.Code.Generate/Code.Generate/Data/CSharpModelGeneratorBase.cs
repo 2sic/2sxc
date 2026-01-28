@@ -13,13 +13,26 @@ internal abstract class CSharpModelGeneratorBase(CSharpModelsGeneratorBase gener
 {
     protected readonly CSharpModelsGeneratorBase Generator = generator;
     protected readonly IContentType Type = type;
+
+    /// <summary>
+    /// The "true" name such as "Tag" without prefix/suffix
+    /// </summary>
     protected readonly string BaseName = baseName;
+
+    ///// <summary>
+    ///// Prefix to use for the class name
+    ///// </summary>
+    //protected string Prefix => Specs.Prefix ?? "";
+
+    ///// <summary>
+    ///// Gets the suffix associated with the class.
+    ///// </summary>
+    //protected string Suffix => ClassSuffix;
+
+    protected string ClassName => $"{Specs.Prefix}{BaseName}{ClassSuffix}";
 
     internal CSharpCodeSpecs Specs => Generator.Specs;
     protected CSharpGeneratorHelper CodeGenHelper => Generator.CodeGenHelper;
-
-    protected string Prefix => Specs.Prefix ?? "";
-    protected string Suffix => ClassSuffix;
 
     #region Abstract Members
 
@@ -59,14 +72,15 @@ internal abstract class CSharpModelGeneratorBase(CSharpModelsGeneratorBase gener
 
     internal GeneratedDataModel? PrepareFile()
     {
-        var finalClassName = $"{Prefix}{BaseName}{Suffix}";
+        var finalClassName = ClassName;
         var l = Log.Fn<GeneratedDataModel>($"ClassName: {finalClassName}; {nameof(Type)}: {Type?.Name} ({Type?.NameId})");
 
         if (Type == null)
             return l.ReturnNull("No content type provided");
 
         // Generate main partial class with optional suffix
-        var autoGenClassName = $"{Specs.DataClassGeneratedPrefix}{Prefix}{BaseName}{Specs.DataClassGeneratedSuffix}";
+        // TODO: WHY are we using 2 prefixes here?
+        var autoGenClassName = $"{Specs.BaseClassPrefix}{ClassName}{Specs.BaseClassSuffix}";
         var mainClass = CodeGenHelper.ClassWrapper(finalClassName, false, true, Specs.NamespaceAutoGen + "." + autoGenClassName);
 
         // Generate AutoGen class with properties
@@ -87,7 +101,7 @@ internal abstract class CSharpModelGeneratorBase(CSharpModelsGeneratorBase gener
             + CodeGenHelper.NamespaceWrapper(Specs.DataNamespace)
                 .ToString(fullBody)
             + "\n\n"
-            + CodeGenHelper.NamespaceWrapper(Specs.DataNamespaceGenerated)
+            + CodeGenHelper.NamespaceWrapper(Specs.BaseClassNamespace)
                 .ToString(autoGenClass);
 
         return l.Return(new($"{finalClassName}{Specs.FileGeneratedSuffix}", fileContents, GenerateFileIntroComment(UserName)), $"File size: {fileContents.Length}");
