@@ -6,8 +6,8 @@ namespace ToSic.Sxc.Code.Generate.Data;
 /// Generator for individual CustomModel classes
 /// Creates lightweight model classes that inherit from CustomModel
 /// </summary>
-internal class CSharpCustomModelGenerator(CSharpCustomModelsGenerator cmg, IContentType type, string className) 
-    : CSharpModelGeneratorBase(cmg, type, className, cmg.Log, "Gen.CstMdl")
+internal class CSharpCustomModelGenerator(CSharpCustomModelsGenerator cmg, IContentType type, string baseName) 
+    : CSharpModelGeneratorBase(cmg, type, baseName, cmg.Log, "Gen.CstMdl")
 {
     #region Overrides
 
@@ -17,11 +17,11 @@ internal class CSharpCustomModelGenerator(CSharpCustomModelsGenerator cmg, ICont
         $$"""
           // DO NOT MODIFY THIS FILE - IT IS AUTO-GENERATED
           // See also: https://go.2sxc.org/copilot-data
-          // To extend it, create a "{{ClassName}}Model.cs" with this contents:
+          // To extend it, create a "{{Prefix}}{{BaseName}}{{Suffix}}.cs" with this contents:
           /*
           namespace AppCode.Data
           {
-            public partial class {{ClassName}}Model
+            public partial class {{Prefix}}{{BaseName}}{{Suffix}}
             {
               // Add your own properties and methods here
             }
@@ -37,12 +37,12 @@ internal class CSharpCustomModelGenerator(CSharpCustomModelsGenerator cmg, ICont
         var remarks = GenerateCommonScopeRemarks();
         return CodeGenHelper.CodeComment(Specs.TabsClass,
                    $"""
-                    This is a generated custom model class for {ClassName} {GetScopeDescription()}
+                    This is a generated custom model class for {Prefix}{BaseName}{Suffix} {GetScopeDescription()}
                     To extend/modify it, see instructions above.
                     """)
                + CodeGenHelper.XmlComment(Specs.TabsClass, summary:
                    $"""
-                    {ClassName} custom model. <br/>
+                    {Prefix}{BaseName}{Suffix} custom model. <br/>
                     Re-generate whenever you change the ContentType. <br/>
                     <br/>
                     This is a lightweight model that inherits from CustomModel. <br/>
@@ -54,7 +54,7 @@ internal class CSharpCustomModelGenerator(CSharpCustomModelsGenerator cmg, ICont
 
     protected override string GenerateAutoGenClassComment() =>
         CodeGenHelper.XmlComment(Specs.TabsClass,
-            summary: $"Auto-Generated *base* class for '{ClassName}Model' in data scope '{Type.Scope}'. " +
+            summary: $"Auto-Generated *base* class for '{Prefix}{BaseName}{Suffix}' in data scope '{Type.Scope}'. " +
                      $"It uses special names to avoid accidental use.");
 
     #endregion

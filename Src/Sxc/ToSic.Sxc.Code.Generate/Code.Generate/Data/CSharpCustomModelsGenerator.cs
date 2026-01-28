@@ -35,22 +35,23 @@ internal class CSharpCustomModelsGenerator(IUser user, IAppReaderFactory appRead
         var codeSpecs = base.BuildSpecs(parameters);
 
         // Override defaults for CustomModel generation
+        var modelSuffix = parameters.Suffix ?? "Model";
         codeSpecs = codeSpecs with
         {
-            DataClassGeneratedSuffix = "Model", // Custom suffix for model classes
+            DataClassGeneratedSuffix = modelSuffix, // Custom suffix for model classes
             DataInherits = "Custom.Data.CustomModel", // Inherit from CustomModel instead of CustomItem
-            FileGeneratedSuffix = "Model.Generated" // Custom suffix for model files
+            FileGeneratedSuffix = ".Generated" // Suffix is handled in class name
         };
         return codeSpecs;
     }
 
-    protected override IGeneratedFile? CreateFileGenerator(IContentType type, string className)
+    protected override IGeneratedFile? CreateFileGenerator(IContentType type, string baseName)
     {
         // Empty the list of override methods and property names
         // since the model-generator doesn't add any overrides
         // because the base class doesn't have any own methods or properties.
         CodeGenHelper.OverrideMethods = [];
         CodeGenHelper.OverridePropertyNames = [];
-        return new CSharpCustomModelGenerator(this, type, className).PrepareFile();
+        return new CSharpCustomModelGenerator(this, type, baseName).PrepareFile();
     }
 }

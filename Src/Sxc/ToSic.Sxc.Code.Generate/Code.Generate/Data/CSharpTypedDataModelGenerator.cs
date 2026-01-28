@@ -2,22 +2,22 @@
 
 namespace ToSic.Sxc.Code.Generate.Data;
 
-internal class CSharpTypedDataModelGenerator(CSharpTypedDataModelsGenerator dmg, IContentType type, string className) 
-    : CSharpModelGeneratorBase(dmg, type, className, dmg.Log, "Gen.DtaCls")
+internal class CSharpTypedDataModelGenerator(CSharpTypedDataModelsGenerator dmg, IContentType type, string baseName) 
+    : CSharpModelGeneratorBase(dmg, type, baseName, dmg.Log, "Gen.DtaCls")
 {
     #region Overrides
 
-    protected override string ClassSuffix => "";
+    protected override string ClassSuffix => Specs.Suffix ?? "";
 
     protected override string GenerateFileIntroComment(string userName) =>
         $$"""
           // DO NOT MODIFY THIS FILE - IT IS AUTO-GENERATED
           // See also: https://go.2sxc.org/copilot-data
-          // To extend it, create a "{{ClassName}}.cs" with this contents:
+          // To extend it, create a "{{Prefix}}{{BaseName}}{{Suffix}}.cs" with this contents:
           /*
           namespace {{dmg.Specs.DataNamespace}}
           {
-            public partial class {{ClassName}}
+            public partial class {{Prefix}}{{BaseName}}{{Suffix}}
             {
               // Add your own properties and methods here
             }
@@ -33,12 +33,12 @@ internal class CSharpTypedDataModelGenerator(CSharpTypedDataModelsGenerator dmg,
         var remarks = GenerateCommonScopeRemarks();
         return CodeGenHelper.CodeComment(Specs.TabsClass,
                    $"""
-                    This is a generated class for {ClassName} {GetScopeDescription()}
+                    This is a generated class for {Prefix}{BaseName}{Suffix} {GetScopeDescription()}
                     To extend/modify it, see instructions above.
                     """)
                + CodeGenHelper.XmlComment(Specs.TabsClass, summary:
                    $"""
-                    {ClassName} data. <br/>
+                    {Prefix}{BaseName}{Suffix} data. <br/>
                     Re-generate whenever you change the ContentType. <br/>
                     <br/>
                     Default properties such as `.Title` or `.Id` are provided in the base class. <br/>
@@ -52,7 +52,7 @@ internal class CSharpTypedDataModelGenerator(CSharpTypedDataModelsGenerator dmg,
     protected override string GenerateAutoGenClassComment() =>
         CodeGenHelper.XmlComment(Specs.TabsClass,
             summary:
-            $"Auto-Generated *base* class for '{ClassName}' in scope '{Type.Scope}'. " +
+            $"Auto-Generated *base* class for '{Prefix}{BaseName}{Suffix}' in scope '{Type.Scope}'. " +
             $"It uses special names to avoid accidental use.");
 
     #endregion

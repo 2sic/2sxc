@@ -8,15 +8,18 @@ namespace ToSic.Sxc.Code.Generate.Data;
 /// Abstract base class for C# model generators (both DataModel and CustomModel)
 /// Contains common logic for generating model classes with properties
 /// </summary>
-internal abstract class CSharpModelGeneratorBase(CSharpModelsGeneratorBase generator, IContentType type, string className, ILog parentLog, string logName) 
+internal abstract class CSharpModelGeneratorBase(CSharpModelsGeneratorBase generator, IContentType type, string baseName, ILog parentLog, string logName) 
     : HelperBase(parentLog, logName)
 {
     protected readonly CSharpModelsGeneratorBase Generator = generator;
     protected readonly IContentType Type = type;
-    protected readonly string ClassName = className;
+    protected readonly string BaseName = baseName;
 
     internal CSharpCodeSpecs Specs => Generator.Specs;
     protected CSharpGeneratorHelper CodeGenHelper => Generator.CodeGenHelper;
+
+    protected string Prefix => Specs.Prefix ?? "";
+    protected string Suffix => ClassSuffix;
 
     #region Abstract Members
 
@@ -56,14 +59,14 @@ internal abstract class CSharpModelGeneratorBase(CSharpModelsGeneratorBase gener
 
     internal GeneratedDataModel? PrepareFile()
     {
-        var l = Log.Fn<GeneratedDataModel>($"{nameof(ClassName)}: {ClassName}; {nameof(Type)}: {Type?.Name} ({Type?.NameId})");
+        var finalClassName = $"{Prefix}{BaseName}{Suffix}";
+        var l = Log.Fn<GeneratedDataModel>($"ClassName: {finalClassName}; {nameof(Type)}: {Type?.Name} ({Type?.NameId})");
 
         if (Type == null)
             return l.ReturnNull("No content type provided");
 
         // Generate main partial class with optional suffix
-        var finalClassName = $"{ClassName}{ClassSuffix}";
-        var autoGenClassName = $"{Specs.DataClassGeneratedPrefix}{ClassName}{Specs.DataClassGeneratedSuffix}";
+        var autoGenClassName = $"{Specs.DataClassGeneratedPrefix}{Prefix}{BaseName}{Specs.DataClassGeneratedSuffix}";
         var mainClass = CodeGenHelper.ClassWrapper(finalClassName, false, true, Specs.NamespaceAutoGen + "." + autoGenClassName);
 
         // Generate AutoGen class with properties
@@ -87,7 +90,7 @@ internal abstract class CSharpModelGeneratorBase(CSharpModelsGeneratorBase gener
             + CodeGenHelper.NamespaceWrapper(Specs.DataNamespaceGenerated)
                 .ToString(autoGenClass);
 
-        return l.Return(new($"{ClassName}{Specs.FileGeneratedSuffix}", fileContents, GenerateFileIntroComment(UserName)), $"File size: {fileContents.Length}");
+        return l.Return(new($"{finalClassName}{Specs.FileGeneratedSuffix}", fileContents, GenerateFileIntroComment(UserName)), $"File size: {fileContents.Length}");
     }
 
     private (bool HasProps, string? Code, List<string>? Usings, string? FirstProperty) ClassProperties(List<IContentTypeAttribute> attributes)

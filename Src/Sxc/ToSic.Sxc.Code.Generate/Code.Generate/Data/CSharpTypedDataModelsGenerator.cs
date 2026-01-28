@@ -24,6 +24,6 @@ internal class CSharpTypedDataModelsGenerator(IUser user, IAppReaderFactory appR
 
     protected internal override CSharpCodeSpecs BuildDerivedSpecs(IFileGeneratorSpecs parameters) => BuildSpecs(parameters);
 
-    protected override IGeneratedFile? CreateFileGenerator(IContentType type, string className) 
-        => new CSharpTypedDataModelGenerator(this, type, className).PrepareFile();
+    protected override IGeneratedFile? CreateFileGenerator(IContentType type, string baseName) 
+        => new CSharpTypedDataModelGenerator(this, type, baseName).PrepareFile();
 }

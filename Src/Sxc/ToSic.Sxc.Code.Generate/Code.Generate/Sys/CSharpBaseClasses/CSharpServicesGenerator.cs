@@ -15,7 +15,7 @@ public class CSharpServicesGenerator(IUser user, IAppReaderFactory appReadFac)
 
     public string Description => "Generates CSharp Service Base Classes in the AppCode/Services folder";
 
-    public string DescriptionHtml => $"The {Name} will generate <code>ServiceBase.Generated.cs</code> files in the <code>AppCode/Services</code> folder. <br> IMPORTANT: Requires that Content-Types were generated.";
+    public string DescriptionHtml => $"The {Name} will generate <code>[Prefix]ServiceBase[Suffix].Generated.cs</code> files in the <code>AppCode/Services</code> folder. <br> IMPORTANT: Requires that Content-Types were generated.";
 
     public string OutputType => "RazorView";// "CSharpService";
 
@@ -39,8 +39,11 @@ public class CSharpServicesGenerator(IUser user, IAppReaderFactory appReadFac)
         return [result];
     }
 
-    internal GeneratedFile CSharpServiceBase(CSharpCodeSpecs cSharpSpecs, string className, string baseClass, string nsAndPath)
+    internal GeneratedFile CSharpServiceBase(CSharpCodeSpecs cSharpSpecs, string baseName, string baseClass, string nsAndPath)
     {
+        var prefix = cSharpSpecs.Prefix ?? "";
+        var suffix = cSharpSpecs.Suffix ?? "";
+        var className = $"{prefix}{baseName}{suffix}";
         var (_, appSnip, allUsings) = BaseClassHelper.BaseClassTools(cSharpSpecs, Log);
 
         var file = new GeneratedFile
