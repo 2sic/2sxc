@@ -63,12 +63,12 @@ namespace Custom.Data;
 /// </remarks>
 [PublicApi]
 [ModelSpecs(ContentType = ModelSpecsAttribute.ForAnyContentType)]
-public partial class CustomItem: ITypedItem, IDataWrapperNeedingFactoryWip<ITypedItem>, IHasPropLookup, IModelFactoryRequired
+public partial class CustomItem: ITypedItem, IDataWrapperNeedingFactory<ITypedItem>, IHasPropLookup, IModelFactoryRequired
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
 
-    void IDataWrapperNeedingFactoryWip<ITypedItem>.Setup(ITypedItem source, IModelFactory modelFactory)
+    void IDataWrapperNeedingFactory<ITypedItem>.Setup(ITypedItem source, IModelFactory modelFactory)
     {
         _item = source;
         _modelFactory = modelFactory;

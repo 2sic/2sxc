@@ -1,7 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using ToSic.Eav.Models.Factory;
 using ToSic.Sxc.Data.Models.Sys;
-using ToSic.Sxc.Data.Sys.Factory;
 
 namespace ToSic.Sxc.Data.Models;
 
@@ -49,7 +48,7 @@ namespace ToSic.Sxc.Data.Models;
 /// - Released in v19.01 (BETA)
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still beta, name may change")]
-public abstract partial class ModelFromEntity: IDataWrapperNeedingFactoryWip<IEntity>, ICanBeEntity, IModelSetup<IEntity>, IModelFactoryRequired
+public abstract partial class ModelFromEntity: IDataWrapperNeedingFactory<IEntity>, ICanBeEntity, IModelSetup<IEntity>, IModelFactoryRequired
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
@@ -59,7 +58,7 @@ public abstract partial class ModelFromEntity: IDataWrapperNeedingFactoryWip<IEn
         return true;
     }
 
-    void IDataWrapperNeedingFactoryWip<IEntity>.Setup(IEntity source, IModelFactory modelFactory)
+    void IDataWrapperNeedingFactory<IEntity>.Setup(IEntity source, IModelFactory modelFactory)
     {
         _entity = source;
         _modelFactory = modelFactory;
@@ -101,10 +100,10 @@ public abstract partial class ModelFromEntity: IDataWrapperNeedingFactoryWip<IEn
 
     #region As...
 
-    /// <inheritdoc cref="DataModelHelpers.As{TCustom}"/>
-    protected T? As<T>(object? item)
-        where T : class, IDataWrapper
-        => DataModelHelpers.As<T>(_modelFactory, item);
+    ///// <inheritdoc cref="DataModelHelpers.As{TCustom}"/>
+    //protected T? As<T>(object? item)
+    //    where T : class, IDataWrapper
+    //    => DataModelHelpers.As<T>(_modelFactory, item);
 
     /// <inheritdoc cref="DataModelHelpers.AsList{T}"/>
     protected IEnumerable<T>? AsList<T>(object source, NoParamOrder npo = default, bool nullIfNull = false)

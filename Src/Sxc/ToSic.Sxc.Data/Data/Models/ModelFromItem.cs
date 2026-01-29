@@ -48,11 +48,11 @@ namespace ToSic.Sxc.Data.Models;
 /// - Released in v19.01 (BETA)
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still beta, name may change to DataModelWithItem or something")]
-public abstract partial class ModelFromItem : IDataWrapperNeedingFactoryWip<ITypedItem>, ICanBeItem, ICanBeEntity, IModelFactoryRequired
+public abstract partial class ModelFromItem : IDataWrapperNeedingFactory<ITypedItem>, ICanBeItem, ICanBeEntity, IModelFactoryRequired
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
-    void IDataWrapperNeedingFactoryWip<ITypedItem>.Setup(ITypedItem source, IModelFactory modelFactory)
+    void IDataWrapperNeedingFactory<ITypedItem>.Setup(ITypedItem source, IModelFactory modelFactory)
     {
         _item = source;
         _modelFactory = modelFactory;

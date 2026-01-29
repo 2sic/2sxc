@@ -53,30 +53,35 @@ partial class CodeDataFactory: IModelFactory
         {
             // 1. Direct setup from the data type specified, no further conversions
             // Should be an ITypedItemWrapper, but not enforced in the signature
-            case IDataWrapperNeedingFactoryWip<TData> withMatchingSetup:
+            case IDataWrapperNeedingFactory<TData> withMatchingSetup:
                 withMatchingSetup.Setup(item, this);
                 return newT;
 
             // 2. Setup from Item, a more complex object which already has more features
             // In some cases the type of the data is already a model, so we need to unwrap it
-            case IDataWrapperNeedingFactoryWip<ITypedItem> forItem when item is ICanBeItem canBeItem:
+            case IDataWrapperNeedingFactory<ITypedItem> forItem when item is ICanBeItem canBeItem:
                 forItem.Setup(canBeItem.Item, this);
                 return newT;
 
             // 3. Setup from Entity, the most basic object
             // DataModelOfEntity can also be filled from Typed (but ATM not the other way around)
-            case IDataWrapperNeedingFactoryWip<IEntity> forEntity when item is ICanBeEntity canBeEntity:
+            case IDataWrapperNeedingFactory<IEntity> forEntity when item is ICanBeEntity canBeEntity:
                 forEntity.Setup(canBeEntity.Entity, this);
                 return newT;
 
             // 4. Setup from item, when starting with an entity
             // In some cases we can only wrap an item, but the data is an entity-based model
-            case IDataWrapperNeedingFactoryWip<ITypedItem> forTypedItem when item is ICanBeEntity canBeEntity:
+            case IDataWrapperNeedingFactory<ITypedItem> forTypedItem when item is ICanBeEntity canBeEntity:
                 settings ??= new() { ItemIsStrict = true };
                 var asItem = AsItem(canBeEntity.Entity, settings);
                 // TODO: #ConvertItemSettings
                 forTypedItem.Setup(asItem, this);
                 return newT;
+
+            case IModelSetup<IEntity> forEntitySetup when item is ICanBeEntity canBeEntity:
+                forEntitySetup.Setup(canBeEntity.Entity);
+                return newT;
+
             default:
                 throw new($"The custom type {typeof(TCustom).Name} does not implement 'ICanWrap<TData>'. This is probably a mistake.");
         }
@@ -93,19 +98,9 @@ partial class CodeDataFactory: IModelFactory
         if (skipTypeCheck)
             return AsCustom<TCustom>(item);
 
-        // Do Type-Name check
-        //var typeNames = DataModelAnalyzer.GetContentTypeNamesList<TCustom>();
-        
         // Check all type names if they are `*` or match the data ContentType
         DataModelAnalyzer.IsTypeNameAllowedOrThrow<TCustom>(item, id, skipTypeCheck);
-        //if (typeNames.Any(t => t == ModelSourceAttribute.ForAnyContentType || item.Type.Is(t)))
-            return AsCustom<TCustom>(item);
-
-        //throw new(
-        //    $"Item with ID {id} is not a '{string.Join(",", typeNames)}'. " +
-        //    $"This is probably a mistake, otherwise use '{nameof(skipTypeCheck)}: true' " +
-        //    $"or apply an attribute [{nameof(ModelSourceAttribute)}({nameof(ModelSourceAttribute.ContentType)} = \"expected-type-name\")] to your model class. "
-        //);
+        return AsCustom<TCustom>(item);
     }
 
     /// <summary>
