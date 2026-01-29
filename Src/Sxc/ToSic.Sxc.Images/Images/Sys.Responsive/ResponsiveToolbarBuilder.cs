@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Data.Sys.Entities;
-using ToSic.Sxc.Adam.Sys.Security;
+﻿using ToSic.Sxc.Adam.Sys.Security;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Edit.Toolbar.Sys;
 using ToSic.Sxc.Images.Sys;
@@ -17,8 +16,10 @@ internal class ResponsiveToolbarBuilder(ILog parentLog) : HelperBase(parentLog, 
         var l = Log.Fn<IToolbarBuilder?>();
         switch (tweaker.ToolbarObj)
         {
-            case false: return l.ReturnNull("false");
-            case IToolbarBuilder customToolbar: return l.Return(customToolbar, "already set");
+            case false:
+                return l.ReturnNull("false");
+            case IToolbarBuilder customToolbar:
+                return l.Return(customToolbar, "already set");
         }
 
         // If we're creating an image for a string value, it won't have a field or parent.
