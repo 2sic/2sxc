@@ -37,12 +37,12 @@ public record LightSpeedDecorator : ModelOfEntity, IOutputCacheSettings
 
     public string Advanced => GetThis("");
 
-    public static LightSpeedDecorator GetFromAppStatePiggyBack(IAppReader? appReader/*, ILog log*/)
+    public static LightSpeedDecorator GetFromAppStatePiggyBack(IAppReader? appReader)
     {
         var appState = appReader?.GetCache();
         var decoFromPiggyBack = appState?.PiggyBack
             .GetOrGenerate(appState, $"decorator-{ContentTypeNameId}", () => appState.Metadata.First<LightSpeedDecorator>())
             .Value;
-        return decoFromPiggyBack ?? (null as IEntity).As<LightSpeedDecorator>()!;
+        return decoFromPiggyBack ?? new LightSpeedDecorator();
     }
 }
