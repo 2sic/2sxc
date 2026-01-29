@@ -12,5 +12,6 @@ public class JsContextUser(IUser user, IEnumerable<IEntity>? dataList)
     public bool CanAdmin { get; } = user.IsSiteAdmin;
 
     [JsonPropertyName("canSwitchEdition")]
-    public bool CanSwitchEdition { get; } = new PolymorphismConfiguration(dataList).UsersWhoMaySwitch.Contains(user.Id);
+    public bool CanSwitchEdition { get; }
+        = dataList.First<PolymorphismConfiguration>()?.UsersWhoMaySwitch.Contains(user.Id) ?? false;
 }

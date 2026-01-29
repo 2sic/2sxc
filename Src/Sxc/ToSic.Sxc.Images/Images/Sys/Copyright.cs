@@ -1,16 +1,17 @@
-﻿using ToSic.Eav.Data.Sys.Entities;
-using ToSic.Eav.Model;
+﻿using ToSic.Eav.Model;
 
 namespace ToSic.Sxc.Images.Sys;
 
+/// <summary>
+/// TODO: unclear what this is for
+/// </summary>
 // TODO: LOCATION / NAMESPACE not final
 [PrivateApi("WIP v16.08")]
+[ModelSource(ContentType = ContentTypeNameId)]
 public record Copyright : ModelOfEntityCore
 {
-    public Copyright(IEntity entity) : base(entity) { }
-
-    public static string TypeNameId = "ac3df5f0-c637-45e7-a52b-b323d50e52ac";
-    public static string NiceTypeName = "🖺Copyright";
+    public const string ContentTypeNameId = "ac3df5f0-c637-45e7-a52b-b323d50e52ac";
+    public const string ContentTypeName = "🖺Copyright";
 
     public string? CopyrightType => GetThis<string>(null);
 

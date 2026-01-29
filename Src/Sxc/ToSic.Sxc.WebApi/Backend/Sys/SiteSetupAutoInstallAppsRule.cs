@@ -1,12 +1,13 @@
-﻿using ToSic.Eav.Data.Sys.Entities;
-using ToSic.Eav.Model;
+﻿using ToSic.Eav.Model;
 using ToSic.Eav.WebApi.Sys.Install;
 
 namespace ToSic.Sxc.Backend.Sys;
 
+[ModelSource(ContentType = ContentTypeNameId)]
 internal record SiteSetupAutoInstallAppsRule : ModelOfEntity
 {
-    public SiteSetupAutoInstallAppsRule(IEntity entity) : base(entity) { }
+    public const string ContentTypeNameId = "833baa25-899b-4242-ade7-323a319bcf71";
+    public const string ContentTypeName = "⚙️SiteSetupAutoInstallApps";
 
     public const string TargetGuid = "guid";
     public const string TargetAll = "all";

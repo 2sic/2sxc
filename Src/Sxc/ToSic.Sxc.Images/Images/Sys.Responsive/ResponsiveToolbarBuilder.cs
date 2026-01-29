@@ -68,21 +68,15 @@ internal class ResponsiveToolbarBuilder(ILog parentLog) : HelperBase(parentLog, 
                 });
 
                 // Add note for Copyright - if there is Metadata for that
-                target.HasMdOrNull.Metadata
-                    .OfType(CopyrightDecorator.NiceTypeName)
-                    .FirstOrDefault()
-                    .DoIfNotNull(cpEntity =>
-                    {
-                        var copyright = new CopyrightDecorator(cpEntity);
-                        modified = modified.AddNamed(
-                            CopyrightDecorator.TypeNameId,
-                            btn => btn
-                                .Tooltip("Copyright")
-                                .Note(copyright.CopyrightMessage.NullIfNoValue() ??
-                                      copyright.Copyrights?.FirstOrDefault()?.GetBestTitle() ?? ""
-                                )
-                        );
-                    });
+                target.HasMdOrNull.Metadata.First<CopyrightDecorator>()
+                    .DoIfNotNull(copyright => modified = modified.AddNamed(
+                        CopyrightDecorator.ContentTypeNameId,
+                        btn => btn
+                            .Tooltip("Copyright")
+                            .Note(copyright.CopyrightMessage.NullIfNoValue() ??
+                                  copyright.Copyrights?.FirstOrDefault()?.GetBestTitle() ?? ""
+                            )
+                    ));
 
 
                 return modified;

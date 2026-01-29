@@ -46,5 +46,5 @@ class ImageMetadataRecommendationsService(IFeaturesService featuresSvc) : Servic
     /// <summary>
     /// Advanced recommendations for image metadata (if enabled) - with additional Copyright
     /// </summary>
-    private static string[] ImageRecommendationsCopyright => [CopyrightDecorator.TypeNameId, ImageDecorator.TypeNameId];
+    private static string[] ImageRecommendationsCopyright => [CopyrightDecorator.ContentTypeNameId, ImageDecorator.TypeNameId];
 }

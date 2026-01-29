@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps.Sys.Permissions;
-using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Backend.Usage;

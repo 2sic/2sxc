@@ -6,15 +6,14 @@ using ToSic.Sxc.Services.OutputCache;
 namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
+[ModelSource(ContentType = ContentTypeNameId)]
 public record LightSpeedDecorator : ModelOfEntity, IOutputCacheSettings
 {
     /// <summary>
     /// Nice name. If it ever changes, remember to also update UI as it has references to it.
     /// </summary>
-    public static string NiceName = "LightSpeedOutputDecorator";
-    public static string TypeNameId = "be34f64b-7d1f-4ad0-b488-dabbbb01a186";
-
-    public LightSpeedDecorator(IEntity? entity) : base(entity!) { }
+    public const string ContentTypeName = "LightSpeedOutputDecorator";
+    public const string ContentTypeNameId = "be34f64b-7d1f-4ad0-b488-dabbbb01a186";
 
     public bool IsEnabled => GetThis(false);
 
@@ -42,13 +41,8 @@ public record LightSpeedDecorator : ModelOfEntity, IOutputCacheSettings
     {
         var appState = appReader?.GetCache();
         var decoFromPiggyBack = appState?.PiggyBack
-            .GetOrGenerate(appState, $"decorator-{TypeNameId}", () =>
-            {
-                //log.A("Debug WIP - remove once this has proven to work; get LightSpeed PiggyBack - recreate");
-                var decoEntityOrNullPb = appState.Metadata.First(typeName: TypeNameId);
-                return new LightSpeedDecorator(decoEntityOrNullPb);
-            })
+            .GetOrGenerate(appState, $"decorator-{ContentTypeNameId}", () => appState.Metadata.First<LightSpeedDecorator>())
             .Value;
-        return decoFromPiggyBack ?? new LightSpeedDecorator(null as IEntity);
+        return decoFromPiggyBack ?? (null as IEntity).As<LightSpeedDecorator>()!;
     }
 }

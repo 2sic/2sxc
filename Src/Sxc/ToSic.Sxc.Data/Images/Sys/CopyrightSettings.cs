@@ -10,6 +10,7 @@ namespace ToSic.Sxc.Images.Sys;
 /// * As of v21 not actively used in code, but in this structure to ensure consistency
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
+[ModelSource(ContentType = ContentTypeNameId)]
 public record CopyrightSettings : ModelOfEntityCore
 {
     /// <summary>
@@ -20,10 +21,8 @@ public record CopyrightSettings : ModelOfEntityCore
     /// </remarks>
     public const string SettingsPath = "Copyright";
 
-    public const string TypeNameId = "aed871cf-220b-4330-b368-f1259981c9c8";
-    public const string NiceTypeName = "⚙️CopyrightSettings";
-
-    public CopyrightSettings(IEntity entity) : base(entity) { }
+    public const string ContentTypeNameId = "aed871cf-220b-4330-b368-f1259981c9c8";
+    public const string ContentTypeName = "⚙️CopyrightSettings";
 
     // todo: unclear if nullable booleans work, probably never tested before
     public bool? ImagesInputEnabled => GetThis(null as bool?);

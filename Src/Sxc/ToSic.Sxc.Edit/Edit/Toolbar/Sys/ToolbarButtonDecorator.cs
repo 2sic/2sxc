@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Data.Sys.Entities;
-using ToSic.Eav.Model;
+﻿using ToSic.Eav.Model;
 using ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
 
 namespace ToSic.Sxc.Edit.Toolbar.Sys;
@@ -12,12 +11,11 @@ namespace ToSic.Sxc.Edit.Toolbar.Sys;
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 [ShowApiWhenReleased(ShowApiMode.Never)]
+[ModelSource(ContentType = ContentTypeNameId)]
 public record ToolbarButtonDecorator : ModelOfEntityCore
 {
-    public ToolbarButtonDecorator(IEntity entity) : base(entity) { }
-
-    public static string TypeName = "ToolbarButtonDecorator";
-    public static string TypeNameId = "acc185a7-f300-4468-bce8-d6a64038989d";
+    public const string TypeName = "ToolbarButtonDecorator";
+    public const string ContentTypeNameId = "acc185a7-f300-4468-bce8-d6a64038989d";
 
     public static string KeyColor = "color";
     public static string KeyIcon = "icon";

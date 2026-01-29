@@ -4,12 +4,11 @@ namespace ToSic.Sxc.Images.Sys;
 
 // TODO: LOCATION / NAMESPACE not final
 [PrivateApi("WIP v16.08")]
+[ModelSource(ContentType = ContentTypeNameId)]
 public record CopyrightDecorator : ModelOfEntityCore
 {
-    public CopyrightDecorator(IEntity entity) : base(entity) { }
-
-    public static string TypeNameId = "077835ec-889e-433f-8acf-a4715acb3503";
-    public static string NiceTypeName = "CopyrightDecorator";
+    public const string ContentTypeNameId = "077835ec-889e-433f-8acf-a4715acb3503";
+    public const string ContentTypeName = "CopyrightDecorator";
 
     public string? CopyrightInfoType => GetThis<string>(null);
 
