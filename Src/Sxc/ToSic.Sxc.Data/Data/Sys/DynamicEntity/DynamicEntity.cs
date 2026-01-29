@@ -45,7 +45,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
         ListHelper = new(list, parent, field, () => Debug, propsRequired: propsRequired, cdf);
     }
 
-    bool IWrapperSetup<IEntity>.SetupContents(IEntity? source)
+    bool IModelSetup<IEntity>.SetupModel(IEntity? source)
         => throw new NotSupportedException($"SetupContents is not supported for {GetType().Name}, as it requires more information.");
 
     /// <summary>

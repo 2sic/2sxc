@@ -33,7 +33,7 @@ internal class TypedItemOfEntity(IEntity entity, ICodeDataFactory cdf, bool prop
 {
     #region Setup
 
-    bool IWrapperSetup<IEntity>.SetupContents(IEntity? source)
+    bool IModelSetup<IEntity>.SetupModel(IEntity? source)
         => throw new NotSupportedException($"SetupContents is not supported for {GetType().Name}, as it requires more information.");
 
     public IEntity Entity { get; } = entity;

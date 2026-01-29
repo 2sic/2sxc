@@ -47,6 +47,7 @@ public class StartupSxcCoreOnly
             .AddEavPersistence()
             .AddEavDataBuild()
             .AddEavDataStack()
+            .AddEavModels()
             .AddEavData()
             // EAV Core and Downstream
             .AddAllLibAndSys()

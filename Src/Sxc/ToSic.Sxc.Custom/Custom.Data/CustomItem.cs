@@ -2,6 +2,7 @@
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.PropertyLookup;
 using ToSic.Eav.Models;
+using ToSic.Eav.Models.Factory;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
@@ -13,6 +14,7 @@ using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
 using ToSic.Sys.GetByName;
+using IModelFactory = ToSic.Sxc.Data.Sys.Factory.IModelFactory;
 
 namespace Custom.Data;
 
@@ -62,7 +64,7 @@ namespace Custom.Data;
 /// </remarks>
 [PublicApi]
 [ModelSource(ContentType = ModelSourceAttribute.ForAnyContentType)]
-public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLookup, INeedsFactory
+public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLookup, IModelFactoryRequired
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 

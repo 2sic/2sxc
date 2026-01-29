@@ -9,7 +9,7 @@ using ToSic.Sxc.Blocks.Sys.Views;
 namespace ToSic.Sxc.Blocks.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public record BlockConfiguration: ModelOfEntityWithLog, IAppIdentity
+public record BlockConfiguration: ModelOfEntity, IAppIdentity
 {
     public  int ZoneId { get; }
     public  int AppId { get; }
@@ -21,9 +21,9 @@ public record BlockConfiguration: ModelOfEntityWithLog, IAppIdentity
     private readonly Generator<QueryDefinitionBuilder> _qDefBuilder;
 
     public BlockConfiguration(IEntity? entity, IAppIdentity appIdentity, IEntity? previewViewEntity, Generator<QueryDefinitionBuilder> qDefBuilder, string languageCode, ILog parentLog):
-        base(entity!, parentLog, "Blk.Config")
+        base(entity!)
     {
-        Log.A("Entity is " + (entity == null ? "" : "not") + " null");
+        parentLog.SubLogOrNull("Blk.Config").A("Entity is " + (entity == null ? "" : "not") + " null");
         LookupLanguages = [languageCode];
         _qDefBuilder = qDefBuilder;
         ZoneId = appIdentity.ZoneId;

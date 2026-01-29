@@ -1,6 +1,8 @@
 ﻿using System.Runtime.CompilerServices;
+using ToSic.Eav.Models.Factory;
 using ToSic.Sxc.Data.Models.Sys;
 using ToSic.Sxc.Data.Sys.Factory;
+using IModelFactory = ToSic.Sxc.Data.Sys.Factory.IModelFactory;
 
 namespace ToSic.Sxc.Data.Models;
 
@@ -48,11 +50,11 @@ namespace ToSic.Sxc.Data.Models;
 /// - Released in v19.01 (BETA)
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still beta, name may change")]
-public abstract partial class ModelFromEntity: ICanWrap<IEntity>, ICanBeEntity, IWrapperSetup<IEntity>, INeedsFactory
+public abstract partial class ModelFromEntity: ICanWrap<IEntity>, ICanBeEntity, IModelSetup<IEntity>, IModelFactoryRequired
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
-    public bool SetupContents(IEntity? source)
+    public bool SetupModel(IEntity? source)
     {
         _entity = source;
         return true;

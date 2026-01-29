@@ -82,8 +82,8 @@ public static class StartupSxcServices
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection ExternalConfig(this IServiceCollection services)
     {
-        // new v15
-        services.TryAddTransient<GoogleMapsSettings>();
+        // new v15 - disabled v21
+        // services.TryAddTransient<GoogleMapsSettings>();
         return services;
     }
 

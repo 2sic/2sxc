@@ -45,6 +45,7 @@ public class Startup
             //.AddEavDataPersistence()
             .AddEavDataBuild()
             .AddEavDataStack()
+            .AddEavModels()
             .AddEavData()
 
             // EAV Core and Downstream
