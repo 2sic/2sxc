@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.Model;
-using ToSic.Eav.Model.Sys;
+using ToSic.Eav.Models.Sys;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Typed;
 

@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.AppReader.Sys;
-using ToSic.Eav.Model;
+using ToSic.Eav.Models;
 using ToSic.Sxc.Services.OutputCache;
 
 namespace ToSic.Sxc.Web.Sys.LightSpeed;

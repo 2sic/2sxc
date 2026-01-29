@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.Model;
-
-namespace ToSic.Sxc.Images.Sys;
+﻿namespace ToSic.Sxc.Images.Sys;
 
 /// <summary>
 /// System Settings regarding Copyright Configuration of an App/Site

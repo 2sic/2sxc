@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.DataSource.Sys.Query;
 using ToSic.Eav.Metadata;
-using ToSic.Eav.Model;
 
 namespace ToSic.Sxc.Blocks.Sys.Views;
 

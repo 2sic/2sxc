@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Model;
+﻿using ToSic.Eav.Models;
 using ToSic.Eav.WebApi.Sys.Install;
 
 namespace ToSic.Sxc.Backend.Sys;

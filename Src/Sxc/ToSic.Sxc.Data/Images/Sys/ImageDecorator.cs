@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Metadata;
-using ToSic.Eav.Model;
 
 namespace ToSic.Sxc.Images.Sys;
 

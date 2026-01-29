@@ -1,8 +1,6 @@
-﻿using ToSic.Eav.Model;
-using ToSic.Sxc.Adam;
+﻿using ToSic.Sxc.Adam;
 using ToSic.Sxc.Cms.Assets.Sys;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Models;
 
 namespace ToSic.Sxc.Cms.Assets;
 

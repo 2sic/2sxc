@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Model;
+﻿using ToSic.Eav.Models;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.GoogleMaps.Sys;

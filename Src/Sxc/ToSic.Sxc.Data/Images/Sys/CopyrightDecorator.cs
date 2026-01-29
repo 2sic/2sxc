@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.Model;
-
-namespace ToSic.Sxc.Images.Sys;
+﻿namespace ToSic.Sxc.Images.Sys;
 
 // TODO: LOCATION / NAMESPACE not final
 [PrivateApi("WIP v16.08")]

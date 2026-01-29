@@ -4,6 +4,7 @@ global using System;
 global using System.Collections.Generic;
 global using System.Diagnostics.CodeAnalysis;
 global using ToSic.Eav.Data;
+global using ToSic.Eav.Models;
 global using ToSic.Sys.Coding;
 global using ToSic.Sys.DI;
 global using ToSic.Sys.Documentation;

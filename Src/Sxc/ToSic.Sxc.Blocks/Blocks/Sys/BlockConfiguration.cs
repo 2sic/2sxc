@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource.Sys.Query;
-using ToSic.Eav.Model;
+using ToSic.Eav.Models;
 using ToSic.Sxc.Blocks.Sys.Views;
 
 // ReSharper disable ConditionalAccessQualifierIsNonNullableAccordingToAPIContract

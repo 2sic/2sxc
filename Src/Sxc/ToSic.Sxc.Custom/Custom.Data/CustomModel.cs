@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Model;
+﻿using ToSic.Eav.Models;
 using ToSic.Sxc.Data.Models;
 
 namespace Custom.Data;

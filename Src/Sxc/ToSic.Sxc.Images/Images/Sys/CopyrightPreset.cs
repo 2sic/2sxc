@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Model;
+﻿using ToSic.Eav.Models;
 
 namespace ToSic.Sxc.Images.Sys;
 

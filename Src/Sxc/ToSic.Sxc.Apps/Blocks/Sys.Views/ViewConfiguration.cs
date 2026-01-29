@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps.Sys;
-using ToSic.Eav.Model;
 using ToSic.Sxc.Apps.Sys.Assets;
 using static ToSic.Sxc.Blocks.Sys.Views.ViewConstants;
 

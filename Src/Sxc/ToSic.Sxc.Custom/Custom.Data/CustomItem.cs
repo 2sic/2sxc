@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.PropertyLookup;
-using ToSic.Eav.Model;
+using ToSic.Eav.Models;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
