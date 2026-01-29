@@ -53,25 +53,25 @@ partial class CodeDataFactory: IModelFactory
         {
             // 1. Direct setup from the data type specified, no further conversions
             // Should be an ITypedItemWrapper, but not enforced in the signature
-            case IDataWrapperNeedingFactory<TData> withMatchingSetup:
+            case IModelSetupWithFactory<TData> withMatchingSetup:
                 withMatchingSetup.Setup(item, this);
                 return newT;
 
             // 2. Setup from Item, a more complex object which already has more features
             // In some cases the type of the data is already a model, so we need to unwrap it
-            case IDataWrapperNeedingFactory<ITypedItem> forItem when item is ICanBeItem canBeItem:
+            case IModelSetupWithFactory<ITypedItem> forItem when item is ICanBeItem canBeItem:
                 forItem.Setup(canBeItem.Item, this);
                 return newT;
 
             // 3. Setup from Entity, the most basic object
             // DataModelOfEntity can also be filled from Typed (but ATM not the other way around)
-            case IDataWrapperNeedingFactory<IEntity> forEntity when item is ICanBeEntity canBeEntity:
+            case IModelSetupWithFactory<IEntity> forEntity when item is ICanBeEntity canBeEntity:
                 forEntity.Setup(canBeEntity.Entity, this);
                 return newT;
 
             // 4. Setup from item, when starting with an entity
             // In some cases we can only wrap an item, but the data is an entity-based model
-            case IDataWrapperNeedingFactory<ITypedItem> forTypedItem when item is ICanBeEntity canBeEntity:
+            case IModelSetupWithFactory<ITypedItem> forTypedItem when item is ICanBeEntity canBeEntity:
                 settings ??= new() { ItemIsStrict = true };
                 var asItem = AsItem(canBeEntity.Entity, settings);
                 // TODO: #ConvertItemSettings

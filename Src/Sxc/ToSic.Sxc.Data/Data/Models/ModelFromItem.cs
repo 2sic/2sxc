@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Models.Factory;
+﻿using System.Data;
+using ToSic.Eav.Models.Factory;
 using ToSic.Sxc.Data.Models.Sys;
 using ToSic.Sxc.Data.Sys.Factory;
 
@@ -48,11 +49,11 @@ namespace ToSic.Sxc.Data.Models;
 /// - Released in v19.01 (BETA)
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still beta, name may change to DataModelWithItem or something")]
-public abstract partial class ModelFromItem : IDataWrapperNeedingFactory<ITypedItem>, ICanBeItem, ICanBeEntity, IModelFactoryRequired
+public abstract partial class ModelFromItem : IModelSetupWithFactory<ITypedItem>, ICanBeItem, ICanBeEntity
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
-    void IDataWrapperNeedingFactory<ITypedItem>.Setup(ITypedItem source, IModelFactory modelFactory)
+    void IModelSetupWithFactory<ITypedItem>.Setup(ITypedItem source, IModelFactory modelFactory)
     {
         _item = source;
         _modelFactory = modelFactory;
