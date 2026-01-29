@@ -1,12 +1,11 @@
-﻿using ToSic.Eav.Data.Sys.Entities;
-using ToSic.Eav.Model;
+﻿using ToSic.Eav.Model;
 
 namespace ToSic.Sxc.Polymorphism.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public record PolymorphismConfiguration : ModelOfEntity
 {
-    public PolymorphismConfiguration(IEnumerable<IEntity>? list): base(list?.GetOne(Name))
+    public PolymorphismConfiguration(IEnumerable<IEntity>? list): base(list?.First(typeName: Name))
     { }
 
     public const string StaticName = "3937fa17-ef2d-40a7-b089-64164eb10bab";

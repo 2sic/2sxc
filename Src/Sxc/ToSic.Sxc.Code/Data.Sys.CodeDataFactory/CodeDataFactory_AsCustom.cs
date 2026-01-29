@@ -2,8 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Model;
 using ToSic.Eav.Model.Sys;
-using ToSic.Sxc.Data.Models;
-using ToSic.Sxc.Data.Models.Sys;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Typed;
 
@@ -87,17 +85,18 @@ partial class CodeDataFactory: IModelFactory
             return AsCustom<TCustom>(item);
 
         // Do Type-Name check
-        var typeNames = DataModelAnalyzer.GetContentTypeNamesList<TCustom>();
+        //var typeNames = DataModelAnalyzer.GetContentTypeNamesList<TCustom>();
         
         // Check all type names if they are `*` or match the data ContentType
-        if (typeNames.Any(t => t == ModelSourceAttribute.ForAnyContentType || item.Type.Is(t)))
+        DataModelAnalyzer.IsTypeNameAllowedOrThrow<TCustom>(item, id, skipTypeCheck);
+        //if (typeNames.Any(t => t == ModelSourceAttribute.ForAnyContentType || item.Type.Is(t)))
             return AsCustom<TCustom>(item);
 
-        throw new(
-            $"Item with ID {id} is not a '{string.Join(",", typeNames)}'. " +
-            $"This is probably a mistake, otherwise use '{nameof(skipTypeCheck)}: true' " +
-            $"or apply an attribute [{nameof(ModelSourceAttribute)}({nameof(ModelSourceAttribute.ContentType)} = \"expected-type-name\")] to your model class. "
-        );
+        //throw new(
+        //    $"Item with ID {id} is not a '{string.Join(",", typeNames)}'. " +
+        //    $"This is probably a mistake, otherwise use '{nameof(skipTypeCheck)}: true' " +
+        //    $"or apply an attribute [{nameof(ModelSourceAttribute)}({nameof(ModelSourceAttribute.ContentType)} = \"expected-type-name\")] to your model class. "
+        //);
     }
 
     /// <summary>

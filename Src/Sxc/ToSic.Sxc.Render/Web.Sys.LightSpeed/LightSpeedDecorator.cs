@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.AppReader.Sys;
-using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.Model;
 using ToSic.Sxc.Services.OutputCache;
 
@@ -46,7 +45,7 @@ public record LightSpeedDecorator : ModelOfEntity, IOutputCacheSettings
             .GetOrGenerate(appState, $"decorator-{TypeNameId}", () =>
             {
                 //log.A("Debug WIP - remove once this has proven to work; get LightSpeed PiggyBack - recreate");
-                var decoEntityOrNullPb = appState.Metadata?.GetOne(TypeNameId);
+                var decoEntityOrNullPb = appState.Metadata.First(typeName: TypeNameId);
                 return new LightSpeedDecorator(decoEntityOrNullPb);
             })
             .Value;

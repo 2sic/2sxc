@@ -44,7 +44,7 @@ public record ImageDecorator : ModelOfEntityCore, IImageDecorator
 
     public static ImageDecorator? GetOrNull(IHasMetadata? source, string?[] dimensions)
     {
-        var decItem = source?.Metadata?.GetOne(TypeNameId);
+        var decItem = source?.Metadata?.First(typeName: TypeNameId);
         return decItem != null
             ? new ImageDecorator(decItem, dimensions)
             : null;
