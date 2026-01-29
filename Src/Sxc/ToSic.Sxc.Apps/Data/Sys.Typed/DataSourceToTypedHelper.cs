@@ -9,7 +9,7 @@ internal class DataSourceToTypedHelper(ICodeDataFactory cdf, IDataSource dataSou
 {
 
     internal IEnumerable<T>? GetAllShared<T>(string? typeName, bool nullIfNotFound, bool useDefaultIfNameNotSetAndNotFound)
-        where T : class, ICanWrapData
+        where T : class, IDataWrapper
     {
         var autoUseDefault = typeName == null && useDefaultIfNameNotSetAndNotFound;
 
@@ -40,12 +40,12 @@ internal class DataSourceToTypedHelper(ICodeDataFactory cdf, IDataSource dataSou
 
     /// <inheritdoc />
     public T? GetOne<T>(int id, NoParamOrder npo, bool skipTypeCheck)
-        where T : class, ICanWrapData
+        where T : class, IDataWrapper
         => cdf.GetOne<T>(() => dataSource.List.GetOne(id), id, skipTypeCheck);
 
     /// <inheritdoc />
     public T? GetOne<T>(Guid id, NoParamOrder npo, bool skipTypeCheck)
-        where T : class, ICanWrapData
+        where T : class, IDataWrapper
         => cdf.GetOne<T>(() => dataSource.List.GetOne(id), id, skipTypeCheck);
 
 }

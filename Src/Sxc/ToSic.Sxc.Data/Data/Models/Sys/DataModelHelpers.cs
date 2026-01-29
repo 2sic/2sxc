@@ -1,5 +1,6 @@
-﻿using ToSic.Sxc.Data.Sys.Factory;
-using IModelFactory = ToSic.Sxc.Data.Sys.Factory.IModelFactory;
+﻿using ToSic.Eav.Data.Sys;
+using ToSic.Eav.Models.Factory;
+using ToSic.Sxc.Data.Sys.Factory;
 
 namespace ToSic.Sxc.Data.Models.Sys;
 
@@ -11,7 +12,7 @@ internal class DataModelHelpers
     /// </summary>
     /// <returns></returns>
     internal static TCustom? As<TCustom>(IModelFactory modelFactory, object? item)
-        where TCustom : class, ICanWrapData
+        where TCustom : class, IDataWrapper
         => item switch
         {
             null => null,
@@ -30,8 +31,8 @@ internal class DataModelHelpers
     /// Typically, the type will be from your `AppCode.Data`.
     /// </summary>
     /// <returns></returns>
-    internal static IEnumerable<TCustom> AsList<TCustom>(IModelFactory modelFactory, object? source, ConvertItemSettings settings, NoParamOrder npo = default, bool nullIfNull = false)
-        where TCustom : class, ICanWrapData
+    internal static IEnumerable<TCustom> AsList<TCustom>(IModelFactory modelFactory, object? source, WrapDataSettings settings, NoParamOrder npo = default, bool nullIfNull = false)
+        where TCustom : class, IDataWrapper
     {
         var list = source switch
         {

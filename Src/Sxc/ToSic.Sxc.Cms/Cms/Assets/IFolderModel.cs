@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Cms.Assets;
 /// </remarks>
 [ModelSpecs(Use = typeof(FolderModelOfEntity))]
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still tweaking details and naming v19.0x")]
-public interface IFolderModel: ICanWrapData
+public interface IFolderModel: IDataWrapper
 {
     /// <inheritdoc cref="IFolderModelSync.Name" />
     string? Name { get; }

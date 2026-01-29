@@ -1,13 +1,23 @@
 ﻿using System.Collections;
 using Microsoft.Extensions.DependencyInjection;
+using ToSic.Eav.Data.Sys;
+using ToSic.Eav.Models;
+using ToSic.Eav.Models.Factory;
 using ToSic.Eav.Models.Sys;
-using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Typed;
 
 namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 
 partial class CodeDataFactory: IModelFactory
 {
+    public TModel? Create<TSource, TModel>(TSource? source)
+        where TModel : IModelSetup<TSource>
+    {
+        var wrapper = serviceProvider.Build<TModel>();
+        var ok = wrapper.SetupModel(source);
+        return ok ? wrapper : default;
+    }
+
     /// <summary>
     /// Convert an object to a custom type, if possible.
     /// If the object is an entity-like thing, that will be converted.
@@ -15,9 +25,9 @@ partial class CodeDataFactory: IModelFactory
     /// </summary>
     [return: NotNullIfNotNull(nameof(source))]
     public TCustom? AsCustom<TCustom>(object? source, NoParamOrder npo = default, bool mock = false)
-        where TCustom : class, ICanWrapData
+        where TCustom : class, IDataWrapper
     {
-        var settings = new Factory.ConvertItemSettings { ItemIsStrict = true, UseMock = mock };
+        var settings = new WrapDataSettings { ItemIsStrict = true, UseMock = mock };
         return source switch
         {
             null when !mock => null,
@@ -28,8 +38,8 @@ partial class CodeDataFactory: IModelFactory
     }
 
     [return: NotNullIfNotNull("item")]
-    public TCustom? AsCustomFrom<TCustom, TData>(TData? item, Factory.ConvertItemSettings? settings)
-        where TCustom : class, ICanWrapData
+    public TCustom? AsCustomFrom<TCustom, TData>(TData? item, WrapDataSettings? settings)
+        where TCustom : class, IDataWrapper
     {
         if (item == null)
             return null;
@@ -43,25 +53,25 @@ partial class CodeDataFactory: IModelFactory
         {
             // 1. Direct setup from the data type specified, no further conversions
             // Should be an ITypedItemWrapper, but not enforced in the signature
-            case ICanWrap<TData> withMatchingSetup:
+            case IDataWrapperNeedingFactoryWip<TData> withMatchingSetup:
                 withMatchingSetup.Setup(item, this);
                 return newT;
 
             // 2. Setup from Item, a more complex object which already has more features
             // In some cases the type of the data is already a model, so we need to unwrap it
-            case ICanWrap<ITypedItem> forItem when item is ICanBeItem canBeItem:
+            case IDataWrapperNeedingFactoryWip<ITypedItem> forItem when item is ICanBeItem canBeItem:
                 forItem.Setup(canBeItem.Item, this);
                 return newT;
 
             // 3. Setup from Entity, the most basic object
             // DataModelOfEntity can also be filled from Typed (but ATM not the other way around)
-            case ICanWrap<IEntity> forEntity when item is ICanBeEntity canBeEntity:
+            case IDataWrapperNeedingFactoryWip<IEntity> forEntity when item is ICanBeEntity canBeEntity:
                 forEntity.Setup(canBeEntity.Entity, this);
                 return newT;
 
             // 4. Setup from item, when starting with an entity
             // In some cases we can only wrap an item, but the data is an entity-based model
-            case ICanWrap<ITypedItem> forTypedItem when item is ICanBeEntity canBeEntity:
+            case IDataWrapperNeedingFactoryWip<ITypedItem> forTypedItem when item is ICanBeEntity canBeEntity:
                 settings ??= new() { ItemIsStrict = true };
                 var asItem = AsItem(canBeEntity.Entity, settings);
                 // TODO: #ConvertItemSettings
@@ -73,7 +83,7 @@ partial class CodeDataFactory: IModelFactory
     }
 
     public TCustom? GetOne<TCustom>(Func<IEntity?> getItem, object id, bool skipTypeCheck)
-        where TCustom : class, ICanWrapData
+        where TCustom : class, IDataWrapper
     {
         var item = getItem();
         if (item == null)
@@ -102,7 +112,7 @@ partial class CodeDataFactory: IModelFactory
     /// Create list of custom-typed ITypedItems
     /// </summary>
     public IEnumerable<TCustom> AsCustomList<TCustom>(object? source, NoParamOrder npo, bool nullIfNull)
-        where TCustom : class, ICanWrapData
+        where TCustom : class, IDataWrapper
     {
         return source switch
         {

@@ -158,7 +158,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     /// <inheritdoc cref="ITypedApi.AsStack{T}" />
     public T AsStack<T>(params object[] items)
-        where T : class, ICanWrapData, new()
+        where T : class, IDataWrapper, new()
         => CodeApi.Cdf.AsStack<T>(items);
 
     #endregion
@@ -215,12 +215,12 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     /// <inheritdoc />
     public T As<T>(object source, NoParamOrder npo = default)
-        where T : class, ICanWrapData
+        where T : class, IDataWrapper
         => CodeApi.Cdf.AsCustom<T>(source: source);
 
     /// <inheritdoc />
     public IEnumerable<T> AsList<T>(object source, NoParamOrder npo = default, bool nullIfNull = default)
-        where T : class, ICanWrapData
+        where T : class, IDataWrapper
         => CodeApi.Cdf.AsCustomList<T>(source: source, npo: npo, nullIfNull: nullIfNull);
 
     #endregion

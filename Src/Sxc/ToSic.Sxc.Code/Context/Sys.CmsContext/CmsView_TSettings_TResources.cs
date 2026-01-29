@@ -21,8 +21,8 @@ namespace ToSic.Sxc.Context.Sys.CmsContext;
 /// </param>
 internal class CmsView<TSettings, TResources>(CmsContext parent, IBlock block, bool settingsPropsRequired = true)
     : CmsView(parent, block), ICmsView<TSettings, TResources>
-    where TSettings : class, ICanWrapData, new()
-    where TResources : class, ICanWrapData, new()
+    where TSettings : class, IDataWrapper, new()
+    where TResources : class, IDataWrapper, new()
 {
     private readonly IView _view = block.View!;
 

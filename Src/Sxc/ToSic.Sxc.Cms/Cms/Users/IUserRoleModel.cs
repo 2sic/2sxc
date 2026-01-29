@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Cms.Users;
 /// </remarks>
 [ModelSpecs(Use = typeof(UserRoleModelOfEntity))]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
-public interface IUserRoleModel : ICanWrapData
+public interface IUserRoleModel : IDataWrapper
 {
     /// <summary>
     /// The Role ID in the database.

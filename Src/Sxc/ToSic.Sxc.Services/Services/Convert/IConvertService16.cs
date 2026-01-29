@@ -145,11 +145,11 @@ public interface IConvertService16
 
     /// <inheritdoc cref="ITypedApi.As{T}"/>
     T As<T>(ICanBeEntity source, NoParamOrder npo = default)
-        where T : class, ICanWrapData;
+        where T : class, IDataWrapper;
     
     /// <inheritdoc cref="ITypedApi.AsList{T}"/>
     IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder npo = default, bool nullIfNull = default)
-        where T : class, ICanWrapData;
+        where T : class, IDataWrapper;
 
     #endregion
 
@@ -179,7 +179,7 @@ public interface IConvertService16
     /// New v21; replaces older ToItem(..., mock: true)
     /// </remarks>
     T ToMock<T>(object data, NoParamOrder npo = default, bool? propsRequired = default)
-        where T : class, ICanWrapData;
+        where T : class, IDataWrapper;
 
     #endregion
 }
