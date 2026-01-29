@@ -1,13 +1,11 @@
-﻿using ToSic.Sxc.Data.Models;
+﻿namespace ToSic.Sxc.Cms.Sites.Sys;
 
-namespace ToSic.Sxc.Cms.Sites.Sys;
-
-public class SiteModelOfEntity: ModelFromEntity, ISiteModel
+public record SiteModelOfEntity: ModelOfEntityCore, ISiteModel
 {
-    public int Id => _entity.EntityId;
-    public Guid Guid => _entity.EntityGuid;
-    public DateTime Created => _entity.Created;
-    public DateTime Modified => _entity.Modified;
+    public int Id => Entity.EntityId;
+    public Guid Guid => Entity.EntityGuid;
+    public DateTime Created => Entity.Created;
+    public DateTime Modified => Entity.Modified;
     public string? Name => GetThis<string>(null);
     public string? Url => GetThis<string>(null);
     public string? Languages => GetThis<string>(null);
