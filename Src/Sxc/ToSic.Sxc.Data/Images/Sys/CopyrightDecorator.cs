@@ -2,7 +2,7 @@
 
 // TODO: LOCATION / NAMESPACE not final
 [PrivateApi("WIP v16.08")]
-[ModelSource(ContentType = ContentTypeNameId)]
+[ModelSpecs(ContentType = ContentTypeNameId)]
 public record CopyrightDecorator : ModelOfEntityCore
 {
     public const string ContentTypeNameId = "077835ec-889e-433f-8acf-a4715acb3503";

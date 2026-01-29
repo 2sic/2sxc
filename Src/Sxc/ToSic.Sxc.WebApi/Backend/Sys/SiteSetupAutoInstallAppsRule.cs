@@ -3,7 +3,7 @@ using ToSic.Eav.WebApi.Sys.Install;
 
 namespace ToSic.Sxc.Backend.Sys;
 
-[ModelSource(ContentType = ContentTypeNameId)]
+[ModelSpecs(ContentType = ContentTypeNameId)]
 internal record SiteSetupAutoInstallAppsRule : ModelOfEntity
 {
     public const string ContentTypeNameId = "833baa25-899b-4242-ade7-323a319bcf71";

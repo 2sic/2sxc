@@ -6,7 +6,7 @@ using ToSic.Sxc.Services.OutputCache;
 namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-[ModelSource(ContentType = ContentTypeNameId)]
+[ModelSpecs(ContentType = ContentTypeNameId)]
 public record LightSpeedDecorator : ModelOfEntity, IOutputCacheSettings
 {
     /// <summary>

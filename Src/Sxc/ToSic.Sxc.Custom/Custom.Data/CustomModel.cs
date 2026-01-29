@@ -53,5 +53,5 @@ namespace Custom.Data;
 /// History: New in 19.03
 /// </remarks>
 [PublicApi]
-[ModelSource(ContentType = "*")]
+[ModelSpecs(ContentType = "*")]
 public class CustomModel: ModelFromItem;

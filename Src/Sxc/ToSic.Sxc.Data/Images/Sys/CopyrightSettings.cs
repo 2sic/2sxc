@@ -8,7 +8,7 @@
 /// * As of v21 not actively used in code, but in this structure to ensure consistency
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
-[ModelSource(ContentType = ContentTypeNameId)]
+[ModelSpecs(ContentType = ContentTypeNameId)]
 public record CopyrightSettings : ModelOfEntityCore
 {
     /// <summary>

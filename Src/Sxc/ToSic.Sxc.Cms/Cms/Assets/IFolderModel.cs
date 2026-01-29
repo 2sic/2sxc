@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Cms.Assets;
 /// * Not to be seen as final, since we may rename this type when we also
 /// * This is similar to the <see cref="IFolder"/> but still a bit different. For example, it has a <see cref="Folder"/> property.
 /// </remarks>
-[ModelCreation(Use = typeof(FolderModelOfEntity))]
+[ModelSpecs(Use = typeof(FolderModelOfEntity))]
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still tweaking details and naming v19.0x")]
 public interface IFolderModel: ICanWrapData
 {

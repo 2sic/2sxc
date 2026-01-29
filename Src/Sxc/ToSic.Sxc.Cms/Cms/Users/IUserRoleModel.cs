@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Cms.Users;
 /// 
 /// * Introduced in v19.01
 /// </remarks>
-[ModelCreation(Use = typeof(UserRoleModelOfEntity))]
+[ModelSpecs(Use = typeof(UserRoleModelOfEntity))]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 public interface IUserRoleModel : ICanWrapData
 {

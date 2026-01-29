@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Edit.Toolbar.Sys;
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-[ModelSource(ContentType = ContentTypeNameId)]
+[ModelSpecs(ContentType = ContentTypeNameId)]
 public record ToolbarButtonDecorator : ModelOfEntityCore
 {
     public const string TypeName = "ToolbarButtonDecorator";

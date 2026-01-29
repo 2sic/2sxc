@@ -63,7 +63,7 @@ namespace Custom.Data;
 /// * It's not abstract, even if the most common case is to inherit, as there are cases where you want to use it directly.
 /// </remarks>
 [PublicApi]
-[ModelSource(ContentType = ModelSourceAttribute.ForAnyContentType)]
+[ModelSpecs(ContentType = ModelSpecsAttribute.ForAnyContentType)]
 public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLookup, IModelFactoryRequired
 {
     #region Explicit Interfaces for internal use - Setup, etc.
