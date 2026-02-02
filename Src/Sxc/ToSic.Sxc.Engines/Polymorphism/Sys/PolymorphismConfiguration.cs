@@ -3,6 +3,7 @@
 namespace ToSic.Sxc.Polymorphism.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
+[ModelSpecs(ContentType = StaticName)]
 public record PolymorphismConfiguration : ModelOfEntity
 {
     public const string StaticName = "3937fa17-ef2d-40a7-b089-64164eb10bab";
