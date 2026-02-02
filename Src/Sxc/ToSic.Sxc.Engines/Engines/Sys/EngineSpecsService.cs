@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Apps.Sys.AppJson;
-using ToSic.Eav.Environment.Sys.ServerPaths;
+﻿using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Blocks.Sys;
@@ -9,9 +8,8 @@ namespace ToSic.Sxc.Engines.Sys;
 public class EngineSpecsService(
     IServerPaths serverPaths,
     EnginePolymorphism enginePolymorphism,
-    EngineCheckTemplate engineCheckTemplate,
-    LazySvc<IAppJsonConfigurationService> appJsonService
-) : ServiceBase("Sxc.EgSpec", connect: [serverPaths, enginePolymorphism, engineCheckTemplate, appJsonService])
+    EngineCheckTemplate engineCheckTemplate
+) : ServiceBase("Sxc.EgSpec", connect: [serverPaths, enginePolymorphism, engineCheckTemplate])
 {
     /// <summary>
     /// Do various preflight checks and create the Engine Specs according to the information in the BlockSpecs
@@ -29,29 +27,6 @@ public class EngineSpecsService(
         var appPathRootInInstallation = block.App.PathSwitch(view.IsShared, PathTypes.PhysRelative);
         var (polymorphPathOrNull, edition) = enginePolymorphism
             .PolymorphTryToSwitchPath(appPathRootInInstallation, view, appReader);
-
-        // if edition is empty get edition from AppJsonConfiguration
-        if (edition.IsEmpty())
-        {
-            var appJson = appJsonService.Value.GetAppJson(block.App.AppId);
-            if (appJson?.Editions?.Count > 0)
-            {
-                var defaultOrFirstEdition = appJson.Editions.OrderByDescending(e => e.Value.IsDefault).FirstOrDefault();
-                if (defaultOrFirstEdition.Key != null)
-                {
-                    edition = defaultOrFirstEdition.Key;
-                    l.A($"Using edition from app.json: {edition}, isDefault:{defaultOrFirstEdition.Value.IsDefault}");
-
-                    // Recalculate the template path with the edition
-                    var editionPath = Path.Combine(appPathRootInInstallation, edition, view.Path).ToAbsolutePathForwardSlash();
-                    if (File.Exists(serverPaths.FullAppPath(editionPath)))
-                    {
-                        polymorphPathOrNull = editionPath;
-                        l.A($"Found template in edition path: {editionPath}");
-                    }
-                }
-            }
-        }
 
         var templatePath = polymorphPathOrNull
                            ?? Path.Combine(appPathRootInInstallation, view.Path).ToAbsolutePathForwardSlash();
