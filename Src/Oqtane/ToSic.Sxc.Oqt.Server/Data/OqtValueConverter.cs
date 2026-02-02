@@ -15,37 +15,25 @@ namespace ToSic.Sxc.Oqt.Server.Data;
 /// The Oqtane implementation of the <see cref="IValueConverter"/> which converts "file:22" or "page:5" to the url,
 /// </summary>
 [PrivateApi]
-internal class OqtValueConverter : ValueConverterBase
+internal class OqtValueConverter(
+    LazySvc<IFileRepository> fileRepository,
+    LazySvc<IFolderRepository> folderRepository,
+    LazySvc<ITenantResolver> tenantResolver,
+    LazySvc<IPageRepository> pageRepository,
+    LazySvc<IServerPaths> serverPaths,
+    LazySvc<AliasResolver> aliasResolverLazy,
+    LazySvc<ISysFeaturesService> featuresLazy)
+    : ValueConverterBase("Oqt.ValCn",
+        connect: [featuresLazy, fileRepository, folderRepository, tenantResolver, pageRepository, serverPaths, aliasResolverLazy])
 {
-    private readonly LazySvc<ISysFeaturesService> _featuresLazy;
-    public LazySvc<IFileRepository> FileRepository { get; }
-    public LazySvc<IFolderRepository> FolderRepository { get; }
-    public LazySvc<ITenantResolver> TenantResolver { get; }
-    public LazySvc<IPageRepository> PageRepository { get; }
-    public LazySvc<IServerPaths> ServerPaths { get; }
-    public LazySvc<AliasResolver> AliasResolverLazy { get; }
+    public LazySvc<IFileRepository> FileRepository { get; } = fileRepository;
+    public LazySvc<IFolderRepository> FolderRepository { get; } = folderRepository;
+    public LazySvc<ITenantResolver> TenantResolver { get; } = tenantResolver;
+    public LazySvc<IPageRepository> PageRepository { get; } = pageRepository;
+    public LazySvc<IServerPaths> ServerPaths { get; } = serverPaths;
+    public LazySvc<AliasResolver> AliasResolverLazy { get; } = aliasResolverLazy;
 
     #region DI Constructor
-
-    public OqtValueConverter(
-        LazySvc<IFileRepository> fileRepository,
-        LazySvc<IFolderRepository> folderRepository,
-        LazySvc<ITenantResolver> tenantResolver,
-        LazySvc<IPageRepository> pageRepository,
-        LazySvc<IServerPaths> serverPaths,
-        LazySvc<AliasResolver> aliasResolverLazy,
-        LazySvc<ISysFeaturesService> featuresLazy) : base("Oqt.ValCn")
-    {
-        ConnectLogs([
-            _featuresLazy = featuresLazy,
-            FileRepository = fileRepository,
-            FolderRepository = folderRepository,
-            TenantResolver = tenantResolver,
-            PageRepository = pageRepository,
-            ServerPaths = serverPaths,
-            AliasResolverLazy = aliasResolverLazy
-        ]);
-    }
 
     protected Alias Alias
     {
@@ -157,7 +145,7 @@ internal class OqtValueConverter : ValueConverterBase
             var result = $"{Alias.Path}/app/{appName}/adam/{filePath}".PrefixSlash();
 
             // optionally do extra security checks (new in 10.02)
-            if (!_featuresLazy.Value.IsEnabled(AdamRestrictLookupToEntity.Guid)) return result;
+            if (!featuresLazy.Value.IsEnabled(AdamRestrictLookupToEntity.Guid)) return result;
 
             // check if it's in this item. We won't check the field, just the item, so the field is ""
             return !AdamSecurity.PathIsInItemAdam(itemGuid, "", pathInAdam)

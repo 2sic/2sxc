@@ -13,26 +13,16 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Context;
 
-internal class OqtModule: Module<Module>
+internal class OqtModule(
+    SettingsHelper settingsHelper,
+    IModuleRepository moduleRepository,
+    IAppsCatalog appsCatalog,
+    LazySvc<AppFinder> appFinderLazy,
+    ISite site)
+    : Module<Module>($"{OqtConstants.OqtLogPrefix}.Cont",
+        connect: [settingsHelper, moduleRepository, appsCatalog, appFinderLazy, site])
 {
-    private readonly SettingsHelper _settingsHelper;
-    private readonly IModuleRepository _moduleRepository;
-    private readonly IAppsCatalog _appsCatalog;
-    private readonly LazySvc<AppFinder> _appFinderLazy;
-    private readonly ISite _site;
     private Dictionary<string, string> _settings;
-
-    public OqtModule(SettingsHelper settingsHelper, IModuleRepository moduleRepository,
-        IAppsCatalog appsCatalog, LazySvc<AppFinder> appFinderLazy, ISite site) : base ($"{OqtConstants.OqtLogPrefix}.Cont")
-    {
-        ConnectLogs([
-            _settingsHelper = settingsHelper,
-            _moduleRepository = moduleRepository,
-            _appsCatalog = appsCatalog,
-            _appFinderLazy = appFinderLazy,
-            _site = site
-        ]);
-    }
 
     public new OqtModule Init(Module module)
     {
@@ -41,7 +31,7 @@ internal class OqtModule: Module<Module>
 
         InitializeIsPrimary(module);
 
-        _settings = _settingsHelper.Init(EntityNames.Module, module.ModuleId).Settings;
+        _settings = settingsHelper.Init(EntityNames.Module, module.ModuleId).Settings;
 
         _id = module.ModuleId;
 
@@ -62,7 +52,7 @@ internal class OqtModule: Module<Module>
     // Temp implementation, don't support im MVC
     public override IModule Init(int id)
     {
-        var module = _moduleRepository.GetModule(id);
+        var module = moduleRepository.GetModule(id);
         return Init(module);
     }
 
@@ -82,7 +72,7 @@ internal class OqtModule: Module<Module>
                 return _blockIdentifier;
 
             // find ZoneId, AppId and prepare settings for next values
-            var zoneId = _site.ZoneId; // ZoneMapper.GetZoneId(UnwrappedContents.SiteId);
+            var zoneId = site.ZoneId; // ZoneMapper.GetZoneId(UnwrappedContents.SiteId);
             var (appId, appNameId) = GetInstanceAppId(zoneId); //appId ?? TestIds.Blog.App;
             var block = Guid.Empty;
             if (_settings.ContainsKey(ModuleSettingNames.ContentGroup))
@@ -107,13 +97,13 @@ internal class OqtModule: Module<Module>
         var l = Log.Fn<(int, string)>($"{zoneId}", timer: true);
 
         if (IsContent) 
-            return l.Return((_appsCatalog.DefaultAppIdentity(zoneId).AppId, "Content"), "Content");
+            return l.Return((appsCatalog.DefaultAppIdentity(zoneId).AppId, "Content"), "Content");
 
         if (!_settings.TryGetValue(ModuleSettingNames.AppName, out var setting)) 
             return l.Return((KnownAppsConstants.AppIdEmpty, KnownAppsConstants.AppNameIdEmpty), KnownAppsConstants.AppNameIdEmpty);
 
         var guid = setting ?? "";
-        var appId = _appFinderLazy.Value.FindAppId(zoneId, guid);
+        var appId = appFinderLazy.Value.FindAppId(zoneId, guid);
         return l.ReturnAsOk((appId, guid));
 
     }
