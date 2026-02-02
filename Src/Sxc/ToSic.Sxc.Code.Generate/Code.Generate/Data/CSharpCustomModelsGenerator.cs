@@ -34,11 +34,8 @@ internal class CSharpCustomModelsGenerator(IUser user, IAppReaderFactory appRead
     {
         var codeSpecs = base.BuildSpecs(parameters);
 
-        // Override defaults for CustomModel generation
-        var modelSuffix = parameters.Suffix ?? "Model";
         codeSpecs = codeSpecs with
         {
-            Suffix = modelSuffix,
             //DataClassGeneratedSuffix = modelSuffix, // Custom suffix for model classes
             DataInherits = "Custom.Data.CustomModel", // Inherit from CustomModel instead of CustomItem
             FileGeneratedSuffix = ".Generated" // Suffix is handled in class name
