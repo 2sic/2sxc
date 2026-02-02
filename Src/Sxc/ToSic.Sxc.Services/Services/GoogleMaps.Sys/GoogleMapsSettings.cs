@@ -7,9 +7,10 @@ namespace ToSic.Sxc.Services.GoogleMaps.Sys;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
+[ModelSpecs(ContentType = ContentTypeNameId)]
 public record GoogleMapsSettings() : ModelOfEntity
 {
-    public static string TypeIdentifier = "f5764f60-2621-4a5d-9391-100fbe664640";
+    public const string ContentTypeNameId = "f5764f60-2621-4a5d-9391-100fbe664640";
 
     public const string SettingsPath = "Settings.GoogleMaps";
 
