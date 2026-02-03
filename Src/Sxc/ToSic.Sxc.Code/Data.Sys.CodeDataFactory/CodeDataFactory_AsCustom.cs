@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Models;
 using ToSic.Eav.Models.Factory;
 using ToSic.Eav.Models.Sys;
@@ -25,9 +24,9 @@ partial class CodeDataFactory: IModelFactory
     /// </summary>
     [return: NotNullIfNotNull(nameof(source))]
     public TCustom? AsCustom<TCustom>(object? source, NoParamOrder npo = default, bool mock = false)
-        where TCustom : class, IDataWrapper
+        where TCustom : class, IModelOfData
     {
-        var settings = new WrapDataSettings { ItemIsStrict = true, UseMock = mock };
+        var settings = new ModelSettings { ItemIsStrict = true, UseMock = mock };
         return source switch
         {
             null when !mock => null,
@@ -38,8 +37,8 @@ partial class CodeDataFactory: IModelFactory
     }
 
     [return: NotNullIfNotNull("item")]
-    public TCustom? AsCustomFrom<TCustom, TData>(TData? item, WrapDataSettings? settings)
-        where TCustom : class, IDataWrapper
+    public TCustom? AsCustomFrom<TCustom, TData>(TData? item, ModelSettings? settings)
+        where TCustom : class, IModelOfData
     {
         if (item == null)
             return null;
@@ -88,7 +87,7 @@ partial class CodeDataFactory: IModelFactory
     }
 
     public TCustom? GetOne<TCustom>(Func<IEntity?> getItem, object id, bool skipTypeCheck)
-        where TCustom : class, IDataWrapper
+        where TCustom : class, IModelOfData
     {
         var item = getItem();
         if (item == null)
@@ -107,7 +106,7 @@ partial class CodeDataFactory: IModelFactory
     /// Create list of custom-typed ITypedItems
     /// </summary>
     public IEnumerable<TCustom> AsCustomList<TCustom>(object? source, NoParamOrder npo, bool nullIfNull)
-        where TCustom : class, IDataWrapper
+        where TCustom : class, IModelOfData
     {
         return source switch
         {

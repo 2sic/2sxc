@@ -1,6 +1,6 @@
 ﻿using System.Collections;
-using ToSic.Eav.Data.Sys;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.Models.Sys;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Typed;
 using ToSic.Sxc.Data.Sys.Wrappers;
@@ -14,7 +14,7 @@ partial class CodeDataFactory
     #region AsTyped Implementations
 
     [return: NotNullIfNotNull(nameof(data)), NotNullIfNotNull(nameof(fallback))]
-    public ITypedItem? AsItem(object? data, WrapDataSettings settings, NoParamOrder npo = default, ITypedItem? fallback = default)
+    public ITypedItem? AsItem(object? data, ModelSettings settings, NoParamOrder npo = default, ITypedItem? fallback = default)
     {
         // If we need mock data, return a fake object
         if (settings.UseMock)
@@ -31,7 +31,7 @@ partial class CodeDataFactory
     /// </summary>
     /// <returns></returns>
     [return: NotNullIfNotNull(nameof(entity))]
-    public ITypedItem? AsItem(IEntity? entity, WrapDataSettings settings)
+    public ITypedItem? AsItem(IEntity? entity, ModelSettings settings)
         => entity == null
             ? null
             : new TypedItemOfEntity(entity, this, propsRequired: settings.ItemIsStrict);
@@ -41,7 +41,7 @@ partial class CodeDataFactory
         => field ??= new(Log, logFirstMax: 25, reLogIteration: 100);
 
     [return: NotNullIfNotNull(nameof(data))]
-    internal ITypedItem? AsItemInternal(object? data, WrapDataSettings settings, int recursions)
+    internal ITypedItem? AsItemInternal(object? data, ModelSettings settings, int recursions)
     {
         // Only log the first 25 calls to this method, then stop logging
         var l = AsItemLogFilter.FnOrNull<ITypedItem?>();
@@ -88,7 +88,7 @@ partial class CodeDataFactory
                 : l.Return(new TypedItemOfEntity(e, this, propsRequired: settings.ItemIsStrict), typeName);
     }
 
-    public IEnumerable<ITypedItem> EntitiesToItems(IEnumerable<IEntity>? entities, WrapDataSettings settings)
+    public IEnumerable<ITypedItem> EntitiesToItems(IEnumerable<IEntity>? entities, ModelSettings settings)
     {
         if (entities == null)
             return [];
@@ -105,10 +105,10 @@ partial class CodeDataFactory
         return result;
     }
 
-    public IEnumerable<ITypedItem> AsItems(object list, WrapDataSettings settings, NoParamOrder npo = default, IEnumerable<ITypedItem>? fallback = null) 
+    public IEnumerable<ITypedItem> AsItems(object list, ModelSettings settings, NoParamOrder npo = default, IEnumerable<ITypedItem>? fallback = null) 
         => AsItemList(list, fallback, MaxRecursions, settings);
 
-    private IEnumerable<ITypedItem> AsItemList(object list, IEnumerable<ITypedItem>? fallback, int recursions, WrapDataSettings settings)
+    private IEnumerable<ITypedItem> AsItemList(object list, IEnumerable<ITypedItem>? fallback, int recursions, ModelSettings settings)
     {
         var l = Log.Fn<IEnumerable<ITypedItem>>($"{nameof(list)}: '{list}'; Settings: {settings}");
 

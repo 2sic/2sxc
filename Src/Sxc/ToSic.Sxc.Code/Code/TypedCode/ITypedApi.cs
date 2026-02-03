@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.DataSource;
+using ToSic.Eav.Models;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Context;
@@ -187,7 +188,7 @@ public interface ITypedApi
     /// <returns>Item of the custom type</returns>
     /// <remarks>New in 17.07</remarks>
     T AsStack<T>(params object[] items)
-        where T : class, IDataWrapper, new();
+        where T : class, IModelOfData, new();
 
     /// <summary>
     /// Convert an Entity or TypedItem into a strongly typed object.
@@ -202,7 +203,7 @@ public interface ITypedApi
     /// Parameter `mock` removed in v21 (breaking, but probably never used in the wild); use `Convert.ToMock()` instead
     /// </remarks>
     T As<T>(object source, NoParamOrder npo = default)
-        where T : class, IDataWrapper;
+        where T : class, IModelOfData;
 
     /// <summary>
     /// Convert a list of Entities or TypedItems into a strongly typed list.
@@ -217,5 +218,5 @@ public interface ITypedApi
     /// Release in v17.05
     /// </remarks>
     IEnumerable<T> AsList<T>(object source, NoParamOrder npo = default, bool nullIfNull = default)
-        where T : class, IDataWrapper;
+        where T : class, IModelOfData;
 }

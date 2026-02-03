@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.Data.Sys;
-using ToSic.Eav.Data.Sys.PropertyStack;
+﻿using ToSic.Eav.Data.Sys.PropertyStack;
+using ToSic.Eav.Models.Sys;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data.Sys.Fields;
 using static ToSic.Sxc.Data.Sys.Typed.TypedHelpers;
@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 
 partial class CodeDataFactory
 {
-    public IField? Field(ITypedItem parent, bool supportOldMetadata, string? name, WrapDataSettings settings)
+    public IField? Field(ITypedItem parent, bool supportOldMetadata, string? name, ModelSettings settings)
     {
         if (name.IsEmptyOrWs())
         {

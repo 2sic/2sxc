@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Data;
+﻿using ToSic.Eav.Models;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Context;
 
@@ -13,8 +14,8 @@ namespace ToSic.Sxc.Context;
 /// </remarks>
 [PublicApi]
 public interface ICmsView<out TSettings, out TResources> : ICmsView
-    where TSettings : class, IDataWrapper, new()
-    where TResources : class, IDataWrapper, new()
+    where TSettings : class, IModelOfData, new()
+    where TResources : class, IModelOfData, new()
 {
     /// <summary>
     /// All the app settings which are custom for each app.

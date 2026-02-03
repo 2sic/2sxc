@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.Models;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
@@ -106,7 +107,7 @@ public abstract class RazorTyped<TModel>()
 
     /// <inheritdoc cref="ITypedApi.AsStack{T}" />
     public T AsStack<T>(params object[] items)
-        where T : class, IDataWrapper, new()
+        where T : class, IModelOfData, new()
         => CodeApi.Cdf.AsStack<T>(items);
 
     #endregion
@@ -170,12 +171,12 @@ public abstract class RazorTyped<TModel>()
 
     /// <inheritdoc />
     public T As<T>(object source, NoParamOrder npo = default)
-        where T : class, IDataWrapper
+        where T : class, IModelOfData
         => CodeApi.Cdf.AsCustom<T>(source: source, npo: npo)!;
 
     /// <inheritdoc />
     public IEnumerable<T> AsList<T>(object source, NoParamOrder npo = default, bool nullIfNull = default)
-        where T : class, IDataWrapper
+        where T : class, IModelOfData
         => CodeApi.Cdf.AsCustomList<T>(source: source, npo: npo, nullIfNull: nullIfNull);
 
     #endregion

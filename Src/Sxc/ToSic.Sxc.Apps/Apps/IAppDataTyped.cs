@@ -65,7 +65,7 @@ public interface IAppDataTyped: IDataSource
     /// </remarks>
     IEnumerable<T>? GetAll<T>(NoParamOrder npo = default, string? typeName = default,
         bool nullIfNotFound = default)
-        where T : class, IDataWrapper;
+        where T : class, IModelOfData;
 
     /// <summary>
     /// Get a single item from the app with the specified ID.
@@ -79,7 +79,7 @@ public interface IAppDataTyped: IDataSource
     /// Released in v17.03.
     /// </remarks>
     T? GetOne<T>(int id, NoParamOrder npo = default, bool skipTypeCheck = false)
-        where T : class, IDataWrapper;
+        where T : class, IModelOfData;
 
 
     /// <summary>
@@ -94,7 +94,7 @@ public interface IAppDataTyped: IDataSource
     /// Released in v17.03.
     /// </remarks>
     T? GetOne<T>(Guid id, NoParamOrder npo = default, bool skipTypeCheck = false)
-        where T : class, IDataWrapper;
+        where T : class, IModelOfData;
 
     #endregion
 }

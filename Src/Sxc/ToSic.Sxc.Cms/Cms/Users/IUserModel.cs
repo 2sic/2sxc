@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Cms.Users;
 /// </remarks>
 [ModelSpecs(Use = typeof(UserModelOfEntity))]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
-public interface IUserModel : IDataWrapper
+public interface IUserModel : IModelOfData
 {
     /// <inheritdoc cref="IUser.Email"/>
     string? Email { get; }

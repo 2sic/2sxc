@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.LookUp;
+using ToSic.Eav.Models;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Template;
 using ToSic.Sxc.Services.Templates;
@@ -154,5 +155,5 @@ public interface ITemplateService
     /// If neither parser nor sources are provided, an empty parser will be used, resulting in no changes to the original values.
     /// </remarks>
     T ParseAs<T>(ICanBeEntity original, NoParamOrder npo = default, bool allowHtml = false, ITemplateEngine? parser = null, IEnumerable<ILookUp>? sources = null, int recursions = TemplateEngineTokens.MaxDepth)
-        where T : class, IDataWrapper;
+        where T : class, IModelOfData;
 }

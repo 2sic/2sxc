@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Context;
-using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.PropertyLookup;
 using ToSic.Eav.Metadata;
+using ToSic.Eav.Models.Sys;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Images;
@@ -23,11 +23,11 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// </summary>
     [return: NotNullIfNotNull(nameof(source))]
     TCustom? AsCustom<TCustom>(object? source, NoParamOrder npo = default, bool mock = false)
-        where TCustom : class, IDataWrapper;
+        where TCustom : class, IModelOfData;
 
     [return: NotNullIfNotNull(nameof(item))]
-    TCustom? AsCustomFrom<TCustom, TData>(TData? item, WrapDataSettings? settings = default)
-        where TCustom : class, IDataWrapper;
+    TCustom? AsCustomFrom<TCustom, TData>(TData? item, ModelSettings? settings = default)
+        where TCustom : class, IModelOfData;
 
     /// <summary>
     /// Create list of custom-typed ITypedItems
@@ -36,11 +36,11 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// Never null, unless explicitly requested with `nullIfNull`, otherwise it would return an empty list.
     /// </remarks>
     IEnumerable<TCustom> AsCustomList<TCustom>(object? source, NoParamOrder npo, bool nullIfNull)
-        where TCustom : class, IDataWrapper;
+        where TCustom : class, IModelOfData;
 
     [return: NotNullIfNotNull(nameof(data))]
-    ITyped? AsTyped(object data, WrapDataSettings settings, string? detailsMessage = default);
-    IEnumerable<ITyped>? AsTypedList(object list, WrapDataSettings settings);
+    ITyped? AsTyped(object data, ModelSettings settings, string? detailsMessage = default);
+    IEnumerable<ITyped>? AsTypedList(object list, ModelSettings settings);
     int CompatibilityLevel { get; }
     CodeDataServices Services { get; }
 
@@ -73,13 +73,13 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// <returns></returns>
     IDynamicEntity CodeAsDyn(IEntity entity);
 
-    IDynamicEntity AsDynamic(IEntity entity, WrapDataSettings settings);
+    IDynamicEntity AsDynamic(IEntity entity, ModelSettings settings);
 
     /// <summary>
     /// Convert a list of Entities into a DynamicEntity.
     /// Only used in DynamicCodeRoot.
     /// </summary>
-    IDynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, WrapDataSettings settings, NoParamOrder npo = default, IEntity? parent = default, string? field = default);
+    IDynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, ModelSettings settings, NoParamOrder npo = default, IEntity? parent = default, string? field = default);
 
     /// <summary>
     /// Convert any object into a dynamic list.
@@ -94,7 +94,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     object? AsDynamicFromObject(object dynObject);
 
     dynamic? MergeDynamic(object[] entities);
-    ITypedItem? AsItem(object? data, WrapDataSettings settings, NoParamOrder npo = default, ITypedItem? fallback = default);
+    ITypedItem? AsItem(object? data, ModelSettings settings, NoParamOrder npo = default, ITypedItem? fallback = default);
 
     /// <summary>
     /// Quick convert an entity to item - if not null, otherwise return null.
@@ -103,26 +103,26 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// <param name="settings"></param>
     /// <returns></returns>
     [return: NotNullIfNotNull(nameof(entity))]
-    ITypedItem? AsItem(IEntity? entity, WrapDataSettings settings);
+    ITypedItem? AsItem(IEntity? entity, ModelSettings settings);
 
-    IEnumerable<ITypedItem> EntitiesToItems(IEnumerable<IEntity> entities, WrapDataSettings settings);
-    IEnumerable<ITypedItem> AsItems(object list, WrapDataSettings settings, NoParamOrder npo = default, IEnumerable<ITypedItem>? fallback = default);
+    IEnumerable<ITypedItem> EntitiesToItems(IEnumerable<IEntity> entities, ModelSettings settings);
+    IEnumerable<ITypedItem> AsItems(object list, ModelSettings settings, NoParamOrder npo = default, IEnumerable<ITypedItem>? fallback = default);
     void SetCompatibilityLevel(int compatibilityLevel);
     void SetFallbacks(ISite site, int? compatibility = default, /*AdamManager*/ object? adamManagerPrepared = default);
     object? Json2Jacket(string json, string? fallback = default);
     ITypedStack AsStack(object[] parts);
 
     T AsStack<T>(object[] parts)
-        where T : class, IDataWrapper, new();
+        where T : class, IModelOfData, new();
 
     IDynamicStack AsDynStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources);
     ITypedStack AsTypedStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources);
-    IField? Field(ITypedItem parent, bool supportOldMetadata, string? name, WrapDataSettings settings);
+    IField? Field(ITypedItem parent, bool supportOldMetadata, string? name, ModelSettings settings);
     IEntity AsEntity(object thingToConvert);
     IEntity FakeEntity(int appId);
 
     TCustom? GetOne<TCustom>(Func<IEntity?> getItem, object id, bool skipTypeCheck)
-        where TCustom : class, IDataWrapper;
+        where TCustom : class, IModelOfData;
 
     IEntity PlaceHolderInBlock(int? appIdOrNull, IEntity? parent, string? fieldName);
 

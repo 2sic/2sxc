@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.PropertyLookup;
+using ToSic.Eav.Models;
 using ToSic.Eav.Sys;
 
 namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
@@ -13,7 +14,7 @@ partial class CodeDataFactory
 
     [PrivateApi]
     public T AsStack<T>(object[] parts)
-        where T : class, IDataWrapper, new() 
+        where T : class, IModelOfData, new() 
         => AsCustom<T>(AsStack(parts));
 
     private TStackType AsStack<TStackType>(string? name, object[] parts, bool strictTypes, Func<string, List<KeyValuePair<string, IPropertyLookup>>, TStackType> generate)

@@ -104,12 +104,12 @@ public abstract partial class ModelFromItem : IModelSetupWithFactory<ITypedItem>
 
     /// <inheritdoc cref="DataModelHelpers.As{TCustom}"/>
     protected T? As<T>(object item)
-        where T : class, IDataWrapper
+        where T : class, IModelOfData
         => DataModelHelpers.As<T>(_modelFactory, item);
 
     /// <inheritdoc cref="DataModelHelpers.AsList{T}"/>
     protected IEnumerable<T>? AsList<T>(object source, NoParamOrder npo = default, bool nullIfNull = false)
-        where T : class, IDataWrapper
+        where T : class, IModelOfData
         => DataModelHelpers.AsList<T>(_modelFactory, source, new() { ItemIsStrict = true }, nullIfNull: nullIfNull);
 
     #endregion

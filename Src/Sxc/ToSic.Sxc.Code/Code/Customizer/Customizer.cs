@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Apps;
+﻿using ToSic.Eav.Models;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys.CmsContext;
 using ToSic.Sxc.Data;
@@ -12,8 +13,8 @@ namespace ToSic.Sxc.Code.Customizer;
 internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCustomizer
 {
     public IAppTyped<TSettings, TResources> App<TSettings, TResources>()
-        where TSettings : class, IDataWrapper, new()
-        where TResources : class, IDataWrapper, new()
+        where TSettings : class, IModelOfData, new()
+        where TResources : class, IModelOfData, new()
     {
         // check if cache exists and was created with the sames specs
         if (_app is IAppTyped<TSettings, TResources> typed)
@@ -27,8 +28,8 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
     private object? _app;
 
     public ICmsView<TSettings, TResources> MyView<TSettings, TResources>()
-        where TSettings : class, IDataWrapper, new()
-        where TResources : class, IDataWrapper, new()
+        where TSettings : class, IModelOfData, new()
+        where TResources : class, IModelOfData, new()
     {
         // check if cache exists and was created with the sames specs
         if (_view is ICmsView<TSettings, TResources> typed)
@@ -47,7 +48,7 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
     private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
 
     public TCustomType? MyItem<TCustomType>()
-        where TCustomType : class, IDataWrapper, new()
+        where TCustomType : class, IModelOfData, new()
     {
         // check if cache exists and was created with the sames specs
         if (_myItem is TCustomType typed)
@@ -61,7 +62,7 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
     private object? _myItem;
 
     public IEnumerable<TCustomType> MyItems<TCustomType>()
-        where TCustomType : class, IDataWrapper, new()
+        where TCustomType : class, IModelOfData, new()
     {
         // check if cache exists and was created with the sames type as is now requested
         if (_myItems is IEnumerable<TCustomType> typed)
@@ -76,7 +77,7 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
     private object? _myItems; // not typed, since we don't know the type yet, but we know it will be IEnumerable<TCustomType> when used
 
     public TCustomType? MyHeader<TCustomType>()
-        where TCustomType : class, IDataWrapper, new()
+        where TCustomType : class, IModelOfData, new()
     {
         // check if cache exists and was created with the sames specs
         if (_myHeader is TCustomType typed)

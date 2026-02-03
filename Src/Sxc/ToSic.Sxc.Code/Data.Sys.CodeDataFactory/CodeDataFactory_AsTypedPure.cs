@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using ToSic.Eav.Data.Sys;
+using ToSic.Eav.Models.Sys;
 using ToSic.Sxc.Data.Sys.Wrappers;
 
 namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
@@ -8,7 +8,7 @@ partial class CodeDataFactory
 {
     private const string NameOfAsTyped = /*nameof(IDynamicCode16.AsTyped)*/ "AsTyped" + "(...)";
 
-    public ITyped? AsTyped(object data, WrapDataSettings settings, string? detailsMessage = default)
+    public ITyped? AsTyped(object data, ModelSettings settings, string? detailsMessage = default)
     {
         var l = Log.Fn<ITyped>();
 
@@ -27,7 +27,7 @@ partial class CodeDataFactory
     }
 
     private const string NameOfAsTypedList = /*nameof(IDynamicCode16.AsTypedList)*/ "AsTypedList" + "(...)";
-    public IEnumerable<ITyped>? AsTypedList(object list, WrapDataSettings settings)
+    public IEnumerable<ITyped>? AsTypedList(object list, ModelSettings settings)
     {
         var l = Log.Fn<IEnumerable<ITyped>>();
 

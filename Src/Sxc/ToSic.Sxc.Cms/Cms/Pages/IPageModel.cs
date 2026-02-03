@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Cms.Pages;
 /// </remarks>
 [ModelSpecs(Use = typeof(PageModelOfEntity))]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
-public interface IPageModel : IDataWrapper
+public interface IPageModel : IModelOfData
 {
     /// <summary>
     /// The page ID.
