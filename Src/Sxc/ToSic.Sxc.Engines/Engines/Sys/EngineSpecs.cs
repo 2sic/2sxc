@@ -17,6 +17,7 @@ public record EngineSpecs
     public required IApp App { get; init; }
     public required IDataSource DataSource { get; init; }
     public required IBlock Block { get; init; }
+    public required string? RuntimeKey { get; init; }
 
-    public HotBuildSpec ToHotBuildSpec() => new(App.AppId, Edition, App.Name);
+    public HotBuildSpec ToHotBuildSpec() => new(App.AppId, Edition, App.Name, RuntimeKey);
 }

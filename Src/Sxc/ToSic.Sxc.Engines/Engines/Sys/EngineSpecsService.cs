@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Environment.Sys.ServerPaths;
+﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Blocks.Sys;
@@ -8,8 +9,9 @@ namespace ToSic.Sxc.Engines.Sys;
 public class EngineSpecsService(
     IServerPaths serverPaths,
     EnginePolymorphism enginePolymorphism,
-    EngineCheckTemplate engineCheckTemplate
-) : ServiceBase("Sxc.EgSpec", connect: [serverPaths, enginePolymorphism, engineCheckTemplate])
+    EngineCheckTemplate engineCheckTemplate,
+    IRuntimeKeyService runtimeKeyService
+) : ServiceBase("Sxc.EgSpec", connect: [serverPaths, enginePolymorphism, engineCheckTemplate, runtimeKeyService])
 {
     /// <summary>
     /// Do various preflight checks and create the Engine Specs according to the information in the BlockSpecs
@@ -47,6 +49,8 @@ public class EngineSpecsService(
         // check access permissions - before initializing or running data-code in the template
         engineCheckTemplate.ThrowIfViewPermissionsDenyAccess(view, block.Context);
 
+        var appRuntimeKey = runtimeKeyService.AppRuntimeKey(block.App);
+
         // All ok, set properties
         var engineSpecs = new EngineSpecs()
         {
@@ -56,6 +60,7 @@ public class EngineSpecsService(
             Edition = edition,
             TemplatePath = templatePath,
             View = view,
+            RuntimeKey = appRuntimeKey
         };
 
         return l.Return(engineSpecs);

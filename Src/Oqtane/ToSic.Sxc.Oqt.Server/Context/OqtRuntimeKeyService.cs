@@ -7,16 +7,14 @@ namespace ToSic.Sxc.Oqt.Server.Context;
 
 internal sealed class OqtRuntimeKeyService(IHttpContextAccessor httpContextAccessor) : IRuntimeKeyService
 {
-    private const string Prefix = "ari"; // app runtime identifier
-
     public string AppRuntimeKey(IAppIdentity appIdentity)
     {
         if (appIdentity.AppId == KnownAppsConstants.PresetAppId
             || appIdentity.AppId == KnownAppsConstants.GlobalPresetAppId)
-            return $"{Prefix}{KnownAppsConstants.PresetTenantId}-{KnownAppsConstants.PresetZoneId}-{appIdentity.AppId}";
+            return $"t{KnownAppsConstants.PresetTenantId:D2}-z{KnownAppsConstants.PresetZoneId:D3}-a{appIdentity.AppId:D5}";
 
         var tenantId = GetTenantIdOrThrow();
-        return $"{Prefix}{tenantId}-{appIdentity.ZoneId}-{appIdentity.AppId}";
+        return $"t{tenantId:D2}-z{appIdentity.ZoneId:D3}-a{appIdentity.AppId:D5}"; // app runtime identifier
     }
 
     private int GetTenantIdOrThrow()
