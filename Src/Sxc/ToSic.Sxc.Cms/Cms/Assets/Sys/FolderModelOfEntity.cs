@@ -15,7 +15,7 @@ internal record FolderModelOfEntity: ModelOfEntityCore, IFolderModelSync, IFolde
 
     [field: AllowNull, MaybeNull]
     public IFolderModel Folder => field
-        ??= Entity.Children(field: nameof(Folder)).FirstOrDefault().As<FolderModelOfEntity>(skipTypeCheck: true)!;
+        ??= Entity.Children(field: nameof(Folder)).FirstOrDefault()?.As<FolderModelOfEntity>(skipTypeCheck: true)!;
 
     [field: AllowNull, MaybeNull]
     public IEnumerable<IFolderModel> Folders => field 
