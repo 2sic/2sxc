@@ -3443,6 +3443,106 @@
               ]
             }
           ]
+        },
+        {
+          "Id": 185367,
+          "Version": 25,
+          "Guid": "4570a596-5020-4111-b494-3e510f778c6e",
+          "Type": {
+            "Id": "DataPipeline",
+            "Name": "DataPipeline"
+          },
+          "Attributes": {
+            "String": {
+              "Description": {
+                "en-us": ""
+              },
+              "Name": {
+                "en-us": "System.SystemData"
+              },
+              "Params": {
+                "en-us": "SysDataSourceGuidMd=fba0d40d-f6af-4593-9ccb-54cfd73d8217\nSysDataSourceGuid=f134e3c1-f09f-4fbc-85be-de43a64c6eed\nSysDataStream=Default"
+              },
+              "StreamsOut": {
+                "en-us": "Default,Header"
+              },
+              "StreamWiring": {
+                "en-us": "9ca272fb-3778-4ade-bc11-9687ab5d3995:Default>Out:Default"
+              },
+              "TestParameters": {
+                "en-us": "[Params:SysDataSourceGuid_Scopes]=f134e3c1-f09f-4fbc-85be-de43a64c6eed\n[Params:SysDataSourceGuid]=ToSic.Eav.DataSources.System.Attributes, ToSic.Eav.DataSources\n[Params:SysDataStream]=Default\n[QueryString:ContentTypeName]=Test"
+              },
+              "VisualDesignerData": {
+                "en-us": "{\"ShowDataSourceDetails\":true}"
+              }
+            },
+            "Boolean": {
+              "AllowEdit": {
+                "en-us": true
+              },
+              "HiddenInQueryPicker": {
+                "en-us": false
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 185369,
+              "Version": 13,
+              "Guid": "9ca272fb-3778-4ade-bc11-9687ab5d3995",
+              "Type": {
+                "Id": "DataPipelinePart",
+                "Name": "DataPipelinePart"
+              },
+              "Attributes": {
+                "String": {
+                  "Description": {
+                    "*": ""
+                  },
+                  "Name": {
+                    "*": "System Data"
+                  },
+                  "PartAssemblyAndType": {
+                    "*": "37cf83f7-5e57-4c4a-9798-a7e1440f99b3"
+                  },
+                  "VisualDesignerData": {
+                    "*": "{\r\n  \"Top\": 200,\r\n  \"Left\": 420\r\n}"
+                  }
+                }
+              },
+              "Owner": "unknown",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "4570a596-5020-4111-b494-3e510f778c6e"
+              }
+            },
+            {
+              "Id": 185370,
+              "Version": 1,
+              "Guid": "d1d0e574-0f40-431f-9255-3b0e3c77317e",
+              "Type": {
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "1fac6138-39c7-4ab6-9c54-9cf3e4ffd5ed"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "4570a596-5020-4111-b494-3e510f778c6e"
+              }
+            }
+          ]
         }
       ]
     }
