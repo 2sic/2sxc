@@ -2,11 +2,11 @@
 <package>
   <metadata>
     <id>ToSic.Sxc.Oqtane.Install</id>
-    <version>21.00.02</version>
+    <version>21.01.00</version>
     <authors>2sic internet solutions GmbH, Switzerland</authors>
     <owners>2sic internet solutions GmbH, Switzerland</owners>
     <title>2sxc CMS and Meta-Module for Oqtane</title>
-    <description>2sxc is a Oqtane module to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
+    <description>2sxc is an Oqtane module to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
     <copyright>Copyright MIT © 2sic 2025</copyright>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">MIT</license>

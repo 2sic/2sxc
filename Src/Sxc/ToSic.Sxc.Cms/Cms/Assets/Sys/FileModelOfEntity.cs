@@ -1,11 +1,10 @@
 ﻿using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Apps.Assets.Sys;
-using ToSic.Sxc.Data.Models;
 
 namespace ToSic.Sxc.Cms.Assets.Sys;
 
 [PrivateApi("Still tweaking details and naming v19.0x")]
-internal class FileModelOfEntity: ModelFromEntity, IFileModelSync, IFileModel
+internal record FileModelOfEntity: ModelOfEntityCore, IFileModelSync, IFileModel
 {
     ///// <summary>
     ///// The ID of this asset (file/folder).
@@ -29,7 +28,8 @@ internal class FileModelOfEntity: ModelFromEntity, IFileModelSync, IFileModel
     public string? Path => GetThis<string>(null);
 
     [field: AllowNull, MaybeNull]
-    public IFolderModel Folder => field ??= As<FolderModelOfEntity>(_entity.Children(field: nameof(Folder)).FirstOrDefault())!;
+    public IFolderModel Folder => field
+        ??= Entity.Children(field: nameof(Folder)).FirstOrDefault()?.As<FolderModelOfEntity>(skipTypeCheck: true)!;
 
     public int Size => GetThis(0);
 
@@ -38,8 +38,8 @@ internal class FileModelOfEntity: ModelFromEntity, IFileModelSync, IFileModel
 
     public string? Url => GetThis<string>(null);
 
-    public DateTime Created => _entity.Created;
+    public DateTime Created => Entity.Created;
 
-    public DateTime Modified => _entity.Modified;
+    public DateTime Modified => Entity.Modified;
 
 }

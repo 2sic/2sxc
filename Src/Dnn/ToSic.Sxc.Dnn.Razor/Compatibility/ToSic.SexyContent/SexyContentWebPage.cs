@@ -31,18 +31,7 @@ public abstract class SexyContentWebPage :
     RazorComponentBase,
     ICreateInstance,
     IHasDnn,
-    // #RemovedV20 #ModulePublish
-    //#pragma warning disable CS0618 // Type or member is obsolete
-    //    IDnnRazorCustomize, 
-    //#pragma warning restore CS0618 // Type or member is obsolete
-    // #RemovedV20 #IAppAndDataHelpers
-    //IDynamicCodeBeforeV10
-    //#pragma warning disable 618
-    //    IAppAndDataHelpers
-    //#pragma warning restore 618
-    // Remainders after removing IDnnRazorCustomize
     IDynamicCode,
-    // new,
     IHasCodeHelp
 {
     internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
@@ -238,29 +227,6 @@ public abstract class SexyContentWebPage :
     #endregion
 
     #endregion
-
-    #region Customize Data & Search - all have been removed in v20 // #RemovedV20 #ModulePublish
-
-    ///// <inheritdoc />
-    //public virtual void CustomizeData() {}
-
-    ///// <inheritdoc />
-    //public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate) { }
-
-    // #RemovedV20 #ModulePublish
-    //[PrivateApi("this is the old signature, should still be supported")]
-    //public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate) { }
-
-    // #RemovedV20 #ModulePublish
-    //[Obsolete("should not be used any more")]
-    //public Purpose Purpose { get; internal set; }
-
-    // #RemovedV20 #ModulePublish
-    //[Obsolete("should not be used any more")]
-    //public InstancePurposes InstancePurpose { get; internal set; }
-
-    #endregion
-
 
     #region Adam 
 

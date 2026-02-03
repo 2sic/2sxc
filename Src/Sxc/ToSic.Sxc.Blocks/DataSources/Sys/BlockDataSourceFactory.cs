@@ -47,28 +47,16 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
         if (view != null)
         {
             l.A($"use query from  view, query#{view.Query?.Id}");
-            // Note: Deprecated feature in v13, remove ca. 14 - should warn
-            // #RemovedV20 #ModulePublish
-//            // TODO: #WarnDeprecated
-//#if NETFRAMEWORK
-//            if (contextDataSource is Compatibility.IBlockDataSource old)
-//            {
-//#pragma warning disable CS0618 // Type or member is obsolete
-//                old.Publish.Enabled = view.PublishData;
-//                old.Publish.Streams = view.StreamsToPublish;
-//#pragma warning restore CS0618 // Type or member is obsolete
-//            }
-//#endif
 
             // Append Streams of the Data-Query (this doesn't require a change of the viewDataSource itself)
-            if (view.Query != null)
-            {
-                l.A("Generate query");
-                var query = queryLazy.Value;
-                query.Init(block.App.ZoneId, block.App.AppId, view.Query.Entity, configLookUp, contextDataSource);
-                l.A("attaching");
-                contextDataSource.SetOut(query);
-            }
+            if (view.Query == null)
+                return l.ReturnAsOk(contextDataSource);
+
+            l.A("Generate query");
+            var query = queryLazy.Value;
+            query.Init(block.App.ZoneId, block.App.AppId, (view.Query as ICanBeEntity).Entity, configLookUp, contextDataSource);
+            l.A("attaching");
+            contextDataSource.SetOut(query);
         }
         else
             l.A("no template override");

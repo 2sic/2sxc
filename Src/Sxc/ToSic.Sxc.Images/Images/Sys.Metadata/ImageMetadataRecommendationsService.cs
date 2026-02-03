@@ -28,15 +28,23 @@ class ImageMetadataRecommendationsService(IFeaturesService featuresSvc) : Servic
 
     public string[] GetImageRecommendations()
     {
-        var settings = ExCtxOrNull?.GetState<ITypedStack>(ExecutionContextStateNames.AllSettings);
-        if (settings == null || !featuresSvc.IsEnabled(BuiltInFeatures.CopyrightManagement.NameId))
+        var sysSettings = ExCtxOrNull?.GetDataStack<ITypedStack>(ExecutionContextStateNames.AllSettings);
+        if (sysSettings == null || !featuresSvc.IsEnabled(BuiltInFeatures.CopyrightManagement.NameId))
             return ImageRecommendationsBasic;
 
-        var useCopyright = settings.Bool($"Copyright.{nameof(CopyrightSettings.ImagesInputEnabled)}");
+        var useCopyright = sysSettings.Bool($"{CopyrightSettings.SettingsPath}.{nameof(CopyrightSettings.ImagesInputEnabled)}");
         return useCopyright
             ? ImageRecommendationsCopyright
             : ImageRecommendationsBasic;
     }
+
+    /// <summary>
+    /// Basic recommendations for image metadata - just the ImageDecorator
+    /// </summary>
     private static string[] ImageRecommendationsBasic => [ImageDecorator.TypeNameId];
-    private static string[] ImageRecommendationsCopyright => [CopyrightDecorator.TypeNameId, ImageDecorator.TypeNameId];
+
+    /// <summary>
+    /// Advanced recommendations for image metadata (if enabled) - with additional Copyright
+    /// </summary>
+    private static string[] ImageRecommendationsCopyright => [CopyrightDecorator.ContentTypeNameId, ImageDecorator.TypeNameId];
 }

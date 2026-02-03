@@ -15,18 +15,13 @@ namespace ToSic.Sxc.DataSources.Sys.AppAssets;
 public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.Dependencies services)
     : ServiceBase<AppAssetsDataSourceProvider.Dependencies>(services, $"{SxcLogName}.AppFls")
 {
-    public class Dependencies(IAppReaderFactory appReaders, IAppPathsMicroSvc appPathMicroSvc, Generator<AppFileManager> fileManagerGenerator)
-        : DependenciesBase(connect: [appReaders, appPathMicroSvc, fileManagerGenerator])
-    {
-        /// <summary>
-        /// Note that we will use Generators for safety, because in rare cases the dependencies could be re-used to create a sub-data-source
-        /// </summary>
-        internal Generator<AppFileManager> FileManagerGenerator { get; } = fileManagerGenerator;
 
-        internal IAppPathsMicroSvc AppPathMicroSvc { get; } = appPathMicroSvc;
-
-        internal IAppReaderFactory AppReaders { get; } = appReaders;
-    }
+    public record Dependencies(
+        IAppReaderFactory AppReaders,
+        IAppPathsMicroSvc AppPathMicroSvc,
+        // Note that we will use Generators for safety, because in rare cases the dependencies could be re-used to create a sub-data-source
+        Generator<AppFileManager> FileManagerGenerator)
+        : DependenciesRecord(connect: [AppReaders, AppPathMicroSvc, FileManagerGenerator]);
 
     public AppAssetsDataSourceProvider Configure(
         AppAssetsGetSpecs specs,

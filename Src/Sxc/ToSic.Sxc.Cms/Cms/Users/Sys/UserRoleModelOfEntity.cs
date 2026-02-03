@@ -1,12 +1,13 @@
-﻿using ToSic.Sxc.Data.Models;
+﻿namespace ToSic.Sxc.Cms.Users.Sys;
 
-namespace ToSic.Sxc.Cms.Users.Sys;
-
-public class UserRoleModelOfEntity: ModelFromEntity, IUserRoleModel
+internal record UserRoleModelOfEntity: ModelOfEntityCore, IUserRoleModel
 {
-    public int Id => _entity.EntityId;
-    public string Name => _entity.Get<string>(nameof(Name)) ?? "unknown";
-    public DateTime Created => _entity.Created;
-    public DateTime Modified => _entity.Modified;
+    public int Id => Entity.EntityId;
 
+    public string Name =>
+        Entity.Get<string>(nameof(Name), fallback: "unknown");
+
+    public DateTime Created => Entity.Created;
+
+    public DateTime Modified => Entity.Modified;
 }

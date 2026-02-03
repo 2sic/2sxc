@@ -44,6 +44,10 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     {
         ListHelper = new(list, parent, field, () => Debug, propsRequired: propsRequired, cdf);
     }
+
+    bool IModelSetup<IEntity>.SetupModel(IEntity? source)
+        => throw new NotSupportedException($"SetupContents is not supported for {GetType().Name}, as it requires more information.");
+
     /// <summary>
     /// Internal helper to make a entity behave as a list, new in 12.03
     /// </summary>
@@ -221,8 +225,6 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
 
     #endregion
 
-    // #RemoveBlocksIRenderService
-    //[PrivateApi] object? ICanBeItem.TryGetBlock() => Cdf?.BlockAsObjectOrNull;
     [PrivateApi] ITypedItem ICanBeItem.Item => TypedItem;
 
 
@@ -240,4 +242,5 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     public virtual IEnumerable<IEntity> OfType(string type) => throw new NotSupportedException("This is just a stub for Metadata");
 
     #endregion
+
 }

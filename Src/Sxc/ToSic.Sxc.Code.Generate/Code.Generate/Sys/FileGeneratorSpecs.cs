@@ -22,4 +22,10 @@ internal record FileGeneratorSpecs : IFileGeneratorSpecs
 
     /// <inheritdoc />
     public ICollection<string>? ContentTypes { get; init; }
+
+    /// <inheritdoc />
+    public string? Prefix { get; init; }
+
+    /// <inheritdoc />
+    public string? Suffix { get; init; }
 }

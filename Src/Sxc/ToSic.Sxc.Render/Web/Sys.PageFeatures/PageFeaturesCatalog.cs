@@ -1,5 +1,5 @@
 ﻿using ToSic.Sxc.Sys.Render.PageFeatures;
-using ToSic.Sys.Startup;
+using ToSic.Sys.Run.GlobalState;
 using static ToSic.Sxc.Sys.Render.PageFeatures.SxcPageFeatures;
 
 namespace ToSic.Sxc.Web.Sys.PageFeatures;

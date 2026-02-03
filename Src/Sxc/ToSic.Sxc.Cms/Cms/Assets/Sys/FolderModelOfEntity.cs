@@ -1,9 +1,7 @@
-﻿using ToSic.Sxc.Data.Models;
-
-namespace ToSic.Sxc.Cms.Assets.Sys;
+﻿namespace ToSic.Sxc.Cms.Assets.Sys;
 
 [PrivateApi("Still tweaking details and naming v19.0x")]
-internal class FolderModelOfEntity: ModelFromEntity, IFolderModelSync, IFolderModel
+internal record FolderModelOfEntity: ModelOfEntityCore, IFolderModelSync, IFolderModel
 {
     ///// <inheritdoc cref="FileTyped.Id"/>
     //public int Id => ((ITypedItem)this).Id;
@@ -16,14 +14,18 @@ internal class FolderModelOfEntity: ModelFromEntity, IFolderModelSync, IFolderMo
     public string? Path => GetThis<string>(null);
 
     [field: AllowNull, MaybeNull]
-    public IFolderModel Folder => field ??= As<FolderModelOfEntity>(_entity.Children(field: nameof(Folder)).FirstOrDefault())!;
+    public IFolderModel Folder => field
+        ??= Entity.Children(field: nameof(Folder)).FirstOrDefault()?.As<FolderModelOfEntity>(skipTypeCheck: true)!;
 
     [field: AllowNull, MaybeNull]
-    public IEnumerable<IFolderModel> Folders => field ??= AsList<FolderModelOfEntity>(_entity.Children(field: nameof(Folders)))!;
+    public IEnumerable<IFolderModel> Folders => field 
+        ??= Entity.Children(field: nameof(Folders)).AsList<FolderModelOfEntity>();
 
     [field: AllowNull, MaybeNull]
-    public IEnumerable<IFileModel> Files => field ??= AsList<FileModelOfEntity>(_entity.Children(field: nameof(Files)))!;
+    public IEnumerable<IFileModel> Files => field
+        ??= Entity.Children(field: nameof(Files)).AsList<FileModelOfEntity>()!;
+
     public string? Url => GetThis<string>(null);
-    public DateTime Created => _entity.Created;
-    public DateTime Modified => _entity.Modified;
+    public DateTime Created => Entity.Created;
+    public DateTime Modified => Entity.Modified;
 }

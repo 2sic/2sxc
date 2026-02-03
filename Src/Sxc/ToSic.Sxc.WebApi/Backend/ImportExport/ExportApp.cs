@@ -13,14 +13,6 @@ using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Capabilities.SysFeatures;
 using ToSic.Sys.Users;
 
-
-#if NETFRAMEWORK
-using HttpResponse = System.Net.Http.HttpResponseMessage;
-#else
-using Microsoft.AspNetCore.Mvc;
-using HttpResponse = Microsoft.AspNetCore.Mvc.IActionResult;
-#endif
-
 namespace ToSic.Sxc.Backend.ImportExport;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -100,9 +92,9 @@ public class ExportApp(
             BuiltInFeatures.AppSyncWithSiteFiles.Guid);
     }
 
-    public HttpResponse Export(AppExportSpecs specs)
+    public FileToUploadToClient Export(AppExportSpecs specs)
     {
-        var l = Log.Fn<HttpResponse>(specs.Dump());
+        var l = Log.Fn<FileToUploadToClient>(specs.Dump());
 
         SecurityHelpers.ThrowIfNotSiteAdmin(user, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
@@ -124,10 +116,17 @@ public class ExportApp(
         l.A("will stream so many bytes:" + fileBytes.Length);
         var mimeType = MimeTypeConstants.FallbackType;
 
-#if NETFRAMEWORK
-        return l.Return(HttpFileHelper.GetAttachmentHttpResponseMessage(fileName, mimeType, new MemoryStream(fileBytes)));
-#else
-        return l.Return(new FileContentResult(fileBytes, mimeType) { FileDownloadName = fileName });
-#endif
+        return l.ReturnAsOk(new()
+        {
+            FileName = fileName,
+            ContentType = MimeTypeConstants.FallbackType,
+            FileBytes = fileBytes
+        });
+
+//#if NETFRAMEWORK
+//        return l.Return(HttpFileHelper.GetAttachmentHttpResponseMessage(fileName, mimeType, new MemoryStream(fileBytes)));
+//#else
+//        return l.Return(new FileContentResult(fileBytes, mimeType) { FileDownloadName = fileName });
+//#endif
     }
 }

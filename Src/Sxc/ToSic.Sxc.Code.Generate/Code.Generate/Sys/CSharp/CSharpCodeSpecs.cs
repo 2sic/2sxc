@@ -18,6 +18,7 @@ internal record CSharpCodeSpecs: FileGeneratorSpecs
 
     /// <summary>
     /// Namespace for the data classes
+    /// TODO: UNCLEAR IF THIS IS NEEDED, OR IF WE SHOULD NOT JUST USE Namespace FROM BASE CLASS
     /// </summary>
     public string DataNamespace { get; init; } = $"{FolderConstants.AppCodeFolder}.Data";
 
@@ -26,15 +27,15 @@ internal record CSharpCodeSpecs: FileGeneratorSpecs
     /// <summary>
     /// Namespace for the data classes
     /// </summary>
-    public string DataNamespaceGenerated => $"{DataNamespace}.{NamespaceAutoGen}";
+    public string BaseClassNamespace => $"{DataNamespace}.{NamespaceAutoGen}";
 
     /// <summary>
     /// This is added to the end of the class name to indicate that it was auto-generated.
     /// It's quite verbose, to ensure that it's unlikely to clash with a real class name.
     /// </summary>
-    public string DataClassGeneratedSuffix { get; init; } = "";
+    public string BaseClassSuffix { get; init; } = "";
 
-    public string DataClassGeneratedPrefix { get; init; } = "ZAutoGen";
+    public string BaseClassPrefix { get; init; } = "ZAutoGen";
 
     /// <summary>
     /// Default class to inherit from - ATM CustomItem only

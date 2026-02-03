@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Oqtane.Infrastructure;
 using ToSic.Eav;
-using ToSic.Eav.Startup;
+using ToSic.Eav.Run.Startup;
 using ToSic.Eav.Sys;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Backend;
@@ -15,7 +15,7 @@ using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.Startup;
+using ToSic.Sxc.Run.Startup;
 using ToSic.Sys.Boot;
 using ToSic.Sys.Configuration;
 using ToSic.Sys.Security.Encryption;
@@ -76,11 +76,11 @@ public class OqtStartup : IServerStartup
             .AddSxcWeb()
             .AddSxcLightSpeed()             // LightSpeed services
             .AddSxcCodeGen()                // Code generation services
-            .AddSxcCoreNew()
-            .AddSxcAppsFallbackServices()
-            .AddSxcCoreFallbackServices()
-            .AddEavEverything()             // Core EAV services
-            .AddEavEverythingFallbacks()
+            .AddSxcCore()
+            .AddSxcAppsFallbacks()
+            .AddSxcCoreFallbacks()
+            .AddEavAll()             // Core EAV services
+            .AddEavAllFallbacks()
             .AddEavWebApiTypedAfterEav()
             .AddOqtAppWebApi()              // Oqtane App WebAPI stuff
             .AddRazorBlade();               // RazorBlade helpers for Razor in the edition used by Oqtane

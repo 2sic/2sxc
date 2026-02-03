@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps.Sys.State;
-using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Cms.Publishing.Sys;
@@ -63,8 +62,8 @@ public partial class ListControllerReal(
     {
         var block = ctxService.BlockRequired();
         var target = parent == null
-            ? block.Configuration.Entity
-            : block.Context.AppReaderRequired.List.One(parent.Value);
+            ? (block.Configuration as ICanBeEntity)?.Entity
+            : block.Context.AppReaderRequired.List.GetOne(parent.Value);
 
         return target == null
             ? throw new($"Can't find parent {parent}")

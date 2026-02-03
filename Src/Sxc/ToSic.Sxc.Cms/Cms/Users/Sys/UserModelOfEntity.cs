@@ -1,20 +1,18 @@
-﻿using ToSic.Sxc.Data.Models;
-
-namespace ToSic.Sxc.Cms.Users.Sys;
+﻿namespace ToSic.Sxc.Cms.Users.Sys;
 
 
-internal class UserModelOfEntity : ModelFromEntity, IUserModel
+internal record UserModelOfEntity : ModelOfEntityCore, IUserModel
 {
 
     public string? Email => GetThis<string>(null);
 
-    public int Id => _entity.EntityId;
+    public int Id => Entity.EntityId;
 
-    public Guid Guid => _entity.EntityGuid;
+    public Guid Guid => Entity.EntityGuid;
 
-    public DateTime Created => _entity.Created;
+    public DateTime Created => Entity.Created;
 
-    public DateTime Modified => _entity.Modified;
+    public DateTime Modified => Entity.Modified;
 
     public bool IsAnonymous => GetThis(false);
 
@@ -38,6 +36,8 @@ internal class UserModelOfEntity : ModelFromEntity, IUserModel
 
     //IMetadataOf IHasMetadata.Metadata => null;
 
-    public IEnumerable<IUserRoleModel> Roles => AsList<UserRoleModelOfEntity>(_entity.Children(field: nameof(Roles)))!;
+    public IEnumerable<IUserRoleModel> Roles =>
+        Entity.Children(field: nameof(Roles)).AsList<UserRoleModelOfEntity>();
+        //AsList<UserRoleModelOfEntity>(Entity.Children(field: nameof(Roles)))!;
 
 }

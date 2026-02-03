@@ -18,10 +18,9 @@ public static class IHasKitExtensions
         };
 
 
-    internal static /*IExecutionContext*/ void SetCompatibility(this IExecutionContext codeRoot, int compatibility)
+    internal static void SetCompatibility(this IExecutionContext codeRoot, int compatibility)
     {
         codeRoot.GetCdf().SetCompatibilityLevel(compatibility);
-        //return codeRoot;
     }
 
 }

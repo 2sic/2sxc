@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataSource.Sys.Query;
+using ToSic.Eav.Models;
 using ToSic.Sxc.Blocks.Sys.Views;
 
 // ReSharper disable ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
@@ -9,7 +9,7 @@ using ToSic.Sxc.Blocks.Sys.Views;
 namespace ToSic.Sxc.Blocks.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
+public record BlockConfiguration: ModelOfEntity, IAppIdentity
 {
     public  int ZoneId { get; }
     public  int AppId { get; }
@@ -21,9 +21,10 @@ public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
     private readonly Generator<QueryDefinitionBuilder> _qDefBuilder;
 
     public BlockConfiguration(IEntity? entity, IAppIdentity appIdentity, IEntity? previewViewEntity, Generator<QueryDefinitionBuilder> qDefBuilder, string languageCode, ILog parentLog):
-        base(entity!, languageCode, parentLog, "Blk.Config")
+        base(entity!)
     {
-        Log.A("Entity is " + (entity == null ? "" : "not") + " null");
+        parentLog.SubLogOrNull("Blk.Config").A("Entity is " + (entity == null ? "" : "not") + " null");
+        LookupLanguages = [languageCode];
         _qDefBuilder = qDefBuilder;
         ZoneId = appIdentity.ZoneId;
         AppId = appIdentity.AppId;
@@ -67,7 +68,7 @@ public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
                                  .FirstOrDefault();
             return field = viewEntity == null
                 ? null
-                : new View(viewEntity, LookupLanguages, Log, _qDefBuilder);
+                : new View(viewEntity, LookupLanguages, _qDefBuilder);
         }
     }
 

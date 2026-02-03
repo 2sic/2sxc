@@ -25,22 +25,14 @@ public class AdamContext(AdamContext.Dependencies services)
 {
     #region Constructor and DI
 
-    public class Dependencies(
-        Generator<MultiPermissionsTypes> typesPermissions,
-        Generator<IAdamSecurityCheckService> adamSecurityGenerator,
-        LazySvc<ISysFeaturesService> featuresSvc,
-        LazySvc<AdamManager> adamManagerLazy,
-        Generator<AdamStorageOfSite> siteStorageGen,
-        Generator<AdamStorageOfField> fieldStorageGen)
-        : DependenciesBase(connect: [typesPermissions, adamSecurityGenerator, featuresSvc, adamManagerLazy, siteStorageGen, fieldStorageGen])
-    {
-        public LazySvc<ISysFeaturesService> FeaturesSvc { get; } = featuresSvc;
-        public LazySvc<AdamManager> AdamManagerLazy { get; } = adamManagerLazy;
-        public Generator<AdamStorageOfSite> SiteStorageGen { get; } = siteStorageGen;
-        public Generator<AdamStorageOfField> FieldStorageGen { get; } = fieldStorageGen;
-        public Generator<IAdamSecurityCheckService> AdamSecurityGenerator { get; } = adamSecurityGenerator;
-        public Generator<MultiPermissionsTypes> TypesPermissions { get; } = typesPermissions;
-    }
+    public record Dependencies(
+        Generator<MultiPermissionsTypes> TypesPermissions,
+        Generator<IAdamSecurityCheckService> AdamSecurityGenerator,
+        LazySvc<ISysFeaturesService> FeaturesSvc,
+        LazySvc<AdamManager> AdamManagerLazy,
+        Generator<AdamStorageOfSite> SiteStorageGen,
+        Generator<AdamStorageOfField> FieldStorageGen)
+        : DependenciesRecord(connect: [TypesPermissions, AdamSecurityGenerator, FeaturesSvc, AdamManagerLazy, SiteStorageGen, FieldStorageGen]);
 
     public IAdamSecurityCheckService Security { get; private set; } = null!;
     public MultiPermissionsTypes Permissions { get; private set; } = null!;

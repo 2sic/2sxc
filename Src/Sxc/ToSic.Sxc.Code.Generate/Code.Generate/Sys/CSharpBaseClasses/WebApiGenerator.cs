@@ -15,7 +15,7 @@ public class WebApiGenerator(IUser user, IAppReaderFactory appReadFac)
 
     public new string Description => "Generates CSharp WebApi Base Controller in the AppCode/Api folder (WIP)";
 
-    public new string DescriptionHtml => $"The {Name} will generate <code>ControllerBase.Generated.cs</code> files in the <code>AppCode/Api</code> folder. <br> IMPORTANT: Requires that Content-Types were generated.";
+    public new string DescriptionHtml => $"The {Name} will generate <code>[Prefix]ControllerBase[Suffix].Generated.cs</code> files in the <code>AppCode/Api</code> folder. <br> IMPORTANT: Requires that Content-Types were generated.";
 
     public new string OutputType => "WebApi";
 

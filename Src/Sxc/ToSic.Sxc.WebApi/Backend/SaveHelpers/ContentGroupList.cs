@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.Data.Sys.ContentTypes;
-using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockEditor;
 using ToSic.Sxc.Blocks.Sys.Views;
@@ -170,7 +169,7 @@ public class ContentGroupList(
 
                 //var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(identifier.GetParentEntityOrError());
                 var contentGroup = appBlocks.GetBlockConfig(identifier.GetParentEntityOrError());
-                var contentTypeName = (contentGroup.View as View)?.GetTypeStaticName(identifier.Field!) ?? "";
+                var contentTypeName = contentGroup.View?.GetTypeStaticName(identifier.Field!) ?? "";
 
                 // if there is no content-type for this, then skip it (don't deliver anything)
                 if (contentTypeName == "")
@@ -187,7 +186,7 @@ public class ContentGroupList(
             if (identifier is { Parent: not null, Field: not null })
             {
                 // look up type
-                var target = AppCtx.AppReader.List.One(identifier.Parent.Value)!;
+                var target = AppCtx.AppReader.List.GetOne(identifier.Parent.Value)!;
                 var field = target.Type[identifier.Field]!;
                 identifier.ContentTypeName = field.EntityFieldItemTypePrimary();
                 newItems.Add(identifier);
@@ -214,7 +213,7 @@ public class ContentGroupList(
             return l.ReturnFalse("no parent");
 
         // get the entity and determine if it's a content-block. If yes, that should affect the differences in load/save
-        var entity = AppCtx.AppReader.List.One(identifier.Parent.Value)!;
+        var entity = AppCtx.AppReader.List.GetOne(identifier.Parent.Value)!;
         return l.Return(entity.Type.Name == WorkBlocks.BlockTypeName, "type name should match");
     }
 

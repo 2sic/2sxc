@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Data.Build;
+﻿using ToSic.Eav.Data;
+using ToSic.Eav.Data.Build;
 using ToSic.Sxc.Web.Sys.LightSpeed;
 
 namespace ToSic.Sxc.WebLightSpeed;
@@ -14,7 +15,7 @@ public class LightSpeedDecoratorTests(DataBuilder dataBuilder)//: TestBaseEavCor
     [Fact]
     public void DecoratorWithNullEntity()
     {
-        var lsDecorator = new LightSpeedDecorator(null);
+        var lsDecorator = (null as IEntity).As<LightSpeedDecorator>();
         TestEmptyDecorator(lsDecorator);
         True(lsDecorator.UrlParametersOthersDisableCache);
     }

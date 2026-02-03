@@ -23,10 +23,6 @@ internal class MetadataDynamic(IMetadata metadata, ICodeDataFactory cdf)
     IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= new(this, () => Debug);
     private PropLookupMetadata? _propLookup;
 
-    //[PrivateApi]
-    //[field: AllowNull, MaybeNull]
-    //private CodeItemHelper ItemHelper => field ??= new(GetHelper, this);
-
     [PrivateApi("Hide this")]
     private readonly IMetadata _metadata = metadata;
 

@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using ToSic.Eav.Apps.Sys.AppJson;
-using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sxc.Code.Sys.Documentation;
 using ToSic.Sys.Utils;
@@ -60,20 +59,6 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGe
 
         try
         {
-            // find the generator
-            var gen = generators.Value.FirstOrDefault(g => g.Name == generator);
-            if (gen == null)
-                return l.Return(new RichResult
-                    {
-                        Ok = false,
-                        Message = $"Generator '{generator}' not found.",
-                    }
-                    .WithTime(l)
-                );
-
-            // Make sure the generator has the logger - if supported
-            (gen as IHasLog)?.LinkLog(Log);
-
             // Determine the specs to generate with
             var specs = new FileGeneratorSpecs
             {
@@ -81,9 +66,10 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGe
                 Edition = edition ?? ""
             };
 
+            var generatorName = generator;
             if (configurationId > 0)
             {
-                var configuration = appReaders.Value.Get(appId).List.One(configurationId);
+                var configuration = appReaders.Value.Get(appId).List.GetOne(configurationId);
                 if (configuration == null)
                     return l.Return(new RichResult
                         {
@@ -103,13 +89,33 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGe
                         .WithTime(l)
                     );
 
+                var configuredGenerator = Sanitize(configuration.Get<string>("CodeGenerator"));
+                if (configuredGenerator.HasValue())
+                    generatorName = configuredGenerator;
+
                 specs = specs with
                 {
                     Namespace = Sanitize(configuration.Get<string>("Namespace")),
                     TargetPath = Sanitize(configuration.Get<string>("TargetFolder")),
-                    ContentTypes = Normalize(configuration.Get<string>("ContentTypes"))
+                    ContentTypes = Normalize(configuration.Get<string>("ContentTypes")),
+                    Prefix = Sanitize(configuration.Get<string>("Prefix")),
+                    Suffix = Sanitize(configuration.Get<string>("Suffix"))
                 };
             }
+
+            // find the generator
+            var gen = generators.Value.FirstOrDefault(g => g.Name == generatorName);
+            if (gen == null)
+                return l.Return(new RichResult
+                    {
+                        Ok = false,
+                        Message = $"Generator '{generatorName}' not found.",
+                    }
+                    .WithTime(l)
+                );
+
+            // Make sure the generator has the logger - if supported
+            (gen as IHasLog)?.LinkLog(Log);
 
             // generate and save files
             fileSaver.GenerateAndSaveFiles(gen, specs);
@@ -134,7 +140,7 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGe
         }
     }
 
-    private static string? Sanitize(string? value) => string.IsNullOrWhiteSpace(value) ? null : value?.Trim();
+    private static string? Sanitize(string? value) => value.HasValue() ? value?.Trim() : null;
 
     private static ICollection<string>? Normalize(string? raw)
     {

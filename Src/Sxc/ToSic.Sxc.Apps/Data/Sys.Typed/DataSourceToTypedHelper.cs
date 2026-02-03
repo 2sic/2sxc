@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Data.Sys.Entities;
+using ToSic.Eav.Models.Sys;
 using ToSic.Sxc.Data.Models.Sys;
 using ToSic.Sxc.Data.Sys.Factory;
 using static ToSic.Eav.DataSource.DataSourceConstants;
@@ -8,7 +9,7 @@ internal class DataSourceToTypedHelper(ICodeDataFactory cdf, IDataSource dataSou
 {
 
     internal IEnumerable<T>? GetAllShared<T>(string? typeName, bool nullIfNotFound, bool useDefaultIfNameNotSetAndNotFound)
-        where T : class, ICanWrapData
+        where T : class, IModelOfData
     {
         var autoUseDefault = typeName == null && useDefaultIfNameNotSetAndNotFound;
 
@@ -39,12 +40,12 @@ internal class DataSourceToTypedHelper(ICodeDataFactory cdf, IDataSource dataSou
 
     /// <inheritdoc />
     public T? GetOne<T>(int id, NoParamOrder npo, bool skipTypeCheck)
-        where T : class, ICanWrapData
-        => cdf.GetOne<T>(() => dataSource.List.One(id), id, skipTypeCheck);
+        where T : class, IModelOfData
+        => cdf.GetOne<T>(() => dataSource.List.GetOne(id), id, skipTypeCheck);
 
     /// <inheritdoc />
     public T? GetOne<T>(Guid id, NoParamOrder npo, bool skipTypeCheck)
-        where T : class, ICanWrapData
-        => cdf.GetOne<T>(() => dataSource.List.One(id), id, skipTypeCheck);
+        where T : class, IModelOfData
+        => cdf.GetOne<T>(() => dataSource.List.GetOne(id), id, skipTypeCheck);
 
 }

@@ -1,11 +1,12 @@
-﻿using System.Text.Json;
-using Microsoft.AspNetCore.Antiforgery;
+﻿using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http;
+using System.Text.Json;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Render.Sys.JsContext;
+using ToSic.Sxc.Web.Sys.EditUi;
 using ToSic.Sys.Security.Encryption;
 using ToSic.Sys.Utils;
 
@@ -35,7 +36,7 @@ internal class OqtJsApiService(
             rvt: RvtFn,
             withPublicKey: withPublicKey,
             secureEndpointPublicKey: SecureEndpointPrimaryKeyFn,
-            dialogQuery: null);
+            dialogQuery: $"{HtmlDialog.TenantIdInUrl}={aliasResolver.Alias.TenantId}&{HtmlDialog.AliasIdInUrl}={aliasResolver.Alias.AliasId}");
 
         string SiteRootFn() => siteRoot.IsEmpty() ? OqtPageOutput.GetSiteRoot(aliasResolver.Alias) : siteRoot;
         string ApiRootFn() => SiteRootFn() + OqtWebApiConstants.ApiRootNoLanguage + "/";

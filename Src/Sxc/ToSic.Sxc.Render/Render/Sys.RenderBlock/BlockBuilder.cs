@@ -20,27 +20,17 @@ namespace ToSic.Sxc.Render.Sys.RenderBlock;
 public partial class BlockBuilder(BlockBuilder.Dependencies services)
     : ServiceBase<BlockBuilder.Dependencies>(services, "Sxc.BlkBld"), IBlockBuilder
 {
-    public class Dependencies(
-        IEngineFactory engineFactory,
-        Generator<IEnvironmentInstaller> envInstGen,
-        Generator<IRenderingHelper> renderHelpGen,
-        LazySvc<PageChangeSummary> pageChangeSummary,
-        LazySvc<ILicenseService> licenseService,
-        IModuleHtmlService moduleHtmlService,
-        CodeInfosInScope codeInfos,
-        BlockCachingHelper blockCachingHelper)
-        : DependenciesBase(connect:
-            [engineFactory, envInstGen, renderHelpGen, pageChangeSummary, licenseService, moduleHtmlService, codeInfos, blockCachingHelper])
-    {
-        public CodeInfosInScope CodeInfos { get; } = codeInfos;
-        public BlockCachingHelper BlockCachingHelper { get; } = blockCachingHelper;
-        public IEngineFactory EngineFactory { get; } = engineFactory;
-        public Generator<IEnvironmentInstaller> EnvInstGen { get; } = envInstGen;
-        public Generator<IRenderingHelper> RenderHelpGen { get; } = renderHelpGen;
-        public LazySvc<PageChangeSummary> PageChangeSummary { get; } = pageChangeSummary;
-        public LazySvc<ILicenseService> LicenseService { get; } = licenseService;
-        public IModuleHtmlService ModuleHtmlService { get; } = moduleHtmlService;
-    }
+    public record Dependencies(
+        IEngineFactory EngineFactory,
+        Generator<IEnvironmentInstaller> EnvInstGen,
+        Generator<IRenderingHelper> RenderHelpGen,
+        LazySvc<PageChangeSummary> PageChangeSummary,
+        LazySvc<ILicenseService> LicenseService,
+        IModuleHtmlService ModuleHtmlService,
+        CodeInfosInScope CodeInfos,
+        BlockCachingHelper BlockCachingHelper)
+        : DependenciesRecord(connect:
+            [EngineFactory, EnvInstGen, RenderHelpGen, PageChangeSummary, LicenseService, ModuleHtmlService, CodeInfos, BlockCachingHelper]);
 
     #region Constructor
 

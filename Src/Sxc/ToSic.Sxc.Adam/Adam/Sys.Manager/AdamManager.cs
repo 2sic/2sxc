@@ -23,16 +23,13 @@ public class AdamManager(AdamManager.Dependencies services)
 {
     #region Dependencies
 
-    public class Dependencies(LazySvc<ICodeDataFactory> cdf, AdamConfiguration adamConfiguration,
-        LazySvc<IAdamFileSystem> adamFsLazy, Generator<AdamStorageOfField> fieldStorageGenerator, AdamGenericHelper adamGenericHelper)
-        : DependenciesBase(connect: [cdf, adamConfiguration, adamFsLazy, fieldStorageGenerator])
-    {
-        public LazySvc<ICodeDataFactory> CdfIfNotProvided { get; } = cdf;
-        public AdamConfiguration AdamConfiguration { get; } = adamConfiguration;
-        public LazySvc<IAdamFileSystem> AdamFsLazy { get; } = adamFsLazy;
-        public Generator<AdamStorageOfField> FieldStorageGenerator { get; } = fieldStorageGenerator;
-        public AdamGenericHelper AdamGenericHelper { get; } = adamGenericHelper;
-    }
+    public record Dependencies(
+        LazySvc<ICodeDataFactory> CdfIfNotProvided,
+        AdamConfiguration AdamConfiguration,
+        LazySvc<IAdamFileSystem> AdamFsLazy,
+        Generator<AdamStorageOfField> FieldStorageGenerator,
+        AdamGenericHelper AdamGenericHelper)
+        : DependenciesRecord(connect: [CdfIfNotProvided, AdamConfiguration, AdamFsLazy, FieldStorageGenerator]);
 
     #endregion
 

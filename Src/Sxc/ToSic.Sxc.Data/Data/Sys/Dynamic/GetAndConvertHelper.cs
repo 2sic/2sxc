@@ -2,7 +2,6 @@
 using ToSic.Eav.Data.Sys.PropertyLookup;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Typed;
-using static System.StringComparer;
 
 namespace ToSic.Sxc.Data.Sys.Dynamic;
 

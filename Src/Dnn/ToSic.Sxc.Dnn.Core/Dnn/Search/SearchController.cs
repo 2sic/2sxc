@@ -116,7 +116,7 @@ internal class SearchController(
     /// <summary>The SearchItems will be initialized, and must exist for the search-index to provide data.</summary>
     public Dictionary<string, List<ISearchItem>> SearchItems;
 
-    private string _edition = default;
+    private string _edition;
 
     /// <summary>
     /// Get search info for each dnn module containing 2sxc data
@@ -127,8 +127,7 @@ internal class SearchController(
         var l = Log.Fn<List<SearchDocument>>();
         // Turn off logging into history by default - the template code can reactivate this if desired
         var logWithPreserve = Log as Log;
-        if (logWithPreserve != null)
-            logWithPreserve.Preserve = false;
+        logWithPreserve?.Preserve = false;
 
         // Log with infos, to ensure errors are caught
         var exitMessage = InitAllAndVerifyIfOk(module);
@@ -152,30 +151,15 @@ internal class SearchController(
                 customizeSearch.CustomizeSearch(SearchItems, Block.Context.Module, beginDate);
                 l.A("Executed CustomizeSearch");
             }
-            else
-            {
-                /* Old mode v06.02 - 12.01 using the Engine or Razor which customizes */
-                // Build the engine, as that's responsible for calling inner search stuff
-                var engine = engineFactory.CreateEngine(view);
-                // #RemovedV20 #ModulePublish
-//                if (engine is IEngineDnnOldCompatibility oldEngine)
-//                {
-//#pragma warning disable CS0618
-//                    oldEngine.Init(Block, Purpose.IndexingForSearch);
+            // 2026-01-27 2dm v21 - old search implementation has been deprecated in v20
+            //else
+            //{
+            //    /* Old mode v06.02 - 12.01 using the Engine or Razor which customizes */
+            //    // Build the engine, as that's responsible for calling inner search stuff
+            //    var engine = engineFactory.CreateEngine(view);
+            //    engine.Init(Block);
 
-//                    // Only run CustomizeData() if we're in the older, classic model of search-indexing
-//                    // The new model v12.02 won't need this
-//                    l.A("Will run CustomizeData() in the Razor Engine which will call it in the Razor if exists");
-//                    oldEngine.CustomizeData();
-
-//                    // check if the cshtml has search customizations
-//                    l.A("Will run CustomizeSearch() in the Razor Engine which will call it in the Razor if exists");
-//                    oldEngine.CustomizeSearch(SearchItems, Block.Context.Module, beginDate);
-//#pragma warning restore CS0618
-//                } else
-                    engine.Init(Block);
-
-            }
+            //}
         }
         catch (Exception e)
         {
@@ -270,20 +254,20 @@ internal class SearchController(
     /// </summary>
     private void AttachDnnLookUpsToData(IDataSource dataSource, DnnSite site, ModuleInfo dnnModule)
     {
-        if (dataSource.Configuration?.LookUpEngine != null)
+        if (dataSource.Configuration?.LookUpEngine == null)
+            return;
+
+        Log.A("Will try to attach dnn providers to DataSource LookUps");
+        try
         {
-            Log.A("Will try to attach dnn providers to DataSource LookUps");
-            try
-            {
-                var getLookups = dnnLookUpEngineResolver.Value;
-                var dnnLookUps = (getLookups as DnnLookUpEngineResolver)?.LookUpEngineOfPortalSettings(site.GetContents(), dnnModule.ModuleID);
-                ((LookUpEngine) dataSource.Configuration.LookUpEngine).Link(dnnLookUps);
-            }
-            catch (Exception e)
-            {
-                // Log but keep going, as it's bad, but the lookups may not be important for this module
-                Log.Ex(e);
-            }
+            var getLookups = dnnLookUpEngineResolver.Value;
+            var dnnLookUps = (getLookups as DnnLookUpEngineResolver)?.LookUpEngineOfPortalSettings(site.GetContents(), dnnModule.ModuleID);
+            ((LookUpEngine) dataSource.Configuration.LookUpEngine).Link(dnnLookUps);
+        }
+        catch (Exception e)
+        {
+            // Log but keep going, as it's bad, but the lookups may not be important for this module
+            Log.Ex(e);
         }
     }
 

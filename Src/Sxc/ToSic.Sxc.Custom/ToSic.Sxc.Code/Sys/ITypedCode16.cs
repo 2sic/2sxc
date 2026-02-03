@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.DataSource;
+using ToSic.Eav.Models;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
@@ -118,7 +119,7 @@ public interface ITypedCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IHas
 
     /// <inheritdoc cref="ITypedApi.AsStack{T}"/>
     public T AsStack<T>(params object[] items)
-        where T : class, ICanWrapData, new();
+        where T : class, IModelOfData, new();
 
     #endregion
 
@@ -169,11 +170,11 @@ public interface ITypedCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IHas
 
     /// <inheritdoc cref="ITypedApi.As{T}"/>
     T As<T>(object source, NoParamOrder npo = default)
-        where T : class, ICanWrapData;
+        where T : class, IModelOfData;
 
     /// <inheritdoc cref="ITypedApi.AsList{T}"/>
     IEnumerable<T> AsList<T>(object source, NoParamOrder npo = default, bool nullIfNull = default)
-        where T : class, ICanWrapData;
+        where T : class, IModelOfData;
 
     #endregion
 }

@@ -15,7 +15,7 @@ public class RazorViewsGenerator(IUser user, IAppReaderFactory appReadFac)
 
     public string Description => "Generates Razor Views in the AppCode/Razor folder";
 
-    public string DescriptionHtml => $"The {Name} will generate <code>AppRazor.Generated.cs</code> files in the <code>AppCode/Razor</code> folder. <br> IMPORTANT: Requires that Content-Types were generated.";
+    public string DescriptionHtml => $"The {Name} will generate <code>[Prefix]AppRazor[Suffix].Generated.cs</code> files in the <code>AppCode/Razor</code> folder. <br> IMPORTANT: Requires that Content-Types were generated.";
 
     public string OutputType => "RazorView";
 
@@ -25,7 +25,7 @@ public class RazorViewsGenerator(IUser user, IAppReaderFactory appReadFac)
     public IGeneratedFileSet[] Generate(IFileGeneratorSpecs specs)
     {
         var cSharpSpecs = BuildSpecs(specs);
-        var file = AppRazors(cSharpSpecs);
+        var file = AppRazors(cSharpSpecs, "AppRazor");
 
         var result = new GeneratedFileSet
         {
@@ -38,13 +38,14 @@ public class RazorViewsGenerator(IUser user, IAppReaderFactory appReadFac)
         return [result];
     }
 
-    private GeneratedFile AppRazors(CSharpCodeSpecs cSharpSpecs)
+    private GeneratedFile AppRazors(CSharpCodeSpecs cSharpSpecs, string baseName)
     {
+        var className = $"{cSharpSpecs.Prefix}{baseName}{cSharpSpecs.Suffix}";
         var (_, appSnip, allUsings) = BaseClassHelper.BaseClassTools(cSharpSpecs, Log);
 
         var file = new GeneratedFile
         {
-            FileName = "AppRazor.Generated.cs",
+            FileName = $"{className}.Generated.cs",
             Path = "Razor",
             Body = $$"""
                      {{CSharpGeneratorHelper.DoNotModifyMessage}}
@@ -58,14 +59,14 @@ public class RazorViewsGenerator(IUser user, IAppReaderFactory appReadFac)
                        /// <summary>
                        /// Base Class for Razor Views which have a typed App but don't use the Model or use the typed MyModel.
                        /// </summary>
-                       public abstract partial class AppRazor: AppRazor<object>
+                       public abstract partial class {{className}}: {{className}}<object>
                        {
                        }
                      
                        /// <summary>
                        /// Base Class for Razor Views which have a typed App and a typed Model
                        /// </summary>
-                       public abstract partial class AppRazor<TModel>: Custom.Hybrid.RazorTyped<TModel>
+                       public abstract partial class {{className}}<TModel>: Custom.Hybrid.RazorTyped<TModel>
                        {
                      {{appSnip}}
                        }

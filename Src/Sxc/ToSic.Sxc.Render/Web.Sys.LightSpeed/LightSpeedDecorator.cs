@@ -1,18 +1,19 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.AppReader.Sys;
-using ToSic.Eav.Data.Sys.Entities;
+using ToSic.Eav.Models;
 using ToSic.Sxc.Services.OutputCache;
 
 namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class LightSpeedDecorator(IEntity? entity) : EntityBasedType(entity!), IOutputCacheSettings
+[ModelSpecs(ContentType = ContentTypeNameId)]
+public record LightSpeedDecorator : ModelOfEntity, IOutputCacheSettings
 {
     /// <summary>
     /// Nice name. If it ever changes, remember to also update UI as it has references to it.
     /// </summary>
-    public static string NiceName = "LightSpeedOutputDecorator";
-    public static string TypeNameId = "be34f64b-7d1f-4ad0-b488-dabbbb01a186";
+    public const string ContentTypeName = "LightSpeedOutputDecorator";
+    public const string ContentTypeNameId = "be34f64b-7d1f-4ad0-b488-dabbbb01a186";
 
     public bool IsEnabled => GetThis(false);
 
@@ -36,17 +37,12 @@ public class LightSpeedDecorator(IEntity? entity) : EntityBasedType(entity!), IO
 
     public string Advanced => GetThis("");
 
-    public static LightSpeedDecorator GetFromAppStatePiggyBack(IAppReader? appReader/*, ILog log*/)
+    public static LightSpeedDecorator GetFromAppStatePiggyBack(IAppReader? appReader)
     {
         var appState = appReader?.GetCache();
         var decoFromPiggyBack = appState?.PiggyBack
-            .GetOrGenerate(appState, $"decorator-{TypeNameId}", () =>
-            {
-                //log.A("Debug WIP - remove once this has proven to work; get LightSpeed PiggyBack - recreate");
-                var decoEntityOrNullPb = appState.Metadata?.FirstOrDefaultOfType(TypeNameId);
-                return new LightSpeedDecorator(decoEntityOrNullPb);
-            })
+            .GetOrGenerate(appState, $"decorator-{ContentTypeNameId}", () => appState.Metadata.First<LightSpeedDecorator>())
             .Value;
-        return decoFromPiggyBack ?? new LightSpeedDecorator(null);
+        return decoFromPiggyBack ?? new LightSpeedDecorator();
     }
 }

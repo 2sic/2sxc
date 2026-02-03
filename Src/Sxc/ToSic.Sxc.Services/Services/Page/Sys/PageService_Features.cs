@@ -51,7 +51,7 @@ partial class PageService
             Listeners.Activate(added);
 
         // also add to this specific module, as we need a few module-level features to activate in case...
-        ExCtxOrNull?.GetState<IBlock>()?.BlockFeatureKeys.AddRange(added);
+        ExCtxOrNull?.GetBlock()?.BlockFeatureKeys.AddRange(added);
 
         return l.ReturnAsOk(""); // empty string, just so it can be used as `@Kit.Page.Activate(...)` and not produce anything
     }
@@ -116,7 +116,7 @@ partial class PageService
     private DynamicEntity WebResources => _webResources.Get(() => (DynamicEntity)Settings.Get(WebResourcesNode)!)!;
     private readonly GetOnce<DynamicEntity> _webResources = new();
 
-    private DynamicStack Settings => _settings.Get(() => (ExCtx.GetState<IDynamicStack>(ExecutionContextStateNames.Settings) as DynamicStack)!)!;
+    private DynamicStack Settings => _settings.Get(() => (ExCtx.GetDataStack<IDynamicStack>(ExecutionContextStateNames.Settings) as DynamicStack)!)!;
     private readonly GetOnce<DynamicStack> _settings = new();
 
 }

@@ -1,9 +1,12 @@
 ﻿using Custom.Razor.Sys;
 using Microsoft.AspNetCore.Mvc.Razor;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Engines.Sys;
 using ToSic.Sxc.Render.Sys;
+using ToSic.Sxc.Render.Sys.Output;
 using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Sys.ExecutionContext;
 
@@ -15,48 +18,82 @@ namespace ToSic.Sxc.Razor;
 [PrivateApi("used to be marked as internal, but it doesn't make sense to show in docs")]
 [EngineDefinition(Name = "Razor")]
 internal class RazorEngine(
-    EngineBase.Dependencies services,
+    EngineSpecsService engineSpecsService,
+    IBlockResourceExtractor blockResourceExtractor,
+    EngineAppRequirements engineAppRequirements,
     LazySvc<IRazorRenderer> razorRenderer,
     LazySvc<IExecutionContextFactory> codeRootFactory,
     LazySvc<CodeErrorHelpService> errorHelp,
     LazySvc<IRenderingHelper> renderingHelper)
-    : EngineBase(services, connect: [codeRootFactory, errorHelp, renderingHelper, razorRenderer]), IRazorEngine
+    : ServiceBase("Sxc.RzrEng", connect: [engineSpecsService, blockResourceExtractor, engineAppRequirements, codeRootFactory, errorHelp, renderingHelper, razorRenderer]),
+        IRazorEngine
 {
-    /// <inheritdoc/>
-    protected override (string? Contents, List<Exception>? Exception) RenderEntryRazor(RenderSpecs specs)
+    /// <inheritdoc />
+    public RenderEngineResult Render(IBlock block, RenderSpecs specs)
     {
-        var l = Log.Fn<(string?, List<Exception>?)>();
-        var task = RenderTask(specs);
+        var l = Log.Fn<RenderEngineResult>(timer: true);
+
+        // Prepare #1: Specs
+        var engineSpecs = engineSpecsService.GetSpecs(block);
+
+        // Preflight: check if rendering is possible, or throw exceptions...
+        var preFlightResult = engineAppRequirements.CheckExpectedNoRenderConditions(engineSpecs);
+        if (preFlightResult != null)
+            return l.ReturnAsError(preFlightResult);
+
+        // Render and process / return
+        var renderedTemplate = RenderEntryRazor(engineSpecs, specs);
+        var result = blockResourceExtractor.Process(renderedTemplate);
+        return l.ReturnAsOk(result);
+    }
+
+    /// <inheritdoc/>
+    private RenderEngineResultRaw RenderEntryRazor(EngineSpecs engineSpecs, RenderSpecs specs)
+    {
+        var l = Log.Fn<RenderEngineResultRaw>();
+        var task = RenderTask(engineSpecs, specs);
         try
         {
             task.Wait();
             var result = task.Result;
 
             if (result.Exception == null)
-                return l.ReturnAsOk((result.TextWriter?.ToString(), null));
+                return l.ReturnAsOk(new ()
+                {
+                    Html = result.TextWriter?.ToString() ?? "",
+                    ExceptionsOrNull  = null
+                });
 
-            var errorMessage = renderingHelper.Value.Init(Block).DesignErrorMessage([result.Exception], true);
-            return l.Return((errorMessage, [result.Exception]));
+            var errorMessage = renderingHelper.Value.Init(engineSpecs.Block).DesignErrorMessage([result.Exception], true);
+            return l.Return(new ()
+            {
+                Html = errorMessage ?? "",
+                ExceptionsOrNull = [result.Exception]
+            });
         }
         catch (Exception ex)
         {
             var myEx = task.Exception?.InnerException ?? ex;
-            return l.Return((myEx.ToString(), [myEx]));
+            return l.Return(new ()
+            {
+                Html = myEx.ToString(),
+                ExceptionsOrNull = [myEx]
+            });
         }
     }
 
     [PrivateApi]
-    private async Task<(TextWriter? TextWriter, Exception? Exception)> RenderTask(RenderSpecs specs)
+    private async Task<(TextWriter? TextWriter, Exception? Exception)> RenderTask(EngineSpecs engineSpecs, RenderSpecs specs)
     {
         Log.A("will render into TextWriter");
         RazorView? page = null;
         try
         {
-            if (string.IsNullOrEmpty(TemplatePath))
+            if (string.IsNullOrEmpty(engineSpecs.TemplatePath))
                 return (null, null);
 
             var result = await razorRenderer.Value.RenderToStringAsync(
-                TemplatePath,
+                engineSpecs,
                 specs.Data,
                 rzv =>
                 {
@@ -65,14 +102,12 @@ internal class RazorEngine(
                         return;
 
                     var dynCode = codeRootFactory.Value
-                        .New(asSxc, Block, Log,
+                        .New(asSxc, engineSpecs.Block, Log,
                             compatibilityFallback: CompatibilityLevels.CompatibilityLevel12);
 
                     asSxc.ConnectToRoot(dynCode);
                     // Note: Don't set the purpose here any more, it's a deprecated feature in 12+
-                },
-                App,
-                new(App.AppId, Edition, App.Name)
+                }
             );
             var writer = new StringWriter();
             await writer.WriteAsync(result);

@@ -193,13 +193,32 @@ public abstract class AppCodeCompiler(
             ? Path.Combine(globalConfiguration.TempAssemblyFolder(), spec.SharedSuffix)
             : globalConfiguration.TempAssemblyFolder();
         var edition = NormalizeForFolder(spec.Edition, "root");
-        var appKey = spec.RuntimeKey ?? $"{spec.AppId:0000}";
+        var shorterAppKey = ShorterAppKey(spec); // t##-a##### or #####
         var cacheFolder = Path.Combine(
             root,
-            $"{appKey}-{edition}");
+            $"{shorterAppKey}-{edition}");
 
         Directory.CreateDirectory(cacheFolder);
         return cacheFolder;
+    }
+
+    private static string ShorterAppKey(HotBuildSpec spec)
+    {
+        var appKey = spec.RuntimeKey;
+        if (appKey == null)
+            return $"{spec.AppId:D5}";
+        
+        // Expected format: t##-z###-a#####
+        var parts = appKey.Split('-');
+
+        // Rebuild without the "z###" part
+        var shorterAppKey = string.Join("-", parts.Where(p => !p.StartsWith("z")));
+
+        // Remove "a" if start with
+        if (shorterAppKey.StartsWith("a"))
+            shorterAppKey = shorterAppKey.Substring(1);
+
+        return shorterAppKey;
     }
 
     private static string NormalizeForFolder(string? value, string fallback)

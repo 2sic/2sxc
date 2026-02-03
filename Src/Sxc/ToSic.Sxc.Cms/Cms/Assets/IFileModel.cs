@@ -1,7 +1,5 @@
 ﻿using ToSic.Eav.Apps.Assets;
 using ToSic.Sxc.Cms.Assets.Sys;
-using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Models;
 
 namespace ToSic.Sxc.Cms.Assets;
 
@@ -16,9 +14,9 @@ namespace ToSic.Sxc.Cms.Assets;
 /// * This is similar to the <see cref="Adam.IFile"/> but still a bit different.
 /// For example, it has a <see cref="Folder"/> property which is different from the <see cref="IFile.Folder"/> property.
 /// </remarks>
-[ModelCreation(Use = typeof(FileModelOfEntity))]
+[ModelSpecs(Use = typeof(FileModelOfEntity))]
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still tweaking details and naming v19.0x")]
-public interface IFileModel: ICanWrapData
+public interface IFileModel: IModelOfData
 {
     /// <inheritdoc cref="IFileModelSync.Name" />
     string? Name { get; }

@@ -15,28 +15,19 @@ namespace ToSic.Sxc.Dnn.Run;
 /// The DNN implementation of the <see cref="IValueConverter"/> which converts "file:22" or "page:5" to the url,
 /// </summary>
 [PrivateApi("Hide implementation - not useful for external documentation")]
-internal class DnnValueConverter : ValueConverterBase
+internal class DnnValueConverter(
+    ISite site,
+    LazySvc<ISysFeaturesService> featuresLazy,
+    LazySvc<PageScopedService<ISite>> siteFromPageLazy,
+    LazySvc<INavigationManager> navigationManager)
+    : ValueConverterBase($"{DnnConstants.LogName}.ValCnv",
+        connect: [site, featuresLazy, siteFromPageLazy, navigationManager])
 {
     public const string CurrentLanguage = "current";
 
     #region DI Constructor
 
-    public DnnValueConverter(ISite site, LazySvc<ISysFeaturesService> featuresLazy, LazySvc<PageScopedService<ISite>> siteFromPageLazy, LazySvc<INavigationManager> navigationManager) : base(
-        $"{DnnConstants.LogName}.ValCnv")
-    {
-        ConnectLogs([
-            _site = site,
-            _featuresLazy = featuresLazy,
-            _siteFromPageLazy = siteFromPageLazy,
-            _navigationManager = navigationManager
-        ]);
-    }
-
-    private readonly ISite _site;
-    private readonly LazySvc<ISysFeaturesService> _featuresLazy;
-    private readonly LazySvc<PageScopedService<ISite>> _siteFromPageLazy;
-    private readonly LazySvc<INavigationManager> _navigationManager;
-    private int PageSiteId => _siteFromPageLazy.Value.Value.Id; // PortalId from page di scope
+    private int PageSiteId => siteFromPageLazy.Value.Value.Id; // PortalId from page di scope
 
     #endregion
 
@@ -61,13 +52,13 @@ internal class DnnValueConverter : ValueConverterBase
     private string TryToResolveOneLinkToInternalDnnCode(string potentialFilePath)
     {
         // Try file reference
-        var fileInfo = FileManager.Instance.GetFile(_site.Id, potentialFilePath) // PortalId from module di scope
+        var fileInfo = FileManager.Instance.GetFile(site.Id, potentialFilePath) // PortalId from module di scope
                        ?? FileManager.Instance.GetFile(PageSiteId, potentialFilePath); // PortalId from page di scope (module sharing on different site)
         if (fileInfo != null) return PrefixFile + Separator + fileInfo.FileId;
 
         // Try page / tab ID
         var tabController = new TabController();
-        var tabInfo = tabController.GetTabsByPortal(_site.Id).Select(tab => tab.Value)
+        var tabInfo = tabController.GetTabsByPortal(site.Id).Select(tab => tab.Value)
                           .FirstOrDefault(tab => tab.TabPath == potentialFilePath)// PortalId from module di scope
                       ?? tabController.GetTabsByPortal(PageSiteId).Select(tab => tab.Value)
                           .FirstOrDefault(tab => tab.TabPath == potentialFilePath);// PortalId from page di scope (module sharing on different site)
@@ -101,7 +92,7 @@ internal class DnnValueConverter : ValueConverterBase
             var result = fileInfo.StorageLocation == 0 ? filePath : FileLinkClickController.Instance.GetFileLinkClick(fileInfo);
 
             // optionally do extra security checks (new in 10.02)
-            if (!_featuresLazy.Value.IsEnabled(BuiltInFeatures.AdamRestrictLookupToEntity.Guid)) return result;
+            if (!featuresLazy.Value.IsEnabled(BuiltInFeatures.AdamRestrictLookupToEntity.Guid)) return result;
 
             // check if it's in this item. We won't check the field, just the item, so the field is ""
             return !AdamSecurity.PathIsInItemAdam(itemGuid, "", filePath)
@@ -130,7 +121,7 @@ internal class DnnValueConverter : ValueConverterBase
     {
         var tabController = new TabController();
 
-        var tabInfo = tabController.GetTab(id, _site.Id) // PortalId from module di scope
+        var tabInfo = tabController.GetTab(id, site.Id) // PortalId from module di scope
                       ?? tabController.GetTab(id, PageSiteId); // PortalId from page di scope (module sharing on different site)
         if (tabInfo == null) return null;
 
@@ -155,7 +146,7 @@ internal class DnnValueConverter : ValueConverterBase
         }
 
         // Exception in AdvancedURLProvider because ownerPortalSettings.PortalAlias is null
-        return _navigationManager.Value.NavigateURL(tabInfo.TabID, psPage, "", additionalParameters);
+        return navigationManager.Value.NavigateURL(tabInfo.TabID, psPage, "", additionalParameters);
 
     }
 

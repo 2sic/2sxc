@@ -7,22 +7,20 @@ namespace ToSic.Sxc.Oqt.Server.Context;
 
 internal sealed class OqtRuntimeKeyService(IHttpContextAccessor httpContextAccessor) : IRuntimeKeyService
 {
-    private const int FallbackTenantId = 1;
-    private const string Prefix = "ari"; // app runtime identifier
-
     public string AppRuntimeKey(IAppIdentity appIdentity)
     {
+        if (appIdentity.AppId == KnownAppsConstants.PresetAppId
+            || appIdentity.AppId == KnownAppsConstants.GlobalPresetAppId)
+            return $"t{KnownAppsConstants.PresetTenantId:D2}-z{KnownAppsConstants.PresetZoneId:D3}-a{appIdentity.AppId:D5}";
+
         var tenantId = GetTenantIdOrThrow();
-        return $"{Prefix}{tenantId}-{appIdentity.ZoneId}-{appIdentity.AppId}";
+        return $"t{tenantId:D2}-z{appIdentity.ZoneId:D3}-a{appIdentity.AppId:D5}"; // app runtime identifier
     }
 
     private int GetTenantIdOrThrow()
     {
         var requestServices = httpContextAccessor?.HttpContext?.RequestServices;
-        if (requestServices == null)
-            return FallbackTenantId;
-
-        var context = requestServices.GetService<IOqtTenantContext>()?.Get();
+        var context = requestServices?.GetService<IOqtTenantContext>()?.Get();
         return context?.TenantId
                ?? throw new InvalidOperationException("Tenant not found");
     }

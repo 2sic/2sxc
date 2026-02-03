@@ -1,6 +1,5 @@
 ﻿using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Models;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Cms.Users;
@@ -19,9 +18,9 @@ namespace ToSic.Sxc.Cms.Users;
 /// 
 /// * Introduced in v19.01
 /// </remarks>
-[ModelCreation(Use = typeof(UserModelOfEntity))]
+[ModelSpecs(Use = typeof(UserModelOfEntity))]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
-public interface IUserModel : ICanWrapData
+public interface IUserModel : IModelOfData
 {
     /// <inheritdoc cref="IUser.Email"/>
     string? Email { get; }

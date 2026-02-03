@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Data.Sys.Entities;
-using ToSic.Sxc.Adam.Sys.Security;
+﻿using ToSic.Sxc.Adam.Sys.Security;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Edit.Toolbar.Sys;
 using ToSic.Sxc.Images.Sys;
@@ -17,8 +16,10 @@ internal class ResponsiveToolbarBuilder(ILog parentLog) : HelperBase(parentLog, 
         var l = Log.Fn<IToolbarBuilder?>();
         switch (tweaker.ToolbarObj)
         {
-            case false: return l.ReturnNull("false");
-            case IToolbarBuilder customToolbar: return l.Return(customToolbar, "already set");
+            case false:
+                return l.ReturnNull("false");
+            case IToolbarBuilder customToolbar:
+                return l.Return(customToolbar, "already set");
         }
 
         // If we're creating an image for a string value, it won't have a field or parent.
@@ -52,7 +53,7 @@ internal class ResponsiveToolbarBuilder(ILog parentLog) : HelperBase(parentLog, 
 
                     // Check if we have special resize metadata
                     var md = target.HasMdOrNull.Metadata
-                        .FirstOrDefaultOfType(ImageDecorator.NiceTypeName)
+                        .First(typeName: ImageDecorator.NiceTypeName)
                         .NullOrGetWith(imgDeco => new ImageDecorator(imgDeco, []));
 
                     // Try to add note
@@ -68,21 +69,15 @@ internal class ResponsiveToolbarBuilder(ILog parentLog) : HelperBase(parentLog, 
                 });
 
                 // Add note for Copyright - if there is Metadata for that
-                target.HasMdOrNull.Metadata
-                    .OfType(CopyrightDecorator.NiceTypeName)
-                    .FirstOrDefault()
-                    .DoIfNotNull(cpEntity =>
-                    {
-                        var copyright = new CopyrightDecorator(cpEntity);
-                        modified = modified.AddNamed(
-                            CopyrightDecorator.TypeNameId,
-                            btn => btn
-                                .Tooltip("Copyright")
-                                .Note(copyright.CopyrightMessage.NullIfNoValue() ??
-                                      copyright.Copyrights?.FirstOrDefault()?.GetBestTitle() ?? ""
-                                )
-                        );
-                    });
+                target.HasMdOrNull.Metadata.First<CopyrightDecorator>()
+                    .DoIfNotNull(copyright => modified = modified.AddNamed(
+                        CopyrightDecorator.ContentTypeNameId,
+                        btn => btn
+                            .Tooltip("Copyright")
+                            .Note(copyright.CopyrightMessage.NullIfNoValue() ??
+                                  copyright.Copyrights?.FirstOrDefault()?.GetBestTitle() ?? ""
+                            )
+                    ));
 
 
                 return modified;

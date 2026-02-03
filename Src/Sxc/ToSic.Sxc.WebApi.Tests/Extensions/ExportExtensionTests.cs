@@ -1,6 +1,7 @@
 using System.IO.Compression;
 using System.Text.Json;
 using ToSic.Eav.Apps.Sys.FileSystemState;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using static ToSic.Eav.Sys.FolderConstants;
 using static ToSic.Sxc.ImportExport.Package.Sys.PackageIndexFile;
 using static ToSic.Sxc.ImportExport.Package.Sys.PackageInstallFile;
@@ -28,13 +29,9 @@ public class ExportExtensionTests
         var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
         Assert.NotNull(result);
-#if !NETFRAMEWORK
-        var fileResult = result as FileContentResult;
-        Assert.NotNull(fileResult);
-        Assert.NotEmpty(fileResult.FileContents);
-        Assert.Contains(fileResult.ContentType, new[] { "application/zip", "application/octet-stream" });
-        Assert.Contains($"app-extension-{extName}-v{version}.zip", fileResult.FileDownloadName);
-#endif
+        Assert.NotEmpty(result.FileBytes);
+        Assert.Contains(result.ContentType, new[] { "application/zip", "application/octet-stream" });
+        Assert.Contains($"app-extension-{extName}-v{version}.zip", result.FileName);
     }
 
     [Fact]
@@ -47,12 +44,9 @@ public class ExportExtensionTests
         
         var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
-#if !NETFRAMEWORK
-        var fileResult = result as FileContentResult;
-        using var zipStream = new MemoryStream(fileResult!.FileContents);
+        using var zipStream = new MemoryStream(result.FileBytes);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
         Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"/{DataFolderProtected}/{AppExtensionJsonFile}", StringComparison.OrdinalIgnoreCase));
-#endif
     }
 
     [Fact]
@@ -65,12 +59,9 @@ public class ExportExtensionTests
         
         var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
-#if !NETFRAMEWORK
-        var fileResult = result as FileContentResult;
-        using var zipStream = new MemoryStream(fileResult!.FileContents);
+        using var zipStream = new MemoryStream(result.FileBytes);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
         Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"/{DataFolderProtected}/{LockFileName}", StringComparison.OrdinalIgnoreCase));
-#endif
     }
 
     #endregion
@@ -117,10 +108,7 @@ public class ExportExtensionTests
 
         var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
 
-#if !NETFRAMEWORK
-        var fileResult = result as FileContentResult;
-        Assert.NotNull(fileResult);
-        using var zipStream = new MemoryStream(fileResult!.FileContents);
+        using var zipStream = new MemoryStream(result.FileBytes);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
 
         // Verify files from all 3 extensions are present
@@ -158,7 +146,6 @@ public class ExportExtensionTests
         Assert.Contains("bundle-a", names);
         Assert.Contains("bundle-b", names);
         Assert.Equal(3, names.Count);
-#endif
     }
 
     [Fact]
@@ -188,10 +175,7 @@ public class ExportExtensionTests
 
         var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
 
-#if !NETFRAMEWORK
-        var fileResult = result as FileContentResult;
-        Assert.NotNull(fileResult);
-        using var zipStream = new MemoryStream(fileResult!.FileContents);
+        using var zipStream = new MemoryStream(result.FileBytes);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
 
         // Present bundled extension should be included
@@ -208,7 +192,6 @@ public class ExportExtensionTests
         Assert.Contains("bundle-a", names);
         Assert.DoesNotContain("text-ext2", names);
         Assert.Equal(2, names.Count);
-#endif
     }
 
     #endregion
@@ -251,14 +234,11 @@ public class ExportExtensionTests
         
         var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
 
-#if !NETFRAMEWORK
-        var fileResult = result as FileContentResult;
-        using var zipStream = new MemoryStream(fileResult!.FileContents);
+        using var zipStream = new MemoryStream(result.FileBytes);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
         var config = GetJsonFileFromZip(zip, $"/{DataFolderProtected}/{AppExtensionJsonFile}");
         Assert.True(config.ContainsKey("isInstalled"));
         Assert.True(config.GetBool("isInstalled"));
-#endif
     }
 
     [Fact]
@@ -271,14 +251,11 @@ public class ExportExtensionTests
         
         var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
-#if !NETFRAMEWORK
-        var fileResult = result as FileContentResult;
-        using var zipStream = new MemoryStream(fileResult!.FileContents);
+        using var zipStream = new MemoryStream(result.FileBytes);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
         var config = GetJsonFileFromZip(zip, $"/{DataFolderProtected}/{AppExtensionJsonFile}");
         Assert.True(config.ContainsKey("isInstalled"));
         Assert.True(config.GetBool("isInstalled"));
-#endif
     }
 
     [Fact]
@@ -320,14 +297,11 @@ public class ExportExtensionTests
         
         var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
-#if !NETFRAMEWORK
-        var fileResult = result as FileContentResult;
-        using var zipStream = new MemoryStream(fileResult!.FileContents);
+        using var zipStream = new MemoryStream(result.FileBytes);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
         
         Assert.Contains(zip.Entries, e => e.FullName.Contains($"AppCode/Extensions/{extName}/Helper.cs", StringComparison.InvariantCultureIgnoreCase));
         Assert.Contains(zip.Entries, e => e.FullName.Contains($"AppCode/Extensions/{extName}/Service.cs", StringComparison.InvariantCultureIgnoreCase));
-#endif
     }
 
     [Fact]
@@ -341,13 +315,10 @@ public class ExportExtensionTests
         
         var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
-#if !NETFRAMEWORK
-        var fileResult = result as FileContentResult;
-        using var zipStream = new MemoryStream(fileResult!.FileContents);
+        using var zipStream = new MemoryStream(result.FileBytes);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
         
         Assert.DoesNotContain(zip.Entries, e => e.FullName.Contains("AppCode/"));
-#endif
     }
 
     [Fact]
@@ -360,13 +331,10 @@ public class ExportExtensionTests
         
         var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
-#if !NETFRAMEWORK
-        var fileResult = result as FileContentResult;
-        using var zipStream = new MemoryStream(fileResult!.FileContents);
+        using var zipStream = new MemoryStream(result.FileBytes);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
         
         Assert.DoesNotContain(zip.Entries, e => e.FullName.Contains("AppCode/"));
-#endif
     }
 
     #endregion
@@ -384,15 +352,12 @@ public class ExportExtensionTests
         
         var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
-#if !NETFRAMEWORK
-        var fileResult = result as FileContentResult;
-        using var zipStream = new MemoryStream(fileResult!.FileContents);
+        using var zipStream = new MemoryStream(result.FileBytes);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
         
         var lockData = GetJsonFileFromZip(zip, $"/{DataFolderProtected}/{LockFileName}");
         Assert.True(lockData.ContainsKey("version"));
         Assert.Equal(version, lockData.GetString("version"));
-#endif
     }
 
     [Fact]
@@ -408,9 +373,7 @@ public class ExportExtensionTests
         
         var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
-#if !NETFRAMEWORK
-        var fileResult = result as FileContentResult;
-        using var zipStream = new MemoryStream(fileResult!.FileContents);
+        using var zipStream = new MemoryStream(result.FileBytes);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
 
         var lockData = GetJsonFileFromZip(zip, $"/{DataFolderProtected}/{LockFileName}");
@@ -418,7 +381,6 @@ public class ExportExtensionTests
         var filesElem = lockData.GetElement("files");
         Assert.True(filesElem.ValueKind == JsonValueKind.Array);
         Assert.True(filesElem.GetArrayLength() > 0);
-#endif
     }
 
     [Fact]
@@ -431,9 +393,7 @@ public class ExportExtensionTests
         
         var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
-#if !NETFRAMEWORK
-        var fileResult = result as FileContentResult;
-        using var zipStream = new MemoryStream(fileResult!.FileContents);
+        using var zipStream = new MemoryStream(result.FileBytes);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
 
         var lockEntry = zip.Entries.First(e => e.FullName.EndsWith($"/{DataFolderProtected}/{LockFileName}"));
@@ -451,7 +411,6 @@ public class ExportExtensionTests
         Assert.NotNull(hash);
         Assert.Equal(64, hash.Length);
         Assert.Matches("^[a-f0-9]{64}$", hash);
-#endif
     }
 
     #endregion
@@ -471,14 +430,11 @@ public class ExportExtensionTests
         
         var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
-#if !NETFRAMEWORK
-        var fileResult = result as FileContentResult;
-        using var zipStream = new MemoryStream(fileResult!.FileContents);
+        using var zipStream = new MemoryStream(result.FileBytes);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
         
         Assert.Contains(zip.Entries, e => e.FullName.Contains("/dist/script.js"));
         Assert.Contains(zip.Entries, e => e.FullName.Contains("/dist/styles.css"));
-#endif
     }
 
     [Fact]
@@ -491,9 +447,7 @@ public class ExportExtensionTests
         
         var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
-#if !NETFRAMEWORK
-        var fileResult = result as FileContentResult;
-        using var zipStream = new MemoryStream(fileResult!.FileContents);
+        using var zipStream = new MemoryStream(result.FileBytes);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
         
         foreach (var entry in zip.Entries.Where(e => !string.IsNullOrEmpty(e.Name)))
@@ -502,7 +456,6 @@ public class ExportExtensionTests
                 && !entry.FullName.StartsWith(DataFolderProtected))
                 Assert.StartsWith($"{AppExtensionsFolder}/", entry.FullName);
         }
-#endif
     }
 
     #endregion

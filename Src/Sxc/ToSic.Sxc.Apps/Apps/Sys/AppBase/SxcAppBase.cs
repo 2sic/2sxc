@@ -33,22 +33,14 @@ public abstract partial class SxcAppBase(SxcAppBase.Dependencies services, strin
     /// Helper class, so inheriting stuff doesn't need to update the constructor all the time
     /// </summary>
     [PrivateApi]
-    public class Dependencies(
-        IZoneMapper zoneMapper,
-        ISite site,
-        IAppReaderFactory appReaders,
-        IDataSourcesService dataSourceFactory,
-        LazySvc<QueryManager> queryManager,
-        IAppDataConfigProvider dataConfigProvider)
-        : DependenciesBase(connect: [zoneMapper, site, appReaders, dataSourceFactory, queryManager, dataConfigProvider])
-    {
-        public IAppDataConfigProvider DataConfigProvider { get; } = dataConfigProvider;
-        public LazySvc<QueryManager> QueryManager { get; } = queryManager;
-        internal IZoneMapper ZoneMapper { get; } = zoneMapper;
-        internal ISite Site { get; } = site;
-        internal IAppReaderFactory AppReaders { get; } = appReaders;
-        internal IDataSourcesService DataSourceFactory { get; } = dataSourceFactory;
-    }
+    public record Dependencies(
+        IZoneMapper ZoneMapper,
+        ISite Site,
+        IAppReaderFactory AppReaders,
+        IDataSourcesService DataSourceFactory,
+        LazySvc<QueryManager> QueryManager,
+        IAppDataConfigProvider DataConfigProvider)
+        : DependenciesRecord(connect: [ZoneMapper, Site, AppReaders, DataSourceFactory, QueryManager, DataConfigProvider]);
 
     #endregion
 

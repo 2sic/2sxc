@@ -40,11 +40,15 @@ public abstract class CSharpGeneratorBase(IUser user, IAppReaderFactory appReadF
             Namespace = parameters.Namespace,
             TargetPath = parameters.TargetPath,
             ContentTypes = parameters.ContentTypes,
+            Prefix = parameters.Prefix,
+            Suffix = parameters.Suffix,
             AppContentTypes = appReader,
             AppName = appReader.Specs.Name,
         };
         if (!string.IsNullOrWhiteSpace(parameters.Namespace))
             specs = specs with { DataNamespace = parameters.Namespace! };
+        //if (parameters.Suffix != null)
+            //specs = specs with { DataClassGeneratedSuffix = parameters.Suffix };
 
         return specs;
     }

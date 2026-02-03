@@ -5,14 +5,13 @@ using ToSic.Eav.Data.Build;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys.CmsContext;
 using ToSic.Sxc.Data.Sys.DynamicJacket;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Services.Sys;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.InfoSystem;
-using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 
@@ -53,7 +52,7 @@ public partial class CodeDataFactory(
 
     [field: AllowNull, MaybeNull]
     private ISite SiteFromContextOrFallback => field 
-        ??= (ExCtxOrNull?.GetState<ICmsContext>() as CmsContext)?.CtxSite.Site
+        ??= (ExCtxOrNull?.GetCmsContext() as CmsContext)?.CtxSite.Site
             ?? _siteOrNull
             ?? throw new("Tried getting site from context or fallback, neither returned anything useful. ");
 
@@ -88,11 +87,11 @@ public partial class CodeDataFactory(
     [field: AllowNull, MaybeNull]
     public string?[] Dimensions => field ??=
         // note: can't use SiteFromContextOrFallback.SafeLanguagePriorityCodes() because it will error during testing
-        (ExCtxOrNull?.GetState<ICmsContext>() as CmsContext)?.CtxSite.Site.SafeLanguagePriorityCodes()
+        (ExCtxOrNull?.GetCmsContext() as CmsContext)?.CtxSite.Site.SafeLanguagePriorityCodes()
         ?? _siteOrNull.SafeLanguagePriorityCodes();
 
 
-    public IBlock? BlockOrNull => ExCtxOrNull?.GetState<IBlock>();
+    public IBlock? BlockOrNull => ExCtxOrNull?.GetBlock();
 
     #endregion
 

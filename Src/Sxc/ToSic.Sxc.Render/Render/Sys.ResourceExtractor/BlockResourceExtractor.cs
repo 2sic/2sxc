@@ -43,6 +43,17 @@ public abstract partial class BlockResourceExtractor(IPageServiceShared pageServ
     public RenderEngineResult Process(string html)
         => Process(html, DefaultSettings);
 
+    public RenderEngineResult Process(RenderEngineResultRaw resultRaw)
+    {
+        var result = Process(resultRaw.Html ?? "");
+        return resultRaw.ExceptionsOrNull != null
+            ? result with
+            {
+                ExceptionsOrNull = result.ExceptionsOrNull,
+            }
+            : result;
+    }
+
     /// <summary>
     /// Run the sequence to extract assets
     /// </summary>

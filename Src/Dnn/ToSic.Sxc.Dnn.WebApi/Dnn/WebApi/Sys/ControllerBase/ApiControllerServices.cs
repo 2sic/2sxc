@@ -9,13 +9,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys;
 /// But for consistency, we're building a comparable structure here.
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ApiControllerDependencies(
-    IExecutionContextFactory exCtxFactory,
-    DnnAppFolderUtilities appFolderUtilities,
-    LazySvc<Apps.App> appOverrideLazy)
-    : DependenciesBase(connect: [exCtxFactory, appFolderUtilities, appOverrideLazy])
-{
-    public LazySvc<Apps.App> AppOverrideLazy { get; } = appOverrideLazy;
-    public IExecutionContextFactory ExecutionContextFactory { get; } = exCtxFactory;
-    public DnnAppFolderUtilities AppFolderUtilities { get; } = appFolderUtilities;
-}
+public record ApiControllerDependencies(
+    IExecutionContextFactory ExCtxFactory,
+    DnnAppFolderUtilities AppFolderUtilities,
+    LazySvc<Apps.App> AppOverrideLazy)
+    : DependenciesRecord(connect: [ExCtxFactory, AppFolderUtilities, AppOverrideLazy]);

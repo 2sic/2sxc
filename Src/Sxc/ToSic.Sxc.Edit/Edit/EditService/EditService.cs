@@ -15,12 +15,12 @@ internal partial class EditService(IJsonService jsonService)
     public override void ConnectToRoot(IExecutionContext exCtx)
     {
         base.ConnectToRoot(exCtx);
-        ((IEditServiceSetup)this).SetBlock(exCtx, exCtx.GetState<IBlock>());
+        ((IEditServiceSetup)this).SetBlock(exCtx, exCtx.GetBlock());
     }
 
     IEditService IEditServiceSetup.SetBlock(IExecutionContext? exCtxOrNull, IBlock block)
     {
-        var user = exCtxOrNull?.GetState<ICmsContext>()?.User;
+        var user = exCtxOrNull?.GetCmsContext()?.User;
         Enabled = block?.Context.Permissions.IsContentAdmin ?? (user?.IsSiteAdmin ?? false);
         return this;
     }

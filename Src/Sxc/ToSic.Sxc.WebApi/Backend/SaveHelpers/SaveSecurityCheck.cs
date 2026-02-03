@@ -6,17 +6,9 @@ using ToSic.Sys.Security.Permissions;
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class SaveSecurity: SaveHelperBase
+public class SaveSecurity(Generator<MultiPermissionsTypes> multiPermissionsTypesGen)
+    : SaveHelperBase("Api.SavSec", connect: [multiPermissionsTypesGen])
 {
-    private readonly Generator<MultiPermissionsTypes> _multiPermissionsTypesGen;
-
-    public SaveSecurity(Generator<MultiPermissionsTypes> multiPermissionsTypesGen) : base("Api.SavSec")
-    {
-        ConnectLogs([
-            _multiPermissionsTypesGen = multiPermissionsTypesGen
-        ]);
-    }
-
     internal new SaveSecurity Init(IContextOfApp context)
     {
         base.Init(context);
@@ -29,7 +21,7 @@ public class SaveSecurity: SaveHelperBase
         var list = items.ToListOpt();
         var l = Log.Fn<IMultiPermissionCheck>($"{list.Count} items");
 
-        var permCheck = _multiPermissionsTypesGen.New()
+        var permCheck = multiPermissionsTypesGen.New()
             .Init(Context, Context.AppReaderRequired, list.Select(i => i.Header).ToList());
         if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
             throw HttpException.PermissionDenied(error);

@@ -61,7 +61,7 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
         var id = ids.FirstOrDefault();
         FlushDataSnapshot();
         // try to find it again (AppState.List contains also draft items)
-        var created = AppReader.List.One(id)
+        var created = AppReader.List.GetOne(id)
             ?? throw new ArgumentException($"Can't find the freshly created entity with ID {id}, something is wrong.");
         return l.Return(created, $"{created.EntityId}/{created.EntityGuid}");
     }

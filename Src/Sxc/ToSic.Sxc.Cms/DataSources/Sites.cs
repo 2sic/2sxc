@@ -39,9 +39,8 @@ namespace ToSic.Sxc.DataSources;
 public class Sites: CustomDataSource
 {
     [PrivateApi]
-    public Sites(Dependencies services, SitesDataSourceProvider sitesProvider) : base(services, logName: "CDS.Sites")
+    public Sites(Dependencies services, SitesDataSourceProvider sitesProvider) : base(services, logName: "CDS.Sites", connect: [sitesProvider])
     {
-        ConnectLogs([sitesProvider]);
         ProvideOutRaw(sitesProvider.GetSitesInternal, options: () => SiteModel.Options);
     }
 }

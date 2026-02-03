@@ -121,7 +121,7 @@ public class ContentBlockDto : EntityDto
         // Query properties
         var query = view?.Query;
         QueryId = query?.Id; // will be null if not defined
-        QueryName = query?.Entity?.GetBestTitle();
+        QueryName = query?.Title;
 
         try
         {

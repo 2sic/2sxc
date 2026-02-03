@@ -46,7 +46,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
     {
         if (!featuresService.IsEnabled(SxcFeatures.ContentSecurityPolicyTestUrl.NameId))
             return null;
-        var pageParameters = ExCtxOrNull?.GetState<ICmsContext>()?.Page?.Parameters;
+        var pageParameters = ExCtxOrNull?.GetCmsContext()?.Page?.Parameters;
         if (pageParameters == null)
             return null;
         pageParameters.TryGetValue(CspConstants.CspUrlParameter, out var cspParam);
@@ -63,7 +63,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
     /// </summary>
     private CspSettingsReader SiteCspSettings => _siteCspSettings.Get(Log, () =>
     {
-        var pageSettings = ExCtxOrNull?.GetState<IDynamicStack>(ExecutionContextStateNames.Settings)
+        var pageSettings = ExCtxOrNull?.GetDataStack<IDynamicStack>(ExecutionContextStateNames.Settings)
             ?.GetStack(AppStackConstants.PartSiteSystem, AppStackConstants.PartGlobalSystem, AppStackConstants.PartPresetSystem);
         return new CspSettingsReader(pageSettings, user, UrlIsDevMode, Log);
     })!;

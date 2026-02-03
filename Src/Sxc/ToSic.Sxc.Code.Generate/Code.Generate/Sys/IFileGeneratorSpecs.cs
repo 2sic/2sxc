@@ -43,4 +43,16 @@ public interface IFileGeneratorSpecs
     /// If null, use all available content types in the "Default" scope + the app settings/resources.
     /// </summary>
     ICollection<string>? ContentTypes { get; init; }
+
+    /// <summary>
+    /// Prefix for generated class and file names.
+    /// If null, don't change the default naming.
+    /// </summary>
+    string? Prefix { get; init; }
+
+    /// <summary>
+    /// Suffix for generated class and file names.
+    /// If null, don't change the default naming.
+    /// </summary>
+    string? Suffix { get; init; }
 }
