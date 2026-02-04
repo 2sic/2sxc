@@ -95,7 +95,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Data.Tests", "..\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.DataSource.TestHelpers", "..\..\eav-server\ToSic.Eav.DataSource.TestHelpers\ToSic.Eav.DataSource.TestHelpers.csproj", "{8F0F0A98-19C0-443A-9666-56F92A7B6BCE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.DataSource.Tests", "..\..\eav-server\ToSic.Eav.DataSource.Tests\ToSic.Eav.DataSource.Tests.csproj", "{15640566-0ECA-4006-A55B-FDF53EAF7549}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.DataSources.Tests", "..\..\eav-server\ToSic.Eav.DataSources.Tests\ToSic.Eav.DataSources.Tests.csproj", "{15640566-0ECA-4006-A55B-FDF53EAF7549}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.DataSource.DbTests", "..\..\eav-server\ToSic.Eav.DataSource.DbTests\ToSic.Eav.DataSource.DbTests.csproj", "{E221C1FB-CA6B-4B80-81BE-130F73D878AB}"
 EndProject
@@ -878,7 +878,7 @@ Global
 		{846B7A05-F8F0-48C1-8A17-28E9F2AD629B} = {896200CD-54AF-462D-881C-0C7A43F0D6AF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
+		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 	EndGlobalSection
 EndGlobal
