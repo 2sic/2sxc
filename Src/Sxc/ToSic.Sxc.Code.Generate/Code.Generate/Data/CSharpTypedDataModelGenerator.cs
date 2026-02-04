@@ -2,8 +2,8 @@
 
 namespace ToSic.Sxc.Code.Generate.Data;
 
-internal class CSharpTypedDataModelGenerator(CSharpTypedDataModelsGenerator dmg, IContentType type, string baseName) 
-    : CSharpModelGeneratorBase(dmg, type, baseName, dmg.Log, "Gen.DtaCls")
+internal class CSharpTypedDataModelGenerator(CSharpTypedDataModelsGenerator generator, IContentType type, string baseName) 
+    : CSharpModelGeneratorBase(generator, type, baseName, generator.Log, "Gen.DtaCls")
 {
     #region Overrides
 
@@ -15,7 +15,7 @@ internal class CSharpTypedDataModelGenerator(CSharpTypedDataModelsGenerator dmg,
           // See also: https://go.2sxc.org/copilot-data
           // To extend it, create a "{{ClassName}}.cs" with this contents:
           /*
-          namespace {{dmg.Specs.DataNamespace}}
+          namespace {{Generator.Specs.DataNamespace}}
           {
             public partial class {{ClassName}}
             {
