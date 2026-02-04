@@ -114,7 +114,6 @@ public class ExportApp(
         using var fileStream = zipExport.ExportApp(specs);
         var fileBytes = fileStream.ToArray();
         l.A("will stream so many bytes:" + fileBytes.Length);
-        var mimeType = MimeTypeConstants.FallbackType;
 
         return l.ReturnAsOk(new()
         {
