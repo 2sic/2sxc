@@ -3541,6 +3541,40 @@
                 "TargetType": 4,
                 "Guid": "4570a596-5020-4111-b494-3e510f778c6e"
               }
+            },
+            {
+              "Id": 185371,
+              "Version": 1,
+              "Guid": "c9c3cb1e-b4bf-4a30-a578-06b2d95e2d1d",
+              "Type": {
+                "Id": "PermissionConfiguration",
+                "Name": "PermissionConfiguration"
+              },
+              "Attributes": {
+                "String": {
+                  "Condition": {
+                    "en-us": "SecurityAccessLevel.Admin"
+                  },
+                  "Grant": {
+                    "en-us": "r"
+                  },
+                  "Identity": {
+                    "en-us": ""
+                  },
+                  "PermissionType": {
+                    "en-us": ""
+                  },
+                  "Title": {
+                    "en-us": "Allow admins - but internal security checks will restrict it more"
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "4570a596-5020-4111-b494-3e510f778c6e"
+              }
             }
           ]
         }
