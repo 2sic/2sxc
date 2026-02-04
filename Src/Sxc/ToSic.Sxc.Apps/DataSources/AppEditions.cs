@@ -6,27 +6,29 @@ namespace ToSic.Sxc.DataSources;
 
 [PrivateApi]
 [VisualQuery(
-    ConfigurationType = "",
+    NiceName = "App Editions",
     NameId = "6cce259b-bf0c-4752-b451-a3eb04825350",
-    //HelpLink = "https://go.2sxc.org/ds-sites",
-    //Icon = DataSourceIcons.Globe,
-    NiceName = "Editions",
+    NameIds =
+    [
+        "ToSic.Sxc.DataSources.AppEditions", // for use in the front end
+    ],
     Type = DataSourceType.System,
     Audience = Audience.System,
     DataConfidentiality = DataConfidentiality.System,
-    UiHint = "Editions in this application")]
-
+    UiHint = "App Editions")]
 public class AppEditions : CustomDataSource
 {
     public AppEditions(Dependencies services, LazySvc<IAppJsonConfigurationService> appJsonService)
         : base(services, logName: "App.EditDS", connect: [appJsonService])
     {
-        ProvideOutRaw(() => GetList(appJsonService.Value), options: () => new()
-        {
-            AutoId = false,
-            TitleField = "Name",
-            TypeName = "Edition",
-        });
+        ProvideOutRaw(
+            () => GetList(appJsonService.Value),
+            options: () => new()
+            {
+                AutoId = false,
+                TitleField = "Name",
+                TypeName = "Edition",
+            });
     }
 
     private IEnumerable<IRawEntity> GetList(IAppJsonConfigurationService appJsonService)

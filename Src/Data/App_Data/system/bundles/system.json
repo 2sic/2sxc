@@ -10529,55 +10529,6 @@
                 "IsTitle": false,
                 "Metadata": [
                   {
-                    "Id": 184330,
-                    "Version": 1,
-                    "Guid": "8861c58a-f3da-4e19-93e7-e8ffd303f905",
-                    "Type": {
-                      "Id": "@string-dropdown-query",
-                      "Name": "@string-dropdown-query"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "Label": {
-                          "en-us": "Title"
-                        },
-                        "MoreFields": {
-                          "en-us": ""
-                        },
-                        "Query": {
-                          "en-us": "System.Scopes"
-                        },
-                        "Separator": {
-                          "en-us": ","
-                        },
-                        "StreamName": {
-                          "en-us": "Default"
-                        },
-                        "UrlParameters": {
-                          "en-us": "$filter=not startswith(NameId, 'System')"
-                        },
-                        "Value": {
-                          "en-us": "NameId"
-                        }
-                      },
-                      "Boolean": {
-                        "AllowMultiValue": {
-                          "en-us": false
-                        },
-                        "EnableEdit": {
-                          "en-us": false
-                        },
-                        "EnableRemove": {
-                          "en-us": true
-                        },
-                        "EnableTextEntry": {
-                          "en-us": false
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
                     "Id": 184325,
                     "Version": 1,
                     "Guid": "a65b1347-17a4-4971-88a9-82a984c1823f",
@@ -10638,19 +10589,11 @@
                       }
                     },
                     "Owner": "unknown"
-                  }
-                ]
-              },
-              {
-                "Name": "ContentTypes",
-                "Type": "String",
-                "InputType": "string-dropdown-query",
-                "IsTitle": false,
-                "Metadata": [
+                  },
                   {
-                    "Id": 184331,
+                    "Id": 184330,
                     "Version": 1,
-                    "Guid": "89d84dc5-d85b-4f63-96c6-c221f5149caf",
+                    "Guid": "8861c58a-f3da-4e19-93e7-e8ffd303f905",
                     "Type": {
                       "Id": "@string-dropdown-query",
                       "Name": "@string-dropdown-query"
@@ -10664,7 +10607,7 @@
                           "en-us": ""
                         },
                         "Query": {
-                          "en-us": "System.ContentTypes"
+                          "en-us": "System.Scopes"
                         },
                         "Separator": {
                           "en-us": ","
@@ -10673,7 +10616,7 @@
                           "en-us": "Default"
                         },
                         "UrlParameters": {
-                          "en-us": "scope=[Scope]"
+                          "en-us": "$filter=not startswith(NameId, 'System')"
                         },
                         "Value": {
                           "en-us": "NameId"
@@ -10681,7 +10624,7 @@
                       },
                       "Boolean": {
                         "AllowMultiValue": {
-                          "en-us": true
+                          "en-us": false
                         },
                         "EnableEdit": {
                           "en-us": false
@@ -10695,7 +10638,15 @@
                       }
                     },
                     "Owner": "dnn:userid=41"
-                  },
+                  }
+                ]
+              },
+              {
+                "Name": "ContentTypes",
+                "Type": "String",
+                "InputType": "string-dropdown-query",
+                "IsTitle": false,
+                "Metadata": [
                   {
                     "Id": 184327,
                     "Version": 1,
@@ -10757,6 +10708,55 @@
                       }
                     },
                     "Owner": "unknown"
+                  },
+                  {
+                    "Id": 184331,
+                    "Version": 1,
+                    "Guid": "89d84dc5-d85b-4f63-96c6-c221f5149caf",
+                    "Type": {
+                      "Id": "@string-dropdown-query",
+                      "Name": "@string-dropdown-query"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "Label": {
+                          "en-us": "Title"
+                        },
+                        "MoreFields": {
+                          "en-us": ""
+                        },
+                        "Query": {
+                          "en-us": "System.ContentTypes"
+                        },
+                        "Separator": {
+                          "en-us": ","
+                        },
+                        "StreamName": {
+                          "en-us": "Default"
+                        },
+                        "UrlParameters": {
+                          "en-us": "scope=[Scope]"
+                        },
+                        "Value": {
+                          "en-us": "NameId"
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": true
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": true
+                        },
+                        "EnableTextEntry": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
                   }
                 ]
               },
@@ -11190,7 +11190,7 @@
                     "en-us": "System.SysData"
                   },
                   "QueryParameters": {
-                    "en-us": "SysDataSourceGuid=f512e44b-5b34-4a32-bfe3-d46d46800a7f&$filter=OutputType eq 'DataModel'"
+                    "en-us": "SysDataSource=ToSic.Sxc.DataSources.CodeGenerators&$filter=OutputType eq 'DataModel'"
                   },
                   "StreamName": {
                     "en-us": "Default"
@@ -11276,7 +11276,7 @@
                     "en-us": "System.SysData"
                   },
                   "QueryParameters": {
-                    "en-us": "SysDataSourceGuid=6cce259b-bf0c-4752-b451-a3eb04825350"
+                    "en-us": "SysDataSource=ToSic.Sxc.DataSources.AppEditions"
                   },
                   "StreamName": {
                     "en-us": "Default"
