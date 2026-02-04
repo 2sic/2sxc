@@ -99,7 +99,8 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGe
                     TargetPath = Sanitize(configuration.Get<string>("TargetFolder")),
                     ContentTypes = Normalize(configuration.Get<string>("ContentTypes")),
                     Prefix = Sanitize(configuration.Get<string>("Prefix")),
-                    Suffix = Sanitize(configuration.Get<string>("Suffix"))
+                    Suffix = Sanitize(configuration.Get<string>("Suffix")),
+                    Edition = Sanitize(configuration.Get<string>("Edition")) ?? edition ?? ""
                 };
             }
 
