@@ -12,6 +12,12 @@
 public interface IFileGeneratorSpecs
 {
     /// <summary>
+    /// ID and name of the configuration used.
+    /// If null, configuration is not used.
+    /// </summary>
+    string? Configuration { get; init; }
+
+    /// <summary>
     /// The AppId of the app for which the file is generated.
     /// </summary>
     int AppId { get; }

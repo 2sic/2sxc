@@ -6,6 +6,9 @@
 internal record FileGeneratorSpecs : IFileGeneratorSpecs
 {
     /// <inheritdoc />
+    public string? Configuration { get; init; }
+
+    /// <inheritdoc />
     public int AppId { get; init; }
 
     /// <inheritdoc />
