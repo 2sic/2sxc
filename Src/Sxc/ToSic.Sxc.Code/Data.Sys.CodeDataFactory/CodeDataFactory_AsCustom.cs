@@ -1,14 +1,22 @@
 ﻿using System.Collections;
 using Microsoft.Extensions.DependencyInjection;
-using ToSic.Sxc.Data.Models;
-using ToSic.Sxc.Data.Models.Sys;
-using ToSic.Sxc.Data.Sys.Factory;
+using ToSic.Eav.Models;
+using ToSic.Eav.Models.Factory;
+using ToSic.Eav.Models.Sys;
 using ToSic.Sxc.Data.Sys.Typed;
 
 namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 
 partial class CodeDataFactory: IModelFactory
 {
+    public TModel? Create<TSource, TModel>(TSource? source)
+        where TModel : IModelSetup<TSource>
+    {
+        var wrapper = serviceProvider.Build<TModel>();
+        var ok = wrapper.SetupModel(source);
+        return ok ? wrapper : default;
+    }
+
     /// <summary>
     /// Convert an object to a custom type, if possible.
     /// If the object is an entity-like thing, that will be converted.
@@ -16,9 +24,9 @@ partial class CodeDataFactory: IModelFactory
     /// </summary>
     [return: NotNullIfNotNull(nameof(source))]
     public TCustom? AsCustom<TCustom>(object? source, NoParamOrder npo = default, bool mock = false)
-        where TCustom : class, ICanWrapData
+        where TCustom : class, IModelOfData
     {
-        var settings = new Factory.ConvertItemSettings { ItemIsStrict = true, UseMock = mock };
+        var settings = new ModelSettings { ItemIsStrict = true, UseMock = mock };
         return source switch
         {
             null when !mock => null,
@@ -29,45 +37,57 @@ partial class CodeDataFactory: IModelFactory
     }
 
     [return: NotNullIfNotNull("item")]
-    public TCustom? AsCustomFrom<TCustom, TData>(TData? item, Factory.ConvertItemSettings? settings)
-        where TCustom : class, ICanWrapData
+    public TCustom? AsCustomFrom<TCustom, TData>(TData? item, ModelSettings? settings)
+        where TCustom : class, IModelOfData
     {
         if (item == null)
             return null;
         if (item is TCustom t)
             return t;
 
-        var bestType = DataModelAnalyzer.GetTargetType<TCustom>();
+        var bestType = ModelAnalyseUse.GetTargetType<TCustom>();
         var newT = ActivatorUtilities.CreateInstance(serviceProvider, bestType) as TCustom;
-
-        settings ??= new() { ItemIsStrict = true };
 
         switch (newT)
         {
+            // 1. Direct setup from the data type specified, no further conversions
             // Should be an ITypedItemWrapper, but not enforced in the signature
-            case ICanWrap<TData> withMatchingSetup:
+            case IModelSetupWithFactory<TData> withMatchingSetup:
                 withMatchingSetup.Setup(item, this);
                 return newT;
+
+            // 2. Setup from Item, a more complex object which already has more features
             // In some cases the type of the data is already a model, so we need to unwrap it
-            case ICanWrap<ITypedItem> forItem when item is ICanBeItem canBeItem:
+            case IModelSetupWithFactory<ITypedItem> forItem when item is ICanBeItem canBeItem:
                 forItem.Setup(canBeItem.Item, this);
                 return newT;
+
+            // 3. Setup from Entity, the most basic object
             // DataModelOfEntity can also be filled from Typed (but ATM not the other way around)
-            case ICanWrap<IEntity> forEntity when item is ICanBeEntity canBeEntity:
+            case IModelSetupWithFactory<IEntity> forEntity when item is ICanBeEntity canBeEntity:
                 forEntity.Setup(canBeEntity.Entity, this);
                 return newT;
+
+            // 4. Setup from item, when starting with an entity
             // In some cases we can only wrap an item, but the data is an entity-based model
-            case ICanWrap<ITypedItem> forTypedItem when item is ICanBeEntity canBeEntity:
+            case IModelSetupWithFactory<ITypedItem> forTypedItem when item is ICanBeEntity canBeEntity:
+                settings ??= new() { ItemIsStrict = true };
+                var asItem = AsItem(canBeEntity.Entity, settings);
                 // TODO: #ConvertItemSettings
-                forTypedItem.Setup(AsItem(canBeEntity.Entity, settings), this);
+                forTypedItem.Setup(asItem, this);
                 return newT;
+
+            case IModelSetup<IEntity> forEntitySetup when item is ICanBeEntity canBeEntity:
+                forEntitySetup.Setup(canBeEntity.Entity);
+                return newT;
+
             default:
                 throw new($"The custom type {typeof(TCustom).Name} does not implement 'ICanWrap<TData>'. This is probably a mistake.");
         }
     }
 
     public TCustom? GetOne<TCustom>(Func<IEntity?> getItem, object id, bool skipTypeCheck)
-        where TCustom : class, ICanWrapData
+        where TCustom : class, IModelOfData
     {
         var item = getItem();
         if (item == null)
@@ -77,25 +97,16 @@ partial class CodeDataFactory: IModelFactory
         if (skipTypeCheck)
             return AsCustom<TCustom>(item);
 
-        // Do Type-Name check
-        var typeNames = DataModelAnalyzer.GetContentTypeNamesList<TCustom>();
-        
         // Check all type names if they are `*` or match the data ContentType
-        if (typeNames.Any(t => t == ModelSourceAttribute.ForAnyContentType || item.Type.Is(t)))
-            return AsCustom<TCustom>(item);
-
-        throw new(
-            $"Item with ID {id} is not a '{string.Join(",", typeNames)}'. " +
-            $"This is probably a mistake, otherwise use '{nameof(skipTypeCheck)}: true' " +
-            $"or apply an attribute [{nameof(ModelSourceAttribute)}({nameof(ModelSourceAttribute.ContentTypes)} = \"expected-type-name\")] to your model class. "
-        );
+        DataModelAnalyzer.IsTypeNameAllowedOrThrow<TCustom>(item, id, skipTypeCheck);
+        return AsCustom<TCustom>(item);
     }
 
     /// <summary>
     /// Create list of custom-typed ITypedItems
     /// </summary>
     public IEnumerable<TCustom> AsCustomList<TCustom>(object? source, NoParamOrder npo, bool nullIfNull)
-        where TCustom : class, ICanWrapData
+        where TCustom : class, IModelOfData
     {
         return source switch
         {

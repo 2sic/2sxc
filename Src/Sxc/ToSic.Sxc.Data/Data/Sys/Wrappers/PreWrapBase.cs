@@ -23,9 +23,6 @@ internal abstract class PreWrapBase(object? data) : IWrapper<object>, IHasJsonSo
 
     public abstract TryGetResult TryGetWrap(string? name, bool wrapDefault = true);
 
-    // #DropUseOfDumpProperties
-    //public abstract List<PropertyDumpItem> _DumpNameWipDroppingMostCases(PropReqSpecs specs, string path);
-
     #endregion
 
     #region Abstract: Keys

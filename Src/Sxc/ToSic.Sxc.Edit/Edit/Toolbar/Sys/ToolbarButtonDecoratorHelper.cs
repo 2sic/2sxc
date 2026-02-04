@@ -30,12 +30,8 @@ public class ToolbarButtonDecoratorHelper(IAppReaderFactory appReaders, ScopedCa
         if (type == null)
             return null;
 
-        var md = type.Metadata
-            .OfType(ToolbarButtonDecorator.TypeName)
-            .ToList();
-
-        var result = md
-            .Select(m => new ToolbarButtonDecorator(m))
+        var result = type.Metadata
+            .GetAll<ToolbarButtonDecorator>()
             .FirstOrDefault(d => d.Command.EqualsInsensitive(command));
 
         cache.Cache[cacheKey] = result;

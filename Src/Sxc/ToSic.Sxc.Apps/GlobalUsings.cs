@@ -7,6 +7,7 @@ global using ToSic.Eav.Apps;
 global using ToSic.Eav.Apps.Sys.Work;
 global using ToSic.Eav.Data;
 global using ToSic.Eav.DataSource;
+global using ToSic.Eav.Models;
 global using ToSic.Sys.Coding;
 global using ToSic.Sys.DI;
 global using ToSic.Sys.Documentation;

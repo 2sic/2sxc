@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Blocks.Sys;
+﻿using ToSic.Eav.Models;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
@@ -21,8 +22,8 @@ namespace ToSic.Sxc.Context.Sys.CmsContext;
 /// </param>
 internal class CmsView<TSettings, TResources>(CmsContext parent, IBlock block, bool settingsPropsRequired = true)
     : CmsView(parent, block), ICmsView<TSettings, TResources>
-    where TSettings : class, ICanWrapData, new()
-    where TResources : class, ICanWrapData, new()
+    where TSettings : class, IModelOfData, new()
+    where TResources : class, IModelOfData, new()
 {
     private readonly IView _view = block.View!;
 

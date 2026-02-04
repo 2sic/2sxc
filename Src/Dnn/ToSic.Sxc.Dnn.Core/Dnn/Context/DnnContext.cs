@@ -17,7 +17,7 @@ internal class DnnContext : IDnnContext, INeedsExecutionContext
     /// </summary>
     public void ConnectToRoot(IExecutionContext exCtx)
     {
-        var moduleContext = exCtx.GetState<IContextOfBlock>()?.Module;
+        var moduleContext = exCtx.GetContextOfBlock()?.Module;
         Module = (moduleContext as Module<ModuleInfo>)?.GetContents();
         // note: this may be a bug, I assume it should be Module.OwnerPortalId
         Portal = PortalSettings.Current ?? 

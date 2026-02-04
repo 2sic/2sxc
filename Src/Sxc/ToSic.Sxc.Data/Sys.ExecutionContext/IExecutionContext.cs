@@ -31,7 +31,7 @@ public interface IExecutionContext: ICanGetService, IHasPiggyBack, IHasLog
     /// <typeparam name="TState"></typeparam>
     /// <param name="name"></param>
     /// <returns></returns>
-    public TState GetState<TState>(string name) where TState : class;
+    public TState GetDataStack<TState>(string name) where TState : class;
 
     /// <summary>
     /// Special GetService which can cache the found service so any other use could get the same instance.

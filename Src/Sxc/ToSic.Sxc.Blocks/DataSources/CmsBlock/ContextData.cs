@@ -26,27 +26,6 @@ namespace ToSic.Sxc.DataSources;
 // ReSharper disable once PartialTypeWithSinglePart
 public partial class ContextData(DataSourceBase.Dependencies services) : PassThrough(services, "Sxc.BlckDs")
 {
-    #region Constructor and Init
-
-    // 2025-06 removed for v20
-    //#if NETFRAMEWORK
-    //    public ContextData(MyServices services, IAppReaderFactory appReaders, LazySvc<CodeInfoService> codeChanges) : base(services, "Sxc.BlckDs")
-    //    {
-    //        ConnectLogs([
-    //            _appReaders = appReaders,
-    //            _codeChanges = codeChanges
-    //        ]);
-    //    }
-    //#else
-    //#pragma warning disable IDE0290 // Use primary constructor
-    //    public ContextData(MyServices services) : base(services, "Sxc.BlckDs")
-    //#pragma warning restore IDE0290 // Use primary constructor
-    //    { }
-    //#endif
-
-    #endregion
-
-
 
     #region New v16
 

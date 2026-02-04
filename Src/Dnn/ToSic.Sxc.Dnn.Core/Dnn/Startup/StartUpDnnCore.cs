@@ -133,11 +133,6 @@ internal static class StartUpDnnCore
         services.TryAddTransient<DnnDynamicCodeService.MyScopedServices>();   // new v15
         services.TryAddTransient<IRenderService, DnnRenderService>();
 
-        // #RemoveBlocksIRenderService
-//#pragma warning disable CS0618
-//        services.TryAddTransient<Blocks.IRenderService, DnnRenderService>();  // Obsolete, but keep for the few apps we already released in v12
-//#pragma warning restore CS0618
-
         // v15 - move ready check turbo into a service
         services.TryAddTransient<DnnReadyCheckTurbo>();
         //services.TryAddScoped<CodeRootFactory, DnnCodeRootFactory>();

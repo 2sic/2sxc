@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.DataSource.TestHelpers\ToSic.Eav.DataSource.TestHelpers.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Testing.FullDbFixtures\ToSic.Eav.Testing.FullDbFixtures.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Features.TestHelpers\ToSic.Sys.Features.TestHelpers.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Adam\ToSic.Sxc.Adam.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Apps\ToSic.Sxc.Apps.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Blocks\ToSic.Sxc.Blocks.csproj" />

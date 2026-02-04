@@ -30,7 +30,7 @@ internal class CmsContext(
     internal new IExecutionContext ExCtx => base.ExCtx;
 
     // Note: Internal so it can be used for View<T, T>
-    internal IBlock BlockInternal => _realBlock.Get(() => ExCtx.GetState<IBlock>())!;
+    internal IBlock BlockInternal => _realBlock.Get(() => ExCtx.GetBlock())!;
     private readonly GetOnce<IBlock?> _realBlock = new();
 
     internal IContextOfBlock? CtxBlockOrNull => _ctxBlock.Get(() => BlockInternal?.Context);

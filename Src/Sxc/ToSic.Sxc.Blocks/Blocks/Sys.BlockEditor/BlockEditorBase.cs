@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Data.Sys.Entities;
-using ToSic.Sxc.Blocks.Sys.Views;
+﻿using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Blocks.Sys.Work;
 
 namespace ToSic.Sxc.Blocks.Sys.BlockEditor;
@@ -11,16 +10,11 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.Depe
 {
     #region DI and Construction
 
-    public class Dependencies(
-        GenWorkPlus<WorkBlocks> appBlocks,
-        GenWorkDb<WorkBlocksMod> workBlocksMod,
-        GenWorkDb<WorkEntityPublish> publisher)
-        : DependenciesBase(connect: [workBlocksMod, appBlocks, publisher])
-    {
-        public GenWorkDb<WorkBlocksMod> WorkBlocksMod { get; } = workBlocksMod;
-        public GenWorkDb<WorkEntityPublish> Publisher { get; } = publisher;
-        public GenWorkPlus<WorkBlocks> AppBlocks { get; } = appBlocks;
-    }
+    public record Dependencies(
+        GenWorkPlus<WorkBlocks> AppBlocks,
+        GenWorkDb<WorkBlocksMod> WorkBlocksMod,
+        GenWorkDb<WorkEntityPublish> Publisher)
+        : DependenciesRecord(connect: [WorkBlocksMod, AppBlocks, Publisher]);
 
     internal BlockEditorBase(Dependencies services, object[] connect) : base(services, "CG.RefMan", connect: connect)
     { }
@@ -54,7 +48,7 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.Depe
         }
 
         // only set preview / content-group-reference - but must use the guid
-        var templateGuid = Block.App.Data.List.One(templateId)!.EntityGuid;
+        var templateGuid = Block.App.Data.List.GetOne(templateId)!.EntityGuid;
         SavePreviewTemplateId(templateGuid);
         return l.Return(null, "only set preview, return null");
     }

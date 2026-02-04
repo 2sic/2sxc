@@ -14,28 +14,12 @@ public abstract class AppAssetsControllerBase : OqtControllerBase
 
     #region Dependencies
 
-    public class Dependencies : DependenciesBase
-    {
-        internal LazySvc<OqtAssetsFileHelper> FileHelper { get; }
-        public IWebHostEnvironment HostingEnvironment { get; }
-        public LazySvc<AppFolderLookupForWebApi> AppFolder { get; }
-        public SiteState SiteState { get; }
-
-        public Dependencies(
-            IWebHostEnvironment hostingEnvironment,
-            LazySvc<AppFolderLookupForWebApi> appFolder,
-            SiteState siteState,
-            LazySvc<OqtAssetsFileHelper> fileHelper
-        )
-        {
-            ConnectLogs([
-                HostingEnvironment = hostingEnvironment,
-                AppFolder = appFolder,
-                SiteState = siteState,
-                FileHelper = fileHelper
-            ]);
-        }
-    }
+    public record Dependencies(
+        IWebHostEnvironment HostingEnvironment,
+        LazySvc<AppFolderLookupForWebApi> AppFolder,
+        SiteState SiteState,
+        LazySvc<OqtAssetsFileHelper> FileHelper)
+        : DependenciesRecord(connect: [HostingEnvironment, AppFolder, SiteState, FileHelper]);
 
     #endregion
 

@@ -1,6 +1,5 @@
 ﻿using ToSic.Sxc.Cms.Sites.Sys;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Models;
 
 namespace ToSic.Sxc.Cms.Sites;
 
@@ -17,9 +16,9 @@ namespace ToSic.Sxc.Cms.Sites;
 /// 
 /// * Introduced in v19.01
 /// </remarks>
-[ModelCreation(Use = typeof(SiteModelOfEntity))]
+[ModelSpecs(Use = typeof(SiteModelOfEntity))]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
-public interface ISiteModel : ICanWrapData
+public interface ISiteModel : IModelOfData
 {
     /// <summary>
     /// The site ID.

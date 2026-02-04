@@ -4,6 +4,7 @@ using ToSic.Eav.Context;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Services.Sys.CodeApiServiceHelpers;
 using ToSic.Sxc.Sys.ExecutionContext;
 
@@ -81,7 +82,7 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
         var codeRoot = ServicesScoped.CodeRootGenerator.New()
             .New(parentClassOrNull: null, cmsBlock, Log, CompatibilityLevels.CompatibilityLevel16);
 
-        var code12 = new TypedApiStandalone(codeRoot, ((ExecutionContext)codeRoot).TypedApi);
+        var code12 = new TypedApiStandalone(codeRoot, codeRoot.GetTypedApi());
         return l.ReturnAsOk(code12);
     }
 
@@ -102,7 +103,7 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
         var codeRoot = GetNewCodeRoot();
         var app = GetApp(ServicesScoped.AppGenerator, zoneId: zoneId, appId: appId);
         ((IExCtxAttachApp)codeRoot).AttachApp(app);
-        var code12 = new TypedApiStandalone(codeRoot, ((ExecutionContext)codeRoot).TypedApi);
+        var code12 = new TypedApiStandalone(codeRoot, codeRoot.GetTypedApi());
         return l.ReturnAsOk(code12);
     }
 

@@ -31,7 +31,7 @@ internal class GetAndConvertConverter(ICodeDataFactory cdf, bool propsRequired, 
             {
                 l.A("Try to convert value");
                 // ReSharper disable once ConstantNullCoalescingCondition - paranoid
-                value = cdf.Services.ValueConverter.ToValue(strMaybeReference, parent?.EntityGuid ?? Guid.Empty) ?? value;
+                value = cdf.Services.ValueConverter.Value.ToValue(strMaybeReference, parent?.EntityGuid ?? Guid.Empty) ?? value;
                 return l.Return(value, "link-conversion");
             }
         }
@@ -83,7 +83,7 @@ internal class GetAndConvertConverter(ICodeDataFactory cdf, bool propsRequired, 
     public List<ITypedItem> ParentsItems(IEntity entity, string? type, string? field, GetRelatedOptions options)
     {
         var list = entity.Parents(type, field);
-        var processed = ProcessOptions(list, options, cdf.Services.User);
+        var processed = ProcessOptions(list, options, cdf.Services.User.Value);
 
         var preserveNull = options.ProcessNull == ProcessNull.Preserve;
 
@@ -104,7 +104,7 @@ internal class GetAndConvertConverter(ICodeDataFactory cdf, bool propsRequired, 
 
     private List<IDynamicEntity?> AsChildrenDyn(IEnumerable<IEntity?> entities, string? field, IEntity? parentEntity)
         => AsChildrenOf(
-            ProcessOptions(entities, new(), cdf.Services.User),
+            ProcessOptions(entities, new(), cdf.Services.User.Value),
             field,
             parentEntity,
             SubDataFactory.SubDynEntityOrNull,
@@ -113,7 +113,7 @@ internal class GetAndConvertConverter(ICodeDataFactory cdf, bool propsRequired, 
 
     private List<ITypedItem> AsChildrenItems(IEnumerable<IEntity?> entities, string field, IEntity? parentEntity, GetRelatedOptions options)
         => AsChildrenOf(
-            ProcessOptions(entities, options, cdf.Services.User),
+            ProcessOptions(entities, options, cdf.Services.User.Value),
             field,
             parentEntity,
             ITypedItem (e) => new TypedItemOfEntity(e, cdf, propsRequired),

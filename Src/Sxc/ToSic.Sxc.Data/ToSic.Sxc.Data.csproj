@@ -12,4 +12,8 @@
     <ProjectReference Include="..\ToSic.Sxc.Core\ToSic.Sxc.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\DataWrapper %28no namespace%29\" />
+  </ItemGroup>
+
 </Project>

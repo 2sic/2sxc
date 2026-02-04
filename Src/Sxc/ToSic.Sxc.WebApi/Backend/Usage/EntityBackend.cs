@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps.Sys.Permissions;
-using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Backend.Usage;
@@ -19,7 +18,7 @@ public class EntityBackend(
         if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
             throw HttpException.PermissionDenied(error);
 
-        var item = context.AppReaderRequired.List.One(guid);
+        var item = context.AppReaderRequired.List.GetOne(guid);
         // Note: this isn't proper yet, it's all relationships in the app, not just of this entity
         //var relationships = item.Relationships.AllRelationships;
 

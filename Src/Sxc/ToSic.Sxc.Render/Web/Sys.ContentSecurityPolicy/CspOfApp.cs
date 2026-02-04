@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps.Sys.AppStack;
-using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -14,7 +13,7 @@ namespace ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CspOfApp : ServiceWithContext
 {
-    public int AppId => _appId ??= ExCtx.GetState<IBlock>()?.AppId ?? 0;
+    public int AppId => _appId ??= ExCtx.GetBlock()?.AppId ?? 0;
     private int? _appId;
 
     #region Constructor
@@ -55,7 +54,7 @@ public class CspOfApp : ServiceWithContext
         var l = Log.Fn<string?>(AppId.ToString());
 
         // Get Stack
-        if (ExCtxOrNull?.GetState<IDynamicStack>(ExecutionContextStateNames.Settings) is not { } stack) 
+        if (ExCtxOrNull?.GetDataStack<IDynamicStack>(ExecutionContextStateNames.Settings) is not { } stack) 
             return l.ReturnNull("no stack");
 
         // Enable this for detailed debugging

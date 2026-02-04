@@ -1,6 +1,5 @@
 ﻿using ToSic.Sxc.Cms.Pages.Sys;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Models;
 
 namespace ToSic.Sxc.Cms.Pages;
 
@@ -20,9 +19,9 @@ namespace ToSic.Sxc.Cms.Pages;
 /// * the previous internal implementation had a property called `Visible` which we finalized to `IsNavigation` to better clarify it purpose.
 /// * the previous internal implementation had a property called `Clickable` which we finalized to `IsClickable` to better clarify it purpose.
 /// </remarks>
-[ModelCreation(Use = typeof(PageModelOfEntity))]
+[ModelSpecs(Use = typeof(PageModelOfEntity))]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
-public interface IPageModel : ICanWrapData
+public interface IPageModel : IModelOfData
 {
     /// <summary>
     /// The page ID.

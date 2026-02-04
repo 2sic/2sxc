@@ -1,3 +1,4 @@
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.App;
 
 // ReSharper disable once CheckNamespace
@@ -12,6 +13,6 @@ internal static class ExportExtensionTestAccessors
     /// <summary>
     /// Test accessor for Export method.
     /// </summary>
-    public static THttpResponseType ExportTac(this ExtensionExportService exportExtension, int zoneId, int appId, string name)
+    public static FileToUploadToClient ExportTac(this ExtensionExportService exportExtension, int zoneId, int appId, string name)
         => exportExtension.Export(appId: appId, name: name);
 }

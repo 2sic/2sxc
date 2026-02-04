@@ -1,4 +1,6 @@
-﻿using ToSic.Sxc.Data.Models.Sys;
+﻿using System.Data;
+using ToSic.Eav.Models.Factory;
+using ToSic.Sxc.Data.Models.Sys;
 using ToSic.Sxc.Data.Sys.Factory;
 
 namespace ToSic.Sxc.Data.Models;
@@ -47,11 +49,11 @@ namespace ToSic.Sxc.Data.Models;
 /// - Released in v19.01 (BETA)
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still beta, name may change to DataModelWithItem or something")]
-public abstract partial class ModelFromItem : ICanWrap<ITypedItem>, ICanBeItem, ICanBeEntity
+public abstract partial class ModelFromItem : IModelSetupWithFactory<ITypedItem>, ICanBeItem, ICanBeEntity
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
-    void ICanWrap<ITypedItem>.Setup(ITypedItem source, IModelFactory modelFactory)
+    void IModelSetupWithFactory<ITypedItem>.Setup(ITypedItem source, IModelFactory modelFactory)
     {
         _item = source;
         _modelFactory = modelFactory;
@@ -72,9 +74,6 @@ public abstract partial class ModelFromItem : ICanWrap<ITypedItem>, ICanBeItem, 
     /// </summary>
     [ShowApiWhenReleased(ShowApiMode.Never)]
     IEntity ICanBeEntity.Entity => _item.Entity;
-
-    // #RemoveBlocksIRenderService
-    //object? ICanBeItem.TryGetBlock() => _item.TryGetBlock();
 
     //IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= ((IHasPropLookup)((ICanBeItem)this).Item).PropertyLookup;
     //private IPropertyLookup _propLookup;
@@ -105,12 +104,12 @@ public abstract partial class ModelFromItem : ICanWrap<ITypedItem>, ICanBeItem, 
 
     /// <inheritdoc cref="DataModelHelpers.As{TCustom}"/>
     protected T? As<T>(object item)
-        where T : class, ICanWrapData
+        where T : class, IModelOfData
         => DataModelHelpers.As<T>(_modelFactory, item);
 
     /// <inheritdoc cref="DataModelHelpers.AsList{T}"/>
     protected IEnumerable<T>? AsList<T>(object source, NoParamOrder npo = default, bool nullIfNull = false)
-        where T : class, ICanWrapData
+        where T : class, IModelOfData
         => DataModelHelpers.AsList<T>(_modelFactory, source, new() { ItemIsStrict = true }, nullIfNull: nullIfNull);
 
     #endregion

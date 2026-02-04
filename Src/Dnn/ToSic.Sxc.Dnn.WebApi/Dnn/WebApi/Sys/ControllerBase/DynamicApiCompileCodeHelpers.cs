@@ -54,7 +54,7 @@ internal class DynamicApiCompileCodeHelpers: CompileCodeHelper
         Log.A($"HasBlock: {block != null}");
 
         var services = _sysHlp.GetService<ApiControllerDependencies>().ConnectServices(Log);
-        var codeRoot = services.ExecutionContextFactory
+        var codeRoot = services.ExCtxFactory
             .New(_owner, block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel10);
 
         _sysHlp.ConnectToRoot(codeRoot);

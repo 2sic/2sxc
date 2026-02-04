@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.LookUp.Sys.Engines;
-
-namespace ToSic.Sxc.Apps.Sys;
+﻿namespace ToSic.Sxc.Apps.Sys;
 
 partial class SxcAppBase
 {

@@ -11,12 +11,13 @@ public class LightSpeedTestData(DataBuilder builder)
     internal const string DefTitle = "LightSpeed Configuration";
 
     internal LightSpeedDecorator Decorator(bool? isEnabled = default, bool? byUrlParameters = null, bool? caseSensitive = null, string? names = default, bool? othersDisableCache = default)
-        => new(LightSpeedTestEntity(isEnabled: isEnabled, byUrlParameters: byUrlParameters, caseSensitive: caseSensitive, names: names, othersDisableCache: othersDisableCache));
+        => LightSpeedTestEntity(isEnabled: isEnabled, byUrlParameters: byUrlParameters, caseSensitive: caseSensitive, names: names, othersDisableCache: othersDisableCache)
+            .As<LightSpeedDecorator>(skipTypeCheck: true)!;
 
     /// <summary>
     /// Basic LightSpeed Content Type with Url Fields only for testing
     /// </summary>
-    private IContentType LsCtUrlFields => builder.ContentType.CreateContentTypeTac(appId: AppId, name: LightSpeedDecorator.NiceName, attributes:
+    private IContentType LsCtUrlFields => builder.ContentType.CreateContentTypeTac(appId: AppId, name: LightSpeedDecorator.ContentTypeName, attributes:
         [
             builder.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.Title), DataTypes.Boolean, true),
             builder.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.IsEnabled), DataTypes.Boolean),
@@ -29,7 +30,7 @@ public class LightSpeedTestData(DataBuilder builder)
 
     private IEntity LightSpeedTestEntity(bool? isEnabled = default, bool? byUrlParameters = default, bool? caseSensitive = default, string? names = default, bool? othersDisableCache = default)
     {
-        var valDaniel = new Dictionary<string, object>
+        var values = new Dictionary<string, object>
         {
             {nameof(LightSpeedDecorator.Title), DefTitle},
             {nameof(LightSpeedDecorator.IsEnabled), isEnabled},
@@ -38,7 +39,7 @@ public class LightSpeedTestData(DataBuilder builder)
             {nameof(LightSpeedDecorator.UrlParameterNames), names},
             {nameof(LightSpeedDecorator.UrlParametersOthersDisableCache), othersDisableCache }
         };
-        var ent = builder.CreateEntityTac(appId: AppId, entityId: 1, contentType: LsCtUrlFields, values: valDaniel, titleField: nameof(LightSpeedDecorator.Title));
+        var ent = builder.CreateEntityTac(appId: AppId, entityId: 1, contentType: LsCtUrlFields, values: values, titleField: nameof(LightSpeedDecorator.Title));
         return ent;
     }
 

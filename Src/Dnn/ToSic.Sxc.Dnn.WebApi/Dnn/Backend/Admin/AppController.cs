@@ -2,6 +2,7 @@
 using ToSic.Eav.DataSources.Sys;
 using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Eav.WebApi.Sys.Dto;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using AppDto = ToSic.Eav.WebApi.Sys.Dto.AppDto;
 using RealController = ToSic.Sxc.Backend.Admin.AppControllerReal;
@@ -73,7 +74,8 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     /// <inheritdoc />
     [HttpGet]
     public HttpResponseMessage Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite, bool assetAdamDeleted = true)
-        => Real.Export(new(zoneId, appId, includeContentGroups, resetAppGuid, assetsAdam, assetsSite, assetAdamDeleted));
+        => Real.Export(new(zoneId, appId, includeContentGroups, resetAppGuid, assetsAdam, assetsSite, assetAdamDeleted))
+            .ToHttpResponse();
 
     /// <inheritdoc />
     [HttpGet]

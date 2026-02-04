@@ -12,34 +12,21 @@ public abstract class CodeApiServiceBase(CodeApiServiceBase.Dependencies service
     : ServiceBase<CodeApiServiceBase.Dependencies>(services, logName),
         ILogWasConnected
 {
-    public class Dependencies(
-        IServiceProvider serviceProvider,
-        LazySvc<ILogStore> logStore,
-        LazySvc<IUser> user,
+    public record Dependencies(
+        IServiceProvider ServiceProvider,
+        LazySvc<ILogStore> LogStore,
+        LazySvc<IUser> User,
         // Dependencies to get primary app
-        LazySvc<ISite> site,
-        LazySvc<IZoneMapper> zoneMapper,
-        LazySvc<IAppsCatalog> appsCatalog)
-        : DependenciesBase(connect: [/* never! serviceProvider */ logStore, user, site, zoneMapper, appsCatalog])
-    {
-        internal IServiceProvider ServiceProvider { get; } = serviceProvider;
-        public LazySvc<ILogStore> LogStore { get; } = logStore;
-        public LazySvc<IUser> User { get; } = user;
-        public LazySvc<ISite> Site { get; } = site;
-        public LazySvc<IZoneMapper> ZoneMapper { get; } = zoneMapper;
-        public LazySvc<IAppsCatalog> AppsCatalog { get; } = appsCatalog;
-    }
+        LazySvc<ISite> Site,
+        LazySvc<IZoneMapper> ZoneMapper,
+        LazySvc<IAppsCatalog> AppsCatalog)
+        : DependenciesRecord(connect: [/* never! serviceProvider */ LogStore, User, Site, ZoneMapper, AppsCatalog]);
 
-    public class ScopedDependencies(
-        Generator<IExecutionContextFactory> codeRootGenerator,
-        Generator<App> appGenerator,
-        LazySvc<IModuleAndBlockBuilder> modAndBlockBuilder)
-        : DependenciesBase(connect: [codeRootGenerator, appGenerator, modAndBlockBuilder])
-    {
-        public Generator<App> AppGenerator { get; } = appGenerator;
-        public Generator<IExecutionContextFactory> CodeRootGenerator { get; } = codeRootGenerator;
-        public LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder { get; } = modAndBlockBuilder;
-    }
+    public record ScopedDependencies(
+        Generator<IExecutionContextFactory> CodeRootGenerator,
+        Generator<App> AppGenerator,
+        LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder)
+        : DependenciesRecord(connect: [CodeRootGenerator, AppGenerator, ModAndBlockBuilder]);
 
     protected IApp GetApp(Generator<App> appGenerator, NoParamOrder npo = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
     {

@@ -18,26 +18,16 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
 {
     #region Dependencies 
 
-    public class Dependencies(
-        IContextOfSite siteCtx,
-        LazySvc<ISysFeaturesService> features,
-        LazySvc<IUiData> uiDataLazy,
-        LazySvc<LanguagesBackend> languagesBackend,
-        IAppPathsMicroSvc appPaths,
-        LazySvc<GlobalPaths> globalPaths,
-        IAppsCatalog appsCatalog,
-        LazySvc<IUserService> usersSvc
-    ) : DependenciesBase(connect: [siteCtx, features, uiDataLazy, appPaths, languagesBackend, globalPaths, appsCatalog, usersSvc])
-    {
-        public LazySvc<GlobalPaths> GlobalPaths { get; } = globalPaths;
-        public IAppPathsMicroSvc AppPaths { get; } = appPaths;
-        public IContextOfSite SiteCtx { get; } = siteCtx;
-        public LazySvc<LanguagesBackend> LanguagesBackend { get; } = languagesBackend;
-        public LazySvc<ISysFeaturesService> Features { get; } = features;
-        public LazySvc<IUiData> UiDataLazy { get; } = uiDataLazy;
-        public IAppsCatalog AppsCatalog { get; } = appsCatalog;
-        public IUserService UsersSvc => usersSvc.Value;
-    }
+    public record Dependencies(
+        IContextOfSite SiteCtx,
+        LazySvc<ISysFeaturesService> Features,
+        LazySvc<IUiData> UiDataLazy,
+        LazySvc<LanguagesBackend> LanguagesBackend,
+        IAppPathsMicroSvc AppPaths,
+        LazySvc<GlobalPaths> GlobalPaths,
+        IAppsCatalog AppsCatalog,
+        LazySvc<IUserService> UsersSvc
+    ) : DependenciesRecord(connect: [SiteCtx, Features, UiDataLazy, AppPaths, LanguagesBackend, GlobalPaths, AppsCatalog, UsersSvc]);
 
     #endregion
 
@@ -219,7 +209,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
             IsContentAdmin = user.IsContentAdmin,
             Name = user.Name,
             Username = user.Username,
-            Roles = flags.HasFlag(Ctx.UserRoles) ? Services.UsersSvc.GetCurrentUser().Roles.Select(r => r.Name).ToListOpt() : [],
+            Roles = flags.HasFlag(Ctx.UserRoles) ? Services.UsersSvc.Value.GetCurrentUser().Roles.Select(r => r.Name).ToListOpt() : [],
         };
         return userDto;
     }

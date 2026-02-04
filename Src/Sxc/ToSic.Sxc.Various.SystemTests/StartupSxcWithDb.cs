@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.Startup;
-using ToSic.Sxc.Startup;
+using ToSic.Eav.Run.Startup;
+using ToSic.Sxc.Run.Startup;
 
 #pragma warning disable CA1822
 
@@ -25,7 +25,7 @@ public class StartupSxcWithDb
             .AddFixtureHelpers()
             .AddDataSourceTestHelpers()
             // 2sxc core
-            .AddSxcCoreNew()
+            .AddSxcCore()
             .AddSxcApps()
             .AddSxcEdit()
             .AddSxcData()
@@ -40,9 +40,9 @@ public class StartupSxcWithDb
             .AddSxcImages()
             .AddSxcWeb()
             .AddSxcLightSpeed()
-            .AddSxcAppsFallbackServices()
+            .AddSxcAppsFallbacks()
 
-            .AddEavEverything()
-            .AddEavEverythingFallbacks();
+            .AddEavAll()
+            .AddEavAllFallbacks();
 
 }

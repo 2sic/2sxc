@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps.Sys;
-using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Context.Sys;
 
@@ -17,7 +16,7 @@ public sealed class BlockOfEntity(BlockGeneratorHelpers helpers, LazySvc<AppFind
 
         // Get the content-block definition if we only have the ID
         // The block ID. Is usually negative to mark inner-content-blocks
-        blockEntity ??= parentBlock.App.Data.List.One(Math.Abs(contentBlockId))!;
+        blockEntity ??= parentBlock.App.Data.List.GetOne(Math.Abs(contentBlockId))!;
 
         var (isContentApp, blockId) = LoadBlockDefinition(appFinderLazy, parentBlock.ZoneId, blockEntity);
         var ctx = (IContextOfBlock)parentBlock.Context.Clone(Log);

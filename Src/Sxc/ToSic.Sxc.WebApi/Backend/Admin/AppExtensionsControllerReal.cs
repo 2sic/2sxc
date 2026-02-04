@@ -1,4 +1,5 @@
 using ToSic.Eav.Apps.Sys.FileSystemState;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.App;
 
 namespace ToSic.Sxc.Backend.Admin;
@@ -125,7 +126,7 @@ public class AppExtensionsControllerReal(
     /// <param name="appId">App identifier</param>
     /// <param name="name">Extension folder name</param>
     /// <returns>HTTP response containing the file data.</returns>
-    public THttpResponseType Download(int appId, string name)
+    public FileToUploadToClient Download(int appId, string name)
         => exportExtensionLazy.Value.Export(appId, name);
 
     /// <summary>

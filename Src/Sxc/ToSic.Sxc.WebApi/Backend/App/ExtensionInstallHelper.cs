@@ -27,6 +27,7 @@ internal class ExtensionInstallHelper(ReadOnlyFileHelper readOnlyHelper, ILog? p
 
         var tempExtensionFolder = Path.Combine(tempDir, FolderConstants.AppExtensionsFolder, folderName);
         var tempAppCodeFolder = Path.Combine(tempDir, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, folderName);
+        var tempAppCodeExtensionFolderName = Path.Combine(tempDir, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, ExtensionValidationHelper.AppCodeExtensionFolderName(folderName));
 
         var extensionTarget = Path.Combine(extensionsRoot, folderName);
         var appCodeTarget = Path.Combine(appRoot, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, folderName);
@@ -38,6 +39,10 @@ internal class ExtensionInstallHelper(ReadOnlyFileHelper readOnlyHelper, ILog? p
         var appCodeTargetValidation = EnsureTargetReadyForCopy(tempAppCodeFolder, appCodeTarget, overwrite, FolderConstants.AppCodeFolder);
         if (!appCodeTargetValidation.Success)
             return l.ReturnAsError(appCodeTargetValidation);
+
+        var appCodeExtensionFolderNameTargetValidation = EnsureTargetReadyForCopy(tempAppCodeExtensionFolderName, appCodeTarget, overwrite, FolderConstants.AppCodeFolder);
+        if (!appCodeExtensionFolderNameTargetValidation.Success)
+            return l.ReturnAsError(appCodeExtensionFolderNameTargetValidation);
 
         var copyResult = CopyAllowedFiles(tempDir, appRoot, folderName, allowedFiles);
         if (!copyResult.Success)
@@ -80,6 +85,7 @@ internal class ExtensionInstallHelper(ReadOnlyFileHelper readOnlyHelper, ILog? p
         {
             Path.Combine(sourceRoot, FolderConstants.AppExtensionsFolder, folderName),
             Path.Combine(sourceRoot, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, folderName),
+            ExtensionValidationHelper.GetActualCasedPath(Path.Combine(sourceRoot, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, ExtensionValidationHelper.AppCodeExtensionFolderName(folderName))),
         };
 
         foreach (var source in sources)

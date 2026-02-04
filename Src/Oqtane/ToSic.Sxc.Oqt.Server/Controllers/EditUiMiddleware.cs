@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers;
 
 internal class EditUiMiddleware
 {
-    private const int UnknownPageId = -1;
+    private const int UnknownId = -1;
 
     public static Task PageOutputCached(HttpContext context, IWebHostEnvironment env, string virtualPath, EditUiResourceSettings settings)
     {
@@ -36,12 +36,15 @@ internal class EditUiMiddleware
         }
 
         var pageId = GetPageId(context);
+        var tenantId = GetTenantId(context);
+        var aliasId = GetAliasId(context);
+        var addOn = $"{HtmlDialog.TenantIdInUrl}={tenantId}&{HtmlDialog.AliasIdInUrl}={aliasId}";
 
         // find siteId from pageId (if provided)
         var aliasResolver = sp.GetService<AliasResolver>();
 
         // 1. (keep order of lines)
-        var siteId = EnsureCorrectAliasAndGetSiteIdFromPageId(pageId, aliasResolver, sp);
+        var siteId = EnsureCorrectAliasAndGetSiteIdFromPageId(tenantId, aliasId, pageId, aliasResolver, sp);
 
         // New feature to get resources
         var htmlHead = "";
@@ -61,7 +64,7 @@ internal class EditUiMiddleware
         // inject JsApi to html content
         var content = sp.GetRequiredService<IJsApiService>().GetJsApiJson(pageId, siteRoot, rvt, withPublicKey);
 
-        html = HtmlDialog.UpdatePlaceholders(html, content, pageId, "", htmlHead, $"<input name=\"__RequestVerificationToken\" type=\"hidden\" value=\"{rvt}\" >");
+        html = HtmlDialog.UpdatePlaceholders(html, content, pageId, addOn, htmlHead, $"<input name=\"__RequestVerificationToken\" type=\"hidden\" value=\"{rvt}\" >");
 
         var bytes = Encoding.Default.GetBytes(html);
 
@@ -74,16 +77,7 @@ internal class EditUiMiddleware
     }
 
     private static string CacheKey(string virtualPath) => $"ToSic.Sxc.Oqt.Server.Controllers.{nameof(EditUiMiddleware)}:{virtualPath}";
-
-    private static int GetPageId(HttpContext context)
-    {
-        var pageIdString = context.Request.Query[HtmlDialog.PageIdInUrl];
-
-        return !string.IsNullOrEmpty(pageIdString) 
-            ? Convert.ToInt32(pageIdString) 
-            : UnknownPageId;
-    }
-
+    
     private static bool WithPublicKey(HttpContext context)
     {
         // 'wpk' should be provided in query string
@@ -95,23 +89,43 @@ internal class EditUiMiddleware
     /// find siteId from pageId (if provided)
     /// initialize SiteState for DB connection
     /// </summary>
+    /// <param name="tenantId"></param>
+    /// <param name="aliasId"></param>
     /// <param name="pageId"></param>
     /// <param name="aliasResolver"></param>
     /// <param name="sp"></param>
     /// <returns>siteId or NULL</returns>
     /// <remarks>internally find correct alias and store it in SiteState.Alias for reuse</remarks>
-    private static int? EnsureCorrectAliasAndGetSiteIdFromPageId(int pageId, AliasResolver aliasResolver, IServiceProvider sp)
+    private static int? EnsureCorrectAliasAndGetSiteIdFromPageId(int tenantId, int aliasId, int pageId, AliasResolver aliasResolver, IServiceProvider sp)
     {
-        if (pageId == UnknownPageId) return null;
+        if (tenantId == UnknownId) return null;
+        if (aliasId == UnknownId) return null;
+        if (pageId == UnknownId) return null;
 
         // FIX: No database provider has been configured for this DbContext. A provider can be configured by overriding the 'DbContext.OnConfiguring' method or by using 'AddDbContext' on the application service provider.
-        var _ = aliasResolver?.Alias; // do not remove or reorder this line (it will initialize SiteState for DB connection)
+        var _ = aliasResolver?.GetAndStoreAlias(aliasId);// do not remove or reorder this line (it will initialize SiteState for DB connection)
 
-        var pages = sp.GetRequiredService<IPageRepository>(); 
+        if (aliasResolver?.Alias.TenantId != tenantId) return null;
+
+        var pages = sp.GetRequiredService<IPageRepository>();
         var page = pages.GetPage(pageId, false); // SiteState need to be initialized for DB connection
 
         aliasResolver?.InitIfEmpty(page?.SiteId); // store correct alias in SiteState.Alias
 
         return page?.SiteId;
     }
+
+    private static int GetQueryParameterAsInt(HttpContext context, string parameterName)
+    {
+        var parameterValue = context.Request.Query[parameterName];
+        return !string.IsNullOrEmpty(parameterValue)
+            ? Convert.ToInt32(parameterValue)
+            : UnknownId;
+    }
+
+    private static int GetTenantId(HttpContext context) => GetQueryParameterAsInt(context, HtmlDialog.TenantIdInUrl);
+
+    private static int GetAliasId(HttpContext context) => GetQueryParameterAsInt(context, HtmlDialog.AliasIdInUrl);
+
+    private static int GetPageId(HttpContext context) => GetQueryParameterAsInt(context, HtmlDialog.PageIdInUrl);
 }

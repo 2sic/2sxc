@@ -3,6 +3,7 @@ using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Engines.Sys;
+using ToSic.Sxc.Render.Sys.Output;
 using ToSic.Sxc.Render.Sys.Specs;
 
 namespace ToSic.Sxc.Dnn.Razor;
@@ -20,84 +21,57 @@ namespace ToSic.Sxc.Dnn.Razor;
 [EngineDefinition(Name = "Razor")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 // ReSharper disable once UnusedMember.Global
-internal partial class DnnRazorEngine(EngineBase.Dependencies helpers, DnnRazorCompiler razorCompiler)
-    : EngineBase(helpers, connect: [razorCompiler]),
+internal class DnnRazorEngine(
+    EngineSpecsService engineSpecsService,
+    IBlockResourceExtractor blockResourceExtractor,
+    EngineAppRequirements engineAppRequirements,
+    DnnRazorCompiler razorCompiler)
+    : ServiceBase("Dnn.RzEng", connect: [engineSpecsService, blockResourceExtractor, engineAppRequirements, razorCompiler]),
         IRazorEngine
-        // #RemovedV20 #ModulePublish
-        //, IEngineDnnOldCompatibility
 {
     /// <inheritdoc />
-    [PrivateApi]
-    public override void Init(IBlock block)
+    public RenderEngineResult Render(IBlock block, RenderSpecs specs)
     {
-        var l = Log.Fn();
-        base.Init(block);
-        // after Base.init also init the compiler (requires objects which were set up in base.Init)
-        razorCompiler.SetupCompiler(new(App.AppId, Edition, App.Name), Block);
+        var l = Log.Fn<RenderEngineResult>(timer: true);
+
+        // Prepare #1: Specs
+        var engineSpecs = engineSpecsService.GetSpecs(block);
+
+        // Preflight: check if rendering is possible, or throw exceptions...
+        var preFlightResult = engineAppRequirements.CheckExpectedNoRenderConditions(engineSpecs);
+        if (preFlightResult != null)
+            return l.ReturnAsError(preFlightResult);
+
+        // Prepare #2: after Base.init also init the compiler (requires objects which were set up in base.Init)
+        razorCompiler.SetupCompiler(engineSpecs);
+
+        // Prepare #3: The entry component
+        RazorComponentBase entryRazorComponent;
         try
         {
-            EntryRazorComponent = InitWebpageAndOldProperties(TemplatePath)?.Instance;
+            var razorBuild = razorCompiler.InitWebpage(engineSpecs.TemplatePath, exitIfNoHotBuild: false);
+            entryRazorComponent = razorBuild.Instance;
         }
-        // Catch web.config Error on DNNs upgraded to 7
-        catch (ConfigurationErrorsException exc)
+        catch (ConfigurationErrorsException exc)    // Catch web.config Error on DNNs upgraded to 7
         {
             throw l.Done(new Exception("Configuration Error. Your web.config seems to be wrong in the 2sxc folder.", exc));
         }
-        l.Done();
-    }
 
-    [PrivateApi]
-    private RazorComponentBase EntryRazorComponent
-    {
-        get => Log.Getter(() => field);
-        set => Log.Do(cName: $"set{nameof(EntryRazorComponent)}", action: () => field = value);
-    }
-
-
-    [PrivateApi]
-    protected override (string, List<Exception>) RenderEntryRazor(RenderSpecs specs)
-    {
-        var (writer, exceptions) = DnnRenderImplementation(EntryRazorComponent, specs);
-        return (writer.ToString(), exceptions);
-    }
-
-    private (TextWriter writer, List<Exception> exceptions) DnnRenderImplementation(RazorComponentBase webpage, RenderSpecs specs)
-    {
-        ILogCall<(TextWriter writer, List<Exception> exceptions)> l = Log.Fn<(TextWriter, List<Exception>)>();
-        var writer = new StringWriter();
-        var result = razorCompiler.Render(webpage, writer, specs);
+        // Render and process / return
+        var renderedTemplate = DnnRenderImplementation(entryRazorComponent, specs);
+        var result = blockResourceExtractor.Process(renderedTemplate);
         return l.ReturnAsOk(result);
     }
 
 
-    private RazorBuildTempResult<RazorComponentBase> InitWebpageAndOldProperties(string templatePath)
+    private RenderEngineResultRaw DnnRenderImplementation(RazorComponentBase webpage, RenderSpecs specs)
     {
-        var l = Log.Fn<RazorBuildTempResult<RazorComponentBase>>();
-        var razorBuild = razorCompiler.InitWebpage(templatePath, exitIfNoHotBuild: false);
-        var pageToInit = razorBuild.Instance;
-
-        // #RemovedV20 #ModulePublish
-        //        if (pageToInit is RazorComponent rzrPage)
-        //        {
-        //#pragma warning disable CS0618
-        //            rzrPage.Purpose = Purpose;
-        //#pragma warning restore CS0618
-        //        }
-
-        // #RemovedV20 #ModulePublish
-        //#pragma warning disable 618, CS0612
-        //        if (pageToInit is SexyContentWebPage oldPage)
-        //            oldPage.InstancePurpose = (InstancePurposes)Purpose;
-        //#pragma warning restore 618, CS0612
-
-        return l.ReturnAsOk(new(pageToInit, razorBuild.UsesHotBuild));
-
+        ILogCall<(TextWriter writer, List<Exception> exceptions)> l = Log.Fn<(TextWriter, List<Exception>)>();
+        var (writer, exceptions) = razorCompiler.Render(webpage, new StringWriter(), specs);
+        return new ()
+        {
+            Html = writer.ToString(),
+            ExceptionsOrNull = exceptions
+        };
     }
-
-
-    ///// <summary>
-    ///// Special old mechanism to always request jQuery and Rvt
-    ///// </summary>
-    //public bool OldAutoLoadJQueryAndRvt => EntryRazorComponent.CompatibilityLevel <= CompatibilityLevels.MaxLevelForAutoJQuery;
-
 }

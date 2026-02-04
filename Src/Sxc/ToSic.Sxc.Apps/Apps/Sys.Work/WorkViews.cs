@@ -82,7 +82,7 @@ public class WorkViews(
                 // Never save the View or the ViewInfoForPathSelect, as that would also preserve an old Service used in the View
                 return new
                 {
-                    v.Entity,
+                    (v as ICanBeEntity)?.Entity,
                     v.Name,
                     urlIdentifier,
                     isRegex,
@@ -104,10 +104,10 @@ public class WorkViews(
 
 
     public IView Get(int templateId)
-        => ViewOfEntity(ViewEntities.One(templateId), templateId, withServices: true);
+        => ViewOfEntity(ViewEntities.GetOne(templateId), templateId, withServices: true);
 
     public IView Get(Guid guid)
-        => ViewOfEntity(ViewEntities.One(guid), guid, withServices: true);
+        => ViewOfEntity(ViewEntities.GetOne(guid), guid, withServices: true);
 
     public IView Recreate(IView originalWithoutServices) => 
            ViewOfEntity(originalWithoutServices.Entity, originalWithoutServices.Id, withServices: true);
@@ -115,7 +115,7 @@ public class WorkViews(
     private IView ViewOfEntity(IEntity? templateEntity, object templateId, bool withServices = true, bool isReplacement = false)
         => templateEntity == null
             ? throw new("The template with id '" + templateId + "' does not exist.")
-            : new View(templateEntity, [cultureResolver.CurrentCultureCode], Log, withServices ? qDefBuilder : null, isReplaced: isReplacement);
+            : new View(templateEntity, [cultureResolver.CurrentCultureCode], withServices ? qDefBuilder : null, isReplaced: isReplacement);
 
 
     // todo: check if this call could be replaced with the normal ContentTypeController.Get to prevent redundant code
@@ -141,9 +141,9 @@ public class WorkViews(
                     Name = ct.Name,
                     IsHidden = visible.All(t => t.ContentType != ct.NameId),   // must check if *any* template is visible, otherwise tell the UI that it's hidden
                     Thumbnail = thumbnail,
-                    Properties = details?.Entity == null
+                    Properties = (details as ICanBeEntity)?.Entity == null
                         ? null
-                        : dataToFormatLight.Convert(details.Entity),
+                        : dataToFormatLight.Convert((details as ICanBeEntity).Entity),
                     IsDefault = ct.Metadata.HasType(KnownDecorators.IsDefaultDecorator),
                 };
             })

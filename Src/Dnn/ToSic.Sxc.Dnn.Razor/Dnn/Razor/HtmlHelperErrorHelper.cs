@@ -3,6 +3,7 @@ using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Sys.Configuration;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn.Razor;
 internal class HtmlHelperErrorHelper(RazorComponentBase page, bool isSystemAdmin, DnnRazorHelper helper,
@@ -37,7 +38,7 @@ internal class HtmlHelperErrorHelper(RazorComponentBase page, bool isSystemAdmin
         // Note that if anything breaks here, it will just use the normal error - but for what breaks in here
         // Note that if withHelp already has help, it won't be extended anymore
         exWithHelp = codeErrService.Value.AddHelpIfKnownError(exWithHelp, page);
-        var block = page.ExCtx.GetState<IBlock>();
+        var block = page.ExCtx.GetBlock();
         var renderHelper = renderingHelperGenerator.New().Init(block);
         var nice = renderHelper.DesignErrorMessage([exWithHelp], true);
         helper.Add(exWithHelp);

@@ -16,22 +16,10 @@ namespace ToSic.Sxc.Dnn.Context;
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [PrivateApi("this is just internal, external users don't really have anything to do with this")]
-public class DnnModule: Module<ModuleInfo>
+public class DnnModule(IAppsCatalog appsCatalog, LazySvc<AppFinder> appFinderLazy, ISite site)
+    : Module<ModuleInfo>("Dnn.Contnr", connect: [appsCatalog, appFinderLazy, site])
 {
     #region Constructors and DI
-        
-    public DnnModule(IAppsCatalog appsCatalog, LazySvc<AppFinder> appFinderLazy, ISite site): base("Dnn.Contnr")
-    {
-        ConnectLogs([
-            _appsCatalog = appsCatalog,
-            _appFinderLazy = appFinderLazy,
-        _site = site,
-        ]);
-    }
-
-    private readonly IAppsCatalog _appsCatalog;
-    private readonly LazySvc<AppFinder> _appFinderLazy;
-    private readonly ISite _site;
 
     /// <summary>
     /// We don't use a Constructor because of DI
@@ -79,7 +67,7 @@ public class DnnModule: Module<ModuleInfo>
 
             // find ZoneId, AppId and prepare settings for next values
             // note: this is the correct zone, even if the module is shared from another portal, because the Site is prepared correctly
-            var zoneId = _site.ZoneId;
+            var zoneId = site.ZoneId;
             var (appId, appNameId) = GetInstanceAppIdAndName(zoneId);
             var settings = UnwrappedModule.ModuleSettings;
 
@@ -104,14 +92,14 @@ public class DnnModule: Module<ModuleInfo>
         var msg = $"get appid from instance for Z:{zoneId} Mod:{module.ModuleID}";
         if (IsContent)
         {
-            var appId = _appsCatalog.DefaultAppIdentity(zoneId).AppId;
+            var appId = appsCatalog.DefaultAppIdentity(zoneId).AppId;
             return l.Return((appId, "Content"), $"{msg} - use Default app: {appId}");
         }
 
         if (module.ModuleSettings.ContainsKey(ModuleSettingNames.AppName))
         {
             var guid = module.ModuleSettings[ModuleSettingNames.AppName].ToString();
-            var appId = _appFinderLazy.Value.FindAppId(zoneId, guid);
+            var appId = appFinderLazy.Value.FindAppId(zoneId, guid);
             return l.Return((appId, guid), $"{msg} AppG:{guid} = app:{appId}");
         }
 

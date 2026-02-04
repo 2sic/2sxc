@@ -1,6 +1,5 @@
 ﻿using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Models;
 using ToSic.Sxc.DataSources;
 
 namespace ToSic.Sxc.Cms.Users;
@@ -18,9 +17,9 @@ namespace ToSic.Sxc.Cms.Users;
 /// 
 /// * Introduced in v19.01
 /// </remarks>
-[ModelCreation(Use = typeof(UserRoleModelOfEntity))]
+[ModelSpecs(Use = typeof(UserRoleModelOfEntity))]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
-public interface IUserRoleModel : ICanWrapData
+public interface IUserRoleModel : IModelOfData
 {
     /// <summary>
     /// The Role ID in the database.

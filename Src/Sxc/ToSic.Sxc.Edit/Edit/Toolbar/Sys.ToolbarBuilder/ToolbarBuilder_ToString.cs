@@ -2,6 +2,7 @@
 using ToSic.Eav.Serialization.Sys.Json;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 using Attribute = ToSic.Razor.Markup.Attribute;
 
@@ -61,7 +62,7 @@ partial record ToolbarBuilder
         // Check if enabled for certain groups
         if (ExCtx != null! /* paranoid */)
         {
-            var user = ExCtx.GetState<ICmsContext>().User;
+            var user = ExCtx.GetCmsContext().User;
             var overrideShow = new ToolbarConfigurationShowHelper()
                 .OverrideShowBecauseOfRoles(Configuration, user);
             enabled = overrideShow ?? enabled;

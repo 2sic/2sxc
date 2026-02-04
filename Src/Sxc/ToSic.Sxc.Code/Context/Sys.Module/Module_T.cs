@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Context.Sys.Module;
 /// <typeparam name="T"></typeparam>
 [PrivateApi("this is just fyi")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class Module<T>(string logName) : ServiceBase(logName), IModule, IWrapper<T>
+public abstract class Module<T>(string logName, object[]? connect = null) : ServiceBase(logName, connect: connect), IModule, IWrapper<T>
     where T : class
 {
     #region Constructors and DI

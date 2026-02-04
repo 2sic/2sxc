@@ -1,7 +1,6 @@
 ﻿using System.Collections.Immutable;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context.Sys.ZoneCulture;
-using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataSource.Sys.Query;
 using ToSic.Sxc.Blocks.Sys.Views;
 
@@ -41,7 +40,7 @@ public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDef
     public BlockConfiguration GetBlockConfig(Guid contentGroupGuid)
     {
         var l = Log.Fn<BlockConfiguration>($"get CG#{contentGroupGuid}");
-        var groupEntity = GetContentGroups().One(contentGroupGuid);
+        var groupEntity = GetContentGroups().GetOne(contentGroupGuid);
         var found = groupEntity != null;
         return l.Return(found
                 ? new BlockConfiguration(groupEntity, AppWorkCtx, null, qDefBuilder, cultureResolver.CurrentCultureCode, Log)
@@ -63,7 +62,7 @@ public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDef
         var result = createTempBlockForPreview
             ? new(null,
                 AppWorkCtx,
-                AppWorkCtx.Data.List.One(blockId.PreviewView),
+                AppWorkCtx.Data.List.GetOne(blockId.PreviewView),
                 qDefBuilder,
                 cultureResolver.CurrentCultureCode,
                 Log

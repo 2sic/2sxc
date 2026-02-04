@@ -34,21 +34,20 @@ namespace ToSic.Sxc.Dnn.Razor.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 // ReSharper disable once UnusedMember.Global
 internal class DnnRazorCompiler(
-    EngineBase.Dependencies helpers,
     IExecutionContextFactory exCtxFactory,
     LazySvc<CodeErrorHelpService> errorHelp,
     LazySvc<SourceAnalyzer> sourceAnalyzer,
     LazySvc<IRoslynBuildManager> roslynBuildManager,
     LazySvc<IAppJsonConfigurationService> appJson)
-    : ServiceBase<EngineBase.Dependencies>(helpers, "Dnn.RzComp", connect: [exCtxFactory, errorHelp, sourceAnalyzer, roslynBuildManager, appJson])
+    : ServiceBase("Dnn.RzComp", connect: [exCtxFactory, errorHelp, sourceAnalyzer, roslynBuildManager, appJson])
 {
     protected HotBuildSpec HotBuildSpecs;
     [PrivateApi] protected IBlock Block;
 
-    internal void SetupCompiler(HotBuildSpec specs, IBlock block)
+    internal void SetupCompiler(EngineSpecs engineSpecs)
     {
-        HotBuildSpecs = specs;
-        Block = block;
+        HotBuildSpecs = engineSpecs.ToHotBuildSpec();
+        Block = engineSpecs.Block;
     }
 
 
@@ -149,7 +148,8 @@ internal class DnnRazorCompiler(
     public RazorBuildTempResult<RazorComponentBase> InitWebpage(string templatePath, bool exitIfNoHotBuild)
     {
         var l = Log.Fn<RazorBuildTempResult<RazorComponentBase>>();
-        if (string.IsNullOrEmpty(templatePath)) return l.ReturnNull("null path");
+        if (string.IsNullOrEmpty(templatePath))
+            return l.ReturnNull("null path");
 
         // Try to build, but exit if we don't use HotBuild
         var razorBuild = CreateWebPageInstance(templatePath);

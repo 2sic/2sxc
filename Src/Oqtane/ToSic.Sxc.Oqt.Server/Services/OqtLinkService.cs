@@ -33,7 +33,7 @@ internal class OqtLinkService(
     public override void ConnectToRoot(IExecutionContext codeRoot)
     {
         base.ConnectToRoot(codeRoot);
-        _blockCtx = codeRoot.GetState<IContextOfBlock>();
+        _blockCtx = codeRoot.GetContextOfBlock();
     }
 
     protected override string ToApi(string api, string parameters = null) => ApiNavigateUrl(api, parameters);

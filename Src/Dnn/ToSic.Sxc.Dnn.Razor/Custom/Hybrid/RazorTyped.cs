@@ -1,4 +1,5 @@
 ﻿using Custom.Razor.Sys;
+using ToSic.Eav.Models;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Razor;
 using ToSic.Sxc.Code.Razor.Sys;
@@ -199,7 +200,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
 
     /// <inheritdoc cref="ITypedApi.AsStack{T}" />
     public T AsStack<T>(params object[] items)
-        where T : class, ICanWrapData, new()
+        where T : class, IModelOfData, new()
         => CodeApi.Cdf.AsStack<T>(items);
 
     #endregion
@@ -224,12 +225,12 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
 
     /// <inheritdoc />
     public T As<T>(object source, NoParamOrder npo = default)
-        where T : class, ICanWrapData
+        where T : class, IModelOfData
         => CodeApi.Cdf.AsCustom<T>(source: source);
 
     /// <inheritdoc />
     public IEnumerable<T> AsList<T>(object source, NoParamOrder npo = default, bool nullIfNull = default)
-        where T : class, ICanWrapData
+        where T : class, IModelOfData
         => CodeApi.Cdf.AsCustomList<T>(source: source, npo: npo, nullIfNull: nullIfNull);
 
     #endregion

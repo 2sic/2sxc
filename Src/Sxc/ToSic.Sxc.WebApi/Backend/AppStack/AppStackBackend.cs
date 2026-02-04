@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.AppStack;
 using ToSic.Eav.Context.Sys.ZoneCulture;
-using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.Data.Sys.PropertyDump;
 using ToSic.Eav.DataSource.Sys.Query;
 using ToSic.Eav.DataSources.Sys;
@@ -51,10 +50,6 @@ public class AppStackBackend(
         // Build Sources List
         var settings = dataStackService.Init(appReader).GetStack(partName, viewSettingsMixin);
 
-        // Dump results
-        // #DropUseOfDumpProperties
-        //var results = settings._DumpNameWipDroppingMostCases(new(null, languages, true, Log), null);
-
         var results = dumperService.Dump(settings, new(null!, languages, true, Log), null!);
         return results;
     }
@@ -65,10 +60,10 @@ public class AppStackBackend(
         if (viewGuid == null)
             return null;
 
-        var viewEnt = appState.List.One(viewGuid.Value)
+        var viewEnt = appState.List.GetOne(viewGuid.Value)
                       ?? throw new($"Tried to get view but not found. Guid was {viewGuid}");
         
-        var view = new View(viewEnt, languages, Log, qDefBuilder);
+        var view = new View(viewEnt, languages, qDefBuilder);
         var viewStackPart = realName == RootNameSettings
             ? view.Settings
             : view.Resources;

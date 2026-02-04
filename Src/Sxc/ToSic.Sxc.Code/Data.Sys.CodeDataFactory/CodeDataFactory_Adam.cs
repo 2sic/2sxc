@@ -3,7 +3,6 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Sys;
 using ToSic.Sxc.Adam.Sys.Manager;
-using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
@@ -33,7 +32,7 @@ partial class CodeDataFactory
         if (ExCtxOrNull is null)
             throw new($"Can't create App Context for {nameof(AdamManager)} in {nameof(ICodeDataFactory)} - no block, no App");
 
-        IContextOfApp contextOfApp = ExCtx.GetState<IContextOfBlock>();
+        IContextOfApp contextOfApp = ExCtx.GetContextOfBlock();
         // TODO: @2dm - find out / document why this could even be null
         if (contextOfApp == null)
         {

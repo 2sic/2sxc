@@ -39,9 +39,9 @@ public interface IBlockBuilder: IHasLog
     /// </summary>
     bool WrapInDiv { get; set; }
 
-    /// <summary>
-    /// Get the engine which will render a block
-    /// </summary>
-    /// <returns></returns>
-    IEngine? GetEngine();
+    ///// <summary>
+    ///// Get the engine which will render a block
+    ///// </summary>
+    ///// <returns></returns>
+    //IEngine? GetEngine();
 }

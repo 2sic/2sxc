@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 /// </remarks>
 [PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.Dependencies>, IExecutionContext, IGetCodePath, IHasPiggyBack, ICanGetService
+public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.Dependencies>, IExecutionContext, IGetCodePath, IHasPiggyBack
 {
     #region Constructor
 
@@ -35,25 +35,16 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
     /// Helper class to ensure if dependencies change, inheriting objects don't need to change their signature
     /// </summary>
     [PrivateApi]
-    public class Dependencies(
-        IServiceProvider serviceProvider,
-        LazySvc<IClassCompiler> codeCompilerLazy,
-        AppDataStackService dataStackService,
-        LazySvc<IConvertService> convertService,
-        LazySvc<CodeCreateDataSourceSvc> dataSources,
-        LazySvc<ICodeDataFactory> cdf,
-        PolymorphConfigReader polymorphism)
-        : DependenciesBase(connect:
-            [/* never! serviceProvider */ codeCompilerLazy, dataStackService, convertService, dataSources, cdf, polymorphism])
-    {
-        public ICodeDataFactory Cdf => cdf.Value;
-        public LazySvc<CodeCreateDataSourceSvc> DataSources { get; } = dataSources;
-        public LazySvc<IConvertService> ConvertService { get; } = convertService;
-        internal IServiceProvider ServiceProvider { get; } = serviceProvider;
-        public LazySvc<IClassCompiler> CodeCompilerLazy { get; } = codeCompilerLazy;
-        public AppDataStackService DataStackService { get; } = dataStackService;
-        public PolymorphConfigReader Polymorphism { get; } = polymorphism;
-    }
+    public record Dependencies(
+        IServiceProvider ServiceProvider,
+        LazySvc<IClassCompiler> CodeCompilerLazy,
+        AppDataStackService DataStackService,
+        LazySvc<IConvertService> ConvertService,
+        LazySvc<CodeCreateDataSourceSvc> DataSources,
+        ICodeDataFactory Cdf,
+        PolymorphConfigReader Polymorphism)
+        : DependenciesRecord(connect:
+            [/* never! serviceProvider */ CodeCompilerLazy, DataStackService, ConvertService, DataSources, Cdf, Polymorphism]);
 
     [PrivateApi]
     protected internal ExecutionContext(Dependencies services, string logPrefix) : base(services, logPrefix + ".DynCdR")
@@ -72,16 +63,6 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
 
 
     PiggyBack IHasPiggyBack.PiggyBack { get; } = new();
-
-
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
-    public TService GetService<TService>() where TService : class
-    {
-        var newService = Services.ServiceProvider.Build<TService>(Log);
-        if (newService is INeedsExecutionContext newWithNeeds)
-            newWithNeeds.ConnectToRoot(this);
-        return newService;
-    }
 
 
 

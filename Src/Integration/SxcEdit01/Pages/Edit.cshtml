@@ -1,5 +1,6 @@
 ﻿@page
 @using ToSic.Eav.Apps.Sys.State
+@using ToSic.Eav.Data
 @using ToSic.Eav.Data.Sys.Entities
 @using ToSic.Eav.Metadata
 @using ToSic.Sxc.Services
@@ -51,7 +52,7 @@
     var dynCodeSvc = ServiceProvider.Build<IDynamicCodeService>();
     var dynCode = dynCodeSvc.OfApp(appIdentity);
 
-    var entityWithAdam = dynCode.App.Data.List.One(IntegrationConstants.ItemWithImagesId);
+    var entityWithAdam = dynCode.App.Data.List.GetOne(IntegrationConstants.ItemWithImagesId);
     var folder2 = dynCode.AsAdam(entityWithAdam, IntegrationConstants.ImagesField);
 }
 <h3>Files in @dynCode.AsDynamic(entityWithAdam).EntityTitle </h3>

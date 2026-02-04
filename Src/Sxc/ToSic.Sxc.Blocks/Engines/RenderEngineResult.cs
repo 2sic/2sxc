@@ -3,9 +3,9 @@
 namespace ToSic.Sxc.Engines;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public record RenderEngineResult
+public record RenderEngineResult: RenderEngineResultRaw
 {
-    public required string Html { get; init; }
+    //public required string Html { get; init; }
 
     public required bool ActivateJsApi { get; init; }
 
@@ -18,5 +18,12 @@ public record RenderEngineResult
 
     public string? ErrorCode { get; init; }
 
+    //public List<Exception>? ExceptionsOrNull { get; init; }
+}
+
+public record RenderEngineResultRaw
+{
+    public required string Html { get; init; }
     public List<Exception>? ExceptionsOrNull { get; init; }
+
 }

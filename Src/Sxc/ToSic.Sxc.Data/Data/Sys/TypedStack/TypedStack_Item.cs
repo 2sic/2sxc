@@ -19,9 +19,6 @@ internal partial class TypedStack: ITypedItem
 
     IEntity ICanBeEntity.Entity => throw new NotImplementedException(NotImplementedError);
 
-    // #RemoveBlocksIRenderService
-    //object? ICanBeItem.TryGetBlock() => Cdf.BlockAsObjectOrNull;
-
     ITypedItem ICanBeItem.Item => this;
 
     bool IEquatable<ITypedItem>.Equals(ITypedItem? other) => ReferenceEquals(this, other);

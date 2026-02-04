@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.ContentTypes;
-using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Serialization.Sys.Options;
 using ToSic.Sxc.Backend.ImportExport;
@@ -33,15 +32,13 @@ public class ViewsBackend(
             .Select(view =>
             {
                 var lightspeed = view.Metadata
-                    .FirstOrDefaultOfType(LightSpeedDecorator.TypeNameId)
-                    .NullOrGetWith(lsEntity => new LightSpeedDecorator(lsEntity)
-                        .Map(lightSpeedDeco => new AppMetadataDto
+                    .First<LightSpeedDecorator>()
+                    .NullOrGetWith(ls => new AppMetadataDto
                         {
-                            Id = lightSpeedDeco.Id,
-                            Title = lightSpeedDeco.Title,
-                            IsEnabled = lightSpeedDeco.IsEnabledNullable != false,
-                        })
-                    );
+                            Id = ls.Id,
+                            Title = ls.Title,
+                            IsEnabled = ls.IsEnabledNullable != false,
+                        });
 
                 return new ViewDetailsDto
                 {

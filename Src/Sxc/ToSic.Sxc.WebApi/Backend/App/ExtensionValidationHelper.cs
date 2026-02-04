@@ -102,9 +102,11 @@ internal class ExtensionValidationHelper(ExtensionManifestService manifestSvc, I
         var expectedWithHash = lockRead.ExpectedWithHash;
         var folderName = Path.GetFileName(candidatePath);
         var tmpAppCodeExtensionDirectory = Path.Combine(tempDir, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, folderName);
+        var tmpAppCodeExtensionFolderNameDirectory = Path.Combine(tempDir, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, AppCodeExtensionFolderName(folderName));
 
         var actualFiles = EnumerateFilesSafe(candidatePath)
-            .Union(EnumerateFilesSafe(tmpAppCodeExtensionDirectory))
+            .Union(EnumerateFilesSafe(tmpAppCodeExtensionDirectory)) // Old JS folder format, lowercase with dashes
+            .Union(EnumerateFilesSafe(tmpAppCodeExtensionFolderNameDirectory)) // CamelCase format, without dashes
             .Select(f => f
                 .Substring(tempDir.Length)
                 .TrimPrefixSlash()
@@ -137,5 +139,51 @@ internal class ExtensionValidationHelper(ExtensionManifestService manifestSvc, I
         }
 
         return l.ReturnAsOk(new(true, null, allowed));
+    }
+
+    /// <summary>
+    /// Converts a JS folder name to a format suitable for the app code folder (without dashes).
+    /// </summary>
+    /// <param name="folderName"></param>
+    /// <returns></returns>
+    internal static string AppCodeExtensionFolderName(string folderName) => folderName.Replace("-", "");
+
+    /// <summary>
+    /// Return the actual on-disk cased path casing for a given full path.
+    /// </summary>
+    /// <param name="fullPath"></param>
+    /// <returns></returns>
+    internal static string GetActualCasedPath(string fullPath)
+    {
+        var dir = new DirectoryInfo(fullPath);
+        var parent = dir.Parent;
+        if (parent == null || !parent.Exists)
+            return fullPath;
+
+        return GetActualCasedPath(parent.FullName, dir.Name);
+    }
+
+    /// <summary>
+    /// Return the actual on-disk cased path casing for a given parent path and folder name.
+    /// </summary>
+    /// <param name="parentPath"></param>
+    /// <param name="folderName"></param>
+    /// <returns></returns>
+    internal static string GetActualCasedPath(string parentPath, string folderName)
+    {
+        var parent = new DirectoryInfo(parentPath);
+        if (!parent.Exists)
+            return Path.Combine(parentPath, folderName);
+
+        // Important: constructing DirectoryInfo from a string does NOT correct casing.
+        // To get the actual on-disk casing (Windows/macOS case-insensitive FS), we must
+        // ask the filesystem for existing entries and use the returned Name/FullName.
+        //
+        // EnumerateDirectories() is lazy (streaming): it doesn't allocate an array like
+        // GetDirectories(), and it can stop early once FirstOrDefault finds a match.
+        var match = parent.EnumerateDirectories()
+            .FirstOrDefault(d => d.Name.Equals(folderName, StringComparison.OrdinalIgnoreCase));
+
+        return match?.FullName ?? Path.Combine(parentPath, folderName);
     }
 }

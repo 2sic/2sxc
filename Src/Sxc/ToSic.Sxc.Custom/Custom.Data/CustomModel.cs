@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Data.Models;
+﻿using ToSic.Eav.Models;
+using ToSic.Sxc.Data.Models;
 
 namespace Custom.Data;
 
@@ -52,5 +53,5 @@ namespace Custom.Data;
 /// History: New in 19.03
 /// </remarks>
 [PublicApi]
-[ModelSource(ContentTypes = "*")]
+[ModelSpecs(ContentType = "*")]
 public class CustomModel: ModelFromItem;

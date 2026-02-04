@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps.Sys;
-using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Sxc.Blocks.Sys.Views;
 
 namespace ToSic.Sxc.Blocks.Sys.Work;
@@ -31,7 +30,7 @@ public class WorkBlocksMod(
 
         l.A($"exists, create for group#{blockConfiguration.Guid} with template#{templateId}");
         workEntUpdate.New(AppWorkCtx).UpdateParts(
-            blockConfiguration.Entity.EntityId,
+            blockConfiguration.Id,
             new Dictionary<string, object> { { ViewParts.TemplateContentType, new List<int?> { templateId } } },
             new()
         );
@@ -42,7 +41,10 @@ public class WorkBlocksMod(
     public void AddEmptyItem(BlockConfiguration block, int? index, bool forceDraft)
     {
         workFieldList.New(AppWorkCtx.AppReader)
-            .FieldListUpdate(block.Entity, ViewParts.ContentPair, forceDraft,
+            .FieldListUpdate(
+                (block as ICanBeEntity).Entity,
+                ViewParts.ContentPair,
+                forceDraft,
                 lists =>
                 {
                     // hitting (+) if the list is empty add two demo items (because we already see one demo item)
@@ -78,7 +80,7 @@ public class WorkBlocksMod(
 
         #region attach to the current list of items
 
-        var cbEnt = AppWorkCtx.AppReader.List.One(parentId)
+        var cbEnt = AppWorkCtx.AppReader.List.GetOne(parentId)
             ?? throw new NullReferenceException($"Tried to use the just-created entity with id '{parentId}' but can't find it.");
         var blockList = cbEnt.Children(field);
 

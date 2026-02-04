@@ -48,18 +48,12 @@ public sealed partial class CmsBlock : DataSourceBase
 
     #region Constructor
 
-    public new class Dependencies(
-        DataSourceBase.Dependencies parentServices,
-        LazySvc<IModule> moduleLazy,
-        LazySvc<IDataSourcesService> dataSourceFactory,
-        GenWorkPlus<WorkBlocks> appBlocks)
-        : DependenciesBase(connect: [moduleLazy, dataSourceFactory, appBlocks])
-    {
-        public DataSourceBase.Dependencies ParentServices { get; } = parentServices;
-        public GenWorkPlus<WorkBlocks> AppBlocks { get; } = appBlocks;
-        public LazySvc<IModule> ModuleLazy { get; } = moduleLazy;
-        public LazySvc<IDataSourcesService> DataSourceFactory { get; } = dataSourceFactory;
-    }
+    public new record Dependencies(
+        DataSourceBase.Dependencies ParentServices,
+        LazySvc<IModule> ModuleLazy,
+        LazySvc<IDataSourcesService> DataSourceFactory,
+        GenWorkPlus<WorkBlocks> AppBlocks)
+        : DependenciesRecord(connect: [ModuleLazy, DataSourceFactory, AppBlocks]);
 
     public CmsBlock(Dependencies services): base(services.ParentServices, $"SDS.CmsBks", connect: [services])
     {

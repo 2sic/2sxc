@@ -8,8 +8,8 @@ internal class LightSpeedConfigHelper(ILog? parentLog) : HelperBase(parentLog, "
     public LightSpeedDecorator GetLightSpeedConfigOfApp(IAppReader? appReader)
     {
         var l = Log.Fn<LightSpeedDecorator>();
-        var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(appReader/*, Log*/);
-        return l.Return(decoFromPiggyBack, $"has decorator: {decoFromPiggyBack.Entity != null!}");
+        var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(appReader);
+        return l.Return(decoFromPiggyBack, $"has decorator: {(decoFromPiggyBack as ICanBeEntity)?.Entity != null!}");
     }
 
     public LightSpeedDecorator? ViewConfigOrNull(IBlock? block)
@@ -18,12 +18,10 @@ internal class LightSpeedConfigHelper(ILog? parentLog) : HelperBase(parentLog, "
         if (block?.ViewIsReady != true)
             return l.ReturnNull("view not ready");
             
-        var md = block.View.Metadata
-                .OfType(LightSpeedDecorator.TypeNameId)
-                .FirstOrDefault();
-        
+        var md = block.View.Metadata.First<LightSpeedDecorator>();
+
         return md == null
             ? l.ReturnNull($"no view metadata for LightSpeedDecorator; view: {block.View.Id}")
-            : l.Return(new(md), $"entity: {md.EntityId}; view: {block.View.Id}");
+            : l.Return(md, $"entity: {md.Id}; view: {block.View.Id}");
     }
 }

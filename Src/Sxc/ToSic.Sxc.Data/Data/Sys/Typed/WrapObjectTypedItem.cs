@@ -13,7 +13,6 @@ using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Sys.ConvertService;
 using ToSic.Sxc.Services.Tweaks;
-using ToSic.Sys.Performance;
 using static ToSic.Sxc.Data.Sys.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data.Sys.Typed;
@@ -234,7 +233,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
                 : [raw]
             : [];
 
-        var df = Cdf.Services.DataFactory.SpawnNew(options: new()
+        var df = Cdf.Services.DataFactory.Value.SpawnNew(options: new()
         {
             AppId = ((ICodeDataFactoryDeepWip)Cdf).AppIdOrZero,
             AutoId = false,
@@ -273,7 +272,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
         // ReSharper disable once ConvertTypeCheckPatternToNullCheck
         if (ValueConverterBase.CouldBeReference(url))
             // ReSharper disable once ConstantNullCoalescingCondition
-            url = Cdf.Services.ValueConverter.ToValue(url, Guid.Empty) ?? url;
+            url = Cdf.Services.ValueConverter.Value.ToValue(url, Guid.Empty) ?? url;
 
         return Tags.SafeUrl(url).ToString();
     }
@@ -286,9 +285,6 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
     #endregion
 
-
-    // #RemoveBlocksIRenderService
-    //object? ICanBeItem.TryGetBlock() => Cdf.BlockAsObjectOrNull;
 
     public ITypedItem Item => this;
 

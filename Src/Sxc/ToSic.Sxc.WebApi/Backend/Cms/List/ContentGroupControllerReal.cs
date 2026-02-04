@@ -39,9 +39,10 @@ public class ContentGroupControllerReal(
         var cg = appBlocks.New(AppCtx).GetBlockConfig(guid);
 
         // new in v11 - this call might be run on a non-content-block, in which case we return null
-        if (cg.Entity == null!)
+        var ent = (cg as ICanBeEntity)?.Entity;
+        if (ent == null!)
             return null;
-        if (cg.Entity.Type.Name != WorkBlocks.BlockTypeName)
+        if (ent.Type.Name != WorkBlocks.BlockTypeName)
             return null;
 
         var header = cg.Header.FirstOrDefault();
@@ -79,7 +80,7 @@ public class ContentGroupControllerReal(
 
         //var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(guid);
         var contentGroup = appBlocks.New(AppCtx).GetBlockConfig(guid);
-        if (contentGroup?.Entity == null || contentGroup.View == null)
+        if ((contentGroup as ICanBeEntity)?.Entity == null || contentGroup.View == null)
             return l.ReturnNull("Doesn't seem to be a content-group. Cancel.");
 
         var typeNameForField = string.Equals(part, ViewParts.ContentLower, OrdinalIgnoreCase)

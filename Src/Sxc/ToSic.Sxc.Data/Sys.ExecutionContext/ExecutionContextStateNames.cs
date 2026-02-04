@@ -4,7 +4,7 @@
 /// Just a helper to ensure that only known state names are used.
 /// </summary>
 /// <remarks>
-/// This is for the <see cref="IExecutionContext.GetState{T}(string)"/>
+/// This is for the <see cref="IExecutionContext.GetDataStack{TState}"/>
 /// </remarks>
 public class ExecutionContextStateNames
 {

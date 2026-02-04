@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Mail;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Services.Mail.Sys;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Oqt.Server.Services;
@@ -48,7 +49,7 @@ internal class OqtMailService(LazySvc<ISettingRepository> settingRepositoryLazy,
 
     private Dictionary<string, string> GetSettings()
     {
-        var site = ExCtx.GetState<IContextOfBlock>().Site;
+        var site = ExCtx.GetContextOfBlock().Site;
         var settings = settingRepositoryLazy.Value
             .GetSettings(EntityNames.Site, site.Id)
             .ToList();

@@ -22,7 +22,7 @@ internal class LightSpeedUrlParams
             return l.Return((false, ""), "No page parameters / context, probably an error, certainly don't cache.");
 
         // Get the parameter names from the config - use piggyback if possible
-        var namesCsv = usePiggyBack && lsConfig.Entity is IHasPiggyBack withCache
+        var namesCsv = usePiggyBack && (lsConfig as ICanBeEntity)?.Entity is IHasPiggyBack withCache
             ? withCache.GetPiggyBack(nameof(LightSpeedUrlParams), () => ExtractConfigCsv(lsConfig))
             : ExtractConfigCsv(lsConfig);
 
