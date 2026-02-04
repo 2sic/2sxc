@@ -16,10 +16,10 @@ namespace ToSic.Sxc.DataSources;
     DataConfidentiality = DataConfidentiality.System,
     UiHint = "Editions in this application")]
 
-public class Editions : CustomDataSource
+public class AppEditions : CustomDataSource
 {
-    public Editions(Dependencies services, LazySvc<IAppJsonConfigurationService> appJsonService)
-        : base(services, logName: "CDS.Editions", connect: [appJsonService])
+    public AppEditions(Dependencies services, LazySvc<IAppJsonConfigurationService> appJsonService)
+        : base(services, logName: "App.EditDS", connect: [appJsonService])
     {
         ProvideOutRaw(() => GetList(appJsonService.Value), options: () => new()
         {
@@ -41,7 +41,6 @@ public class Editions : CustomDataSource
             var list = appJson.Editions
                 .Select(s => new RawEntity(new()
                 {
-                    //{ AttributeNames.NameIdNiceName, s.Key },
                     { "Name", s.Key },
                     { "Description", s.Value.Description },
                     { "IsDefault", s.Value.IsDefault },
@@ -53,7 +52,6 @@ public class Editions : CustomDataSource
         // default data
         var rootEdition = new RawEntity(new()
         {
-            //{ AttributeNames.NameIdNiceName, "" },
             { "Name", "" },
             { "Description", "Root edition" },
             { "IsDefault", true },
