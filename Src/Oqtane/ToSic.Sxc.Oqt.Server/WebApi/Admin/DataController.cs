@@ -62,7 +62,7 @@ public class DataController() : OqtStatefulControllerBase(DataControllerReal.Log
         => Real.GetRecycleBin(appId);
 
     /// <inheritdoc />
-    [HttpGet]
+    [HttpPost]
     [Authorize(Roles = RoleNames.Host)]
     public void Recycle(int appId, int transactionId)
         => Real.Recycle(appId, transactionId);
