@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Data;
-
-namespace ToSic.Sxc.Apps;
+﻿namespace ToSic.Sxc.Apps;
 
 /// <summary>
 /// A strongly typed app, which has settings and resources as strongly typed objects.

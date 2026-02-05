@@ -10020,7 +10020,7 @@
               {
                 "Name": "CodeGenerator",
                 "Type": "String",
-                "InputType": "string-dropdown",
+                "InputType": "string-picker",
                 "IsTitle": false,
                 "Metadata": [
                   {
@@ -10037,16 +10037,16 @@
                           "en-us": ""
                         },
                         "DefaultValue": {
-                          "en-us": ""
+                          "en-us": "CSharpTypedDataModelsGenerator"
                         },
                         "InputType": {
-                          "en-us": "string-dropdown"
+                          "en-us": "string-picker"
                         },
                         "Name": {
-                          "en-us": "Code Generator"
+                          "en-us": "Code Generator to use"
                         },
                         "Notes": {
-                          "en-us": "<p>Leave empty to just use the generator selected in the main UI.</p>"
+                          "en-us": ""
                         },
                         "Placeholder": {
                           "en-us": ""
@@ -10074,7 +10074,7 @@
                           "en-us": false
                         },
                         "Required": {
-                          "en-us": false
+                          "en-us": true
                         },
                         "VisibleInEditUI": {
                           "en-us": true
@@ -10121,6 +10121,200 @@
                         }
                       },
                       "Boolean": {
+                        "EnableTextEntry": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 185373,
+                    "Version": 1,
+                    "Guid": "4473820a-b618-4bd1-b598-2efa6645b528",
+                    "Type": {
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CreateParameters": {
+                          "en-us": ""
+                        },
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "auto-inline"
+                        },
+                        "Separator": {
+                          "en-us": ","
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "d5e64a2d-eb7e-4ca4-86f0-5d601becf4ac"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": false
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": false
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
+                        "EnableTextEntry": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "Edition",
+                "Type": "String",
+                "InputType": "string-picker",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 185374,
+                    "Version": 1,
+                    "Guid": "6cbd6e55-0b32-4b9c-9248-761c87bda51d",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-picker"
+                        },
+                        "Name": {
+                          "en-us": "Edition (to generate the files into)"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "daff7fcd-50f5-424a-93b9-87881d3bd9d5"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "unknown"
+                  },
+                  {
+                    "Id": 185376,
+                    "Version": 1,
+                    "Guid": "38308a79-14b1-4c00-944f-4c230361c93e",
+                    "Type": {
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CreateParameters": {
+                          "en-us": ""
+                        },
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "auto-inline"
+                        },
+                        "Separator": {
+                          "en-us": ","
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "a1eb623f-32a6-46c4-bb12-858befea459a"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": true
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": true
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
                         "EnableTextEntry": {
                           "en-us": false
                         }
@@ -10216,6 +10410,119 @@
                 ]
               },
               {
+                "Name": "ContentTypeSet",
+                "Type": "String",
+                "InputType": "string-dropdown",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 185379,
+                    "Version": 1,
+                    "Guid": "d59f9450-c9a3-47f8-971a-96ba53d1df3f",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-dropdown"
+                        },
+                        "Name": {
+                          "en-us": "Content Type Set"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Choose which content-types should be generated.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "unknown"
+                  },
+                  {
+                    "Id": 185380,
+                    "Version": 1,
+                    "Guid": "2b3b52f8-0e2d-468a-b1e7-5d1426708b7e",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 185381,
+                    "Version": 1,
+                    "Guid": "6dc01766-b6f5-40b8-bc22-45d23adea61d",
+                    "Type": {
+                      "Id": "@string-dropdown",
+                      "Name": "@string-dropdown"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ":Default - all from the default scope + AppSettings and AppResources\ncustom:Custom selection"
+                        },
+                        "DropdownValuesFormat": {
+                          "en-us": "value-label"
+                        }
+                      },
+                      "Boolean": {
+                        "EnableTextEntry": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "Scope",
                 "Type": "String",
                 "InputType": "string-dropdown-query",
@@ -10258,7 +10565,9 @@
                           "*": []
                         },
                         "Formulas": {
-                          "*": []
+                          "*": [
+                            "a374f3be-6c7c-4c68-a4b7-f53cda081f5c"
+                          ]
                         },
                         "Warnings": {
                           "*": []
@@ -10375,7 +10684,9 @@
                           "*": []
                         },
                         "Formulas": {
-                          "*": []
+                          "*": [
+                            "65209d3c-2499-4099-afed-e9d4f15cc333"
+                          ]
                         },
                         "Warnings": {
                           "*": []
@@ -10840,7 +11151,208 @@
               }
             ]
           },
-          "Entities": []
+          "Entities": [
+            {
+              "Id": 185372,
+              "Version": 1,
+              "Guid": "d5e64a2d-eb7e-4ca4-86f0-5d601becf4ac",
+              "Type": {
+                "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
+                "Name": "UiPickerSourceQuery",
+                "AttributeMap": {
+                  "Query": "1454db62-f29f-4471-b2a5-5bd82817580a",
+                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a",
+                  "Value": "0ee078ec-ee4d-41a0-b6b6-ffcdfa90f4eb",
+                  "Label": "a3489bc4-6f3c-4e84-a825-2476b0ae4c32"
+                }
+              },
+              "Attributes": {
+                "String": {
+                  "CreateTypes": {
+                    "en-us": ""
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": "<p>[Item:DescriptionHtml]</p>"
+                  },
+                  "ItemTooltip": {
+                    "en-us": "<p>[Item:Description]</p>"
+                  },
+                  "Label": {
+                    "en-us": "[Item:Name] v[Item:Version]"
+                  },
+                  "MoreFields": {
+                    "en-us": "Version,Description,DescriptionHtml"
+                  },
+                  "Query": {
+                    "en-us": "System.SysData"
+                  },
+                  "QueryParameters": {
+                    "en-us": "SysDataSource=ToSic.Sxc.DataSources.CodeGenerators&$filter=OutputType eq 'DataModel'"
+                  },
+                  "StreamName": {
+                    "en-us": "Default"
+                  },
+                  "Title": {
+                    "en-us": "Query: SysData Generators"
+                  },
+                  "Value": {
+                    "en-us": "Name"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 185377,
+              "Version": 1,
+              "Guid": "daff7fcd-50f5-424a-93b9-87881d3bd9d5",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  // console.log(\"isnew\", context.target.entity.isNew);\n  // console.log('edition', data.value, `isEmpty: ${data.value.length}`);\n\n  // 1. Exit if editing something existing\n  if (!context.target.entity.isNew)\n    return;\n\n  // Otherwise try to set default to best possible value\n  // 2. wait for options to exist\n  if (data.options.length == 0)\n    return;\n\n  // 3. Find default if given, and select that, then stop the formula\n  const best = data.options.find(o => o?.data?.IsDefault ?? false);\n  // console.log('options', data.options, best);\n  return { \n    value: best ? [best.value] : data.value,\n    stop: true\n  };\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Value"
+                  },
+                  "Title": {
+                    "en-us": "Field.Value"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 185375,
+              "Version": 1,
+              "Guid": "a1eb623f-32a6-46c4-bb12-858befea459a",
+              "Type": {
+                "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
+                "Name": "UiPickerSourceQuery",
+                "AttributeMap": {
+                  "Query": "1454db62-f29f-4471-b2a5-5bd82817580a",
+                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a",
+                  "Value": "0ee078ec-ee4d-41a0-b6b6-ffcdfa90f4eb",
+                  "Label": "a3489bc4-6f3c-4e84-a825-2476b0ae4c32"
+                }
+              },
+              "Attributes": {
+                "String": {
+                  "CreateTypes": {
+                    "en-us": ""
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": ""
+                  },
+                  "ItemTooltip": {
+                    "en-us": ""
+                  },
+                  "Label": {
+                    "en-us": "\"[Item:Name]\" - [Item:Description]"
+                  },
+                  "MoreFields": {
+                    "en-us": "Description,IsDefault"
+                  },
+                  "Query": {
+                    "en-us": "System.SysData"
+                  },
+                  "QueryParameters": {
+                    "en-us": "SysDataSource=ToSic.Sxc.DataSources.AppEditions"
+                  },
+                  "StreamName": {
+                    "en-us": "Default"
+                  },
+                  "Title": {
+                    "en-us": "Query: SysData Editions"
+                  },
+                  "Value": {
+                    "en-us": "Name"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 185382,
+              "Version": 1,
+              "Guid": "a374f3be-6c7c-4c68-a4b7-f53cda081f5c",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  return data.ContentTypeSet == 'custom';\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 185383,
+              "Version": 1,
+              "Guid": "65209d3c-2499-4099-afed-e9d4f15cc333",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  return data.ContentTypeSet == 'custom';\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            }
+          ]
         }
       ]
     }

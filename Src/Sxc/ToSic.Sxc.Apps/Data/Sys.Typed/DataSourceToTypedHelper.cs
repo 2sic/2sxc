@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.Data.Sys.Entities;
-using ToSic.Eav.Models.Sys;
-using ToSic.Sxc.Data.Models.Sys;
+﻿using ToSic.Eav.Models.Sys;
 using ToSic.Sxc.Data.Sys.Factory;
 using static ToSic.Eav.DataSource.DataSourceConstants;
 

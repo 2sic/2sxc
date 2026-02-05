@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.DataSource.Sys.Query;
 using ToSic.Sxc.Apps.Sys.Paths;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Typed;
 
 namespace ToSic.Sxc.Apps.Sys.AppTyped;

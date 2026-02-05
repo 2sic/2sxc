@@ -2,7 +2,6 @@
 using ToSic.Eav.Context.Sys.ZoneCulture;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.ContentTypes;
-using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.Data.Sys.ValueConverter;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource.Sys.Query;
@@ -82,7 +81,7 @@ public class WorkViews(
                 // Never save the View or the ViewInfoForPathSelect, as that would also preserve an old Service used in the View
                 return new
                 {
-                    (v as ICanBeEntity)?.Entity,
+                    v.Entity,
                     v.Name,
                     urlIdentifier,
                     isRegex,

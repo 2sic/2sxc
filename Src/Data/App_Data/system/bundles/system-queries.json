@@ -3446,7 +3446,7 @@
         },
         {
           "Id": 185367,
-          "Version": 38,
+          "Version": 40,
           "Guid": "4570a596-5020-4111-b494-3e510f778c6e",
           "Type": {
             "Id": "DataPipeline",
@@ -3461,7 +3461,7 @@
                 "en-us": "System.SysData"
               },
               "Params": {
-                "en-us": "SysDataSourceGuid=[QueryString:SysDataSourceGuid]\nSysDataStream=[QueryString:SysDataStream||Default]"
+                "en-us": "SysDataSource=[QueryString:SysDataSource]\nSysDataStream=[QueryString:SysDataStream||Default]"
               },
               "StreamsOut": {
                 "en-us": "Default,Header"
@@ -3470,7 +3470,7 @@
                 "en-us": "9ca272fb-3778-4ade-bc11-9687ab5d3995:Default>Out:Default"
               },
               "TestParameters": {
-                "en-us": "[QueryString:SysDataSourceGuid_Metadata]=fba0d40d-f6af-4593-9ccb-54cfd73d8217\n[Params:SysDataSourceGuid_Scopes]=f134e3c1-f09f-4fbc-85be-de43a64c6eed\n[QueryString:SysDataSourceGuid]=ToSic.Eav.DataSources.System.Attributes, ToSic.Eav.DataSources\n[Params:SysDataSourceGuid_Never]=398d0b9f-044f-48f7-83ef-307872f7ed93\n[Params:SysDataStream_xx]=Default\n[QueryString:ContentTypeName]=Test"
+                "en-us": "[QueryString:SysDataSource_Metadata]=fba0d40d-f6af-4593-9ccb-54cfd73d8217\n[Params:SysDataSource_Scopes]=f134e3c1-f09f-4fbc-85be-de43a64c6eed\n[QueryString:SysDataSource]=ToSic.Eav.DataSources.System.Attributes, ToSic.Eav.DataSources\n[Params:SysDataSource_Never]=398d0b9f-044f-48f7-83ef-307872f7ed93\n[Params:SysDataStream_xx]=Default\n[QueryString:ContentTypeName]=Test"
               },
               "VisualDesignerData": {
                 "en-us": "{\"ShowDataSourceDetails\":true}"
@@ -3488,32 +3488,8 @@
           "Owner": "dnn:userid=41",
           "Metadata": [
             {
-              "Id": 185370,
-              "Version": 1,
-              "Guid": "d1d0e574-0f40-431f-9255-3b0e3c77317e",
-              "Type": {
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
-                "Name": "SystemExportDecorator"
-              },
-              "Attributes": {
-                "Entity": {
-                  "Configuration": {
-                    "*": [
-                      "1fac6138-39c7-4ab6-9c54-9cf3e4ffd5ed"
-                    ]
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41",
-              "For": {
-                "Target": "Entity",
-                "TargetType": 4,
-                "Guid": "4570a596-5020-4111-b494-3e510f778c6e"
-              }
-            },
-            {
               "Id": 185369,
-              "Version": 18,
+              "Version": 19,
               "Guid": "9ca272fb-3778-4ade-bc11-9687ab5d3995",
               "Type": {
                 "Id": "DataPipelinePart",
@@ -3536,6 +3512,30 @@
                 }
               },
               "Owner": "unknown",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "4570a596-5020-4111-b494-3e510f778c6e"
+              }
+            },
+            {
+              "Id": 185370,
+              "Version": 1,
+              "Guid": "d1d0e574-0f40-431f-9255-3b0e3c77317e",
+              "Type": {
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "1fac6138-39c7-4ab6-9c54-9cf3e4ffd5ed"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
               "For": {
                 "Target": "Entity",
                 "TargetType": 4,
