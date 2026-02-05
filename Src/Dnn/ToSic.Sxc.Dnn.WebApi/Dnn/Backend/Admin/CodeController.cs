@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.WebApi.Sys.Dto;
-using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using RealController = ToSic.Sxc.Backend.Admin.CodeControllerReal;
 
@@ -24,11 +23,12 @@ public class CodeController() : DnnSxcControllerBase(RealController.LogSuffix)
     public RichResult GenerateDataModels(int appId, string generator, string edition = null, int configurationId = 0)
         => Real.GenerateDataModels(appId, edition, generator: generator, configurationId: configurationId);
 
-    [HttpGet]
-    [JsonFormatter]
-    [ValidateAntiForgeryToken]
-    [SupportedModules(DnnSupportedModuleNames)]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public EditionsDto GetEditions(int appId)
-        => Real.GetEditions(appId);
+    // #MigrateSimpleDataToSysDataAccess
+    //[HttpGet]
+    //[JsonFormatter]
+    //[ValidateAntiForgeryToken]
+    //[SupportedModules(DnnSupportedModuleNames)]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+    //public EditionsDto GetEditions(int appId)
+    //    => Real.GetEditions(appId);
 }
