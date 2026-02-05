@@ -10018,6 +10018,136 @@
                 ]
               },
               {
+                "Name": "OutputType",
+                "Type": "String",
+                "InputType": "string-picker",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 185389,
+                    "Version": 1,
+                    "Guid": "1841e61f-b558-4e54-beef-792442614bea",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "DataModel"
+                        },
+                        "InputType": {
+                          "en-us": "string-picker"
+                        },
+                        "Name": {
+                          "en-us": "Output Type (WIP - 2dm still working on this)"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": true
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": true
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "unknown"
+                  },
+                  {
+                    "Id": 185391,
+                    "Version": 1,
+                    "Guid": "3135f27a-2357-4eb0-b2e1-0a6eae741453",
+                    "Type": {
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CreateParameters": {
+                          "en-us": ""
+                        },
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "list"
+                        },
+                        "Separator": {
+                          "en-us": ","
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "74bae28a-f606-4da4-a380-9f1abff682c1"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": true
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": false
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
+                        "EnableTextEntry": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "CodeGenerator",
                 "Type": "String",
                 "InputType": "string-picker",
@@ -11153,6 +11283,64 @@
           },
           "Entities": [
             {
+              "Id": 185390,
+              "Version": 1,
+              "Guid": "74bae28a-f606-4da4-a380-9f1abff682c1",
+              "Type": {
+                "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
+                "Name": "UiPickerSourceQuery",
+                "AttributeMap": {
+                  "Query": "1454db62-f29f-4471-b2a5-5bd82817580a",
+                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a",
+                  "Value": "0ee078ec-ee4d-41a0-b6b6-ffcdfa90f4eb",
+                  "Label": "a3489bc4-6f3c-4e84-a825-2476b0ae4c32"
+                }
+              },
+              "Attributes": {
+                "String": {
+                  "CreateTypes": {
+                    "en-us": ""
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": ""
+                  },
+                  "ItemTooltip": {
+                    "en-us": ""
+                  },
+                  "Label": {
+                    "en-us": "Name"
+                  },
+                  "MoreFields": {
+                    "en-us": ""
+                  },
+                  "Query": {
+                    "en-us": "System.SysData"
+                  },
+                  "QueryParameters": {
+                    "en-us": "SysDataSource=ToSic.Sxc.DataSources.CodeGenerators&SysDataStream=OutputType"
+                  },
+                  "StreamName": {
+                    "en-us": "Default"
+                  },
+                  "Title": {
+                    "en-us": "Query: Copilot Output Types"
+                  },
+                  "Value": {
+                    "en-us": "Name"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
               "Id": 185372,
               "Version": 1,
               "Guid": "d5e64a2d-eb7e-4ca4-86f0-5d601becf4ac",
@@ -11190,13 +11378,13 @@
                     "en-us": "System.SysData"
                   },
                   "QueryParameters": {
-                    "en-us": "SysDataSource=ToSic.Sxc.DataSources.CodeGenerators&$filter=OutputType eq 'DataModel'"
+                    "en-us": "SysDataSource=ToSic.Sxc.DataSources.CodeGenerators&$filter=OutputType eq '[OutputType]'"
                   },
                   "StreamName": {
                     "en-us": "Default"
                   },
                   "Title": {
-                    "en-us": "Query: SysData Generators"
+                    "en-us": "Query: Copilot Generators"
                   },
                   "Value": {
                     "en-us": "Name"
@@ -11282,7 +11470,7 @@
                     "en-us": "Default"
                   },
                   "Title": {
-                    "en-us": "Query: SysData Editions"
+                    "en-us": "Query: App Editions"
                   },
                   "Value": {
                     "en-us": "Name"
