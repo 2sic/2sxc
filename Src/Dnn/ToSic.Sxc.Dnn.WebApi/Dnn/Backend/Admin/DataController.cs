@@ -64,7 +64,7 @@ public class DataController() : DnnSxcControllerBase(DataControllerReal.LogSuffi
 
 
     /// <inheritdoc />
-    [HttpGet]
+    [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
     public void Recycle(int appId, int transactionId)
         => Real.Recycle(appId, transactionId);

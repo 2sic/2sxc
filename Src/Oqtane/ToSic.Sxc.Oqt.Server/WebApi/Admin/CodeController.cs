@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Admin.CodeControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
@@ -29,9 +27,10 @@ public class CodeController() : OqtControllerBase(false, RealController.LogSuffi
     public RichResult GenerateDataModels(int appId, string generator, string edition = null, int configurationId = 0)
         => Real.GenerateDataModels(appId, edition, generator: generator, configurationId: configurationId);
 
-    [HttpGet]
-    [JsonFormatter]
-    [Authorize(Roles = RoleNames.Host)]
-    public EditionsDto GetEditions(int appId)
-        => Real.GetEditions(appId);
+    // #MigrateSimpleDataToSysDataAccess
+    //[HttpGet]
+    //[JsonFormatter]
+    //[Authorize(Roles = RoleNames.Host)]
+    //public EditionsDto GetEditions(int appId)
+    //    => Real.GetEditions(appId);
 }

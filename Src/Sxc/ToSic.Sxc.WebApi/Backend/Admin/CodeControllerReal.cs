@@ -167,6 +167,11 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGe
         return cleaned.Any() ? cleaned : null;
     }
 
+    // #MigrateSimpleDataToSysDataAccess
+    // TODO: @STV this is not used the way it was intended anymore.
+    // Pls
+    // - slim down to only provide Editions (which is the only thing still used)
+    // - consider moving that functionality away from this controller - either standalone or elsewhere
     public EditionsDto GetEditions(int appId)
     {
         var l = Log.Fn<EditionsDto>($"{nameof(appId)}:{appId}");

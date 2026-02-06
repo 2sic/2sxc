@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Data.Raw.Sys;
-using ToSic.Eav.Data.Sys;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Sxc.Code.Generate.Sys;
@@ -26,23 +25,33 @@ public class CodeGenerators: CustomDataSource
         : base(services, logName: "CDS.Generators", connect: [generators])
     {
         ProvideOutRaw(
-            () => GetList(generators.Value),
+            () => Generators(generators.Value),
             options: () => new()
             {
                 AutoId = true,
                 TitleField = "Name",
                 TypeName = "Generator",
             });
+
+        ProvideOutRaw(
+            () => OutputTypes(generators.Value),
+            name: "OutputType",
+            options: () => new()
+            {
+                AutoId = true,
+                TitleField = "Name",
+                TypeName = "OutputType",
+            });
+
     }
 
-    private IEnumerable<IRawEntity> GetList(IEnumerable<IFileGenerator> fileGenerators)
+    private IEnumerable<IRawEntity> Generators(IEnumerable<IFileGenerator> fileGenerators)
     {
         var l = Log.Fn<IEnumerable<IRawEntity>>();
-        //var fileGenerators = _generators.Value;
         var list = fileGenerators
             .Select(g => new RawEntity(new()
             {
-                { AttributeNames.NameIdNiceName, g.NameId },
+                //{ AttributeNames.NameIdNiceName, g.NameId },
                 { nameof(g.Name), g.Name },
                 { nameof(g.Version), g.Version },
                 { nameof(g.Description), g.Description },
@@ -54,4 +63,19 @@ public class CodeGenerators: CustomDataSource
 
         return l.Return(list, $"{list.Count}");
     }
+
+    private IEnumerable<IRawEntity> OutputTypes(IEnumerable<IFileGenerator> fileGenerators)
+    {
+        var l = Log.Fn<IEnumerable<IRawEntity>>();
+        var list = fileGenerators
+            .GroupBy(g => g.OutputType)
+            .Select(g => new RawEntity(new()
+            {
+                { "Name", g.Key },
+            }))
+            .ToList();
+
+        return l.Return(list, $"{list.Count}");
+    }
+
 }
