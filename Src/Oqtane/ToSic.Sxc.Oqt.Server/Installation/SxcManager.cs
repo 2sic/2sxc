@@ -74,8 +74,8 @@ public class SxcManager(
             case "20-00-00":
                 Upgrade_20_00_00(tenant, version);
                 break;
-            case "20-00-10":
-                Upgrade_20_00_10(tenant, version);
+            case "21-01-01":
+                Upgrade_21_01_01(tenant, version);
                 break;
         }
     }
@@ -95,13 +95,13 @@ public class SxcManager(
         RemoveAssemblies(tenant, assemblies, version);
     }
 
-    private void Upgrade_20_00_10(Tenant tenant, string version)
+    private void Upgrade_21_01_01(Tenant tenant, string version)
     {
-        LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(Upgrade_20_00_10)} {version}");
+        LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(Upgrade_21_01_01)} {version}");
 
         if (tenant.Name != TenantNames.Master)
         {
-            LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(Upgrade_20_00_10)} skipped because tenant '{tenant.Name}' is not '{TenantNames.Master}'.");
+            LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(Upgrade_21_01_01)} skipped because tenant '{tenant.Name}' is not '{TenantNames.Master}'.");
             return;
         }
 
@@ -116,6 +116,13 @@ public class SxcManager(
         {
             LogError($"2sxc {EavSystemInfo.VersionString} install error: {version} Upgrade Error moving 2sxc folders - {ex}");
         }
+
+        string[] assemblies =
+        [
+            "Microsoft.AspNetCore.Authorization.dll"
+        ];
+
+        RemoveAssemblies(tenant, assemblies, version);
     }
 
     private void RemoveAssemblies(Tenant tenant, string[] assemblies, string version)
@@ -157,7 +164,9 @@ public class SxcManager(
         foreach (var directory in Directory.GetDirectories(sourceRoot))
         {
             var folderName = Path.GetFileName(directory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
-            if (string.IsNullOrWhiteSpace(folderName)) continue;
+            
+            if (string.IsNullOrWhiteSpace(folderName))
+                continue;
 
             // Don't try to move the new structure folder back into itself.
             if (folderName.Equals(OqtConstants.TenantsFolderName, StringComparison.OrdinalIgnoreCase))
