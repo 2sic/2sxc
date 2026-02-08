@@ -18,7 +18,7 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
 {
     // For debugging
 
-    // turn on if we ever need to debug stuff again, but avoid this in production, unless really, really necessaryE
+    // turn on if we ever need to debug stuff again, but avoid this in production, unless really, really necessary
 #if DEBUG
     private static readonly bool LogAnything = true;
 #else
@@ -58,8 +58,8 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
 
         try
         {
+            // Debug logging during dev-builds
             var debugEnabled = IsDebugEnabled(); // no request context here
-
             if (debugEnabled)
                 DnnJsonFormattersDebug.DumpFormattersToLog(Log, "init-before", controllerSettings.Formatters);
 
@@ -70,6 +70,7 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
                 GetCustomAttributes(controllerDescriptor.ControllerType)
             );
 
+            // Debug logging during dev-builds
             if (debugEnabled)
                 DnnJsonFormattersDebug.DumpFormattersToLog(Log, "init-after", controllerSettings.Formatters);
 
@@ -127,6 +128,7 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
             // Re-use manager instance per request if possible to avoid repeated allocations
             var dnnJsonFormattersManager = new DnnJsonFormattersManager(Log);
 
+            // Get any attribute for formatting on the current action, as this can override the controller-level configuration
             var jsonFormatterAttributeOnAction = context.ActionDescriptor
                 .GetCustomAttributes<JsonFormatterAttribute>()
                 .FirstOrDefault();
@@ -134,8 +136,9 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
             var perRequestConfiguration = PerRequestConfigurationHelper
                 .CreateAndApplyPerRequestConfiguration(context, dnnJsonFormattersManager, jsonFormatterAttributeOnAction);
 
+            // Debug logging during dev-builds
             if (debugEnabled && perRequestConfiguration != null)
-                DnnJsonFormattersDebug.DumpFormattersToLog(Log, "action-after", perRequestConfiguration.Formatters);
+                DnnJsonFormattersDebug.DumpFormattersToLog(Log, "action-after", perRequestConfiguration?.Formatters);
 
             l.Done();
 
@@ -158,8 +161,7 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
             return dbgBool;
 
         var debugEnabled = IsDebugEnabled();
-        if (requestProperties != null)
-            requestProperties[DebugFlagKey] = debugEnabled;
+        requestProperties?[DebugFlagKey] = debugEnabled;
 
         return debugEnabled;
     }
