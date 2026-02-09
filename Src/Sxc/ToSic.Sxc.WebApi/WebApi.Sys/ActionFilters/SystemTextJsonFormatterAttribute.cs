@@ -67,15 +67,41 @@ public class SystemTextJsonFormatterAttribute : ActionFilterAttribute, IControll
                   .OfType<JsonFormatterAttribute>()
                   .FirstOrDefault();
 
+        var effectiveJsonFormatterAttribute = ApplyQueryStringCasingOverride(context, jsonFormatterAttribute);
+
         // creating JsonConverter, JsonOptions and SystemTextJsonOutputFormatter per request
         // instead of using global, static, singleton version because this is for API only
         return JsonConverterFactoryHelpers.CreateNewFormatterFactory(
             context.HttpContext.RequestServices,
-            jsonFormatterAttribute,
+            effectiveJsonFormatterAttribute,
             () => Casing.Unspecified,
             jsonSerializerOptions => new SystemTextJsonOutputFormatter(jsonSerializerOptions)
         );
     }
+
+    /// <summary>
+    /// Allows request-level casing override using `?$casing=camel` without touching global JSON options.
+    /// </summary>
+    private static JsonFormatterAttribute? ApplyQueryStringCasingOverride(ActionExecutedContext context, JsonFormatterAttribute? currentAttribute)
+    {
+        if (!TryGetQueryStringCasingOverride(context, out var requestedCasing))
+            return currentAttribute;
+
+        return new()
+        {
+            EntityFormat = currentAttribute?.EntityFormat ?? EntityFormat.Light,
+            Casing = requestedCasing
+        };
+    }
+
+    /// <summary>
+    /// Returns true only for supported casing overrides; unsupported values are ignored.
+    /// </summary>
+    private static bool TryGetQueryStringCasingOverride(ActionExecutedContext context, out Casing casing)
+        => JsonCasingOverrideHelper.TryParseCasingOverride(
+            context.HttpContext?.Request?.Query?
+                .Select(pair => new KeyValuePair<string, string>(pair.Key, pair.Value.ToString())),
+            out casing);
 
 
     //private static SystemTextJsonOutputFormatter SystemTextJsonMediaTypeFormatterFactory(ActionExecutedContext context)
