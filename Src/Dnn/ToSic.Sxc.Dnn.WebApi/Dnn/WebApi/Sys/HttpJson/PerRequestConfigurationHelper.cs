@@ -12,35 +12,39 @@ internal class PerRequestConfigurationHelper
 {
 
     /// <summary>
-    /// Ensure we only configure once per request
+    /// Ensure we only configure once per request.
     /// </summary>
     /// <param name="context"></param>
     /// <param name="l"></param>
-    /// <returns></returns>
+    /// <returns>`false` if not yet configured, `true` if already configured.</returns>
     internal static bool SkipOnMultipleExecutionsOnTheSameRequest(HttpActionContext context, ILogCall l)
     {
         const string markerKey = "2sxc.JsonFormatter.Configured";
 
         // Use Request.Properties to mark rather than mutating headers (faster & avoids client-side confusion)
         var props = context.Request?.Properties;
-        if (props != null)
+        if (props == null)
+            return false;
+
+        // If it was already configured, we would get a count,
+        // so we can increase it and log that this is happening - but skip the actual configuration again.
+        if (props.TryGetTyped(markerKey, out int cnt))
         {
-            if (props.TryGetTyped(markerKey, out int cnt))
-            {
-                cnt++;
-                props[markerKey] = cnt;
-                l.A($"Formatter configuration already ran for this request - skipping (count:{cnt})");
-                return true;
-            }
-            props[markerKey] = 1; // first time
+            cnt++;
+            props[markerKey] = cnt;
+            l.A($"Formatter configuration already ran for this request - skipping (count:{cnt})");
+            return true;
         }
+
+        // First time, mark it as configured and continue with the configuration.
+        props[markerKey] = 1;
         return false;
     }
 
     internal static HttpConfiguration CreateAndApplyPerRequestConfiguration(
         HttpActionContext context,
         DnnJsonFormattersManager manager,
-        JsonFormatterAttribute jsonFormatterAttributeOnAction)
+        JsonFormatterAttribute jsonFormatterAttributeOnCurrentAction)
     {
         var configOriginal = context.ControllerContext.Configuration
                              ?? throw new InvalidOperationException("Controller configuration is not available.");
@@ -48,10 +52,11 @@ internal class PerRequestConfigurationHelper
         // Create a copy of the previous configuration
         var settingsCopy = new HttpControllerSettings(configOriginal);
 
+
         manager.ReconfigureActionWithContextAwareSerializer(
             context.ControllerContext.ControllerDescriptor,
             settingsCopy.Formatters,    // this list will be updated, side effect!
-            jsonFormatterAttributeOnAction
+            jsonFormatterAttributeOnCurrentAction
         );
 
         var perRequestConfiguration = ApplyControllerSettings(settingsCopy, configOriginal);
@@ -62,6 +67,7 @@ internal class PerRequestConfigurationHelper
 
     private static HttpConfiguration ApplyPerRequestConfiguration(HttpActionContext context, HttpConfiguration configuration)
     {
+        // Note: null should not be possible, will probably cause problems upstream
         if (configuration == null)
             return null;
         context.ControllerContext.Configuration = configuration;
@@ -69,31 +75,30 @@ internal class PerRequestConfigurationHelper
         return configuration;
     }
 
-    // Cached reflection bridge to Web API’s internal HttpConfiguration.ApplyControllerSettings
-    // so we can spin up per-request clones of the controller configuration without touching shared state 
-    private static readonly Func<HttpControllerSettings, HttpConfiguration, HttpConfiguration> ApplyControllerSettings
-        = GetInternalApplyControllerSettings();
+    /// <summary>
+    /// This gives access to the internal static method `HttpConfiguration.ApplyControllerSettings`
+    /// which is used by Web API to create a controller-specific configuration based on the global configuration and controller settings.
+    ///
+    /// We need it to spin up per-request clones of the controller configuration without touching shared state
+    /// </summary>
+    /// <remarks>
+    /// We will use this method to create a per-request configuration that we can modify without affecting the global configuration or other requests.
+    /// The underlying method is retrieved through reflection, but we'll cache the delegate for performance, so we only pay the reflection cost once.
+    ///
+    /// The method we wrap is:
+    /// internal static HttpConfiguration ApplyControllerSettings(HttpControllerSettings settings, HttpConfiguration configuration)
+    /// {
+    ///   if (!settings.IsFormatterCollectionInitialized && !settings.IsParameterBindingRuleCollectionInitialized && !settings.IsServiceCollectionInitialized)
+    ///     return configuration;
+    ///   HttpConfiguration httpConfiguration = new HttpConfiguration(configuration, settings);
+    ///   httpConfiguration.Initializer(httpConfiguration);
+    ///   return httpConfiguration;
+    /// }
+    /// </remarks>
+    private static readonly Func<HttpControllerSettings, HttpConfiguration, /* out */ HttpConfiguration> ApplyControllerSettings
+        = typeof(HttpConfiguration).GetDelegateToMethod<Func<HttpControllerSettings, HttpConfiguration, /* out */ HttpConfiguration>>(
+            methodName: "ApplyControllerSettings",
+            bindingAttr: BindingFlags.NonPublic | BindingFlags.Static
+        );
 
-    private static Func<HttpControllerSettings, HttpConfiguration, HttpConfiguration> GetInternalApplyControllerSettings()
-    {
-        const string methodName = "ApplyControllerSettings";
-        var method = typeof(HttpConfiguration).GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static);
-        if (method == null)
-            throw new InvalidOperationException($"Unable to locate {nameof(HttpConfiguration)}.{methodName}");
-        return (Func<HttpControllerSettings, HttpConfiguration, HttpConfiguration>)method
-            .CreateDelegate(typeof(Func<HttpControllerSettings, HttpConfiguration, HttpConfiguration>));
-
-
-        // Note: the method is this: 
-        //internal static HttpConfiguration ApplyControllerSettings(
-        //    HttpControllerSettings settings,
-        //    HttpConfiguration configuration)
-        //{
-        //    if (!settings.IsFormatterCollectionInitialized && !settings.IsParameterBindingRuleCollectionInitialized && !settings.IsServiceCollectionInitialized)
-        //        return configuration;
-        //    HttpConfiguration httpConfiguration = new HttpConfiguration(configuration, settings);
-        //    httpConfiguration.Initializer(httpConfiguration);
-        //    return httpConfiguration;
-        //}
-    }
 }

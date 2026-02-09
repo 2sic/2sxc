@@ -1,21 +1,16 @@
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Apps.Sys.Paths;
-using ToSic.Eav.Context;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using ToSic.Sys.Coding;
-using ToSic.Sys.DI;
-using ToSic.Sys.Logging;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
@@ -60,7 +55,7 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
         services.AddSingleton<ISite>(site);
         services.AddSingleton<IAppPathsMicroSvc>(appPathSvc);
         services.AddSingleton(sp => new LazySvc<IAppReaderFactory>(sp));
-        services.AddSingleton<IEnumerable<IFileGenerator>>(_ => Array.Empty<IFileGenerator>());
+        services.AddSingleton<IEnumerable<IFileGenerator>>(_ => []);
         services.AddSingleton(sp => new LazySvc<IEnumerable<IFileGenerator>>(sp));
         services.AddSingleton<FakeAppJsonConfigurationService>(_ => new FakeAppJsonConfigurationService(tempRoot));
         services.AddSingleton<IAppJsonConfigurationService>(sp => sp.GetRequiredService<FakeAppJsonConfigurationService>());
