@@ -142,7 +142,7 @@ public class WorkViews(
                     Thumbnail = thumbnail,
                     Properties = (details as ICanBeEntity)?.Entity == null
                         ? null
-                        : dataToFormatLight.Convert((details as ICanBeEntity).Entity),
+                        : dataToFormatLight.Convert((details as ICanBeEntity)!.Entity),
                     IsDefault = ct.Metadata.HasType(KnownDecorators.IsDefaultDecorator),
                 };
             })

@@ -573,7 +573,7 @@ public class ExtensionExportService(
                 if (exclude != null && exclude.Any(f => relativePath.StartsWith(f, StringComparison.OrdinalIgnoreCase)))
                 {
                     l.A($"Excluding: {relativePath}");
-                    return (null, null);
+                    return (null!, null!);
                 }
 
                 var zipPath = Path.Combine(baseZipPath, relativePath).Replace("\\", "/");
