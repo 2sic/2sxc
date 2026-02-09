@@ -140,9 +140,7 @@ public class WorkViews(
                     Name = ct.Name,
                     IsHidden = visible.All(t => t.ContentType != ct.NameId),   // must check if *any* template is visible, otherwise tell the UI that it's hidden
                     Thumbnail = thumbnail,
-                    Properties = (details as ICanBeEntity)?.Entity == null
-                        ? null
-                        : dataToFormatLight.Convert((details as ICanBeEntity)!.Entity),
+                    Properties = ((details as ICanBeEntity)?.Entity).NullOrGetWith(dataToFormatLight.Convert),
                     IsDefault = ct.Metadata.HasType(KnownDecorators.IsDefaultDecorator),
                 };
             })
