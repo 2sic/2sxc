@@ -142,14 +142,6 @@ public class ExtensionExportService(
             ContentType = MimeTypeConstants.FallbackType,
             FileBytes = fileBytes
         });
-
-//#if NETFRAMEWORK
-//        return l.ReturnAsOk(HttpFileHelper.GetAttachmentHttpResponseMessage(fileName, MimeTypeConstants.FallbackType,
-//            new MemoryStream(fileBytes)));
-//#else
-//        return l.ReturnAsOk(new FileContentResult(fileBytes, MimeTypeConstants.FallbackType) { FileDownloadName =
-// fileName });
-//#endif
     }
 
     private sealed record ExtensionExportSpec(
