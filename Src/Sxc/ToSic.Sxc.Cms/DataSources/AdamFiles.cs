@@ -27,7 +27,6 @@ namespace ToSic.Sxc.DataSources;
     Type = DataSourceType.Lookup,
     Audience = Audience.Advanced,
     In = [DataSourceConstants.InStreamDefaultRequired],
-    DynamicOut = false,
     ConfigurationType = "" // TODO: ...
 )]
 [PrivateApi("Was till v17 InternalApi_DoNotUse_MayChangeWithoutNotice(still wip / finishing specs etc.)")]

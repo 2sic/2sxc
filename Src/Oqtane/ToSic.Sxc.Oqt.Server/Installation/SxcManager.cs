@@ -74,8 +74,8 @@ public class SxcManager(
             case "20-00-00":
                 Upgrade_20_00_00(tenant, version);
                 break;
-            case "21-01-01":
-                Upgrade_21_01_01(tenant, version);
+            case "21-02-00": // 21.02
+                Upgrade_21_02_00(tenant, version);
                 break;
         }
     }
@@ -95,13 +95,13 @@ public class SxcManager(
         RemoveAssemblies(tenant, assemblies, version);
     }
 
-    private void Upgrade_21_01_01(Tenant tenant, string version)
+    private void Upgrade_21_02_00(Tenant tenant, string version)
     {
-        LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(Upgrade_21_01_01)} {version}");
+        LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(Upgrade_21_02_00)} {version}");
 
         if (tenant.Name != TenantNames.Master)
         {
-            LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(Upgrade_21_01_01)} skipped because tenant '{tenant.Name}' is not '{TenantNames.Master}'.");
+            LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(Upgrade_21_02_00)} skipped because tenant '{tenant.Name}' is not '{TenantNames.Master}'.");
             return;
         }
 

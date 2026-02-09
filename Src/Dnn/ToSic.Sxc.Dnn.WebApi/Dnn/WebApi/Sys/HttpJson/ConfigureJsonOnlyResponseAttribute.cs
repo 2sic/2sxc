@@ -133,8 +133,10 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
                 .GetCustomAttributes<JsonFormatterAttribute>()
                 .FirstOrDefault();
 
+            var effectiveJsonFormatterAttribute = ApplyQueryStringCasingOverride(context, jsonFormatterAttributeOnAction);
+
             var perRequestConfiguration = PerRequestConfigurationHelper
-                .CreateAndApplyPerRequestConfiguration(context, dnnJsonFormattersManager, jsonFormatterAttributeOnAction);
+                .CreateAndApplyPerRequestConfiguration(context, dnnJsonFormattersManager, effectiveJsonFormatterAttribute);
 
             // Debug logging during dev-builds
             if (debugEnabled && perRequestConfiguration != null)
@@ -165,6 +167,27 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
 
         return debugEnabled;
     }
+
+    /// <summary>
+    /// Allows request-level casing override using `?$casing=camel` without touching global formatter state.
+    /// </summary>
+    private static JsonFormatterAttribute ApplyQueryStringCasingOverride(HttpActionContext context, JsonFormatterAttribute currentAttribute)
+    {
+        if (!TryGetQueryStringCasingOverride(context, out var requestedCasing))
+            return currentAttribute;
+
+        return new()
+        {
+            EntityFormat = currentAttribute?.EntityFormat ?? EntityFormat.Light,
+            Casing = requestedCasing
+        };
+    }
+
+    /// <summary>
+    /// Returns true only for supported casing overrides; unsupported values are ignored.
+    /// </summary>
+    private static bool TryGetQueryStringCasingOverride(HttpActionContext context, out Casing casing)
+        => JsonCasingOverrideHelper.TryParseCasingOverride(context?.Request?.GetQueryNameValuePairs(), out casing);
 
 
     /// <summary>

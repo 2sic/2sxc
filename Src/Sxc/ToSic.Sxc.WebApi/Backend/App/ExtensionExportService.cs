@@ -6,11 +6,16 @@ using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.ImportExport.Sys.Zip;
 using ToSic.Eav.Persistence.File;
+using ToSic.Eav.Serialization.Sys.Json;
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.ImportExport.Package.Sys;
 using ToSic.Sys.Security.Encryption;
 using ToSic.Sys.Utils;
+
+#if NETFRAMEWORK
+using ToSic.Sys.Utils;
+#endif
 
 namespace ToSic.Sxc.Backend.App;
 
@@ -158,7 +163,7 @@ public class ExtensionExportService(
         string LockJsonContent
     );
 
-    private JsonSerializerOptions JsonSerializationIndented => field ??= new()
+    private JsonSerializerOptions JsonSerializationIndented => field ??= new(JsonOptions.UnsafeJsonWithoutEncodingHtml)
     {
         WriteIndented = true,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -179,17 +184,23 @@ public class ExtensionExportService(
             var zipping = new Zipping(l);
 
             // Add collected files using helper (deduplicate zip paths)
-            var allFiles = new List<(string sourcePath, string zipPath)>();
-            var addedZipPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var export in exports)
-            {
-                foreach (var file in export.FilesToInclude)
-                {
-                    if (!addedZipPaths.Add(file.zipPath))
-                        continue;
-                    allFiles.Add(file);
-                }
-            }
+            //var allFiles = new List<(string sourcePath, string zipPath)>();
+            //var addedZipPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            //foreach (var export in exports)
+            //{
+            //    foreach (var file in export.FilesToInclude)
+            //    {
+            //        if (!addedZipPaths.Add(file.zipPath))
+            //            continue;
+            //        allFiles.Add(file);
+            //    }
+            //}
+
+            // 2026-02-09 2dm - simpler and functional
+            var allFiles = exports
+                .SelectMany(export => export.FilesToInclude)
+                .DistinctBy(t => t.zipPath, StringComparer.OrdinalIgnoreCase)
+                .ToList();
 
             zipping.AddFiles(archive, allFiles);
             l.A($"Added {allFiles.Count} files to ZIP");
@@ -305,78 +316,23 @@ public class ExtensionExportService(
         var expandedReleases = releases
             .Select(releaseRef =>
             {
+                var lr = Log.Fn<AppExtensionRelease>();
                 if (releaseRef.ValueKind != JsonValueKind.String)
-                {
-                    l.A($"Skipping non-string release reference: {releaseRef.ValueKind}");
-                    return null;
-                }
+                    return lr.ReturnNull($"Skipping non-string release reference: {releaseRef.ValueKind}");
 
                 var guidString = releaseRef.GetString();
                 if (string.IsNullOrEmpty(guidString) || !Guid.TryParse(guidString, out var guid))
-                {
-                    l.A($"Skipping invalid release GUID: {guidString}");
-                    return null;
-                }
+                    return lr.ReturnNull($"Skipping invalid release GUID: {guidString}");
 
                 // Look up release entity from app data
                 var releaseEntity = appReader.List.FirstOrDefault(e => e.EntityGuid == guid);
 
-                if (releaseEntity == null)
-                {
-                    l.A($"Release entity not found for GUID: {guid}");
-                    return null;
-                }
-
-                // Create release object
-                var releaseObj = new
-                {
-                    version = releaseEntity.Get<string>("Version") ?? DefaultVersion,
-                    breaking = releaseEntity.Get<bool>("Breaking"),
-                    notes = releaseEntity.Get<string>("Notes") ?? ""
-                };
-
-                return releaseObj;
+                return releaseEntity == null
+                    ? lr.ReturnNull($"Release entity not found for GUID: {guid}")
+                    : lr.Return(releaseEntity.As<AppExtensionRelease>()!, "found");
             })
             .Where(r => r != null)!
             .ToList();
-
-        // old, non-functional way:
-        //var expandedReleases = new List<object>();
-
-        //foreach (var releaseRef in releases)
-        //{
-        //    if (releaseRef.ValueKind != JsonValueKind.String)
-        //    {
-        //        l.A($"Skipping non-string release reference: {releaseRef.ValueKind}");
-        //        continue;
-        //    }
-
-        //    var guidString = releaseRef.GetString();
-        //    if (string.IsNullOrEmpty(guidString) || !Guid.TryParse(guidString, out var guid))
-        //    {
-        //        l.A($"Skipping invalid release GUID: {guidString}");
-        //        continue;
-        //    }
-
-        //    // Look up release entity from app data
-        //    var releaseEntity = appReader.List.FirstOrDefault(e => e.EntityGuid == guid);
-
-        //    if (releaseEntity == null)
-        //    {
-        //        l.A($"Release entity not found for GUID: {guid}");
-        //        continue;
-        //    }
-
-        //    // Create release object
-        //    var releaseObj = new
-        //    {
-        //        version = releaseEntity.Get<string>("Version") ?? DefaultVersion,
-        //        breaking = releaseEntity.Get<bool>("Breaking"),
-        //        notes = releaseEntity.Get<string>("Notes") ?? ""
-        //    };
-
-        //    expandedReleases.Add(releaseObj);
-        //}
 
         // Serialize expanded releases back to JsonElement
         var expandedJson = JsonSerializer.Serialize(expandedReleases, JsonSerializationIndented);
@@ -573,7 +529,7 @@ public class ExtensionExportService(
                 if (exclude != null && exclude.Any(f => relativePath.StartsWith(f, StringComparison.OrdinalIgnoreCase)))
                 {
                     l.A($"Excluding: {relativePath}");
-                    return (null, null);
+                    return (null!, null!);
                 }
 
                 var zipPath = Path.Combine(baseZipPath, relativePath).Replace("\\", "/");
