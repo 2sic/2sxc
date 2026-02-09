@@ -227,7 +227,7 @@ public partial class SimpleDataEditService(
         var l = Log.Fn<IDictionary<string, object?>>();
         // Find all attributes which are relationships
         var relationships = contentType.Attributes
-            .Where(a => a.Type == ValueTypes.Entity)
+            .Where(a => a.IsEntity() /*.Type == ValueTypes.Entity*/)
             .ToListOpt();
 
         var newValues = values
