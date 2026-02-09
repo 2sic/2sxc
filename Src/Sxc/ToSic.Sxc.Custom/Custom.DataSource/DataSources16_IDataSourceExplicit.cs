@@ -46,7 +46,7 @@ public abstract partial class DataSource16
     #endregion
 
     [PrivateApi("Hide in docs to only show important APIs for DataSource creators")]
-    public IDataSourceLink Link => ((IDataSourceLinkable)_inner).Link;
+    public IDataSourceLink GetLink() => ((IDataSourceLinkable)_inner).GetLink();
 
     #region Caching stuff - all explicit as the DataSource Developer shouldn't need this
 

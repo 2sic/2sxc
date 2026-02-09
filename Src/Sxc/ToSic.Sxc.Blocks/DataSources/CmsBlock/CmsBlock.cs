@@ -66,9 +66,11 @@ public sealed partial class CmsBlock : DataSourceBase
     private readonly Dependencies _services;
     #endregion
 
-    public override IDataSourceLink Link => _link.Get(() => BreachExtensions.CreateEmptyLink(this)
-        .AddStream(name: ViewParts.StreamHeader)
-        .AddStream(name: ViewParts.StreamHeaderOld))!;
+    public override IDataSourceLink GetLink() =>
+        _link.Get(() => BreachExtensions.CreateEmptyLink(this)
+            .WithAnotherStream(name: ViewParts.StreamHeader)
+            .WithAnotherStream(name: ViewParts.StreamHeaderOld))!;
+
     private readonly GetOnce<IDataSourceLink> _link = new();
 
 
