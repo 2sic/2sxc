@@ -14,7 +14,6 @@ namespace ToSic.Sxc.Dnn.DataSources;
     Icon = DataSourceIcons.DynamicForm,
     Type = DataSourceType.Source, 
     NameId = "ToSic.Sxc.Dnn.DataSources.DnnSql, ToSic.Sxc.Dnn",
-    DynamicOut = false,
     NameIds =
     [
         "ToSic.SexyContent.DataSources.DnnSqlDataSource, ToSic.SexyContent",
