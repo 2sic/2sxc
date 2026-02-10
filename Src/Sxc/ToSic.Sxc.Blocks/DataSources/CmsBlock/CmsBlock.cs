@@ -25,11 +25,15 @@ namespace ToSic.Sxc.DataSources;
     UiHint = "Data for this CMS Block (instance/module)",
     Icon = DataSourceIcons.RecentActor,
     Type = DataSourceType.Source, 
-    NameId = "ToSic.Sxc.DataSources.CmsBlock, ToSic.Sxc",
+    NameId = "ce46fcac-e531-45a2-adc5-181164e742f6",
+    NameIds =
+    [
+        "ToSic.Sxc.DataSources.CmsBlock, ToSic.Sxc",
+        "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent"
+    ],
     ConfigurationType = "7c2b2bc2-68c6-4bc3-ba18-6e6b5176ba02",
     In = [DataSourceConstants.StreamDefaultName],
-    HelpLink = "https://docs.2sxc.org/api/dot-net/ToSic.Sxc.DataSources.CmsBlock.html",
-    NameIds = ["ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent"])]
+    HelpLink = "https://docs.2sxc.org/api/dot-net/ToSic.Sxc.DataSources.CmsBlock.html")]
 public sealed partial class CmsBlock : DataSourceBase
 {
     /// <summary>
