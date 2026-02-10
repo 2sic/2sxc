@@ -1,6 +1,5 @@
 ﻿using System.Collections.Immutable;
 using ToSic.Eav.DataSource;
-
 using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Services;
@@ -34,7 +33,7 @@ namespace ToSic.Sxc.DataSources;
     ConfigurationType = "7c2b2bc2-68c6-4bc3-ba18-6e6b5176ba02",
     In = [DataSourceConstants.StreamDefaultName],
     HelpLink = "https://docs.2sxc.org/api/dot-net/ToSic.Sxc.DataSources.CmsBlock.html")]
-public sealed partial class CmsBlock : DataSourceBase
+public sealed partial class CmsBlock : DataSourceBase, IDataSourceLinkable
 {
     /// <summary>
     /// The instance-id of the CmsBlock (2sxc instance, DNN ModId). <br/>
@@ -70,12 +69,12 @@ public sealed partial class CmsBlock : DataSourceBase
     private readonly Dependencies _services;
     #endregion
 
-    public override IDataSourceLink GetLink() =>
-        _link.Get(() => BreachExtensions.CreateEmptyLink(this)
+    IDataSourceLink IDataSourceLinkable.GetLink() => _link
+        ??= BreachExtensions.CreateEmptyLink(this)
             .WithAnotherStream(name: ViewParts.StreamHeader)
-            .WithAnotherStream(name: ViewParts.StreamHeaderOld))!;
+            .WithAnotherStream(name: ViewParts.StreamHeaderOld);
 
-    private readonly GetOnce<IDataSourceLink> _link = new();
+    private IDataSourceLink? _link;
 
 
     private IImmutableList<IEntity> GetContent()
