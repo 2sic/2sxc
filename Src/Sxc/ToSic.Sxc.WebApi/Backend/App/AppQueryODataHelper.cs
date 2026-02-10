@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.Sys.Convert;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Services;
 using ToSic.Sys.OData;
@@ -22,20 +23,9 @@ public class AppQueryODataHelper(IConvertToEavLight dataConverter, IDataSourcesS
         var oDataQuery = UriQueryParser.Parse(systemQueryOptions);
         var engine = new ODataQueryEngine(dataSourcesService);
 
-        var streams = stream?.Split(',')
-                          .Select(s => s.Trim())
-                          .Where(s => !string.IsNullOrWhiteSpace(s))
-                          .ToArray()
-                      ?? query.Out
-                          .Select(p => p.Key)
-                          .ToArray();
+        var streams = DataSourceConvertHelper.GetBestStreamNames(query, stream);
 
-        var guidFilter = filterGuids?
-            .Select(g => Guid.TryParse(g, out var guid) ? guid : (Guid?)null)
-            .Where(g => g.HasValue)
-            .Select(g => g!.Value)
-            .ToHashSet()
-            ?? [];
+        var guidFilter = DataSourceConvertHelper.SafeParseGuidList(filterGuids);
 
         // only apply odata to the "Default" stream or the first one.
         var streamToFilter = streams.Contains(DataSourceConstants.StreamDefaultName, StringComparer.OrdinalIgnoreCase)
