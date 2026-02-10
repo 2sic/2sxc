@@ -1,7 +1,10 @@
-﻿using System.Net;
+﻿using System.IO;
+using System.Net;
 using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.DataFormats.EavLight;
+using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Query.Sys;
+using ToSic.Eav.DataSource.Sys.Convert;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Eav.WebApi.Sys.Admin.App;
 using ToSic.Eav.WebApi.Sys.Admin.Query;
@@ -19,7 +22,7 @@ namespace ToSic.Sxc.Backend.App;
 public class AppQueryControllerReal(
     LazySvc<AppQueryODataHelper> oDataHelper,
     ISxcCurrentContextService ctxService,
-    IConvertToEavLight dataConverter,
+    Generator<IConvertToEavLight> dataConverter,
     Generator<AppPermissionCheck> appPermissionCheck,
     LazySvc<QueryManager> queryManager,
     LazySvc<ILookUpEngineResolver> lookupResolver)
@@ -28,7 +31,7 @@ public class AppQueryControllerReal(
 {
     public const string LogSuffix = "AppQry";
 
-    private const string AllStreams = "*";
+    //private const string AllStreams = "*";
 
     #region In-Container-Context Queries
 
@@ -121,22 +124,43 @@ public class AppQueryControllerReal(
             throw l.Done(new HttpExceptionAbstraction(HttpStatusCode.Unauthorized, msg, "Request not allowed"));
         }
 
-        dataConverter.WithGuid = includeGuid;
-        if (dataConverter is ConvertToEavLightWithCmsInfo serializerWithEdit)
-            serializerWithEdit.WithEdit = context.Permissions.IsContentAdmin;
 
-        if (stream == AllStreams)
+        if (stream == DataSourceConstants.AllStreams)
             stream = null;
 
+        var streamNames = DataSourceConvertHelper.GetBestStreamNames(query, stream);
+        var queryOptionDic = QueryODataParams.CreateMany(query.Configuration.Parse, streamNames);
+
         // New v17 experimental with special fields
-        var systemQueryOptions = new QueryODataParams(query.Configuration.Parse).SystemQueryOptions;
-        if (dataConverter is ConvertToEavLight serializerWithOData)
-            serializerWithOData.AddSelectFields(systemQueryOptions.Select.ToListOpt());
+        var systemQueryOptions = QueryODataParams.Create(query.Configuration.Parse);
+
+        var isContentAdmin = context.Permissions.IsContentAdmin;
+
+        var dc = PrepareDataConverter(includeGuid, isContentAdmin, systemQueryOptions);
 
         // v20 support OData filtering, sorting...
-        var result = systemQueryOptions.RawAllSystem.Any()
+        var result = !systemQueryOptions.IsEmptyExceptForSelect()
             ? oDataHelper.Value.ApplyOData(query, systemQueryOptions, stream, more?.Guids)
-            : dataConverter.Convert(query, stream?.Split(','), more?.Guids);
+            : dc.Convert(query,
+                streamNames /*stream?.Split(',')*/,
+                more?.Guids,
+                queryOptionDic.ToDictionary(
+                    pair => pair.Key,
+                    ICollection<string> (pair) => pair.Value.Select.ToListOpt(),
+                    StringComparer.OrdinalIgnoreCase
+                )
+            );
         return l.Return(result);
+    }
+
+    private IConvertToEavLight PrepareDataConverter(bool withGuid, bool isEditor, SystemQueryOptions options)
+    {
+        var dc = dataConverter.New();
+        dc.WithGuid = withGuid;
+        if (dc is ConvertToEavLightWithCmsInfo serializerWithEdit)
+            serializerWithEdit.WithEdit = isEditor;
+        if (dc is ConvertToEavLight serializerWithOData)
+            serializerWithOData.AddSelectFields(options.Select.ToListOpt());
+        return dc;
     }
 }
