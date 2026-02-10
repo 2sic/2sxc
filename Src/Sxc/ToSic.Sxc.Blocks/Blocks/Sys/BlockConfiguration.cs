@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.DataSource.Sys.Query;
+using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Eav.Models;
 using ToSic.Sxc.Blocks.Sys.Views;
 
@@ -18,9 +18,9 @@ public record BlockConfiguration: ModelOfEntity, IAppIdentity
 
     public IBlockIdentifier? BlockIdentifierOrNull { get; set; }
 
-    private readonly Generator<QueryDefinitionBuilder> _qDefBuilder;
+    private readonly Generator<QueryDefinitionFactory> _qDefBuilder;
 
-    public BlockConfiguration(IEntity? entity, IAppIdentity appIdentity, IEntity? previewViewEntity, Generator<QueryDefinitionBuilder> qDefBuilder, string languageCode, ILog parentLog):
+    public BlockConfiguration(IEntity? entity, IAppIdentity appIdentity, IEntity? previewViewEntity, Generator<QueryDefinitionFactory> qDefBuilder, string languageCode, ILog parentLog):
         base(entity!)
     {
         parentLog.SubLogOrNull("Blk.Config").A("Entity is " + (entity == null ? "" : "not") + " null");

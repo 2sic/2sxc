@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Data.Sys.Entities;
-using ToSic.Eav.DataSource.Sys.Query;
+using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Eav.ImportExport.Integration;
 using ToSic.Eav.ImportExport.Json.Sys;
@@ -29,7 +29,7 @@ public class ViewsExportImport(
     AppIconHelpers appIconHelpers,
     Generator<ImpExpHelpers> impExpHelpers,
     IResponseMaker responseMaker,
-    Generator<QueryDefinitionBuilder> qDefBuilder,
+    Generator<QueryDefinitionFactory> qDefBuilder,
     IAppPathsMicroSvc appPathSvc)
     : ServiceBase("Bck.Views",
         connect:

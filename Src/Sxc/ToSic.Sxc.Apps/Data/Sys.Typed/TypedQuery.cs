@@ -1,10 +1,10 @@
-﻿using ToSic.Eav.DataSource.Sys.Query;
+﻿using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Sxc.Data.Sys.Factory;
 
 namespace ToSic.Sxc.Data.Sys.Typed;
 
-internal class TypedQuery(DataSourceBase.Dependencies services, LazySvc<QueryBuilder> queryBuilder)
-    : Query(services, queryBuilder), ITypedQuery
+internal class TypedQuery(DataSourceBase.Dependencies services, LazySvc<QueryFactory> queryBuilder, LazySvc<QueryDefinitionFactory> queryDefBuilder)
+    : Query(services, queryBuilder, queryDefBuilder), ITypedQuery
 {
     #region Cdf Attachments and setup ToTypedHelper
 

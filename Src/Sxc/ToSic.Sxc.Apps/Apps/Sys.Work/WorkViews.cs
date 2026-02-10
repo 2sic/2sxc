@@ -4,7 +4,7 @@ using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Eav.Data.Sys.ValueConverter;
 using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Eav.DataSource.Sys.Query;
+using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Eav.Metadata.Sys;
 using ToSic.Sxc.Apps.Sys.Ui;
 using ToSic.Sxc.Blocks.Sys.Views;
@@ -18,7 +18,7 @@ public class WorkViews(
     LazySvc<IValueConverter> valConverterLazy,
     IZoneCultureResolver cultureResolver,
     IConvertToEavLight dataToFormatLight,
-    Generator<QueryDefinitionBuilder> qDefBuilder)
+    Generator<QueryDefinitionFactory> qDefBuilder)
     : WorkUnitBase<IAppWorkCtxPlus>("Cms.ViewRd",
         connect: [appEntities, valConverterLazy, cultureResolver, dataToFormatLight, qDefBuilder])
 {

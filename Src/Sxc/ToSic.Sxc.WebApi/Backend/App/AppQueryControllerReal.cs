@@ -2,7 +2,7 @@
 using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Sys.Query;
+using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Eav.Services;
@@ -102,7 +102,7 @@ public class AppQueryControllerReal(
         var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"name:{name}, stream:{stream}, withModule:{(context as IContextOfBlock)?.Module.Id}");
 
         var lookups = preparedLookup ?? lookupResolver.Value.GetLookUpEngine(modId);
-        var query = queryManager.Value.GetQuery(app, name, lookups, recurseParents: 3);
+        var query = queryManager.Value.TryGetQuery(app, name, lookups, recurseParents: 3);
 
         if (query == null)
         {

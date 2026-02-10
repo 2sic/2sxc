@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.DataSource.Sys.Query;
+﻿using ToSic.Eav.DataSource.Query.Sys;
 
 namespace ToSic.Sxc.Services.Sys.DataService;
 
@@ -31,7 +31,7 @@ internal class GetQueryMs<TQuery>: ServiceBase where TQuery : Query
         var fullOptions = _optionsMs.SafeOptions(parameters, null, true /*, options: options*/);
 
         // #WipAppIdentityOrReader must become not null
-        var query = _queryManager.Value.GetQuery(fullOptions.AppIdentityOrReader! /* WIP */, name, fullOptions.LookUp!, 3);
+        var query = _queryManager.Value.TryGetQuery(fullOptions.AppIdentityOrReader! /* WIP */, name, fullOptions.LookUp!, 3);
 
         if (query == null)
             return l.ReturnNull("query was null");
