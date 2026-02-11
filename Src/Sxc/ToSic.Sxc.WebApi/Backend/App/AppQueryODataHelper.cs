@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.OData;
 using ToSic.Eav.DataSource.Sys.Convert;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Services;
@@ -17,24 +18,22 @@ public class AppQueryODataHelper(IConvertToEavLight dataConverter, IDataSourcesS
 {
 
 
-    internal IDictionary<string, IEnumerable<EavLightEntity>> ApplyOData(IDataSource query, SystemQueryOptions systemQueryOptions, string? stream, string[]? filterGuids)
+    internal IDictionary<string, IEnumerable<EavLightEntity>> ApplyOData(IDataSource query, IDictionary<string, ODataOptions> streams, string[]? filterGuids)
     {
         var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>();
-        var oDataQuery = UriQueryParser.Parse(systemQueryOptions);
-        var engine = new ODataQueryEngine(dataSourcesService);
-
-        var streams = DataSourceConvertHelper.GetBestStreamNames(query, stream);
+        var oDataEngine = new ODataQueryEngine(dataSourcesService);
 
         var guidFilter = DataSourceConvertHelper.SafeParseGuidList(filterGuids);
 
         // only apply odata to the "Default" stream or the first one.
-        var streamToFilter = streams.Contains(DataSourceConstants.StreamDefaultName, StringComparer.OrdinalIgnoreCase)
+        var streamToFilter = streams.ContainsKey(DataSourceConstants.StreamDefaultName)
             ? DataSourceConstants.StreamDefaultName
-            : streams.First();
+            : streams.Keys.First();
 
         var filtered = streams
-            .Select(streamName =>
+            .Select(stream =>
             {
+                var streamName = stream.Key;
                 var sourceStream = query.GetStream(streamName, nullIfNotFound: true);
 
                 // Null-check - not really expected, but just in case...
@@ -50,8 +49,9 @@ public class AppQueryODataHelper(IConvertToEavLight dataConverter, IDataSourcesS
 
                 // Apply OData to this stream
                 // For the internal processing, we need it to be in an IDataSource
+                var oDataQuery = stream.Value.ToQuery();
                 var wrapper = dataSourcesService.Create<PassThrough>(sourceStream);
-                var execution = engine.Execute(wrapper, oDataQuery);
+                var execution = oDataEngine.Execute(wrapper, oDataQuery);
                 var entities = guidFilter.Any()
                     ? execution.Items.Where(e => guidFilter.Contains(e.EntityGuid))
                     : execution.Items;

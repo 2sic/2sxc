@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Net;
+﻿using System.Net;
 using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource;
@@ -129,31 +128,31 @@ public class AppQueryControllerReal(
             stream = null;
 
         var streamNames = DataSourceConvertHelper.GetBestStreamNames(query, stream);
-        var queryOptionDic = QueryODataParams.CreateMany(query.Configuration.Parse, streamNames);
+        var streamOptions = QueryODataParams.CreateMany(query.Configuration.Parse, streamNames);
 
         // New v17 experimental with special fields
         var systemQueryOptions = QueryODataParams.Create(query.Configuration.Parse);
 
-        var isContentAdmin = context.Permissions.IsContentAdmin;
+        // v21 support OData filtering, sorting...
+        var mustUseOData = streamOptions.Any(so => !so.Value.IsEmptyExceptForSelect());
+        if (mustUseOData)
+        {
+            var oDataResult = oDataHelper.Value.ApplyOData(query, streamOptions, more?.Guids);
+            return l.Return(oDataResult, "processed with OData");
+        }
 
-        var dc = PrepareDataConverter(includeGuid, isContentAdmin, systemQueryOptions);
-
-        // v20 support OData filtering, sorting...
-        var result = !systemQueryOptions.IsEmptyExceptForSelect()
-            ? oDataHelper.Value.ApplyOData(query, systemQueryOptions, stream, more?.Guids)
-            : dc.Convert(query,
-                streamNames /*stream?.Split(',')*/,
-                more?.Guids,
-                queryOptionDic.ToDictionary(
-                    pair => pair.Key,
-                    ICollection<string> (pair) => pair.Value.Select.ToListOpt(),
-                    StringComparer.OrdinalIgnoreCase
-                )
-            );
-        return l.Return(result);
+        // Classic, lightweight conversion
+        var selectFields = streamOptions.ToDictionary(
+            pair => pair.Key,
+            ICollection<string> (pair) => pair.Value.Select.ToListOpt(),
+            StringComparer.OrdinalIgnoreCase
+        );
+        var dc = PrepareDataConverter(includeGuid, context.Permissions.IsContentAdmin, systemQueryOptions);
+        var result = dc.Convert(query, streamNames, more?.Guids, selectFields);
+        return l.Return(result, "classic convert");
     }
 
-    private IConvertToEavLight PrepareDataConverter(bool withGuid, bool isEditor, SystemQueryOptions options)
+    private IConvertToEavLight PrepareDataConverter(bool withGuid, bool isEditor, ODataOptions options)
     {
         var dc = dataConverter.New();
         dc.WithGuid = withGuid;
