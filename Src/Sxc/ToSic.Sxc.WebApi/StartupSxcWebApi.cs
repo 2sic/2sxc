@@ -109,6 +109,9 @@ public static class StartupSxcWebApi
 
         services.TryAddTransient<AssetTemplates>();
 
+        // Odata v21
+        services.TryAddTransient<AppQueryODataHelper>();
+
         services.AddLoadSettingsProviders();
 
         services.AddSxcInsights();

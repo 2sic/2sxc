@@ -1,11 +1,11 @@
-﻿using System.Net;
+﻿using System.IO;
+using System.Net;
 using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Sys.Query;
-using ToSic.Eav.DataSources;
+using ToSic.Eav.DataSource.Query.Sys;
+using ToSic.Eav.DataSource.Sys.Convert;
 using ToSic.Eav.LookUp.Sys.Engines;
-using ToSic.Eav.Services;
 using ToSic.Eav.WebApi.Sys.Admin.App;
 using ToSic.Eav.WebApi.Sys.Admin.Query;
 using ToSic.Sxc.Data.Sys.Convert;
@@ -20,18 +20,18 @@ namespace ToSic.Sxc.Backend.App;
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppQueryControllerReal(
+    LazySvc<AppQueryODataHelper> oDataHelper,
     ISxcCurrentContextService ctxService,
-    IConvertToEavLight dataConverter,
+    Generator<IConvertToEavLight> dataConverter,
     Generator<AppPermissionCheck> appPermissionCheck,
     LazySvc<QueryManager> queryManager,
-    LazySvc<ILookUpEngineResolver> lookupResolver,
-    IDataSourcesService dataSourcesService)
+    LazySvc<ILookUpEngineResolver> lookupResolver)
     : ServiceBase("Sxc.ApiApQ",
-        connect: [lookupResolver, ctxService, dataConverter, appPermissionCheck, queryManager]), IAppQueryController
+        connect: [oDataHelper, lookupResolver, ctxService, dataConverter, appPermissionCheck, queryManager]), IAppQueryController
 {
     public const string LogSuffix = "AppQry";
 
-    private const string AllStreams = "*";
+    //private const string AllStreams = "*";
 
     #region In-Container-Context Queries
 
@@ -102,7 +102,7 @@ public class AppQueryControllerReal(
         var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"name:{name}, stream:{stream}, withModule:{(context as IContextOfBlock)?.Module.Id}");
 
         var lookups = preparedLookup ?? lookupResolver.Value.GetLookUpEngine(modId);
-        var query = queryManager.Value.GetQuery(app, name, lookups, recurseParents: 3);
+        var query = queryManager.Value.TryGetQuery(app, name, lookups, recurseParents: 3);
 
         if (query == null)
         {
@@ -124,64 +124,43 @@ public class AppQueryControllerReal(
             throw l.Done(new HttpExceptionAbstraction(HttpStatusCode.Unauthorized, msg, "Request not allowed"));
         }
 
-        dataConverter.WithGuid = includeGuid;
-        if (dataConverter is ConvertToEavLightWithCmsInfo serializerWithEdit)
-            serializerWithEdit.WithEdit = context.Permissions.IsContentAdmin;
 
-        if (stream == AllStreams)
+        if (stream == DataSourceConstants.AllStreams)
             stream = null;
 
+        var streamNames = DataSourceConvertHelper.GetBestStreamNames(query, stream);
+        var queryOptionDic = QueryODataParams.CreateMany(query.Configuration.Parse, streamNames);
+
         // New v17 experimental with special fields
-        var systemQueryOptions = new QueryODataParams(query.Configuration).SystemQueryOptions;
-        if (dataConverter is ConvertToEavLight serializerWithOData)
-            serializerWithOData.AddSelectFields(systemQueryOptions.Select.ToListOpt());
+        var systemQueryOptions = QueryODataParams.Create(query.Configuration.Parse);
+
+        var isContentAdmin = context.Permissions.IsContentAdmin;
+
+        var dc = PrepareDataConverter(includeGuid, isContentAdmin, systemQueryOptions);
 
         // v20 support OData filtering, sorting...
-        var result = systemQueryOptions.RawAllSystem.Any()
-            ? ApplyOData(query, systemQueryOptions, stream, more?.Guids)
-            : dataConverter.Convert(query, stream?.Split(','), more?.Guids);
+        var result = !systemQueryOptions.IsEmptyExceptForSelect()
+            ? oDataHelper.Value.ApplyOData(query, systemQueryOptions, stream, more?.Guids)
+            : dc.Convert(query,
+                streamNames /*stream?.Split(',')*/,
+                more?.Guids,
+                queryOptionDic.ToDictionary(
+                    pair => pair.Key,
+                    ICollection<string> (pair) => pair.Value.Select.ToListOpt(),
+                    StringComparer.OrdinalIgnoreCase
+                )
+            );
         return l.Return(result);
     }
 
-    private IDictionary<string, IEnumerable<EavLightEntity>> ApplyOData(IDataSource query, SystemQueryOptions systemQueryOptions, string? stream, string[]? filterGuids)
+    private IConvertToEavLight PrepareDataConverter(bool withGuid, bool isEditor, SystemQueryOptions options)
     {
-        var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>();
-        var oDataQuery = UriQueryParser.Parse(systemQueryOptions);
-        var engine = new ODataQueryEngine(dataSourcesService);
-
-        var streams = stream?.Split(',')
-                          .Select(s => s.Trim())
-                          .Where(s => !string.IsNullOrWhiteSpace(s))
-                          .ToArray()
-                      ?? query.Out.Select(p => p.Key).ToArray();
-
-        var guidFilter = filterGuids?
-            .Select(g => Guid.TryParse(g, out var guid) ? guid : (Guid?)null)
-            .Where(g => g.HasValue)
-            .Select(g => g!.Value)
-            .ToHashSet()
-            ?? new HashSet<Guid>();
-
-        var results = new Dictionary<string, IEnumerable<EavLightEntity>>(StringComparer.OrdinalIgnoreCase);
-
-        foreach (var streamName in streams)
-        {
-            var sourceStream = query.GetStream(streamName, nullIfNotFound: true);
-            if (sourceStream == null)
-            {
-                l.A($"Stream '{streamName}' not found, skip OData.");
-                continue;
-            }
-
-            var wrapper = dataSourcesService.Create<PassThrough>(sourceStream);
-            var execution = engine.Execute(wrapper, oDataQuery);
-            var entities = guidFilter.Any()
-                ? execution.Items.Where(e => guidFilter.Contains(e.EntityGuid))
-                : execution.Items;
-
-            results[streamName] = dataConverter.Convert(entities);
-        }
-
-        return l.Return(results);
+        var dc = dataConverter.New();
+        dc.WithGuid = withGuid;
+        if (dc is ConvertToEavLightWithCmsInfo serializerWithEdit)
+            serializerWithEdit.WithEdit = isEditor;
+        if (dc is ConvertToEavLight serializerWithOData)
+            serializerWithOData.AddSelectFields(options.Select.ToListOpt());
+        return dc;
     }
 }

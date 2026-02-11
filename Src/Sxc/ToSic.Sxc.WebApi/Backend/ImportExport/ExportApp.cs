@@ -121,11 +121,5 @@ public class ExportApp(
             ContentType = MimeTypeConstants.FallbackType,
             FileBytes = fileBytes
         });
-
-//#if NETFRAMEWORK
-//        return l.Return(HttpFileHelper.GetAttachmentHttpResponseMessage(fileName, mimeType, new MemoryStream(fileBytes)));
-//#else
-//        return l.Return(new FileContentResult(fileBytes, mimeType) { FileDownloadName = fileName });
-//#endif
     }
 }

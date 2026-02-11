@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Sys.Query;
+using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Eav.Services;
 using ToSic.Sxc.Blocks.Sys;
@@ -7,7 +7,7 @@ using ToSic.Sxc.Blocks.Sys;
 namespace ToSic.Sxc.DataSources.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFactory, LazySvc<Query> queryLazy)
+public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFactory, Generator<Query> queryLazy)
     : ServiceBase("Sxc.BDsFct", connect: [dataSourceFactory, queryLazy])
 {
 
@@ -53,7 +53,7 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
                 return l.ReturnAsOk(contextDataSource);
 
             l.A("Generate query");
-            var query = queryLazy.Value;
+            var query = queryLazy.New();
             query.Init(block.App.ZoneId, block.App.AppId, (view.Query as ICanBeEntity).Entity, configLookUp, contextDataSource);
             l.A("attaching");
             contextDataSource.SetOut(query);

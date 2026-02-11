@@ -158,7 +158,7 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGe
         var cleaned = raw
             .SelectMany(item => item?
                 .Split([',', ';', '\n', '\r'], StringSplitOptions.RemoveEmptyEntries)
-                ?? Array.Empty<string>())
+                ?? [])
             .Where(item => !string.IsNullOrWhiteSpace(item))
             .Select(item => item.Trim())
             .Distinct(StringComparer.OrdinalIgnoreCase)

@@ -39,10 +39,12 @@ public partial class ExecutionContext
         if (Block is not { DataIsReady: true })
             return l.ReturnNull("no data/view");
         var data = Block.Data;
-        if (!data.Out.ContainsKey(sourceStream))
+
+        var stream = data.GetStream(sourceStream, nullIfNotFound: true);
+        if (stream == null)
             return l.ReturnNull("stream not found");
 
-        var list = data[sourceStream]!.List.ToList();
+        var list = stream.List.ToList();
         return !list.Any()
             ? l.ReturnNull("first is null") 
             : l.Return(Cdf.AsDynamicFromEntities(list, new() { ItemIsStrict = false }), "found");

@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Apps.AppReader.Sys;
-using ToSic.Eav.DataSource.Sys.Query;
+using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.Sys.Assets;
 using ToSic.Sxc.Apps.Sys.Paths;

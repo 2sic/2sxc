@@ -10,10 +10,6 @@ namespace ToSic.Sxc.DataSources;
 [VisualQuery(
     NiceName = "Code Generators",
     NameId = "f512e44b-5b34-4a32-bfe3-d46d46800a7f",
-    NameIds =
-    [
-        "ToSic.Sxc.DataSources.CodeGenerators", // for use in the front end
-    ],
     Type = DataSourceType.System,
     Audience = Audience.System,
     DataConfidentiality = DataConfidentiality.System,

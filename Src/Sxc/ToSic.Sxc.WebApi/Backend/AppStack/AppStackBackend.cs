@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Apps.Sys.AppStack;
 using ToSic.Eav.Context.Sys.ZoneCulture;
 using ToSic.Eav.Data.Sys.PropertyDump;
-using ToSic.Eav.DataSource.Sys.Query;
+using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Eav.DataSources.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
 using static ToSic.Eav.Apps.Sys.AppStack.AppStackConstants;
@@ -13,7 +13,7 @@ public class AppStackBackend(
     AppDataStackService dataStackService,
     IZoneCultureResolver zoneCulture,
     IAppReaderFactory appReaders,
-    Generator<QueryDefinitionBuilder> qDefBuilder,
+    Generator<QueryDefinitionFactory> qDefBuilder,
     IPropertyDumpService dumperService)
     : ServiceBase("Sxc.ApiApQ", connect: [dataStackService, zoneCulture, appReaders, dumperService])
 {

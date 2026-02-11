@@ -26,6 +26,8 @@ public abstract partial class DataSource16
 
     [PrivateApi("Hide in docs to only show important APIs for DataSource creators")]
     public IReadOnlyDictionary<string, IDataStream> Out => _inner.Out;
+
+    [Obsolete("This is an old API, better use GetStream(...) as it provides more options to handle errors.")]
     IDataStream IDataSource.this[string outName] => _inner[outName]!;
 
     /// <inheritdoc />
@@ -46,7 +48,7 @@ public abstract partial class DataSource16
     #endregion
 
     [PrivateApi("Hide in docs to only show important APIs for DataSource creators")]
-    public IDataSourceLink Link => ((IDataSourceLinkable)_inner).Link;
+    public IDataSourceLink GetLink() => ((IDataSourceLinkable)_inner).GetLink();
 
     #region Caching stuff - all explicit as the DataSource Developer shouldn't need this
 

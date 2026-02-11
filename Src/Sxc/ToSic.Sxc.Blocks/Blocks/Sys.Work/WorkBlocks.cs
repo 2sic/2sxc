@@ -1,13 +1,13 @@
 ﻿using System.Collections.Immutable;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context.Sys.ZoneCulture;
-using ToSic.Eav.DataSource.Sys.Query;
+using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
 
 namespace ToSic.Sxc.Blocks.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDefinitionBuilder> qDefBuilder, GenWorkPlus<WorkEntities> workEntities)
+public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDefinitionFactory> qDefBuilder, GenWorkPlus<WorkEntities> workEntities)
     : WorkUnitBase<IAppWorkCtxPlus>("SxS.Blocks", connect: [cultureResolver, qDefBuilder, workEntities])
 {
     public const string BlockTypeName = "2SexyContent-ContentGroup";

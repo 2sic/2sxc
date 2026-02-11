@@ -176,10 +176,10 @@ public class TokenEngine(
 
         var builder = new StringBuilder();
 
-        if (!engineSpecs.DataSource.Out.ContainsKey(streamName))
-            throw new ArgumentException("Was not able to implement REPEAT because I could not find Data:" + streamName + ". Please check spelling the pipeline delivering data to this template.");
+        var stream = engineSpecs.DataSource.GetStream(streamName, nullIfNotFound: true)
+            ?? throw new ArgumentException("Was not able to implement REPEAT because I could not find Data:" + streamName + ". Please check spelling the pipeline delivering data to this template.");
 
-        var dataItems = engineSpecs.DataSource[streamName]!.List.ToImmutableOpt();
+        var dataItems = stream.List.ToImmutableOpt();
         var itemsCount = dataItems.Count;
         for (var i = 0; i < itemsCount; i++)
         {

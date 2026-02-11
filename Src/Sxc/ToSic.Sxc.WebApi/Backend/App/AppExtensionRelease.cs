@@ -1,5 +1,6 @@
-﻿using System.Text.Json.Serialization;
-using ToSic.Eav.Models;
+﻿using ToSic.Eav.Models;
+
+// ReSharper disable UnusedMember.Global
 
 namespace ToSic.Sxc.Backend.App;
 
@@ -10,12 +11,9 @@ internal record AppExtensionRelease: ModelOfEntityCore
     public const string ContentTypeName = "AppExtensionRelease";
     private const string DefaultVersion = "00.00.01";
 
-    [JsonPropertyName("releaseNotes")]
     public string ReleaseNotes => GetThis("");
 
-    [JsonPropertyName("version")]
     public string Version => GetThis(DefaultVersion);
 
-    [JsonPropertyName("isBreaking")]
     public bool IsBreaking => GetThis(false);
 }

@@ -3446,7 +3446,7 @@
         },
         {
           "Id": 185367,
-          "Version": 40,
+          "Version": 43,
           "Guid": "4570a596-5020-4111-b494-3e510f778c6e",
           "Type": {
             "Id": "DataPipeline",
@@ -3455,33 +3455,33 @@
           "Attributes": {
             "String": {
               "Description": {
-                "en-us": "Retrieve data from the backend - basically any other DataSource."
+                "*": "Retrieve data from the backend - basically any other DataSource."
               },
               "Name": {
-                "en-us": "System.SysData"
+                "*": "System.SysData"
               },
               "Params": {
-                "en-us": "SysDataSource=[QueryString:SysDataSource]\nSysDataStream=[QueryString:SysDataStream||Default]"
+                "*": "SysDataSource=[QueryString:SysDataSource]\nSysDataStream=[QueryString:SysDataStream||Default]"
               },
               "StreamsOut": {
-                "en-us": "Default,Header"
+                "*": "*,Header"
               },
               "StreamWiring": {
-                "en-us": "9ca272fb-3778-4ade-bc11-9687ab5d3995:Default>Out:Default"
+                "*": "9ca272fb-3778-4ade-bc11-9687ab5d3995:Default>Out:*"
               },
               "TestParameters": {
-                "en-us": "[QueryString:SysDataSource_Metadata]=fba0d40d-f6af-4593-9ccb-54cfd73d8217\n[Params:SysDataSource_Scopes]=f134e3c1-f09f-4fbc-85be-de43a64c6eed\n[QueryString:SysDataSource]=ToSic.Eav.DataSources.System.Attributes, ToSic.Eav.DataSources\n[Params:SysDataSource_Never]=398d0b9f-044f-48f7-83ef-307872f7ed93\n[Params:SysDataStream_xx]=Default\n[QueryString:ContentTypeName]=Test"
+                "*": "[QueryString:SysDataSource_Metadata]=fba0d40d-f6af-4593-9ccb-54cfd73d8217\n[Params:SysDataSource_Scopes]=f134e3c1-f09f-4fbc-85be-de43a64c6eed\n[QueryString:SysDataSource]=ToSic.Eav.DataSources.System.Attributes, ToSic.Eav.DataSources\n[Params:SysDataSource_Never]=398d0b9f-044f-48f7-83ef-307872f7ed93\n[Params:SysDataStream_xx]=Default\n[QueryString:ContentTypeName]=Test"
               },
               "VisualDesignerData": {
-                "en-us": "{\"ShowDataSourceDetails\":true}"
+                "*": "{\"ShowDataSourceDetails\":true}"
               }
             },
             "Boolean": {
               "AllowEdit": {
-                "en-us": true
+                "*": true
               },
               "HiddenInQueryPicker": {
-                "en-us": true
+                "*": true
               }
             }
           },
@@ -3489,7 +3489,7 @@
           "Metadata": [
             {
               "Id": 185369,
-              "Version": 19,
+              "Version": 20,
               "Guid": "9ca272fb-3778-4ade-bc11-9687ab5d3995",
               "Type": {
                 "Id": "DataPipelinePart",
