@@ -1,5 +1,7 @@
 ﻿using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.ImportExport.Json.Sys;
+using ToSic.Eav.Metadata;
 using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Backend.SaveHelpers;
@@ -89,6 +91,12 @@ public class EditSaveBackend(
                 var isOkException = saveValidator.EntityNotNullAndAttributeCountOk(index, ent);
                 if (isOkException != null)
                     throw isOkException;
+
+                // Check if Save is disabled because of content-type metadata (new v21)
+                // This should prevent entities from being put in the DB, where the UI was only meant for some other configuration
+                if (ent.Type.TryGetMetadata<DataStorageDecorator>()?.SaveIsDisabled == true)
+                    throw HttpException.BadRequest($"Saving is disabled for content-type {ent.Type.Name} (id: {ent.Type.Id})");
+
 
                 // If it's an update, check if everything is ok, and if the ID needs to be reset.
                 var validatorResult = updateValidator.IfUpdateValidateAndCorrectIds(appEntities, index, ent);
