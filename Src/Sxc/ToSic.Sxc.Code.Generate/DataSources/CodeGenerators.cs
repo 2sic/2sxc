@@ -10,11 +10,7 @@ namespace ToSic.Sxc.DataSources;
 [VisualQuery(
     NiceName = "Code Generators",
     NameId = "f512e44b-5b34-4a32-bfe3-d46d46800a7f",
-    NameIds =
-    [
-        // Internal name for the system, used in some entity-pickers. Can change at any time.
-        "ToSic.Sxc.DataSources.CodeGenerators",
-    ],
+    NameIds = ["System.CodeGenerators"], // Internal name for the system, used in some entity-pickers. Can change at any time.
     Type = DataSourceType.System,
     Audience = Audience.System,
     DataConfidentiality = DataConfidentiality.System,

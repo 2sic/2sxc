@@ -10025,7 +10025,7 @@
                 "Metadata": [
                   {
                     "Id": 185389,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "1841e61f-b558-4e54-beef-792442614bea",
                     "Type": {
                       "Id": "@All",
@@ -10043,7 +10043,7 @@
                           "en-us": "string-picker"
                         },
                         "Name": {
-                          "en-us": "Output Type (WIP - 2dm still working on this)"
+                          "en-us": "Output Type"
                         },
                         "Notes": {
                           "en-us": ""
@@ -10085,7 +10085,7 @@
                   },
                   {
                     "Id": 185391,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "3135f27a-2357-4eb0-b2e1-0a6eae741453",
                     "Type": {
                       "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
@@ -10155,7 +10155,7 @@
                 "Metadata": [
                   {
                     "Id": 185360,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "2f12e841-c573-4161-8051-4a1b099ac617",
                     "Type": {
                       "Id": "@All",
@@ -10260,7 +10260,7 @@
                   },
                   {
                     "Id": 185373,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "4473820a-b618-4bd1-b598-2efa6645b528",
                     "Type": {
                       "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
@@ -11284,7 +11284,7 @@
           "Entities": [
             {
               "Id": 185390,
-              "Version": 1,
+              "Version": 2,
               "Guid": "74bae28a-f606-4da4-a380-9f1abff682c1",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -11320,7 +11320,7 @@
                     "en-us": "System.SysData"
                   },
                   "QueryParameters": {
-                    "en-us": "SysDataSource=ToSic.Sxc.DataSources.CodeGenerators&SysDataStream=OutputType"
+                    "en-us": "SysDataSource=System.CodeGenerators&SysDataStream=OutputType"
                   },
                   "StreamName": {
                     "en-us": "Default"
@@ -11342,7 +11342,7 @@
             },
             {
               "Id": 185372,
-              "Version": 1,
+              "Version": 3,
               "Guid": "d5e64a2d-eb7e-4ca4-86f0-5d601becf4ac",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -11378,7 +11378,7 @@
                     "en-us": "System.SysData"
                   },
                   "QueryParameters": {
-                    "en-us": "SysDataSource=ToSic.Sxc.DataSources.CodeGenerators&$filter=OutputType eq '[OutputType]'"
+                    "en-us": "SysDataSource=System.CodeGenerators&$filter=OutputType eq '[OutputType]'"
                   },
                   "StreamName": {
                     "en-us": "Default"
@@ -11428,7 +11428,7 @@
             },
             {
               "Id": 185375,
-              "Version": 1,
+              "Version": 2,
               "Guid": "a1eb623f-32a6-46c4-bb12-858befea459a",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -11464,7 +11464,7 @@
                     "en-us": "System.SysData"
                   },
                   "QueryParameters": {
-                    "en-us": "SysDataSource=ToSic.Sxc.DataSources.AppEditions"
+                    "en-us": "SysDataSource=System.AppEditions"
                   },
                   "StreamName": {
                     "en-us": "Default"

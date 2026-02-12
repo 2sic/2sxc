@@ -8,10 +8,7 @@ namespace ToSic.Sxc.DataSources;
 [VisualQuery(
     NiceName = "App Editions",
     NameId = "6cce259b-bf0c-4752-b451-a3eb04825350",
-    NameIds =
-    [
-        "ToSic.Sxc.DataSources.AppEditions", // for use in the front end
-    ],
+    NameIds = ["System.AppEditions"], // for use in the front end
     Type = DataSourceType.System,
     Audience = Audience.System,
     DataConfidentiality = DataConfidentiality.System,

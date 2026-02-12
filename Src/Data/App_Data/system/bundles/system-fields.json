@@ -2829,9 +2829,9 @@
           },
           "Entities": [
             {
-              "Id": 130125,
-              "Version": 6,
-              "Guid": "1eb95148-7cd6-4e1a-b32e-ce748891dfb1",
+              "Id": 130494,
+              "Version": 4,
+              "Guid": "859a787b-f9d4-4069-89de-4e51d2a21bd2",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
                 "Name": "UiFormula"
@@ -2839,16 +2839,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "*": "v1(data) { return data.VisibleInEditUI && !data.Disabled; }"
+                    "en-us": "v1(data, context) {\n  var hints = [];\n  if(!data.VisibleInEditUI) hints.push('\uD83E\uDD77\uD83C\uDFFD');\n  if(data.Disabled) hints.push('\uD83D\uDD12');\n  if(data.Required) hints.push('✅');\n  if(data.DisableTranslation) hints.push('no \uD83C\uDF10');\n  if(data.DisableAutoTranslation === false) hints.push('auto-\uD83C\uDF10');\n  if(data.DisableAutoTranslation === true) hints.push('no auto-\uD83C\uDF10');\n  if(data.IsEphemeral) hints.push('no \uD83D\uDCBE');\n  var hint = hints.length ? ' (' + hints.join(', ') + ')' : '';\n  return data.default + hint; \n}"
                   },
                   "Notes": {
                     "*": ""
                   },
                   "Target": {
-                    "*": "Field.Settings.Visible"
+                    "*": "Field.Settings.Name"
                   },
                   "Title": {
-                    "*": "Setting Visible: InEditUI: Hide if not visible or not enabled"
+                    "*": "Setting Name"
                   }
                 },
                 "Boolean": {
@@ -2891,9 +2891,9 @@
               "Owner": "dnn:userid=41"
             },
             {
-              "Id": 130158,
-              "Version": 3,
-              "Guid": "e9def33a-148f-4dd1-975c-9422baf6bc94",
+              "Id": 130125,
+              "Version": 6,
+              "Guid": "1eb95148-7cd6-4e1a-b32e-ce748891dfb1",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
                 "Name": "UiFormula"
@@ -2901,7 +2901,7 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "*": "v1(data) { return !!data.EnableExperimental; }"
+                    "*": "v1(data) { return data.VisibleInEditUI && !data.Disabled; }"
                   },
                   "Notes": {
                     "*": ""
@@ -2910,69 +2910,7 @@
                     "*": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "*": "Setting Visible: InEditUI: Show if experimental"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "*": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 130157,
-              "Version": 3,
-              "Guid": "58739790-70e1-4df3-a98a-0cc69a260e68",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "*": "v1(data) { return !!data.EnableExperimental; }"
-                  },
-                  "Notes": {
-                    "*": ""
-                  },
-                  "Target": {
-                    "*": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "*": "Setting Visible: InEditUI: Show if experimental"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "*": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 130494,
-              "Version": 4,
-              "Guid": "859a787b-f9d4-4069-89de-4e51d2a21bd2",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v1(data, context) {\n  var hints = [];\n  if(!data.VisibleInEditUI) hints.push('\uD83E\uDD77\uD83C\uDFFD');\n  if(data.Disabled) hints.push('\uD83D\uDD12');\n  if(data.Required) hints.push('✅');\n  if(data.DisableTranslation) hints.push('no \uD83C\uDF10');\n  if(data.DisableAutoTranslation === false) hints.push('auto-\uD83C\uDF10');\n  if(data.DisableAutoTranslation === true) hints.push('no auto-\uD83C\uDF10');\n  if(data.IsEphemeral) hints.push('no \uD83D\uDCBE');\n  var hint = hints.length ? ' (' + hints.join(', ') + ')' : '';\n  return data.default + hint; \n}"
-                  },
-                  "Notes": {
-                    "*": ""
-                  },
-                  "Target": {
-                    "*": "Field.Settings.Name"
-                  },
-                  "Title": {
-                    "*": "Setting Name"
+                    "*": "Setting Visible: InEditUI: Hide if not visible or not enabled"
                   }
                 },
                 "Boolean": {
@@ -3015,37 +2953,6 @@
               "Owner": "dnn:userid=41"
             },
             {
-              "Id": 130254,
-              "Version": 2,
-              "Guid": "92c9f03c-31da-4288-91ed-780503438983",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "*": "v1(data) { return data.default + (data.Formulas.length ? ' (' + data.Formulas.length + ')' : ''); }"
-                  },
-                  "Notes": {
-                    "*": ""
-                  },
-                  "Target": {
-                    "*": "Field.Settings.Name"
-                  },
-                  "Title": {
-                    "*": "Setting Name"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "*": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
               "Id": 166032,
               "Version": 2,
               "Guid": "f76bfadf-be8a-4703-a94e-66b25a3f37f4",
@@ -3071,6 +2978,99 @@
                 "Boolean": {
                   "Enabled": {
                     "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 130157,
+              "Version": 3,
+              "Guid": "58739790-70e1-4df3-a98a-0cc69a260e68",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "*": "v1(data) { return !!data.EnableExperimental; }"
+                  },
+                  "Notes": {
+                    "*": ""
+                  },
+                  "Target": {
+                    "*": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "*": "Setting Visible: InEditUI: Show if experimental"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "*": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 130158,
+              "Version": 3,
+              "Guid": "e9def33a-148f-4dd1-975c-9422baf6bc94",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "*": "v1(data) { return !!data.EnableExperimental; }"
+                  },
+                  "Notes": {
+                    "*": ""
+                  },
+                  "Target": {
+                    "*": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "*": "Setting Visible: InEditUI: Show if experimental"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "*": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 130254,
+              "Version": 2,
+              "Guid": "92c9f03c-31da-4288-91ed-780503438983",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "*": "v1(data) { return data.default + (data.Formulas.length ? ' (' + data.Formulas.length + ')' : ''); }"
+                  },
+                  "Notes": {
+                    "*": ""
+                  },
+                  "Target": {
+                    "*": "Field.Settings.Name"
+                  },
+                  "Title": {
+                    "*": "Setting Name"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "*": true
                   }
                 }
               },
@@ -7554,9 +7554,9 @@
           },
           "Entities": [
             {
-              "Id": 130443,
-              "Version": 1,
-              "Guid": "b8083a65-c590-48d8-a278-d96e180db82b",
+              "Id": 130439,
+              "Version": 4,
+              "Guid": "f670e444-96a8-4a00-b588-70a6f8d879ef",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
                 "Name": "UiFormula"
@@ -7564,21 +7564,21 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "*": "v1(data, context) { return data.BtnFlushValues ? '' : data.initial; }"
+                    "en-us": "v1(data, context) {\n  if(context.cache.secondRun) return data.value;\n  context.cache.secondRun = true;\n  return !!data.DropdownValues;\n}"
                   },
                   "Notes": {
-                    "*": ""
+                    "en-us": ""
                   },
                   "Target": {
-                    "*": "Field.Value"
+                    "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "*": "Value"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
                   "Enabled": {
-                    "*": true
+                    "en-us": true
                   }
                 }
               },
@@ -7616,9 +7616,9 @@
               "Owner": "dnn:userid=41"
             },
             {
-              "Id": 130439,
-              "Version": 4,
-              "Guid": "f670e444-96a8-4a00-b588-70a6f8d879ef",
+              "Id": 130443,
+              "Version": 1,
+              "Guid": "b8083a65-c590-48d8-a278-d96e180db82b",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
                 "Name": "UiFormula"
@@ -7626,21 +7626,21 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v1(data, context) {\n  if(context.cache.secondRun) return data.value;\n  context.cache.secondRun = true;\n  return !!data.DropdownValues;\n}"
+                    "*": "v1(data, context) { return data.BtnFlushValues ? '' : data.initial; }"
                   },
                   "Notes": {
-                    "en-us": ""
+                    "*": ""
                   },
                   "Target": {
-                    "en-us": "Field.Settings.Visible"
+                    "*": "Field.Value"
                   },
                   "Title": {
-                    "en-us": "Setting Visible"
+                    "*": "Value"
                   }
                 },
                 "Boolean": {
                   "Enabled": {
-                    "en-us": true
+                    "*": true
                   }
                 }
               },
@@ -8454,6 +8454,48 @@
             "Scope": "System.Fields",
             "Metadata": [
               {
+                "Id": 53697,
+                "Version": 10,
+                "Guid": "7c8aad9f-40a8-4756-94fb-2c3e58e8a2f6",
+                "Type": {
+                  "Id": "ContentType-InputType",
+                  "Name": "ContentType-InputType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AngularAssets": {
+                      "en-us": "[system:path]/extensions/field-string-wysiwyg/index.js"
+                    },
+                    "ConfigTypes": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": "light wysiwyg-editor (recommended) - without images or advanced formating, as is usually the case in professional content-templates."
+                    },
+                    "Label": {
+                      "en-us": "WYSIWYG editor (default)"
+                    },
+                    "Type": {
+                      "en-us": "string-wysiwyg"
+                    }
+                  },
+                  "Boolean": {
+                    "DisableI18n": {
+                      "en-us": false
+                    },
+                    "UseAdam": {
+                      "en-us": true
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=1",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "@string-wysiwyg"
+                }
+              },
+              {
                 "Id": 53713,
                 "Version": 4,
                 "Guid": "c9da1ed4-42ab-4947-957d-7f40c0c44a94",
@@ -8547,48 +8589,6 @@
                   }
                 },
                 "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "@string-wysiwyg"
-                }
-              },
-              {
-                "Id": 53697,
-                "Version": 10,
-                "Guid": "7c8aad9f-40a8-4756-94fb-2c3e58e8a2f6",
-                "Type": {
-                  "Id": "ContentType-InputType",
-                  "Name": "ContentType-InputType"
-                },
-                "Attributes": {
-                  "String": {
-                    "AngularAssets": {
-                      "en-us": "[system:path]/extensions/field-string-wysiwyg/index.js"
-                    },
-                    "ConfigTypes": {
-                      "en-us": ""
-                    },
-                    "Description": {
-                      "en-us": "light wysiwyg-editor (recommended) - without images or advanced formating, as is usually the case in professional content-templates."
-                    },
-                    "Label": {
-                      "en-us": "WYSIWYG editor (default)"
-                    },
-                    "Type": {
-                      "en-us": "string-wysiwyg"
-                    }
-                  },
-                  "Boolean": {
-                    "DisableI18n": {
-                      "en-us": false
-                    },
-                    "UseAdam": {
-                      "en-us": true
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=1",
                 "For": {
                   "Target": "ContentType",
                   "TargetType": 5,
@@ -9778,6 +9778,40 @@
           },
           "Entities": [
             {
+              "Id": 183897,
+              "Version": 3,
+              "Guid": "28e7b048-6967-4abf-bf84-4b09e5c45843",
+              "Type": {
+                "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+                "Name": "UiPickerSourceCustomCsv"
+              },
+              "Attributes": {
+                "String": {
+                  "Csv": {
+                    "en-us": "Value,Title,Info\n,\"Default (inline editor)\",\"Will put the WYSIWYG into the form and usually allow opening a larger dialog when working on a lot of content\"\ndialog,\"Dialog only\",\"Only show a brief preview of the HTML, then use the dialog for editing\"\ninline,\"Inline without dialog\",\"Place inline in form without dialog\""
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": "<p>[Item:Info]</p>"
+                  },
+                  "ItemTooltip": {
+                    "en-us": "<p>[Item:Info]</p>"
+                  },
+                  "Title": {
+                    "en-us": "String-WYSIWYG Dialog Type"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
               "Id": 142603,
               "Version": 4,
               "Guid": "18da7984-28c7-4c22-9c30-c7d698808c15",
@@ -9874,34 +9908,31 @@
               "Owner": "dnn:userid=41"
             },
             {
-              "Id": 183897,
+              "Id": 142604,
               "Version": 3,
-              "Guid": "28e7b048-6967-4abf-bf84-4b09e5c45843",
+              "Guid": "325f68ef-247c-446c-bbe2-30cf32ea437a",
               "Type": {
-                "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
-                "Name": "UiPickerSourceCustomCsv"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
-                  "Csv": {
-                    "en-us": "Value,Title,Info\n,\"Default (inline editor)\",\"Will put the WYSIWYG into the form and usually allow opening a larger dialog when working on a lot of content\"\ndialog,\"Dialog only\",\"Only show a brief preview of the HTML, then use the dialog for editing\"\ninline,\"Inline without dialog\",\"Place inline in form without dialog\""
+                  "Formula": {
+                    "en-us": "v1(data, context) {\n  // only run in the beginning\n  if (context.cache.alreadyRun) return data.value;\n  context.cache.alreadyRun = true;\n  return data.ButtonSource == '' && data.ButtonAdvanced == '';\n}"
                   },
-                  "Description": {
+                  "Notes": {
                     "en-us": ""
                   },
-                  "ItemInformation": {
-                    "en-us": "<p>[Item:Info]</p>"
-                  },
-                  "ItemTooltip": {
-                    "en-us": "<p>[Item:Info]</p>"
+                  "Target": {
+                    "en-us": "Field.Settings.Collapsed"
                   },
                   "Title": {
-                    "en-us": "String-WYSIWYG Dialog Type"
+                    "en-us": "Setting Collapsed"
                   }
                 },
-                "Hyperlink": {
-                  "ItemLink": {
-                    "en-us": ""
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
                   }
                 }
               },
@@ -9974,37 +10005,6 @@
                 }
               },
               "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 142604,
-              "Version": 3,
-              "Guid": "325f68ef-247c-446c-bbe2-30cf32ea437a",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v1(data, context) {\n  // only run in the beginning\n  if (context.cache.alreadyRun) return data.value;\n  context.cache.alreadyRun = true;\n  return data.ButtonSource == '' && data.ButtonAdvanced == '';\n}"
-                  },
-                  "Notes": {
-                    "en-us": ""
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Collapsed"
-                  },
-                  "Title": {
-                    "en-us": "Setting Collapsed"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
             }
           ]
         },
@@ -10014,6 +10014,48 @@
             "Name": "@custom-gps",
             "Scope": "System.Fields",
             "Metadata": [
+              {
+                "Id": 46512,
+                "Version": 9,
+                "Guid": "e0342e24-fca1-412c-8b72-7220833a1410",
+                "Type": {
+                  "Id": "ContentType-InputType",
+                  "Name": "ContentType-InputType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AngularAssets": {
+                      "en-us": "[system:path]/extensions/field-custom-gps/index.js"
+                    },
+                    "ConfigTypes": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": "to pick a location with a map - can also store the values in separate number fields and auto-find an address based on values in the form"
+                    },
+                    "Label": {
+                      "en-us": "GPS Picker"
+                    },
+                    "Type": {
+                      "en-us": "custom-gps"
+                    }
+                  },
+                  "Boolean": {
+                    "DisableI18n": {
+                      "en-us": false
+                    },
+                    "UseAdam": {
+                      "en-us": false
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=1",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "@custom-gps"
+                }
+              },
               {
                 "Id": 53674,
                 "Version": 1,
@@ -10063,48 +10105,6 @@
                 },
                 "Attributes": {},
                 "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "@custom-gps"
-                }
-              },
-              {
-                "Id": 46512,
-                "Version": 9,
-                "Guid": "e0342e24-fca1-412c-8b72-7220833a1410",
-                "Type": {
-                  "Id": "ContentType-InputType",
-                  "Name": "ContentType-InputType"
-                },
-                "Attributes": {
-                  "String": {
-                    "AngularAssets": {
-                      "en-us": "[system:path]/extensions/field-custom-gps/index.js"
-                    },
-                    "ConfigTypes": {
-                      "en-us": ""
-                    },
-                    "Description": {
-                      "en-us": "to pick a location with a map - can also store the values in separate number fields and auto-find an address based on values in the form"
-                    },
-                    "Label": {
-                      "en-us": "GPS Picker"
-                    },
-                    "Type": {
-                      "en-us": "custom-gps"
-                    }
-                  },
-                  "Boolean": {
-                    "DisableI18n": {
-                      "en-us": false
-                    },
-                    "UseAdam": {
-                      "en-us": false
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=1",
                 "For": {
                   "Target": "ContentType",
                   "TargetType": 5,
@@ -11317,9 +11317,9 @@
           },
           "Entities": [
             {
-              "Id": 133281,
-              "Version": 6,
-              "Guid": "91e53b6e-50cf-4da0-a641-87cf17aa4813",
+              "Id": 133290,
+              "Version": 2,
+              "Guid": "196e4c5d-2c45-4908-bd3f-e9ae6d3eb8e0",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
                 "Name": "UiFormula"
@@ -11327,7 +11327,7 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v1(data, context) {\n  return data.JsonSchemaMode != 'none' && data.JsonSchemaSource == 'link';\n}"
+                    "en-us": "v1(data, context) { return data.JsonSchemaMode != 'none'; }"
                   },
                   "Notes": {
                     "en-us": ""
@@ -11348,9 +11348,9 @@
               "Owner": "dnn:userid=41"
             },
             {
-              "Id": 133290,
-              "Version": 2,
-              "Guid": "196e4c5d-2c45-4908-bd3f-e9ae6d3eb8e0",
+              "Id": 133281,
+              "Version": 6,
+              "Guid": "91e53b6e-50cf-4da0-a641-87cf17aa4813",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
                 "Name": "UiFormula"
@@ -11358,7 +11358,7 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v1(data, context) { return data.JsonSchemaMode != 'none'; }"
+                    "en-us": "v1(data, context) {\n  return data.JsonSchemaMode != 'none' && data.JsonSchemaSource == 'link';\n}"
                   },
                   "Notes": {
                     "en-us": ""
