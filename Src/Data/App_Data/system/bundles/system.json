@@ -11542,6 +11542,176 @@
             }
           ]
         }
+      ],
+      "Entities": [
+        {
+          "Id": 185412,
+          "Version": 4,
+          "Guid": "a148a07e-7bd0-41ae-9911-a00583215ae5",
+          "Type": {
+            "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
+            "Name": "UiPickerSourceQuery",
+            "AttributeMap": {
+              "Query": "1454db62-f29f-4471-b2a5-5bd82817580a",
+              "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a",
+              "Value": "0ee078ec-ee4d-41a0-b6b6-ffcdfa90f4eb",
+              "Label": "a3489bc4-6f3c-4e84-a825-2476b0ae4c32"
+            }
+          },
+          "Attributes": {
+            "String": {
+              "CreateTypes": {
+                "en-us": ""
+              },
+              "Description": {
+                "en-us": ""
+              },
+              "ItemInformation": {
+                "en-us": "<p>[Item:AssemblyQualifiedName]</p>"
+              },
+              "ItemTooltip": {
+                "en-us": ""
+              },
+              "Label": {
+                "en-us": "FullName"
+              },
+              "MoreFields": {
+                "en-us": ""
+              },
+              "Query": {
+                "en-us": "System.SysData"
+              },
+              "QueryParameters": {
+                "en-us": "SysDataSource=System.DataProcessors"
+              },
+              "StreamName": {
+                "en-us": "Default"
+              },
+              "Title": {
+                "en-us": "Query: SysData DataProcessors"
+              },
+              "Value": {
+                "en-us": "FullName"
+              }
+            },
+            "Hyperlink": {
+              "ItemLink": {
+                "en-us": ""
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 185414,
+              "Version": 1,
+              "Guid": "655d92f5-252f-4d30-87fb-b3772735789b",
+              "Type": {
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "acc500b8-ff84-40e6-aa1f-0cd2d762bace"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "a148a07e-7bd0-41ae-9911-a00583215ae5"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 185417,
+          "Version": 3,
+          "Guid": "6e3f3520-77b9-4cb9-80ea-2d507bea197d",
+          "Type": {
+            "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
+            "Name": "UiPickerSourceQuery",
+            "AttributeMap": {
+              "Query": "1454db62-f29f-4471-b2a5-5bd82817580a",
+              "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a",
+              "Value": "0ee078ec-ee4d-41a0-b6b6-ffcdfa90f4eb",
+              "Label": "a3489bc4-6f3c-4e84-a825-2476b0ae4c32"
+            }
+          },
+          "Attributes": {
+            "String": {
+              "CreateTypes": {
+                "en-us": ""
+              },
+              "Description": {
+                "en-us": ""
+              },
+              "ItemInformation": {
+                "en-us": "<p>[Item:NameId]</p>"
+              },
+              "ItemTooltip": {
+                "en-us": ""
+              },
+              "Label": {
+                "en-us": "NameId"
+              },
+              "MoreFields": {
+                "en-us": ""
+              },
+              "Query": {
+                "en-us": "System.SysData"
+              },
+              "QueryParameters": {
+                "en-us": "SysDataSource=System.MetadataTargetTypes"
+              },
+              "StreamName": {
+                "en-us": "Default"
+              },
+              "Title": {
+                "en-us": "Query: SysData MetadataTargetType"
+              },
+              "Value": {
+                "en-us": "Id"
+              }
+            },
+            "Hyperlink": {
+              "ItemLink": {
+                "en-us": ""
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 185419,
+              "Version": 1,
+              "Guid": "5007830c-c374-493a-8c1a-9e552f9b43ba",
+              "Type": {
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "acc500b8-ff84-40e6-aa1f-0cd2d762bace"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "6e3f3520-77b9-4cb9-80ea-2d507bea197d"
+              }
+            }
+          ]
+        }
       ]
     }
   ]

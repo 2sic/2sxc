@@ -2136,6 +2136,93 @@
           },
           "Entities": [
             {
+              "Id": 176328,
+              "Version": 3,
+              "Guid": "1aef80c1-fb18-493a-90b9-e5f8c702965e",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => { return !!data.parameters?.showWarningGlobalFile; });"
+                  },
+                  "Notes": {
+                    "en-us": ""
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Setting Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183852,
+              "Version": 1,
+              "Guid": "f350e7cb-829a-407a-b442-bd481ddc02bb",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  const forAttribute = context.target.entity.for.targetType == 2;\n  return { value: forAttribute, stop: true };\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183850,
+              "Version": 1,
+              "Guid": "b0948915-0f4a-4843-9b4f-eb1604321457",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  const forAttribute = context.target.entity.for.targetType == 2;\n  return { value: !forAttribute, stop: true };\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
               "Id": 183851,
               "Version": 1,
               "Guid": "f8e9b585-f00f-4f25-9679-500024209d98",
@@ -2164,65 +2251,6 @@
               "Owner": "dnn:userid=41"
             },
             {
-              "Id": 144400,
-              "Version": 3,
-              "Guid": "e448061e-6587-4833-9071-143ded271a76",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v1(data, context) { return data.CropBehavior == 'to'; }"
-                  },
-                  "Notes": {
-                    "en-us": ""
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "en-us": "Setting Visible"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 163987,
-              "Version": 2,
-              "Guid": "6e1d7fe2-f790-4a16-9ca9-4d93210c5c34",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v1(data, context) { return data.CropBehavior !== ''; }"
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "en-us": "Field.Settings.Visible"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
               "Id": 176318,
               "Version": 3,
               "Guid": "2ab4855c-9699-4f33-8a8c-b17ef8f86bed",
@@ -2234,34 +2262,6 @@
                 "String": {
                   "Formula": {
                     "en-us": "// Only show if the description is not null/whitespace etc.\n// https://stackoverflow.com/questions/10232366\nv2((data) => {\n  const str = data.Description;\n  return str === null || (/^\\s*$/).test(str);\n});"
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "en-us": "Field.Settings.Visible"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 176322,
-              "Version": 4,
-              "Guid": "7d4c5b6f-9831-4a72-bbaa-5b82c4564851",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "// Only show if the description is not null/whitespace AND data.DescriptionExtended is empty\nv2((data) => {\n  const detailsBlank = data.DescriptionExtended == '';\n  const title = data.Description;\n  const titleBlank = title == null || (/^\\s*$/).test(title);\n  return detailsBlank && !titleBlank;\n});"
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
@@ -2310,9 +2310,9 @@
               "Owner": "dnn:userid=41"
             },
             {
-              "Id": 176328,
-              "Version": 3,
-              "Guid": "1aef80c1-fb18-493a-90b9-e5f8c702965e",
+              "Id": 176322,
+              "Version": 4,
+              "Guid": "7d4c5b6f-9831-4a72-bbaa-5b82c4564851",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
                 "Name": "UiFormula"
@@ -2320,7 +2320,35 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v2((data, context) => { return !!data.parameters?.showWarningGlobalFile; });"
+                    "en-us": "// Only show if the description is not null/whitespace AND data.DescriptionExtended is empty\nv2((data) => {\n  const detailsBlank = data.DescriptionExtended == '';\n  const title = data.Description;\n  const titleBlank = title == null || (/^\\s*$/).test(title);\n  return detailsBlank && !titleBlank;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 144400,
+              "Version": 3,
+              "Guid": "e448061e-6587-4833-9071-143ded271a76",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v1(data, context) { return data.CropBehavior == 'to'; }"
                   },
                   "Notes": {
                     "en-us": ""
@@ -2330,62 +2358,6 @@
                   },
                   "Title": {
                     "en-us": "Setting Visible"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 183850,
-              "Version": 1,
-              "Guid": "b0948915-0f4a-4843-9b4f-eb1604321457",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v2((data, context) => {\n  const forAttribute = context.target.entity.for.targetType == 2;\n  return { value: !forAttribute, stop: true };\n});"
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "en-us": "Field.Settings.Visible"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 183829,
-              "Version": 1,
-              "Guid": "8737cc85-67ee-457f-9221-7337ae006d4b",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v2((data, context) => {\n  return !!data.LightboxIsEnabled;\n});"
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "en-us": "Field.Settings.Visible"
                   }
                 },
                 "Boolean": {
@@ -2483,9 +2455,9 @@
               "Owner": "dnn:userid=41"
             },
             {
-              "Id": 183852,
-              "Version": 1,
-              "Guid": "f350e7cb-829a-407a-b442-bd481ddc02bb",
+              "Id": 163987,
+              "Version": 2,
+              "Guid": "6e1d7fe2-f790-4a16-9ca9-4d93210c5c34",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
                 "Name": "UiFormula"
@@ -2493,7 +2465,35 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v2((data, context) => {\n  const forAttribute = context.target.entity.for.targetType == 2;\n  return { value: forAttribute, stop: true };\n});"
+                    "en-us": "v1(data, context) { return data.CropBehavior !== ''; }"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183829,
+              "Version": 1,
+              "Guid": "8737cc85-67ee-457f-9221-7337ae006d4b",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  return !!data.LightboxIsEnabled;\n});"
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
@@ -5247,6 +5247,68 @@
           },
           "Entities": [
             {
+              "Id": 144458,
+              "Version": 4,
+              "Guid": "21f878f4-f822-45cf-a840-8d7d581e8f0d",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v1(data, context) {\n  if (context.cache.alreadyRun) return data.value;\n  context.cache.alreadyRun = true;\n  const enabled = context.features.isEnabled('LightSpeedOutputCache');\n  // console.log(\"enabled\", enabled);\n  return !enabled;\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Setting Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 144445,
+              "Version": 4,
+              "Guid": "48dfbe23-bdad-4fd3-a216-3e28dd072d39",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v1(data, context) {\n  var partMsg = function(target, value) {\n    if (value == -1) return target + ' \uD83D\uDEAB';\n    return target + ' ' + value + 's';\n  }\n  var msg = '';\n  if (!data.IsEnabled)\n    return '\uD83D\uDEAB';\n  msg = '✅ - ';\n  msg += partMsg('Users', data.Duration);\n  msg += ', ' + partMsg('Reg', data.DurationUsers);\n  msg += ', ' + partMsg('Editors', data.DurationEditors);\n  msg += ', ' + partMsg('SysAdmins', data.DurationSystemAdmin);\n  return msg;\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
+                  },
+                  "Target": {
+                    "en-us": "Field.Value"
+                  },
+                  "Title": {
+                    "en-us": "Value"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
               "Id": 183804,
               "Version": 2,
               "Guid": "3cdbdd23-27c8-4fbd-8b56-43501a9606bb",
@@ -5258,6 +5320,34 @@
                 "String": {
                   "Formula": {
                     "en-us": "v2((data, context) => {\n  return data.VarShowDuration && data.IsEnabled != false;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183819,
+              "Version": 4,
+              "Guid": "46b375ba-3a11-4f04-8faf-33ef4ef5b29a",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "// if parameters has a forView then take that, otherwise default to false\nv2((data, context) => {\n  return { \n    value: data.parameters.forView == 'true', // defaults to false\n    stop: true,\n  }\n});"
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
@@ -5292,6 +5382,37 @@
                   },
                   "Title": {
                     "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 144523,
+              "Version": 2,
+              "Guid": "46e32523-21b2-4485-8e10-ae846009e305",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v1(data, context) {\n  return context.debug;\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -5348,127 +5469,6 @@
                   },
                   "Title": {
                     "en-us": "Field.Settings.Visible"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 183819,
-              "Version": 4,
-              "Guid": "46b375ba-3a11-4f04-8faf-33ef4ef5b29a",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "// if parameters has a forView then take that, otherwise default to false\nv2((data, context) => {\n  return { \n    value: data.parameters.forView == 'true', // defaults to false\n    stop: true,\n  }\n});"
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "en-us": "Field.Settings.Visible"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 144523,
-              "Version": 2,
-              "Guid": "46e32523-21b2-4485-8e10-ae846009e305",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v1(data, context) {\n  return context.debug;\n}"
-                  },
-                  "Notes": {
-                    "en-us": ""
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "en-us": "Setting Visible"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 144445,
-              "Version": 4,
-              "Guid": "48dfbe23-bdad-4fd3-a216-3e28dd072d39",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v1(data, context) {\n  var partMsg = function(target, value) {\n    if (value == -1) return target + ' \uD83D\uDEAB';\n    return target + ' ' + value + 's';\n  }\n  var msg = '';\n  if (!data.IsEnabled)\n    return '\uD83D\uDEAB';\n  msg = '✅ - ';\n  msg += partMsg('Users', data.Duration);\n  msg += ', ' + partMsg('Reg', data.DurationUsers);\n  msg += ', ' + partMsg('Editors', data.DurationEditors);\n  msg += ', ' + partMsg('SysAdmins', data.DurationSystemAdmin);\n  return msg;\n}"
-                  },
-                  "Notes": {
-                    "en-us": ""
-                  },
-                  "Target": {
-                    "en-us": "Field.Value"
-                  },
-                  "Title": {
-                    "en-us": "Value"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 144458,
-              "Version": 4,
-              "Guid": "21f878f4-f822-45cf-a840-8d7d581e8f0d",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v1(data, context) {\n  if (context.cache.alreadyRun) return data.value;\n  context.cache.alreadyRun = true;\n  const enabled = context.features.isEnabled('LightSpeedOutputCache');\n  // console.log(\"enabled\", enabled);\n  return !enabled;\n}"
-                  },
-                  "Notes": {
-                    "en-us": ""
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -6324,12 +6324,12 @@
               {
                 "Name": "TargetType",
                 "Type": "Number",
-                "InputType": "number-dropdown",
+                "InputType": "number-picker",
                 "IsTitle": false,
                 "Metadata": [
                   {
                     "Id": 136798,
-                    "Version": 5,
+                    "Version": 7,
                     "Guid": "5c6419d5-7b4f-4c3d-8e94-da7cee04204e",
                     "Type": {
                       "Id": "@All",
@@ -6344,7 +6344,7 @@
                           "en-us": "0"
                         },
                         "InputType": {
-                          "en-us": "number-dropdown"
+                          "en-us": "number-picker"
                         },
                         "Name": {
                           "en-us": "Target Type"
@@ -6425,6 +6425,38 @@
                         },
                         "DropdownValuesFormat": {
                           "en-us": "value-label"
+                        }
+                      },
+                      "Boolean": {
+                        "EnableTextEntry": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 185418,
+                    "Version": 1,
+                    "Guid": "4ec32f7e-7c45-4721-85b5-45760ae9d135",
+                    "Type": {
+                      "Id": "2421dded-3aeb-47d2-ab9d-e2b72a2d821d",
+                      "Name": "@number-picker"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "PickerDisplayMode": {
+                          "en-us": "list"
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "6e3f3520-77b9-4cb9-80ea-2d507bea197d"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
                         }
                       },
                       "Boolean": {
@@ -6773,6 +6805,64 @@
             ]
           },
           "Entities": [
+            {
+              "Id": 185417,
+              "Version": 3,
+              "Guid": "6e3f3520-77b9-4cb9-80ea-2d507bea197d",
+              "Type": {
+                "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
+                "Name": "UiPickerSourceQuery",
+                "AttributeMap": {
+                  "Query": "1454db62-f29f-4471-b2a5-5bd82817580a",
+                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a",
+                  "Value": "0ee078ec-ee4d-41a0-b6b6-ffcdfa90f4eb",
+                  "Label": "a3489bc4-6f3c-4e84-a825-2476b0ae4c32"
+                }
+              },
+              "Attributes": {
+                "String": {
+                  "CreateTypes": {
+                    "en-us": ""
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": "<p>[Item:NameId]</p>"
+                  },
+                  "ItemTooltip": {
+                    "en-us": ""
+                  },
+                  "Label": {
+                    "en-us": "NameId"
+                  },
+                  "MoreFields": {
+                    "en-us": ""
+                  },
+                  "Query": {
+                    "en-us": "System.SysData"
+                  },
+                  "QueryParameters": {
+                    "en-us": "SysDataSource=System.MetadataTargetTypes"
+                  },
+                  "StreamName": {
+                    "en-us": "Default"
+                  },
+                  "Title": {
+                    "en-us": "Query: SysData MetadataTargetType"
+                  },
+                  "Value": {
+                    "en-us": "Id"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
             {
               "Id": 136802,
               "Version": 2,
@@ -7321,9 +7411,9 @@
           },
           "Entities": [
             {
-              "Id": 142659,
-              "Version": 2,
-              "Guid": "dc7e8c8d-6633-4a09-ad2c-afb0f4727ef0",
+              "Id": 143982,
+              "Version": 3,
+              "Guid": "7faf0496-dc03-4e45-a1ae-e43629965344",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
                 "Name": "UiFormula"
@@ -7331,16 +7421,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v1(data, context) { return data.ShowAdvanced; }"
+                    "en-us": "v1(data, context) {\n  const empty = 'empty';\n  const len = 30;\n  // Remove HTML in note\n  const noHtml = data.Note.replace(/<\\/?[^>]+(>|$)/g, ' ');\n  if (!noHtml || noHtml == ' ') return empty;\n\n  // remove html things like &nbsp;\n  const converterTextArea = context.cache.converter \n    || document.createElement(\"textarea\");\n  converterTextArea.innerHTML = noHtml;\n  const cleanText = converterTextArea.value;\n\n  // Trim multiple spaces, created by multiple tags\n  var final = cleanText.replace(/\\s+/g, ' ').trim();\n\n  if (!final) return empty;\n\n  if (final.length > len) final = final.substring(0, len) + \"...\"\n  return final || empty;\n}"
                   },
                   "Notes": {
                     "en-us": ""
                   },
                   "Target": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Field.Value"
                   },
                   "Title": {
-                    "en-us": "Setting Visible"
+                    "en-us": "Value"
                   }
                 },
                 "Boolean": {
@@ -7383,9 +7473,9 @@
               "Owner": "dnn:userid=41"
             },
             {
-              "Id": 143982,
-              "Version": 3,
-              "Guid": "7faf0496-dc03-4e45-a1ae-e43629965344",
+              "Id": 142659,
+              "Version": 2,
+              "Guid": "dc7e8c8d-6633-4a09-ad2c-afb0f4727ef0",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
                 "Name": "UiFormula"
@@ -7393,16 +7483,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v1(data, context) {\n  const empty = 'empty';\n  const len = 30;\n  // Remove HTML in note\n  const noHtml = data.Note.replace(/<\\/?[^>]+(>|$)/g, ' ');\n  if (!noHtml || noHtml == ' ') return empty;\n\n  // remove html things like &nbsp;\n  const converterTextArea = context.cache.converter \n    || document.createElement(\"textarea\");\n  converterTextArea.innerHTML = noHtml;\n  const cleanText = converterTextArea.value;\n\n  // Trim multiple spaces, created by multiple tags\n  var final = cleanText.replace(/\\s+/g, ' ').trim();\n\n  if (!final) return empty;\n\n  if (final.length > len) final = final.substring(0, len) + \"...\"\n  return final || empty;\n}"
+                    "en-us": "v1(data, context) { return data.ShowAdvanced; }"
                   },
                   "Notes": {
                     "en-us": ""
                   },
                   "Target": {
-                    "en-us": "Field.Value"
+                    "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Value"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
