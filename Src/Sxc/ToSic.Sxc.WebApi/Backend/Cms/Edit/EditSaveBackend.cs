@@ -23,29 +23,18 @@ public class EditSaveBackend(
             pagePublishing, workEntities, ctxService, jsonSerializer, saveSecurity, saveBackendHelper, dataBuilder
         ])
 {
-    #region DI Constructor and Init
 
-    public EditSaveBackend Init(int appId)
+    public Dictionary<Guid, int> Save(int appId, EditSaveDto package, bool partOfPage)
     {
-        _appId = appId;
+        var l = Log.Fn<Dictionary<Guid, int>>($"save started with a#{appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
+
         // The context should be from the block if there is one, because it affects saving/publishing
         // Basically it can result in things being saved draft or titles being updated
-        _context = ctxService.GetExistingAppOrSet(appId);
-        pagePublishing.Init(_context);
-        return this;
-    }
+        var context = ctxService.GetExistingAppOrSet(appId);
 
-    private IContextOfApp _context = null!;
-    private int _appId;
-    #endregion
-
-    public Dictionary<Guid, int> Save(EditSaveDto package, bool partOfPage)
-    {
-        var l = Log.Fn<Dictionary<Guid, int>>($"save started with a#{_appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
 
         // perform some basic validation checks
-        var validator = new SaveDataValidator(package, Log);
-        var containsOnlyExpectedNodesException = validator.ContainsOnlyExpectedNodes();
+        var containsOnlyExpectedNodesException = new SaveDataPackageValidator(Log).ContainsOnlyExpectedNodes(package);
         if (containsOnlyExpectedNodesException != null)
             throw containsOnlyExpectedNodesException;
 
@@ -59,17 +48,17 @@ public class EditSaveBackend(
         //}
 
         // new API WIP
-        var appEntities = workEntities.New(_appId);
+        var appEntities = workEntities.New(appId);
         var appCtx = appEntities.AppWorkCtx;
 
         var ser = jsonSerializer.SetApp(appCtx.AppReader);
         // Since we're importing directly into this app, we would prefer local content-types
         ser.PreferLocalAppTypes = true;
-        validator.PrepareForEntityChecks(appEntities);
 
         #region check if it's an update, and do more security checks then - shared with EntitiesController.Save
+
         // basic permission checks
-        var permCheck = saveSecurity.Init(_context).DoPreSaveSecurityCheck(package.Items);
+        var permCheck = saveSecurity.DoPreSaveSecurityCheck(context, package.Items);
 
         var foundItems = package.Items
             .Where(i => i.Entity.Id != 0 || i.Entity.Guid != Guid.Empty)
@@ -79,6 +68,7 @@ public class EditSaveBackend(
             );
         if (foundItems.Any(i => i != null) && !permCheck.EnsureAll(GrantSets.UpdateSomething, out var error))
             throw HttpException.PermissionDenied(error);
+
         #endregion
 
 
@@ -88,24 +78,28 @@ public class EditSaveBackend(
 
         l.A($"items to process: {itemsToProcess.Count} of {package.Items.Count}");
 
+        var saveValidator = new SaveDataValidator(Log);
+        var updateValidator = new SaveDataUpdateValidator(Log);
         var items = itemsToProcess
-            .Select(i =>
+            .Select((i, index) => // index is helpful in case of errors
             {
                 var ent = ser.Deserialize(i.Entity, false, false);
 
-                var index = package.Items.IndexOf(i); // index is helpful in case of errors
-                var isOkException = validator.EntityIsOk(index, ent);
+                // Check basic entity integrity
+                var isOkException = saveValidator.EntityNotNullAndAttributeCountOk(index, ent);
                 if (isOkException != null)
                     throw isOkException;
 
-                var resultValidator = validator.IfUpdateValidateAndCorrectIds(index, ent);
+                // If it's an update, check if everything is ok, and if the ID needs to be reset.
+                var validatorResult = updateValidator.IfUpdateValidateAndCorrectIds(appEntities, index, ent);
+                if (validatorResult.Exception != null)
+                    throw validatorResult.Exception;
 
-                if (resultValidator.Exception != null)
-                    throw resultValidator.Exception;
-
+                // Reconstruct the entity, with possible ID reset, and with the correct owner and published state
                 ent = dataBuilder.Entity.CreateFrom(ent,
-                    id: resultValidator.ResetId,
-                    isPublished: package.IsPublished, owner: ent.Owner.NullIfNoValue() ?? _context.User.IdentityToken
+                    id: validatorResult.ResetId,
+                    isPublished: package.IsPublished,
+                    owner: ent.Owner.NullIfNoValue() ?? context.User.IdentityToken
                 );
 
                 // new in 11.01
@@ -132,8 +126,9 @@ public class EditSaveBackend(
 
         var result = items.Any()
             ? pagePublishing.SaveInPagePublishing(
+                context,
                 ctxService.BlockOrNull(),
-                _appId,
+                appId,
                 items,
                 partOfPage,
                 forceSaveAsDraft => DoSave(appEntities, items, package.DraftShouldBranch || forceSaveAsDraft),
