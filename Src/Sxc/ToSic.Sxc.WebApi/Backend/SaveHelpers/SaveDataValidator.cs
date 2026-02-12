@@ -17,16 +17,15 @@ internal class SaveDataValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
         var l = Log.Fn<HttpExceptionAbstraction?>();
         if (newEntity == null)
         {
-            Add($"entity {index} couldn't deserialize");
-            BuildExceptionIfHasIssues(out var preparedException);
+            var preparedException = BuildExceptionIfHasIssues($"entity {index} couldn't deserialize", l);
             return l.Return(preparedException, "newEntity is null");
         }
 
         // New #2595 allow saving empty metadata decorator entities
-        if (newEntity.Attributes.Count == 0 && !newEntity.Type.Metadata.HasType(KnownDecorators.SaveEmptyDecoratorId))
-            Add($"entity {index} doesn't have attributes (or they are invalid)");
+        var preparedException2 = (newEntity.Attributes.Count == 0 && !newEntity.Type.Metadata.HasType(KnownDecorators.SaveEmptyDecoratorId))
+            ? BuildExceptionIfHasIssues($"entity {index} doesn't have attributes (or they are invalid)", l, "EntityIsOk() done")
+            : null;
 
-        BuildExceptionIfHasIssues(out var preparedException2, "EntityIsOk() done");
         return l.Return(preparedException2, "second test");
     }
 

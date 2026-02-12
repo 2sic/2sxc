@@ -30,7 +30,7 @@ internal class SaveDataPackageValidator(ILog parentLog) : ValidatorBase(parentLo
             ValidateEachItemInBundle(package.Items);
         }
 
-        BuildExceptionIfHasIssues(out var preparedException, "ContainsOnlyExpectedNodes() done");
+        var preparedException = BuildExceptionIfHasIssues(Errors, l, "ContainsOnlyExpectedNodes() done");
         return l.Return(preparedException);
     }
 

@@ -32,7 +32,7 @@ internal class SaveDataUpdateValidator(ILog parentLog) : ValidatorBase(parentLog
         CompareIdentities(count, previousEntity, newEntity);
         CompareAttributes(count, previousEntity, newEntity);
 
-        BuildExceptionIfHasIssues(out var exception, "EntityIsOk() done");
+        var exception = BuildExceptionIfHasIssues(Errors, l, "EntityIsOk() done");
 
         return l.Return((resetId, exception), "ok");
     }
