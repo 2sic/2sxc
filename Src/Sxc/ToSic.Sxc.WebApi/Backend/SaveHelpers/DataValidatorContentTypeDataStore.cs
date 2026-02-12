@@ -35,8 +35,8 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBas
             return l.Return(sharedWork, "ok from shared");
 
         // Preprocessor exists, and supports pre-saving, so execute it
-        var result = await preEdit.Process(ent);
-        var exception = HttpExceptionAbstraction.FromPossibleException(result.Exception, HttpStatusCode.Forbidden);
+        var result = await preEdit.Process(new() { Data = ent });
+        var exception = HttpExceptionAbstraction.FromPossibleException(result.Exceptions.FirstOrDefault(), HttpStatusCode.Forbidden);
         return l.Return(sharedWork with { Entity = result.Data, Exception = exception }, $"pre-edit, {(exception != null ? "with exception" : "")}");
 
     }
@@ -70,8 +70,8 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBas
             return l.Return(sharedWork, "ok from shared");
 
         // Preprocessor exists, and supports pre-saving, so execute it
-        var result = await preSave.Process(ent);
-        var exception = HttpExceptionAbstraction.FromPossibleException(result.Exception, HttpStatusCode.Forbidden);
+        var result = await preSave.Process(new() { Data = ent });
+        var exception = HttpExceptionAbstraction.FromPossibleException(result.Exceptions.FirstOrDefault(), HttpStatusCode.Forbidden);
         return l.Return(sharedWork with { Entity = result.Data, Exception = exception }, $"pre-save, {(exception != null ? "with exception" : "")}");
     }
 
