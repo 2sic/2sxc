@@ -101,8 +101,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.DataSource.DbTest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Testing.FullDbFixtures", "..\..\eav-server\ToSic.Eav.Testing.FullDbFixtures\ToSic.Eav.Testing.FullDbFixtures.csproj", "{233738E3-515C-4EAD-BA80-D649BEF43255}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Core.TestHelpers", "..\..\eav-server\ToSic.Eav.Core.TestHelpers\ToSic.Eav.Core.TestHelpers.csproj", "{F62B6E09-D2AD-2612-3005-0B117312B8FC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.StartupTests", "..\..\eav-server\ToSic.Eav.StartupTests\ToSic.Eav.StartupTests.csproj", "{8FA5D0CF-619F-4B2A-9BA7-0124B2C5F325}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Persistence.Efc.Tests", "..\..\eav-server\ToSic.Eav.Persistence.Efc.Tests\ToSic.Eav.Persistence.Efc.Tests.csproj", "{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}"
@@ -256,6 +254,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Data.TestsPostBuild", "..\..\eav-server\ToSic.Eav.Data.TestsPostBuild\ToSic.Eav.Data.TestsPostBuild.csproj", "{846B7A05-F8F0-48C1-8A17-28E9F2AD629B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.DataSource.Tests", "..\..\eav-server\ToSic.Eav.DataSource.Tests\ToSic.Eav.DataSource.Tests.csproj", "{679DA9D4-D38E-4F50-AA27-3A5F50A3ED58}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "L2.0 Eav.Core", "L2.0 Eav.Core", "{77D56432-D1F7-49E7-9CBE-819C78B69FEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sys.TestHelpers", "..\..\eav-server\ToSic.Sys.TestHelpers\ToSic.Sys.TestHelpers.csproj", "{AA708E63-59DE-4677-B8ED-4E8549482B90}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sys.Security.TestHelpers", "..\..\eav-server\ToSic.Sys.Security.TestHelpers\ToSic.Sys.Security.TestHelpers.csproj", "{C386DA5C-248C-4B91-BB00-C083EC7914AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -439,10 +443,6 @@ Global
 		{233738E3-515C-4EAD-BA80-D649BEF43255}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{233738E3-515C-4EAD-BA80-D649BEF43255}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
 		{233738E3-515C-4EAD-BA80-D649BEF43255}.Testing|Any CPU.Build.0 = Debug|Any CPU
-		{F62B6E09-D2AD-2612-3005-0B117312B8FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F62B6E09-D2AD-2612-3005-0B117312B8FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F62B6E09-D2AD-2612-3005-0B117312B8FC}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
-		{F62B6E09-D2AD-2612-3005-0B117312B8FC}.Testing|Any CPU.Build.0 = Debug|Any CPU
 		{8FA5D0CF-619F-4B2A-9BA7-0124B2C5F325}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8FA5D0CF-619F-4B2A-9BA7-0124B2C5F325}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8FA5D0CF-619F-4B2A-9BA7-0124B2C5F325}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
@@ -757,6 +757,14 @@ Global
 		{679DA9D4-D38E-4F50-AA27-3A5F50A3ED58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{679DA9D4-D38E-4F50-AA27-3A5F50A3ED58}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
 		{679DA9D4-D38E-4F50-AA27-3A5F50A3ED58}.Testing|Any CPU.Build.0 = Debug|Any CPU
+		{AA708E63-59DE-4677-B8ED-4E8549482B90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA708E63-59DE-4677-B8ED-4E8549482B90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA708E63-59DE-4677-B8ED-4E8549482B90}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA708E63-59DE-4677-B8ED-4E8549482B90}.Testing|Any CPU.Build.0 = Debug|Any CPU
+		{C386DA5C-248C-4B91-BB00-C083EC7914AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C386DA5C-248C-4B91-BB00-C083EC7914AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C386DA5C-248C-4B91-BB00-C083EC7914AA}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
+		{C386DA5C-248C-4B91-BB00-C083EC7914AA}.Testing|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -809,7 +817,6 @@ Global
 		{15640566-0ECA-4006-A55B-FDF53EAF7549} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
 		{E221C1FB-CA6B-4B80-81BE-130F73D878AB} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
 		{233738E3-515C-4EAD-BA80-D649BEF43255} = {7A84A35D-E2AC-4A05-8751-B51B99EA0967}
-		{F62B6E09-D2AD-2612-3005-0B117312B8FC} = {2DBCC960-1C0B-494F-9E21-8707A1D344C3}
 		{8FA5D0CF-619F-4B2A-9BA7-0124B2C5F325} = {25F1BD72-BA38-41C3-A24F-57110B544285}
 		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F} = {7A84A35D-E2AC-4A05-8751-B51B99EA0967}
 		{DBF7E808-4DB5-67DB-2D6B-A044BE3D81F1} = {7A84A35D-E2AC-4A05-8751-B51B99EA0967}
@@ -883,9 +890,12 @@ Global
 		{7B3BB702-5BEF-48EB-91A9-8E34D99F321E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{846B7A05-F8F0-48C1-8A17-28E9F2AD629B} = {896200CD-54AF-462D-881C-0C7A43F0D6AF}
 		{679DA9D4-D38E-4F50-AA27-3A5F50A3ED58} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
+		{77D56432-D1F7-49E7-9CBE-819C78B69FEE} = {46C0FCB4-4589-42CA-8553-9647B1E58BED}
+		{AA708E63-59DE-4677-B8ED-4E8549482B90} = {32E45183-6A02-41A2-A4D5-6CB58A6D39A9}
+		{C386DA5C-248C-4B91-BB00-C083EC7914AA} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
 		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
 	EndGlobalSection
 EndGlobal
