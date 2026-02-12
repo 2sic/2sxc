@@ -1,7 +1,5 @@
 ﻿using ToSic.Eav.Data.Build;
-using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.ImportExport.Json.Sys;
-using ToSic.Eav.Metadata;
 using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Backend.SaveHelpers;
@@ -18,14 +16,10 @@ public class EditSaveBackend(
     JsonSerializer jsonSerializer,
     SaveSecurity saveSecurity,
     SaveEntities saveBackendHelper,
+    LazySvc<DataValidatorContentTypeDataStore> valContentTypeDataStore,
     DataBuilder dataBuilder)
-    : ServiceBase("Cms.SaveBk",
-        connect:
-        [
-            pagePublishing, workEntities, ctxService, jsonSerializer, saveSecurity, saveBackendHelper, dataBuilder
-        ])
+    : ServiceBase("Cms.SaveBk", connect: [pagePublishing, workEntities, ctxService, jsonSerializer, saveSecurity, saveBackendHelper, dataBuilder, valContentTypeDataStore])
 {
-
     public Dictionary<Guid, int> Save(int appId, EditSaveDto package, bool partOfPage)
     {
         var l = Log.Fn<Dictionary<Guid, int>>($"save started with a#{appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
@@ -94,11 +88,13 @@ public class EditSaveBackend(
 
                 // Check if Save is disabled because of content-type metadata (new v21)
                 // This should prevent entities from being put in the DB, where the UI was only meant for some other configuration
-                if (ent.Type.TryGetMetadata<DataStorageDecorator>()?.SaveIsDisabled == true)
-                    throw HttpException.BadRequest($"Saving is disabled for content-type {ent.Type.Name} (id: {ent.Type.Id})");
+                var (returnEntity, processor, procException) = valContentTypeDataStore.Value.PreSave(index, ent).Result;
+                if (procException != null)
+                    throw procException;
 
+                ent = returnEntity ?? throw HttpException.BadRequest($"Failed to process entity on index {index}");
 
-                // If it's an update, check if everything is ok, and if the ID needs to be reset.
+                // If update check everything is ok, and if the ID needs to be reset
                 var validatorResult = updateValidator.IfUpdateValidateAndCorrectIds(appEntities, index, ent);
                 if (validatorResult.Exception != null)
                     throw validatorResult.Exception;
@@ -106,7 +102,7 @@ public class EditSaveBackend(
                 // Reconstruct the entity, with possible ID reset, and with the correct owner and published state
                 ent = dataBuilder.Entity.CreateFrom(ent,
                     id: validatorResult.ResetId,
-                    isPublished: package.IsPublished,
+                    isPublished: package.IsPublished, // the published state is only in the header, not per entity, so we need to set it here
                     owner: ent.Owner.NullIfNoValue() ?? context.User.IdentityToken
                 );
 

@@ -1466,6 +1466,36 @@
                   "TargetType": 5,
                   "String": "PermissionConfiguration"
                 }
+              },
+              {
+                "Id": 185423,
+                "Version": 1,
+                "Guid": "cd6417ac-70be-4cb3-b33d-2525ad781b30",
+                "Type": {
+                  "Id": "9db5de57-7c16-4370-8d16-a8bf4cfe8e5b",
+                  "Name": "DataStorageDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "DataProcessingHandler": {
+                      "en-us": "ToSic.Eav.Metadata.Sys.PermissionDataProcessor"
+                    },
+                    "StoreType": {
+                      "en-us": ""
+                    }
+                  },
+                  "Boolean": {
+                    "SaveIsDisabled": {
+                      "en-us": false
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "PermissionConfiguration"
+                }
               }
             ],
             "Attributes": [

@@ -112,6 +112,9 @@ public static class StartupSxcWebApi
         // Odata v21
         services.TryAddTransient<AppQueryODataHelper>();
 
+        // SaveData PreSave
+        services.TryAddTransient<DataValidatorContentTypeDataStore>();
+
         services.AddLoadSettingsProviders();
 
         services.AddSxcInsights();
