@@ -88,7 +88,7 @@ public class EditSaveBackend(
 
                 // Check if Save is disabled because of content-type metadata (new v21)
                 // This should prevent entities from being put in the DB, where the UI was only meant for some other configuration
-                var (returnEntity, processor, procException) = valContentTypeDataStore.Value.PreSave(index, ent).Result;
+                var (returnEntity, _, procException, processor) = valContentTypeDataStore.Value.PreSave(index, ent).GetAwaiter().GetResult();
                 if (procException != null)
                     throw procException;
 

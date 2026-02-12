@@ -10,6 +10,7 @@ namespace ToSic.Sxc.Backend.SaveHelpers;
 [PrivateApi]
 public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBase("Val.DtStor")
 {
+
     /// <summary>
     /// Check if entity was able to deserialize, and if it has attributes.
     /// In rare cases, no-attributes are allowed, but this requires metadata decorators to allow it.
@@ -17,49 +18,89 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBas
     /// <param name="index"></param>
     /// <param name="ent"></param>
     /// <returns></returns>
-    internal async Task<(IEntity? Entity, IDataProcessor? Processor, HttpExceptionAbstraction? Exception)> PreSave(int index, IEntity ent)
+    internal async Task<Result> PreEdit(int index, IEntity ent)
     {
-        var l = Log.Fn<(IEntity?, IDataProcessor?, HttpExceptionAbstraction?)>();
-        
+        var l = Log.Fn<Result>();
+
         // Check if Save is disabled because of content-type metadata (new v21)
         // This should prevent entities from being put in the DB, where the UI was only meant for some other configuration
         var sharedWork = await Shared(index, ent);
-        
+
         // Preprocessor exists, and supports pre-saving, so execute it
-        if (sharedWork.Exception != null || sharedWork.Processor is not IDataProcessorPreSave preSave)
-            return l.Return((ent, sharedWork.Processor, null), "from shared");
+        if (sharedWork.Exception != null)
+            return l.Return(sharedWork, "error from shared");
 
+        // If no Preprocessor or not pre-saving
+        if (sharedWork.Processor is not IDataProcessorPreEdit preEdit)
+            return l.Return(sharedWork, "ok from shared");
 
-        var result = await preSave.Process(ent);
+        // Preprocessor exists, and supports pre-saving, so execute it
+        var result = await preEdit.Process(ent);
         var exception = HttpExceptionAbstraction.FromPossibleException(result.Exception, HttpStatusCode.Forbidden);
-        return l.Return((result.Data, sharedWork.Processor, exception), $"pre-save, {(exception != null ? "with exception" : "")}");
+        return l.Return(sharedWork with { Entity = result.Data, Exception = exception }, $"pre-edit, {(exception != null ? "with exception" : "")}");
 
     }
 
+    /// <summary>
+    /// Check if entity was able to deserialize, and if it has attributes.
+    /// In rare cases, no-attributes are allowed, but this requires metadata decorators to allow it.
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="ent"></param>
+    /// <returns></returns>
+    internal async Task<Result> PreSave(int index, IEntity ent)
+    {
+        var l = Log.Fn<Result>();
+
+        // Check if Save is disabled because of content-type metadata (new v21)
+        // This should prevent entities from being put in the DB, where the UI was only meant for some other configuration
+        var sharedWork = await Shared(index, ent);
+
+        // Preprocessor exists, and supports pre-saving, so execute it
+        if (sharedWork.Exception != null)
+            return l.Return(sharedWork, "error from shared");
+
+        // If we have a decorator, check if it forbids saving.
+        // For example for Debug-Settings which should never hit the backend
+        if (sharedWork.Decorator?.SaveIsDisabled == true)
+            return l.Return(new(sharedWork.Entity, sharedWork.Decorator, BuildExceptionIfHasIssues($"Save is disabled for content-type {ent.Type.Name} (index: {index})", l)), "save disabled!");
+
+        // If no Preprocessor or not pre-saving
+        if (sharedWork.Processor is not IDataProcessorPreSave preSave)
+            return l.Return(sharedWork, "ok from shared");
+
+        // Preprocessor exists, and supports pre-saving, so execute it
+        var result = await preSave.Process(ent);
+        var exception = HttpExceptionAbstraction.FromPossibleException(result.Exception, HttpStatusCode.Forbidden);
+        return l.Return(sharedWork with { Entity = result.Data, Exception = exception }, $"pre-save, {(exception != null ? "with exception" : "")}");
+    }
+
+    /// <summary>
+    /// Shared code
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="ent"></param>
+    /// <returns></returns>
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-    private async Task<(IEntity? Entity, IDataProcessor? Processor, HttpExceptionAbstraction? Exception)> Shared(int index, IEntity ent)
+    private async Task<Result> Shared(int index, IEntity ent)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
     {
-        var l = Log.Fn<(IEntity?, IDataProcessor?, HttpExceptionAbstraction?)>();
+        var l = Log.Fn<Result>();
 
         // Check if Save is disabled because of content-type metadata (new v21)
         // This should prevent entities from being put in the DB, where the UI was only meant for some other configuration
         var ct = ent.Type;
-        var storageDecorator = ct.TryGetMetadata<DataStorageDecorator>();
+        var decorator = ct.TryGetMetadata<DataStorageDecorator>();
 
-        if (storageDecorator == null)
-            return l.Return((ent, null, null), "no decorator");
+        if (decorator == null)
+            return l.Return(new (ent, decorator), "no decorator");
 
-        if (storageDecorator.SaveIsDisabled)
-            return l.Return((ent, null, BuildExceptionIfHasIssues($"Saving is disabled for content-type {ct.Name} (id: {ct.Id})", l)), "save disabled!");
-
-        if (string.IsNullOrEmpty(storageDecorator.DataProcessingHandler))
-            return l.Return((ent, null, null), "no data processing handler");
+        if (string.IsNullOrEmpty(decorator.DataProcessingHandler))
+            return l.Return(new (ent, decorator), "no data processing handler");
 
 
         // generate an object of the specified type name
-        var dph = storageDecorator.DataProcessingHandler;
-        var dataProcessingType = AssemblyHandling.GetTypeOrNull(dph); // Type.GetType(dph, throwOnError: false);
+        var dataProcessingType = AssemblyHandling.GetTypeOrNull(decorator.DataProcessingHandler);
 
         if (dataProcessingType == null)
             return l.Return(AsError("not found"), "data type results in null");
@@ -74,9 +115,17 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBas
         if (probablyProcessor is not IDataProcessor dataProcessor)
             return l.Return(AsError("could not be instantiated"), "Instantiated type null or wrong type");
 
-        return l.Return((ent, dataProcessor, null), "no pre-save");
+        return l.Return(new (ent, decorator, null, dataProcessor), "no pre-save");
 
-        (IEntity?, IDataProcessor?, HttpExceptionAbstraction?) AsError(string msg) =>
-            (ent, null, BuildExceptionIfHasIssues($"Data processing handler '{dph}' {msg} for content-type {ct.Name} (id: {ct.Id})", l));
+        Result AsError(string msg) =>
+            new(ent, decorator, BuildExceptionIfHasIssues(
+                $"Data processing handler '{decorator.DataProcessingHandler}' {msg} for content-type {ct.Name} (id: {ct.Id})", l));
     }
+
+    public record Result(
+        IEntity? Entity,
+        DataStorageDecorator? Decorator,
+        HttpExceptionAbstraction? Exception = null,
+        IDataProcessor? Processor = null
+    );
 }
