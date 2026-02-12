@@ -3881,6 +3881,41 @@
                   "TargetType": 5,
                   "String": "5d70d9f6-3c03-4c09-8413-1a0c2e8dbf8f"
                 }
+              },
+              {
+                "Id": 185420,
+                "Version": 1,
+                "Guid": "fb72c3d4-43bf-4daf-9717-c9610bf56c8d",
+                "Type": {
+                  "Id": "9db5de57-7c16-4370-8d16-a8bf4cfe8e5b",
+                  "Name": "DataStorageDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "DataProcessingHandler": {
+                      "en-us": ""
+                    },
+                    "StoreType": {
+                      "en-us": ""
+                    }
+                  },
+                  "Number": {
+                    "ItemsMax": {
+                      "en-us": 0
+                    }
+                  },
+                  "Boolean": {
+                    "SaveIsDisabled": {
+                      "en-us": true
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "5d70d9f6-3c03-4c09-8413-1a0c2e8dbf8f"
+                }
               }
             ],
             "Attributes": [
