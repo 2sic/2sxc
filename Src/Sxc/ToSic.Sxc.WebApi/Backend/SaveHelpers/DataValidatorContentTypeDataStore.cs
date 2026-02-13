@@ -18,28 +18,8 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBas
     /// <param name="index"></param>
     /// <param name="ent"></param>
     /// <returns></returns>
-    internal async Task<Result> PreEdit(int index, IEntity ent)
-    {
-        var l = Log.Fn<Result>();
-
-        // Check if Save is disabled because of content-type metadata (new v21)
-        // This should prevent entities from being put in the DB, where the UI was only meant for some other configuration
-        var sharedWork = await Shared(index, ent);
-
-        // Preprocessor exists, and supports pre-saving, so execute it
-        if (sharedWork.Exception != null)
-            return l.Return(sharedWork, "error from shared");
-
-        // If no Preprocessor or not pre-saving
-        if (sharedWork.Processor is not IDataProcessorPreEdit preEdit)
-            return l.Return(sharedWork, "ok from shared");
-
-        // Preprocessor exists, and supports pre-saving, so execute it
-        var result = await preEdit.Process(new() { Data = ent });
-        var exception = HttpExceptionAbstraction.FromPossibleException(result.Exceptions.FirstOrDefault(), HttpStatusCode.Forbidden);
-        return l.Return(sharedWork with { Entity = result.Data, Exception = exception }, $"pre-edit, {(exception != null ? "with exception" : "")}");
-
-    }
+    internal async Task<Result> PreEdit(int index, IEntity ent) =>
+        await Shared(index, ent, DataProcessingEvents.PreEdit);
 
     /// <summary>
     /// Check if entity was able to deserialize, and if it has attributes.
@@ -54,7 +34,7 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBas
 
         // Check if Save is disabled because of content-type metadata (new v21)
         // This should prevent entities from being put in the DB, where the UI was only meant for some other configuration
-        var sharedWork = await Shared(index, ent);
+        var sharedWork = await Shared(index, ent, DataProcessingEvents.PreSave);
 
         // Preprocessor exists, and supports pre-saving, so execute it
         if (sharedWork.Exception != null)
@@ -65,14 +45,8 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBas
         if (sharedWork.Decorator?.SaveIsDisabled == true)
             return l.Return(new(sharedWork.Entity, sharedWork.Decorator, BuildExceptionIfHasIssues($"Save is disabled for content-type {ent.Type.Name} (index: {index})", l)), "save disabled!");
 
-        // If no Preprocessor or not pre-saving
-        if (sharedWork.Processor is not IDataProcessorPreSave preSave)
-            return l.Return(sharedWork, "ok from shared");
+        return l.Return(sharedWork);
 
-        // Preprocessor exists, and supports pre-saving, so execute it
-        var result = await preSave.Process(new() { Data = ent });
-        var exception = HttpExceptionAbstraction.FromPossibleException(result.Exceptions.FirstOrDefault(), HttpStatusCode.Forbidden);
-        return l.Return(sharedWork with { Entity = result.Data, Exception = exception }, $"pre-save, {(exception != null ? "with exception" : "")}");
     }
 
     /// <summary>
@@ -80,12 +54,13 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBas
     /// </summary>
     /// <param name="index"></param>
     /// <param name="ent"></param>
+    /// <param name="action"></param>
     /// <returns></returns>
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-    private async Task<Result> Shared(int index, IEntity ent)
+    private async Task<Result> Shared(int index, IEntity ent, string action)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
     {
-        var l = Log.Fn<Result>();
+        var l = Log.Fn<Result>($"action: {action}");
 
         // Check if Save is disabled because of content-type metadata (new v21)
         // This should prevent entities from being put in the DB, where the UI was only meant for some other configuration
@@ -115,7 +90,11 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBas
         if (probablyProcessor is not IDataProcessor dataProcessor)
             return l.Return(AsError("could not be instantiated"), "Instantiated type null or wrong type");
 
-        return l.Return(new (ent, decorator, null, dataProcessor), "no pre-save");
+        // Preprocessor exists, and supports pre-saving, so execute it
+        var result = await dataProcessor.Process(action, new() { Data = ent });
+        var exception = HttpExceptionAbstraction.FromPossibleException(result.Exceptions.FirstOrDefault(), HttpStatusCode.Forbidden);
+        return l.Return(new(result.Data, null, exception = exception), $"action: {action}, {(exception != null ? "with exception" : "")}");
+
 
         Result AsError(string msg) =>
             new(ent, decorator, BuildExceptionIfHasIssues(
