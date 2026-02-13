@@ -55,11 +55,11 @@ public class DataController() : OqtStatefulControllerBase(DataControllerReal.Log
     public bool BundleRestore(string fileName, int zoneId, int appId)
         => Real.BundleRestore(fileName, zoneId, appId);
 
-    /// <inheritdoc />
-    [HttpGet]
-    [Authorize(Roles = RoleNames.Host)]
-    public IReadOnlyList<WorkEntityRecycleBin.RecycleBinItem> GetRecycleBin(int appId)
-        => Real.GetRecycleBin(appId);
+    ///// <inheritdoc />
+    //[HttpGet]
+    //[Authorize(Roles = RoleNames.Host)]
+    //public IReadOnlyList<WorkEntityRecycleBin.RecycleBinItem> GetRecycleBin(int appId)
+    //    => Real.GetRecycleBin(appId);
 
     /// <inheritdoc />
     [HttpPost]

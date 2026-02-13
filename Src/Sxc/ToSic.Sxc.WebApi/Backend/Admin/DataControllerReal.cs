@@ -20,10 +20,9 @@ public class DataControllerReal(
     LazySvc<ContentExportApi> contentExportLazy,
     Generator<ImportContent> importContent,
     LazySvc<IUser> userLazy,
-    GenWorkDb<WorkEntityRecycleBin> recycleBin,
     GenWorkDb<WorkEntityRecycle> recycle)
     : Services_ServiceBase("Api.DtaCtlRl",
-        connect: [site, appPathSvc, appWorkCtxSvc, context, contentExportLazy, importContent, userLazy, recycleBin, recycle])/*, IAdminDataController*/
+        connect: [site, appPathSvc, appWorkCtxSvc, context, contentExportLazy, importContent, userLazy, recycle])/*, IAdminDataController*/
 {
     public const string LogSuffix = "DataCtrl";
 
@@ -78,16 +77,16 @@ public class DataControllerReal(
     }
 
 
-    public IReadOnlyList<WorkEntityRecycleBin.RecycleBinItem> GetRecycleBin(int appId)
-    {
-        var l = Log.Fn<IReadOnlyList<WorkEntityRecycleBin.RecycleBinItem>>($"appId:{appId}");
+    //public IReadOnlyList<WorkEntityRecycleBin.RecycleBinItem> GetRecycleBin(int appId)
+    //{
+    //    var l = Log.Fn<IReadOnlyList<WorkEntityRecycleBin.RecycleBinItem>>($"appId:{appId}");
 
-        var items = recycleBin
-            .New(appId)
-            .Get();
+    //    var items = recycleBin
+    //        .New(appId)
+    //        .Get();
 
-        return l.Return(items, $"found:{items.Count}");
-    }
+    //    return l.Return(items, $"found:{items.Count}");
+    //}
 
     public void Recycle(int appId, int transactionId)
     {
