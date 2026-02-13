@@ -1,5 +1,6 @@
 ﻿using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Services.Cache.Sys.CacheKey;
+using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.ServicesTests.CacheTests;
 public class CacheKeyForElevationTests

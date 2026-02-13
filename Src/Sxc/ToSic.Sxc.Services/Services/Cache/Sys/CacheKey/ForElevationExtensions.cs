@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Cms.Users;
+﻿using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Services.Cache.Sys.CacheKey;
 public static class ForElevationExtensions

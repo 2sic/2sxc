@@ -2,6 +2,7 @@
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Services.Cache.Sys.CacheKey;
 using ToSic.Sys.Caching.Policies;
+using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Services.Cache;
 
