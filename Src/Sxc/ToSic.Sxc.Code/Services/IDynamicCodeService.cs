@@ -13,10 +13,11 @@ namespace ToSic.Sxc.Services;
 /// 
 /// History
 /// 
-/// * New in v13.02
-/// * This is meant to replace the `ToSic.Sxc.Dnn.Factory`. Please use this from now on.
+/// * New in v13.02 - this is meant to replace the `ToSic.Sxc.Dnn.Factory`. Please use this from now on.
+/// * In v21 it's superseded by <see cref="ITypedApiService"/> - please use that instead
 /// </remarks>
 [PublicApi]
+[Obsolete($"Superseded by ITypedApi")]
 public interface IDynamicCodeService
 {
     /// <summary>
