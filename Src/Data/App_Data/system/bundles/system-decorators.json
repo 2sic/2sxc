@@ -8470,12 +8470,12 @@
               {
                 "Name": "Command",
                 "Type": "String",
-                "InputType": "string-dropdown",
+                "InputType": "string-dropdown-query",
                 "IsTitle": true,
                 "Metadata": [
                   {
                     "Id": 150878,
-                    "Version": 2,
+                    "Version": 5,
                     "Guid": "3bcbb4da-0920-4584-8b73-f0a8d6cf8345",
                     "Type": {
                       "Id": "@All",
@@ -8490,7 +8490,7 @@
                           "en-us": "metadata"
                         },
                         "InputType": {
-                          "en-us": "string-dropdown"
+                          "en-us": "string-dropdown-query"
                         },
                         "Name": {
                           "en-us": "Command"
@@ -8554,25 +8554,49 @@
                     "Owner": "dnn:userid=41"
                   },
                   {
-                    "Id": 150883,
+                    "Id": 185424,
                     "Version": 1,
-                    "Guid": "22c72d94-e868-4ae6-b31b-e8c8171cba66",
+                    "Guid": "7afa9fdf-5c7a-4815-8fcc-bacefde345cf",
                     "Type": {
-                      "Id": "@string-dropdown",
-                      "Name": "@string-dropdown"
+                      "Id": "@string-dropdown-query",
+                      "Name": "@string-dropdown-query"
                     },
                     "Attributes": {
                       "String": {
-                        "DropdownValues": {
-                          "en-us": "Simple Value\nAnother Value\nl:Left (will store an l)\nr:Right (will store an r)\nc:Center (... c)\nm:Middle\nrandom:Random value\nMIT:MIT License"
+                        "Label": {
+                          "en-us": "Name"
                         },
-                        "DropdownValuesFormat": {
-                          "en-us": "value-label"
+                        "MoreFields": {
+                          "en-us": ""
+                        },
+                        "Query": {
+                          "en-us": "System.SysData"
+                        },
+                        "Separator": {
+                          "en-us": ","
+                        },
+                        "StreamName": {
+                          "en-us": "Default"
+                        },
+                        "UrlParameters": {
+                          "en-us": "SysDataSource=System.ToolbarButtonActions"
+                        },
+                        "Value": {
+                          "en-us": "Name"
                         }
                       },
                       "Boolean": {
-                        "EnableTextEntry": {
+                        "AllowMultiValue": {
                           "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": true
+                        },
+                        "EnableRemove": {
+                          "en-us": true
+                        },
+                        "EnableTextEntry": {
+                          "en-us": true
                         }
                       }
                     },
@@ -8698,7 +8722,7 @@
                 "Metadata": [
                   {
                     "Id": 150880,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "5bca2223-ee75-4cdc-a988-e7ca8d60d680",
                     "Type": {
                       "Id": "@All",
@@ -8716,7 +8740,7 @@
                           "en-us": "string-default"
                         },
                         "Name": {
-                          "en-us": "UiColor"
+                          "en-us": "UI Color (Button Background)"
                         },
                         "Notes": {
                           "en-us": "<p>The color parameter of the UI</p>"
@@ -8758,7 +8782,7 @@
                   },
                   {
                     "Id": 150886,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "8c3fe0be-822e-42ed-b359-f6399b41b79d",
                     "Type": {
                       "Id": "@String",
@@ -8778,7 +8802,7 @@
                   },
                   {
                     "Id": 150887,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "f83c66f6-f7f5-4207-91ca-c1797d3944d6",
                     "Type": {
                       "Id": "@string-default",
@@ -8788,6 +8812,9 @@
                       "String": {
                         "InputFontFamily": {
                           "en-us": "monospace"
+                        },
+                        "TextWrapping": {
+                          "en-us": ""
                         }
                       },
                       "Number": {
@@ -8808,7 +8835,7 @@
                 "Metadata": [
                   {
                     "Id": 150881,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "fe8a5ae8-9330-4dea-baaf-f86f606beb87",
                     "Type": {
                       "Id": "@All",
@@ -8826,7 +8853,7 @@
                           "en-us": "string-default"
                         },
                         "Name": {
-                          "en-us": "UiIcon"
+                          "en-us": "UI Icon (SVG)"
                         },
                         "Notes": {
                           "en-us": "<p>An SVG (as plain text) to use.</p>"
@@ -8868,7 +8895,7 @@
                   },
                   {
                     "Id": 150888,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "2e047acf-a3c2-4ff3-b089-b9efae3b998a",
                     "Type": {
                       "Id": "@String",
@@ -8888,7 +8915,7 @@
                   },
                   {
                     "Id": 150889,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "13fb5912-56fb-4fbc-9e4d-a9900345faed",
                     "Type": {
                       "Id": "@string-default",
@@ -8898,6 +8925,9 @@
                       "String": {
                         "InputFontFamily": {
                           "en-us": "monospace"
+                        },
+                        "TextWrapping": {
+                          "en-us": ""
                         }
                       },
                       "Number": {
