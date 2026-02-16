@@ -6,6 +6,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Sys;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code;
 
@@ -219,4 +220,7 @@ public interface ITypedApi
     /// </remarks>
     IEnumerable<T> AsList<T>(object source, NoParamOrder npo = default, bool nullIfNull = default)
         where T : class, IModelOfData;
+
+    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    TService GetService<TService>() where TService : class;
 }

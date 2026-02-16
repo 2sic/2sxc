@@ -29,6 +29,7 @@ internal class TypedApiStandalone(IExecutionContext exCtx, ICodeTypedApiHelper a
 
     #region Services
 
+    /// <inheritdoc/>
     public TService GetService<TService>() where TService : class
         => exCtx.GetService<TService>();
 
@@ -115,4 +116,5 @@ internal class TypedApiStandalone(IExecutionContext exCtx, ICodeTypedApiHelper a
     public string UniqueKey => Kit.Key.UniqueKey;
 
     #endregion
+
 }
