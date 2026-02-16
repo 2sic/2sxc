@@ -6388,29 +6388,6 @@
                     "Owner": "dnn:userid=41"
                   },
                   {
-                    "Id": 136800,
-                    "Version": 4,
-                    "Guid": "de6e856a-16b9-4e7f-a74e-61821bdccf5d",
-                    "Type": {
-                      "Id": "@Number",
-                      "Name": "@Number"
-                    },
-                    "Attributes": {
-                      "Number": {
-                        "Decimals": {
-                          "en-us": 0
-                        },
-                        "Max": {
-                          "en-us": 10
-                        },
-                        "Min": {
-                          "en-us": 0
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
                     "Id": 136801,
                     "Version": 4,
                     "Guid": "f8cd9db8-2fe3-4449-b797-185dfc74b5b9",
