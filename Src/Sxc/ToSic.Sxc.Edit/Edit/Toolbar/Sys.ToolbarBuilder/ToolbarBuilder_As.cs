@@ -30,7 +30,7 @@ partial record ToolbarBuilder
             ? clone
             : clone with
             {
-                Configuration = (Configuration ?? new()) with
+                Configuration = Configuration with
                 {
                     HtmlMode = mode
                 }

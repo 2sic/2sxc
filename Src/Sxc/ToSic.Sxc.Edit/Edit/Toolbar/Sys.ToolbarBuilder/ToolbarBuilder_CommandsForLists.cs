@@ -30,6 +30,7 @@ partial record ToolbarBuilder
 
     }
 
+
     public IToolbarBuilder Add(
         object? target = null,
         NoParamOrder npo = default,
@@ -38,7 +39,7 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddListAction("add", target, npo, contentType, ui, parameters, operation, tweak);
+    ) => AddListAction(ActionNames.Add, target, npo, contentType, ui, parameters, operation, tweak);
 
     public IToolbarBuilder AddExisting(
         object? target = null,
@@ -48,7 +49,7 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddListAction("add-existing", target, npo, contentType, ui, parameters, operation, tweak);
+    ) => AddListAction(ActionNames.AddExisting, target, npo, contentType, ui, parameters, operation, tweak);
 
     public IToolbarBuilder List(
         object? target = null,
@@ -57,7 +58,7 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddListAction("list", target, npo, null, ui, parameters, operation, tweak);
+    ) => AddListAction(ActionNames.List, target, npo, null, ui, parameters, operation, tweak);
 
 
     public IToolbarBuilder MoveDown(
@@ -67,7 +68,7 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddListAction("movedown", target, npo, null, ui, parameters, operation, tweak);
+    ) => AddListAction(ActionNames.MoveDown, target, npo, null, ui, parameters, operation, tweak);
 
     public IToolbarBuilder MoveUp(
         object? target = null,
@@ -76,7 +77,7 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddListAction("moveup", target, npo, null, ui, parameters, operation, tweak);
+    ) => AddListAction(ActionNames.MoveUp, target, npo, null, ui, parameters, operation, tweak);
 
     public IToolbarBuilder Remove(
         object? target = null,
@@ -85,7 +86,7 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddListAction("remove", target, npo, null, ui, parameters, operation, tweak);
+    ) => AddListAction(ActionNames.Remove, target, npo, null, ui, parameters, operation, tweak);
 
     public IToolbarBuilder Replace(
         object? target = null,
@@ -94,5 +95,5 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddListAction("replace", target, npo, null, ui, parameters, operation, tweak);
+    ) => AddListAction(ActionNames.Replace, target, npo, null, ui, parameters, operation, tweak);
 }

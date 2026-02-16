@@ -17,18 +17,22 @@ partial record ToolbarBuilder
     {
         // If no root provided, we can't check demo mode as of now, so return
         var root = Configuration?.DemoCheckItem?.Entity;
-        if (root == null) return false;
+        if (root == null)
+            return false;
 
         // If root is not demo, then don't use demo mode
-        if (!root.IsDemoItemSafe()) return false;
+        if (!root.IsDemoItemSafe())
+            return false;
 
         // Check if we have a target, if not, then go into demo-mode
         var target = (FindRule<ToolbarRuleForParams>()?.Target as ICanBeEntity)?.Entity;
-        if (target == null) return true;
+        if (target == null)
+            return true;
 
         // If the root and target are the same, then the toolbar should work
         // because it's meant to create a new entry right here
-        if (root.EntityId == target.EntityId) return false;
+        if (root.EntityId == target.EntityId)
+            return false;
 
         return true;
     }

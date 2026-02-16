@@ -14,7 +14,7 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddAdminAction("layout", npo, ui, parameters, operation, target, tweak);
+    ) => AddAdminAction(ActionNames.Layout, npo, ui, parameters, operation, target, tweak);
 
 
     public IToolbarBuilder Code(
@@ -30,13 +30,14 @@ partial record ToolbarBuilder
         if (tweak == null)
         {
             var paramsWithCode = new ObjectToUrl().SerializeWithChild(parameters, (target as string).HasValue() ? "call=" + target : "", "");
-            return AddAdminAction("code", npo, ui, paramsWithCode, operation, target, tweak);
+            return AddAdminAction(ActionNames.Code, npo, ui, paramsWithCode, operation, target, tweak);
         }
 
         // if we have a tweak, we must place the call into that to avoid an error that parameters & tweak are provided
         ITweakButton ReTweak(ITweakButton _) => tweak(new TweakButton.TweakButton().Parameters("call", target?.ToString()));
-        return AddAdminAction("code", npo, ui, parameters, operation, target, ReTweak);
+        return AddAdminAction(ActionNames.Code, npo, ui, parameters, operation, target, ReTweak);
     }
+
 
     public IToolbarBuilder Fields(
         object? target = null,
@@ -48,7 +49,7 @@ partial record ToolbarBuilder
     )
     {
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters);
-        return EntityRule("fields", target, pars, propsKeep: [KeyContentType], contentType: target as string).Builder;
+        return EntityRule(ActionNames.Fields, target, pars, propsKeep: [KeyContentType], contentType: target as string).Builder;
     }
 
 
@@ -59,7 +60,7 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddAdminAction("template", npo, ui, parameters, operation, target, tweak);
+    ) => AddAdminAction(ActionNames.Template, npo, ui, parameters, operation, target, tweak);
 
     public IToolbarBuilder Query(
         object? target = null,
@@ -68,7 +69,7 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddAdminAction("query", npo, ui, parameters, operation, target, tweak);
+    ) => AddAdminAction(ActionNames.Query, npo, ui, parameters, operation, target, tweak);
 
     public IToolbarBuilder View(
         object? target = null,
@@ -77,7 +78,7 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddAdminAction("view", npo, ui, parameters, operation, target, tweak);
+    ) => AddAdminAction(ActionNames.View, npo, ui, parameters, operation, target, tweak);
 
     public IToolbarBuilder Edition(
         NoParamOrder npo = default,
@@ -86,6 +87,6 @@ partial record ToolbarBuilder
     )
     {
         var paramsMergeInTweak = editions == default ? null : new { editions };
-        return AddAdminAction("edition", npo, null, paramsMergeInTweak, null, null, tweak);
+        return AddAdminAction(ActionNames.Edition, npo, null, paramsMergeInTweak, null, null, tweak);
     }
 }

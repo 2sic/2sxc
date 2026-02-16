@@ -74,23 +74,14 @@ partial record ToolbarBuilder : IToolbarBuilderInternal
     private int FindContextAppId(object target)
     {
         var l = Log.Fn<int>();
-        if (target is IEntity entity)
-            return l.Return(entity.AppId, "entity-appid");
-
-        //if (target is IDynamicEntity dynEntity)
-        //    return (dynEntity.Entity?.AppId ?? NoAppId, "dyn entity");
-        if (target is ICanBeEntity canBeEntity)
-            return l.Return(canBeEntity.Entity?.AppId ?? NoAppId, "dyn/typed entity");
-
-        if (target is IHasMetadata md)
+        return target switch
         {
-            if (md.Metadata.Any())
-                return l.Return(md.Metadata.FirstOrDefault()?.AppId ?? NoAppId, "metadata");
-            if (md.Metadata is IMetadataInternals mdInternal)
-                return l.Return(mdInternal.Context("todo")?.AppId ?? NoAppId, "metadata internal");
-        }
-
-        return l.Return(NoAppId, "no app id");
+            IEntity entity => l.Return(entity.AppId, "entity-appid"),
+            ICanBeEntity canBeEntity => l.Return(canBeEntity.Entity?.AppId ?? NoAppId, "dyn/typed entity"),
+            IHasMetadata md when md.Metadata.Any() => l.Return(md.Metadata.FirstOrDefault()?.AppId ?? NoAppId, "metadata"),
+            IHasMetadata { Metadata: IMetadataInternals mdInternal } => l.Return(mdInternal.Context("todo")?.AppId ?? NoAppId, "metadata internal"),
+            _ => l.Return(NoAppId, "no app id")
+        };
     }
 
 }

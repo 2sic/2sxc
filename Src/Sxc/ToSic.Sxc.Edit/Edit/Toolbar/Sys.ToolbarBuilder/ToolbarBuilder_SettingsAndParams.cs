@@ -63,7 +63,7 @@ partial record ToolbarBuilder
         return clone;
     }
 
-    private void TargetCheck(object? target)
+    private static void TargetCheck(object? target)
     {
         if (target is IAsset)
             throw new("Got a 'target' parameter which seems to be an adam-file. " +

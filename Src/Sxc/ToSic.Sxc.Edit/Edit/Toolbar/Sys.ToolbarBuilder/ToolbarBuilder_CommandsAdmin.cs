@@ -8,6 +8,7 @@ partial record ToolbarBuilder
 {
     private IToolbarBuilder AddAdminAction(
         string verb,
+        // ReSharper disable once UnusedParameter.Local
         NoParamOrder npo,
         object? ui,
         object? parameters,
@@ -46,7 +47,7 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddAdminAction("app", npo, ui, parameters, operation, target, tweak);
+    ) => AddAdminAction(ActionNames.App, npo, ui, parameters, operation, target, tweak);
 
     public IToolbarBuilder AppImport(
         object? target = null,
@@ -55,8 +56,8 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddAdminAction("app-import", npo, ui, parameters, operation, target, tweak);
-        
+    ) => AddAdminAction(ActionNames.AppImport, npo, ui, parameters, operation, target, tweak);
+
     public IToolbarBuilder AppResources(
         object? target = null,
         NoParamOrder npo = default,
@@ -64,7 +65,7 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddAdminAction("app-resources", npo, ui, parameters, operation, target, tweak);
+    ) => AddAdminAction(ActionNames.AppResources, npo, ui, parameters, operation, target, tweak);
 
     public IToolbarBuilder AppSettings(
         object? target = null,
@@ -73,7 +74,7 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddAdminAction("app-settings", npo, ui, parameters, operation, target, tweak);
+    ) => AddAdminAction(ActionNames.AppSettings, npo, ui, parameters, operation, target, tweak);
 
     public IToolbarBuilder Apps(
         object? target = null,
@@ -82,7 +83,7 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddAdminAction("apps", npo, ui, parameters, operation, target, tweak);
+    ) => AddAdminAction(ActionNames.Apps, npo, ui, parameters, operation, target, tweak);
 
     public IToolbarBuilder System(
         object? target = null,
@@ -91,7 +92,7 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddAdminAction("system", npo, ui, parameters, operation, target, tweak);
+    ) => AddAdminAction(ActionNames.System, npo, ui, parameters, operation, target, tweak);
 
 
     public IToolbarBuilder Insights(
@@ -101,6 +102,5 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddAdminAction("insights", npo, ui, parameters, operation, target, tweak);
-
+    ) => AddAdminAction(ActionNames.Insights, npo, ui, parameters, operation, target, tweak);
 }
