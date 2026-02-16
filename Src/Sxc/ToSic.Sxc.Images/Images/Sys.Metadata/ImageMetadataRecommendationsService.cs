@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Metadata;
-using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -22,7 +22,7 @@ class ImageMetadataRecommendationsService(IFeaturesService featuresSvc) : Servic
         if (mdOf?.Target == null || !path.HasValue())
             return;
         var ext = Path.GetExtension(path);
-        if (ext.HasValue() && Classification.IsImage(ext))
+        if (ext.HasValue() && AssetTypeNames.IsImage(ext))
             mdOf.Target.Recommendations = GetImageRecommendations();
     }
 

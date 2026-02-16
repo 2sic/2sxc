@@ -73,7 +73,7 @@ public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TF
             ReferenceId = ((IHasMetadata)file).Metadata.Target.KeyString,
             AllowEdit = CanEditFolder(file),
             Metadata = GetMetadataOf(file.Metadata),
-            Type = Classification.TypeName(file.Extension),
+            Type = AssetTypeNames.GetTypeName(file.Extension),
         };
         return item;
     }

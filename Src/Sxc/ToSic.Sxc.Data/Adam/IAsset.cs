@@ -50,7 +50,7 @@ public interface IAsset: IHasMetadata, IFromField
     /// </summary>
     /// <returns>
     /// `folder`, `image`, `document`, `file` depending on what it is.
-    /// `document` for `C:\Inetpub\wwwroot\www.2sic.com\Portals\0\2sxc\content\assets\docs\terms\file.pdf`
+    /// See <see cref="AssetTypes"/>
     /// </returns>
     string Type { get; }
 }
