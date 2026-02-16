@@ -59,7 +59,7 @@ internal class CmsContext(
 
     [field: AllowNull, MaybeNull]
     public ICmsModule Module => field
-        ??= new CmsModule(this, BlockInternal.Context?.Module ?? new ModuleUnknown(null!), BlockInternal);
+        ??= new CmsModule(this, BlockInternal?.Context?.Module ?? new ModuleUnknown(null!), BlockInternal, SiteAppReader.Metadata);
 
     [field: AllowNull, MaybeNull]
     public ICmsUser User => field

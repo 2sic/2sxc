@@ -1,9 +1,10 @@
 ﻿using ToSic.Eav.Metadata;
+using ToSic.Eav.Metadata.Sys;
 using ToSic.Sxc.Blocks.Sys;
 
 namespace ToSic.Sxc.Context.Sys.CmsContext;
 
-internal class CmsModule(CmsContext parent, IModule module, IBlock block)
+internal class CmsModule(CmsContext parent, IModule module, IBlock block, IMetadataOfSource appMetadata)
     : CmsContextPartBase<IModule>(parent, module), ICmsModule
 {
     public int Id => GetContents()?.Id ?? 0;
@@ -12,7 +13,6 @@ internal class CmsModule(CmsContext parent, IModule module, IBlock block)
     public ICmsBlock Block => field ??= new CmsBlock(block.RootBlock);
 
     protected override IMetadata GetMetadataOf() 
-        => block.Context.AppReaderRequired.Metadata.GetMetadataOf(TargetTypes.Module, Id, title: "Module " + Id)
+        => appMetadata.GetMetadataOf(TargetTypes.Module, Id, title: "Module " + Id)
             .AddRecommendations();
-
 }
