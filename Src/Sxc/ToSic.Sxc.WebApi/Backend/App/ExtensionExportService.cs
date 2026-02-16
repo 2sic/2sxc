@@ -13,10 +13,6 @@ using ToSic.Sxc.ImportExport.Package.Sys;
 using ToSic.Sys.Security.Encryption;
 using ToSic.Sys.Utils;
 
-#if NETFRAMEWORK
-using ToSic.Sys.Utils;
-#endif
-
 namespace ToSic.Sxc.Backend.App;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]

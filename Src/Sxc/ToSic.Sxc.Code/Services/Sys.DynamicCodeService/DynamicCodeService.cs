@@ -12,7 +12,9 @@ namespace ToSic.Sxc.Services.Sys.DynamicCodeService;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class DynamicCodeService(CodeApiServiceBase.Dependencies services, string? logName = null /* must be nullable for DI */)
     : CodeApiServiceBase(services, logName ?? $"{SxcLogName}.DCS"),
+#pragma warning disable CS0618 // Type or member is obsolete
         IDynamicCodeService
+#pragma warning restore CS0618 // Type or member is obsolete
 {
     #region Constructor and Init
 
