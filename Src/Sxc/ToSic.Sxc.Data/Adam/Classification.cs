@@ -1,5 +1,11 @@
 ﻿namespace ToSic.Sxc.Adam;
 
+/// <summary>
+/// Helper to classify a file by type.
+/// </summary>
+/// <remarks>
+/// This has been part of 2sxc since forever, but only shown in docs since v21.02.
+/// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class Classification
 {
