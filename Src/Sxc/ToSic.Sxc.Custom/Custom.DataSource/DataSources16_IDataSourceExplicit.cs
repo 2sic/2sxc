@@ -40,8 +40,8 @@ public abstract partial class DataSource16
     public IEnumerable<IEntity> List => _inner.List;
 
     // Note: changed to explicit in v19.01; not sure why it was not explicit before
-    void IDataSource.Setup(IDataSourceOptions? options, IDataSourceLinkable? attach)
-        => _inner.Setup(options, attach);
+    void IServiceWithSetup<IDataSourceOptions>.Setup(IDataSourceOptions options)
+        => ((IServiceWithSetup<IDataSourceOptions>)_inner).Setup(options);
 
     ILog IHasLog.Log => _inner.Log;
 
