@@ -24,21 +24,35 @@ public class QueryController() : OqtStatefulControllerBase(RealController.LogSuf
 {
     private RealController Real => GetService<RealController>();
 
-    [HttpGet] public QueryDefinitionDto Get(int appId, int? id = null) => Real.Get(appId, id);
+    [HttpGet]
+    public QueryDefinitionDto Get(int appId, int? id = null) =>
+        Real.Get(appId, id);
 
-    [HttpGet] public IEnumerable<DataSourceDto> DataSources(int zoneId, int appId) => Real.DataSources(new AppIdentity(zoneId, appId));
+    [HttpGet]
+    public IEnumerable<DataSourceDto> DataSources(int zoneId, int appId) =>
+        Real.DataSources(new(zoneId, appId));
 
-    [HttpPost] public QueryDefinitionDto Save([FromBody] QueryDefinitionDto data, int appId, int id)
-        => Real.Save(data, appId, id);
+    [HttpPost]
+    public QueryDefinitionDto Save([FromBody] QueryDefinitionDto data, int appId, int id) =>
+        Real.Save(data, appId, id);
 
-    [HttpGet] public QueryRunDto Run(int appId, int id, int top = 0) => Real.RunDev(appId, id, top);
+    [HttpGet]
+    public QueryRunDto RunDev(int appId, int id, int top = 0) =>
+        Real.RunDev(appId, id, top);
 
-    [HttpGet] public QueryRunDto DebugStream(int appId, int id, string from, string @out, int top = 25) 
-        => Real.DebugStream(appId, id, @from, @out, top);
+    [HttpGet]
+    public QueryRunDto DebugStream(int appId, int id, string from, string @out, int top = 25) =>
+        Real.DebugStream(appId, id, @from, @out, top);
 
-    [HttpGet] public void Clone(int appId, int id) => Real.Clone(appId, id);
+    [HttpGet]
+    public void Clone(int appId, int id) =>
+        Real.Clone(appId, id);
 
-    [HttpDelete] public bool Delete(int appId, int id) => Real.DeleteIfUnused(appId, id);
+    [HttpDelete]
+    public bool Delete(int appId, int id) =>
+        Real.DeleteIfUnused(appId, id);
 
-    [HttpPost] public bool Import(EntityImportDto args) => Real.Import(args);
+    [HttpPost]
+    public bool Import(EntityImportDto args) =>
+        Real.Import(args);
 }

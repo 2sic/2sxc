@@ -41,14 +41,14 @@ public class QueryControllerReal(
         
 
 
-    public QueryRunDto DebugStream(int appId, int id, string from, string @out, int top = 25) 
-        => DebugStream(appId, id, top, LookUpEngineWithBlockRequired(), from, @out);
+    public QueryRunDto DebugStream(int appId, int id, string from, string @out, int top = 25) =>
+        DebugStream(appId, id, top, LookUpEngineWithBlockRequired(), from, @out);
 
     /// <summary>
     /// Query the Result of a Pipeline using Test-Parameters
     /// </summary>
-    public QueryRunDto RunDev(int appId, int id, int top)
-        => RunDevInternal(appId, id, LookUpEngineWithBlockRequired(), top, builtQuery => builtQuery.Main);
+    public QueryRunDto RunDev(int appId, int id, int top) =>
+        RunDevInternal(appId, id, LookUpEngineWithBlockRequired(), top, builtQuery => builtQuery.Main);
 
     private ILookUpEngine LookUpEngineWithBlockRequired()
     {
