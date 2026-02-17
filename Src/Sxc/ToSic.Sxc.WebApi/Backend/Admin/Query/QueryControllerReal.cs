@@ -8,11 +8,11 @@ namespace ToSic.Sxc.Backend.Admin.Query;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class QueryControllerReal(
-    QueryControllerBase<QueryControllerReal>.Dependencies services,
+    QueryControllerBase.Dependencies services,
     GenWorkPlus<WorkViews> workViews,
     ISxcCurrentContextService currentContextService,
     Generator<IAppDataConfigProvider> tokenEngineWithContext)
-    : QueryControllerBase<QueryControllerReal>(services, "Api." + LogSuffix, connect: [workViews, currentContextService, tokenEngineWithContext])
+    : QueryControllerBase(services, "Api." + LogSuffix, connect: [workViews, currentContextService, tokenEngineWithContext])
 {
     public const string LogSuffix = "Query";
     public const string LogGroup = EavWebApiConstants.HistoryNameWebApi + "-query";
