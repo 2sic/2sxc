@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.LookUp.Sys.Engines;
+﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.LookUp.Sys.Engines;
 
 namespace ToSic.Sxc.Services.Sys.DataService;
 
@@ -21,11 +22,10 @@ internal class DataSourceOptionsMs(IAppIdentity? identity, Func<ILookUpEngine?>?
                                   $"(the Module / WebApi call) or provided manually by spawning a new {nameof(IDataService)} with the AppIdentity using 'New(...).")
                               : new AppIdentity(0, 0)
                           );
-        // Convert to a pure identity, in case the original object was much more
-        appIdentity = new AppIdentity(appIdentity);
         var opts = new DataSourceOptionConverter().Create(new DataSourceOptions
         {
-            AppIdentityOrReader = appIdentity,
+            // Convert to a pure identity, in case the original object was much more
+            AppIdentityOrReader = appIdentity.PureIdentity(),
             LookUp = LookUpEngine,
             Immutable = true,
         }, options);

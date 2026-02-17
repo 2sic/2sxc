@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.DataSource;
+﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Eav.Services;
@@ -18,12 +19,13 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
 
         l.A("Will get Default data source");
         var dsFactory = dataSourceFactory.Value;
-        var initialSource = dsFactory.CreateDefault(new DataSourceOptions
+        var options = new DataSourceOptions
         {
-            AppIdentityOrReader = block,
+            AppIdentityOrReader = block.PureIdentity(),
             LookUp = configLookUp,
-        });
-        var blockDataSource = dsFactory.Create<CmsBlock>(attach: initialSource);
+        };
+        var initialSource = dsFactory.CreateDefault(options);
+        var blockDataSource = dsFactory.Create<CmsBlock>(/*attach: initialSource*/ options with { Attach = initialSource });
 
         blockDataSource.OverrideView = view;
         blockDataSource.UseSxcInstanceContentGroup = true;
@@ -35,12 +37,8 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
         l.A($"use query upstream:{viewDataSourceUpstream != null}");
 
         l.A($"Will get ModuleDataSource, aka {nameof(ContextData)}");
-        var contextDataSource = dsFactory.Create<ContextData>(attach: viewDataSourceUpstream,
-            options: new DataSourceOptions
-            {
-                AppIdentityOrReader = block,
-                LookUp = configLookUp,
-            });
+        var contextDataSource = dsFactory.Create<ContextData>(/*attach: viewDataSourceUpstream,*/
+            options: options with { Attach = viewDataSourceUpstream });
         contextDataSource.SetBlock(blockDataSource);
 
         // Take Publish-Properties from the View-Template

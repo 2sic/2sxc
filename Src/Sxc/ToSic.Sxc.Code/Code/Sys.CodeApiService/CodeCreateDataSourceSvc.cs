@@ -42,8 +42,9 @@ public class CodeCreateDataSourceSvc(LazySvc<IDataSourcesService> dataSources, L
             AppIdentityOrReader = AppIdentity,
             LookUp = LookUpEngine,
             Immutable = immutable,
+            Attach = attach,
         }, options);
-        return DataSources.Value.Create<T>(attach: attach, options: typedOptions);
+        return DataSources.Value.Create<T>(/*attach: attach,*/ options: typedOptions);
     }
 
 }
