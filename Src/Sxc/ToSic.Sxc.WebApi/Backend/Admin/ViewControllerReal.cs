@@ -12,18 +12,14 @@ public class ViewControllerReal(
     LazySvc<IContextOfSite> context,
     LazySvc<ViewsBackend> viewsBackend,
     LazySvc<ViewsExportImport> viewExportImport,
-    LazySvc<UsageBackend> usageBackend,
-    LazySvc<PolymorphismBackend> polymorphismBackend)
-    : Services_ServiceBase("Api.ViewRl", connect: [context, polymorphismBackend, usageBackend, viewsBackend, viewExportImport]),
+    LazySvc<UsageBackend> usageBackend)
+    : Services_ServiceBase("Api.ViewRl", connect: [context, usageBackend, viewsBackend, viewExportImport]),
         IViewController
 {
     public const string LogSuffix = "View";
 
     /// <inheritdoc />
     public IEnumerable<ViewDetailsDto> All(int appId) => viewsBackend.Value.GetAll(appId);
-
-    /// <inheritdoc />
-    public PolymorphismDto Polymorphism(int appId) => polymorphismBackend.Value.Polymorphism(appId);
 
     /// <inheritdoc />
     public bool Delete(int appId, int id) => viewsBackend.Value.Delete(appId, id);
