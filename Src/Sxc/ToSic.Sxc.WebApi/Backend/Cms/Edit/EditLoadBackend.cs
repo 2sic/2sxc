@@ -7,7 +7,6 @@ using ToSic.Eav.Metadata.Sys;
 using ToSic.Eav.Metadata.Targets;
 using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.WebApi.Security;
-using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sxc.Backend.SaveHelpers;
 using ToSic.Sxc.Data.Sys;
@@ -29,17 +28,17 @@ public partial class EditLoadBackend(
     ISxcCurrentContextService ctxService,
     ITargetTypeService mdTargetTypes,
     IAppReaderFactory appReaders,
-    IUiData uiData,
     GenWorkPlus<WorkInputTypes> inputTypes,
     Generator<JsonSerializer> jsonSerializerGenerator,
     Generator<MultiPermissionsTypes> typesPermissions,
+    LazySvc<DataValidatorContentTypeDataStore> valContentTypeDataStore,
     EditLoadPrefetchHelper prefetch,
     EditLoadSettingsHelper loadSettings)
     : ServiceBase("Cms.LoadBk",
         connect:
         [
             workCtxSvc, inputTypes, api, contentGroupList, entityBuilder, contextBuilder, ctxService,
-            mdTargetTypes, appReaders, uiData, jsonSerializerGenerator, typesPermissions, prefetch, loadSettings
+            mdTargetTypes, appReaders, jsonSerializerGenerator, typesPermissions, valContentTypeDataStore, prefetch, loadSettings
         ])
 {
 
@@ -74,15 +73,28 @@ public partial class EditLoadBackend(
         var appWorkCtx = workCtxSvc.ContextPlus(appId, showDrafts: showDrafts);
         var entityApi = api.Init(appId, showDrafts);
         var list = entityApi.GetEntitiesForEditing(items);
+
+        // Do special PreLoad checks
+        for (var index = 0; index < list.Count; index++)
+        {
+            var entitySet = list[index];
+            var ent = entitySet.Entity;
+            if (ent == null)
+                continue; // new item, so no need to check
+            var preEdit = valContentTypeDataStore.Value.PreEdit(index, ent).GetAwaiter().GetResult();
+            if (preEdit.Exception != null)
+                throw preEdit.Exception;
+        }
+
         var jsonSerializer = jsonSerializerGenerator.New().SetApp(appReader);
 
         var result = new EditLoadDto
         {
             Items = list
-                .Select(e => new BundleWithHeaderOptional<JsonEntity>
+                .Select(bundle => new BundleWithHeaderOptional<JsonEntity>
                 {
-                    Header = e.Header,
-                    Entity = GetSerializeAndMdAssignJsonEntity(appId, e, jsonSerializer, appReader, appWorkCtx)
+                    Header = bundle.Header,
+                    Entity = GetSerializeAndMdAssignJsonEntity(appId, bundle, jsonSerializer, appReader, appWorkCtx)
                 })
                 .ToList(),
         };

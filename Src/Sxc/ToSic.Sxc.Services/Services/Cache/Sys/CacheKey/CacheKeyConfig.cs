@@ -1,5 +1,6 @@
 ﻿using ToSic.Sxc.Cms.Users;
 using ToSic.Sys.Memory;
+using ToSic.Sys.Users;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.Cache.Sys.CacheKey;

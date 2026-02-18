@@ -95,11 +95,13 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGe
 
                 specs = specs with
                 {
+                    Configuration = $"{configurationId} {configuration.GetBestTitle()}",
                     Namespace = Sanitize(configuration.Get<string>("Namespace")),
                     TargetPath = Sanitize(configuration.Get<string>("TargetFolder")),
                     ContentTypes = Normalize(configuration.Get<string>("ContentTypes")),
                     Prefix = Sanitize(configuration.Get<string>("Prefix")),
-                    Suffix = Sanitize(configuration.Get<string>("Suffix"))
+                    Suffix = Sanitize(configuration.Get<string>("Suffix")),
+                    Edition = Sanitize(configuration.Get<string>("Edition")) ?? edition,
                 };
             }
 
@@ -156,7 +158,7 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGe
         var cleaned = raw
             .SelectMany(item => item?
                 .Split([',', ';', '\n', '\r'], StringSplitOptions.RemoveEmptyEntries)
-                ?? Array.Empty<string>())
+                ?? [])
             .Where(item => !string.IsNullOrWhiteSpace(item))
             .Select(item => item.Trim())
             .Distinct(StringComparer.OrdinalIgnoreCase)
@@ -165,6 +167,11 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGe
         return cleaned.Any() ? cleaned : null;
     }
 
+    // #MigrateSimpleDataToSysDataAccess
+    // TODO: @STV this is not used the way it was intended anymore.
+    // Pls
+    // - slim down to only provide Editions (which is the only thing still used)
+    // - consider moving that functionality away from this controller - either standalone or elsewhere
     public EditionsDto GetEditions(int appId)
     {
         var l = Log.Fn<EditionsDto>($"{nameof(appId)}:{appId}");

@@ -10,6 +10,7 @@ using ToSic.Sxc.Services.Cache.Sys.CacheKey;
 using ToSic.Sxc.Services.Cache.Sys.VaryBy;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Caching.Policies;
+using ToSic.Sys.Users;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.Cache.Sys;

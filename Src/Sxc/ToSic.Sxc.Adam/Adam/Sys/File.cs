@@ -30,7 +30,7 @@ public class File<TFolderId, TFileId>(AdamManager adamManager)
     /// <param name="mdOf"></param>
     protected void AttachMdRecommendations(IMetadata mdOf)
     {
-        if (mdOf?.Target == null || Type != Classification.Image)
+        if (mdOf?.Target == null || Type != AssetTypes.Image)
             return;
         mdOf.Target.Recommendations = AdamManager.Cdf
             .GetService<IImageMetadataRecommendationsService>()
@@ -48,7 +48,7 @@ public class File<TFolderId, TFileId>(AdamManager adamManager)
 
     public string? Url { get; set; }
 
-    public string Type => Classification.TypeName(Extension);
+    public string Type => AssetTypeNames.GetTypeName(Extension);
 
 
     [PrivateApi]

@@ -6,7 +6,6 @@ using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Apps.Sys.Loaders;
 using ToSic.Eav.Apps.Sys.Paths;
-using ToSic.Eav.Data.Sys.Dimensions;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Code.Generate.Sys;
@@ -69,7 +68,7 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
         services.AddSingleton<AppsCacheSwitch>(sp => new FakeAppsCacheSwitch());
         services.AddSingleton<AppCachePurger>(sp => new AppCachePurger(sp.GetRequiredService<IAppsCatalog>(), sp.GetRequiredService<AppsCacheSwitch>()));
         services.AddSingleton(sp => new LazySvc<AppCachePurger>(sp));
-        services.AddSingleton<IEnumerable<IFileGenerator>>(_ => Array.Empty<IFileGenerator>());
+        services.AddSingleton<IEnumerable<IFileGenerator>>(_ => []);
         services.AddSingleton(sp => new LazySvc<IEnumerable<IFileGenerator>>(sp));
         services.AddSingleton<IAppJsonConfigurationService, FakeAppJsonConfigurationService>();
         services.AddSingleton(sp => new LazySvc<IAppJsonConfigurationService>(sp));
@@ -293,7 +292,7 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
             => new Dictionary<int, Zone>();
 
         public Zone Zone(int zoneId)
-            => new Zone(zoneId, 1, 2, new Dictionary<int, string>(), new List<DimensionDefinition>());
+            => new Zone(zoneId, 1, 2, new Dictionary<int, string>(), []);
 
         public IAppIdentityPure DefaultAppIdentity(int zoneId)
             => new AppIdentityPure(zoneId, 1);
@@ -319,8 +318,8 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
             if (field != null)
             {
                 var getOnce = field.GetValue(this);
-                var resetMethod = getOnce?.GetType().GetMethod("Reset", new[] { typeof(IAppsCacheSwitchable) });
-                resetMethod?.Invoke(getOnce, new object[] { _fakeValue });
+                var resetMethod = getOnce?.GetType().GetMethod("Reset", [typeof(IAppsCacheSwitchable)]);
+                resetMethod?.Invoke(getOnce, [_fakeValue]);
             }
         }
     }

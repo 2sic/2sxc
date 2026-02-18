@@ -2,10 +2,9 @@
 using ToSic.Eav.Context.Sys.ZoneCulture;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.ContentTypes;
-using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.Data.Sys.ValueConverter;
 using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Eav.DataSource.Sys.Query;
+using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Eav.Metadata.Sys;
 using ToSic.Sxc.Apps.Sys.Ui;
 using ToSic.Sxc.Blocks.Sys.Views;
@@ -19,7 +18,7 @@ public class WorkViews(
     LazySvc<IValueConverter> valConverterLazy,
     IZoneCultureResolver cultureResolver,
     IConvertToEavLight dataToFormatLight,
-    Generator<QueryDefinitionBuilder> qDefBuilder)
+    Generator<QueryDefinitionFactory> qDefBuilder)
     : WorkUnitBase<IAppWorkCtxPlus>("Cms.ViewRd",
         connect: [appEntities, valConverterLazy, cultureResolver, dataToFormatLight, qDefBuilder])
 {
@@ -82,7 +81,7 @@ public class WorkViews(
                 // Never save the View or the ViewInfoForPathSelect, as that would also preserve an old Service used in the View
                 return new
                 {
-                    (v as ICanBeEntity)?.Entity,
+                    v.Entity,
                     v.Name,
                     urlIdentifier,
                     isRegex,
@@ -141,9 +140,7 @@ public class WorkViews(
                     Name = ct.Name,
                     IsHidden = visible.All(t => t.ContentType != ct.NameId),   // must check if *any* template is visible, otherwise tell the UI that it's hidden
                     Thumbnail = thumbnail,
-                    Properties = (details as ICanBeEntity)?.Entity == null
-                        ? null
-                        : dataToFormatLight.Convert((details as ICanBeEntity).Entity),
+                    Properties = ((details as ICanBeEntity)?.Entity).NullOrGetWith(dataToFormatLight.Convert),
                     IsDefault = ct.Metadata.HasType(KnownDecorators.IsDefaultDecorator),
                 };
             })

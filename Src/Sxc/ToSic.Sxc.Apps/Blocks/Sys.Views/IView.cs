@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.DataSource.Sys.Query;
+﻿using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Blocks.Sys.Views;

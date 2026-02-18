@@ -36,13 +36,6 @@ public class ViewController : OqtStatefulControllerBase, IViewController
     public IEnumerable<ViewDetailsDto> All(int appId) => Real.All(appId);
 
     /// <inheritdoc />
-    [HttpGet]
-    //[SupportedModules("2sxc,2sxc-app")]
-    [ValidateAntiForgeryToken]
-    [Authorize(Roles = RoleNames.Admin)]
-    public PolymorphismDto Polymorphism(int appId) => Real.Polymorphism(appId);
-
-    /// <inheritdoc />
     [HttpGet, HttpDelete]
     //[SupportedModules("2sxc,2sxc-app")]
     [ValidateAntiForgeryToken]

@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.DataSource.Sys.Query;
+﻿using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Eav.Metadata;
 using static ToSic.Sxc.Blocks.Sys.Views.ViewConstants;
 
@@ -11,7 +11,7 @@ public record View : ViewConfiguration, IView
 {
     public View(IEntity templateEntity,
         string?[] languageCodes,
-        Generator<QueryDefinitionBuilder>? qDefBuilder,
+        Generator<QueryDefinitionFactory>? qDefBuilder,
         bool isReplaced = false) : base(templateEntity, languageCodes)
     {
         //LookupLanguages = languageCodes;
@@ -67,13 +67,13 @@ public record View : ViewConfiguration, IView
             ? (_qDefBuilder ?? throw new ArgumentException(
                 @"Query Definition builder is null. View is probably from PiggyBack cache. To use it, you must first Recreate it with the WorkViews",
                 nameof(_qDefBuilder))
-            ).New().Create(queryRaw, Entity.AppId)
+            ).New().Create(Entity.AppId, queryRaw)
             : null;
         return (queryRaw, query);
     });
 
     private readonly GetOnce<(IEntity? QueryEntity, QueryDefinition? Definition)> _queryInfo = new();
-    private readonly Generator<QueryDefinitionBuilder>? _qDefBuilder;
+    private readonly Generator<QueryDefinitionFactory>? _qDefBuilder;
 
 
     //public string UrlIdentifier => Get(FieldNameInUrl, "");

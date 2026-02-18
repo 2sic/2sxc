@@ -4,7 +4,7 @@ using ToSic.Eav.Metadata.Sys;
 namespace ToSic.Sxc.Context.Sys.CmsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class CmsPage(CmsContext parent, IMetadataOfSource appState, LazySvc<IPage> fallbackPage)
+internal class CmsPage(CmsContext parent, IMetadataOfSource appMetadata, LazySvc<IPage> fallbackPage)
     : CmsContextPartBase<IPage>(parent, parent.CtxBlockOrNull?.Page ?? fallbackPage.Value), ICmsPage
 {
     public int Id => GetContents()?.Id ?? 0;
@@ -15,6 +15,6 @@ internal class CmsPage(CmsContext parent, IMetadataOfSource appState, LazySvc<IP
     public string Url => GetContents()!.Url ?? string.Empty;
 
     protected override IMetadata GetMetadataOf() =>
-        appState.GetMetadataOf(TargetTypes.Page, Id, title: Url)
+        appMetadata.GetMetadataOf(TargetTypes.Page, Id, title: Url)
             .AddRecommendations([KnownDecorators.NoteDecoratorName, KnownDecorators.OpenGraphName]);
 }

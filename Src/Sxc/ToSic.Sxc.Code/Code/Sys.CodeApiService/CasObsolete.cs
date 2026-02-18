@@ -29,9 +29,10 @@ public class CodeApiServiceObsolete(IExecutionContext dynCode)
             {
                 AppIdentityOrReader = null, // #WipAppIdentityOrReader must become not null
                 LookUp = configuration,
+                Attach = links,
             };
             if (links != null)
-                return dataSources.DataSources.Value.Create(type: type!, attach: links, options: cnf2Wip);
+                return dataSources.DataSources.Value.Create(type: type!, /*attach: links,*/ options: cnf2Wip);
 
             var initialSource = dataSources.DataSources.Value.CreateDefault(new DataSourceOptions
             {
@@ -39,15 +40,15 @@ public class CodeApiServiceObsolete(IExecutionContext dynCode)
                 LookUp = dataSources.LookUpEngine,
             });
             return typeName != ""
-                ? dataSources.DataSources.Value.Create(type: type!, attach: initialSource, options: cnf2Wip)
+                ? dataSources.DataSources.Value.Create(type: type!, /*attach: initialSource,*/ options: cnf2Wip with { Attach = initialSource })
                 : initialSource;
         }
         catch (Exception ex)
         {
-            var errMessage = $"The razor code is calling a very old method {nameof(CreateSource)}." +
-                             $" In this version, you used the type name as a string {nameof(CreateSource)}(string typeName, ...)." +
-                             $" This has been deprecated since ca. v4 and has been removed now. " +
-                             $" Please use the newer {nameof(CreateSource)}<Type>(...) overload.";
+            const string errMessage = $"The razor code is calling a very old method {nameof(CreateSource)}." +
+                                      $" In this version, you used the type name as a string {nameof(CreateSource)}(string typeName, ...)." +
+                                      $" This has been deprecated since ca. v4 and has been removed now. " +
+                                      $" Please use the newer {nameof(CreateSource)}<Type>(...) overload.";
 
             throw new(errMessage, ex);
         }

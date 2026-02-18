@@ -13,10 +13,8 @@ internal class ToolbarRuleMetadata(
     string? parameters = null,
     ToolbarContext? context = null,
     ToolbarButtonDecoratorHelper? decoHelper = null
-    ) : ToolbarRuleTargeted(target, CommandName, operation: operation, ui: ui, parameters: parameters, context: context, decoHelper: decoHelper)
+    ) : ToolbarRuleTargeted(target, ActionNames.Metadata, operation: operation, ui: ui, parameters: parameters, context: context, decoHelper: decoHelper)
 {
-    internal const string CommandName = "metadata";
-
     protected override string DecoratorTypeName => typeName;
 
     public override string GeneratedCommandParams() 
@@ -24,9 +22,12 @@ internal class ToolbarRuleMetadata(
 
     private string MetadataCommandParams()
     {
-        if (string.IsNullOrWhiteSpace(typeName)) return "error=NoContentType";
-        if (typeName.Contains(",")) return "error=CommaFoundInContentType";
-        if (Target is not IHasMetadata hasMetadata) return "error=TargetWithoutMetadata";
+        if (string.IsNullOrWhiteSpace(typeName))
+            return "error=NoContentType";
+        if (typeName.Contains(","))
+            return "error=CommaFoundInContentType";
+        if (Target is not IHasMetadata hasMetadata)
+            return "error=TargetWithoutMetadata";
 
         // 1. check if it's a valid target
         var targetId = hasMetadata.Metadata.Target;
@@ -34,17 +35,18 @@ internal class ToolbarRuleMetadata(
         // Check if it already has this metadata
         var existing = hasMetadata.Metadata.OfType(typeName).FirstOrDefault();
 
-        // 2. build target string
-        var mdFor = "for=" + targetId.TargetType + "," +
-                    (targetId.KeyGuid != null ? $"guid,{targetId.KeyGuid}"
-                        : targetId.KeyString != null ? $"string,{targetId.KeyString}"
-                        : $"number,{targetId.KeyNumber}");
-
-        // 4. add / update rule
+        // add / update rule
         var newRule = $"{KeyEntityId}={existing?.EntityId ?? 0}"
                       + (existing == null
-                          ? $"&{KeyContentType}={typeName}&{mdFor}"
+                          ? $"&{KeyContentType}={typeName}&{MdFor()}"
                           : "");
         return newRule;
+
+        // Build target string containing IDs if not yet created
+        string MdFor() =>
+            "for=" + targetId.TargetType + "," +
+            (targetId.KeyGuid != null ? $"guid,{targetId.KeyGuid}"
+                : targetId.KeyString != null ? $"string,{targetId.KeyString}"
+                : $"number,{targetId.KeyNumber}");
     }
 }

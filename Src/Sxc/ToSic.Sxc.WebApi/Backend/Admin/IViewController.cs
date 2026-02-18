@@ -25,13 +25,6 @@ public interface IViewController
     IEnumerable<ViewDetailsDto> All(int appId);
 
     /// <summary>
-    /// Find out how polymorphism is configured in this App.
-    /// </summary>
-    /// <param name="appId"></param>
-    /// <returns></returns>
-    PolymorphismDto Polymorphism(int appId);
-
-    /// <summary>
     /// Delete a View
     /// </summary>
     /// <param name="appId"></param>

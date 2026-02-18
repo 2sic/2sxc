@@ -16,7 +16,7 @@ internal class CSharpCustomModelsGenerator(IUser user, IAppReaderFactory appRead
 {
     #region Information for the interface
 
-    public override string Description => "Generates C# Custom Model Classes for the AppCode/Data folder";
+    public override string Description => "Generates light-weight C# Custom Model Classes for the AppCode/Data folder";
 
     public override string DescriptionHtml => $"The {Name} will generate <code>[TypeName]Model.Generated.cs</code> files in the <code>AppCode/Data</code> folder.";
 

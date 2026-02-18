@@ -6,10 +6,11 @@ namespace ToSic.Sxc.Backend.SaveHelpers;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class SxcPagePublishing(ContentGroupList contentGroupList, IPagePublishing pagePublishing, IAppsCatalog appsCatalog)
-    : SaveHelperBase("Sxc.PgPubl", connect: [contentGroupList, pagePublishing, appsCatalog])
+    : ServiceBase("Sxc.PgPubl", connect: [contentGroupList, pagePublishing, appsCatalog])
 {
 
     internal Dictionary<Guid, int> SaveInPagePublishing(
+        IContextOfApp context,
         IBlock? blockOrNull,
         int appId,
         List<BundleWithHeader<IEntity>> items,
@@ -35,7 +36,7 @@ public class SxcPagePublishing(ContentGroupList contentGroupList, IPagePublishin
         if (partOfPage)
         {
             l.A("partOfPage - save with publishing");
-            pagePublishing.DoInsidePublishing(Context, _ => postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft));
+            pagePublishing.DoInsidePublishing(context, _ => postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft));
         }
         else
         {

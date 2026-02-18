@@ -13,6 +13,7 @@ namespace ToSic.Sxc.Adam;
 public interface IAsset: IHasMetadata, IFromField
 {
     #region Metadata
+
     /// <summary>
     /// Tells you if this asset has real metadata attached or not. 
     /// </summary>
@@ -30,7 +31,6 @@ public interface IAsset: IHasMetadata, IFromField
     /// An `IMetadata` which contains the metadata, or an empty IMetadata which still works if no metadata exists.
     /// </returns>
     new ITypedMetadata Metadata { get; }
-
 
     #endregion
 
@@ -50,7 +50,7 @@ public interface IAsset: IHasMetadata, IFromField
     /// </summary>
     /// <returns>
     /// `folder`, `image`, `document`, `file` depending on what it is.
-    /// `document` for `C:\Inetpub\wwwroot\www.2sic.com\Portals\0\2sxc\content\assets\docs\terms\file.pdf`
+    /// See <see cref="AssetTypes"/>
     /// </returns>
     string Type { get; }
 }

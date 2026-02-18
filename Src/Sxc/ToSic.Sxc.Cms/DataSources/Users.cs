@@ -223,15 +223,25 @@ public class Users : CustomDataSourceAdvanced
             .ToList();
 
         // Get roles, use the current data source to provide aspects such as lookups etc.
-        var rolesDs = _rolesGenerator.New(attach: this, options: new DataSourceOptionConverter()
-            .Create(new DataSourceOptions()
+        var rolesDs = _rolesGenerator.New( /*attach: this,*/ options:
+            //new DataSourceOptionConverter().Create(
+            new DataSourceOptions
             {
                 AppIdentityOrReader = this.PureIdentity(),
-            }, new
-            {
-                // Set filter parameter to only get roles we'll need
-                RoleIds = string.Join(",", roleIds),
-            })
+                Attach = this,
+                MyConfigValues = new
+                    {
+                        // Set filter parameter to only get roles we'll need
+                        RoleIds = string.Join(",", roleIds),
+                    }
+                    .ToDicInvariantInsensitive()
+                    .ToDicStringStringImInv()
+            }
+            //, new
+            //{
+            //    // Set filter parameter to only get roles we'll need
+            //    RoleIds = string.Join(",", roleIds),
+            //})
         );
         
         return rolesDs.List.ToList();

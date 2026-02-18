@@ -132,7 +132,7 @@ internal class DnnRazorCompiler(
             if (compiledType == null)
                 return l.ReturnNull("type not found");
 
-            page = Activator.CreateInstance(compiledType);
+            page = TypeFactory.CreateInstance(compiledType);
             var pageObjectValue = RuntimeHelpers.GetObjectValue(page);  // seems to do unboxing, why???
             return l.ReturnAsOk(new(pageObjectValue, useHotBuild));
         }

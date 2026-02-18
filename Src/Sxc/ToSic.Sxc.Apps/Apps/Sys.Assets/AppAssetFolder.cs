@@ -37,7 +37,7 @@ internal abstract class AppAssetFolder: IFolder
     public DateTime Created => DateTime.MinValue;
     public DateTime Modified => DateTime.MinValue;
 
-    public string Type => Classification.Folder;
+    public string Type => AssetTypes.Folder;
 
     public IField? Field { get; set; }
 

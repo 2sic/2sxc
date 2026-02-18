@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
 partial record ToolbarBuilder
 {
     public IToolbarBuilder More(NoParamOrder npo = default, object? ui = default)
-        => this.AddInternal([new ToolbarRuleCustom("more", ui: PrepareUi(ui))]);
+        => this.AddInternal([new ToolbarRuleCustom(ActionNames.More, ui: PrepareUi(ui))]);
 
     public IToolbarBuilder For(object target)
         => Parameters(target);
@@ -60,4 +60,6 @@ partial record ToolbarBuilder
             : (this with { Configuration = Configuration with { Group = name } })
             .AddInternal([new ToolbarRuleGeneric($"+group={name}")]);
     }
+
+    //public const string custom = "custom";
 }

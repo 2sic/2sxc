@@ -20,8 +20,8 @@ partial class DataService
         var l = Log.Fn<T>($"{nameof(attach)}: {attach}, {nameof(options)}: {options}");
 
         // If no in-source was provided, make sure that we create one from the current app
-        var fullOptions = OptionsMs.SafeOptions(parameters, options: options);
-        var ds = dataSources.Value.Create<T>(attach: attach, options: fullOptions);
+        var fullOptions = OptionsMs.SafeOptions(parameters, options: options).WithAttach(attach);
+        var ds = dataSources.Value.Create<T>(/*attach: attach,*/ options: fullOptions);
 
         return l.Return(ds);
     }
@@ -38,10 +38,13 @@ partial class DataService
         var l = Log.Fn<IDataSource>($"{nameof(name)}: {name}, {nameof(attach)}: {attach}, {nameof(options)}: {options}");
 
         // Do this first, to ensure AppIdentity is really known/set
-        var safeOptions = OptionsMs.SafeOptions(parameters, options: options);
+        var safeOptions = OptionsMs.SafeOptions(parameters, options: options)
+            .WithAttach(attach);
         var appId = safeOptions.AppIdentityOrReader!.AppId;
 
-        var dsInfo = name.IsEmptyOrWs() ? null : catalog.Value.FindDataSourceInfo(name, appId);
+        var dsInfo = name.IsEmptyOrWs()
+            ? null
+            : catalog.Value.FindDataSourceInfo(name, appId);
         if (dsInfo == null)
             throw new ArgumentException($"Tried to create DataSource with name '{name}' but it was not found. " +
                                         "Either you a) mis-typed it, " +
@@ -58,7 +61,7 @@ partial class DataService
                 $"Message: {dsInfo.ErrorOrNull.Message}; \n" +
                 $"Debug Info: {ErrorDebugMessage}"));
 
-        var ds = dataSources.Value.Create(dsInfo.Type, attach: attach, options: safeOptions);
+        var ds = dataSources.Value.Create(dsInfo.Type, /*attach: attach,*/ options: safeOptions);
 
         // If it's the superuser (often developing the DS) we should show errors instead of letting it just happen
         if (!showErrors || !ds.IsError())

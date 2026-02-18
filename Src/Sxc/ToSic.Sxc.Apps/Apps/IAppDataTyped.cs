@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Metadata;
-using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Apps;
 

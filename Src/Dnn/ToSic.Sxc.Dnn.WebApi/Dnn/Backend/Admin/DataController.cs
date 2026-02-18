@@ -56,15 +56,15 @@ public class DataController() : DnnSxcControllerBase(DataControllerReal.LogSuffi
     public bool BundleRestore(string fileName, int zoneId, int appId)
         => Real.BundleRestore(fileName, zoneId, appId);
 
-    /// <inheritdoc />
-    [HttpGet]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public IReadOnlyList<WorkEntityRecycleBin.RecycleBinItem> GetRecycleBin(int appId)
-        => Real.GetRecycleBin(appId);
+    ///// <inheritdoc />
+    //[HttpGet]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+    //public IReadOnlyList<WorkEntityRecycleBin.RecycleBinItem> GetRecycleBin(int appId)
+    //    => Real.GetRecycleBin(appId);
 
 
     /// <inheritdoc />
-    [HttpGet]
+    [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
     public void Recycle(int appId, int transactionId)
         => Real.Recycle(appId, transactionId);

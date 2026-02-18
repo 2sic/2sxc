@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Data;
 /// * Renamed in v20 to `ITypedMetadata` from `IMetadata` because it kept on causing confusions
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("The name can change, but the APIs are safe to use.")]
-public interface ITypedMetadata: IHasMetadata, ITypedItem, ICanDebug, /*ISxcDynamicObject,*/ IEntityWrapper
+public interface ITypedMetadata: /*IHasMetadata, */ITypedItem, ICanDebug, /*ISxcDynamicObject,*/ IEntityWrapper
 {
     /// <summary>
     /// Ask if there is metadata of the type specified.
@@ -35,6 +35,12 @@ public interface ITypedMetadata: IHasMetadata, ITypedItem, ICanDebug, /*ISxcDyna
     /// <param name="type"></param>
     /// <returns></returns>
     IEnumerable<IEntity> OfType(string type);
+
+    /// <summary>
+    /// WIP v21.02
+    /// </summary>
+    /// <returns></returns>
+    IEnumerable<IEntity> GetAll();
 
     // TODO: REMOVE
     ///// <summary>

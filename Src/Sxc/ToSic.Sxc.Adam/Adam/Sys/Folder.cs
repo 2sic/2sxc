@@ -33,7 +33,7 @@ public class Folder<TFolderId, TFileId>(AdamManager adamManager)
     public string? Url { get; set; }
 
     /// <inheritdoc />
-    public string Type => Classification.Folder;
+    public string Type => AssetTypes.Folder;
 
 
     /// <inheritdoc />

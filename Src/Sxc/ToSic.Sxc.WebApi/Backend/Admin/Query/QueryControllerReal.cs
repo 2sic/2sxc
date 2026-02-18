@@ -8,11 +8,11 @@ namespace ToSic.Sxc.Backend.Admin.Query;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class QueryControllerReal(
-    QueryControllerBase<QueryControllerReal>.Dependencies services,
+    QueryControllerBase.Dependencies services,
     GenWorkPlus<WorkViews> workViews,
     ISxcCurrentContextService currentContextService,
     Generator<IAppDataConfigProvider> tokenEngineWithContext)
-    : QueryControllerBase<QueryControllerReal>(services, "Api." + LogSuffix, connect: [workViews, currentContextService, tokenEngineWithContext])
+    : QueryControllerBase(services, "Api." + LogSuffix, connect: [workViews, currentContextService, tokenEngineWithContext])
 {
     public const string LogSuffix = "Query";
     public const string LogGroup = EavWebApiConstants.HistoryNameWebApi + "-query";
@@ -41,14 +41,14 @@ public class QueryControllerReal(
         
 
 
-    public QueryRunDto DebugStream(int appId, int id, string from, string @out, int top = 25) 
-        => DebugStream(appId, id, top, LookUpEngineWithBlockRequired(), from, @out);
+    public QueryRunDto DebugStream(int appId, int id, string from, string @out, int top = 25) =>
+        DebugStream(appId, id, top, LookUpEngineWithBlockRequired(), from, @out);
 
     /// <summary>
     /// Query the Result of a Pipeline using Test-Parameters
     /// </summary>
-    public QueryRunDto RunDev(int appId, int id, int top)
-        => RunDevInternal(appId, id, LookUpEngineWithBlockRequired(), top, builtQuery => builtQuery.Main);
+    public QueryRunDto RunDev(int appId, int id, int top) =>
+        RunDevInternal(appId, id, LookUpEngineWithBlockRequired(), top, builtQuery => builtQuery.Main);
 
     private ILookUpEngine LookUpEngineWithBlockRequired()
     {

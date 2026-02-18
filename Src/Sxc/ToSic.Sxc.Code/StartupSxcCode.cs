@@ -44,7 +44,9 @@ public static class StartupSxcCode
         // v13 DynamicCodeService
         services.TryAddTransient<CodeApiServiceBase.Dependencies>();
         services.TryAddTransient<CodeApiServiceBase.ScopedDependencies>();  // new v15
+#pragma warning disable CS0618 // Type or member is obsolete
         services.TryAddTransient<IDynamicCodeService, DynamicCodeService>();
+#pragma warning restore CS0618 // Type or member is obsolete
 
         // v20 TypedCodeService
         services.TryAddTransient<ITypedApiService, TypedApiService>();

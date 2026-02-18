@@ -20,7 +20,8 @@ namespace ToSic.Sxc.Data.Sys.Metadata;
 
 [PrivateApi("Hide implementation")]
 internal partial class Metadata(IMetadata metadata, ICodeDataFactory cdf)
-    : ITypedMetadata, IHasPropLookup, IHasJsonSource
+    : ITypedMetadata, IHasPropLookup, IHasJsonSource,
+        IHasMetadata // only needed so the property access work below
 {
     #region Setup
 
@@ -83,6 +84,8 @@ internal partial class Metadata(IMetadata metadata, ICodeDataFactory cdf)
     public /*override*/ bool HasType(string type) => metadata.HasType(type);
 
     public /*override*/ IEnumerable<IEntity> OfType(string type) => metadata.OfType(type);
+
+    public IEnumerable<IEntity> GetAll() => metadata.ToList();
 
     #region Properties from the interfaces which are not really supported
 

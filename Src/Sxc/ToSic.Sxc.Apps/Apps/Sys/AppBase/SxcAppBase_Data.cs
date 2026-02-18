@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Apps.Sys;
+﻿using ToSic.Eav.Apps.Sys;
+
+namespace ToSic.Sxc.Apps.Sys;
 
 partial class SxcAppBase
 {
@@ -40,14 +42,15 @@ partial class SxcAppBase
                       "Please call InitData first to provide this data.");
 
         // Note: ModulePermissionController does not work when indexing, return false for search
-        var initialSource = Services.DataSourceFactory.CreateDefault(
-            new DataSourceOptions
-            {
-                AppIdentityOrReader = this,
-                LookUp = dataConfig.LookUpEngine,
-                ShowDrafts = dataConfig.ShowDrafts
-            });
-        var appDataWithCreate = Services.DataSourceFactory.Create<TDataSource>(attach: initialSource) as TResult;
+        var options = new DataSourceOptions
+        {
+            AppIdentityOrReader = this.PureIdentity(),
+            LookUp = dataConfig.LookUpEngine,
+            ShowDrafts = dataConfig.ShowDrafts,
+        };
+        var initialSource = Services.DataSourceFactory.CreateDefault(options);
+        var appDataWithCreate = Services.DataSourceFactory.Create<TDataSource>( /*attach: initialSource*/
+            options with { Attach = initialSource, }) as TResult;
 
         return l.Return(appDataWithCreate);
     }

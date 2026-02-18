@@ -18,7 +18,7 @@ public class EditControllerReal(
         => loadBackend.Value.Load(appId, items);
 
     public Dictionary<Guid, int> Save(EditSaveDto package, int appId, bool partOfPage)
-        => saveBackendLazy.Value.Init(appId).Save(package, partOfPage);
+        => saveBackendLazy.Value.Save(appId, package, partOfPage);
 
 
     public LinkInfoDto LinkInfo(string link, int appId, string? contentType = default, Guid guid = default, string? field = default)

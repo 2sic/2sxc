@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Sys.Query;
 using ToSic.Eav.DataSources;
 using ToSic.Sxc.Blocks.Sys.Views;
 
@@ -40,9 +39,9 @@ public partial class ContextData(DataSourceBase.Dependencies services) : PassThr
     #endregion
 
 
-    internal void SetOut(Query querySource)
+    internal void SetOut(IQuery querySource)
         => _querySource = querySource;
-    private Query? _querySource;
+    private IQuery? _querySource;
     internal void SetBlock(CmsBlock blockSource)
         => _blockSource = blockSource;
     private CmsBlock _blockSource = null!;

@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.DataSource.Sys;
-using ToSic.Eav.DataSource.Sys.Query;
+﻿using ToSic.Eav.DataSource.Query.Sys;
+using ToSic.Eav.DataSource.Sys;
 
 namespace ToSic.Sxc.Apps;
 
@@ -31,11 +31,11 @@ partial class App
     {
         // Try to find the local query, abort if not found
         // Not final implementation, but goal is to properly cascade from AppState to parent
-        if (Query.TryGetValue(name, out var value) && value is Query query)
+        if (Query.TryGetValue(name, out var query) && query != null)
             return query;
 
         // Try to find query definition - while also checking parent apps
-        var qEntity = Services.QueryManager.Value.GetQuery(AppReaderInt, name, AppDataConfig.LookUpEngine, recurseParents: 3);
+        var qEntity = Services.QueryManager.Value.TryGetQuery(AppReaderInt, name, AppDataConfig.LookUpEngine, recurseParents: 3);
 
         return qEntity ?? throw new((DataSourceConstantsInternal.IsGlobalQuery(name) ? "Global " : "") + "Query not Found!");
     }

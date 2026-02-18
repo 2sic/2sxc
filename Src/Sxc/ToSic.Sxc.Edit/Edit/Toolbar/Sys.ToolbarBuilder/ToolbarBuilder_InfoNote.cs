@@ -10,10 +10,9 @@ partial record ToolbarBuilder
         string? target = default,
         Func<ITweakButton, ITweakButton>? tweak = default
     ) => InfoLikeButton(npo: npo,
-        verb: "info",
+        verb: ActionNames.Info,
         paramsMergeInTweak: link != default ? new { link, target } : null,
         tweak: tweak);
-
 
     private IToolbarBuilder InfoLikeButton(
         NoParamOrder npo,

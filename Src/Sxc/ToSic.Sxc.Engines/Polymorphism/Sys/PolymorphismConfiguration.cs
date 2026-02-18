@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Polymorphism.Sys;
 public record PolymorphismConfiguration : ModelOfEntity
 {
     public const string ContentTypeNameId = "3937fa17-ef2d-40a7-b089-64164eb10bab";
-    public const string Name = "2sxcPolymorphismConfiguration";
+    public const string ContentTypeName = "2sxcPolymorphismConfiguration";
 
     public string Mode => GetThis("");
 

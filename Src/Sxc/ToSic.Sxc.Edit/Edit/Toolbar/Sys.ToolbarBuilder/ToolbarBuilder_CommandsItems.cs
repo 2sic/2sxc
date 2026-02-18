@@ -99,7 +99,7 @@ partial record ToolbarBuilder
 
         var pars = PreCleanParams(tweak, defOp: defOp, operation: operation, ui: ui, uiMerge: "show=true", parameters: parameters);
 
-        return EntityRule("delete", target, pars, 
+        return EntityRule(ActionNames.Delete, target, pars, 
             propsKeep: [KeyTitle, KeyEntityId, KeyEntityGuid]).Builder;
     }
 
@@ -113,7 +113,7 @@ partial record ToolbarBuilder
         string? operation = null)
     {
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill);
-        return EntityRule("edit", target, pars, propsSkip: [KeyEntityGuid, KeyTitle, KeyPublished]).Builder;
+        return EntityRule(ActionNames.Edit, target, pars, propsSkip: [KeyEntityGuid, KeyTitle, KeyPublished]).Builder;
     }
 
     public IToolbarBuilder New(
@@ -127,10 +127,12 @@ partial record ToolbarBuilder
     {
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill);
 
-        return EntityRule("new", target, pars,
+        return EntityRule(ActionNames.New, target, pars,
             propsSkip: [KeyEntityGuid, KeyEntityId, KeyTitle, KeyPublished],
             contentType: target as string).Builder;
     }
+
+
 
     public IToolbarBuilder Publish(
         object? target = null,
@@ -142,7 +144,7 @@ partial record ToolbarBuilder
     {
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters);
 
-        return EntityRule("publish", target, pars,
+        return EntityRule(ActionNames.Publish, target, pars,
             propsKeep: [KeyEntityId, KeyPublished, KeyIndex, KeyUseModule]).Builder;
     }
 
@@ -205,11 +207,9 @@ partial record ToolbarBuilder
     {
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill);
 
-        return EntityRule("copy", target, pars, propsKeep: [KeyEntityId, KeyContentType],
+        return EntityRule(ActionNames.Copy, target, pars, propsKeep: [KeyEntityId, KeyContentType],
             contentType: contentType).Builder;
     }
-
-
 
 
     public IToolbarBuilder Data(
@@ -224,7 +224,7 @@ partial record ToolbarBuilder
     {
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, filter: filter);
 
-        return EntityRule("data", target, pars, propsKeep: [KeyContentType], contentType: target as string)
+        return EntityRule(ActionNames.Data, target, pars, propsKeep: [KeyContentType], contentType: target as string)
             .Builder;
     }
         

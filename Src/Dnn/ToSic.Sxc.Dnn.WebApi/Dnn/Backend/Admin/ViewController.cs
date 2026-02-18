@@ -25,14 +25,6 @@ public class ViewController() : DnnSxcControllerBase(RealController.LogSuffix), 
         => Real.All(appId);
 
     /// <inheritdoc />
-    [HttpGet]
-    [SupportedModules(DnnSupportedModuleNames)]
-    [ValidateAntiForgeryToken]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public PolymorphismDto Polymorphism(int appId)
-        => Real.Polymorphism(appId);
-
-    /// <inheritdoc />
     [HttpGet, HttpDelete]
     [SupportedModules(DnnSupportedModuleNames)]
     [ValidateAntiForgeryToken]

@@ -6,8 +6,8 @@ namespace ToSic.Sxc.Code.Generate.Data;
 /// Generator for individual CustomModel classes
 /// Creates lightweight model classes that inherit from CustomModel
 /// </summary>
-internal class CSharpCustomModelGenerator(CSharpCustomModelsGenerator cmg, IContentType type, string baseName) 
-    : CSharpModelGeneratorBase(cmg, type, baseName, cmg.Log, "Gen.CstMdl")
+internal class CSharpCustomModelGenerator(CSharpCustomModelsGenerator generator, IContentType type, string baseName) 
+    : CSharpModelGeneratorBase(generator, type, baseName, generator.Log, "Gen.CstMdl")
 {
     #region Overrides
 
@@ -19,7 +19,7 @@ internal class CSharpCustomModelGenerator(CSharpCustomModelsGenerator cmg, ICont
           // See also: https://go.2sxc.org/copilot-data
           // To extend it, create a "{{ClassName}}.cs" with this contents:
           /*
-          namespace AppCode.Data
+          namespace {{Generator.Specs.DataNamespace}}
           {
             public partial class {{ClassName}}
             {

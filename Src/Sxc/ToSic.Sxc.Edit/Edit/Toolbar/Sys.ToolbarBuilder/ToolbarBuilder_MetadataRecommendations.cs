@@ -5,17 +5,17 @@ namespace ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
 
 partial record ToolbarBuilder
 {
-    private List<string> GetMetadataTypeNames(object? target, string? contentTypes)
+    private ICollection<string> GetMetadataTypeNames(object? target, string? contentTypes)
     {
         var types = contentTypes.CsvToArrayWithoutEmpty();
         if (!types.Any())
-            types = FindMetadataRecommendations(target);
+            return FindMetadataRecommendations(target);
 
-        var finalTypes = new List<string>();
-        foreach (var type in types)
-            if (type == "*") finalTypes.AddRange(FindMetadataRecommendations(target));
-            else finalTypes.Add(type);
-        return finalTypes;
+        var typesToReturn = types
+            .SelectMany(t => t == "*" ? FindMetadataRecommendations(target) : [t])
+            .ToList();
+
+        return typesToReturn;
     }
 
     private string[] FindMetadataRecommendations(object? target)
