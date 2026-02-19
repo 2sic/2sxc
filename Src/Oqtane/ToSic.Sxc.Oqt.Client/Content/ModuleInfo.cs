@@ -27,12 +27,25 @@ public class ModuleInfo : IModule
      * 20-00-05 - SQL - Fixes and small updates, etc
      * 21-00-00 - SQL - TsDynDataHistory: add ParentRef
      */
-
+    
     /// <summary>
     /// The SQL versions must use a "-" to avoid being replaced on search/replace when releasing a new version.
     /// When SQL script is added in new version, include new version explicitly in this array.
     /// </summary>
-    internal static string[] SqlScriptVersions = ["12-00-00", "12-05-00", "13-00-00", "13-01-00", "15-00-00", "16-07-01", "18-03-00", "19-00-00", "20-00-00", "20-00-05", "21-00-00"];
+    internal static string[] SqlScriptVersions =
+    [
+        "12-00-00",
+        "12-05-00",
+        "13-00-00",
+        "13-01-00",
+        "15-00-00",
+        "16-07-01",
+        "18-03-00",
+        "19-00-00",
+        ModuleInfoConstants.V20_00_00,
+        "20-00-05",
+        ModuleInfoConstants.V21_00_00,
+    ];
 
     /// <summary>
     /// Merge versions for use in Oqtane version list
