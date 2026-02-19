@@ -81,19 +81,19 @@ internal class TypedApiStandalone(IExecutionContext exCtx, ICodeTypedApiHelper a
         => Cdf.AsStack(items);
 
     public T AsStack<T>(params object[] items)
-        where T : class, IModelOfData, new()
+        where T : class, IModelFromData, new()
         => Cdf.AsStack<T>(items);
 
     #region As / AsList WIP v17
 
     /// <inheritdoc />
     public T As<T>(object source, NoParamOrder npo = default)
-        where T : class, IModelOfData
+        where T : class, IModelFromData
         => Cdf.AsCustom<T>(source: source, npo: npo);
 
     /// <inheritdoc />
     public IEnumerable<T> AsList<T>(object source, NoParamOrder npo = default, bool nullIfNull = default)
-        where T : class, IModelOfData
+        where T : class, IModelFromData
         => Cdf.AsCustomList<T>(source: source, npo: npo, nullIfNull: nullIfNull);
 
     #endregion

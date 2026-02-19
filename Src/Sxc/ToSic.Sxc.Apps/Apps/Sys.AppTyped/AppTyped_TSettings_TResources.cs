@@ -6,8 +6,8 @@ namespace ToSic.Sxc.Apps.Sys.AppTyped;
 
 internal class AppTyped<TSettings, TResources>(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager<TypedQuery>> queryManager)
     : AppTyped(globalPaths, queryManager), IAppTyped<TSettings, TResources>
-    where TSettings : class, IModelOfData, new()
-    where TResources : class, IModelOfData, new()
+    where TSettings : class, IModelFromData, new()
+    where TResources : class, IModelFromData, new()
 {
     [field: AllowNull, MaybeNull]
     TSettings IAppTyped<TSettings, TResources>.Settings

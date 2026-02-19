@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Cms.Pages.Sys;
 
-public record PageModelOfEntity: ModelOfEntity, IPageModel
+public record PageModelOfEntity: ModelFromEntity, IPageModel
 {
     public int Id => Entity.EntityId;
     public int ParentId => GetThis(0);

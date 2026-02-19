@@ -5,7 +5,7 @@
 namespace ToSic.Sxc.Backend.App;
 
 [ModelSpecs(ContentType = ContentTypeId)]
-internal record AppExtensionRelease: ModelOfEntity
+internal record AppExtensionRelease: ModelFromEntity
 {
     public const string ContentTypeId = "1d91a2c0-4d5d-4197-8cb8-d4bfebf72f15";
     public const string ContentTypeName = "AppExtensionRelease";

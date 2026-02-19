@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Cms.Sites;
 /// </remarks>
 [ModelSpecs(Use = typeof(SiteModelOfEntity))]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
-public interface ISiteModel : IModelOfData
+public interface ISiteModel : IModelFromData
 {
     /// <summary>
     /// The site ID.

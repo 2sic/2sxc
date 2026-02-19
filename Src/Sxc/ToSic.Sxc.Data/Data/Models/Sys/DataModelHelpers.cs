@@ -12,7 +12,7 @@ internal class DataModelHelpers
     /// </summary>
     /// <returns></returns>
     internal static TCustom? As<TCustom>(IModelFactory modelFactory, object? item)
-        where TCustom : class, IModelOfData
+        where TCustom : class, IModelFromData
         => item switch
         {
             null => null,
@@ -32,7 +32,7 @@ internal class DataModelHelpers
     /// </summary>
     /// <returns></returns>
     internal static IEnumerable<TCustom> AsList<TCustom>(IModelFactory modelFactory, object? source, ModelSettings settings, NoParamOrder npo = default, bool nullIfNull = false)
-        where TCustom : class, IModelOfData
+        where TCustom : class, IModelFromData
     {
         var list = source switch
         {

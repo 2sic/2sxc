@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Images.Sys;
 // TODO: LOCATION / NAMESPACE not final
 [PrivateApi("WIP v16.08")]
 [ModelSpecs(ContentType = ContentTypeNameId)]
-public record CopyrightPreset : ModelOfEntity
+public record CopyrightPreset : ModelFromEntity
 {
     public const string ContentTypeNameId = "ac3df5f0-c637-45e7-a52b-b323d50e52ac";
     public const string ContentTypeName = "🖺Copyright";

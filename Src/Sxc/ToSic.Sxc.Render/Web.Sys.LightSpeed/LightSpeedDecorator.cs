@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [ModelSpecs(ContentType = ContentTypeNameId)]
-public record LightSpeedDecorator : ModelOfEntityBasic, IOutputCacheSettings
+public record LightSpeedDecorator : ModelFromEntityBasic, IOutputCacheSettings
 {
     /// <summary>
     /// Nice name. If it ever changes, remember to also update UI as it has references to it.

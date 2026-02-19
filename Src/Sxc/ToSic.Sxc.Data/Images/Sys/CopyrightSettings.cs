@@ -9,7 +9,7 @@
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 [ModelSpecs(ContentType = ContentTypeNameId)]
-public record CopyrightSettings : ModelOfEntity
+public record CopyrightSettings : ModelFromEntity
 {
     /// <summary>
     /// Where these settings are placed in the Settings structure - for use as prefix when accessing settings.

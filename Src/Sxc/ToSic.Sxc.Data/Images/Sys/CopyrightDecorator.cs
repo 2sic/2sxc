@@ -3,7 +3,7 @@
 // TODO: LOCATION / NAMESPACE not final
 [PrivateApi("WIP v16.08")]
 [ModelSpecs(ContentType = ContentTypeNameId)]
-public record CopyrightDecorator : ModelOfEntity
+public record CopyrightDecorator : ModelFromEntity
 {
     public const string ContentTypeNameId = "077835ec-889e-433f-8acf-a4715acb3503";
     public const string ContentTypeName = "CopyrightDecorator";

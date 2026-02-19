@@ -14,7 +14,7 @@ partial class CodeDataFactory
 
     [PrivateApi]
     public T AsStack<T>(object[] parts)
-        where T : class, IModelOfData, new() 
+        where T : class, IModelFromData, new() 
         => AsCustom<T>(AsStack(parts));
 
     private TStackType AsStack<TStackType>(string? name, object[] parts, bool strictTypes, Func<string, List<KeyValuePair<string, IPropertyLookup>>, TStackType> generate)

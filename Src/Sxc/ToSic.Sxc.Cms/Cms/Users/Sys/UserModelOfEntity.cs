@@ -1,7 +1,7 @@
 ﻿namespace ToSic.Sxc.Cms.Users.Sys;
 
 
-internal record UserModelOfEntity : ModelOfEntity, IUserModel
+internal record UserModelOfEntity : ModelFromEntity, IUserModel
 {
 
     public string? Email => GetThis<string>(null);

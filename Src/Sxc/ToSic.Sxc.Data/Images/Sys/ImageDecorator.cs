@@ -4,7 +4,7 @@ namespace ToSic.Sxc.Images.Sys;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public record ImageDecorator : ModelOfEntity, IImageDecorator
+public record ImageDecorator : ModelFromEntity, IImageDecorator
 {
     public ImageDecorator(IEntity entity, string?[] languageCodes) : base(entity)
     {

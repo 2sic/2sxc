@@ -24,7 +24,7 @@ partial class CodeDataFactory: IModelFactory
     /// </summary>
     [return: NotNullIfNotNull(nameof(source))]
     public TCustom? AsCustom<TCustom>(object? source, NoParamOrder npo = default, bool mock = false)
-        where TCustom : class, IModelOfData
+        where TCustom : class, IModelFromData
     {
         var settings = new ModelSettings { ItemIsStrict = true, UseMock = mock };
         return source switch
@@ -38,7 +38,7 @@ partial class CodeDataFactory: IModelFactory
 
     [return: NotNullIfNotNull("item")]
     public TCustom? AsCustomFrom<TCustom, TData>(TData? item, ModelSettings? settings)
-        where TCustom : class, IModelOfData
+        where TCustom : class, IModelFromData
     {
         if (item == null)
             return null;
@@ -87,7 +87,7 @@ partial class CodeDataFactory: IModelFactory
     }
 
     public TCustom? GetOne<TCustom>(Func<IEntity?> getItem, object id, bool skipTypeCheck)
-        where TCustom : class, IModelOfData
+        where TCustom : class, IModelFromData
     {
         var item = getItem();
         if (item == null)
@@ -106,7 +106,7 @@ partial class CodeDataFactory: IModelFactory
     /// Create list of custom-typed ITypedItems
     /// </summary>
     public IEnumerable<TCustom> AsCustomList<TCustom>(object? source, NoParamOrder npo, bool nullIfNull)
-        where TCustom : class, IModelOfData
+        where TCustom : class, IModelFromData
     {
         return source switch
         {

@@ -29,7 +29,7 @@ public interface ITypedQuery: IDataSource
     /// WIP in v20.00
     /// </remarks>
     IEnumerable<T>? GetAll<T>(NoParamOrder npo = default, string? typeName = default, bool nullIfNotFound = default)
-        where T : class, IModelOfData;
+        where T : class, IModelFromData;
 
     /// <summary>
     /// Get a single item from the query with the specified ID.
@@ -43,7 +43,7 @@ public interface ITypedQuery: IDataSource
     /// WIP in v20.00
     /// </remarks>
     T? GetOne<T>(int id, NoParamOrder npo = default, bool skipTypeCheck = false)
-        where T : class, IModelOfData;
+        where T : class, IModelFromData;
 
 
     /// <summary>
@@ -58,7 +58,7 @@ public interface ITypedQuery: IDataSource
     /// WIP in v20.00
     /// </remarks>
     T? GetOne<T>(Guid guid, NoParamOrder npo = default, bool skipTypeCheck = false)
-        where T : class, IModelOfData;
+        where T : class, IModelFromData;
 
     #endregion
 }
