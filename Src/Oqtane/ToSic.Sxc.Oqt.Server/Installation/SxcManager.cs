@@ -72,11 +72,11 @@ public class SxcManager(
 
         switch (version.Replace(".", "-"))
         {
-            case "20-00-00":
+            case "20-00-00": // Runs on every install or upgrade since the version is hard-coded in ToSic.Sxc.Oqt.Client/Content/ModuleInfo.cs?plain=1#L35.
                 Upgrade_20_00_00(tenant, version);
                 break;
-            case "21-02-00": // 21.02
-                Upgrade_21_02_00(tenant, version);
+            case "21-00-00": // Runs on every install or upgrade since the version is hard-coded in ToSic.Sxc.Oqt.Client/Content/ModuleInfo.cs?plain=1#L35.
+                Upgrade_21_00_00(tenant, version);
                 break;
         }
     }
@@ -96,13 +96,13 @@ public class SxcManager(
         RemoveAssemblies(tenant, assemblyCleanupRules, version);
     }
 
-    private void Upgrade_21_02_00(Tenant tenant, string version)
+    private void Upgrade_21_00_00(Tenant tenant, string version)
     {
-        LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(Upgrade_21_02_00)} {version}");
+        LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(Upgrade_21_00_00)} {version}");
 
         if (tenant.Name != TenantNames.Master)
         {
-            LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(Upgrade_21_02_00)} skipped because tenant '{tenant.Name}' is not '{TenantNames.Master}'.");
+            LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(Upgrade_21_00_00)} skipped because tenant '{tenant.Name}' is not '{TenantNames.Master}'.");
             return;
         }
 
