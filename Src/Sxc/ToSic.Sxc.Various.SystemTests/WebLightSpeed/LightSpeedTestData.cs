@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Sys;
+using ToSic.Eav.Models;
 using ToSic.Sxc.Web.Sys.LightSpeed;
 
 namespace ToSic.Sxc.WebLightSpeed;

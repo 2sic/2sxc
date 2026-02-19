@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Models;
 using ToSic.Sxc.Blocks.Sys;
 
 namespace ToSic.Sxc.Web.Sys.LightSpeed;
