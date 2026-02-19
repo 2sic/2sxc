@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Blocks.Sys.Views;
 /// </summary>
 [PrivateApi("Was Public API till v17, but I can't see any reason why people would have used it since it would go through ICmsView")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IView: IModelOfEntity, IHasMetadata
+public interface IView: IModelOfEntityBasic, IHasMetadata
 {
     /// <summary>
     /// The name, localized in the current UI language.

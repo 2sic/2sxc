@@ -4,7 +4,7 @@ namespace ToSic.Sxc.Polymorphism.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [ModelSpecs(ContentType = ContentTypeNameId)]
-public record PolymorphismConfiguration : ModelOfEntity
+public record PolymorphismConfiguration : ModelOfEntityBasic
 {
     public const string ContentTypeNameId = "3937fa17-ef2d-40a7-b089-64164eb10bab";
     public const string ContentTypeName = "2sxcPolymorphismConfiguration";

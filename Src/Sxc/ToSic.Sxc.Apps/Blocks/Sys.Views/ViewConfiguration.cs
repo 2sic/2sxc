@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Blocks.Sys.Views;
 [PrivateApi("Internal implementation - don't publish")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [ModelSpecs(ContentType = ContentTypeNameId)]
-public record ViewConfiguration : ModelOfEntity // , IView
+public record ViewConfiguration : ModelOfEntityBasic // , IView
 {
     public const string ContentTypeNameId = AppConstants.TemplateContentType;
     public const string ContentTypeName = AppConstants.TemplateContentType;
