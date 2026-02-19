@@ -33,6 +33,14 @@ public class SxcManager(
     private const string MigrationTable = "__EFMigrationsHistory";
     private sealed record AssemblyCleanupRule(string AssemblyName, int? MinRuntimeMajor = null, int? MaxRuntimeMajor = null);
 
+    /// <summary>
+    /// Installs or upgrades 2sxc for the specified tenant and version.
+    /// </summary>
+    /// <param name="tenant">The tenant being installed or upgraded.</param>
+    /// <param name="version">The target module version.</param>
+    /// <returns>
+    /// <c>true</c> if installation/upgrade completed successfully; otherwise <c>false</c>.
+    /// </returns>
     public bool Install(Tenant tenant, string version)
     {
         LogInfo($"2sxc {EavSystemInfo.VersionString} install: Starting installation for version {version} on tenant '{tenant.Name}'");
@@ -59,9 +67,21 @@ public class SxcManager(
         return ApplyMigrationIfNeeded(tenant, migrationId);
     }
 
+    /// <summary>
+    /// Executes the uninstall SQL script for the specified tenant.
+    /// </summary>
+    /// <param name="tenant">The tenant to uninstall 2sxc from.</param>
+    /// <returns><c>true</c> when the uninstall script succeeds; otherwise <c>false</c>.</returns>
     public bool Uninstall(Tenant tenant)
         => sql.ExecuteScript(tenant, GetType().Assembly, "ToSic.Sxc.Uninstall.sql");
 
+    /// <summary>
+    /// Applies non-SQL upgrade logic for known versions.
+    /// Runs on every install or upgrade for every explicitly defined version in ToSic.Sxc.Oqt.Client/Content/ModuleInfo.cs?plain=1#L35.
+    /// plus latest version, for all tenants, so it can be used for general cleanup tasks on every install/upgrade.
+    /// </summary>
+    /// <param name="tenant">The current tenant context.</param>
+    /// <param name="version">The version identifier from Oqtane.</param>
     private void ApplyVersionUpgrade(Tenant tenant, string version)
     {
         using var scope = serviceScopeFactory.CreateScope();
@@ -72,15 +92,21 @@ public class SxcManager(
 
         switch (version.Replace(".", "-"))
         {
-            case "20-00-00": // Runs on every install or upgrade since the version is hard-coded in ToSic.Sxc.Oqt.Client/Content/ModuleInfo.cs?plain=1#L35.
+            case ModuleInfoConstants.V20_00_00: // Runs on every install or upgrade since the version is hard-coded in ToSic.Sxc.Oqt.Client/Content/ModuleInfo.cs?plain=1#L35.
                 Upgrade_20_00_00(tenant, version);
                 break;
-            case "21-00-00": // Runs on every install or upgrade since the version is hard-coded in ToSic.Sxc.Oqt.Client/Content/ModuleInfo.cs?plain=1#L35.
+            case ModuleInfoConstants.V21_00_00: // Runs on every install or upgrade since the version is hard-coded in ToSic.Sxc.Oqt.Client/Content/ModuleInfo.cs?plain=1#L35.
                 Upgrade_21_00_00(tenant, version);
                 break;
         }
     }
 
+    /// <summary>
+    /// Cleans up specific 2sxc/eav old assemblies in v20.00.00,
+    /// which are no longer needed and may cause conflicts.
+    /// </summary>
+    /// <param name="tenant">The tenant being upgraded.</param>
+    /// <param name="version">The version identifier being processed.</param>
     private void Upgrade_20_00_00(Tenant tenant, string version)
     {
         LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(Upgrade_20_00_00)} {version}");
@@ -96,6 +122,13 @@ public class SxcManager(
         RemoveAssemblies(tenant, assemblyCleanupRules, version);
     }
 
+
+    /// <summary>
+    /// Performs 2sxc folder reorganization for multi tenants support in v21.00.00
+    /// and cleans up 1 net9 assembly in net10 runtime, which is no longer needed and may cause conflicts.
+    /// </summary>
+    /// <param name="tenant">The tenant being upgraded.</param>
+    /// <param name="version">The version identifier being processed.</param>
     private void Upgrade_21_00_00(Tenant tenant, string version)
     {
         LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(Upgrade_21_00_00)} {version}");
@@ -126,6 +159,12 @@ public class SxcManager(
         RemoveAssemblies(tenant, assemblyCleanupRules, version);
     }
 
+    /// <summary>
+    /// Removes outdated assemblies according to runtime-specific cleanup rules.
+    /// </summary>
+    /// <param name="tenant">The tenant being upgraded.</param>
+    /// <param name="assemblyCleanupRules">Assembly deletion rules with runtime constraints.</param>
+    /// <param name="version">The version identifier for logging.</param>
     private void RemoveAssemblies(Tenant tenant, AssemblyCleanupRule[] assemblyCleanupRules, string version)
     {
         var runtimeMajor = Environment.Version.Major;
@@ -165,10 +204,21 @@ public class SxcManager(
         }
     }
 
+    /// <summary>
+    /// Determines whether a cleanup rule applies to the current runtime major version.
+    /// </summary>
+    /// <param name="rule">The cleanup rule to evaluate.</param>
+    /// <param name="runtimeMajor">The runtime major version.</param>
+    /// <returns><c>true</c> if the runtime is within the rule bounds; otherwise <c>false</c>.</returns>
     private static bool IsRuntimeMatch(AssemblyCleanupRule rule, int runtimeMajor)
         => (!rule.MinRuntimeMajor.HasValue || runtimeMajor >= rule.MinRuntimeMajor.Value)
            && (!rule.MaxRuntimeMajor.HasValue || runtimeMajor <= rule.MaxRuntimeMajor.Value);
 
+    /// <summary>
+    /// Creates a readable representation of an assembly cleanup rule.
+    /// </summary>
+    /// <param name="rule">The rule to describe.</param>
+    /// <returns>A formatted string with assembly name and runtime bounds.</returns>
     private static string DescribeRule(AssemblyCleanupRule rule)
     {
         var min = rule.MinRuntimeMajor?.ToString() ?? "-inf";
@@ -176,6 +226,12 @@ public class SxcManager(
         return $"{rule.AssemblyName} [runtime {min}..{max}]";
     }
 
+    /// <summary>
+    /// Moves all first-level folders from the source root into the destination base.
+    /// </summary>
+    /// <param name="sourceRoot">The root folder containing source subfolders.</param>
+    /// <param name="destinationBase">The destination base folder.</param>
+    /// <param name="version">The version identifier for logging.</param>
     private void MoveSubfoldersToDestinationBase(string sourceRoot, string destinationBase, string version)
     {
         LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(MoveSubfoldersToDestinationBase)} source:'{sourceRoot}', dest:'{destinationBase}', version:{version}");
@@ -213,6 +269,13 @@ public class SxcManager(
         }
     }
 
+    /// <summary>
+    /// Retries a folder move/merge operation multiple times before failing.
+    /// </summary>
+    /// <param name="source">The source directory path.</param>
+    /// <param name="target">The target directory path.</param>
+    /// <param name="version">The version identifier for logging.</param>
+    /// <returns><c>true</c> if the directory was moved or merged; otherwise <c>false</c>.</returns>
     private bool MoveDirectoryWithRetry(string source, string target, string version)
     {
         const int maxAttempts = 10;
@@ -253,6 +316,12 @@ public class SxcManager(
         }
     }
 
+    /// <summary>
+    /// Moves a directory if possible; otherwise merges content into an existing target.
+    /// </summary>
+    /// <param name="source">The source directory path.</param>
+    /// <param name="target">The target directory path.</param>
+    /// <param name="version">The version identifier for logging.</param>
     private void MoveDirectoryMerged(string source, string target, string version)
     {
         if (!Directory.Exists(source))
@@ -320,6 +389,12 @@ public class SxcManager(
         }
     }
 
+    /// <summary>
+    /// Moves a file with retries to tolerate transient IO and access errors.
+    /// </summary>
+    /// <param name="sourceFile">The source file path.</param>
+    /// <param name="targetFile">The target file path.</param>
+    /// <param name="version">The version identifier for logging.</param>
     private void MoveFileWithRetry(string sourceFile, string targetFile, string version)
     {
         const int maxAttempts = 10;
@@ -348,12 +423,27 @@ public class SxcManager(
 
 
     #region Migration helpers
+    /// <summary>
+    /// Builds the migration identifier used for SQL scripts and history records.
+    /// </summary>
+    /// <param name="version">The version string.</param>
+    /// <returns>The migration identifier.</returns>
     private static string BuildMigrationId(string version) => $"{MigrationPrefix}{version}";
 
+    /// <summary>
+    /// Creates a SQL query that checks whether a migration is already registered.
+    /// </summary>
+    /// <param name="migrationId">The migration identifier.</param>
+    /// <returns>A SQL select statement for existence checks.</returns>
     private static string CheckMigrationHistory(string migrationId)
         => $"SELECT 1 FROM {MigrationTable} WHERE MigrationId = '{migrationId}'";
 
     // We are using SQL scripts rather than EF migrations, so we seed the migration history table
+    /// <summary>
+    /// Creates a SQL statement that records a migration in EF migration history if missing.
+    /// </summary>
+    /// <param name="migrationId">The migration identifier.</param>
+    /// <returns>A SQL command that conditionally inserts a history record.</returns>
     private static string RegisterInMigrationHistory(string migrationId)
         => $"""
             IF NOT EXISTS({CheckMigrationHistory(migrationId)})
@@ -361,6 +451,12 @@ public class SxcManager(
             VALUES('{migrationId}', '{EavSystemInfo.VersionString}', SYSDATETIME(), '{Constants.Version}')
             """;
 
+    /// <summary>
+    /// Executes a version migration script when needed and records it in migration history.
+    /// </summary>
+    /// <param name="tenant">The tenant being upgraded.</param>
+    /// <param name="migrationId">The migration identifier.</param>
+    /// <returns><c>true</c> if migration is applied or already present; otherwise <c>false</c>.</returns>
     private bool ApplyMigrationIfNeeded(Tenant tenant, string migrationId)
     {
         var fileName = $"{migrationId}.sql";
@@ -418,6 +514,11 @@ public class SxcManager(
                 )
             """;
 
+    /// <summary>
+    /// Determines whether the tenant already contains a 2sxc database footprint.
+    /// </summary>
+    /// <param name="tenant">The tenant to inspect.</param>
+    /// <returns><c>true</c> if 2sxc data exists; otherwise <c>false</c>.</returns>
     private bool IsCleanInstall(Tenant tenant)
     {
         var exists = Exists(sql, tenant, HasSxcDb);
@@ -425,9 +526,21 @@ public class SxcManager(
         return !exists;
     }
 
+    /// <summary>
+    /// Runs the clean-install SQL script for the tenant.
+    /// </summary>
+    /// <param name="tenant">The tenant to initialize.</param>
+    /// <returns><c>true</c> when the clean install script succeeds; otherwise <c>false</c>.</returns>
     private bool RunCleanInstall(Tenant tenant)
         => sql.ExecuteScript(tenant, GetType().Assembly, $"{CleanInstallMigrationId}.sql");
 
+    /// <summary>
+    /// Executes a select query and returns whether at least one row exists.
+    /// </summary>
+    /// <param name="sql">The SQL repository.</param>
+    /// <param name="tenant">The tenant context for query execution.</param>
+    /// <param name="select">The SQL select statement.</param>
+    /// <returns><c>true</c> if the query returns a row; otherwise <c>false</c>.</returns>
     private static bool Exists(ISqlRepository sql, Tenant tenant, string select)
     {
         using var reader = sql.ExecuteReader(tenant, select);
@@ -437,8 +550,20 @@ public class SxcManager(
 
 
     #region Logging helpers
+    /// <summary>
+    /// Writes an informational installation log entry.
+    /// </summary>
+    /// <param name="message">The log message.</param>
     private void LogInfo(string message) => logger.Log(LogLevel.Information, Utilities.LogMessage(this, message));
+    /// <summary>
+    /// Writes a warning installation log entry.
+    /// </summary>
+    /// <param name="message">The log message.</param>
     private void LogWarn(string message) => logger.Log(LogLevel.Warning, Utilities.LogMessage(this, message));
+    /// <summary>
+    /// Writes an error installation log entry.
+    /// </summary>
+    /// <param name="message">The log message.</param>
     private void LogError(string message) => logger.LogError(Utilities.LogMessage(this, message));
     #endregion
 }
