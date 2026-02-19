@@ -30,11 +30,13 @@ public class AppPolymorphism : CustomDataSource
         var poly = appReaders.Get(AppId).List
             .First<PolymorphismConfiguration>(nullHandling: ModelNullHandling.PreferModelForce)!;
 
-        var data = DataFactory.Create(new Dictionary<string, object?>
-        {
-            { nameof(poly.Resolver), poly.Resolver },
-            { "TypeName", PolymorphismConfiguration.ContentTypeName },
-        }, id: poly.Id);
+        var data = DataFactory
+            .SpawnNew(new() { AutoId = false })
+            .Create(new Dictionary<string, object?>
+            {
+                { nameof(poly.Resolver), poly.Resolver },
+                { "TypeName", PolymorphismConfiguration.ContentTypeName },
+            }, id: poly.Id);
 
         return l.Return([data], $"{poly}");
     }
