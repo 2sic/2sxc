@@ -41,7 +41,7 @@ public class PolymorphConfigReader(LazySvc<ServiceSwitcher<IPolymorphismResolver
 
     public PolymorphConfigReader Init(IEnumerable<IEntity> list)
     {
-        Configuration = list.First<PolymorphismConfiguration>(nullHandling: ModelNullHandling.PreferModelForce)!;
+        Configuration = list.First<PolymorphismConfiguration>(nullHandling: ModelNullHandling.PreferModel)!;
         return this;
     }
 
