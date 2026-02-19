@@ -43,7 +43,7 @@ public partial class EditLoadBackend(
 {
 
 
-    public EditLoadDto Load(int appId, List<ItemIdentifier> items)
+    public async Task<EditLoadDto> Load(int appId, List<ItemIdentifier> items)
     {
         var l = Log.Fn<EditLoadDto>($"load many a#{appId}, items⋮{items.Count}");
         // Security check

@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Processing;
 using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.WebApi.Sys.Cms;
@@ -20,7 +21,7 @@ public class EditSaveBackend(
     DataBuilder dataBuilder)
     : ServiceBase("Cms.SaveBk", connect: [pagePublishing, workEntities, ctxService, jsonSerializer, saveSecurity, saveBackendHelper, dataBuilder, valContentTypeDataStore])
 {
-    public Dictionary<Guid, int> Save(int appId, EditSaveDto package, bool partOfPage)
+    public async Task<Dictionary<Guid, int>> Save(int appId, EditSaveDto package, bool partOfPage)
     {
         var l = Log.Fn<Dictionary<Guid, int>>($"save started with a#{appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
 
@@ -76,8 +77,8 @@ public class EditSaveBackend(
 
         var saveValidator = new SaveDataValidator(Log);
         var updateValidator = new SaveDataUpdateValidator(Log);
-        var items = itemsToProcess
-            .Select((i, index) => // index is helpful in case of errors
+        var items = await Task.WhenAll(itemsToProcess
+            .Select(async (i, index) => // index is helpful in case of errors
             {
                 var ent = ser.Deserialize(i.Entity, false, false);
 
@@ -88,7 +89,9 @@ public class EditSaveBackend(
 
                 // Check if Save is disabled because of content-type metadata (new v21)
                 // This should prevent entities from being put in the DB, where the UI was only meant for some other configuration
-                var (returnEntity, _, procException, processor) = valContentTypeDataStore.Value.PreSave(index, ent).GetAwaiter().GetResult();
+                var (returnEntity, _ /* Decorator */, procException, processor) = await valContentTypeDataStore.Value
+                    .PreSave(index, ent);
+
                 if (procException != null)
                     throw procException;
 
@@ -118,13 +121,16 @@ public class EditSaveBackend(
                         i.Header.Add = false;
                 }
 
-                return new BundleWithHeader<IEntity>
-                {
-                    Header = i.Header,
-                    Entity = ent
-                };
+                return (
+                    Bundle: new BundleWithHeader<IEntity>
+                    {
+                        Header = i.Header,
+                        Entity = ent
+                    },
+                    Processor: processor
+                );
             })
-            .ToList();
+            .ToList());
 
         l.A("items to save generated, all data tests passed");
 
