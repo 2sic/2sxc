@@ -31,6 +31,7 @@ public class SxcManager(
     private const string CleanInstallMigrationId = "ToSic.Sxc.Install";
     private const string MigrationPrefix = "ToSic.Sxc.";
     private const string MigrationTable = "__EFMigrationsHistory";
+    private sealed record AssemblyCleanupRule(string AssemblyName, int? MinRuntimeMajor = null, int? MaxRuntimeMajor = null);
 
     public bool Install(Tenant tenant, string version)
     {
@@ -84,15 +85,15 @@ public class SxcManager(
     {
         LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(Upgrade_20_00_00)} {version}");
 
-        string[] assemblies =
+        AssemblyCleanupRule[] assemblyCleanupRules =
         [
-            "ToSic.Sxc.dll",
-            "ToSic.Eav.dll",
-            "ToSic.Eav.Core.dll",
-            "ToSic.Lib.Core.dll"
+            new("ToSic.Sxc.dll"),
+            new("ToSic.Eav.dll"),
+            new("ToSic.Eav.Core.dll"),
+            new("ToSic.Lib.Core.dll")
         ];
 
-        RemoveAssemblies(tenant, assemblies, version);
+        RemoveAssemblies(tenant, assemblyCleanupRules, version);
     }
 
     private void Upgrade_21_02_00(Tenant tenant, string version)
@@ -117,36 +118,62 @@ public class SxcManager(
             LogError($"2sxc {EavSystemInfo.VersionString} install error: {version} Upgrade Error moving 2sxc folders - {ex}");
         }
 
-        string[] assemblies =
+        AssemblyCleanupRule[] assemblyCleanupRules =
         [
-            "Microsoft.AspNetCore.Authorization.dll"
+            new("Microsoft.AspNetCore.Authorization.dll", MinRuntimeMajor: 10)
         ];
 
-        RemoveAssemblies(tenant, assemblies, version);
+        RemoveAssemblies(tenant, assemblyCleanupRules, version);
     }
 
-    private void RemoveAssemblies(Tenant tenant, string[] assemblies, string version)
+    private void RemoveAssemblies(Tenant tenant, AssemblyCleanupRule[] assemblyCleanupRules, string version)
     {
-        LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(RemoveAssemblies)} assemblies:{assemblies.Length}, version:{version}");
+        var runtimeMajor = Environment.Version.Major;
+        LogInfo($"2sxc {EavSystemInfo.VersionString} install: {nameof(RemoveAssemblies)} rules:{assemblyCleanupRules.Length}, runtimeMajor:{runtimeMajor}, version:{version}");
 
         // In a development environment assemblies cannot be removed as the debugger runs from /bin and locks the files
         if (tenant.Name == TenantNames.Master && !environment.IsDevelopment())
         {
-            foreach (var assembly in assemblies)
+            var matchingRules = assemblyCleanupRules
+                .Where(rule => IsRuntimeMatch(rule, runtimeMajor))
+                .ToArray();
+            var skippedRules = assemblyCleanupRules
+                .Where(rule => !IsRuntimeMatch(rule, runtimeMajor))
+                .ToArray();
+
+            LogInfo($"2sxc {EavSystemInfo.VersionString} install: {version} Assembly cleanup rule matches {matchingRules.Length}/{assemblyCleanupRules.Length} for runtime major {runtimeMajor}.");
+            if (skippedRules.Length > 0)
+            {
+                LogInfo($"2sxc {EavSystemInfo.VersionString} install: {version} Skipping assembly cleanup due to runtime criteria: {string.Join(", ", skippedRules.Select(DescribeRule))}");
+            }
+
+            foreach (var rule in matchingRules)
             {
                 try
                 {
                     var binFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-                    var filepath = Path.Combine(binFolder!, assembly);
-                    LogInfo($"2sxc {EavSystemInfo.VersionString} install: {version} Removing {assembly} - '{filepath}'");
-                    if (File.Exists(filepath)) File.Delete(filepath);
+                    var filepath = Path.Combine(binFolder!, rule.AssemblyName);
+                    LogInfo($"2sxc {EavSystemInfo.VersionString} install: {version} Removing {rule.AssemblyName} - '{filepath}'");
+                    if (File.Exists(filepath))
+                        File.Delete(filepath);
                 }
                 catch (Exception ex)
                 {
-                    LogError($"2sxc {EavSystemInfo.VersionString} install error: {version} Upgrade Error Removing {assembly} - {ex}");
+                    LogError($"2sxc {EavSystemInfo.VersionString} install error: {version} Upgrade Error Removing {rule.AssemblyName} - {ex}");
                 }
             }
         }
+    }
+
+    private static bool IsRuntimeMatch(AssemblyCleanupRule rule, int runtimeMajor)
+        => (!rule.MinRuntimeMajor.HasValue || runtimeMajor >= rule.MinRuntimeMajor.Value)
+           && (!rule.MaxRuntimeMajor.HasValue || runtimeMajor <= rule.MaxRuntimeMajor.Value);
+
+    private static string DescribeRule(AssemblyCleanupRule rule)
+    {
+        var min = rule.MinRuntimeMajor?.ToString() ?? "-inf";
+        var max = rule.MaxRuntimeMajor?.ToString() ?? "+inf";
+        return $"{rule.AssemblyName} [runtime {min}..{max}]";
     }
 
     private void MoveSubfoldersToDestinationBase(string sourceRoot, string destinationBase, string version)
@@ -164,7 +191,7 @@ public class SxcManager(
         foreach (var directory in Directory.GetDirectories(sourceRoot))
         {
             var folderName = Path.GetFileName(directory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
-            
+
             if (string.IsNullOrWhiteSpace(folderName))
                 continue;
 
@@ -344,7 +371,7 @@ public class SxcManager(
             LogWarn($"2sxc {EavSystemInfo.VersionString} install: SQL script '{migrationId}.sql' do not exists as embedded resource in assembly. Skipping.");
             return true;
         }
-        
+
         if (Exists(sql, tenant, CheckMigrationHistory(migrationId)))
         {
             LogWarn($"2sxc {EavSystemInfo.VersionString} install: Migration for version '{migrationId}' already present in history. Skipping SQL script '{migrationId}.sql'.");
@@ -412,6 +439,6 @@ public class SxcManager(
     #region Logging helpers
     private void LogInfo(string message) => logger.Log(LogLevel.Information, Utilities.LogMessage(this, message));
     private void LogWarn(string message) => logger.Log(LogLevel.Warning, Utilities.LogMessage(this, message));
-    private void LogError(string message) => logger.LogError(Utilities.LogMessage(this, message)); 
+    private void LogError(string message) => logger.LogError(Utilities.LogMessage(this, message));
     #endregion
 }
