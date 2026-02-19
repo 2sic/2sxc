@@ -93,7 +93,7 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBas
         // Preprocessor exists, and supports pre-saving, so execute it
         var result = await dataProcessor.Process(action, new() { Data = ent });
         var exception = HttpExceptionAbstraction.FromPossibleException(result.Exceptions.FirstOrDefault(), HttpStatusCode.Forbidden);
-        return l.Return(new(result.Data, null, exception = exception), $"action: {action}, {(exception != null ? "with exception" : "")}");
+        return l.Return(new(result.Data, null, exception), $"action: {action}, {(exception != null ? "with exception" : "")}");
 
 
         Result AsError(string msg) =>

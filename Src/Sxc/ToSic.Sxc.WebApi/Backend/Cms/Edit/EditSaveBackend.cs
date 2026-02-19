@@ -134,17 +134,42 @@ public class EditSaveBackend(
 
         l.A("items to save generated, all data tests passed");
 
-        var result = items.Any()
-            ? pagePublishing.SaveInPagePublishing(
-                context,
-                ctxService.BlockOrNull(),
-                appId,
-                items,
-                partOfPage,
-                forceSaveAsDraft => DoSave(appEntities, items, package.DraftShouldBranch || forceSaveAsDraft),
-                permCheck
-            )
-            : [];
+        if (!items.Any())
+            return l.Return([], "returning: 0");
+
+        var itemsWithoutProcessor = items
+            .Select(i => i.Bundle)
+            .ToList();
+
+        var result = pagePublishing.SaveInPagePublishing(
+            context,
+            ctxService.BlockOrNull(),
+            appId,
+            itemsWithoutProcessor,
+            partOfPage,
+            forceSaveAsDraft => DoSave(appEntities, itemsWithoutProcessor, package.DraftShouldBranch || forceSaveAsDraft),
+            permCheck
+        );
+
+        var itemsWithProcessor = items
+            .Where(i => i.Processor != null)
+            .ToList();
+
+        if (!itemsWithProcessor.Any())
+            return l.Return(result, $"returning: {result.Count}, no {DataProcessingEvents.PostSave}");
+
+        l.A($"Will run processors for {itemsWithProcessor.Count} items");
+        foreach (var item in itemsWithProcessor)
+        {
+            try
+            {
+                var post = await item.Processor!.Process(DataProcessingEvents.PostSave, new() { Data = item.Bundle.Entity });
+            }
+            catch (Exception ex)
+            {
+                l.Ex(ex, $"Error running processor for entity {item.Bundle.Entity.EntityGuid} ({item.Bundle.Entity.EntityId})");
+            }
+        }
 
         return l.Return(result, $"returning: {result.Count}");
     }
