@@ -37,7 +37,7 @@ internal record UserModelOfEntity : ModelOfEntity, IUserModel
     //IMetadataOf IHasMetadata.Metadata => null;
 
     public IEnumerable<IUserRoleModel> Roles =>
-        Entity.Children(field: nameof(Roles)).AsList<UserRoleModelOfEntity>();
+        Entity.Children(field: nameof(Roles)).ToModels<UserRoleModelOfEntity>();
         //AsList<UserRoleModelOfEntity>(Entity.Children(field: nameof(Roles)))!;
 
 }

@@ -19,7 +19,7 @@ internal class LoadSettingsForGpsDefaults(
         {
             var getMaps = parameters.ContextOfApp.AppSettings.InternalGetPath(GoogleMapsSettings.SettingsPath);
             coordinates = getMaps?.GetFirstResultEntity() is { } mapsEntity
-                ? mapsEntity.As<GoogleMapsSettings>()!.DefaultCoordinates
+                ? mapsEntity.ToModel<GoogleMapsSettings>()!.DefaultCoordinates
                 : MapsCoordinates.Defaults;
         }
 

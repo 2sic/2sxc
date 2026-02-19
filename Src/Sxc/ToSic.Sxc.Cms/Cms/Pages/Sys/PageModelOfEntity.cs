@@ -20,5 +20,5 @@ public record PageModelOfEntity: ModelOfEntity, IPageModel
     public bool IsDeleted => GetThis(false);
 
     public IEnumerable<IPageModel> Children =>
-        Entity.Children(field: nameof(Children)).AsList<PageModelOfEntity>();
+        Entity.Children(field: nameof(Children)).ToModels<PageModelOfEntity>();
 }

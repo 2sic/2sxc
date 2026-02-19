@@ -318,7 +318,7 @@ public class ExtensionExportService(
 
                 return releaseEntity == null
                     ? lr.ReturnNull($"Release entity not found for GUID: {guid}")
-                    : lr.Return(releaseEntity.As<AppExtensionRelease>()!, "found");
+                    : lr.Return(releaseEntity.ToModel<AppExtensionRelease>()!, "found");
             })
             .Where(r => r != null)!
             .ToList();

@@ -16,7 +16,7 @@ public class LightSpeedDecoratorTests(DataBuilder dataBuilder)//: TestBaseEavCor
     [Fact]
     public void DecoratorWithNullEntity()
     {
-        var lsDecorator = (null as IEntity).As<LightSpeedDecorator>(nullHandling: ModelNullHandling.PreferModelForce);
+        var lsDecorator = (null as IEntity).ToModel<LightSpeedDecorator>(nullHandling: ModelNullHandling.PreferModelForce);
         TestEmptyDecorator(lsDecorator);
         True(lsDecorator.UrlParametersOthersDisableCache);
     }
