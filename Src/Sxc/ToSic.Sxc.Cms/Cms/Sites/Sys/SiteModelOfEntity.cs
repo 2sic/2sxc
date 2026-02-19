@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Cms.Sites.Sys;
 
-public record SiteModelOfEntity: ModelOfEntityCore, ISiteModel
+public record SiteModelOfEntity: ModelOfEntity, ISiteModel
 {
     public int Id => Entity.EntityId;
     public Guid Guid => Entity.EntityGuid;

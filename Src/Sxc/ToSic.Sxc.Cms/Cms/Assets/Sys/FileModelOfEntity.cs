@@ -4,7 +4,7 @@ using ToSic.Eav.Apps.Assets.Sys;
 namespace ToSic.Sxc.Cms.Assets.Sys;
 
 [PrivateApi("Still tweaking details and naming v19.0x")]
-internal record FileModelOfEntity: ModelOfEntityCore, IFileModelSync, IFileModel
+internal record FileModelOfEntity: ModelOfEntity, IFileModelSync, IFileModel
 {
     ///// <summary>
     ///// The ID of this asset (file/folder).
