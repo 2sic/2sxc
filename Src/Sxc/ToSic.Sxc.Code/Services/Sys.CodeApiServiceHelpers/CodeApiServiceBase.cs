@@ -23,10 +23,10 @@ public abstract class CodeApiServiceBase(CodeApiServiceBase.Dependencies service
         : DependenciesRecord(connect: [/* never! serviceProvider */ LogStore, User, Site, ZoneMapper, AppsCatalog]);
 
     public record ScopedDependencies(
-        Generator<IExecutionContextFactory> CodeRootGenerator,
+        Generator<IExecutionContextFactory> ExCtxGenerator,
         Generator<App> AppGenerator,
         LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder)
-        : DependenciesRecord(connect: [CodeRootGenerator, AppGenerator, ModAndBlockBuilder]);
+        : DependenciesRecord(connect: [ExCtxGenerator, AppGenerator, ModAndBlockBuilder]);
 
     protected IApp GetApp(Generator<App> appGenerator, NoParamOrder npo = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
     {

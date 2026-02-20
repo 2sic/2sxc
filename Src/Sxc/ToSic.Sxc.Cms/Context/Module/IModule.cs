@@ -17,7 +17,7 @@ public interface IModule
 
 
     /// <summary>
-    /// Determines if this is a the primary App (the content-app) as opposed to any additional app
+    /// Determines if this is the primary App (the content-app) as opposed to any additional app
     /// </summary>
     [PrivateApi("don't think this should be here! also not sure if it's the primary - or the contentApp! reason seems to be that we detect it by the DNN module name")]
     [ShowApiWhenReleased(ShowApiMode.Never)]

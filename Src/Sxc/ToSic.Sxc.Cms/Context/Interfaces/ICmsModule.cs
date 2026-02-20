@@ -39,7 +39,7 @@ public interface ICmsModule: IHasMetadata
     int Id { get; }
 
     /// <summary>
-    /// Information about the root block in the module.
+    /// Information about the **root** block in the module.
     /// </summary>
     /// <remarks>
     /// Added ca. v13, but not documented/published till 2sxc 17.

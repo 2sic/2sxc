@@ -54,13 +54,19 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
         // Note that BlockOptional was already retrieved in the base class
         var codeRoot = context.HttpContext.RequestServices
             .Build<IExecutionContextFactory>()
-            .New(_owner, BlockOptional, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel12);
+            .New(new()
+            {
+                OwnerOrNull = _owner,
+                BlockOrNull = BlockOptional,
+                ParentLog = Log,
+                CompatibilityFallback = CompatibilityLevels.CompatibilityLevel12,
+            });
         ConnectToRoot(codeRoot);
 
         AdamCode = codeRoot.GetService<AdamCode>();
 
         // In case SxcBlock was null, there is no instance, but we may still need the app
-        if (ExCtx.GetApp() == null)
+        if (ExCtx.GetApp() == null! /* realistic case */)
         {
             Log.A("DynCode.App is null");
             TryToAttachAppFromUrlParams(context);
@@ -68,9 +74,9 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
 
         // Ensure the Api knows what path it's on, in case it will
         // create instances of .cs files
-        if (context.HttpContext.Items.TryGetValue(SourceCodeConstants.SharedCodeRootPathKeyInCache, out var createInstancePath))
-            if (_owner is IGetCodePath withCodePath)
-                withCodePath.CreateInstancePath = (createInstancePath as string)!;
+        if (context.HttpContext.Items.TryGetValue(SourceCodeConstants.SharedCodeRootPathKeyInCache, out var createInstancePath)
+            && _owner is IGetCodePath withCodePath)
+            withCodePath.CreateInstancePath = (createInstancePath as string)!;
     }
 
 

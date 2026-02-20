@@ -69,14 +69,18 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
     [PrivateApi]
     public virtual IExecutionContext InitDynCodeRoot(IBlock? block, ILog? parentLog)
     {
-        this.LinkLog(parentLog ?? (block as IHasLog)?.Log);
+        this.LinkLog(parentLog);
         var cLog = Log.Fn<IExecutionContext>();
 
         if (block == null)
             return cLog.Return(this, "no block");
 
         Block = block;
-        AttachApp(block.App);
+
+        // Only attach App if it exists
+        // For example when using the Execution Context in a module container, which doesn't have initialized data yet
+        if (block.AppIsReady)
+            AttachApp(block.App);
 
         return cLog.Return(this, $"AppId: {App?.AppId}, Block: {(block.ConfigurationIsReady ? block.Configuration?.BlockIdentifierOrNull?.Guid : null)}");
     }

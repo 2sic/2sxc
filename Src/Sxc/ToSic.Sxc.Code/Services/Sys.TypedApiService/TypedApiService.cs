@@ -24,10 +24,12 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
     /// It's important to understand that everything in here will use the scoped service provider.
     /// </summary>
     [field: AllowNull, MaybeNull]
-    protected IServiceProvider ScopedServiceProvider => field ??= Services.ServiceProvider.CreateScope().ServiceProvider;
+    protected IServiceProvider ScopedServiceProvider => field
+        ??= Services.ServiceProvider.CreateScope().ServiceProvider;
 
     [field: AllowNull, MaybeNull]
-    private ScopedDependencies ServicesScoped => field ??= ScopedServiceProvider.Build<ScopedDependencies>().ConnectServices(Log);
+    private ScopedDependencies ServicesScoped => field
+        ??= ScopedServiceProvider.Build<ScopedDependencies>().ConnectServices(Log);
 
 
     protected void ActivateEditUi() => EditUiRequired = true;
@@ -42,11 +44,7 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
         MakeSureLogIsInHistory();
 
         var app = GetApp(ServicesScoped.AppGenerator, zoneId: zoneId, appId: appId, site: site, withUnpublished: withUnpublished);
-        var codeRoot = GetNewCodeRoot();
-        ((IExCtxAttachApp)codeRoot).AttachApp(app);
-
-        var appTyped = codeRoot.GetState<IAppTyped>();
-        return l.ReturnAsOk(appTyped);
+        return l.ReturnAsOk(CreateCodeRootWithApp(app));
     }
 
     /// <inheritdoc />
@@ -56,9 +54,15 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
 
         MakeSureLogIsInHistory();
         var app = GetAndInitApp(ServicesScoped.AppGenerator.New(), GetPrimaryAppIdentity(null), null);
+        return l.ReturnAsOk(CreateCodeRootWithApp(app));
+    }
+
+    private IAppTyped CreateCodeRootWithApp(IApp app)
+    {
         var codeRoot = GetNewCodeRoot();
         ((IExCtxAttachApp)codeRoot).AttachApp(app);
-        return l.ReturnAsOk(codeRoot.GetState<IAppTyped>());
+        var appTyped = codeRoot.GetState<IAppTyped>();
+        return appTyped;
     }
 
     #endregion
@@ -79,8 +83,13 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
         MakeSureLogIsInHistory();
         ActivateEditUi();
         var cmsBlock = ServicesScoped.ModAndBlockBuilder.Value.BuildBlock(pageId, moduleId);
-        var codeRoot = ServicesScoped.CodeRootGenerator.New()
-            .New(parentClassOrNull: null, cmsBlock, Log, CompatibilityLevels.CompatibilityLevel16);
+        var codeRoot = ServicesScoped.ExCtxGenerator.New().New(new()
+        {
+            OwnerOrNull = null,
+            BlockOrNull = cmsBlock,
+            ParentLog = Log,
+            CompatibilityFallback = CompatibilityLevels.CompatibilityLevel16,
+        });
 
         var code12 = new TypedApiStandalone(codeRoot, codeRoot.GetTypedApi());
         return l.ReturnAsOk(code12);
@@ -108,8 +117,13 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
     }
 
     private IExecutionContext GetNewCodeRoot() =>
-        ServicesScoped.CodeRootGenerator.New()
-            .New(parentClassOrNull: null, null, Log, CompatibilityLevels.CompatibilityLevel16);
+        ServicesScoped.ExCtxGenerator.New().New(new()
+        {
+            OwnerOrNull = null,
+            BlockOrNull = null,
+            ParentLog = Log,
+            CompatibilityFallback = CompatibilityLevels.CompatibilityLevel16,
+        });
 
     #endregion
 

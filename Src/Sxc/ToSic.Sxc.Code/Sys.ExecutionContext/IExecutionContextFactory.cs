@@ -7,10 +7,14 @@ public interface IExecutionContextFactory
     /// <summary>
     /// Creates a CodeApiService - if possible based on the parent class requesting it.
     /// </summary>
-    /// <param name="parentClassOrNull"></param>
-    /// <param name="blockOrNull"></param>
-    /// <param name="parentLog"></param>
-    /// <param name="compatibilityFallback"></param>
     /// <returns></returns>
-    IExecutionContext New(object? parentClassOrNull, IBlock? blockOrNull, ILog parentLog, int compatibilityFallback);
+    IExecutionContext New(ExecutionContextOptions options);
+}
+
+public record ExecutionContextOptions
+{
+    public object? OwnerOrNull { get; init; }
+    public IBlock? BlockOrNull { get; init; }
+    public required ILog ParentLog { get; init; }
+    public int CompatibilityFallback { get; init; }
 }

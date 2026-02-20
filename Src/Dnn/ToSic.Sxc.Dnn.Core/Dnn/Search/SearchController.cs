@@ -311,15 +311,20 @@ internal class SearchController(
         l.A("got instance of compiled ViewController class");
 
         // 2. Check if it implements ToSic.Sxc.Search.ICustomizeSearch - otherwise just return the empty search results as shown above
-        if (!(instance is ICustomizeSearch customizeSearch))
+        if (instance is not ICustomizeSearch customizeSearch)
             return l.ReturnNull("exit, class do not implements ICustomizeSearch");
 
         // 3. Make sure it has the full context if it's based on DynamicCode (like Code12)
         if (instance is INeedsExecutionContext instanceWithContext)
         {
             l.A($"attach DynamicCode context to class instance");
-            var parentDynamicCodeRoot = codeRootFactory.New()
-                .New(null, block, Log, CompatibilityLevels.CompatibilityLevel10);
+            var parentDynamicCodeRoot = codeRootFactory.New().New(new()
+            {
+                OwnerOrNull = null,
+                BlockOrNull = block,
+                ParentLog = Log,
+                CompatibilityFallback = CompatibilityLevels.CompatibilityLevel10,
+            });
             instanceWithContext.ConnectToRoot(parentDynamicCodeRoot);
         }
 
