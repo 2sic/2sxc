@@ -52,7 +52,7 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
 
         // Use the ServiceProvider of the current request to build DynamicCodeRoot
         // Note that BlockOptional was already retrieved in the base class
-        var codeRoot = context.HttpContext.RequestServices
+        var exCtx = context.HttpContext.RequestServices
             .Build<IExecutionContextFactory>()
             .New(new()
             {
@@ -61,9 +61,9 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
                 ParentLog = Log,
                 CompatibilityFallback = CompatibilityLevels.CompatibilityLevel12,
             });
-        ConnectToRoot(codeRoot);
+        ConnectToRoot(exCtx);
 
-        AdamCode = codeRoot.GetService<AdamCode>();
+        AdamCode = exCtx.GetService<AdamCode>();
 
         // In case SxcBlock was null, there is no instance, but we may still need the app
         if (ExCtx.GetApp() == null! /* realistic case */)

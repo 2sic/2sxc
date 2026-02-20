@@ -15,11 +15,11 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
 {
     #region DynamicCode Attachment / Handling through ViewData
 
-    public override void ConnectToRoot(IExecutionContext codeRoot)
+    public override void ConnectToRoot(IExecutionContext exCtx)
     {
-        base.ConnectToRoot(codeRoot);
-        _exCtx = codeRoot;
-        owner.LinkLog(codeRoot.Log);
+        base.ConnectToRoot(exCtx);
+        _exCtx = exCtx;
+        owner.LinkLog(exCtx.Log);
         Log.A("OqtRazorHelper connect Log");
     }
 

@@ -30,10 +30,10 @@ internal class OqtLinkService(
 
     private new OqtLinkPaths LinkPaths => (OqtLinkPaths) base.LinkPaths;
 
-    public override void ConnectToRoot(IExecutionContext codeRoot)
+    public override void ConnectToRoot(IExecutionContext exCtx)
     {
-        base.ConnectToRoot(codeRoot);
-        _blockCtx = codeRoot.GetContextOfBlock();
+        base.ConnectToRoot(exCtx);
+        _blockCtx = exCtx.GetContextOfBlock();
     }
 
     protected override string ToApi(string api, string parameters = null) => ApiNavigateUrl(api, parameters);

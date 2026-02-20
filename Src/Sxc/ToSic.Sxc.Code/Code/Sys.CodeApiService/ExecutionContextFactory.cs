@@ -24,7 +24,7 @@ public class ExecutionContextFactory(IServiceProvider serviceProvider)
             ? TryBuildCodeApiServiceForDynamic(options.OwnerOrNull.GetType())
             : null;
 
-        // Default case / old case - just a non-generic DnnDynamicCodeRoot
+        // Default or old case - just a non-generic DnnDynamicCodeRoot
         // Also applies if previous call didn't succeed
         executionContext ??= serviceProvider.Build<ExecutionContext>();
 
@@ -64,8 +64,8 @@ public class ExecutionContextFactory(IServiceProvider serviceProvider)
             var finalType = typeof(ExecutionContext<,>).MakeGenericType(typeof(object), kitType);
 
             // 3. return that
-            var codeRoot = serviceProvider.Build<ExecutionContext>(finalType);
-            return l.ReturnAsOk(codeRoot);
+            var exCtx = serviceProvider.Build<ExecutionContext>(finalType);
+            return l.ReturnAsOk(exCtx);
         }
         catch (Exception ex)
         {

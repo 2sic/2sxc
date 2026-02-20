@@ -9,11 +9,12 @@ internal class ModuleUnknown: IModule, IIsUnknown
     // ReSharper disable once UnusedParameter.Local
     public ModuleUnknown(WarnUseOfUnknown<ModuleUnknown> _) { }
 
-    public IModule Init(int id)
-    {
-        // don't do anything
-        return this;
-    }
+    /// <summary>
+    /// Dummy init, don't do anything
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public IModule Init(int id) => this;
 
     public int Id => EavConstants.NullId;
     public bool IsContent => true;

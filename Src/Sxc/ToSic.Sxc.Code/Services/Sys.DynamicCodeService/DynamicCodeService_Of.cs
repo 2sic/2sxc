@@ -24,7 +24,7 @@ partial class DynamicCodeService
         MakeSureLogIsInHistory();
         ActivateEditUi();
         var cmsBlock = ServicesScoped.ModAndBlockBuilder.Value.BuildBlock(pageId, moduleId);
-        var codeRoot = ServicesScoped.ExCtxGenerator.New().New(new()
+        var exCtx = ServicesScoped.ExCtxGenerator.New().New(new()
         {
             OwnerOrNull = null,
             BlockOrNull = cmsBlock,
@@ -32,7 +32,7 @@ partial class DynamicCodeService
             CompatibilityFallback = CompatibilityLevels.CompatibilityLevel12,
         });
 
-        var code12 = new DynamicCodeStandalone(codeRoot, ((ExecutionContext)codeRoot).DynamicApi);
+        var code12 = new DynamicCodeStandalone(exCtx, ((ExecutionContext)exCtx).DynamicApi);
         return l.ReturnAsOk(code12);
     }
 
@@ -47,7 +47,7 @@ partial class DynamicCodeService
         var l = Log.Fn<IDynamicCode12>();
         MakeSureLogIsInHistory();
         ActivateEditUi();
-        var codeRoot = ServicesScoped.ExCtxGenerator.New().New(new()
+        var exCtx = ServicesScoped.ExCtxGenerator.New().New(new()
         {
             OwnerOrNull = null,
             BlockOrNull = null,
@@ -55,8 +55,8 @@ partial class DynamicCodeService
             CompatibilityFallback = CompatibilityLevels.CompatibilityLevel12,
         });
         var app = App(zoneId: zoneId, appId: appId);
-        ((IExCtxAttachApp)codeRoot).AttachApp(app);
-        var code12 = new DynamicCodeStandalone(codeRoot, ((ExecutionContext)codeRoot).DynamicApi);
+        ((IExCtxAttachApp)exCtx).AttachApp(app);
+        var code12 = new DynamicCodeStandalone(exCtx, ((ExecutionContext)exCtx).DynamicApi);
         return l.ReturnAsOk(code12);
     }
 }
