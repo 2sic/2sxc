@@ -128,4 +128,6 @@ public interface ITypedApiService
 
     /// <inheritdoc />
     ITypedApi ApiOfModule(int pageId, int moduleId);
+
+    ITypedApi ApiOfSite(int siteId, int pageId, int moduleId);
 }

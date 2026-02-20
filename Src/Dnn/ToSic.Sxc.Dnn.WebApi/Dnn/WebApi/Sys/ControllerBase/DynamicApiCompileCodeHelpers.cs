@@ -54,34 +54,32 @@ internal class DynamicApiCompileCodeHelpers: CompileCodeHelper
         Log.A($"HasBlock: {block != null}");
 
         var services = _sysHlp.GetService<ApiControllerDependencies>().ConnectServices(Log);
-        var codeRoot = services.ExCtxFactory
-            .New(new()
-            {
-                OwnerOrNull = _owner,
-                BlockOrNull = block,
-                ParentLog = Log,
-                CompatibilityFallback = CompatibilityLevels.CompatibilityLevel10,
-            });
-            //.New(_owner, block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel10);
+        var exCtx = services.ExCtxFactory.New(new()
+        {
+            OwnerOrNull = _owner,
+            BlockOrNull = block,
+            ParentLog = Log,
+            CompatibilityFallback = CompatibilityLevels.CompatibilityLevel10,
+        });
 
-        _sysHlp.ConnectToRoot(codeRoot);
+        _sysHlp.ConnectToRoot(exCtx);
 
-        AdamCode = codeRoot.GetService<AdamCode>();
+        AdamCode = exCtx.GetService<AdamCode>();
 
         // In case SxcBlock was null, there is no instance, but we may still need the app
-        var app = codeRoot.GetApp();
+        var app = exCtx.GetApp();
         if (app == null! /* Special: there are cases where it's null, even though the API doesn't show it */)
         {
             Log.A("DynCode.App is null");
             app = GetAppOrNullFromUrlParams(services, request);
             if (app != null)
-                ((IExCtxAttachApp)codeRoot).AttachApp(app);
+                ((IExCtxAttachApp)exCtx).AttachApp(app);
         }
 
         var reqProperties = request.Properties;
 
         // must run this after creating AppAndDataHelpers
-        reqProperties.Add(DnnConstants.DnnContextKey, (codeRoot as IHasDnn)?.Dnn);
+        reqProperties.Add(DnnConstants.DnnContextKey, (exCtx as IHasDnn)?.Dnn);
 
         /*if (*/
         reqProperties.TryGetTyped(SourceCodeConstants.SharedCodeRootPathKeyInCache, out string path);
@@ -92,7 +90,7 @@ internal class DynamicApiCompileCodeHelpers: CompileCodeHelper
         _sysHlp.WebApiLogging?.AddLogSpecs(block, app, currentPath, _sysHlp.GetService<CodeInfosInScope>());
 
 
-        return (codeRoot, path);
+        return (exCtx, path);
     }
 
 

@@ -5,6 +5,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Services.Sys.CodeApiServiceHelpers;
 using ToSic.Sxc.Sys.ExecutionContext;
 
@@ -75,7 +76,8 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
         MakeSureLogIsInHistory();
         ActivateEditUi();
         var cmsBlock = ServicesScoped.ModAndBlockBuilder.Value.BuildBlock(pageId, moduleId);
-        var codeRoot = ServicesScoped.ExCtxGenerator.New().New(new()
+
+        var exCtx = ServicesScoped.ExCtxGenerator.New().New(new()
         {
             OwnerOrNull = null,
             BlockOrNull = cmsBlock,
@@ -83,7 +85,7 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
             CompatibilityFallback = CompatibilityLevels.CompatibilityLevel16,
         });
 
-        var code12 = new TypedApiStandalone(codeRoot, codeRoot.GetTypedApi());
+        var code12 = new TypedApiStandalone(exCtx, exCtx.GetTypedApi());
         return l.ReturnAsOk(code12);
     }
 
@@ -95,22 +97,30 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
     public ITypedApi ApiOfSite(int siteId) =>
         ApiOfAppOrSite(GetPrimaryAppIdentity(siteId));
 
+
+    public ITypedApi ApiOfSite(int siteId, int pageId, int moduleId)
+    {
+        var moduleFallback = ServicesScoped.ModAndBlockBuilder.Value.GetModule(pageId, moduleId);
+        var appIdentity = GetPrimaryAppIdentity(siteId);
+        return OfAppOrSiteInternal(zoneId: appIdentity.ZoneId, appId: appIdentity.AppId, moduleFallback);
+    }
+
     private ITypedApi ApiOfAppOrSite(IAppIdentity appIdentity) =>
         OfAppOrSiteInternal(zoneId: appIdentity.ZoneId, appId: appIdentity.AppId);
 
 
-    private ITypedApi OfAppOrSiteInternal(int? zoneId = null, int? appId = null)
+    private ITypedApi OfAppOrSiteInternal(int? zoneId = null, int? appId = null, IModule? moduleIfBlockUnknown = default)
     {
         var l = Log.Fn<ITypedApi>();
         MakeSureLogIsInHistory();
         ActivateEditUi();
         var app = GetApp(ServicesScoped.AppGenerator, zoneId: zoneId, appId: appId);
-        var exCtx = GetNewCodeRoot(app);
+        var exCtx = GetNewCodeRoot(app, moduleIfBlockUnknown);
         var code12 = new TypedApiStandalone(exCtx, exCtx.GetTypedApi());
         return l.ReturnAsOk(code12);
     }
 
-    private IExecutionContext GetNewCodeRoot(IApp? appToAttach = default)
+    private IExecutionContext GetNewCodeRoot(IApp? appToAttach = default, IModule? moduleIfBlockUnknown = default)
     {
         var exCtx = ServicesScoped.ExCtxGenerator.New().New(new()
         {
@@ -118,6 +128,7 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
             BlockOrNull = null,
             ParentLog = Log,
             CompatibilityFallback = CompatibilityLevels.CompatibilityLevel16,
+            ModuleIfBlockUnknown = moduleIfBlockUnknown,
         });
         if (appToAttach != null)
             ((IExCtxAttachApp)exCtx).AttachApp(appToAttach);

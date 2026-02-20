@@ -10,7 +10,7 @@ public abstract class ModuleAndBlockBuilder(Generator<BlockOfModule> blockGenera
     /// <summary>
     /// Get the module specific to each platform.
     /// </summary>
-    protected abstract IModule GetModuleImplementation(int pageId, int moduleId);
+    public abstract IModule GetModule(int pageId, int moduleId);
 
     protected void ThrowIfModuleIsNull<TModule>(int pageId, int moduleId, TModule moduleInfo)
     {
@@ -23,7 +23,7 @@ public abstract class ModuleAndBlockBuilder(Generator<BlockOfModule> blockGenera
     public IBlock BuildBlock(int pageId, int moduleId)
     {
         var l = Log.Fn<IBlock>($"{pageId}, {moduleId}");
-        var module = GetModuleImplementation(pageId, moduleId);
+        var module = GetModule(pageId, moduleId);
         var ctx = GetContextOfBlock(module, pageId);
         
         var block = blockGenerator.New().GetBlockOfModule(ctx);

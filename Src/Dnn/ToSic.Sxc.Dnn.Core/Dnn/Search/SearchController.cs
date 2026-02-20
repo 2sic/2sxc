@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Dnn.Search;
 internal class SearchController(
     AppsCacheSwitch appsCache,
     Generator<CodeCompiler> codeCompiler,
-    Generator<IExecutionContextFactory> codeRootFactory,
+    Generator<IExecutionContextFactory> exCtxFactory,
     Generator<ISite> siteGenerator,
     LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder,
     LazySvc<ILookUpEngineResolver> dnnLookUpEngineResolver,
@@ -49,7 +49,7 @@ internal class SearchController(
     : ServiceBase("DNN.Search",
         connect:
         [
-            appsCache, codeCompiler, codeRootFactory, siteGenerator, engineFactory, dnnLookUpEngineResolver,
+            appsCache, codeCompiler, exCtxFactory, siteGenerator, engineFactory, dnnLookUpEngineResolver,
             moduleAndBlockBuilder, logStore, polymorphism
         ])
 {
@@ -318,7 +318,7 @@ internal class SearchController(
         if (instance is INeedsExecutionContext instanceWithContext)
         {
             l.A($"attach DynamicCode context to class instance");
-            var parentDynamicCodeRoot = codeRootFactory.New().New(new()
+            var parentDynamicCodeRoot = exCtxFactory.New().New(new()
             {
                 OwnerOrNull = null,
                 BlockOrNull = block,

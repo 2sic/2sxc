@@ -61,9 +61,15 @@ internal class CmsContext(
     [field: AllowNull, MaybeNull]
     public ICmsModule Module => field
         ??= new CmsModule(this,
-            BlockInternal?.Context?.Module ?? (ExCtx as ExecutionContext)?.ModuleIfBlockUnknown ?? new ModuleUnknown(null!),
-            BlockInternal?.RootBlock,
-            SiteAppReader.Metadata
+            // First try to get the module from the block
+            module: BlockInternal?.Context?.Module
+                    // If that's unknown, try to see if the execution context has an alternate module
+                    // like when used on a container which is not a 2sxc module
+                    ?? (ExCtx as ExecutionContext)?.ModuleIfBlockUnknown
+                    // Fallback: just make sure don't have errors
+                    ?? new ModuleUnknown(null!),
+            rootBlock: BlockInternal?.RootBlock,
+            appMetadata: SiteAppReader.Metadata
         );
 
     [field: AllowNull, MaybeNull]
