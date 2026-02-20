@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Context.Sys.Module;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -18,9 +17,10 @@ internal class CmsContext(
     IPlatform platform,
     IContextOfSite siteCtxFallback,
     LazySvc<IPage> pageLazy,
+    LazySvc<IModule> moduleFallback,
     IAppReaderFactory appReaders)
     : ServiceWithContext(SxcLogName + ".CmsCtx",
-        connect: [siteCtxFallback, pageLazy, appReaders, platform]), ICmsContext
+        connect: [siteCtxFallback, pageLazy, moduleFallback, appReaders, platform]), ICmsContext
 {
     #region Internal context
 
@@ -51,7 +51,7 @@ internal class CmsContext(
 
     [field: AllowNull, MaybeNull]
     public ICmsPage Page => field
-        ??= new CmsPage(this, SiteAppReader.Metadata, pageLazy);
+        ??= new CmsPage(this, pageLazy, SiteAppReader.Metadata);
 
     [field: AllowNull, MaybeNull]
     public ICmsCulture Culture => field
@@ -59,13 +59,13 @@ internal class CmsContext(
 
     [field: AllowNull, MaybeNull]
     public ICmsModule Module => field
-        ??= new CmsModule(this, BlockInternal?.Context?.Module ?? new ModuleUnknown(null!), BlockInternal, SiteAppReader.Metadata);
+        ??= new CmsModule(this, BlockInternal?.Context?.Module ?? moduleFallback.Value /*new ModuleUnknown(null!)*/, BlockInternal?.RootBlock, SiteAppReader.Metadata);
 
     [field: AllowNull, MaybeNull]
     public ICmsUser User => field
-        ??= CreateCurrent();
+        ??= CreateCurrentUser();
 
-    private ICmsUser CreateCurrent()
+    private ICmsUser CreateCurrentUser()
     {
         var userSvc = ExCtx.GetService<IUserService>(reuse: true);
         var userModel = userSvc.GetCurrentUser();
