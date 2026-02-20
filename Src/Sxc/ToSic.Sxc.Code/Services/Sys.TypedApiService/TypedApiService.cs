@@ -44,7 +44,7 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
         MakeSureLogIsInHistory();
 
         var app = GetApp(ServicesScoped.AppGenerator, zoneId: zoneId, appId: appId, site: site, withUnpublished: withUnpublished);
-        return l.ReturnAsOk(CreateCodeRootWithApp(app));
+        return l.ReturnAsOk(GetNewCodeRoot(app).GetState<IAppTyped>());
     }
 
     /// <inheritdoc />
@@ -54,15 +54,7 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
 
         MakeSureLogIsInHistory();
         var app = GetAndInitApp(ServicesScoped.AppGenerator.New(), GetPrimaryAppIdentity(null), null);
-        return l.ReturnAsOk(CreateCodeRootWithApp(app));
-    }
-
-    private IAppTyped CreateCodeRootWithApp(IApp app)
-    {
-        var codeRoot = GetNewCodeRoot();
-        ((IExCtxAttachApp)codeRoot).AttachApp(app);
-        var appTyped = codeRoot.GetState<IAppTyped>();
-        return appTyped;
+        return l.ReturnAsOk(GetNewCodeRoot(app).GetState<IAppTyped>());
     }
 
     #endregion
@@ -71,10 +63,10 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
     #region Of App / Site / Module etc.
 
     /// <inheritdoc />
-    public ITypedApi ApiOfApp(int appId) => OfAppInternal(appId: appId);
+    public ITypedApi ApiOfApp(int appId) => OfAppOrSiteInternal(appId: appId);
 
     /// <inheritdoc />
-    public ITypedApi ApiOfApp(int zoneId, int appId) => OfAppInternal(zoneId: zoneId, appId: appId);
+    public ITypedApi ApiOfApp(int zoneId, int appId) => OfAppOrSiteInternal(zoneId: zoneId, appId: appId);
 
     /// <inheritdoc />
     public ITypedApi ApiOfModule(int pageId, int moduleId)
@@ -96,34 +88,41 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
     }
 
     /// <inheritdoc />
-    public ITypedApi ApiOfSite() => ApiOfApp(GetPrimaryAppIdentity(null));
+    public ITypedApi ApiOfSite() =>
+        ApiOfAppOrSite(GetPrimaryAppIdentity(null));
 
     /// <inheritdoc />
-    public ITypedApi ApiOfSite(int siteId) => ApiOfApp(GetPrimaryAppIdentity(siteId));
+    public ITypedApi ApiOfSite(int siteId) =>
+        ApiOfAppOrSite(GetPrimaryAppIdentity(siteId));
 
-    private ITypedApi ApiOfApp(IAppIdentity appIdentity) => OfAppInternal(zoneId: appIdentity.ZoneId, appId: appIdentity.AppId);
+    private ITypedApi ApiOfAppOrSite(IAppIdentity appIdentity) =>
+        OfAppOrSiteInternal(zoneId: appIdentity.ZoneId, appId: appIdentity.AppId);
 
 
-    private ITypedApi OfAppInternal(int? zoneId = null, int? appId = null)
+    private ITypedApi OfAppOrSiteInternal(int? zoneId = null, int? appId = null)
     {
         var l = Log.Fn<ITypedApi>();
         MakeSureLogIsInHistory();
         ActivateEditUi();
-        var codeRoot = GetNewCodeRoot();
         var app = GetApp(ServicesScoped.AppGenerator, zoneId: zoneId, appId: appId);
-        ((IExCtxAttachApp)codeRoot).AttachApp(app);
-        var code12 = new TypedApiStandalone(codeRoot, codeRoot.GetTypedApi());
+        var exCtx = GetNewCodeRoot(app);
+        var code12 = new TypedApiStandalone(exCtx, exCtx.GetTypedApi());
         return l.ReturnAsOk(code12);
     }
 
-    private IExecutionContext GetNewCodeRoot() =>
-        ServicesScoped.ExCtxGenerator.New().New(new()
+    private IExecutionContext GetNewCodeRoot(IApp? appToAttach = default)
+    {
+        var exCtx = ServicesScoped.ExCtxGenerator.New().New(new()
         {
             OwnerOrNull = null,
             BlockOrNull = null,
             ParentLog = Log,
             CompatibilityFallback = CompatibilityLevels.CompatibilityLevel16,
         });
+        if (appToAttach != null)
+            ((IExCtxAttachApp)exCtx).AttachApp(appToAttach);
+        return exCtx;
+    }
 
     #endregion
 

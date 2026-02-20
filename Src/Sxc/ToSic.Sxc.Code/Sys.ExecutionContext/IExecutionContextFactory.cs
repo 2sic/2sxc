@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Blocks.Sys;
-
-namespace ToSic.Sxc.Sys.ExecutionContext;
+﻿namespace ToSic.Sxc.Sys.ExecutionContext;
 
 public interface IExecutionContextFactory
 {
@@ -9,12 +7,4 @@ public interface IExecutionContextFactory
     /// </summary>
     /// <returns></returns>
     IExecutionContext New(ExecutionContextOptions options);
-}
-
-public record ExecutionContextOptions
-{
-    public object? OwnerOrNull { get; init; }
-    public IBlock? BlockOrNull { get; init; }
-    public required ILog ParentLog { get; init; }
-    public int CompatibilityFallback { get; init; }
 }

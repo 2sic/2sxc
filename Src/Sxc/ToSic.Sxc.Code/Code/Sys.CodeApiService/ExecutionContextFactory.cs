@@ -9,13 +9,13 @@ namespace ToSic.Sxc.Code.Sys.CodeApiService;
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ExecutionContextFactory(IServiceProvider serviceProvider)
-    : ServiceBase($"{SxcLogName}.ExCtxF", connect: [/* never! serviceProvider */ ]), IExecutionContextFactory
+    : ServiceBase($"{SxcLogName}.ExCtxF", connect: [/* never! serviceProvider */]), IExecutionContextFactory
 {
+
     /// <inheritdoc/>
     public IExecutionContext New(ExecutionContextOptions options)
     {
-        var compatibility = (options.OwnerOrNull as ICompatibilityLevel)?.CompatibilityLevel ?? options.CompatibilityFallback;
-        var l = Log.Fn<ExecutionContext>($"{nameof(compatibility)}: {compatibility}");
+        var l = Log.Fn<ExecutionContext>($"{nameof(options.Compatibility)}: {options.Compatibility}");
 
         // New v14 case - the Razor component implements IDynamicData<model, Kit>
         // which specifies what kit version to use.
@@ -26,11 +26,9 @@ public class ExecutionContextFactory(IServiceProvider serviceProvider)
 
         // Default case / old case - just a non-generic DnnDynamicCodeRoot
         // Also applies if previous call didn't succeed
-        executionContext ??= serviceProvider.Build<ExecutionContext>(Log);
+        executionContext ??= serviceProvider.Build<ExecutionContext>();
 
-        executionContext
-            .InitDynCodeRoot(options.BlockOrNull, options.ParentLog)
-            .SetCompatibility(compatibility);
+        executionContext.Setup(options);
 
         return l.ReturnAsOk(executionContext);
     }
@@ -75,4 +73,5 @@ public class ExecutionContextFactory(IServiceProvider serviceProvider)
             return null;
         }
     }
+
 }
