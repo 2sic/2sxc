@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Context.Sys.Module;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -17,10 +18,10 @@ internal class CmsContext(
     IPlatform platform,
     IContextOfSite siteCtxFallback,
     LazySvc<IPage> pageLazy,
-    LazySvc<IModule> moduleFallback,
+    //LazySvc<IModule> moduleFallback,
     IAppReaderFactory appReaders)
     : ServiceWithContext(SxcLogName + ".CmsCtx",
-        connect: [siteCtxFallback, pageLazy, moduleFallback, appReaders, platform]), ICmsContext
+        connect: [siteCtxFallback, pageLazy, /*moduleFallback,*/ appReaders, platform]), ICmsContext
 {
     #region Internal context
 
@@ -59,7 +60,11 @@ internal class CmsContext(
 
     [field: AllowNull, MaybeNull]
     public ICmsModule Module => field
-        ??= new CmsModule(this, BlockInternal?.Context?.Module ?? moduleFallback.Value /*new ModuleUnknown(null!)*/, BlockInternal?.RootBlock, SiteAppReader.Metadata);
+        ??= new CmsModule(this,
+            BlockInternal?.Context?.Module ?? (ExCtx as ExecutionContext)?.ModuleIfBlockUnknown ?? new ModuleUnknown(null!),
+            BlockInternal?.RootBlock,
+            SiteAppReader.Metadata
+        );
 
     [field: AllowNull, MaybeNull]
     public ICmsUser User => field

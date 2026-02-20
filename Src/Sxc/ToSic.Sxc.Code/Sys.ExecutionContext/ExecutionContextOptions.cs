@@ -1,4 +1,5 @@
 ﻿using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
 
@@ -18,7 +19,12 @@ public record ExecutionContextOptions
     public IBlock? BlockOrNull { get; init; }
 
     /// <summary>
-    /// The parent log to attach to.
+    /// The module we're on, in case the block is not known.
+    /// </summary>
+    public IModule? ModuleIfBlockUnknown { get; init; }
+
+    /// <summary>
+    /// The parent log to attach to. Required.
     /// </summary>
     public required ILog ParentLog { get; init; }
 

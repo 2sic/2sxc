@@ -59,6 +59,8 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
     [PrivateApi]
     internal ICmsContext CmsContext { get; }
 
+    internal IModule? ModuleIfBlockUnknown { get; private set; }
+
     #endregion
 
 
@@ -76,6 +78,7 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
         var cLog = Log.Fn<IExecutionContext>();
 
         Cdf.SetCompatibilityLevel(options.Compatibility);
+        ModuleIfBlockUnknown = options.ModuleIfBlockUnknown;
 
         if (options.BlockOrNull == null)
             return cLog.Return(this, "no block");
