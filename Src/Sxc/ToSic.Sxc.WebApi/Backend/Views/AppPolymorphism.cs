@@ -29,7 +29,7 @@ public class AppPolymorphism : CustomDataSource
         var l = Log.Fn<IEnumerable<IEntity>>($"App: {AppId}");
 
         var poly = appReaders.Get(AppId).List
-            .First<PolymorphismConfiguration>(nullHandling: ModelNullHandling.PreferModel)!;
+            .FirstModel<PolymorphismConfiguration>(nullHandling: ModelNullHandling.PreferModel)!;
 
         var data = DataFactory
             .SpawnNew(new() { AutoId = false })

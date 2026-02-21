@@ -10,10 +10,10 @@ namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 partial class CodeDataFactory: IModelFactory
 {
     public TModel? Create<TSource, TModel>(TSource? source)
-        where TModel : IModelSetup<TSource>
+        where TModel : IModelFromEntity
     {
         var wrapper = serviceProvider.Build<TModel>();
-        var ok = wrapper.SetupModel(source);
+        var ok = (wrapper as IModelSetup<TSource>)?.SetupModel(source) ?? false;
         return ok ? wrapper : default;
     }
 

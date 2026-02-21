@@ -66,7 +66,7 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBas
         // Check if Save is disabled because of content-type metadata (new v21)
         // This should prevent entities from being put in the DB, where the UI was only meant for some other configuration
         var ct = ent.Type;
-        var decorator = ct.GetMetadata<DataStorageDecorator>();
+        var decorator = ct.GetMetadataModel<DataStorageDecorator>();
 
         if (decorator == null)
             return l.Return(new (ent, decorator), "no decorator");

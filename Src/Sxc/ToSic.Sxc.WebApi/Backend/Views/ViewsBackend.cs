@@ -33,7 +33,7 @@ public class ViewsBackend(
             .Select(view =>
             {
                 var lightspeed = view.Metadata
-                    .First<LightSpeedDecorator>()
+                    .FirstModel<LightSpeedDecorator>()
                     .NullOrGetWith(ls => new AppMetadataDto
                         {
                             Id = ls.Id,

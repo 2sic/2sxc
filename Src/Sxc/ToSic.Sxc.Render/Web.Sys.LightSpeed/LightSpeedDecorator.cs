@@ -41,7 +41,7 @@ public record LightSpeedDecorator : ModelFromEntityBasic, IOutputCacheSettings
     {
         var appState = appReader?.GetCache();
         var decoFromPiggyBack = appState?.PiggyBack
-            .GetOrGenerate(appState, $"decorator-{ContentTypeNameId}", () => appState.Metadata.First<LightSpeedDecorator>())
+            .GetOrGenerate(appState, $"decorator-{ContentTypeNameId}", () => appState.Metadata.FirstModel<LightSpeedDecorator>())
             .Value;
         return decoFromPiggyBack ?? new LightSpeedDecorator();
     }
