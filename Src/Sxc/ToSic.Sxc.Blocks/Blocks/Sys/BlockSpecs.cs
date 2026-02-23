@@ -49,7 +49,6 @@ public record BlockSpecs : IBlock
     }
 
     private readonly BlockConfiguration? _configuration;
-    private IBlock? _rootBlock;
     public bool ConfigurationIsReady => _configuration != null;
 
     /// <inheritdoc />
@@ -94,8 +93,9 @@ public record BlockSpecs : IBlock
     [PrivateApi]
     public IBlock RootBlock
     {
-        get => _rootBlock ?? this; // never store the result, as the fallback should still return me-object in future if never set.
-        init => _rootBlock = value;
+        get => field ??
+               this; // never store the result, as the fallback should still return me-object in future if never set.
+        init;
     }
 
     public List<IDependentApp> DependentApps { get; } = [];

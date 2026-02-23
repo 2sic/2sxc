@@ -4,7 +4,7 @@ using ToSic.Eav.Metadata.Sys;
 namespace ToSic.Sxc.Context.Sys.CmsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class CmsPage(CmsContext parent, IMetadataOfSource appMetadata, LazySvc<IPage> fallbackPage)
+internal class CmsPage(CmsContext parent, LazySvc<IPage> fallbackPage, IMetadataOfSource appMetadata)
     : CmsContextPartBase<IPage>(parent, parent.CtxBlockOrNull?.Page ?? fallbackPage.Value), ICmsPage
 {
     public int Id => GetContents()?.Id ?? 0;

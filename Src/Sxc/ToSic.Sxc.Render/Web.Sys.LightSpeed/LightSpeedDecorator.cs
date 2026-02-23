@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [ModelSpecs(ContentType = ContentTypeNameId)]
-public record LightSpeedDecorator : ModelOfEntity, IOutputCacheSettings
+public record LightSpeedDecorator : ModelFromEntityBasic, IOutputCacheSettings
 {
     /// <summary>
     /// Nice name. If it ever changes, remember to also update UI as it has references to it.
@@ -41,7 +41,7 @@ public record LightSpeedDecorator : ModelOfEntity, IOutputCacheSettings
     {
         var appState = appReader?.GetCache();
         var decoFromPiggyBack = appState?.PiggyBack
-            .GetOrGenerate(appState, $"decorator-{ContentTypeNameId}", () => appState.Metadata.First<LightSpeedDecorator>())
+            .GetOrGenerate(appState, $"decorator-{ContentTypeNameId}", () => appState.Metadata.FirstModel<LightSpeedDecorator>())
             .Value;
         return decoFromPiggyBack ?? new LightSpeedDecorator();
     }

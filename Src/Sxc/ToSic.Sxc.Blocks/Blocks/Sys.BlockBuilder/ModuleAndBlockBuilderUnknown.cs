@@ -9,7 +9,7 @@ public class ModuleAndBlockBuilderUnknown: ModuleAndBlockBuilder
     public ModuleAndBlockBuilderUnknown(WarnUseOfUnknown<ModuleAndBlockBuilderUnknown> _, Generator<BlockOfModule>bfmGenerator) : base(bfmGenerator, "Unk")
     { }
 
-    protected override IModule GetModuleImplementation(int pageId, int moduleId)
+    public override IModule GetModule(int pageId, int moduleId)
         => throw new NotSupportedException();
 
     protected override IContextOfBlock GetContextOfBlock(IModule module, int? pageId)

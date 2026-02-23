@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Models;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Web.Sys.Http;
@@ -40,7 +41,7 @@ public class PolymorphConfigReader(LazySvc<ServiceSwitcher<IPolymorphismResolver
 
     public PolymorphConfigReader Init(IEnumerable<IEntity> list)
     {
-        Configuration = list.First<PolymorphismConfiguration>(nullHandling: ModelNullHandling.PreferModelForce)!;
+        Configuration = list.FirstModel<PolymorphismConfiguration>(nullHandling: ModelNullHandling.PreferModel)!;
         return this;
     }
 

@@ -10,11 +10,11 @@ internal class ToolbarRuleForParams(
 {
     public const string CommandName = "params";
 
-    internal ToolbarRuleForParams(
-        ToolbarRuleForParams original,
-        object target,
-        string? ui = null,
-        string? parameters = null
-    ) : this(target, ui ?? original?.Ui, parameters ?? original?.Parameters, original?.Context, original?.DecoHelper)
-    {}
+    //internal ToolbarRuleForParams(
+    //    ToolbarRuleForParams original,
+    //    object target,
+    //    string? ui = null,
+    //    string? parameters = null
+    //) : this(target, ui ?? original?.Ui, parameters ?? original?.Parameters, original?.Context, original?.DecoHelper)
+    //{}
 }

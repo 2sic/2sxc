@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Cms.Assets;
 /// </remarks>
 [ModelSpecs(Use = typeof(FileModelOfEntity))]
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still tweaking details and naming v19.0x")]
-public interface IFileModel: IModelOfData
+public interface IFileModel: IModelFromData
 {
     /// <inheritdoc cref="IFileModelSync.Name" />
     string? Name { get; }

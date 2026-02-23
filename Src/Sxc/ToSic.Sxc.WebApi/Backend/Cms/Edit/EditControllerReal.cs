@@ -14,11 +14,11 @@ public class EditControllerReal(
 {
     public const string LogSuffix = "Edit";
 
-    public EditLoadDto Load(List<ItemIdentifier> items, int appId)
-        => loadBackend.Value.Load(appId, items);
+    public async Task<EditLoadDto> Load(List<ItemIdentifier> items, int appId)
+        => await loadBackend.Value.Load(appId, items);
 
-    public Dictionary<Guid, int> Save(EditSaveDto package, int appId, bool partOfPage)
-        => saveBackendLazy.Value.Save(appId, package, partOfPage);
+    public async Task<Dictionary<Guid, int>> Save(EditSaveDto package, int appId, bool partOfPage)
+        => await saveBackendLazy.Value.Save(appId, package, partOfPage);
 
 
     public LinkInfoDto LinkInfo(string link, int appId, string? contentType = default, Guid guid = default, string? field = default)

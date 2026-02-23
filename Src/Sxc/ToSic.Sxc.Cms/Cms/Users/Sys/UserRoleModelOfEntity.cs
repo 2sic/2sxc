@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Cms.Users.Sys;
 
-internal record UserRoleModelOfEntity: ModelOfEntityCore, IUserRoleModel
+internal record UserRoleModelOfEntity: ModelFromEntity, IUserRoleModel
 {
     public int Id => Entity.EntityId;
 

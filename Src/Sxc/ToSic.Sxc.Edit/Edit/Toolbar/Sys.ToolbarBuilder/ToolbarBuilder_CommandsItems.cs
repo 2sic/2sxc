@@ -189,7 +189,6 @@ partial record ToolbarBuilder
             })
             .ToArray();
 
-        // var builder = this as IToolbarBuilder;
         return l.ReturnAsOk(this.AddInternal(mdsToAdd));
     }
 

@@ -295,22 +295,22 @@ public partial class CustomItem: ITypedItem, IModelSetupWithFactory<ITypedItem>,
 
     /// <inheritdoc />
     public T? Child<T>(string name, NoParamOrder npo = default, bool? required = default, GetRelatedOptions? options = default)
-        where T : class, IModelOfData, new()
+        where T : class, IModelFromData, new()
         => _item.Child<T>(name, npo: npo, required: required, options: options);
 
     /// <inheritdoc />
     public IEnumerable<T> Children<T>(string? field, NoParamOrder npo = default, string? type = default, bool? required = default, GetRelatedOptions? options = default)
-        where T : class, IModelOfData, new()
+        where T : class, IModelFromData, new()
         => _item.Children<T>(field: field, npo: npo, type: type, required: required, options: options);
 
     /// <inheritdoc />
     public T? Parent<T>(NoParamOrder npo = default, bool? current = default, string? type = default, string? field = default, GetRelatedOptions? options = default)
-        where T : class, IModelOfData, new()
+        where T : class, IModelFromData, new()
         => _item.Parent<T>(npo: npo, current: current, type: type, field: field, options: options);
 
     /// <inheritdoc />
     public IEnumerable<T> Parents<T>(NoParamOrder npo = default, string? type = default, string? field = default, GetRelatedOptions? options = default)
-        where T : class, IModelOfData, new()
+        where T : class, IModelFromData, new()
         => _item.Parents<T>(npo: npo, type: type ?? typeof(T).Name, field: field, options: options);
 
     /// <inheritdoc />
@@ -332,7 +332,7 @@ public partial class CustomItem: ITypedItem, IModelSetupWithFactory<ITypedItem>,
     /// New in v17.03
     /// </remarks>
     protected T As<T>(ITypedItem item)
-        where T : class, IModelOfData
+        where T : class, IModelFromData
         => _modelFactory.AsCustomFrom<T, ITypedItem>(item);
 
     /// <summary>
@@ -348,7 +348,7 @@ public partial class CustomItem: ITypedItem, IModelSetupWithFactory<ITypedItem>,
     /// New in v17.03
     /// </remarks>
     protected IEnumerable<T> AsList<T>(IEnumerable<ITypedItem>? source, NoParamOrder npo = default, bool nullIfNull = false)
-        where T : class, IModelOfData
+        where T : class, IModelFromData
         => (source ?? (nullIfNull ? null : []))
             ?.Select(item => _modelFactory.AsCustomFrom<T, ITypedItem>(item))
             .ToList()!;

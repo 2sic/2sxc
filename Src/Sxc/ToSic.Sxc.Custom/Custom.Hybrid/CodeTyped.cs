@@ -171,7 +171,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, ITypedCode16
 
     /// <inheritdoc cref="ITypedApi.AsStack{T}" />
     public T AsStack<T>(params object[] items)
-        where T : class, IModelOfData, new()
+        where T : class, IModelFromData, new()
         => CodeApi().Cdf.AsStack<T>(items);
 
     #endregion
@@ -205,12 +205,12 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, ITypedCode16
 
     /// <inheritdoc />
     public T As<T>(object source, NoParamOrder npo = default)
-        where T : class, IModelOfData
+        where T : class, IModelFromData
         => Cdf.AsCustom<T>(source: source, npo: npo)!;
 
     /// <inheritdoc />
     public IEnumerable<T> AsList<T>(object source, NoParamOrder npo = default, bool nullIfNull = default)
-        where T : class, IModelOfData
+        where T : class, IModelFromData
         => Cdf.AsCustomList<T>(source, npo, nullIfNull);
 
     #endregion

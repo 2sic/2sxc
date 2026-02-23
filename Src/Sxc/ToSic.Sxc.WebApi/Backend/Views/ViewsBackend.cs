@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Eav.DataFormats.EavLight;
+using ToSic.Eav.Models;
 using ToSic.Eav.Serialization.Sys.Options;
 using ToSic.Sxc.Backend.ImportExport;
 using ToSic.Sxc.Web.Sys.LightSpeed;
@@ -32,7 +33,7 @@ public class ViewsBackend(
             .Select(view =>
             {
                 var lightspeed = view.Metadata
-                    .First<LightSpeedDecorator>()
+                    .FirstModel<LightSpeedDecorator>()
                     .NullOrGetWith(ls => new AppMetadataDto
                         {
                             Id = ls.Id,

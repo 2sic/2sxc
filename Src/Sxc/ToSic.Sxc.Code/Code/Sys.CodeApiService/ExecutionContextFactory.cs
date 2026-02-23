@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Services.Sys;
+﻿using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Sys.CodeApiService;
@@ -10,34 +9,26 @@ namespace ToSic.Sxc.Code.Sys.CodeApiService;
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ExecutionContextFactory(IServiceProvider serviceProvider)
-    : ServiceBase($"{SxcLogName}.CDRFac", connect: [/* never! serviceProvider */ ]), IExecutionContextFactory
+    : ServiceBase($"{SxcLogName}.ExCtxF", connect: [/* never! serviceProvider */]), IExecutionContextFactory
 {
-    /// <summary>
-    /// Creates a CodeApiService - if possible based on the parent class requesting it.
-    /// </summary>
-    /// <param name="parentClassOrNull"></param>
-    /// <param name="blockOrNull"></param>
-    /// <param name="parentLog"></param>
-    /// <param name="compatibilityFallback"></param>
-    /// <returns></returns>
-    public IExecutionContext New(object? parentClassOrNull, IBlock? blockOrNull, ILog parentLog, int compatibilityFallback)
+
+    /// <inheritdoc/>
+    public IExecutionContext New(ExecutionContextOptions options)
     {
-        var compatibility = (parentClassOrNull as ICompatibilityLevel)?.CompatibilityLevel ?? compatibilityFallback;
-        var l = Log.Fn<ExecutionContext>($"{nameof(compatibility)}: {compatibility}");
+        var l = Log.Fn<ExecutionContext>($"{nameof(options.Compatibility)}: {options.Compatibility}");
 
         // New v14 case - the Razor component implements IDynamicData<model, Kit>
         // which specifies what kit version to use.
         // Try to respect that or null if error or not such interface
-        var executionContext = parentClassOrNull == null
-            ? null
-            : TryBuildCodeApiServiceForDynamic(parentClassOrNull.GetType());
+        var executionContext = options.OwnerOrNull != null
+            ? TryBuildCodeApiServiceForDynamic(options.OwnerOrNull.GetType())
+            : null;
 
-        // Default case / old case - just a non-generic DnnDynamicCodeRoot
-        executionContext ??= serviceProvider.Build<ExecutionContext>(Log);
+        // Default or old case - just a non-generic DnnDynamicCodeRoot
+        // Also applies if previous call didn't succeed
+        executionContext ??= serviceProvider.Build<ExecutionContext>();
 
-        executionContext
-            .InitDynCodeRoot(blockOrNull, parentLog)
-            .SetCompatibility(compatibility);
+        executionContext.Setup(options);
 
         return l.ReturnAsOk(executionContext);
     }
@@ -73,8 +64,8 @@ public class ExecutionContextFactory(IServiceProvider serviceProvider)
             var finalType = typeof(ExecutionContext<,>).MakeGenericType(typeof(object), kitType);
 
             // 3. return that
-            var codeRoot = serviceProvider.Build<ExecutionContext>(finalType);
-            return l.ReturnAsOk(codeRoot);
+            var exCtx = serviceProvider.Build<ExecutionContext>(finalType);
+            return l.ReturnAsOk(exCtx);
         }
         catch (Exception ex)
         {
@@ -82,4 +73,5 @@ public class ExecutionContextFactory(IServiceProvider serviceProvider)
             return null;
         }
     }
+
 }

@@ -76,18 +76,6 @@ public class DataControllerReal(
         return l.Return(result.Success, message);
     }
 
-
-    //public IReadOnlyList<WorkEntityRecycleBin.RecycleBinItem> GetRecycleBin(int appId)
-    //{
-    //    var l = Log.Fn<IReadOnlyList<WorkEntityRecycleBin.RecycleBinItem>>($"appId:{appId}");
-
-    //    var items = recycleBin
-    //        .New(appId)
-    //        .Get();
-
-    //    return l.Return(items, $"found:{items.Count}");
-    //}
-
     public void Recycle(int appId, int transactionId)
     {
         var l = Log.Fn($"appId:{appId}, tx:{transactionId}");

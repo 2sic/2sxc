@@ -1,7 +1,7 @@
 ﻿namespace ToSic.Sxc.Cms.Users.Sys;
 
 
-internal record UserModelOfEntity : ModelOfEntityCore, IUserModel
+internal record UserModelOfEntity : ModelFromEntity, IUserModel
 {
 
     public string? Email => GetThis<string>(null);
@@ -37,7 +37,7 @@ internal record UserModelOfEntity : ModelOfEntityCore, IUserModel
     //IMetadataOf IHasMetadata.Metadata => null;
 
     public IEnumerable<IUserRoleModel> Roles =>
-        Entity.Children(field: nameof(Roles)).AsList<UserRoleModelOfEntity>();
+        Entity.Children(field: nameof(Roles)).ToModels<UserRoleModelOfEntity>();
         //AsList<UserRoleModelOfEntity>(Entity.Children(field: nameof(Roles)))!;
 
 }

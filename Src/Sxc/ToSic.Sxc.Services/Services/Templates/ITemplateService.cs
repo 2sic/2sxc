@@ -155,5 +155,5 @@ public interface ITemplateService
     /// If neither parser nor sources are provided, an empty parser will be used, resulting in no changes to the original values.
     /// </remarks>
     T ParseAs<T>(ICanBeEntity original, NoParamOrder npo = default, bool allowHtml = false, ITemplateEngine? parser = null, IEnumerable<ILookUp>? sources = null, int recursions = TemplateEngineTokens.MaxDepth)
-        where T : class, IModelOfData;
+        where T : class, IModelFromData;
 }

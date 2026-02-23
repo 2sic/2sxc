@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Cms.Pages.Sys;
 
-public record PageModelOfEntity: ModelOfEntityCore, IPageModel
+public record PageModelOfEntity: ModelFromEntity, IPageModel
 {
     public int Id => Entity.EntityId;
     public int ParentId => GetThis(0);
@@ -20,5 +20,5 @@ public record PageModelOfEntity: ModelOfEntityCore, IPageModel
     public bool IsDeleted => GetThis(false);
 
     public IEnumerable<IPageModel> Children =>
-        Entity.Children(field: nameof(Children)).AsList<PageModelOfEntity>();
+        Entity.Children(field: nameof(Children)).ToModels<PageModelOfEntity>();
 }

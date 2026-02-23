@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using ToSic.Eav.Models;
 using ToSic.Sxc.Polymorphism.Sys;
 using ToSic.Sys.Users;
 
@@ -13,7 +14,7 @@ public class JsContextUser(IUser user, IEnumerable<IEntity>? dataList)
 
     [JsonPropertyName("canSwitchEdition")]
     public bool CanSwitchEdition { get; }
-        = dataList.First<PolymorphismConfiguration>(nullHandling: ModelNullHandling.PreferNull)
+        = dataList.FirstModel<PolymorphismConfiguration>(nullHandling: ModelNullHandling.PreferNull)
               ?.UsersWhoMaySwitch.Contains(user.Id)
           ?? false;
 }

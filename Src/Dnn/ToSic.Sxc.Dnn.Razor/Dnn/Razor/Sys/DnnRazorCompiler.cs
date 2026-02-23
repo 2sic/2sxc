@@ -179,8 +179,13 @@ internal class DnnRazorCompiler(
         // All children which are then generated here should re-use that CodeApiService
         if (_sharedCodeApiService == null)
         {
-            _sharedCodeApiService = exCtxFactory
-                .New(webPage, Block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel9Old);
+            _sharedCodeApiService = exCtxFactory.New(new()
+            {
+                OwnerOrNull = webPage,
+                BlockOrNull = Block,
+                ParentLog = Log,
+                CompatibilityFallback = CompatibilityLevels.CompatibilityLevel9Old,
+            });
 
             // Since we just created a new CodeApiService, we must add this razor engine to it's piggyback
             _sharedCodeApiService.GetPiggyBack(nameof(DnnRazorCompiler), () => this);

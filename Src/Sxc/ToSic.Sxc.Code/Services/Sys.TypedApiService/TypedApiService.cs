@@ -5,6 +5,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Services.Sys.CodeApiServiceHelpers;
 using ToSic.Sxc.Sys.ExecutionContext;
 
@@ -24,10 +25,12 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
     /// It's important to understand that everything in here will use the scoped service provider.
     /// </summary>
     [field: AllowNull, MaybeNull]
-    protected IServiceProvider ScopedServiceProvider => field ??= Services.ServiceProvider.CreateScope().ServiceProvider;
+    protected IServiceProvider ScopedServiceProvider => field
+        ??= Services.ServiceProvider.CreateScope().ServiceProvider;
 
     [field: AllowNull, MaybeNull]
-    private ScopedDependencies ServicesScoped => field ??= ScopedServiceProvider.Build<ScopedDependencies>().ConnectServices(Log);
+    private ScopedDependencies ServicesScoped => field
+        ??= ScopedServiceProvider.Build<ScopedDependencies>().ConnectServices(Log);
 
 
     protected void ActivateEditUi() => EditUiRequired = true;
@@ -42,11 +45,7 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
         MakeSureLogIsInHistory();
 
         var app = GetApp(ServicesScoped.AppGenerator, zoneId: zoneId, appId: appId, site: site, withUnpublished: withUnpublished);
-        var codeRoot = GetNewCodeRoot();
-        ((IExCtxAttachApp)codeRoot).AttachApp(app);
-
-        var appTyped = codeRoot.GetState<IAppTyped>();
-        return l.ReturnAsOk(appTyped);
+        return l.ReturnAsOk(GetNewCodeRoot(app).GetState<IAppTyped>());
     }
 
     /// <inheritdoc />
@@ -56,9 +55,7 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
 
         MakeSureLogIsInHistory();
         var app = GetAndInitApp(ServicesScoped.AppGenerator.New(), GetPrimaryAppIdentity(null), null);
-        var codeRoot = GetNewCodeRoot();
-        ((IExCtxAttachApp)codeRoot).AttachApp(app);
-        return l.ReturnAsOk(codeRoot.GetState<IAppTyped>());
+        return l.ReturnAsOk(GetNewCodeRoot(app).GetState<IAppTyped>());
     }
 
     #endregion
@@ -67,10 +64,10 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
     #region Of App / Site / Module etc.
 
     /// <inheritdoc />
-    public ITypedApi ApiOfApp(int appId) => OfAppInternal(appId: appId);
+    public ITypedApi ApiOfApp(int appId) => OfAppOrSiteInternal(appId: appId);
 
     /// <inheritdoc />
-    public ITypedApi ApiOfApp(int zoneId, int appId) => OfAppInternal(zoneId: zoneId, appId: appId);
+    public ITypedApi ApiOfApp(int zoneId, int appId) => OfAppOrSiteInternal(zoneId: zoneId, appId: appId);
 
     /// <inheritdoc />
     public ITypedApi ApiOfModule(int pageId, int moduleId)
@@ -79,37 +76,64 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
         MakeSureLogIsInHistory();
         ActivateEditUi();
         var cmsBlock = ServicesScoped.ModAndBlockBuilder.Value.BuildBlock(pageId, moduleId);
-        var codeRoot = ServicesScoped.CodeRootGenerator.New()
-            .New(parentClassOrNull: null, cmsBlock, Log, CompatibilityLevels.CompatibilityLevel16);
 
-        var code12 = new TypedApiStandalone(codeRoot, codeRoot.GetTypedApi());
+        var exCtx = ServicesScoped.ExCtxGenerator.New().New(new()
+        {
+            OwnerOrNull = null,
+            BlockOrNull = cmsBlock,
+            ParentLog = Log,
+            CompatibilityFallback = CompatibilityLevels.CompatibilityLevel16,
+        });
+
+        var code12 = new TypedApiStandalone(exCtx, exCtx.GetTypedApi());
         return l.ReturnAsOk(code12);
     }
 
     /// <inheritdoc />
-    public ITypedApi ApiOfSite() => ApiOfApp(GetPrimaryAppIdentity(null));
+    public ITypedApi ApiOfSite() =>
+        ApiOfAppOrSite(GetPrimaryAppIdentity(null));
 
     /// <inheritdoc />
-    public ITypedApi ApiOfSite(int siteId) => ApiOfApp(GetPrimaryAppIdentity(siteId));
+    public ITypedApi ApiOfSite(int siteId) =>
+        ApiOfAppOrSite(GetPrimaryAppIdentity(siteId));
 
-    private ITypedApi ApiOfApp(IAppIdentity appIdentity) => OfAppInternal(zoneId: appIdentity.ZoneId, appId: appIdentity.AppId);
+
+    public ITypedApi ApiOfSite(int siteId, int pageId, int moduleId)
+    {
+        var moduleFallback = ServicesScoped.ModAndBlockBuilder.Value.GetModule(pageId, moduleId);
+        var appIdentity = GetPrimaryAppIdentity(siteId);
+        return OfAppOrSiteInternal(zoneId: appIdentity.ZoneId, appId: appIdentity.AppId, moduleFallback);
+    }
+
+    private ITypedApi ApiOfAppOrSite(IAppIdentity appIdentity) =>
+        OfAppOrSiteInternal(zoneId: appIdentity.ZoneId, appId: appIdentity.AppId);
 
 
-    private ITypedApi OfAppInternal(int? zoneId = null, int? appId = null)
+    private ITypedApi OfAppOrSiteInternal(int? zoneId = null, int? appId = null, IModule? moduleIfBlockUnknown = default)
     {
         var l = Log.Fn<ITypedApi>();
         MakeSureLogIsInHistory();
         ActivateEditUi();
-        var codeRoot = GetNewCodeRoot();
         var app = GetApp(ServicesScoped.AppGenerator, zoneId: zoneId, appId: appId);
-        ((IExCtxAttachApp)codeRoot).AttachApp(app);
-        var code12 = new TypedApiStandalone(codeRoot, codeRoot.GetTypedApi());
+        var exCtx = GetNewCodeRoot(app, moduleIfBlockUnknown);
+        var code12 = new TypedApiStandalone(exCtx, exCtx.GetTypedApi());
         return l.ReturnAsOk(code12);
     }
 
-    private IExecutionContext GetNewCodeRoot() =>
-        ServicesScoped.CodeRootGenerator.New()
-            .New(parentClassOrNull: null, null, Log, CompatibilityLevels.CompatibilityLevel16);
+    private IExecutionContext GetNewCodeRoot(IApp? appToAttach = default, IModule? moduleIfBlockUnknown = default)
+    {
+        var exCtx = ServicesScoped.ExCtxGenerator.New().New(new()
+        {
+            OwnerOrNull = null,
+            BlockOrNull = null,
+            ParentLog = Log,
+            CompatibilityFallback = CompatibilityLevels.CompatibilityLevel16,
+            ModuleIfBlockUnknown = moduleIfBlockUnknown,
+        });
+        if (appToAttach != null)
+            ((IExCtxAttachApp)exCtx).AttachApp(appToAttach);
+        return exCtx;
+    }
 
     #endregion
 

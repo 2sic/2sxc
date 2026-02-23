@@ -18,9 +18,10 @@ internal class CmsContext(
     IPlatform platform,
     IContextOfSite siteCtxFallback,
     LazySvc<IPage> pageLazy,
+    //LazySvc<IModule> moduleFallback,
     IAppReaderFactory appReaders)
     : ServiceWithContext(SxcLogName + ".CmsCtx",
-        connect: [siteCtxFallback, pageLazy, appReaders, platform]), ICmsContext
+        connect: [siteCtxFallback, pageLazy, /*moduleFallback,*/ appReaders, platform]), ICmsContext
 {
     #region Internal context
 
@@ -51,7 +52,7 @@ internal class CmsContext(
 
     [field: AllowNull, MaybeNull]
     public ICmsPage Page => field
-        ??= new CmsPage(this, SiteAppReader.Metadata, pageLazy);
+        ??= new CmsPage(this, pageLazy, SiteAppReader.Metadata);
 
     [field: AllowNull, MaybeNull]
     public ICmsCulture Culture => field
@@ -59,13 +60,23 @@ internal class CmsContext(
 
     [field: AllowNull, MaybeNull]
     public ICmsModule Module => field
-        ??= new CmsModule(this, BlockInternal?.Context?.Module ?? new ModuleUnknown(null!), BlockInternal, SiteAppReader.Metadata);
+        ??= new CmsModule(this,
+            // First try to get the module from the block
+            module: BlockInternal?.Context?.Module
+                    // If that's unknown, try to see if the execution context has an alternate module
+                    // like when used on a container which is not a 2sxc module
+                    ?? (ExCtx as ExecutionContext)?.ModuleIfBlockUnknown
+                    // Fallback: just make sure don't have errors
+                    ?? new ModuleUnknown(null!),
+            rootBlock: BlockInternal?.RootBlock,
+            appMetadata: SiteAppReader.Metadata
+        );
 
     [field: AllowNull, MaybeNull]
     public ICmsUser User => field
-        ??= CreateCurrent();
+        ??= CreateCurrentUser();
 
-    private ICmsUser CreateCurrent()
+    private ICmsUser CreateCurrentUser()
     {
         var userSvc = ExCtx.GetService<IUserService>(reuse: true);
         var userModel = userSvc.GetCurrentUser();

@@ -23,11 +23,11 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// </summary>
     [return: NotNullIfNotNull(nameof(source))]
     TCustom? AsCustom<TCustom>(object? source, NoParamOrder npo = default, bool mock = false)
-        where TCustom : class, IModelOfData;
+        where TCustom : class, IModelFromData;
 
     [return: NotNullIfNotNull(nameof(item))]
     TCustom? AsCustomFrom<TCustom, TData>(TData? item, ModelSettings? settings = default)
-        where TCustom : class, IModelOfData;
+        where TCustom : class, IModelFromData;
 
     /// <summary>
     /// Create list of custom-typed ITypedItems
@@ -36,7 +36,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// Never null, unless explicitly requested with `nullIfNull`, otherwise it would return an empty list.
     /// </remarks>
     IEnumerable<TCustom> AsCustomList<TCustom>(object? source, NoParamOrder npo, bool nullIfNull)
-        where TCustom : class, IModelOfData;
+        where TCustom : class, IModelFromData;
 
     [return: NotNullIfNotNull(nameof(data))]
     ITyped? AsTyped(object data, ModelSettings settings, string? detailsMessage = default);
@@ -113,7 +113,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     ITypedStack AsStack(object[] parts);
 
     T AsStack<T>(object[] parts)
-        where T : class, IModelOfData, new();
+        where T : class, IModelFromData, new();
 
     IDynamicStack AsDynStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources);
     ITypedStack AsTypedStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources);
@@ -122,7 +122,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     IEntity FakeEntity(int appId);
 
     TCustom? GetOne<TCustom>(Func<IEntity?> getItem, object id, bool skipTypeCheck)
-        where TCustom : class, IModelOfData;
+        where TCustom : class, IModelFromData;
 
     IEntity PlaceHolderInBlock(int? appIdOrNull, IEntity? parent, string? fieldName);
 

@@ -13,7 +13,7 @@ using ToSic.Sxc.Sys.ExecutionContext;
 namespace ToSic.Sxc.Context.Sys.CmsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IView>(parent, block.View!), ICmsView
+internal class CmsView(CmsContext cmsContext, IBlock block) : CmsContextPartBase<IView>(cmsContext, block.View!), ICmsView
 {
     private readonly IView _view = block.View!;
 
@@ -40,7 +40,7 @@ internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IVi
         => new CmsViewFolder(this, block.App, AppAssetsHelpers.DetermineShared(location) ?? _view.IsShared);
 
     [field: AllowNull, MaybeNull]
-    private ICodeDataFactory Cdf => field ??= Parent.ExCtx.GetCdf();
+    private ICodeDataFactory Cdf => field ??= CmsContext.ExCtx.GetCdf();
 
     /// <summary>
     /// Note: this is an explicit implementation, so in Dynamic Razor it won't work. This is by design.

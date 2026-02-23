@@ -25,7 +25,7 @@ internal class OqtModuleAndBlockBuilder(
     /// <param name="pageId">not required in Oqtane</param>
     /// <param name="moduleId"></param>
     /// <returns></returns>
-    protected override IModule GetModuleImplementation(int pageId, int moduleId)
+    public override IModule GetModule(int pageId, int moduleId)
     {
         var oqtModule = moduleRepositoryGenerator.New().GetModule(moduleId);
         ThrowIfModuleIsNull(pageId, moduleId, oqtModule);

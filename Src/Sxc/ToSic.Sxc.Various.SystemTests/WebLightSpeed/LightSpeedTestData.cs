@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Sys;
+using ToSic.Eav.Models;
 using ToSic.Sxc.Web.Sys.LightSpeed;
 
 namespace ToSic.Sxc.WebLightSpeed;
@@ -12,7 +13,7 @@ public class LightSpeedTestData(DataBuilder builder)
 
     internal LightSpeedDecorator Decorator(bool? isEnabled = default, bool? byUrlParameters = null, bool? caseSensitive = null, string? names = default, bool? othersDisableCache = default)
         => LightSpeedTestEntity(isEnabled: isEnabled, byUrlParameters: byUrlParameters, caseSensitive: caseSensitive, names: names, othersDisableCache: othersDisableCache)
-            .As<LightSpeedDecorator>(skipTypeCheck: true)!;
+            .ToModel<LightSpeedDecorator>(skipTypeCheck: true)!;
 
     /// <summary>
     /// Basic LightSpeed Content Type with Url Fields only for testing

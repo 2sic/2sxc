@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Adam.Sys.Security;
+﻿using ToSic.Eav.Models;
+using ToSic.Sxc.Adam.Sys.Security;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Edit.Toolbar.Sys;
 using ToSic.Sxc.Images.Sys;
@@ -69,7 +70,7 @@ internal class ResponsiveToolbarBuilder(ILog parentLog) : HelperBase(parentLog, 
                 });
 
                 // Add note for Copyright - if there is Metadata for that
-                target.HasMdOrNull.Metadata.First<CopyrightDecorator>()
+                target.HasMdOrNull.Metadata.FirstModel<CopyrightDecorator>()
                     .DoIfNotNull(copyright => modified = modified.AddNamed(
                         CopyrightDecorator.ContentTypeNameId,
                         btn => btn

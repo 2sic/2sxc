@@ -18,7 +18,7 @@ internal class DnnModuleAndBlockBuilder(
     private ILog ParentLog => (Log as Log)?.Parent ?? Log;
 
 
-    protected override IModule GetModuleImplementation(int pageId, int moduleId)
+    public override IModule GetModule(int pageId, int moduleId)
     {
         var l = Log.Fn<IModule>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
         var moduleInfo = new ModuleController().GetModule(moduleId, pageId, false);

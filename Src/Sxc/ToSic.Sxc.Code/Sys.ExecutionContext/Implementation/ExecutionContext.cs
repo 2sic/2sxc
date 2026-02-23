@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 /// </remarks>
 [PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.Dependencies>, IExecutionContext, IGetCodePath, IHasPiggyBack
+public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.Dependencies>, IExecutionContext, IGetCodePath, IHasPiggyBack, IServiceWithSetup<ExecutionContextOptions>
 {
     #region Constructor
 
@@ -59,24 +59,37 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
     [PrivateApi]
     internal ICmsContext CmsContext { get; }
 
+    internal IModule? ModuleIfBlockUnknown { get; private set; }
+
     #endregion
 
 
     PiggyBack IHasPiggyBack.PiggyBack { get; } = new();
 
-
-
     [PrivateApi]
-    public virtual IExecutionContext InitDynCodeRoot(IBlock? block, ILog? parentLog)
+    void IServiceWithSetup<ExecutionContextOptions>.Setup(ExecutionContextOptions options)
     {
-        this.LinkLog(parentLog ?? (block as IHasLog)?.Log);
+        Setup(options);
+    }
+
+    public virtual IExecutionContext Setup(ExecutionContextOptions options)
+    {
+        this.LinkLog(options.ParentLog);
         var cLog = Log.Fn<IExecutionContext>();
 
-        if (block == null)
+        Cdf.SetCompatibilityLevel(options.Compatibility);
+        ModuleIfBlockUnknown = options.ModuleIfBlockUnknown;
+
+        if (options.BlockOrNull == null)
             return cLog.Return(this, "no block");
 
+        var block = options.BlockOrNull;
         Block = block;
-        AttachApp(block.App);
+
+        // Only attach App if it exists
+        // For example when using the Execution Context in a module container, which doesn't have initialized data yet
+        if (block.AppIsReady)
+            AttachApp(block.App);
 
         return cLog.Return(this, $"AppId: {App?.AppId}, Block: {(block.ConfigurationIsReady ? block.Configuration?.BlockIdentifierOrNull?.Guid : null)}");
     }
@@ -108,4 +121,5 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
 
     [field: AllowNull, MaybeNull]
     internal ICodeTypedApiHelper TypedApi => field ??= new CodeTypedApiHelper(this);
+
 }

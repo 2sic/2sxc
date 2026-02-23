@@ -5,6 +5,7 @@ using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.ImportExport.Sys.Zip;
+using ToSic.Eav.Models;
 using ToSic.Eav.Persistence.File;
 using ToSic.Eav.Serialization.Sys.Json;
 using ToSic.Eav.Sys;
@@ -317,7 +318,7 @@ public class ExtensionExportService(
 
                 return releaseEntity == null
                     ? lr.ReturnNull($"Release entity not found for GUID: {guid}")
-                    : lr.Return(releaseEntity.As<AppExtensionRelease>()!, "found");
+                    : lr.Return(releaseEntity.ToModel<AppExtensionRelease>()!, "found");
             })
             .Where(r => r != null)!
             .ToList();

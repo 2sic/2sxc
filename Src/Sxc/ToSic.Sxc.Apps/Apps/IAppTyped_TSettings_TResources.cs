@@ -12,8 +12,8 @@
 public interface IAppTyped<out TSettings, out TResources> :
     IAppIdentity,
     IAppTyped   // should be convertible to IAppTyped
-    where TSettings : class, IModelOfData, new()
-    where TResources : class, IModelOfData, new()
+    where TSettings : class, IModelFromData, new()
+    where TResources : class, IModelFromData, new()
 {
     /// <summary>
     /// All the app settings which are custom for each app.

@@ -22,10 +22,10 @@ internal class RazorEngine(
     IBlockResourceExtractor blockResourceExtractor,
     EngineAppRequirements engineAppRequirements,
     LazySvc<IRazorRenderer> razorRenderer,
-    LazySvc<IExecutionContextFactory> codeRootFactory,
+    LazySvc<IExecutionContextFactory> exCtxFactory,
     LazySvc<CodeErrorHelpService> errorHelp,
     LazySvc<IRenderingHelper> renderingHelper)
-    : ServiceBase("Sxc.RzrEng", connect: [engineSpecsService, blockResourceExtractor, engineAppRequirements, codeRootFactory, errorHelp, renderingHelper, razorRenderer]),
+    : ServiceBase("Sxc.RzrEng", connect: [engineSpecsService, blockResourceExtractor, engineAppRequirements, exCtxFactory, errorHelp, renderingHelper, razorRenderer]),
         IRazorEngine
 {
     /// <inheritdoc />
@@ -101,12 +101,16 @@ internal class RazorEngine(
                     if (rzv.RazorPage is not IRazor asSxc)
                         return;
 
-                    var dynCode = codeRootFactory.Value
-                        .New(asSxc, engineSpecs.Block, Log,
-                            compatibilityFallback: CompatibilityLevels.CompatibilityLevel12);
+                    var exCtx = exCtxFactory.Value.New(new()
+                    {
+                        OwnerOrNull = asSxc,
+                        BlockOrNull = engineSpecs.Block,
+                        ParentLog = Log,
+                        CompatibilityFallback = CompatibilityLevels.CompatibilityLevel12,
+                    });
 
-                    asSxc.ConnectToRoot(dynCode);
-                    // Note: Don't set the purpose here any more, it's a deprecated feature in 12+
+                    asSxc.ConnectToRoot(exCtx);
+                    // Note: Don't set the purpose here anymore, it's a deprecated feature in 12+
                 }
             );
             var writer = new StringWriter();

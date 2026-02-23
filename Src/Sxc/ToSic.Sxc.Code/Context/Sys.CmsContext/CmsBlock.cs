@@ -3,15 +3,15 @@ using ToSic.Sxc.Blocks.Sys;
 
 namespace ToSic.Sxc.Context.Sys.CmsContext;
 
-internal class CmsBlock(IBlock block) : ICmsBlock
+internal class CmsBlock(IBlock? block) : ICmsBlock
 {
     /// <inheritdoc />
-    public int Id => block.ConfigurationIsReady
+    public int Id => block?.ConfigurationIsReady == true
         ? block.Configuration.Id
         : 0;
 
     /// <inheritdoc />
-    public Guid Guid => block.ConfigurationIsReady
+    public Guid Guid => block?.ConfigurationIsReady == true
         ? block.Configuration.Guid
         : Guid.Empty;
 
@@ -19,5 +19,5 @@ internal class CmsBlock(IBlock block) : ICmsBlock
     public bool IsRoot => block is { ParentBlockOrNull: null };
 
     /// <inheritdoc />
-    public IMetadata Metadata => (block.Configuration as ICanBeEntity)?.Entity?.Metadata!;
+    public IMetadata Metadata => (block?.Configuration as ICanBeEntity)?.Entity?.Metadata!;
 }

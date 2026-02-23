@@ -33,9 +33,9 @@ public class TokenEngine(
     IBlockResourceExtractor blockResourceExtractor,
     EngineAppRequirements engineAppRequirements,
     IServerPaths serverPaths,
-    LazySvc<IExecutionContextFactory> codeRootFactory,
+    LazySvc<IExecutionContextFactory> exCtxFactory,
     Generator<IAppDataConfigProvider> tokenEngineWithContext)
-    : ServiceBase("Sxc.TokEng", connect: [engineSpecsService, blockResourceExtractor, engineAppRequirements, codeRootFactory, tokenEngineWithContext]),
+    : ServiceBase("Sxc.TokEng", connect: [engineSpecsService, blockResourceExtractor, engineAppRequirements, exCtxFactory, tokenEngineWithContext]),
         ITokenEngine
 {
     #region Replacement List to still support old Tokens
@@ -97,15 +97,16 @@ public class TokenEngine(
             return l.ReturnAsError(preFlightResult);
 
         // Prepare #2: Helpers etc.
-        var executionContext = codeRootFactory.Value.New(
-            null,
-            engineSpecs.Block,
-            Log,
-            CompatibilityLevels.CompatibilityLevel9Old
-        );
-        var cdf = executionContext.GetCdf();
+        var exCtx = exCtxFactory.Value.New(new()
+        {
+            OwnerOrNull = null,
+            BlockOrNull = engineSpecs.Block,
+            ParentLog = Log,
+            CompatibilityFallback = CompatibilityLevels.CompatibilityLevel9Old,
+        });
+        var cdf = exCtx.GetCdf();
         var cultureInfo = CultureHelpers.SafeCultureInfo(cdf.Dimensions);
-        var rootLookups = InitTokenReplace(executionContext.GetDynamicApi(), engineSpecs, cultureInfo);
+        var rootLookups = InitTokenReplace(exCtx.GetDynamicApi(), engineSpecs, cultureInfo);
 
         // Render and process / return
         var renderedTemplate = RenderTokenTemplate(engineSpecs, specs, cdf, cultureInfo, rootLookups);

@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Data.Sys;
+using ToSic.Eav.Models;
 using ToSic.Sxc.Services.GoogleMaps.Sys;
 using ToSic.Sys.Capabilities.Features;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
@@ -18,7 +19,7 @@ internal class LoadSettingsForGpsDefaults(
         {
             var getMaps = parameters.ContextOfApp.AppSettings.InternalGetPath(GoogleMapsSettings.SettingsPath);
             coordinates = getMaps?.GetFirstResultEntity() is { } mapsEntity
-                ? mapsEntity.As<GoogleMapsSettings>()!.DefaultCoordinates
+                ? mapsEntity.ToModel<GoogleMapsSettings>()!.DefaultCoordinates
                 : MapsCoordinates.Defaults;
         }
 

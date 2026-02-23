@@ -14,8 +14,8 @@ namespace ToSic.Sxc.Context;
 /// </remarks>
 [PublicApi]
 public interface ICmsView<out TSettings, out TResources> : ICmsView
-    where TSettings : class, IModelOfData, new()
-    where TResources : class, IModelOfData, new()
+    where TSettings : class, IModelFromData, new()
+    where TResources : class, IModelFromData, new()
 {
     /// <summary>
     /// All the app settings which are custom for each app.

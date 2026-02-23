@@ -2,6 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using ToSic.Eav.WebApi.Sys.Cms;
+using ToSic.Eav.WebApi.Sys.Dto;
+using ToSic.Eav.WebApi.Sys.Routing;
 using ToSic.Sxc.Backend.Cms;
 
 namespace IntegrationSamples.SxcEdit01.Controllers
@@ -18,13 +22,13 @@ namespace IntegrationSamples.SxcEdit01.Controllers
 
         [HttpPost]
         [AllowAnonymous] // Anonymous is ok, security check happens internally
-        public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
-            => Real.Load(items, appId);
+        public async Task<EditLoadDto> Load([FromBody] List<ItemIdentifier> items, int appId)
+            => await Real.Load(items, appId);
 
         [HttpPost]
         // todo #mvcSec [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
-            => Real.Save(package, appId, partOfPage);
+        public async Task<Dictionary<Guid, int>> Save([FromBody] EditSaveDto package, int appId, bool partOfPage)
+            => await Real.Save(package, appId, partOfPage);
 
         /// <inheritdoc />
         [HttpGet]

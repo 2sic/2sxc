@@ -9,7 +9,7 @@ using ToSic.Sxc.Blocks.Sys.Views;
 namespace ToSic.Sxc.Blocks.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public record BlockConfiguration: ModelOfEntity, IAppIdentity
+public record BlockConfiguration: ModelFromEntityBasic, IAppIdentity
 {
     public  int ZoneId { get; }
     public  int AppId { get; }
