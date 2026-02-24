@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Build.Sys;
 using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Metadata.Sys;
@@ -23,7 +24,7 @@ public partial class EditLoadBackend(
     AppWorkContextService workCtxSvc,
     EntityApi api,
     ContentGroupList contentGroupList,
-    EntityBuilder entityBuilder,
+    EntityAssembler entityAssembler,
     IUiContextBuilder contextBuilder,
     ISxcCurrentContextService ctxService,
     ITargetTypeService mdTargetTypes,
@@ -37,7 +38,7 @@ public partial class EditLoadBackend(
     : ServiceBase("Cms.LoadBk",
         connect:
         [
-            workCtxSvc, inputTypes, api, contentGroupList, entityBuilder, contextBuilder, ctxService,
+            workCtxSvc, inputTypes, api, contentGroupList, entityAssembler, contextBuilder, ctxService,
             mdTargetTypes, appReaders, jsonSerializerGenerator, typesPermissions, valContentTypeDataStore, prefetch, loadSettings
         ])
 {

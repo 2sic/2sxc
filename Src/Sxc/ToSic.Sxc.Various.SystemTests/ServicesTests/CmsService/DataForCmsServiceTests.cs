@@ -4,7 +4,7 @@ using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.ServicesTests.CmsService;
 
-public class DataForCmsServiceTests(DataBuilder dataBuilder)
+public class DataForCmsServiceTests(DataAssembler dataAssembler)
 {
     public const int AppId = -1;
     public const string SomeTextField = "SomeText";
@@ -43,7 +43,7 @@ public class DataForCmsServiceTests(DataBuilder dataBuilder)
             { SomeTextField, text },
             { SomeHtmlField, html }
         };
-        return dataBuilder.CreateEntityTac(appId: AppId, entityId: 1, contentType: contentType, values: values, titleField: SomeTextField);
+        return dataAssembler.CreateEntityTac(appId: AppId, entityId: 1, contentType: contentType, values: values, titleField: SomeTextField);
     }
 
 

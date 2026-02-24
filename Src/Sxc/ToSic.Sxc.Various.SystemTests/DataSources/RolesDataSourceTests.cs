@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.DataSources;
@@ -8,7 +7,7 @@ using ToSic.Sxc.DataSources;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Tests.DataSources;
 
-public class RolesDataSourceTests(DataBuilder dataBuilder, DataSourcesTstBuilder dsSvc) : IClassFixture<DoFixtureStartup<ScenarioBasic>>
+public class RolesDataSourceTests(DataSourcesTstBuilder dsSvc, LookUpTestData lookUp) : IClassFixture<DoFixtureStartup<ScenarioBasic>>
 {
     public class Startup: StartupSxcWithDb
     {
@@ -76,6 +75,6 @@ public class RolesDataSourceTests(DataBuilder dataBuilder, DataSourcesTstBuilder
             .Create(new DataSourceOptions
             {
                 AppIdentityOrReader = new AppIdentity(0, 0),
-                LookUp = new LookUpTestData(dataBuilder).AppSetAndRes()
+                LookUp = lookUp.AppSetAndRes()
             }, options));
 }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Specialized;
 using System.Diagnostics;
-using ToSic.Eav.Data.Build;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Web.Sys.LightSpeed;
@@ -11,11 +10,11 @@ using ToSic.Sxc.Web.Sys.Url;
 namespace ToSic.Sxc.WebLightSpeed;
 
 [Startup(typeof(StartupSxcCoreOnly))]
-public class LightSpeedUrlParamsTest(DataBuilder dataBuilder)//: TestBaseEavCore
+public class LightSpeedUrlParamsTest(DataAssembler dataAssembler, ContentTypeAssembler typeAssembler)//: TestBaseEavCore
 {
     //public LightSpeedUrlParamsTest() => _testData = new(dataBuilder);
 
-    private readonly LightSpeedTestData _testData = new(dataBuilder);
+    private readonly LightSpeedTestData _testData = new(dataAssembler, typeAssembler);
 
     private static NameValueCollection Parse(string query) => UrlHelpers.ParseQueryString(query);
 

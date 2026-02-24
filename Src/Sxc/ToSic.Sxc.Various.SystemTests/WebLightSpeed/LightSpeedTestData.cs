@@ -6,7 +6,7 @@ using ToSic.Sxc.Web.Sys.LightSpeed;
 
 namespace ToSic.Sxc.WebLightSpeed;
 
-public class LightSpeedTestData(DataBuilder builder)
+public class LightSpeedTestData(DataAssembler dataAssembler, ContentTypeAssembler typeAssembler)
 {
     public const int AppId = -1;
     internal const string DefTitle = "LightSpeed Configuration";
@@ -18,14 +18,14 @@ public class LightSpeedTestData(DataBuilder builder)
     /// <summary>
     /// Basic LightSpeed Content Type with Url Fields only for testing
     /// </summary>
-    private IContentType LsCtUrlFields => builder.ContentType.CreateContentTypeTac(appId: AppId, name: LightSpeedDecorator.ContentTypeName, attributes:
+    private IContentType LsCtUrlFields => typeAssembler.Type.CreateContentTypeTac(appId: AppId, name: LightSpeedDecorator.ContentTypeName, attributes:
         [
-            builder.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.Title), DataTypes.Boolean, true),
-            builder.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.IsEnabled), DataTypes.Boolean),
-            builder.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.ByUrlParameters), DataTypes.Boolean),
-            builder.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.UrlParametersCaseSensitive), DataTypes.Boolean),
-            builder.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.UrlParameterNames), DataTypes.String),
-            builder.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.UrlParametersOthersDisableCache), DataTypes.Boolean),
+            typeAssembler.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.Title), DataTypes.Boolean, true),
+            typeAssembler.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.IsEnabled), DataTypes.Boolean),
+            typeAssembler.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.ByUrlParameters), DataTypes.Boolean),
+            typeAssembler.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.UrlParametersCaseSensitive), DataTypes.Boolean),
+            typeAssembler.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.UrlParameterNames), DataTypes.String),
+            typeAssembler.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.UrlParametersOthersDisableCache), DataTypes.Boolean),
         ]
     );
 
@@ -40,7 +40,7 @@ public class LightSpeedTestData(DataBuilder builder)
             {nameof(LightSpeedDecorator.UrlParameterNames), names},
             {nameof(LightSpeedDecorator.UrlParametersOthersDisableCache), othersDisableCache }
         };
-        var ent = builder.CreateEntityTac(appId: AppId, entityId: 1, contentType: LsCtUrlFields, values: values, titleField: nameof(LightSpeedDecorator.Title));
+        var ent = dataAssembler.CreateEntityTac(appId: AppId, entityId: 1, contentType: LsCtUrlFields, values: values, titleField: nameof(LightSpeedDecorator.Title));
         return ent;
     }
 

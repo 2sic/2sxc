@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Cms.Users.Sys;
@@ -16,7 +15,7 @@ namespace ToSic.Sxc.DataSources;
 //
 // In the future, we should find a way to system-test DNN DBs with real data, to make sure the filters work
 
-public class UsersDataSourceTests(DataBuilder dataBuilder, DataSourcesTstBuilder DsSvc) : IClassFixture<DoFixtureStartup<ScenarioBasic>>
+public class UsersDataSourceTests(DataSourcesTstBuilder DsSvc, LookUpTestData lookUpTestData) : IClassFixture<DoFixtureStartup<ScenarioBasic>>
 {
     public class Startup : StartupSxcWithDb
     {
@@ -218,6 +217,6 @@ public class UsersDataSourceTests(DataBuilder dataBuilder, DataSourcesTstBuilder
             .Create(new DataSourceOptions
             {
                 AppIdentityOrReader = new AppIdentity(0, 0),
-                LookUp = new LookUpTestData(dataBuilder).AppSetAndRes(),
+                LookUp = lookUpTestData.AppSetAndRes(),
             }, options));
 }

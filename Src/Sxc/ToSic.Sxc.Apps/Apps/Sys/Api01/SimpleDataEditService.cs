@@ -2,10 +2,12 @@
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Build.Sys;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.Data.Sys.EntityPair;
 using ToSic.Eav.Data.Sys.Save;
+using ToSic.Eav.Data.Sys.ValueConverter;
 using ToSic.Eav.Metadata;
 using static System.StringComparer;
 
@@ -28,13 +30,14 @@ namespace ToSic.Sxc.Apps.Sys.Api01;
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class SimpleDataEditService(
-    DataBuilder builder,
+    DataAssembler dataAssembler,
     IZoneMapper zoneMapper,
     IContextOfSite ctx,
     GenWorkDb<WorkEntitySave> entSave,
     GenWorkDb<WorkEntityUpdate> entUpdate,
     GenWorkDb<WorkEntityDelete> entDelete,
-    Generator<AppPermissionCheck> appPermissionCheckGenerator) : ServiceBase("Dta.Simple", connect: [entSave, entUpdate, entDelete, zoneMapper, builder, ctx, appPermissionCheckGenerator])
+    LazySvc<IValueConverter> valueConverter,
+    Generator<AppPermissionCheck> appPermissionCheckGenerator) : ServiceBase("Dta.Simple", connect: [entSave, entUpdate, entDelete, zoneMapper, dataAssembler, ctx, appPermissionCheckGenerator, valueConverter])
 {
 
     #region Constructor / DI
@@ -166,14 +169,14 @@ public partial class SimpleDataEditService(
 
         // Prepare attributes to add
         var preparedValues = ConvertRelationsToNullArray(type, values);
-        var preparedIAttributes = builder.Attribute.Create(preparedValues);
+        var preparedIAttributes = dataAssembler.AttributeList.Finalize(preparedValues);
         var attributes = BuildNewEntityValues(type, preparedIAttributes, _defaultLanguageCode);
 
-        var newEntity = builder.Entity.Create(
+        var newEntity = dataAssembler.Entity.Create(
             appId: _appId,
             guid: eGuid,
             contentType: type,
-            attributes: builder.Attribute.Create(attributes),
+            attributes: dataAssembler.AttributeList.Finalize(attributes),
             owner: owner,
             metadataFor: targetOrNull,
             isPublished: publishing.ShouldPublish);
@@ -302,9 +305,8 @@ public partial class SimpleDataEditService(
                 var firstValContents = firstValue?.ObjectContents;
                 if (firstValContents == null)
                     return null;
-                var preConverted =
-                    builder.Value.PreConvertReferences(firstValContents, ctAttr.Type, true);
-                var newAttribute = builder.Attribute.CreateOrUpdate(
+                var preConverted = valueConverter.Value.PreConvertReferences(firstValContents, ctAttr.Type, true);
+                var newAttribute = dataAssembler.Attribute.CreateOrUpdate(
                     originalOrNull: attribute,
                     name: ctAttr.Name,
                     value: preConverted,

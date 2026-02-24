@@ -2,6 +2,7 @@
 using ToSic.Eav.Context.Sys.ZoneCulture;
 using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Build.Sys;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys;
@@ -23,13 +24,14 @@ public partial class CodeDataFactory(
     LazySvc<CodeDataServices> codeDataServices,
     LazySvc<AdamManager> adamManager,
     LazySvc<IContextOfApp> contextOfAppLazy,
-    LazySvc<DataBuilder> dataBuilderLazy,
+    LazySvc<DataAssembler> dataBuilderLazy,
+    LazySvc<ContentTypeTypeAssembler> contentTypeAssembler,
     LazySvc<ICodeDataPoCoWrapperService> codeDataWrapper,
     Generator<CodeJsonWrapper> wrapJsonGenerator,
     LazySvc<CodeInfoService> codeInfoSvc,
     LazySvc<IZoneMapper> zoneMapper)
     : ServiceWithContext("Sxc.AsConv",
-        connect: [/* never: serviceProvider */codeDataServices, adamManager, contextOfAppLazy, dataBuilderLazy, codeDataWrapper, wrapJsonGenerator, codeInfoSvc, zoneMapper]),
+        connect: [/* never: serviceProvider */codeDataServices, adamManager, contextOfAppLazy, dataBuilderLazy, contentTypeAssembler, codeDataWrapper, wrapJsonGenerator, codeInfoSvc, zoneMapper]),
         ICodeDataFactory
 {
     public CodeInfoService CodeInfo => codeInfoSvc.Value;

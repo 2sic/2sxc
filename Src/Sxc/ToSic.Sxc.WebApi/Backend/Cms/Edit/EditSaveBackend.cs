@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Build.Sys;
 using ToSic.Eav.Data.Processing;
 using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.Serialization.Sys;
@@ -18,8 +19,8 @@ public class EditSaveBackend(
     SaveSecurity saveSecurity,
     SaveEntities saveBackendHelper,
     LazySvc<DataValidatorContentTypeDataStore> valContentTypeDataStore,
-    DataBuilder dataBuilder)
-    : ServiceBase("Cms.SaveBk", connect: [pagePublishing, workEntities, ctxService, jsonSerializer, saveSecurity, saveBackendHelper, dataBuilder, valContentTypeDataStore])
+    DataAssembler dataAssembler)
+    : ServiceBase("Cms.SaveBk", connect: [pagePublishing, workEntities, ctxService, jsonSerializer, saveSecurity, saveBackendHelper, dataAssembler, valContentTypeDataStore])
 {
     public async Task<Dictionary<Guid, int>> Save(int appId, EditSaveDto package, bool partOfPage)
     {
@@ -103,7 +104,7 @@ public class EditSaveBackend(
                     throw validatorResult.Exception;
 
                 // Reconstruct the entity, with possible ID reset, and with the correct owner and published state
-                ent = dataBuilder.Entity.CreateFrom(ent,
+                ent = dataAssembler.Entity.CreateFrom(ent,
                     id: validatorResult.ResetId,
                     isPublished: package.IsPublished, // the published state is only in the header, not per entity, so we need to set it here
                     owner: ent.Owner.NullIfNoValue() ?? context.User.IdentityToken

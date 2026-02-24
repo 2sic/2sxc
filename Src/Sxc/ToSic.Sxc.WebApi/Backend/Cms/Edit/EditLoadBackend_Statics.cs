@@ -108,7 +108,7 @@ partial class EditLoadBackend
     {
         var l = Log.Fn<IEntity>();
         var type = appSysCtx.AppReader.GetContentType(header.ContentTypeName!);
-        var ent = entityBuilder.EmptyOfType(appId, header.Guid, header.EntityId, type);
+        var ent = entityAssembler.EmptyOfType(appId, header.Guid, header.EntityId, type);
         return l.Return(ent);
     }
 }

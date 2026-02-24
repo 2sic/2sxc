@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Services.Cache;
-using ToSic.Sxc.Services.Cache.Sys;
-using ToSic.Sxc.Services.Cache.Sys.CacheKey;
+﻿using ToSic.Sxc.Services.Cache.Sys.CacheKey;
 using static ToSic.Sxc.Services.Cache.Sys.CacheServiceConstants;
 #pragma warning disable xUnit1026
 
