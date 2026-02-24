@@ -9926,7 +9926,7 @@
             "Metadata": [
               {
                 "Id": 184324,
-                "Version": 1,
+                "Version": 2,
                 "Guid": "3ea2c591-de9e-4784-b218-4cf29e5613ee",
                 "Type": {
                   "Id": "ContentType",
@@ -9947,7 +9947,7 @@
                       "en-us": "<p>Configure settings for generating data models - both typed and lightweight.</p>"
                     },
                     "Label": {
-                      "en-us": "Data Copilot Configuration"
+                      "en-us": "Code Generator / Copilot Configuration"
                     },
                     "ListInstructions": {
                       "en-us": ""
@@ -11341,6 +11341,182 @@
                       }
                     },
                     "Owner": "unknown"
+                  }
+                ]
+              },
+              {
+                "Name": "GroupAdvanced",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 185425,
+                    "Version": 4,
+                    "Guid": "0c980309-1e5b-4d92-aa76-c40e955430ab",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-default"
+                        },
+                        "Name": {
+                          "en-us": "Advanced (BETA)"
+                        },
+                        "Notes": {
+                          "en-us": "<p>These features are experimental and probably don't work yet.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "unknown"
+                  },
+                  {
+                    "Id": 185427,
+                    "Version": 3,
+                    "Guid": "d0d6962e-329a-4e87-9649-d8dd4824d2f3",
+                    "Type": {
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "AutoGenerate",
+                "Type": "Boolean",
+                "InputType": "boolean-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 185426,
+                    "Version": 2,
+                    "Guid": "af9affc8-309e-4c07-a9e3-7f9253facdfb",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "boolean-default"
+                        },
+                        "Name": {
+                          "en-us": "AutoGenerate"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "unknown"
+                  },
+                  {
+                    "Id": 185428,
+                    "Version": 1,
+                    "Guid": "25e68b9c-73a5-4318-81e4-7178359cb2a7",
+                    "Type": {
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "TitleFalse": {
+                          "en-us": "Don't auto re-generate code when data changes (default)"
+                        },
+                        "TitleIndeterminate": {
+                          "en-us": ""
+                        },
+                        "TitleTrue": {
+                          "en-us": "Auto re-generate code when Content-Types change"
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
                   }
                 ]
               }
