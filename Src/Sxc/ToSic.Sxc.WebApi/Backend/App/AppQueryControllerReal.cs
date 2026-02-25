@@ -34,10 +34,10 @@ public class AppQueryControllerReal(
 
     #region In-Container-Context Queries
 
-    public IDictionary<string, IEnumerable<EavLightEntity>> Query(string name, int? appId, string? stream = null, bool includeGuid = false)
+    public IDictionary<string, IEnumerable<EavLightEntity>> Query(string name, int? appId, string? stream = null, bool? includeGuid = false)
         => QueryPost(name, null, appId, stream, includeGuid);
 
-    public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost(string name, QueryParametersDtoFromClient? more, int? appId, string? stream = null, bool includeGuid = false)
+    public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost(string name, QueryParametersDtoFromClient? more, int? appId, string? stream = null, bool? includeGuid = false)
     {
         var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
         var appCtx = appId != null
@@ -56,7 +56,7 @@ public class AppQueryControllerReal(
             ? maybeBlock.Data.Configuration.LookUpEngine
             : null;
 
-        var result = BuildQueryAndRun(appCtx.AppReaderRequired, name, stream, includeGuid, appCtx, more, blockLookupOrNull);
+        var result = BuildQueryAndRun(appCtx.AppReaderRequired, name, stream, includeGuid ?? false, appCtx, more, blockLookupOrNull);
         return l.Return(result);
     }
 

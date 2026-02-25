@@ -45,7 +45,7 @@ public class AppQueryController() : OqtStatefulControllerBase(RealController.Log
         [FromRoute] string name,
         [FromQuery] int? appId = null,
         [FromRoute] string stream = null,
-        [FromQuery] bool includeGuid = false
+        [FromQuery] bool? includeGuid = false
     ) => Real.Query(name, appId, stream, includeGuid);
 
     [HttpPost($"{AppParts.Auto}/{AppParts.Query}" + "/{name}")]
@@ -55,6 +55,6 @@ public class AppQueryController() : OqtStatefulControllerBase(RealController.Log
         QueryParametersDtoFromClient more,
         [FromQuery] int? appId = null,
         [FromRoute] string stream = null,
-        [FromQuery] bool includeGuid = false
+        [FromQuery] bool? includeGuid = false
     ) => Real.QueryPost(name, more, appId, stream, includeGuid);
 }
