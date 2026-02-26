@@ -62,6 +62,8 @@ public static class StartupSxcWebApi
         services.TryAddTransient<EditLoadActivityAddRequiredFeatures>();
         services.TryAddTransient<EditLoadActivityPrefetchHelper>();
         services.TryAddTransient<EditLoadActivitySettingsHelper>();
+        services.TryAddTransient<EditLoadActivityCleanupRequest>();
+        services.TryAddTransient<EditLoadActivityConvertRequest>();
 
 
         services.TryAddTransient<EditSaveBackend>();

@@ -4,9 +4,7 @@ namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
 public class EditLoadActivityAddRequiredFeatures(IUiContextBuilder contextBuilder): ServiceBase("UoW.AddCtx", connect: [contextBuilder])
 {
-    public record ActionContext(List<IContentType> UsedTypes);
-
-    public EditLoadDto Run(EditLoadDto result, EditLoadActivityContext mainCtx, ActionContext actionCtx)
+    public EditLoadDto Run(EditLoadDto result, EditLoadActContextWithUsedTypes actionCtx)
     {
         var l = Log.Fn<EditLoadDto>();
 

@@ -1,122 +1,90 @@
-﻿using ToSic.Eav.Apps.Sys;
-using ToSic.Eav.Apps.Sys.Permissions;
-using ToSic.Eav.Data.Build.Sys;
-using ToSic.Eav.ImportExport.Json.V1;
-using ToSic.Eav.Metadata.Sys;
-using ToSic.Eav.Metadata.Targets;
-using ToSic.Eav.Serialization.Sys;
+﻿using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sxc.Backend.Cms.Load.Activities;
 using ToSic.Sxc.Backend.SaveHelpers;
 using ToSic.Sys.Security.Permissions;
-using ToSic.Sys.Utils;
-using JsonSerializer = ToSic.Eav.ImportExport.Json.Sys.JsonSerializer;
 
 
 namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public partial class EditLoadBackend(
+public class EditLoadBackend(
     AppWorkContextService workCtxSvc,
-    EntityApi api,
-    ContentGroupList contentGroupList,
-    EntityAssembler entityAssembler,
-    //IUiContextBuilder contextBuilder,
+    EditLoadActionGetForEditing actGetForEditing,
     ISxcCurrentContextService ctxService,
-    ITargetTypeService mdTargetTypes,
-    //IAppReaderFactory appReaders,
-    //GenWorkPlus<WorkInputTypes> inputTypes,
-    Generator<JsonSerializer> jsonSerializerGenerator,
+    Generator<MultiPermissionsTypes> typesPermissions,
+    LazySvc<DataValidatorContentTypeDataStore> valContentTypeDataStore,
+
+    EditLoadActivityCleanupRequest actCleanupRequest,
+    EditLoadActivityConvertRequest actConvertRequest,
     EditLoadActivityAddContentTypes addContentTypes,
     EditLoadActivityAddNecessaryInputTypes actAddNecessaryInputTypes,
     EditLoadActivityAddContext actAddContext,
     EditLoadActivityAddRequiredFeatures actAddRequiredFeatures,
-    Generator<MultiPermissionsTypes> typesPermissions,
-    LazySvc<DataValidatorContentTypeDataStore> valContentTypeDataStore,
     EditLoadActivityPrefetchHelper actPrefetch,
-    EditLoadActivitySettingsHelper actAddActivitySettings)
+    EditLoadActivitySettingsHelper actAddActivitySettings
+)
     : ServiceBase("Cms.LoadBk",
         connect:
         [
-            workCtxSvc, /*inputTypes,*/ api, contentGroupList, entityAssembler, /*contextBuilder,*/ ctxService,
-            mdTargetTypes, /*appReaders,*/ jsonSerializerGenerator, typesPermissions, valContentTypeDataStore, actPrefetch, actAddActivitySettings,
+            workCtxSvc, actGetForEditing, ctxService, typesPermissions, valContentTypeDataStore, actPrefetch, actAddActivitySettings,
+            actCleanupRequest,
+            actConvertRequest,
             addContentTypes,
             actAddNecessaryInputTypes,
             actAddContext,
             actAddRequiredFeatures,
         ])
 {
-
-
     public async Task<EditLoadDto> Load(int appId, List<ItemIdentifier> items)
     {
         var l = Log.Fn<EditLoadDto>($"load many a#{appId}, items⋮{items.Count}");
+
+        var appContext = ctxService.GetExistingAppOrSet(appId);
+
+        // Note 2026-02-26 2dm - changed this to use from context, should be identical, but maybe it's not? keep an eye on this till 2026-Q2
+        var appReader = appContext.AppReaderRequired; // appReaders.Get(appId);
+        var actContextLight = new EditLoadActContext(appId, appReader, appContext);
+
+        items = actCleanupRequest.Run(items, actContextLight);
+
         // Security check
-        var context = ctxService.GetExistingAppOrSet(appId);
-        
         // do early permission check - but at this time it may be that we don't have the types yet
         // because they may be group/id combinations, without type information which we'll look up afterward
-        var appReader = context.AppReaderRequired; // appReaders.Get(appId);
-        items = contentGroupList.Init(appReader.PureIdentity())
-            .ConvertGroup(items)
-            .ConvertListIndexToId(items);
-        items = TryToAutoFindMetadataSingleton(items, context.AppReaderRequired.Metadata);
 
         // Special Edge Case
         // If the user is Module-Admin then we can skip the remaining checks
         // This is important because the main context may not contain the module
 
         // Look up the types, and repeat security check with type-names
-        l.A($"Will do permission check; app has {context.AppReaderRequired.List.Count} items");
+        l.A($"Will do permission check; app has {appReader.List.Count} items");
         var permCheck = typesPermissions.New()
-            .Init(context, context.AppReaderRequired, items);
+            .Init(appContext, appReader, items);
         if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
             throw HttpException.PermissionDenied(error);
 
         // load items - similar
         var showDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
         var appWorkCtx = workCtxSvc.ContextPlus(appId, showDrafts: showDrafts);
-        var entityApi = api.Init(appId, showDrafts);
-        var list = entityApi.GetEntitiesForEditing(items);
+
+        var actContext = new EditLoadActContextWithWork(appId, appReader, appWorkCtx, appContext);
+
+
+        var list = actGetForEditing.Run(appId, showDrafts, items);
 
         // Do special PreLoad checks
         for (var index = 0; index < list.Count; index++)
         {
-            var entitySet = list[index];
-            var ent = entitySet.Entity;
+            var ent = list[index].Entity;
             if (ent == null)
                 continue; // new item, so no need to check
-            var preEdit = valContentTypeDataStore.Value.PreEdit(index, ent).GetAwaiter().GetResult();
+            var preEdit = await valContentTypeDataStore.Value.PreEdit(index, ent);
             if (preEdit.Exception != null)
                 throw preEdit.Exception;
         }
 
-        var jsonSerializer = jsonSerializerGenerator.New().SetApp(appReader);
-
-        var result = new EditLoadDto
-        {
-            Items = list
-                .Select(bundle => new BundleWithHeaderOptional<JsonEntity>
-                {
-                    Header = bundle.Header,
-                    Entity = GetSerializeAndMdAssignJsonEntity(appId, bundle, jsonSerializer, appReader, appWorkCtx)
-                })
-                .ToList(),
-        };
-
-        // set published if some data already exists
-        if (list.Any())
-        {
-            var entity = list.First().Entity;
-            var isPublished = entity?.IsPublished ?? true; // Entity could be null (new), then true
-            result = result with
-            {
-                IsPublished = isPublished,
-                // only set draft-should-branch if this draft already has a published item
-                DraftShouldBranch = !isPublished && (appReader.GetPublished(entity)) != null
-            };
-        }
+        var result = actConvertRequest.Run(list, actContext);
 
         // since we're retrieving data - make sure we're allowed to
         // this is to ensure that if public forms only have "create" permissions, they can't access existing data
@@ -125,130 +93,27 @@ public partial class EditLoadBackend(
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out error))
                 throw l.Ex(HttpException.PermissionDenied(error));
 
-        #region Load content-types and additional data (like formulas)
 
-        //var serializerForTypes = jsonSerializerGenerator.New().SetApp(appReader);
-        //serializerForTypes.ValueConvertHyperlinks = true;
-        var usedTypes = UsedTypes(list, appWorkCtx);
+        var usedTypes = UsedTypes(list, appReader);
+        var actCtxPlus = EditLoadActContextWithUsedTypes.Map(actContext, usedTypes);
 
-
-
-        //var serSettings = new JsonSerializationSettings
-        //{
-        //    CtIncludeInherited = true,
-        //    CtAttributeIncludeInheritedMetadata = true
-        //};
-
-        //var jsonTypes = usedTypes
-        //    .Select(t => serializerForTypes.ToPackage(t, serSettings))
-        //    .ToListOpt();
-
-        // Fix not-supported input-type names; map to correct name
-        //jsonTypes = jsonTypes
-        //    .Select(jt =>
-        //    {
-        //        jt = jt with
-        //        {
-        //            ContentType = jt.ContentType == null
-        //                ? null
-        //                : jt.ContentType with
-        //                {
-        //                    Attributes = (jt.ContentType.Attributes ?? [])
-        //                    .Select(a => a with
-        //                    {
-        //                        // ensure that the input-type is set, otherwise it will be null
-        //                        InputType = InputTypes.MapInputTypeV10(a.InputType! /* it can't really be null, only in very old imports, and this is not an import */)
-        //                    })
-        //                    .ToListOpt(),
-        //                }
-        //        };
-        //        return jt;
-        //    })
-        //    .ToListOpt();
-
-        //result = result with
-        //{
-        //    ContentTypes = jsonTypes
-        //        .Select(t => t.ContentType!)
-        //        .ToList(),
-
-        //    // Also add global Entities like Formulas which would not be included otherwise
-        //    ContentTypeItems = jsonTypes
-        //        .SelectMany(t => t.Entities!)
-        //        .ToList(),
-        //};
-
-        var uowContext = new EditLoadActivityContext(appId, appReader, appWorkCtx, context);
-
-        result = addContentTypes.Run(result, uowContext, new(usedTypes));
-
-        #endregion
-
-        #region Input Types on ContentTypes and general definitions
-
+        // Add Content Types information
+        result = addContentTypes.Run(result, actCtxPlus);
 
         // load input-field configurations
-
-        result = actAddNecessaryInputTypes.Run(result, uowContext);
-
-        //result = result with
-        //{
-        //    InputTypes = GetNecessaryInputTypes(result.ContentTypes, appWorkCtx),
-        //};
-
-        #endregion
+        result = actAddNecessaryInputTypes.Run(result, actContext);
 
         // Attach context, but only the minimum needed for the UI
-        result = actAddContext.Run(result, uowContext, new(usedTypes));
-
-        //var isSystemType = usedTypes.Any(t => t.AppId == KnownAppsConstants.PresetAppId);
-        //l.A($"isSystemType: {isSystemType}");
-
-        //// Attach context, but only the minimum needed for the UI
-        //result = result with
-        //{
-        //    Context = contextBuilder.InitApp(context.AppReaderRequired)
-        //        .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.UserRoles | Ctx.Features |
-        //             (isSystemType ? Ctx.FeaturesForSystemTypes : Ctx.Features), CtxEnable.EditUi),
-
-        //    // Load settings for the front-end
-        //    //Settings = loadSettings.GetSettings(context, usedTypes, result.ContentTypes, appWorkCtx),
-        //};
+        result = actAddContext.Run(result, actCtxPlus);
 
         // Load settings for the front-end
-        result = actAddActivitySettings.Run(result, uowContext, new(usedTypes));
+        result = actAddActivitySettings.Run(result, actCtxPlus);
 
         // Prefetch additional data
-        result = actPrefetch.Run(result, uowContext);
-        //try
-        //{
-        //    result.Prefetch = prefetch.TryToPrefectAdditionalData(appId, result);
-        //}
-        //catch (Exception ex) // Log and Ignore
-        //{
-        //    l.A("Ran into an error during Prefetch");
-        //    l.Ex(ex);
-        //}
+        result = actPrefetch.Run(result, actContextLight);
 
         // Determine required features for the UI WIP 18.02
-        result = actAddRequiredFeatures.Run(result, uowContext, new(usedTypes));
-        //var inheritedFields = usedTypes
-        //    .SelectMany(t => t.Attributes
-        //        .Where(a => a.SysSettings?.InheritMetadata == true)
-        //        .Select(a => new { a.Name, Type = t}))
-        //    .ToList();
-
-        //if (inheritedFields.Any())
-        //    result = result with
-        //    {
-        //        RequiredFeatures = new()
-        //        {
-        //            {
-        //                BuiltInFeatures.ContentTypeFieldsReuseDefinitions.NameId,
-        //                inheritedFields.Select(f => $"Used in fields: {f.Type.Name}.{f.Name}").ToArray()
-        //            },
-        //        }
-        //    };
+        result = actAddRequiredFeatures.Run(result, actCtxPlus);
 
         // done
         var finalMsg = $"items:{result.Items.Count}, types:{result.ContentTypes.Count}, inputs:{result.InputTypes.Count}, feats:{result.Context.Features?.Count}";
@@ -256,42 +121,12 @@ public partial class EditLoadBackend(
     }
         
 
-    /// <summary>
-    /// new 2020-12-08 - correct entity-id with lookup of existing if marked as singleton
-    /// </summary>
-    // ReSharper disable once UnusedMethodReturnValue.Local
-    private List<ItemIdentifier> TryToAutoFindMetadataSingleton(List<ItemIdentifier> list, IMetadataSource appMdSource)
-    {
-        var l = Log.Fn<List<ItemIdentifier>>();
-        var headersWithMetadataFor = list
-            .Where(header => header.For?.Singleton == true && header.ContentTypeName.HasValue())
-            .ToListOpt();
 
-        foreach (var header in headersWithMetadataFor)
-        {
-            l.A("Found an entity with the auto-lookup marker");
-            // try to find metadata for this
-            var mdFor = header.For;
-            // #TargetTypeIdInsteadOfTarget
-            var type = mdFor!.TargetType != 0
-                ? mdFor.TargetType
-                : mdTargetTypes.GetId(mdFor.Target!);
-            var mds = mdFor.Guid != null
-                ? appMdSource.GetMetadata(type, mdFor.Guid.Value, header.ContentTypeName)
-                : mdFor.Number != null
-                    ? appMdSource.GetMetadata(type, mdFor.Number.Value, header.ContentTypeName)
-                    : appMdSource.GetMetadata(type, mdFor.String, header.ContentTypeName);
+    private List<IContentType> UsedTypes(List<BundleWithHeaderOptional<IEntity>> list, IAppReader appReader)
+        => list.Select(i
+                // try to get the entity type, but if there is none (new), look it up according to the header
+                => i.Entity?.Type
+                   ?? appReader.GetContentType(i.Header!.ContentTypeName!))
+            .ToList();
 
-            var mdList = mds.ToArray();
-            if (mdList.Length > 1)
-            {
-                l.A($"Warning - looking for best metadata but found too many {mdList.Length}, will use first");
-                // must now sort by ID otherwise the order may be different after a few save operations
-                mdList = [.. mdList.OrderBy(e => e.EntityId)];
-            }
-            header.EntityId = !mdList.Any() ? 0 : mdList.First().EntityId;
-        }
-
-        return l.Return(list);
-    }
 }

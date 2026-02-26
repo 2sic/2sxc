@@ -11,7 +11,7 @@ public partial class EditLoadActivityPrefetchHelper(
     EntityPickerApi entityPickerBackend)
     : ServiceBase(SxcLogName + ".Prefetch", connect: [adamTransGetItems, hyperlinkBackend, entityPickerBackend])
 {
-    public EditLoadDto Run(EditLoadDto result, EditLoadActivityContext mainCtx)
+    public EditLoadDto Run(EditLoadDto result, EditLoadActContext mainCtx)
     {
         var l = Log.Fn<EditLoadDto>();
         try

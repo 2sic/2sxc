@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
 public class EditLoadActivityAddNecessaryInputTypes(GenWorkPlus<WorkInputTypes> inputTypes) : ServiceBase("UoW.InpTyp")
 {
-    public EditLoadDto Run(EditLoadDto result, EditLoadActivityContext mainCtx)
+    public EditLoadDto Run(EditLoadDto result, EditLoadActContextWithWork mainCtx)
     {
         result = result with
         {

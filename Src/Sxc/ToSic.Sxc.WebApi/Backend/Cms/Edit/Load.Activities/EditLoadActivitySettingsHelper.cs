@@ -20,11 +20,11 @@ public class EditLoadActivitySettingsHelper(
 {
     public record ActionContext(List<IContentType> UsedTypes);
 
-    public EditLoadDto Run(EditLoadDto result, EditLoadActivityContext mainCtx, ActionContext actionCtx)
+    public EditLoadDto Run(EditLoadDto result, EditLoadActContextWithUsedTypes actionCtx)
     {
         result = result with
         {
-            Settings = GetSettings(mainCtx.AppContext, actionCtx.UsedTypes, result.ContentTypes, mainCtx.AppWorkCtx),
+            Settings = GetSettings(actionCtx.AppContext, actionCtx.UsedTypes, result.ContentTypes, actionCtx.AppWorkCtx),
         };
         return result;
     }

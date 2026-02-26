@@ -6,9 +6,7 @@ namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
 public class EditLoadActivityAddContentTypes(Generator<JsonSerializer> jsonSerializerGenerator)
 {
-    public record ActionContext(List<IContentType> UsedTypes);
-
-    public EditLoadDto Run(EditLoadDto result, EditLoadActivityContext mainCtx, ActionContext actionCtx)
+    public EditLoadDto Run(EditLoadDto result, EditLoadActContextWithUsedTypes mainCtx)
     {
         var serSettings = new JsonSerializationSettings
         {
@@ -19,7 +17,7 @@ public class EditLoadActivityAddContentTypes(Generator<JsonSerializer> jsonSeria
         var serializerForTypes = jsonSerializerGenerator.New().SetApp(mainCtx.AppReader);
         serializerForTypes.ValueConvertHyperlinks = true;
 
-        var jsonTypes = actionCtx.UsedTypes
+        var jsonTypes = mainCtx.UsedTypes
             .Select(t => serializerForTypes.ToPackage(t, serSettings))
             .ToListOpt();
 
