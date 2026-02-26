@@ -61,7 +61,7 @@ public class EntityPicker : DataSourceBase
         GenWorkPlus<WorkEntities> workEntities,
         ICurrentContextService ctxService,
         Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions,
-        Generator<MultiPermissionsTypes> typePermissions,
+        Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> typePermissions,
         IUser user,
         IAppReaderFactory appReaders,
         Dependencies services
@@ -81,7 +81,7 @@ public class EntityPicker : DataSourceBase
     private readonly IUser _user;
     private readonly IAppReaderFactory _appReaders;
     private readonly Generator<MultiPermissionsApp, MultiPermissionsApp.Options> _appPermissions;
-    private readonly Generator<MultiPermissionsTypes> _typePermissions;
+    private readonly Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> _typePermissions;
 
     #region Dynamic Out
 
@@ -137,7 +137,7 @@ public class EntityPicker : DataSourceBase
         if (TypeNames.IsEmptyOrWs())
         {
             // App permission checker
-            var permCheckApp = _appPermissions.New(new() { Context = context, App = this.PureIdentity() });
+            var permCheckApp = _appPermissions.New(new() { SiteContext = context, App = this.PureIdentity() });
 
             // First do security check with no-type name
             if (!permCheckApp.EnsureAll(GrantSets.ReadSomething, out _))
@@ -166,8 +166,7 @@ public class EntityPicker : DataSourceBase
             {
                 var lType = l.Fn($"Adding all of '{type.Name}'");
 
-                var permCheckType = _typePermissions.New()
-                    .Init(context, context.AppReaderRequired, type.Name);
+                var permCheckType = _typePermissions.New(new() { SiteContext = context, App = context.AppReaderRequired, ContentTypes = [type.Name] });
 
                 if (permCheckType.EnsureAll(GrantSets.ReadSomething, out _))
                 {

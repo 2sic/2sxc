@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps.Sys.Permissions;
-using ToSic.Eav.WebApi.Security;
 using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sxc.Backend.Cms.Load.Activities;
 using ToSic.Sxc.Backend.SaveHelpers;
@@ -13,7 +12,7 @@ public class EditLoadBackend(
     AppWorkContextService workCtxSvc,
     EditLoadActionGetForEditing actGetForEditing,
     ISxcCurrentContextService ctxService,
-    Generator<MultiPermissionsTypes> typesPermissions,
+    Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> typesPermissions,
     LazySvc<DataValidatorContentTypeDataStore> valContentTypeDataStore,
 
     EditLoadActivityCleanupRequest actCleanupRequest,
@@ -59,8 +58,12 @@ public class EditLoadBackend(
 
         // Look up the types, and repeat security check with type-names
         l.A($"Will do permission check; app has {appReader.List.Count} items");
-        var permCheck = typesPermissions.New()
-            .Init(appContext, appReader, items);
+        var permCheck = typesPermissions.New(new()
+        {
+            SiteContext = appContext,
+            App = appReader,
+            ContentTypes = MultiPermissionTypeExtensions.ExtractTypeNamesFromItems(appReader, items, Log),
+        });
         if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
             throw HttpException.PermissionDenied(error);
 

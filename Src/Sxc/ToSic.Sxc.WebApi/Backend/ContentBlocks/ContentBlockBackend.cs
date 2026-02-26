@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Backend.ContentBlocks;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentBlockBackend(
     GenWorkPlus<WorkViews> workViews,
-    Generator<MultiPermissionsApp> multiPermissionsApp,
+    Generator<MultiPermissionsApp, MultiPermissionsApp.Options> multiPermissionsApp,
     IPagePublishing publishing,
     GenWorkDb<WorkBlocksMod> workBlocksMod,
     ISxcCurrentContextService ctxService,
@@ -62,7 +62,7 @@ public class ContentBlockBackend(
     {
         Log.A($"try to publish #{index} on '{part}'");
         var block = ctxService.BlockRequired();
-        ApiForBlockHelpers.ThrowIfNotAllowedInApp(multiPermissionsApp, block.Context, GrantSets.WritePublished);
+        multiPermissionsApp.ThrowIfNotAllowedInApp(block.Context, GrantSets.WritePublished);
         return blockEditorSelectorLazy.Value
             .GetEditor(block)
             .Publish(part, index);
