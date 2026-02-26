@@ -19,10 +19,9 @@ public class SaveSecurity(Generator<MultiPermissionsTypes, MultiPermissionsTypes
         {
             SiteContext = context,
             App = appReader,
-            ContentTypes = MultiPermissionTypeExtensions.ExtractTypeNamesFromItems(
+            ContentTypes = new SavePermissionDataHelper(Log).ExtractTypeNamesFromItems(
                 appReader,
-                list.Select(i => i.Header).ToList(),
-                Log
+                list.Select(i => i.Header).ToList()
             )
         });
         

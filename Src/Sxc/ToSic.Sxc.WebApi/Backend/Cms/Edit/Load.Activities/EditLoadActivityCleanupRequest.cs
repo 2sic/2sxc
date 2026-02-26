@@ -1,6 +1,8 @@
 ﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Data.Processing;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Metadata.Targets;
+using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sxc.Backend.SaveHelpers;
 using ToSic.Sys.Utils;
 
@@ -9,18 +11,19 @@ namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 public class EditLoadActivityCleanupRequest(ContentGroupList contentGroupList, ITargetTypeService mdTargetTypes)
     : ServiceBase("UoW.AddCtx", connect: [contentGroupList, mdTargetTypes])
 {
-    public List<ItemIdentifier> Run(List<ItemIdentifier> items, EditLoadActContext actionCtx)
+    public async Task<ActionData<List<ItemIdentifier>>> Run(LowCodeActionContext actionCtx, ActionData<List<ItemIdentifier>> data)
     {
         var l = Log.Fn<List<ItemIdentifier>>();
 
-
-        items = contentGroupList.Init(actionCtx.AppReader.PureIdentity())
+        var items = data.Data;
+        var appReader = actionCtx.Get<IAppReader>(EditLoadContextConstants.AppReader);
+        items = contentGroupList.Init(appReader.PureIdentity())
             .ConvertGroup(items)
             .ConvertListIndexToId(items);
-        items = TryToAutoFindMetadataSingleton(items, actionCtx.AppReader.Metadata);
+        items = TryToAutoFindMetadataSingleton(items, appReader.Metadata);
 
 
-        return l.Return(items);
+        return ActionData.Create(l.Return(items));
     }
 
 

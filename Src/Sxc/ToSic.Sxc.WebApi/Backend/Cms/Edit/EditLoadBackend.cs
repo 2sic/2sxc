@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.Permissions;
+using ToSic.Eav.Data.Processing;
 using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sxc.Backend.Cms.Load.Activities;
 using ToSic.Sxc.Backend.SaveHelpers;
@@ -21,13 +22,13 @@ public class EditLoadBackend(
     EditLoadActivityAddNecessaryInputTypes actAddNecessaryInputTypes,
     EditLoadActivityAddContext actAddContext,
     EditLoadActivityAddRequiredFeatures actAddRequiredFeatures,
-    EditLoadActivityPrefetchHelper actPrefetch,
+    EditLoadActivityAddPrefetch actAddPrefetch,
     EditLoadActivitySettingsHelper actAddActivitySettings
 )
     : ServiceBase("Cms.LoadBk",
         connect:
         [
-            workCtxSvc, actGetForEditing, ctxService, typesPermissions, valContentTypeDataStore, actPrefetch, actAddActivitySettings,
+            workCtxSvc, actGetForEditing, ctxService, typesPermissions, valContentTypeDataStore, actAddPrefetch, actAddActivitySettings,
             actCleanupRequest,
             actConvertRequest,
             addContentTypes,
@@ -44,9 +45,17 @@ public class EditLoadBackend(
 
         // Note 2026-02-26 2dm - changed this to use from context, should be identical, but maybe it's not? keep an eye on this till 2026-Q2
         var appReader = appContext.AppReaderRequired; // appReaders.Get(appId);
-        var actContextLight = new EditLoadActContext(appId, appReader, appContext);
+        var actContext = new LowCodeActionContext
+        {
+            Named = new(StringComparer.OrdinalIgnoreCase)
+            {
+                [EditLoadContextConstants.AppId] = appId,
+                [EditLoadContextConstants.AppReader] = appReader,
+                [EditLoadContextConstants.AppContext] = appContext,
+            }
+        };
 
-        items = actCleanupRequest.Run(items, actContextLight);
+        var itemsData = await actCleanupRequest.Run(actContext, ActionData.Create(items));
 
         // Security check
         // do early permission check - but at this time it may be that we don't have the types yet
@@ -58,11 +67,12 @@ public class EditLoadBackend(
 
         // Look up the types, and repeat security check with type-names
         l.A($"Will do permission check; app has {appReader.List.Count} items");
+        var usedContentTypes = new SavePermissionDataHelper(Log).ExtractTypeNamesFromItems(appReader, itemsData.Data);
         var permCheck = typesPermissions.New(new()
         {
             SiteContext = appContext,
             App = appReader,
-            ContentTypes = MultiPermissionTypeExtensions.ExtractTypeNamesFromItems(appReader, items, Log),
+            ContentTypes = usedContentTypes,
         });
         if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
             throw HttpException.PermissionDenied(error);
@@ -71,10 +81,18 @@ public class EditLoadBackend(
         var showDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
         var appWorkCtx = workCtxSvc.ContextPlus(appId, showDrafts: showDrafts);
 
-        var actContext = new EditLoadActContextWithWork(appId, appReader, appWorkCtx, appContext);
+        //var actContext = new EditLoadActContextWithWork(appId, appReader, appWorkCtx, appContext);
 
+        //actContext = actContext with
+        //{
+        //    Named = new(actContext.Named, StringComparer.OrdinalIgnoreCase)
+        //    {
+        //        [EditLoadContextConstants.AppCtxWork] = appWorkCtx,
+        //    }
+        //};
+        actContext = actContext.With(EditLoadContextConstants.AppCtxWork, appWorkCtx);
 
-        var list = actGetForEditing.Run(appId, showDrafts, items);
+        var list = actGetForEditing.Run(actContext, itemsData.Data);
 
         // Do special PreLoad checks
         for (var index = 0; index < list.Count; index++)
@@ -87,7 +105,7 @@ public class EditLoadBackend(
                 throw preEdit.Exception;
         }
 
-        var result = actConvertRequest.Run(list, actContext);
+        var result = await actConvertRequest.Run(actContext, ActionData.Create(list));
 
         // since we're retrieving data - make sure we're allowed to
         // this is to ensure that if public forms only have "create" permissions, they can't access existing data
@@ -98,29 +116,38 @@ public class EditLoadBackend(
 
 
         var usedTypes = UsedTypes(list, appReader);
-        var actCtxPlus = EditLoadActContextWithUsedTypes.Map(actContext, usedTypes);
+
+        //var actCtxPlus2 = actContext with
+        //{
+        //    Named = new(actContext.Named, StringComparer.OrdinalIgnoreCase)
+        //    {
+        //        [EditLoadContextConstants.UsedTypes] = usedTypes,
+        //    }
+        //};
+        actContext = actContext.With(EditLoadContextConstants.UsedTypes, usedTypes);
 
         // Add Content Types information
-        result = addContentTypes.Run(result, actCtxPlus);
+        result = await addContentTypes.Run(actContext, result);
 
         // load input-field configurations
-        result = actAddNecessaryInputTypes.Run(result, actContext);
+        result = await actAddNecessaryInputTypes.Run(actContext, result);
 
         // Attach context, but only the minimum needed for the UI
-        result = actAddContext.Run(result, actCtxPlus);
+        result = await actAddContext.Run(actContext, result);
 
         // Load settings for the front-end
-        result = actAddActivitySettings.Run(result, actCtxPlus);
+        result = await actAddActivitySettings.Run(actContext, result);
 
         // Prefetch additional data
-        result = actPrefetch.Run(result, actContextLight);
+        result = await actAddPrefetch.Run(actContext, result);
 
         // Determine required features for the UI WIP 18.02
-        result = actAddRequiredFeatures.Run(result, actCtxPlus);
+        result = await actAddRequiredFeatures.Run(actContext, result);
 
         // done
-        var finalMsg = $"items:{result.Items.Count}, types:{result.ContentTypes.Count}, inputs:{result.InputTypes.Count}, feats:{result.Context.Features?.Count}";
-        return l.Return(result, finalMsg);
+        var final = result.Data;
+        var finalMsg = $"items:{final.Items.Count}, types:{final.ContentTypes.Count}, inputs:{final.InputTypes.Count}, feats:{final.Context.Features?.Count}";
+        return l.Return(final, finalMsg);
     }
         
 

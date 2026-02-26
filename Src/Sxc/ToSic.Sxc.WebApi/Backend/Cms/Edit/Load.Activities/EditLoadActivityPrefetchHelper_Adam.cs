@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
-partial class EditLoadActivityPrefetchHelper
+partial class EditLoadActivityAddPrefetch
 {
     private Dictionary<string, Dictionary<string, IEnumerable< /*AdamItemDto*/object>>> PrefetchAdam(int appId, EditLoadDto editData)
     {

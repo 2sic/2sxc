@@ -1,27 +1,32 @@
 ﻿using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.Data.Build.Sys;
+using ToSic.Eav.Data.Processing;
 using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Serialization.Sys;
+using ToSic.Eav.WebApi.Sys.Entities;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
 public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerializerGenerator, EntityAssembler entityAssembler)
     : ServiceBase("UoW.AddCtx", connect: [jsonSerializerGenerator, entityAssembler])
 {
-    public EditLoadDto Run(List<BundleWithHeaderOptional<IEntity>> list, EditLoadActContextWithWork actionCtx)
+    public async Task<ActionData<EditLoadDto>> Run(LowCodeActionContext actionCtx, ActionData<List<BundleWithHeaderOptional<IEntity>>> data)
     {
         var l = Log.Fn<EditLoadDto>();
 
-        var jsonSerializer = jsonSerializerGenerator.New().SetApp(actionCtx.AppReader);
+        var appReader = actionCtx.Get<IAppReader>(EditLoadContextConstants.AppReader);
+        var appWorkCtxPlus = actionCtx.Get<IAppWorkCtxPlus>(EditLoadContextConstants.AppCtxWork);
+        var jsonSerializer = jsonSerializerGenerator.New().SetApp(appReader);
 
+        var list = data.Data;
         var result = new EditLoadDto
         {
             Items = list
                 .Select(bundle => new BundleWithHeaderOptional<JsonEntity>
                 {
                     Header = bundle.Header,
-                    Entity = GetSerializeAndMdAssignJsonEntity(actionCtx.AppId, bundle, jsonSerializer, actionCtx.AppReader, actionCtx.AppWorkCtx)
+                    Entity = GetSerializeAndMdAssignJsonEntity(actionCtx.Get<int>("AppId"), bundle, jsonSerializer, appReader, appWorkCtxPlus)
                 })
                 .ToList(),
         };
@@ -35,10 +40,10 @@ public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerial
             {
                 IsPublished = isPublished,
                 // only set draft-should-branch if this draft already has a published item
-                DraftShouldBranch = !isPublished && (actionCtx.AppReader.GetPublished(entity)) != null
+                DraftShouldBranch = !isPublished && (appReader.GetPublished(entity)) != null
             };
         }
-        return l.Return(result);
+        return ActionData.Create(l.Return(result));
     }
 
     /// <summary>

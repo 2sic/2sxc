@@ -1,12 +1,15 @@
-﻿using ToSic.Eav.ImportExport.Json.Sys;
+﻿using ToSic.Eav.Data.Processing;
+using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.Serialization.Sys;
+using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sxc.Data.Sys;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
 public class EditLoadActivityAddContentTypes(Generator<JsonSerializer> jsonSerializerGenerator)
+    : ILowCodeAction<LowCodeActionContext, EditLoadDto, EditLoadDto>
 {
-    public EditLoadDto Run(EditLoadDto result, EditLoadActContextWithUsedTypes mainCtx)
+    public async Task<ActionData<EditLoadDto>> Run(LowCodeActionContext mainCtx, ActionData<EditLoadDto> result)
     {
         var serSettings = new JsonSerializationSettings
         {
@@ -14,10 +17,10 @@ public class EditLoadActivityAddContentTypes(Generator<JsonSerializer> jsonSeria
             CtAttributeIncludeInheritedMetadata = true
         };
 
-        var serializerForTypes = jsonSerializerGenerator.New().SetApp(mainCtx.AppReader);
+        var serializerForTypes = jsonSerializerGenerator.New().SetApp(mainCtx.Get<IAppReader>(EditLoadContextConstants.AppReader));
         serializerForTypes.ValueConvertHyperlinks = true;
 
-        var jsonTypes = mainCtx.UsedTypes
+        var jsonTypes = mainCtx.Get<List<IContentType>>(EditLoadContextConstants.UsedTypes)
             .Select(t => serializerForTypes.ToPackage(t, serSettings))
             .ToListOpt();
 
@@ -46,14 +49,17 @@ public class EditLoadActivityAddContentTypes(Generator<JsonSerializer> jsonSeria
 
         result = result with
         {
-            ContentTypes = jsonTypes
-                .Select(t => t.ContentType!)
-                .ToList(),
+            Data = result.Data with
+            {
+                ContentTypes = jsonTypes
+                    .Select(t => t.ContentType!)
+                    .ToList(),
 
-            // Also add global Entities like Formulas which would not be included otherwise
-            ContentTypeItems = jsonTypes
-                .SelectMany(t => t.Entities!)
-                .ToList(),
+                // Also add global Entities like Formulas which would not be included otherwise
+                ContentTypeItems = jsonTypes
+                    .SelectMany(t => t.Entities!)
+                    .ToList(),
+            },
         };
 
         return result;

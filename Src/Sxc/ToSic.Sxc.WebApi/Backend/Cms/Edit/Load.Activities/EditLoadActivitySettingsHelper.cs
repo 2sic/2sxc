@@ -1,8 +1,10 @@
 ﻿using System.Collections;
+using ToSic.Eav.Data.Processing;
 using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Serialization.Sys;
+using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sxc.Backend.Cms.Load.Settings;
 using ToSic.Sys.Utils;
 using static System.StringComparer;
@@ -20,14 +22,17 @@ public class EditLoadActivitySettingsHelper(
 {
     public record ActionContext(List<IContentType> UsedTypes);
 
-    public EditLoadDto Run(EditLoadDto result, EditLoadActContextWithUsedTypes actionCtx)
-    {
-        result = result with
+    public async Task<ActionData<EditLoadDto>> Run(LowCodeActionContext actionCtx, ActionData<EditLoadDto> result) =>
+        result with
         {
-            Settings = GetSettings(actionCtx.AppContext, actionCtx.UsedTypes, result.ContentTypes, actionCtx.AppWorkCtx),
+            Data = result.Data with
+            {
+                Settings = GetSettings(actionCtx.Get<IContextOfApp>(EditLoadContextConstants.AppContext),
+                    actionCtx.Get<List<IContentType>>(EditLoadContextConstants.UsedTypes),
+                    result.Data.ContentTypes,
+                    actionCtx.Get<IAppWorkCtxPlus>(EditLoadContextConstants.AppCtxWork)),
+            },
         };
-        return result;
-    }
 
     /// <summary>
     /// WIP v15.
