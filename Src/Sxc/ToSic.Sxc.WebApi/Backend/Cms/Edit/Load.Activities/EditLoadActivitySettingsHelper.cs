@@ -3,13 +3,14 @@ using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Serialization.Sys;
+using ToSic.Sxc.Backend.Cms.Load.Settings;
 using ToSic.Sys.Utils;
 using static System.StringComparer;
 
-namespace ToSic.Sxc.Backend.Cms;
+namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class EditLoadSettingsHelper(
+public class EditLoadActivitySettingsHelper(
     Generator<JsonSerializer> jsonSerializerGenerator,
     IEnumerable<ILoadSettingsProvider> loadSettingsProviders,
     IEnumerable<ILoadSettingsContentTypesProvider> loadSettingsTypesProviders,
@@ -17,6 +18,17 @@ public class EditLoadSettingsHelper(
     : ServiceBase(SxcLogName + ".LodSet",
         connect: [jsonSerializerGenerator, loadSettingsProviders, appEntities])
 {
+    public record ActionContext(List<IContentType> UsedTypes);
+
+    public EditLoadDto Run(EditLoadDto result, EditLoadActivityContext mainCtx, ActionContext actionCtx)
+    {
+        result = result with
+        {
+            Settings = GetSettings(mainCtx.AppContext, actionCtx.UsedTypes, result.ContentTypes, mainCtx.AppWorkCtx),
+        };
+        return result;
+    }
+
     /// <summary>
     /// WIP v15.
     /// Later it should be built using a list of services that provide settings to the UI.
@@ -24,7 +36,7 @@ public class EditLoadSettingsHelper(
     /// - later get from settings
     /// </summary>
     /// <returns></returns>
-    public EditSettingsDto GetSettings(IContextOfApp contextOfApp, List<IContentType> contentTypes, List<JsonContentType> jsonTypes, IAppWorkCtxPlus appWorkCtx)
+    private EditSettingsDto GetSettings(IContextOfApp contextOfApp, List<IContentType> contentTypes, List<JsonContentType> jsonTypes, IAppWorkCtxPlus appWorkCtx)
     {
         var l = Log.Fn<EditSettingsDto>();
         var allInputTypes = jsonTypes
@@ -84,7 +96,7 @@ public class EditLoadSettingsHelper(
         return l.Return(finalSettings, $"{finalSettings.Count}");
     }
 
-    public List<JsonContentTypeWithTitleWip> GetContentTypes(LoadSettingsProviderParameters parameters)
+    private List<JsonContentTypeWithTitleWip> GetContentTypes(LoadSettingsProviderParameters parameters)
     {
         var l = Log.Fn<List<JsonContentTypeWithTitleWip>>();
 

@@ -4,7 +4,7 @@ using ToSic.Sxc.Services.GoogleMaps.Sys;
 using ToSic.Sys.Capabilities.Features;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
-namespace ToSic.Sxc.Backend.Cms;
+namespace ToSic.Sxc.Backend.Cms.Load.Settings;
 
 internal class LoadSettingsForGpsDefaults(
     LazySvc<IFeaturesService> features)

@@ -1,10 +1,9 @@
-﻿
-using ToSic.Eav.Apps.Sys.AppStack;
+﻿using ToSic.Eav.Apps.Sys.AppStack;
 using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Sys.Utils;
 using static System.String;
 
-namespace ToSic.Sxc.Backend.Cms;
+namespace ToSic.Sxc.Backend.Cms.Load.Settings;
 
 internal class LoadSettingsForContentType()
     : LoadSettingsProviderBase($"{SxcLogName}.LdStCT"), ILoadSettingsProvider

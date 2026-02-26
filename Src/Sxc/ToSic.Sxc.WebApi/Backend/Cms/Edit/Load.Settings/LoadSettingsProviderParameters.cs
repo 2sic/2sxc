@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Backend.Cms;
+﻿namespace ToSic.Sxc.Backend.Cms.Load.Settings;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class LoadSettingsProviderParameters

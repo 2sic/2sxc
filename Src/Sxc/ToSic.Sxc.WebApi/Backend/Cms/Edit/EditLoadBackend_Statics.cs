@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Apps.Sys;
-using ToSic.Eav.Apps.Sys.State;
+﻿using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.ImportExport.Json.V1;
 
@@ -67,42 +66,42 @@ partial class EditLoadBackend
                    ?? appSysCtx.AppReader.GetContentType(i.Header!.ContentTypeName!))
             .ToList();
 
-    private List<InputTypeInfo> GetNecessaryInputTypes(List<JsonContentType> contentTypes, IAppWorkCtxPlus appCtx)
-    {
-        var l = Log.Fn<List<InputTypeInfo>>($"{nameof(contentTypes)}: {contentTypes.Count}");
-        var fields = contentTypes
-            .SelectMany(t => t.AttributesSafe())
-            .Select(a => a.InputType)
-            .Distinct()
-            .ToList();
+    //private List<InputTypeInfo> GetNecessaryInputTypes(List<JsonContentType> contentTypes, IAppWorkCtxPlus appCtx)
+    //{
+    //    var l = Log.Fn<List<InputTypeInfo>>($"{nameof(contentTypes)}: {contentTypes.Count}");
+    //    var fields = contentTypes
+    //        .SelectMany(t => t.AttributesSafe())
+    //        .Select(a => a.InputType)
+    //        .Distinct()
+    //        .ToList();
 
-        l.A("Found these input types to load: " + string.Join(", ", fields));
+    //    l.A("Found these input types to load: " + string.Join(", ", fields));
 
-        var allInputType = inputTypes.New(appCtx).GetInputTypes();
+    //    var allInputType = inputTypes.New(appCtx).GetInputTypes();
 
-        var found = allInputType
-            .Where(it => fields.Contains(it.Type))
-            .ToList();
+    //    var found = allInputType
+    //        .Where(it => fields.Contains(it.Type))
+    //        .ToList();
 
-        if (found.Count == fields.Count) 
-            l.A("Found all");
-        else
-        {
-            l.A($"It seems some input types were not found. Needed {fields.Count}, found {found.Count}. Will try to log details for this.");
-            try
-            {
-                var notFound = fields.Where(field => found.All(fnd => fnd.Type != field));
-                l.A("Didn't find: " + string.Join(",", notFound));
-            }
-            catch (Exception ex)
-            {
-                l.Ex(ex);
-                l.A("Ran into problems logging missing input types.");
-            }
-        }
+    //    if (found.Count == fields.Count) 
+    //        l.A("Found all");
+    //    else
+    //    {
+    //        l.A($"It seems some input types were not found. Needed {fields.Count}, found {found.Count}. Will try to log details for this.");
+    //        try
+    //        {
+    //            var notFound = fields.Where(field => found.All(fnd => fnd.Type != field));
+    //            l.A("Didn't find: " + string.Join(",", notFound));
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            l.Ex(ex);
+    //            l.A("Ran into problems logging missing input types.");
+    //        }
+    //    }
 
-        return l.Return(found, $"{found.Count}");
-    }
+    //    return l.Return(found, $"{found.Count}");
+    //}
 
     private IEntity ConstructEmptyEntity(int appId, ItemIdentifier header, IAppWorkCtx appSysCtx)
     {

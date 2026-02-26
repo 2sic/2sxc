@@ -2,15 +2,33 @@
 using ToSic.Sxc.Adam.Sys.Work;
 using ToSic.Sxc.Backend.Adam;
 
-namespace ToSic.Sxc.Backend.Cms;
+namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public partial class EditLoadPrefetchHelper(
+public partial class EditLoadActivityPrefetchHelper(
     Generator<HyperlinkBackend> hyperlinkBackend,
     Generator<IAdamPrefetchHelper, AdamWorkOptions> adamTransGetItems,
     EntityPickerApi entityPickerBackend)
     : ServiceBase(SxcLogName + ".Prefetch", connect: [adamTransGetItems, hyperlinkBackend, entityPickerBackend])
 {
+    public EditLoadDto Run(EditLoadDto result, EditLoadActivityContext mainCtx)
+    {
+        var l = Log.Fn<EditLoadDto>();
+        try
+        {
+            result = result with
+            {
+                Prefetch = TryToPrefectAdditionalData(mainCtx.AppId, result)
+            };
+            return l.Return(result, "prefetched");
+        }
+        catch (Exception ex)
+        {
+            l.Ex(ex);
+            return l.Return(result, "error prefetching");
+        }
+    }
+
     public EditPrefetchDto TryToPrefectAdditionalData(int appId, EditLoadDto editData)
         => Log.Quick(() => new EditPrefetchDto
         {
