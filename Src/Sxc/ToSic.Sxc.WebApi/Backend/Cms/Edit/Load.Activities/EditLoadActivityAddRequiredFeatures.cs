@@ -4,7 +4,8 @@ using ToSic.Sys.Capabilities.Features;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
-public class EditLoadActivityAddRequiredFeatures(IUiContextBuilder contextBuilder): ServiceBase("UoW.AddCtx", connect: [contextBuilder])
+public class EditLoadActivityAddRequiredFeatures(IUiContextBuilder contextBuilder): ServiceBase("UoW.AddCtx", connect: [contextBuilder]),
+    ILowCodeAction<EditLoadDto, EditLoadDto>
 {
     public async Task<ActionData<EditLoadDto>> Run(LowCodeActionContext actionCtx, ActionData<EditLoadDto> result)
     {

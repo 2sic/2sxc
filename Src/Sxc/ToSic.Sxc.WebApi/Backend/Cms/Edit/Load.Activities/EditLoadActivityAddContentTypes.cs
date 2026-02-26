@@ -7,7 +7,7 @@ using ToSic.Sxc.Data.Sys;
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
 public class EditLoadActivityAddContentTypes(Generator<JsonSerializer> jsonSerializerGenerator)
-    : ILowCodeAction<LowCodeActionContext, EditLoadDto, EditLoadDto>
+    : ILowCodeAction<EditLoadDto, EditLoadDto>
 {
     public async Task<ActionData<EditLoadDto>> Run(LowCodeActionContext mainCtx, ActionData<EditLoadDto> result)
     {

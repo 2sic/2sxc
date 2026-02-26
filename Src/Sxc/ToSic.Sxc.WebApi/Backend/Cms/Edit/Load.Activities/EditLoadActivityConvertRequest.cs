@@ -9,7 +9,8 @@ using ToSic.Eav.WebApi.Sys.Entities;
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
 public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerializerGenerator, EntityAssembler entityAssembler)
-    : ServiceBase("UoW.AddCtx", connect: [jsonSerializerGenerator, entityAssembler])
+    : ServiceBase("UoW.AddCtx", connect: [jsonSerializerGenerator, entityAssembler]),
+        ILowCodeAction<List<BundleWithHeaderOptional<IEntity>>, EditLoadDto>
 {
     public async Task<ActionData<EditLoadDto>> Run(LowCodeActionContext actionCtx, ActionData<List<BundleWithHeaderOptional<IEntity>>> data)
     {

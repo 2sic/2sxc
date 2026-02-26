@@ -18,7 +18,7 @@ public class EditLoadBackend(
 
     EditLoadActivityCleanupRequest actCleanupRequest,
     EditLoadActivityConvertRequest actConvertRequest,
-    EditLoadActivityAddContentTypes addContentTypes,
+    EditLoadActivityAddContentTypes actAddContentTypes,
     EditLoadActivityAddNecessaryInputTypes actAddNecessaryInputTypes,
     EditLoadActivityAddContext actAddContext,
     EditLoadActivityAddRequiredFeatures actAddRequiredFeatures,
@@ -31,7 +31,7 @@ public class EditLoadBackend(
             workCtxSvc, actGetForEditing, ctxService, typesPermissions, valContentTypeDataStore, actAddPrefetch, actAddActivitySettings,
             actCleanupRequest,
             actConvertRequest,
-            addContentTypes,
+            actAddContentTypes,
             actAddNecessaryInputTypes,
             actAddContext,
             actAddRequiredFeatures,
@@ -47,7 +47,7 @@ public class EditLoadBackend(
         var appReader = appContext.AppReaderRequired; // appReaders.Get(appId);
         var actContext = new LowCodeActionContext
         {
-            Named = new(StringComparer.OrdinalIgnoreCase)
+            Context = new(StringComparer.OrdinalIgnoreCase)
             {
                 [EditLoadContextConstants.AppId] = appId,
                 [EditLoadContextConstants.AppReader] = appReader,
@@ -81,15 +81,6 @@ public class EditLoadBackend(
         var showDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
         var appWorkCtx = workCtxSvc.ContextPlus(appId, showDrafts: showDrafts);
 
-        //var actContext = new EditLoadActContextWithWork(appId, appReader, appWorkCtx, appContext);
-
-        //actContext = actContext with
-        //{
-        //    Named = new(actContext.Named, StringComparer.OrdinalIgnoreCase)
-        //    {
-        //        [EditLoadContextConstants.AppCtxWork] = appWorkCtx,
-        //    }
-        //};
         actContext = actContext.With(EditLoadContextConstants.AppCtxWork, appWorkCtx);
 
         var list = actGetForEditing.Run(actContext, itemsData.Data);
@@ -116,33 +107,21 @@ public class EditLoadBackend(
 
 
         var usedTypes = UsedTypes(list, appReader);
-
-        //var actCtxPlus2 = actContext with
-        //{
-        //    Named = new(actContext.Named, StringComparer.OrdinalIgnoreCase)
-        //    {
-        //        [EditLoadContextConstants.UsedTypes] = usedTypes,
-        //    }
-        //};
         actContext = actContext.With(EditLoadContextConstants.UsedTypes, usedTypes);
 
-        // Add Content Types information
-        result = await addContentTypes.Run(actContext, result);
+        var actions = new List<ILowCodeAction<EditLoadDto, EditLoadDto>>
+        {
+            actAddContentTypes,         // Add Content Types information
+            actAddNecessaryInputTypes,  // load input-field configurations
+            actAddContext,              // Attach context, but only the minimum needed for the UI
+            actAddActivitySettings,     // Load settings for the front-end
+            actAddPrefetch,             // Prefetch additional data
+            actAddRequiredFeatures      // Determine required features for the UI
+        };
 
-        // load input-field configurations
-        result = await actAddNecessaryInputTypes.Run(actContext, result);
-
-        // Attach context, but only the minimum needed for the UI
-        result = await actAddContext.Run(actContext, result);
-
-        // Load settings for the front-end
-        result = await actAddActivitySettings.Run(actContext, result);
-
-        // Prefetch additional data
-        result = await actAddPrefetch.Run(actContext, result);
-
-        // Determine required features for the UI WIP 18.02
-        result = await actAddRequiredFeatures.Run(actContext, result);
+        // Loop through the actions and run each one
+        foreach (var lowCodeAction in actions)
+            result = await lowCodeAction.Run(actContext, result);
 
         // done
         var final = result.Data;

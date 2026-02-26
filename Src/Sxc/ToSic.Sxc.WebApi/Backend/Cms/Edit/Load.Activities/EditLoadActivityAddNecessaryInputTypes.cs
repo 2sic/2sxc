@@ -5,7 +5,8 @@ using ToSic.Eav.WebApi.Sys.Entities;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
-public class EditLoadActivityAddNecessaryInputTypes(GenWorkPlus<WorkInputTypes> inputTypes) : ServiceBase("UoW.InpTyp")
+public class EditLoadActivityAddNecessaryInputTypes(GenWorkPlus<WorkInputTypes> inputTypes) : ServiceBase("UoW.InpTyp"),
+    ILowCodeAction<EditLoadDto, EditLoadDto>
 {
     public async Task<ActionData<EditLoadDto>> Run(LowCodeActionContext mainCtx, ActionData<EditLoadDto> result) =>
         result with

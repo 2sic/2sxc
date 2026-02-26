@@ -18,7 +18,8 @@ public class EditLoadActivitySettingsHelper(
     IEnumerable<ILoadSettingsContentTypesProvider> loadSettingsTypesProviders,
     GenWorkPlus<WorkEntities> appEntities)
     : ServiceBase(SxcLogName + ".LodSet",
-        connect: [jsonSerializerGenerator, loadSettingsProviders, appEntities])
+        connect: [jsonSerializerGenerator, loadSettingsProviders, appEntities]),
+        ILowCodeAction<EditLoadDto, EditLoadDto>
 {
     public record ActionContext(List<IContentType> UsedTypes);
 

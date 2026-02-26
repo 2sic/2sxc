@@ -9,7 +9,8 @@ using ToSic.Sys.Utils;
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
 public class EditLoadActivityCleanupRequest(ContentGroupList contentGroupList, ITargetTypeService mdTargetTypes)
-    : ServiceBase("UoW.AddCtx", connect: [contentGroupList, mdTargetTypes])
+    : ServiceBase("UoW.AddCtx", connect: [contentGroupList, mdTargetTypes]),
+        ILowCodeAction<List<ItemIdentifier>, List<ItemIdentifier>>
 {
     public async Task<ActionData<List<ItemIdentifier>>> Run(LowCodeActionContext actionCtx, ActionData<List<ItemIdentifier>> data)
     {
