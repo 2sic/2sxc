@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Backend.Admin;
 public class DialogControllerReal(
     ISxcCurrentContextService ctxService,
     IUiContextBuilder uiContextBuilder,
-    Generator<MultiPermissionsApp> appPermissions)
+    Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions)
     : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [ctxService, uiContextBuilder, appPermissions]),
         IDialogController
 {
@@ -28,7 +28,7 @@ public class DialogControllerReal(
         // if we have an appid (we don't have it in an install-new-apps-scenario) check permissions
         if (appContext != null)
         {
-            var appAndPerms = appPermissions.New().Init(appContext, appContext.AppReaderRequired);
+            var appAndPerms = appPermissions.New(new() { Context = appContext, App = appContext.AppReaderRequired });
             if (!appAndPerms.ZoneIsOfCurrentContextOrUserIsSuper(out var error))
                 throw HttpException.PermissionDenied(error);
         }

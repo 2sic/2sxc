@@ -60,7 +60,7 @@ public class EntityPicker : DataSourceBase
     public EntityPicker(
         GenWorkPlus<WorkEntities> workEntities,
         ICurrentContextService ctxService,
-        Generator<MultiPermissionsApp> appPermissions,
+        Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions,
         Generator<MultiPermissionsTypes> typePermissions,
         IUser user,
         IAppReaderFactory appReaders,
@@ -80,7 +80,7 @@ public class EntityPicker : DataSourceBase
     private readonly ICurrentContextService _ctxService;
     private readonly IUser _user;
     private readonly IAppReaderFactory _appReaders;
-    private readonly Generator<MultiPermissionsApp> _appPermissions;
+    private readonly Generator<MultiPermissionsApp, MultiPermissionsApp.Options> _appPermissions;
     private readonly Generator<MultiPermissionsTypes> _typePermissions;
 
     #region Dynamic Out
@@ -137,8 +137,7 @@ public class EntityPicker : DataSourceBase
         if (TypeNames.IsEmptyOrWs())
         {
             // App permission checker
-            var permCheckApp = _appPermissions.New()
-                .Init(context, this.PureIdentity());
+            var permCheckApp = _appPermissions.New(new() { Context = context, App = this.PureIdentity() });
 
             // First do security check with no-type name
             if (!permCheckApp.EnsureAll(GrantSets.ReadSomething, out _))

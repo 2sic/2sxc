@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Backend.Usage;
 public class UsageBackend(
     GenWorkPlus<WorkBlocks> appBlocks,
     GenWorkPlus<WorkViews> workViews,
-    Generator<MultiPermissionsApp> appPermissions,
+    Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions,
     ISxcCurrentContextService ctxService)
     : ServiceBase("Bck.Usage", connect: [appPermissions, ctxService, workViews, appBlocks])
 {
@@ -20,7 +20,7 @@ public class UsageBackend(
         var context = ctxService.GetExistingAppOrSet(appId);
 
         // extra security to only allow zone change if host user
-        var permCheck = appPermissions.New().Init(context, context.AppReaderRequired);
+        var permCheck = appPermissions.New(new() { Context = context, App = context.AppReaderRequired });
         if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
             throw HttpException.PermissionDenied(error);
 

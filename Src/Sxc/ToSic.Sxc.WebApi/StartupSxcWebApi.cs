@@ -53,7 +53,7 @@ public static class StartupSxcWebApi
         //services.TryAddTransient<ExtensionManifestService>();
         services.TryAddTransient<ExtensionInspectBackend>();
         services.TryAddTransient<ExtensionDeleteBackend>();
-        services.TryAddTransient<EntityBackend>();
+        //services.TryAddTransient<EntityBackend>();
 
         services.TryAddTransient<EditLoadBackend>();
         services.TryAddTransient<EditLoadActivityAddContentTypes>();
