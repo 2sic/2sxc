@@ -106,7 +106,7 @@ public class EditLoadBackend(
                 throw l.Ex(HttpException.PermissionDenied(error));
 
 
-        var usedTypes = UsedTypes(list, appReader);
+        var usedTypes = UsedTypes(actContext, list);
         actContext = actContext.With(EditLoadContextConstants.UsedTypes, usedTypes);
 
         var actions = new List<ILowCodeAction<EditLoadDto, EditLoadDto>>
@@ -131,11 +131,12 @@ public class EditLoadBackend(
         
 
 
-    private List<IContentType> UsedTypes(List<BundleWithHeaderOptional<IEntity>> list, IAppReader appReader)
+    private List<IContentType> UsedTypes(LowCodeActionContext context, List<BundleWithHeaderOptional<IEntity>> list)
         => list.Select(i
                 // try to get the entity type, but if there is none (new), look it up according to the header
                 => i.Entity?.Type
-                   ?? appReader.GetContentType(i.Header!.ContentTypeName!))
+                   ?? context.Get<IAppReader>(EditLoadContextConstants.AppReader)
+                       .GetContentType(i.Header!.ContentTypeName!))
             .ToList();
 
 }
