@@ -3,12 +3,11 @@ using ToSic.Eav.Models;
 using ToSic.Eav.Serialization.Sys.Json;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Services.GoogleMaps.Sys;
+namespace ToSic.Sxc.Cms.Settings;
 
-[PrivateApi]
-[ShowApiWhenReleased(ShowApiMode.Never)]
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
 [ModelSpecs(ContentType = ContentTypeNameId)]
-public record GoogleMapsSettings() : ModelFromEntityBasic
+public record GoogleMaps() : ModelFromEntityBasic
 {
     public const string ContentTypeNameId = "f5764f60-2621-4a5d-9391-100fbe664640";
 

@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Services.GoogleMaps.Sys;
+﻿namespace ToSic.Sxc.Cms.Settings;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
