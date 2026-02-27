@@ -140,6 +140,7 @@ public static class StartupSxcWebApi
         services.AddTransient<ILoadSettingsProvider, LoadSettingsForGpsDefaults>();
         services.AddTransient<ILoadSettingsProvider, LoadSettingsForContentType>();
         services.AddTransient<ILoadSettingsProvider, LoadSettingsApiKeys>();
+        services.AddTransient<ILoadSettingsProvider, LoadSettingsForWysiwygDefaults>(); // new v21
         services.AddTransient<ILoadSettingsContentTypesProvider, LoadSettingsForPickerSources>();
         return services;
     }
