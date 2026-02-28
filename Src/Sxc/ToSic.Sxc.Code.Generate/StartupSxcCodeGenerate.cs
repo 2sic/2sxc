@@ -1,5 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Data.Processing;
 using ToSic.Sxc.Code.Generate.Data;
 using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sxc.Code.Generate.Sys.CSharpBaseClasses;
@@ -23,6 +24,10 @@ public static class StartupSxcCodeGenerate
         // v20 Code Generators
         services.TryAddTransient<CSharpCustomModelsGenerator>();  // direct registration
         services.AddTransient<IFileGenerator, CSharpCustomModelsGenerator>(); // with interface and no try, so all can be listed in DI
+
+        // v21.04 Copilot auto-generate on content-type changes
+        services.TryAddTransient<CopilotContentTypeDataProcessor>();
+        services.TryAddEnumerable(ServiceDescriptor.Transient(typeof(IDataProcessor), typeof(CopilotContentTypeDataProcessor)));
 
         return services;
     }
