@@ -6,7 +6,7 @@ using ToSic.Sys.Utils;
 using static ToSic.Eav.Data.Sys.DataConstants;
 
 
-namespace ToSic.Sxc.Services.DataServices;
+namespace ToSic.Sxc.Services.Data.Sys;
 partial class DataService
 {
 
@@ -20,7 +20,7 @@ partial class DataService
         var l = Log.Fn<T>($"{nameof(attach)}: {attach}, {nameof(options)}: {options}");
 
         // If no in-source was provided, make sure that we create one from the current app
-        var fullOptions = OptionsMs.SafeOptions(parameters, options: options).WithAttach(attach);
+        var fullOptions = DataSourceOptionsExtensions.WithAttach(OptionsMs.SafeOptions(parameters, options: options), attach);
         var ds = dataSources.Value.Create<T>(/*attach: attach,*/ options: fullOptions);
 
         return l.Return(ds);
@@ -38,8 +38,7 @@ partial class DataService
         var l = Log.Fn<IDataSource>($"{nameof(name)}: {name}, {nameof(attach)}: {attach}, {nameof(options)}: {options}");
 
         // Do this first, to ensure AppIdentity is really known/set
-        var safeOptions = OptionsMs.SafeOptions(parameters, options: options)
-            .WithAttach(attach);
+        var safeOptions = DataSourceOptionsExtensions.WithAttach(OptionsMs.SafeOptions(parameters, options: options), attach);
         var appId = safeOptions.AppIdentityOrReader!.AppId;
 
         var dsInfo = name.IsEmptyOrWs()
@@ -64,11 +63,11 @@ partial class DataService
         var ds = dataSources.Value.Create(dsInfo.Type, /*attach: attach,*/ options: safeOptions);
 
         // If it's the superuser (often developing the DS) we should show errors instead of letting it just happen
-        if (!showErrors || !ds.IsError())
+        if (!showErrors || !ErrorExtensions.IsError((IDataSource)ds))
             return l.Return(ds);
 
         // Work out more information about the error
-        var errEntity = ds.List.First();
+        var errEntity = Enumerable.First<IEntity>(ds.List);
         var message = $"Title: '{errEntity.Get<string>(ErrorFieldTitle)}'; \n" +
                       $"Message: {errEntity.Get<string>(ErrorFieldMessage)}; \n" +
                       $"Debug Info: {errEntity.Get<string>(ErrorFieldDebugNotes)}";

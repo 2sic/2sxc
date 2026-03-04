@@ -11,7 +11,7 @@ using ToSic.Sys.Users;
 
 // TODO: MAKE PRIVATE AGAIN AFTER MOVING TO ToSic.Sxc.Custom
 
-namespace ToSic.Sxc.Services.DataServices;
+namespace ToSic.Sxc.Services.Data.Sys;
 
 [PrivateApi("hide implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -21,23 +21,35 @@ public partial class DataService(
     LazySvc<IAppsCatalog> appsCatalog,
     LazySvc<QueryManager<Query>> queryManager,
     IUser user)
-    : ServiceWithContext("Sxc.DatSvc", connect: [user, dataSources, catalog, appsCatalog, queryManager]), IDataService
+    : ServiceWithContext("Sxc.DatSvc", connect: [user, dataSources, catalog, appsCatalog, queryManager]),
+        IDataService,
+        IServiceWithSetup<DataService.Options>
 {
+    public record Options(IAppIdentity? AppIdentity, Func<ILookUpEngine?>? GetLookup);
+
     public override void ConnectToRoot(IExecutionContext exCtx)
     {
         base.ConnectToRoot(exCtx);
-        Setup(exCtx.GetState<Sxc.Apps.IApp>(), () => (exCtx as IExCtxLookUpEngine)?.LookUpForDataSources);
+        Setup(new(exCtx.GetState<Sxc.Apps.IApp>(), () => (exCtx as IExCtxLookUpEngine)?.LookUpForDataSources));
     }
 
-    // TODO: MAKE PRIVATE AGAIN AFTER MOVING TO ToSic.Sxc.Custom
-    public IDataService Setup(IAppIdentity? appIdentity, Func<ILookUpEngine?>? getLookup)
+    public void Setup(Options opts)
     {
-        _appIdentity = appIdentity ?? _appIdentity;
-        _getLookup = getLookup ?? _getLookup;
-        return this;
+        _appIdentity = opts.AppIdentity ?? _appIdentity;
+        _getLookup = opts.GetLookup ?? _getLookup;
+
     }
     private IAppIdentity? _appIdentity;
-        
+
+    //// TODO: MAKE PRIVATE AGAIN AFTER MOVING TO ToSic.Sxc.Custom
+    //public IDataService SetupOld(IAppIdentity? appIdentity, Func<ILookUpEngine?>? getLookup)
+    //{
+    //    _appIdentity = appIdentity ?? _appIdentity;
+    //    _getLookup = getLookup ?? _getLookup;
+    //    return this;
+    //}
+
+
     public IDataService SpawnNew(NoParamOrder npo = default, IAppIdentity? appIdentity = default, int zoneId = default, int appId = default)
     {
         // Make sure we have an AppIdentity if possible - or reuse the existing, though it could be null
@@ -55,11 +67,11 @@ public partial class DataService(
         if (ExCtxOrNull != null)
         {
             newDs.ConnectToRoot(ExCtxOrNull);
-            newDs.Setup(appIdentity, null);
+            newDs.Setup(new(appIdentity, null));
         }
         else
         {
-            newDs.Setup(appIdentity, _getLookup);
+            newDs.Setup(new(appIdentity, _getLookup));
         }
         return newDs;
     }
@@ -86,6 +98,33 @@ public partial class DataService(
         IDataSourceLinkable? attach = default,
         object? parameters = default)
         => new GetQueryMs<Query>(queryManager, OptionsMs, Log).GetQuery(name, npo, attach, parameters);
+
+    #endregion
+
+    #region Linking
+
+    public IDataSourceLink CreateLink(IDataSourceLinkable source,
+        NoParamOrder npo = default,
+        string? inName = default,
+        string? outName = default
+    )
+    {
+        var link = source.GetLink();
+        return inName != default || outName != default
+            ? link.WithRename(outName: outName, inName: inName)
+            : link;
+    }
+
+    public IDataSourceLink CombineLinks(params IDataSourceLinkable[] sources)
+    {
+        if (sources.Length == 0)
+            throw new ArgumentException(@"At least one source must be provided", nameof(sources));
+
+        var first = sources[0].GetLink();
+        return sources.Length == 1
+            ? first
+            : first.WithMore(sources.Skip(1).ToArray());
+    }
 
     #endregion
 

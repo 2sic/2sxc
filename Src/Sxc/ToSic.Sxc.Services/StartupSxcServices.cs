@@ -4,7 +4,7 @@ using ToSic.Sxc.Render.Sys.ModuleHtml;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Cache.Sys;
 using ToSic.Sxc.Services.Cms.Sys;
-using ToSic.Sxc.Services.DataServices;
+using ToSic.Sxc.Services.Data.Sys;
 using ToSic.Sxc.Services.Link.Sys;
 using ToSic.Sxc.Services.Mail.Sys;
 using ToSic.Sxc.Services.OutputCache;

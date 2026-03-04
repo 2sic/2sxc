@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Services.DataServices;
+using ToSic.Sxc.Services.Data.Sys;
 
 namespace ToSic.Sxc.Services;
 
@@ -46,7 +46,7 @@ public class ServiceKitLight16(IServiceProvider serviceProvider) : ServiceBase("
     public IDataService Data => _data.Get(() =>
     {
         var dss = GetService<IDataService>();
-        (dss as DataService)?.Setup(_appIdentity, _getLookup);
+        (dss as DataService)?.Setup(new(_appIdentity, _getLookup));
         return dss;
     })!;
     private readonly GetOnce<IDataService> _data = new();
