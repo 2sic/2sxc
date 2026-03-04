@@ -23,7 +23,7 @@ public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TF
 
 
     [field: AllowNull, MaybeNull]
-    public AdamContext AdamContext => field ??= Options.AdamContext!;
+    public AdamContext AdamContext => field ??= MyOptions.AdamContext!;
 
     #endregion
 

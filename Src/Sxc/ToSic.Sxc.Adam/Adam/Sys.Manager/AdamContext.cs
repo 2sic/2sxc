@@ -26,7 +26,7 @@ public class AdamContext(AdamContext.Dependencies services)
     #region Constructor and DI
 
     public record Dependencies(
-        Generator<MultiPermissionsTypes> TypesPermissions,
+        Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> TypesPermissions,
         Generator<IAdamSecurityCheckService> AdamSecurityGenerator,
         LazySvc<ISysFeaturesService> FeaturesSvc,
         LazySvc<AdamManager> AdamManagerLazy,
@@ -61,9 +61,9 @@ public class AdamContext(AdamContext.Dependencies services)
 
         Context = context;
 
-        Permissions = Services.TypesPermissions.New()
-            .Init(context, context.AppReaderRequired, contentType);
-
+        Permissions = Services.TypesPermissions.New(new()
+                { SiteContext = context, App = context.AppReaderRequired, ContentTypes = [contentType] })
+            ;
         // only do checks on field/guid if it's actually accessing that, if it's on the portal root, don't.
         UseSiteRoot = usePortalRoot;
         if (!usePortalRoot)

@@ -1,6 +1,6 @@
 ﻿using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Backend.Cms;
+namespace ToSic.Sxc.Backend.Cms.Load.Settings;
 
 /// <summary>
 /// Load additional content-type definitions which are used by pickers.

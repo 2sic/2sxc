@@ -20,7 +20,7 @@ public class AppQueryController() : DnnSxcControllerBase(RealController.LogSuffi
         [FromUri] string name,
         [FromUri] int? appId = null,
         [FromUri] string stream = null,
-        [FromUri] bool includeGuid = false
+        [FromUri] bool? includeGuid = false
     ) => Real.Query(name, appId, stream, includeGuid);
 
     [HttpPost]
@@ -29,7 +29,7 @@ public class AppQueryController() : DnnSxcControllerBase(RealController.LogSuffi
         [FromBody] QueryParametersDtoFromClient more,
         [FromUri] int? appId = null,
         [FromUri] string stream = null,
-        [FromUri] bool includeGuid = false
+        [FromUri] bool? includeGuid = false
     ) => Real.QueryPost(name, more, appId, stream, includeGuid);
 
     [HttpGet] 

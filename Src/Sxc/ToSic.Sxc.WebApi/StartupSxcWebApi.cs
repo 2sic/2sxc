@@ -11,6 +11,8 @@ using ToSic.Sxc.Backend.Admin.Query;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Backend.AppStack;
 using ToSic.Sxc.Backend.Cms;
+using ToSic.Sxc.Backend.Cms.Load.Activities;
+using ToSic.Sxc.Backend.Cms.Load.Settings;
 using ToSic.Sxc.Backend.ContentBlocks;
 using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Backend.ImportExport;
@@ -51,10 +53,19 @@ public static class StartupSxcWebApi
         //services.TryAddTransient<ExtensionManifestService>();
         services.TryAddTransient<ExtensionInspectBackend>();
         services.TryAddTransient<ExtensionDeleteBackend>();
-        services.TryAddTransient<EntityBackend>();
+        //services.TryAddTransient<EntityBackend>();
+
         services.TryAddTransient<EditLoadBackend>();
-        services.TryAddTransient<EditLoadPrefetchHelper>();
-        services.TryAddTransient<EditLoadSettingsHelper>();
+        services.TryAddTransient<EditLoadActivityAddContentTypes>();
+        services.TryAddTransient<EditLoadActivityAddNecessaryInputTypes>();
+        services.TryAddTransient<EditLoadActivityAddContext>();
+        services.TryAddTransient<EditLoadActivityAddRequiredFeatures>();
+        services.TryAddTransient<EditLoadActivityAddPrefetch>();
+        services.TryAddTransient<EditLoadActivitySettingsHelper>();
+        services.TryAddTransient<EditLoadActivityCleanupRequest>();
+        services.TryAddTransient<EditLoadActivityConvertRequest>();
+
+
         services.TryAddTransient<EditSaveBackend>();
         services.TryAddTransient<SaveSecurity>();
         services.TryAddTransient<AppViewPickerBackend>();
@@ -129,6 +140,7 @@ public static class StartupSxcWebApi
         services.AddTransient<ILoadSettingsProvider, LoadSettingsForGpsDefaults>();
         services.AddTransient<ILoadSettingsProvider, LoadSettingsForContentType>();
         services.AddTransient<ILoadSettingsProvider, LoadSettingsApiKeys>();
+        services.AddTransient<ILoadSettingsProvider, LoadSettingsForWysiwygDefaults>(); // new v21
         services.AddTransient<ILoadSettingsContentTypesProvider, LoadSettingsForPickerSources>();
         return services;
     }

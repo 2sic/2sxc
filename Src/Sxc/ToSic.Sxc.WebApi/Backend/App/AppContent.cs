@@ -24,8 +24,8 @@ public class AppContent(
     EntityApi api,
     LazySvc<IConvertToEavLight> entToDicLazy,
     ISxcCurrentContextService ctxService,
-    Generator<MultiPermissionsTypes> typesPermissions,
-    Generator<MultiPermissionsItems> itemsPermissions,
+    Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> typesPermissions,
+    Generator<MultiPermissionsItems, MultiPermissionsItems.Options> itemsPermissions,
     GenWorkDb<WorkFieldList> workFieldList,
     LazySvc<SimpleDataEditService> dataControllerLazy)
     : ServiceBase("Sxc.ApiApC",
@@ -278,7 +278,7 @@ public class AppContent(
 
     protected MultiPermissionsTypes ThrowIfNotAllowedInType(string contentType, List<Grants> requiredGrants, IAppIdentity appIdentity)
     {
-        var permCheck = typesPermissions.New().Init(Context, appIdentity, contentType);
+        var permCheck = typesPermissions.New(new() { SiteContext = Context, App = appIdentity, ContentTypes = [contentType] });
         if (!permCheck.EnsureAll(requiredGrants, out var error))
             throw HttpException.PermissionDenied(error);
         return permCheck;
@@ -288,7 +288,7 @@ public class AppContent(
     {
         if (itm == null)
             throw new ArgumentNullException(nameof(itm), @"Item must not be null to check it's security.");
-        var permCheck = itemsPermissions.New().Init(Context, appIdentity, itm);
+        var permCheck = itemsPermissions.New(new() { SiteContext = Context, App = appIdentity, Entities = [itm] });
         if (!permCheck.EnsureAll(requiredGrants, out var error))
             throw HttpException.PermissionDenied(error);
         return permCheck;

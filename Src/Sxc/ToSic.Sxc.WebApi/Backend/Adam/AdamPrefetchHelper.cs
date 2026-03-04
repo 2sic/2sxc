@@ -14,7 +14,7 @@ public class AdamPrefetchHelper(Generator<AdamWorkGet, AdamWorkOptions> adamGet,
     public ICollection<AdamItemDto> GetAdamItemsForPrefetch(string subFolderName, bool autoCreate = true)
     {
         var l = Log.Fn<ICollection<AdamItemDto>>($"subFolderName:{subFolderName}, autoCreate:{autoCreate}");
-        var adamGetReady = adamGet.New(Options);
+        var adamGetReady = adamGet.New(MyOptions);
         var items = adamGetReady.ItemsInField(subFolderName, autoCreate);
         
         if (items == null)

@@ -8,7 +8,7 @@ namespace ToSic.Sxc.ServicesTests.CmsService;
 
 public class StringWysiwygTests(
     ExecutionContextMock executionContext,
-    ContentTypeFactory contentTypeFactory,
+    CodeContentTypesManager ctDefFactory,
     DataForCmsServiceTests dataForCmsTests,
     ICodeDataFactory cdf,
     ITestOutputHelper output
@@ -30,7 +30,7 @@ public class StringWysiwygTests(
         // Must get service through codeApiSvc, because the class is internal & it needs to have a parent CodeApiService for sub-dependencies
         var parser = executionContext.GetService<CmsServiceStringWysiwyg>();
 
-        var ctWithHtmlField = contentTypeFactory.CreateTac<MockHtmlContentType>();
+        var ctWithHtmlField = ctDefFactory.CreateTac<MockHtmlContentType>();
 
         var attribute = ctWithHtmlField.Attributes
             .First(a => a.Name == nameof(MockHtmlContentType.SomeHtml));

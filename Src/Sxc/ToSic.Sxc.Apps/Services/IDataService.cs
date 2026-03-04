@@ -100,4 +100,33 @@ public interface IDataService
     );
 
     #endregion
+
+    /// <summary>
+    /// Create a connection-link of a data source or stream.
+    /// Mainly used for linking to a source with another name.
+    /// </summary>
+    /// <param name="source">The source (stream or data source)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="inName">What In-Stream it should connect to. Optional, default is "Default"</param>
+    /// <param name="outName">What Out-stream it should use from the source. Optional, default is "Default" (rarely changed).</param>
+    /// <returns></returns>
+    /// <remarks>
+    /// Introduced in v21.04, previous API (rarely used) has not worked for a while.
+    /// </remarks>
+    IDataSourceLink CreateLink(IDataSourceLinkable source,
+        NoParamOrder npo = default,
+        string? inName = default,
+        string? outName = default
+    );
+
+    /// <summary>
+    /// Merge many links to usually attach to a new data source.
+    /// Use this when you want to attach more than one source to a new DataSource.
+    /// </summary>
+    /// <param name="sources">One or more sources. Make sure they specify different In names - usually using <see cref="CreateLink"/>.</param>
+    /// <returns></returns>
+    /// <remarks>
+    /// Introduced in v21.04, previous API (rarely used) has not worked for a while.
+    /// </remarks>
+    IDataSourceLink CombineLinks(params IDataSourceLinkable[] sources);
 }

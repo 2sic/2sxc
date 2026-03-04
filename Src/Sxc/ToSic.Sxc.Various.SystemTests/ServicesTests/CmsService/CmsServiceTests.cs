@@ -8,13 +8,13 @@ using ExecutionContext = ToSic.Sxc.Sys.ExecutionContext.ExecutionContext;
 
 namespace ToSic.Sxc.ServicesTests.CmsService;
 
-public class CmsServiceTests(ICodeDataFactory cdf, ExecutionContext exCtx, /*ICmsService cmsService,*/ DataForCmsServiceTests dataForCmsTests, ContentTypeFactory contentTypeFactory)
+public class CmsServiceTests(ICodeDataFactory cdf, ExecutionContext exCtx, /*ICmsService cmsService,*/ DataForCmsServiceTests dataForCmsTests, CodeContentTypesManager ctDefFactory)
     : IClassFixture<DoFixtureStartup<ScenarioFullPatronsWithDb>>
 {
 #if NETCOREAPP
     [field: System.Diagnostics.CodeAnalysis.AllowNull, System.Diagnostics.CodeAnalysis.MaybeNull]
 #endif
-    public IContentType TstDataContentType => field ??= contentTypeFactory.CreateTac<MockHtmlContentType>();
+    public IContentType TstDataContentType => field ??= ctDefFactory.CreateTac<MockHtmlContentType>();
 
     [Theory]
     [InlineData(null, "", "")]

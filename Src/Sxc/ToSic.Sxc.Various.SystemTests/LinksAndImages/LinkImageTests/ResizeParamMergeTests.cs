@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.Images;
-using ToSic.Sxc.Images.Sys.ResizeSettings;
+﻿using ToSic.Sxc.Images.Sys.ResizeSettings;
 
 namespace ToSic.Sxc.LinksAndImages.LinkImageTests;
 

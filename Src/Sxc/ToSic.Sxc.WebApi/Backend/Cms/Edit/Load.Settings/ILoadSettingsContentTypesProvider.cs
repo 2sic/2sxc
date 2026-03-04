@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Backend.Cms;
+﻿namespace ToSic.Sxc.Backend.Cms.Load.Settings;
 
 /// <summary>
 /// Load Settings Provider which supply additional content-types which the UI needs for editing.

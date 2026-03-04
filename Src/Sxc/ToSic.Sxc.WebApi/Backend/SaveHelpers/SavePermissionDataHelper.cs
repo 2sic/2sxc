@@ -1,29 +1,19 @@
-﻿using ToSic.Eav.Apps.Sys.Permissions;
-using ToSic.Eav.Data.Sys.Entities;
+﻿using ToSic.Eav.Data.Sys.Entities;
 
-namespace ToSic.Eav.WebApi.Security;
+namespace ToSic.Sxc.Backend.SaveHelpers;
 
 /// <summary>
 /// Extension Methods to Init with slightly different parameters
 /// </summary>
-internal static class MultiPermissionTypeExtensions
+internal class SavePermissionDataHelper(ILog parentLog): HelperBase(parentLog, "Sav.TypExt")
 {
-    public static MultiPermissionsTypes Init(this MultiPermissionsTypes parent, IContextOfSite context, IAppIdentity app, List<ItemIdentifier> items)
-    {
-        var l = parent.Log.Fn<MultiPermissionsTypes>($"..., appId: {app.AppId}, items: {items.Count}");
-        parent.Init(context, app);
-        var contentTypes = ExtractTypeNamesFromItems(parent, items);
-        parent.InitTypesAfterInit(contentTypes);
-        return l.Return(parent);
-    }
-
     /// <summary>
     /// Important: this can only run after init, because AppState isn't available before
     /// </summary>
-    private static List<string> ExtractTypeNamesFromItems(MultiPermissionsTypes parent, IEnumerable<ItemIdentifier> items)
+    internal List<string> ExtractTypeNamesFromItems(IAppReader parent, IEnumerable<ItemIdentifier> items)
     {
-        var l = parent.Log.Fn<List<string>>();
-        var allData = parent.AppState.List;
+        var l = Log.Fn<List<string>>();
+        var allData = parent.List;
 
         l.A($"items in full list: {allData.Count}");
 

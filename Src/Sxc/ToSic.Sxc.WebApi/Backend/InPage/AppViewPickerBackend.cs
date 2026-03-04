@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Backend.InPage;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppViewPickerBackend(
-    Generator<MultiPermissionsApp> multiPermissionsApp,
+    Generator<MultiPermissionsApp, MultiPermissionsApp.Options> multiPermissionsApp,
     ISxcCurrentContextService ctxService,
     LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
     GenWorkPlus<WorkViews> workViews,
@@ -44,7 +44,7 @@ public class AppViewPickerBackend(
     {
         var l = Log.Fn<Guid?>($"{templateId}, {forceCreateContentGroup}");
         var block = ctxService.BlockRequired();
-        ApiForBlockHelpers.ThrowIfNotAllowedInApp(multiPermissionsApp, block.Context, GrantSets.WriteSomething);
+        multiPermissionsApp.ThrowIfNotAllowedInApp(block.Context, GrantSets.WriteSomething);
         var result = blockEditorSelectorLazy.Value.GetEditor(block)
             .SaveTemplateId(templateId, forceCreateContentGroup);
         return l.ReturnAsOk(result);

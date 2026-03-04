@@ -1,8 +1,8 @@
 ﻿using ToSic.Eav.Data.Sys.ValueConverter;
 
-namespace ToSic.Sxc.Backend.Cms;
+namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
-partial class EditLoadPrefetchHelper
+partial class EditLoadActivityAddPrefetch
 {
     private Dictionary<string, LinkInfoDto> PrefetchLinks(int appId, EditLoadDto editData)
     {

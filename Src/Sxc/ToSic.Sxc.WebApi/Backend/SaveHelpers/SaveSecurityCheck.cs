@@ -1,12 +1,11 @@
 ﻿using ToSic.Eav.Apps.Sys.Permissions;
-using ToSic.Eav.WebApi.Security;
 using ToSic.Eav.WebApi.Sys.Security;
 using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class SaveSecurity(Generator<MultiPermissionsTypes> multiPermissionsTypesGen)
+public class SaveSecurity(Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> multiPermissionsTypesGen)
     : ServiceBase("Api.SavSec", connect: [multiPermissionsTypesGen])
 {
 
@@ -15,8 +14,16 @@ public class SaveSecurity(Generator<MultiPermissionsTypes> multiPermissionsTypes
         var list = items.ToListOpt();
         var l = Log.Fn<IMultiPermissionCheck>($"{list.Count} items");
 
-        var permCheck = multiPermissionsTypesGen.New()
-            .Init(context, context.AppReaderRequired, list.Select(i => i.Header).ToList());
+        var appReader = context.AppReaderRequired;
+        var permCheck = multiPermissionsTypesGen.New(new()
+        {
+            SiteContext = context,
+            App = appReader,
+            ContentTypes = new SavePermissionDataHelper(Log).ExtractTypeNamesFromItems(
+                appReader,
+                list.Select(i => i.Header).ToList()
+            )
+        });
         
         if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
             throw HttpException.PermissionDenied(error);
