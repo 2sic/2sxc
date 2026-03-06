@@ -2,6 +2,9 @@
 
 
 // ReSharper disable once CheckNamespace
+using System.Runtime.CompilerServices;
+// ReSharper disable UnusedMember.Global
+
 namespace Custom.Hybrid;
 
 /// <summary>
@@ -24,38 +27,43 @@ public abstract partial class RazorTyped
     /// The real DNN runtime path should continue to use legacy <c>Execute</c>-based code generation.
     /// </summary>
     public virtual Task ExecuteAsync()
-        => throw CreateUnexpectedRuntimeInvocation(nameof(ExecuteAsync));
+        => throw CreateUnexpectedRuntimeInvocation();
 
     /// <summary>
     /// Bridges classic Razor's abstract <c>Execute</c> contract to the design-time <c>ExecuteAsync</c> pattern.
     /// If this base implementation is ever reached in production, fail fast with a clear message.
+    ///
+    /// Note that the asp.net Framework implementation only has an abstract `Execute` method,
+    /// which is only added at the last layer during real compile.
+    /// The design-time environment complains about this, so we need to provide a concrete implementation here, even though it should never be called at runtime.
     /// </summary>
-    public override void Execute() => ExecuteAsync().GetAwaiter().GetResult();
+    public override void Execute()
+        => throw CreateUnexpectedRuntimeInvocation();
 
     /// <summary>
     /// Placeholder symbol for newer design-time generated attribute writer calls.
     /// Legacy DNN runtime code generation should keep using <c>WriteAttribute</c> instead.
     /// </summary>
     protected virtual void BeginWriteAttribute(string name, string prefix, int prefixOffset, string suffix, int suffixOffset, int attributeValuesCount)
-        => throw CreateUnexpectedRuntimeInvocation(nameof(BeginWriteAttribute));
+        => throw CreateUnexpectedRuntimeInvocation();
 
     /// <summary>
     /// Placeholder symbol for newer design-time generated attribute writer calls.
     /// Legacy DNN runtime code generation should keep using <c>WriteAttribute</c> instead.
     /// </summary>
     protected virtual void WriteAttributeValue(string prefix, int prefixOffset, object value, int valueOffset, int valueLength, bool isLiteral)
-        => throw CreateUnexpectedRuntimeInvocation(nameof(WriteAttributeValue));
+        => throw CreateUnexpectedRuntimeInvocation();
 
     /// <summary>
     /// Placeholder symbol for newer design-time generated attribute writer calls.
     /// Legacy DNN runtime code generation should keep using <c>WriteAttribute</c> instead.
     /// </summary>
     protected virtual void EndWriteAttribute()
-        => throw CreateUnexpectedRuntimeInvocation(nameof(EndWriteAttribute));
+        => throw CreateUnexpectedRuntimeInvocation();
 
-    private static InvalidOperationException CreateUnexpectedRuntimeInvocation(string memberName)
+    private InvalidOperationException CreateUnexpectedRuntimeInvocation([CallerMemberName] string memberName = default)
         => new(
-            $"The design-time compatibility member '{nameof(RazorTyped)}.{memberName}' was invoked at runtime. " +
+            $"The design-time compatibility member '{GetType().Name}.{memberName}' was invoked at runtime. " +
             "This shim exists only to satisfy newer editor-generated Razor code for VS Code IntelliSense on .NET Framework. " +
             "The DNN runtime should continue using legacy System.Web.Razor code generation (Execute/Write/WriteLiteral and WriteAttribute). " +
             "If this exception occurs, the runtime Razor compiler/code generator has started emitting unsupported design-time members " +
