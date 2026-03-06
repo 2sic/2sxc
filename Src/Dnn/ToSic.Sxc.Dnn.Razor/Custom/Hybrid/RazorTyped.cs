@@ -30,7 +30,7 @@ namespace Custom.Hybrid;
 /// Be aware of this since the APIs are very different - see [Typed Code](xref:NetCode.TypedCode.Index).
 /// </remarks>
 [PublicApi]
-public abstract partial class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHasCodeHelp, IGetCodePath, ISetDynamicModel, ICanUseRoslynCompiler
+public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHasCodeHelp, IGetCodePath, ISetDynamicModel, ICanUseRoslynCompiler
 {
     #region Constructor, Setup, Helpers
 

@@ -1,11 +1,11 @@
 #if NETFRAMEWORK
 
 
-// ReSharper disable once CheckNamespace
 using System.Runtime.CompilerServices;
-// ReSharper disable UnusedMember.Global
 
-namespace Custom.Hybrid;
+// ReSharper disable once CheckNamespace
+// ReSharper disable UnusedMember.Global
+namespace ToSic.Sxc.Web;
 
 /// <summary>
 /// Design-time compatibility shim for newer editor-generated Razor classes on .NET Framework.
@@ -14,13 +14,13 @@ namespace Custom.Hybrid;
 /// DNN runtime rendering still uses legacy <c>System.Web.Razor</c> code generation, which emits classic
 /// <c>Execute</c>/<c>Write</c>/<c>WriteLiteral</c> calls through <c>WebPageExecutingBase</c>.
 /// The members below only exist so VS Code / Roslyn design-time generated classes can bind against
-/// <see cref="RazorTyped"/> during analysis of <c>.cshtml</c> files.
+/// <see cref="RazorComponentBase"/> during analysis of <c>.cshtml</c> files.
 /// They must not become part of the production execution path.
 /// If any of them is invoked at runtime, it means the runtime Razor compiler/code generator has drifted into
 /// an unsupported shape or a non-generated subclass relied on this shim instead of providing real behavior.
 /// In that case a fail-fast exception is safer than silently rendering wrong HTML.
 /// </remarks>
-public abstract partial class RazorTyped
+public abstract partial class RazorComponentBase
 {
     /// <summary>
     /// Newer design-time generated Razor classes may override <c>ExecuteAsync</c>.
