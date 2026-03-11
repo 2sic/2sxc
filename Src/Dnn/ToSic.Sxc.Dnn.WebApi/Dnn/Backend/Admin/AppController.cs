@@ -77,11 +77,23 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
         => Real.Export(new(zoneId, appId, includeContentGroups, resetAppGuid, assetsAdam, assetsSite, assetAdamDeleted))
             .ToHttpResponse();
 
+
     /// <inheritdoc />
     [HttpGet]
     [ValidateAntiForgeryToken]
-    public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withPortalFiles = false)
-        => Real.SaveData(new(zoneId, appId, includeContentGroups, resetAppGuid, WithSiteFiles: withPortalFiles));
+    public async Task<bool> SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withPortalFiles = false)
+        => (await Real.SaveData(new(zoneId, appId, includeContentGroups, resetAppGuid, WithSiteFiles: withPortalFiles))).Data;
+
+    /// <inheritdoc />
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+    public Task<ImportResultDto> Reset(int zoneId, int appId, bool withPortalFiles = false)
+    {
+        SysHlp.PreventServerTimeout600();
+        return Real.Reset(zoneId, appId, PortalSettings.DefaultLanguage, withPortalFiles);
+    }
+
 
     /// <inheritdoc />
     [HttpGet]
@@ -89,16 +101,6 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null)
         => Real.GetStack(appId, part, key, view);
-
-    /// <inheritdoc />
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public ImportResultDto Reset(int zoneId, int appId, bool withPortalFiles = false)
-    {
-        SysHlp.PreventServerTimeout600();
-        return Real.Reset(zoneId, appId, PortalSettings.DefaultLanguage, withPortalFiles);
-    }
 
     /// <inheritdoc />
     [HttpPost]

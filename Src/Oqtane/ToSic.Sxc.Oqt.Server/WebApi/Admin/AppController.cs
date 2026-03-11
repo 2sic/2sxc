@@ -77,12 +77,21 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
         => Real.Export(new(zoneId, appId, includeContentGroups, resetAppGuid, assetsAdam, assetsSite, assetAdamDeleted))
             .ToHttpResponse();
 
+
     /// <inheritdoc />
     [HttpGet]
     [Authorize(Roles = RoleNames.Admin)]
     [ValidateAntiForgeryToken]
-    public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withPortalFiles = false)
-        => Real.SaveData(new(zoneId, appId, includeContentGroups, resetAppGuid, WithSiteFiles: withPortalFiles));
+    public async Task<bool> SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withPortalFiles = false)
+        => (await Real.SaveData(new(zoneId, appId, includeContentGroups, resetAppGuid, WithSiteFiles: withPortalFiles))).Data;
+
+    /// <inheritdoc />
+    [HttpPost]
+    [Authorize(Roles = RoleNames.Host)]
+    [ValidateAntiForgeryToken]
+    public Task<ImportResultDto> Reset(int zoneId, int appId, bool withPortalFiles = false) 
+        => Real.Reset(zoneId, appId, CtxHlp.BlockOptional.Context.Site.DefaultCultureCode, withPortalFiles);
+
 
     /// <inheritdoc />
     [HttpGet]
@@ -90,13 +99,6 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
     [Authorize(Roles = RoleNames.Admin)]
     public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null)
         => Real.GetStack(appId, part, key, view);
-
-    /// <inheritdoc />
-    [HttpPost]
-    [Authorize(Roles = RoleNames.Host)]
-    [ValidateAntiForgeryToken]
-    public ImportResultDto Reset(int zoneId, int appId, bool withPortalFiles = false) 
-        => Real.Reset(zoneId, appId, CtxHlp.BlockOptional.Context.Site.DefaultCultureCode, withPortalFiles);
 
     /// <inheritdoc />
     [HttpPost]

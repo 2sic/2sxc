@@ -25,14 +25,9 @@ public class ExportApp(
     ISite site,
     IUser user,
     Generator<ImpExpHelpers> impExpHelpers,
-    ISysFeaturesService features,
     IAppPathsMicroSvc appPathSvc)
     : ServiceBase("Bck.Export",
-        connect:
-        [
-            workEntities, appWorkCtxSvc, workViews, zoneMapper, export, site, user, features, impExpHelpers,
-            appPathSvc
-        ])
+        connect: [workEntities, appWorkCtxSvc, workViews, zoneMapper, export, site, user, impExpHelpers, appPathSvc])
 {
     public AppExportInfoDto GetAppInfo(int zoneId, int appId)
     {
@@ -65,24 +60,6 @@ public class ExportApp(
             TransferableFilesCount = zipExport.AppFileManager.GetAllTransferableFiles().Count() // TransferablePortalFilesCount
                                      + (appHasCustomParent ? 0 : zipExport.AppFileManagerGlobal.GetAllTransferableFiles().Count()), // TransferableGlobalFilesCount
         });
-    }
-
-    internal bool SaveDataForVersionControl(AppExportSpecs specs)
-    {
-        var l = Log.Fn<bool>(specs.Dump());
-        SecurityHelpers.ThrowIfNotSiteAdmin(user, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
-
-        // Ensure feature available...
-        SyncWithSiteFilesVerifyFeaturesOrThrow(features, specs.WithSiteFiles);
-
-        var contextZoneId = site.ZoneId;
-        var appRead = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(specs.ZoneId, specs.AppId, user, contextZoneId);
-        var appPaths = appPathSvc.Get(appRead, site);
-
-        var zipExport = export.Init(specs.ZoneId, specs.AppId, appRead.Specs.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
-        zipExport.ExportForSourceControl(specs);
-
-        return l.ReturnTrue();
     }
 
     internal static void SyncWithSiteFilesVerifyFeaturesOrThrow(ISysFeaturesService features, bool withSiteFiles)
