@@ -81,17 +81,15 @@ internal partial class Metadata(IMetadata metadata, ICodeDataFactory cdf)
 
 
 
-    public /*override*/ bool HasType(string type) => metadata.HasType(type);
+    public bool HasType(string type) => metadata.HasType(type);
 
-    public /*override*/ IEnumerable<IEntity> OfType(string type) => metadata.OfType(type);
+    public IEnumerable<IEntity> OfType(string type) => metadata.OfType(type);
 
     public IEnumerable<IEntity> GetAll() => metadata.ToList();
 
     #region Properties from the interfaces which are not really supported
 
-    public /*override*/ bool IsDemoItem => false;
-
-    //public new ITypedItem Presentation => throw new NotSupportedException();
+    public bool IsDemoItem => false;
 
     #endregion
 

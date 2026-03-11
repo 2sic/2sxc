@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Web;
 /// </summary>
 [PrivateApi("internal class only!")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHasLog, IDnnRazorCompatibility, ICompatibilityLevel
+public abstract partial class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHasLog, IDnnRazorCompatibility, ICompatibilityLevel
 {
     #region Constructor / Setup
 
