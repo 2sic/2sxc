@@ -26,4 +26,6 @@ public record OutputCacheSettings : IOutputCacheSettings
     public string? UrlParameterNames { get; init; }
 
     public bool UrlParametersOthersDisableCache { get; init; }
+
+    public IReadOnlyCollection<string>? ExternalDependencyKeys { get; init; }
 }

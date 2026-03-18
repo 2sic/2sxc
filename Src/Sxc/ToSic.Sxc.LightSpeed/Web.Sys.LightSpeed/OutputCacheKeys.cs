@@ -3,6 +3,8 @@ public class OutputCacheKeys
 {
     internal const string GlobalCacheKeyModuleRoot = "Sxc-LightSpeed.Module.";
     internal const string GlobalCacheKeyPartialRoot = "Sxc-LightSpeed.Partial.";
+    internal const string GlobalCacheKeyAppDependencyRoot = "Sxc-LightSpeed.App.";
+    internal const string GlobalCacheKeyExternalDependencyRoot = "Sxc-LightSpeed.Ext.";
 
     /// <summary>
     /// Determine the cache key for module data.
@@ -60,4 +62,10 @@ public class OutputCacheKeys
         //    id += $"-c:{currentCulture}";
         return id;
     }
+
+    internal static string ExternalDependencyKey(int appId, string dependencyName)
+        => $"{GlobalCacheKeyExternalDependencyRoot}a:{appId}-k:{dependencyName.Trim().ToLowerInvariant()}";
+
+    internal static string AppDependencyKey(int appId)
+        => $"{GlobalCacheKeyAppDependencyRoot}a:{appId}";
 }

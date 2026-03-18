@@ -24,6 +24,15 @@ internal class OutputCacheService(IModuleHtmlService moduleHtmlService)
     public string Enable(bool enable = true)
         => Configure(new() { IsEnabled = enable });
 
+    public string DependOn(string key)
+    {
+        if (string.IsNullOrWhiteSpace(key))
+            throw new ArgumentException("Dependency key must not be empty.", nameof(key));
+
+        ((ModuleHtmlService)moduleHtmlService).AddOutputCacheDependency(ModuleId, key);
+        return "";
+    }
+
     public string Configure(OutputCacheSettings settings)
     {
         ((ModuleHtmlService)moduleHtmlService).ConfigureOutputCache(ModuleId, settings);

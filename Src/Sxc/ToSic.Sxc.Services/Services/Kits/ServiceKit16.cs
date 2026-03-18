@@ -1,5 +1,6 @@
 ﻿using Connect.Koi;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Services.OutputCache;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Services.Sys.Cms;
 
@@ -153,6 +154,12 @@ public class ServiceKit16() : ServiceKit("Sxc.Kit16")
     /// </remarks>
     [field: AllowNull, MaybeNull]
     public ICacheService Cache => field ??= GetKitService<ICacheService>();
+
+    /// <summary>
+    /// Output cache service, used to influence LightSpeed output-cache behavior for the current render.
+    /// </summary>
+    [field: AllowNull, MaybeNull]
+    public IOutputCacheService OutputCache => field ??= GetKitService<IOutputCacheService>();
 
     #endregion
 }

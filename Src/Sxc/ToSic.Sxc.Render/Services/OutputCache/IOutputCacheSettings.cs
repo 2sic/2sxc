@@ -15,4 +15,5 @@ internal interface IOutputCacheSettings
     bool UrlParametersCaseSensitive { get; }
     string? UrlParameterNames { get; }
     bool UrlParametersOthersDisableCache { get; }
+    IReadOnlyCollection<string>? ExternalDependencyKeys { get; }
 }

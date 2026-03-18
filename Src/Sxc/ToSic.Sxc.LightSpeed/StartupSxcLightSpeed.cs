@@ -13,6 +13,8 @@ public static class StartupSxcLightSpeed
     {
         // v13 LightSpeed
         services.TryAddTransient<IOutputCache, LightSpeed>();
+        services.TryAddTransient<OutputCacheManager>();
+        services.TryAddTransient<LightSpeedExternalDependencies>();
         services.TryAddTransient<LightSpeedStats>();
 
         return services;

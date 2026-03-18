@@ -14,8 +14,9 @@ namespace ToSic.Sxc.Web.Sys.LightSpeed;
 internal class LightSpeed(
     ISysFeaturesService features,
     LazySvc<ISite> site,
-    LazySvc<OutputCacheManager> outputCacheManager
-) : ServiceBase(SxcLogName + ".Lights", connect: [features, outputCacheManager]), IOutputCache
+    LazySvc<OutputCacheManager> outputCacheManager,
+    LazySvc<LightSpeedExternalDependencies> externalDependencies
+) : ServiceBase(SxcLogName + ".Lights", connect: [features, outputCacheManager, externalDependencies]), IOutputCache
 {
     [field: AllowNull, MaybeNull]
     private LightSpeedConfigHelper LsConfigHelper => field ??= new(Log);
@@ -114,6 +115,14 @@ internal class LightSpeed(
                 : null;
             l.A($"{nameof(appPathsToMonitor)} done");
 
+            // The returned list always includes the app-wide LightSpeed key and may also include
+            // named external dependency keys declared through Kit.OutputCache.DependOn(...).
+            var externalCacheKeys = ExternalDependencies.GetOrEnsureCacheKeys(
+                AppReaderOrNull.AppId,
+                data.OutputCacheSettings?.ExternalDependencyKeys
+            );
+            l.A($"{nameof(externalCacheKeys)} done");
+
             // add to cache and log
             string? cacheKey = null;
             l.Do(message: "outputCacheManager add", timer: true,
@@ -122,6 +131,7 @@ internal class LightSpeed(
                     cacheItem,
                     duration,
                     data.DependentApps.SelectMany(r => r.CacheKeys).ToList(),
+                    externalCacheKeys,
                     appPathsToMonitor
                 )
             );
@@ -285,5 +295,6 @@ internal class LightSpeed(
     private readonly GetOnce<LightSpeedDecorator?> _viewConfig = new();
 
     private OutputCacheManager OutCacheMan => outputCacheManager.Value;
+    private LightSpeedExternalDependencies ExternalDependencies => externalDependencies.Value;
 
 }

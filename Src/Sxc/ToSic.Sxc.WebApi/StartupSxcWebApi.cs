@@ -110,6 +110,7 @@ public static class StartupSxcWebApi
         services.TryAddTransient<ViewControllerReal>();
         services.TryAddTransient<AppDataControllerReal>();
         services.TryAddTransient<AppQueryControllerReal>();
+        services.TryAddTransient<CacheControllerReal>();
         services.TryAddTransient<ContentGroupControllerReal>();
         services.TryAddTransient<EditControllerReal>();
         services.TryAddTransient<HistoryControllerReal>();
