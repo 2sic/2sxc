@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Render.Sys.ModuleHtml;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.Cache.Sys;
 using ToSic.Sxc.Services.Cms.Sys;
 using ToSic.Sxc.Services.Data.Sys;
@@ -66,6 +67,7 @@ public static class StartupSxcServices
 
         // Cache Service - WIP v17
         services.TryAddTransient<ICacheService, CacheService>();
+        services.TryAddTransient<INamedCacheDependencyService, NamedCacheDependencyService>();
 
         // v17.01
         services.TryAddTransient<IUserService, UserService>();
@@ -98,9 +100,6 @@ public static class StartupSxcServices
 
         // v12.05
         services.TryAddTransient<IMailService, MailServiceUnknown>();
-
-        // 21.06
-        services.TryAddTransient<IOutputCacheFlushService, OutputCacheFlushServiceUnknown>();
 
         return services;
     }

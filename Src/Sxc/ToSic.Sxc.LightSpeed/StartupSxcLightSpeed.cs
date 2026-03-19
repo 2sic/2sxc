@@ -1,6 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Sxc.Services.OutputCache;
 using ToSic.Sxc.Web.Sys.LightSpeed;
 
 // ReSharper disable once CheckNamespace
@@ -14,13 +13,7 @@ public static class StartupSxcLightSpeed
         // v13 LightSpeed
         services.TryAddTransient<IOutputCache, LightSpeed>();
         services.TryAddTransient<OutputCacheManager>();
-        services.TryAddTransient<LightSpeedExternalDependencies>();
         services.TryAddTransient<LightSpeedStats>();
-        services.TryAddTransient<IOutputCacheFlushService, OutputCacheFlushService>();
-
-        // Replace the fallback flusher with the LightSpeed-backed implementation.
-        //services.Replace(ServiceDescriptor.Transient<IOutputCacheFlushService, OutputCacheFlushService>());
-
 
         return services;
     }

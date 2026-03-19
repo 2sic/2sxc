@@ -36,9 +36,14 @@ public interface IOutputCacheService
     string Disable();
 
     /// <summary>
-    /// Add a dependency key that the output cache should depend on.
-    /// When the specified dependency changes, the cache will be invalidated and refreshed.
+    /// Add a named external dependency that the output cache should depend on.
+    /// When the specified dependency changes, the current app's cached output will be invalidated and refreshed.
     /// </summary>
+    /// <remarks>
+    /// This currently affects output caching only.
+    /// Internally the dependency is tracked through a shared named-marker service so future <c>Kit.Cache</c>
+    /// APIs can reuse the same invalidation mechanism without inventing a second dependency system.
+    /// </remarks>
     /// <param name="key"></param>
     /// <returns></returns>
     string DependOn(string key);
@@ -46,11 +51,14 @@ public interface IOutputCacheService
     // Maybe we need a more generic API for this, that can be used not only for output cache but also for data caching?
 
     /// <summary>
-    /// Flush one or more named LightSpeed external dependencies for the current app.
-    /// If <paramref name="dependencies"/> is null or empty, the app-wide LightSpeed dependency marker is touched.
+    /// Flush one or more named output-cache dependencies for the current app.
+    /// If <paramref name="dependencies"/> is null or empty, the app-wide output-cache dependency marker is touched.
     /// </summary>
     /// <param name="dependencies"></param>
-    /// <returns>The number of normalized dependency markers that were touched.</returns>
+    /// <returns>
+    /// The number of normalized named dependency markers that were touched.
+    /// Returns <c>0</c> when the app-wide flush path is used.
+    /// </returns>
     int Flush(IEnumerable<string>? dependencies = null);
 
     /// <summary>

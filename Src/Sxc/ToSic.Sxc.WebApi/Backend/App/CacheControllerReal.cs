@@ -1,15 +1,12 @@
-using System.Net;
-using ToSic.Eav.Context;
-using ToSic.Sxc.Context.Sys;
-using ToSic.Sxc.Web.Sys.LightSpeed;
+using ToSic.Sxc.Services.Cache;
 
 namespace ToSic.Sxc.Backend.App;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CacheControllerReal(
     ISxcCurrentContextService ctxService,
-    LazySvc<LightSpeedExternalDependencies> externalDependencies)
-    : ServiceBase("Sxc.ApiApCac", connect: [ctxService, externalDependencies])
+    LazySvc<INamedCacheDependencyService> namedDependencies)
+    : ServiceBase("Sxc.ApiApCac", connect: [ctxService, namedDependencies])
 {
     public const string LogSuffix = "AppCac";
 
@@ -35,18 +32,18 @@ public class CacheControllerReal(
         //    throw l.Done(new HttpExceptionAbstraction(HttpStatusCode.Unauthorized, message, "Request not allowed"));
         //}
 
-        var normalized = ExternalDependencies.NormalizeDependencies(request?.Dependencies);
+        var normalized = NamedDependencies.NormalizeNames(request?.Dependencies);
         if (normalized.Count == 0)
         {
-            // Empty input means "flush all LightSpeed entries for this app" by touching the
+            // Empty input means "flush all output-cache entries for this app" by touching the
             // app-wide dependency key, without purging the full app cache.
-            ExternalDependencies.TouchApp(appId);
+            NamedDependencies.TouchApp(CacheDependencyScopes.OutputCache, appId);
             return l.ReturnTrue("app-wide cache dependency touched");
         }
 
-        ExternalDependencies.Touch(appId, normalized);
+        NamedDependencies.Touch(CacheDependencyScopes.OutputCache, appId, normalized);
         return l.ReturnTrue($"{normalized.Count} dependencies touched");
     }
 
-    private LightSpeedExternalDependencies ExternalDependencies => externalDependencies.Value;
+    private INamedCacheDependencyService NamedDependencies => namedDependencies.Value;
 }

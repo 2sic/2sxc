@@ -4,6 +4,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneCulture;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Render.Sys;
+using ToSic.Sxc.Services.Cache;
 using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Utils;
 using static ToSic.Sxc.Sys.Configuration.SxcFeatures;
@@ -15,8 +16,8 @@ internal class LightSpeed(
     ISysFeaturesService features,
     LazySvc<ISite> site,
     LazySvc<OutputCacheManager> outputCacheManager,
-    LazySvc<LightSpeedExternalDependencies> externalDependencies
-) : ServiceBase(SxcLogName + ".Lights", connect: [features, outputCacheManager, externalDependencies]), IOutputCache
+    LazySvc<INamedCacheDependencyService> namedDependencies
+) : ServiceBase(SxcLogName + ".Lights", connect: [features, outputCacheManager, namedDependencies]), IOutputCache
 {
     [field: AllowNull, MaybeNull]
     private LightSpeedConfigHelper LsConfigHelper => field ??= new(Log);
@@ -115,9 +116,10 @@ internal class LightSpeed(
                 : null;
             l.A($"{nameof(appPathsToMonitor)} done");
 
-            // The returned list always includes the app-wide LightSpeed key and may also include
+            // The returned list always includes the app-wide output-cache marker and may also include
             // named external dependency keys declared through Kit.OutputCache.DependOn(...).
-            var externalCacheKeys = ExternalDependencies.GetOrEnsureCacheKeys(
+            var externalCacheKeys = NamedDependencies.GetOrEnsureKeys(
+                CacheDependencyScopes.OutputCache,
                 AppReaderOrNull.AppId,
                 data.OutputCacheSettings?.ExternalDependencyKeys
             );
@@ -295,6 +297,6 @@ internal class LightSpeed(
     private readonly GetOnce<LightSpeedDecorator?> _viewConfig = new();
 
     private OutputCacheManager OutCacheMan => outputCacheManager.Value;
-    private LightSpeedExternalDependencies ExternalDependencies => externalDependencies.Value;
+    private INamedCacheDependencyService NamedDependencies => namedDependencies.Value;
 
 }
