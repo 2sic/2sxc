@@ -46,6 +46,14 @@ public interface IOutputCacheService
     // Maybe we need a more generic API for this, that can be used not only for output cache but also for data caching?
 
     /// <summary>
+    /// Flush one or more named LightSpeed external dependencies for the current app.
+    /// If <paramref name="dependencies"/> is null or empty, the app-wide LightSpeed dependency marker is touched.
+    /// </summary>
+    /// <param name="dependencies"></param>
+    /// <returns>The number of normalized dependency markers that were touched.</returns>
+    int Flush(IEnumerable<string>? dependencies = null);
+
+    /// <summary>
     /// Explicitly enable (or disable) the output cache for the current module.
     /// </summary>
     /// <param name="enable"></param>

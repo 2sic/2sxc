@@ -99,6 +99,9 @@ public static class StartupSxcServices
         // v12.05
         services.TryAddTransient<IMailService, MailServiceUnknown>();
 
+        // 21.06
+        services.TryAddTransient<IOutputCacheFlushService, OutputCacheFlushServiceUnknown>();
+
         return services;
     }
 
