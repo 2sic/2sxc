@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.Context;
-using ToSic.Sxc.Render.Sys.ModuleHtml;
+﻿using ToSic.Sxc.Render.Sys.ModuleHtml;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 
@@ -11,6 +10,7 @@ namespace ToSic.Sxc.Services.OutputCache;
 internal class OutputCacheService(IModuleHtmlService moduleHtmlService)
     : ServiceWithContext("Sxc.OutCac", connect: [moduleHtmlService]), IOutputCacheService
 {
+    [PrivateApi("internal use only, external API should not know about this.")]
     public int ModuleId
     {
         get => _moduleId ??= ExCtx.GetCmsContext()?.Module?.Id ?? 0;
