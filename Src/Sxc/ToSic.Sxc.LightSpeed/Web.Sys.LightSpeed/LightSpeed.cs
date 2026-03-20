@@ -82,7 +82,7 @@ internal class LightSpeed(
         {
             l.A($"{nameof(data.DependentApps)} count {data.DependentApps.Count}");
 
-            // when dependent apps have disabled caching, parent app should not cache also 
+            // when dependent apps have disabled caching, parent app should not cache also
             if (!IsEnabledOnDependentApps(data.DependentApps))
                 return l.ReturnFalse("disabled in dependent app");
 
@@ -102,7 +102,10 @@ internal class LightSpeed(
         // Add to cache
         try
         {
-            var cacheItem = new OutputCacheItem(data);
+            var cacheItem = OutputCacheItem.Create(
+                data,
+                useCompression: features.IsEnabled(LightSpeedOutputCacheCompression.NameId)
+            );
             // #RemovedV20 #OldDnnAutoJQuery
             //doOtherStuff?.Invoke(cacheItem);
 
@@ -174,7 +177,7 @@ internal class LightSpeed(
         LightSpeedUrlParams.GetUrlParams(ViewConfigOrNull ?? AppConfig, _block?.Context.Page.Parameters, Log)
     );
     private readonly GetOnce<(bool CachingAllowed, string Extension)> _urlParams = new();
-    
+
     private string CurrentCulture => _currentCulture.Get(() => site.Value.SafeCurrentCultureCode())!;
     private readonly GetOnce<string> _currentCulture = new();
 
