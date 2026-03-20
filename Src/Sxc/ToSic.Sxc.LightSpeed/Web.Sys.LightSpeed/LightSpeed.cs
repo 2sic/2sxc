@@ -220,7 +220,7 @@ internal class LightSpeed(
 
             // This is a bit unclear - it seems that only if dependent apps are registered, will the cache be treated as valid...?
             // compare cache time-stamps
-            var dependentApp = result.Data.DependentApps?.FirstOrDefault();
+            var dependentApp = result.DependentApps?.FirstOrDefault();
             return dependentApp == null
                 ? l.ReturnNull("no dep app")
                 : l.Return(result, "found");

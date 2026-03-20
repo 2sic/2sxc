@@ -123,6 +123,25 @@ public class LightSpeedOutputCacheCompressionTests(ITestOutputHelper output)
         NotSame(result, cachedResult);
     }
 
+    [Fact]
+    public void OutputCacheItem_ReDecompressesHtml_OnEachRead_WhenCompressed()
+    {
+        var html = LightSpeedOutputCacheCompressionTestData.CreateRealisticHtml(10_000);
+        var result = CreateRenderResult(html);
+
+        var cacheItem = OutputCacheItem.Create(result, useCompression: true, minBytes: 5_000);
+
+        True(cacheItem.IsCompressed);
+
+        var firstRead = cacheItem.Data;
+        var secondRead = cacheItem.Data;
+
+        Equal(html, firstRead.Html);
+        Equal(html, secondRead.Html);
+        NotSame(firstRead, secondRead);
+        False(ReferenceEquals(firstRead.Html, secondRead.Html));
+    }
+
     private static RenderResult CreateRenderResult(string html) => new()
     {
         Html = html,

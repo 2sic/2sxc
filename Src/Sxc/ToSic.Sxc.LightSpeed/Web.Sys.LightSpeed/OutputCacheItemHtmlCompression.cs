@@ -5,18 +5,19 @@ namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
 internal static class OutputCacheItemHtmlCompression
 {
+    private static readonly UTF8Encoding Utf8NoBom = new(false);
+
     public const int DefaultMinBytes = 5_000;
 
     public static int GetUtf8ByteCount(string html)
-        => Encoding.UTF8.GetByteCount(html);
+        => Utf8NoBom.GetByteCount(html);
 
     public static byte[] Compress(string html)
     {
-        var input = Encoding.UTF8.GetBytes(html);
-
-        using var output = new MemoryStream(input.Length);
+        using var output = new MemoryStream(GetUtf8ByteCount(html));
         using (var compressionStream = new GZipStream(output, CompressionLevel.Fastest, leaveOpen: true))
-            compressionStream.Write(input, 0, input.Length);
+        using (var writer = new StreamWriter(compressionStream, Utf8NoBom, bufferSize: 1024, leaveOpen: true))
+            writer.Write(html);
 
         return output.ToArray();
     }
@@ -25,7 +26,7 @@ internal static class OutputCacheItemHtmlCompression
     {
         using var input = new MemoryStream(compressedHtml);
         using var decompressionStream = new GZipStream(input, CompressionMode.Decompress, leaveOpen: true);
-        using var reader = new StreamReader(decompressionStream, Encoding.UTF8, detectEncodingFromByteOrderMarks: false);
+        using var reader = new StreamReader(decompressionStream, Utf8NoBom, detectEncodingFromByteOrderMarks: false);
         return reader.ReadToEnd();
     }
 }

@@ -11,14 +11,14 @@ namespace ToSic.Sxc.Web.Sys.LightSpeed;
 public class LightSpeedStats(MemoryCacheService memoryCacheService) : ServiceBase(SxcLogName + ".LightSpeedStats", connect: [memoryCacheService])
 {
     public Dictionary<int, int> ItemsCount => All
-        .GroupBy(i => i.Data.AppId)
+        .GroupBy(i => i.AppId)
         .ToDictionary(
             g => g.Key,
             g => g.Count()
         );
 
     public Dictionary<int, int> Size => All
-        .GroupBy(i => i.Data.AppId)
+        .GroupBy(i => i.AppId)
         .ToDictionary(
             g => g.Key,
             g => new MemorySizeEstimator(Log).EstimateMany(g.ToArray<object>()).Total

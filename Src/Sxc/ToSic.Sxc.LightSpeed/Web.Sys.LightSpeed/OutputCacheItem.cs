@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Render.Sys;
+﻿using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Render.Sys;
 using ToSic.Sys.Caching;
 using ToSic.Sys.Memory;
 
@@ -9,7 +10,6 @@ public class OutputCacheItem : ICanEstimateSize, ITimestamped
 {
     private readonly IRenderResult data;
     private readonly byte[]? compressedHtml;
-    private string? decompressedHtml;
 
     public OutputCacheItem(IRenderResult data)
     {
@@ -28,14 +28,18 @@ public class OutputCacheItem : ICanEstimateSize, ITimestamped
         if (!useCompression)
             return new(data);
 
-        if (data is not RenderResult renderResult || string.IsNullOrEmpty(renderResult.Html))
+        if (data is not RenderResult renderResult)
             return new(data);
 
-        var originalHtmlUtf8Bytes = OutputCacheItemHtmlCompression.GetUtf8ByteCount(renderResult.Html);
+        var html = renderResult.Html;
+        if (string.IsNullOrEmpty(html))
+            return new(data);
+
+        var originalHtmlUtf8Bytes = OutputCacheItemHtmlCompression.GetUtf8ByteCount(html);
         if (originalHtmlUtf8Bytes < minBytes)
             return new(data);
 
-        var compressedHtml = OutputCacheItemHtmlCompression.Compress(renderResult.Html);
+        var compressedHtml = OutputCacheItemHtmlCompression.Compress(html);
         if (compressedHtml.Length >= originalHtmlUtf8Bytes)
             return new(data);
 
@@ -44,7 +48,11 @@ public class OutputCacheItem : ICanEstimateSize, ITimestamped
 
     public IRenderResult Data => !IsCompressed || data is not RenderResult renderResult
         ? data
-        : renderResult with { Html = decompressedHtml ??= OutputCacheItemHtmlCompression.Decompress(compressedHtml!) };
+        : renderResult with { Html = OutputCacheItemHtmlCompression.Decompress(compressedHtml!) };
+
+    public int AppId => data.AppId;
+
+    public List<IDependentApp>? DependentApps => data.DependentApps;
 
     public bool IsCompressed => compressedHtml != null;
 
