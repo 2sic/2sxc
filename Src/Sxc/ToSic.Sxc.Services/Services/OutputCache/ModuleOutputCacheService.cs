@@ -9,8 +9,8 @@ namespace ToSic.Sxc.Services.OutputCache;
 // Note 2dm 2025-06 - this doesn't seem to be in use anywhere!
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class OutputCacheService(IModuleHtmlService moduleHtmlService, INamedCacheDependencyService namedDependencies)
-    : ServiceWithContext("Sxc.OutCac", connect: [moduleHtmlService, namedDependencies]), IOutputCacheService
+internal class ModuleOutputCacheService(IModuleHtmlService moduleHtmlService, INamedCacheDependencyService namedDependencies)
+    : ServiceWithContext("Sxc.OutCac", connect: [moduleHtmlService, namedDependencies]), IModuleOutputCacheService
 {
     [PrivateApi("internal use only, external API should not know about this.")]
     public int ModuleId

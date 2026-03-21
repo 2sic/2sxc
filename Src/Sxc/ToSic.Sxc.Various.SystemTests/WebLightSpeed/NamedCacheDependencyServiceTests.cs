@@ -21,7 +21,7 @@ public class NamedCacheDependencyServiceTests(ExecutionContext exCtx)
 
     private INamedCacheDependencyService Dependencies => exCtx.GetService<INamedCacheDependencyService>(reuse: true);
 
-    private OutputCacheService OutputCache => exCtx.GetService<OutputCacheService>(reuse: true);
+    private ModuleOutputCacheService OutputCache => exCtx.GetService<ModuleOutputCacheService>(reuse: true);
 
     private ModuleHtmlService ModuleHtml => (ModuleHtmlService)exCtx.GetService<IModuleHtmlService>(reuse: true);
 

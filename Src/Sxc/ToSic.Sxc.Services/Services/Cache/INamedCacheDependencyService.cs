@@ -1,8 +1,10 @@
+using ToSic.Sxc.Services.OutputCache;
+
 namespace ToSic.Sxc.Services.Cache;
 
 /// <summary>
 /// Internal marker service for app-scoped named cache dependencies.
-/// It currently backs <see cref="OutputCache.IOutputCacheService"/> and is structured
+/// It currently backs <see cref="IModuleOutputCacheService"/> and is structured
 /// so future <c>Kit.Cache</c> APIs can reuse the same invalidation mechanism.
 /// </summary>
 [PrivateApi]

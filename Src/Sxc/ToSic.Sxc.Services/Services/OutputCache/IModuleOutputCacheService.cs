@@ -7,7 +7,7 @@
 /// <remarks>
 /// It allows enabling/disabling the cache, configuring cache settings, and adding dependencies that will invalidate the cache when they change.
 /// </remarks>
-public interface IOutputCacheService
+public interface IModuleOutputCacheService
 {
     /// <summary>
     /// The current module ID

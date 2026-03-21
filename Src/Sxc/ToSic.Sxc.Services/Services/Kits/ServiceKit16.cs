@@ -159,7 +159,7 @@ public class ServiceKit16() : ServiceKit("Sxc.Kit16")
     /// Output cache service, used to influence LightSpeed output-cache behavior for the current render.
     /// </summary>
     [field: AllowNull, MaybeNull]
-    public IOutputCacheService OutputCache => field ??= GetKitService<IOutputCacheService>();
+    public IModuleOutputCacheService OutputCache => field ??= GetKitService<IModuleOutputCacheService>();
 
     #endregion
 }

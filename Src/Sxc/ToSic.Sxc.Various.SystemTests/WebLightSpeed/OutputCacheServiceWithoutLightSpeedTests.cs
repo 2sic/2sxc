@@ -20,7 +20,7 @@ public class OutputCacheServiceWithoutLightSpeedTests
         ((IExCtxAttachApp)exCtx).AttachApp(new TestApp(CurrentAppId));
     }
 
-    private IOutputCacheService OutputCache => exCtx.GetService<IOutputCacheService>(reuse: true);
+    private IModuleOutputCacheService OutputCache => exCtx.GetService<IModuleOutputCacheService>(reuse: true);
     private INamedCacheDependencyService Dependencies => exCtx.GetService<INamedCacheDependencyService>(reuse: true);
     private MemoryCacheService Cache => exCtx.GetService<MemoryCacheService>(reuse: true);
     private int OtherAppId => CurrentAppId + 1;

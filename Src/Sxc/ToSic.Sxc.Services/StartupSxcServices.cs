@@ -54,8 +54,8 @@ public static class StartupSxcServices
         // 19.03.03 - CmsService improving SoC
         services.TryAddTransient<HtmlImgToPictureHelper>();
         services.TryAddTransient<HtmlInnerContentHelper>();
-        services.TryAddTransient<IOutputCacheService, OutputCacheService>();    // WIP v19.03.03, not official ATM
-        services.TryAddTransient<OutputCacheService>();                         // WIP v19.03.03, not official ATM
+        services.TryAddTransient<IModuleOutputCacheService, ModuleOutputCacheService>();    // WIP v19.03.03, not official ATM
+        services.TryAddTransient<ModuleOutputCacheService>();                         // WIP v19.03.03, not official ATM
 
         // Kits v14 - v16
         services.TryAddTransient<ServiceKit>();
