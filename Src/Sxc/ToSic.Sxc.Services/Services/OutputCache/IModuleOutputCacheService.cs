@@ -1,11 +1,13 @@
 ﻿namespace ToSic.Sxc.Services.OutputCache;
 
 /// <summary>
-/// Service to manage the output cache (LightSpeed) for the current module.
-/// To be used within Razor templates to control caching behavior of module output, allowing for dynamic content while still benefiting from caching where appropriate.
+/// Service to influence LightSpeed output caching for the current module render.
+/// To be used within Razor templates to control caching behavior of the current module output,
+/// while keeping cache invalidation and other app-level management operations on a separate service.
 /// </summary>
 /// <remarks>
-/// It allows enabling/disabling the cache, configuring cache settings, and adding dependencies that will invalidate the cache when they change.
+/// It allows enabling/disabling the cache, configuring cache settings, and adding named dependencies
+/// that LightSpeed should watch for this render.
 /// </remarks>
 public interface IModuleOutputCacheService
 {
@@ -49,17 +51,6 @@ public interface IModuleOutputCacheService
     string DependOn(string key);
     // TODO: unclear where / how to add such dependencies, that they are properly tracked and trigger cache invalidation when they change.
     // Maybe we need a more generic API for this, that can be used not only for output cache but also for data caching?
-
-    /// <summary>
-    /// Flush one or more named output-cache dependencies for the current app.
-    /// If <paramref name="dependencies"/> is null or empty, the app-wide output-cache dependency marker is touched.
-    /// </summary>
-    /// <param name="dependencies"></param>
-    /// <returns>
-    /// The number of normalized named dependency markers that were touched.
-    /// Returns <c>0</c> when the app-wide flush path is used.
-    /// </returns>
-    int Flush(IEnumerable<string>? dependencies = null);
 
     /// <summary>
     /// Explicitly enable (or disable) the output cache for the current module.

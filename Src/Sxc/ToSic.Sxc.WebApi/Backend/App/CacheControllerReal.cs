@@ -1,12 +1,12 @@
-using ToSic.Sxc.Services.Cache;
+using ToSic.Sxc.Services.OutputCache;
 
 namespace ToSic.Sxc.Backend.App;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CacheControllerReal(
     ISxcCurrentContextService ctxService,
-    LazySvc<INamedCacheDependencyService> namedDependencies)
-    : ServiceBase("Sxc.ApiApCac", connect: [ctxService, namedDependencies])
+    LazySvc<IOutputCacheManagementService> outputCacheManagement)
+    : ServiceBase("Sxc.ApiApCac", connect: [ctxService, outputCacheManagement])
 {
     public const string LogSuffix = "AppCac";
 
@@ -32,18 +32,11 @@ public class CacheControllerReal(
         //    throw l.Done(new HttpExceptionAbstraction(HttpStatusCode.Unauthorized, message, "Request not allowed"));
         //}
 
-        var normalized = NamedDependencies.NormalizeNames(request?.Dependencies);
-        if (normalized.Count == 0)
-        {
-            // Empty input means "flush all output-cache entries for this app" by touching the
-            // app-wide dependency key, without purging the full app cache.
-            NamedDependencies.TouchApp(CacheDependencyScopes.OutputCache, appId);
-            return l.ReturnTrue("app-wide cache dependency touched");
-        }
-
-        NamedDependencies.Touch(CacheDependencyScopes.OutputCache, appId, normalized);
-        return l.ReturnTrue($"{normalized.Count} dependencies touched");
+        var touched = OutputCacheManagement.Flush(appId, request?.Dependencies);
+        return touched == 0
+            ? l.ReturnTrue("app-wide cache dependency touched")
+            : l.ReturnTrue($"{touched} dependencies touched");
     }
 
-    private INamedCacheDependencyService NamedDependencies => namedDependencies.Value;
+    private IOutputCacheManagementService OutputCacheManagement => outputCacheManagement.Value;
 }

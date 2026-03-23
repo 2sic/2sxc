@@ -56,6 +56,7 @@ public static class StartupSxcServices
         services.TryAddTransient<HtmlInnerContentHelper>();
         services.TryAddTransient<IModuleOutputCacheService, ModuleOutputCacheService>();    // WIP v19.03.03, not official ATM
         services.TryAddTransient<ModuleOutputCacheService>();                         // WIP v19.03.03, not official ATM
+        services.TryAddTransient<IOutputCacheManagementService, OutputCacheManagementService>(); // v21.06.00
 
         // Kits v14 - v16
         services.TryAddTransient<ServiceKit>();

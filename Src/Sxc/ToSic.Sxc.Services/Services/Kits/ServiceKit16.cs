@@ -161,5 +161,11 @@ public class ServiceKit16() : ServiceKit("Sxc.Kit16")
     [field: AllowNull, MaybeNull]
     public IModuleOutputCacheService OutputCache => field ??= GetKitService<IModuleOutputCacheService>();
 
+    /// <summary>
+    /// Output cache management service, used to invalidate LightSpeed output-cache markers for a specific app.
+    /// </summary>
+    [field: AllowNull, MaybeNull]
+    public IOutputCacheManagementService OutputCacheManagement => field ??= GetKitService<IOutputCacheManagementService>();
+
     #endregion
 }

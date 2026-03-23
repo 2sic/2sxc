@@ -1,7 +1,6 @@
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.OutputCache;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Sys.LightSpeed;
 using ToSic.Sys.Caching;
 using ExecutionContext = ToSic.Sxc.Sys.ExecutionContext.ExecutionContext;
@@ -9,25 +8,21 @@ using ExecutionContext = ToSic.Sxc.Sys.ExecutionContext.ExecutionContext;
 namespace ToSic.Sxc.WebLightSpeed;
 
 [Startup(typeof(StartupSxcWithDbWithoutLightSpeed))]
-public class OutputCacheServiceWithoutLightSpeedTests
+public class OutputCacheManagementServiceWithoutLightSpeedTests
 {
     private const int CurrentAppId = 7;
     private readonly ExecutionContext exCtx;
 
-    public OutputCacheServiceWithoutLightSpeedTests(ExecutionContext exCtx)
-    {
-        this.exCtx = exCtx;
-        ((IExCtxAttachApp)exCtx).AttachApp(new TestApp(CurrentAppId));
-    }
+    public OutputCacheManagementServiceWithoutLightSpeedTests(ExecutionContext exCtx) => this.exCtx = exCtx;
 
-    private IModuleOutputCacheService OutputCache => exCtx.GetService<IModuleOutputCacheService>(reuse: true);
+    private IOutputCacheManagementService OutputCacheManagement => exCtx.GetService<IOutputCacheManagementService>(reuse: true);
     private INamedCacheDependencyService Dependencies => exCtx.GetService<INamedCacheDependencyService>(reuse: true);
     private MemoryCacheService Cache => exCtx.GetService<MemoryCacheService>(reuse: true);
     private int OtherAppId => CurrentAppId + 1;
 
     [Fact]
-    public void OutputCacheServiceResolvesWithoutLightSpeed()
-        => NotNull(OutputCache);
+    public void OutputCacheManagementServiceResolvesWithoutLightSpeed()
+        => NotNull(OutputCacheManagement);
 
     [Fact]
     public void FlushSelectiveDependenciesWithoutLightSpeed()
@@ -40,7 +35,7 @@ public class OutputCacheServiceWithoutLightSpeedTests
         Cache.Set(entryKeyB, new OutputCacheItem(new RenderResult()), policy => policy.WatchCacheKeys(Dependencies.GetOrEnsureKeys(CacheDependencyScopes.OutputCache, CurrentAppId, ["pricing"])));
         Cache.Set(entryKeyC, new OutputCacheItem(new RenderResult()), policy => policy.WatchCacheKeys(Dependencies.GetOrEnsureKeys(CacheDependencyScopes.OutputCache, OtherAppId, ["products"])));
 
-        var touched = OutputCache.Flush([" products ", "PRODUCTS"]);
+        var touched = OutputCacheManagement.Flush(CurrentAppId, [" products ", "PRODUCTS"]);
 
         Equal(1, touched);
         Null(Cache.Get<OutputCacheItem>(entryKeyA));
@@ -59,7 +54,7 @@ public class OutputCacheServiceWithoutLightSpeedTests
         Cache.Set(entryKeyB, new OutputCacheItem(new RenderResult()), policy => policy.WatchCacheKeys(Dependencies.GetOrEnsureKeys(CacheDependencyScopes.OutputCache, CurrentAppId, ["pricing"])));
         Cache.Set(entryKeyC, new OutputCacheItem(new RenderResult()), policy => policy.WatchCacheKeys(Dependencies.GetOrEnsureKeys(CacheDependencyScopes.OutputCache, OtherAppId, ["products"])));
 
-        var touched = OutputCache.Flush();
+        var touched = OutputCacheManagement.Flush(CurrentAppId);
 
         Equal(0, touched);
         Null(Cache.Get<OutputCacheItem>(entryKeyA));
@@ -78,7 +73,7 @@ public class OutputCacheServiceWithoutLightSpeedTests
         Cache.Set(entryKeyB, new OutputCacheItem(new RenderResult()), policy => policy.WatchCacheKeys(Dependencies.GetOrEnsureKeys(CacheDependencyScopes.OutputCache, CurrentAppId, ["pricing"])));
         Cache.Set(entryKeyC, new OutputCacheItem(new RenderResult()), policy => policy.WatchCacheKeys(Dependencies.GetOrEnsureKeys(CacheDependencyScopes.OutputCache, OtherAppId, ["products"])));
 
-        var touched = OutputCache.Flush([]);
+        var touched = OutputCacheManagement.Flush(CurrentAppId, []);
 
         Equal(0, touched);
         Null(Cache.Get<OutputCacheItem>(entryKeyA));
