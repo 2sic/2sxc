@@ -152,7 +152,9 @@ public partial class View : PortalModuleBase, IActionable
         LogTimer.DoInTimer(() =>
         {
             // #lightspeed
-            if (OutputCache.Existing != null)
+            var cachedResult = OutputCache.Existing?.Data;
+            var cacheHit = cachedResult != null;
+            if (cacheHit)
                 l.A("Lightspeed hit - will use cached");
 
             IRenderResult renderResult = null;
@@ -163,10 +165,10 @@ public partial class View : PortalModuleBase, IActionable
                 TryCatchAndLogToDnn(() =>
                 {
                     // Try to build the html and everything
-                    renderResult = OutputCache.Existing?.Data;
+                    renderResult = cachedResult;
 
                     var useLightspeed = OutputCache.IsEnabled; // ?? false;
-                    finalMessage = !useLightspeed ? "" : renderResult != null ? "⚡⚡" : "⚡⏳";
+                    finalMessage = !useLightspeed ? "" : cacheHit ? "⚡⚡" : "⚡⏳";
 
                     // Generate Render Result if not already provided by cache
                     renderResult ??= RenderViewAndGatherJsCssSpecs(useLightspeed);
@@ -196,9 +198,12 @@ public partial class View : PortalModuleBase, IActionable
 
                     // #Lightspeed
                     var lLightSpeed = Log.Fn(message: "Lightspeed", timer: true);
-                    
-                    // #RemovedV20 #OldDnnAutoJQuery
-                    OutputCache.Save(renderResult/*, _enforcePre1025JQueryLoading*/);
+
+                    // Do not save cache hits again. Compressed cache items materialize a new RenderResult on each Data access,
+                    // which would otherwise trigger a redundant recompress/rewrite on every request.
+                    if (!cacheHit)
+                        // #RemovedV20 #OldDnnAutoJQuery
+                        OutputCache.Save(renderResult/*, _enforcePre1025JQueryLoading*/);
                     lLightSpeed.Done();
 
                     return true; // dummy result for TryCatchAndLogToDnn

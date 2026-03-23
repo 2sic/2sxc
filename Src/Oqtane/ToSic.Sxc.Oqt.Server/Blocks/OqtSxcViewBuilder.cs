@@ -5,6 +5,7 @@ using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
+using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Render.Sys.RenderBlock;
 using ToSic.Sxc.Web.Sys.LightSpeed;
 using ToSic.Sxc.Web.Sys.Url;
@@ -64,21 +65,28 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
         if (RefsInstalledCheck.WarnIfRefsAreNotInstalled(out var oqtViewResultsDtoWarning)) return oqtViewResultsDtoWarning;
 
         OqtViewResultsDto ret = null;
+        IRenderResult renderResult = null;
         var finalMessage = "";
         LogTimer.DoInTimer(() => Log.Do(timer: true, action: () =>
         {
             #region Lightspeed output caching
             var useLightspeed = OutputCache?.IsEnabled ?? false;
-            if (OutputCache?.Existing != null) Log.A("Lightspeed hit - will use cached");
-            var renderResult = OutputCache?.Existing?.Data
-                               ?? _blockBuilderGenerator.New().Setup(Block).Run(true, specs: new()
-                               {
-                                   UseLightspeed = useLightspeed,
-                                   IncludeAllAssetsInOqtane = site.RenderMode == "Interactive",
-                               });
+            var cachedResult = OutputCache?.Existing?.Data;
+            var cacheHit = cachedResult != null;
+            if (cacheHit) Log.A("Lightspeed hit - will use cached");
+            renderResult = cachedResult
+                           ?? _blockBuilderGenerator.New().Setup(Block).Run(true, specs: new()
+                           {
+                               UseLightspeed = useLightspeed,
+                               IncludeAllAssetsInOqtane = site.RenderMode == "Interactive",
+                           });
             finalMessage = !useLightspeed ? "" :
-                OutputCache?.Existing?.Data != null ? "⚡⚡" : "⚡⏳";
-            OutputCache?.Save(renderResult);
+                cacheHit ? "⚡⚡" : "⚡⏳";
+
+            // Do not save cache hits again. Compressed cache items materialize a new RenderResult on each Data access,
+            // which would otherwise trigger a redundant recompress/rewrite on every request.
+            if (!cacheHit)
+                OutputCache?.Save(renderResult);
 
             #endregion
 
@@ -107,7 +115,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
                     .ToList(), // convert NameValueCollection to (query) string because can't serialize NameValueCollection to json
             };
         }));
-        LogTimer.Done(OutputCache?.Existing?.Data?.IsError ?? false ? "⚠️" : finalMessage);
+        LogTimer.Done(renderResult?.IsError ?? false ? "⚠️" : finalMessage);
 
         // Check if there is less than 50 global types and warn user to restart application
         // HACK: in v14.03 this check was moved bellow LogTimer.DoInTimer because we got exception (probably timing issue)
