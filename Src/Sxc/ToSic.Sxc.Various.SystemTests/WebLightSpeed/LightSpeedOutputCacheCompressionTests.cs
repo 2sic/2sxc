@@ -9,7 +9,7 @@ namespace ToSic.Sxc.WebLightSpeed;
 
 public class LightSpeedOutputCacheCompressionTests(ITestOutputHelper output)
 {
-    [Theory]
+    [Theory(Skip = "Disabled benchmark/report test.")]
     [MemberData(nameof(LightSpeedOutputCacheCompressionTestData.HtmlSizesAndProfiles), MemberType = typeof(LightSpeedOutputCacheCompressionTestData))]
     public void GZipProfiles_RoundTrip_And_Report(HtmlCompressionCase testCase, TestCompressionProfile profile)
     {
@@ -27,7 +27,7 @@ public class LightSpeedOutputCacheCompressionTests(ITestOutputHelper output)
         output.WriteLine($"{testCase.Name} | {profile} | chars: {html.Length} | utf8: {utf8Bytes} B | string payload: {estimatedStringPayloadBytes} B | compressed: {compressed.Length} B | compress x100: {compressDuration.TotalMilliseconds:F2} ms | decompress x100: {decompressDuration.TotalMilliseconds:F2} ms");
     }
 
-    [Theory]
+    [Theory(Skip = "Disabled benchmark/report test.")]
     [MemberData(nameof(LightSpeedOutputCacheCompressionTestData.HtmlSizes), MemberType = typeof(LightSpeedOutputCacheCompressionTestData))]
     public void Lifecycle_Report_For_CacheLike_Reads(HtmlCompressionCase testCase)
     {
