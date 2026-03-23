@@ -14,7 +14,7 @@ internal static class OutputCacheItemHtmlCompression
 
     public static byte[] Compress(string html)
     {
-        using var output = new MemoryStream(GetUtf8ByteCount(html));
+        using var output = new MemoryStream();
         using (var compressionStream = new GZipStream(output, CompressionLevel.Fastest, leaveOpen: true))
         using (var writer = new StreamWriter(compressionStream, Utf8NoBom, bufferSize: 1024, leaveOpen: true))
             writer.Write(html);
