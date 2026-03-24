@@ -128,7 +128,10 @@ public class AppQueryControllerReal(
             stream = null;
 
         var streamNames = DataSourceConvertHelper.GetBestStreamNames(query, stream);
-        var streamOptions = QueryODataParams.CreateMany(query.Configuration.Parse, streamNames);
+
+        // Pass the originally requested stream so QueryODataParams can map a bare $select
+        // to that stream when exactly one stream was explicitly selected.
+        var streamOptions = QueryODataParams.CreateMany(query.Configuration.Parse, streamNames, stream);
 
         // New v17 experimental with special fields
         var systemQueryOptions = QueryODataParams.Create(query.Configuration.Parse);
