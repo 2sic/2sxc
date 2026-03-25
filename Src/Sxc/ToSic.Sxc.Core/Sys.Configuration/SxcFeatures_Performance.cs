@@ -28,4 +28,5 @@ public partial class SxcFeatures
         Security = FeaturesCatalogRules.Security0Neutral,
         LicenseRules = BuiltInFeatures.ForPatronPerformanceNotEnabled,
     };
+
 }

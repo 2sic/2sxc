@@ -43,5 +43,5 @@ public partial class PageServiceShared(IPageFeatures pageFeatures, IFeaturesServ
     /// <summary>
     /// WIP v21.06
     /// </summary>
-    public PageSpecs PageSpecs { get; } = new();
+    public PageUrlSpecs UrlSpecs { get; } = new();
 }

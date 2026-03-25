@@ -10,6 +10,6 @@ interface IPageServiceSharedInternal: IPageServiceShared
     /// <summary>
     /// WIP v21.06
     /// </summary>
-    PageSpecs PageSpecs { get; }
+    PageUrlSpecs UrlSpecs { get; }
 
 }

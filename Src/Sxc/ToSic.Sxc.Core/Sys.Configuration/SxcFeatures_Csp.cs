@@ -97,4 +97,16 @@ public partial class SxcFeatures
         ScopedToModule = true,
     };
 
+    public static readonly Feature PageShield = new()
+    {
+        NameId = nameof(PageShield),
+        Guid = new("429d3b22-4bbd-4fd0-ac4d-4d7c865bac13"),
+        Name = "PageShield - WIP",
+        IsPublic = false,
+        Ui = false,
+        Description = "Tight control over URL parameters, to avoid crawlers from multiplying combinations of URL parameters.",
+        Security = FeaturesCatalogRules.Security0Neutral,
+        LicenseRules = SxcLicenseRules.ForPatronsSentinelEnabled,
+    };
+
 }

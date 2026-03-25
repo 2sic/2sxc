@@ -1,42 +1,78 @@
-﻿using ToSic.Sxc.Context;
+﻿using ToSic.Razor.Blade;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Web.Sys.PageServiceShared;
+using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Services.PageShield;
 
-internal class PageShield(IPageServiceShared pageServiceShared)
+internal class PageShield(IPageServiceShared pageServiceShared, IUser user)
     : ServiceWithContext("Sxc.OutCac", connect: [pageServiceShared]), IPageShield
 {
-    private const string AllowedUrlParameters = "AllowedUrlParameters";
 
     private IPageServiceSharedInternal PssInternal => (IPageServiceSharedInternal)pageServiceShared;
 
-    public string? Allow(string urlParameters)
+    public string? Allow(string keys, string? values = null)
     {
-        PssInternal.PageSpecs.AddCsv(AllowedUrlParameters, urlParameters);
+        PssInternal.UrlSpecs.Add(keys, values);
         return null;
     }
 
     public string ParametersAllowed =>
-        PssInternal.PageSpecs.Get(AllowedUrlParameters) ?? "";
+        PssInternal.UrlSpecs.Keys() ?? "";
 
-    public bool ParametersAreValid => ParametersUnexpected == "";
+    public bool ParametersAreValid =>
+        ParametersUnexpected.Count == 0;
 
-    public string ParametersUnexpected
-    {
-        get
-        {
-            var page = ExCtxOrNull?.GetBlock().Context.Page;
-            if (page == null)
-                return "";
-            var list = PssInternal.PageSpecs.GetUnexpected(AllowedUrlParameters, page.Parameters);
-            return string.Join(",", list);
-        }
-    }
+    public IParameters ParametersUnexpected =>
+        PssInternal.UrlSpecs.GetInvalid(PageParametersSafe);
 
     public IParameters Parameters =>
-        (ExCtxOrNull?.GetBlock().Context.Page.Parameters ?? new Context.Sys.Parameters())
-        .Filter(ParametersAllowed);
+        PssInternal.UrlSpecs.GetValid(PageParametersSafe);
+
+    private IParameters PageParametersSafe =>
+        ExCtxOrNull?.GetBlock().Context.Page.Parameters ?? new Context.Sys.Parameters();
+
+    // TODO: this can't work yet...
+    public IHtmlTag? Enforce(ILinkService link)
+    {
+        if (ParametersAreValid)
+            return null;
+
+        if (user.IsContentEditor)
+            return Tag.Div().Class("alert alert-danger").Wrap(
+                Tag.H4("Warning: Unexpected URL Parameters Detected"),
+                Tag.P(
+                    "The URL contains parameters which are not expected on this page, and may cause problems. If you are not logged it, this will trigger a redirect. Please check the URL and remove any parameters which are not expected, or update the configuration to expect these parameters.",
+                    Tag.Br(),
+                    "Please check the URL and remove any parameters which are not expected, or update the configuration to expect these parameters."
+                ),
+                Tag.Ol().Wrap(
+                    Tag.Li(Tag.Strong("Expected"), ": ", Tag.Code(Parameters + "")),
+                    Tag.Li(Tag.Strong("Actual"), ": ", Tag.Code(PageParametersSafe + "")),
+                    Tag.Li(Tag.Strong("Unexpected"), ": ", Tag.Code(ParametersUnexpected + ""))
+                )
+            );
+
+#if NETFRAMEWORK
+        var response = System.Web.HttpContext.Current.Response;
+
+        // Clear any previous headers/content
+        response.Clear();
+
+        // Manually set the 301 status
+        response.StatusCode = 301;
+        response.StatusDescription = "Moved Permanently";
+
+        // Set the destination
+        response.AddHeader("Location", link.To(parameters: Parameters));
+
+        // End the response to prevent further processing
+        response.End();
+
+#endif
+        return null;
+    }
 }

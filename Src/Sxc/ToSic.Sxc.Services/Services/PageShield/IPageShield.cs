@@ -1,12 +1,16 @@
-﻿using ToSic.Sxc.Context;
+﻿using ToSic.Razor.Blade;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Services.PageShield;
 
 [PrivateApi]
 public interface IPageShield
 {
-    public string? Allow(string urlParameters);
+    public string? Allow(string keys, string? values = null);
+
     string? ParametersAllowed { get; }
-    string ParametersUnexpected { get; }
+    IParameters ParametersUnexpected { get; }
     IParameters Parameters { get; }
+    bool ParametersAreValid { get; }
+    IHtmlTag? Enforce(ILinkService link);
 }

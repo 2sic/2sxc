@@ -43,6 +43,8 @@ public partial class SxcFeatures
             LightSpeedOutputCacheCompression, // v21
             SmartDataCache, // v19.01
 
+            PageShield, // v21.06
+
             RazorCacheCompiledToDisk    // v20.00-09
         );
 }
