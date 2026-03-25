@@ -1,5 +1,6 @@
 ﻿using Connect.Koi;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Services.PageShield;
 using ToSic.Sxc.Services.Sys;
 
 namespace ToSic.Sxc.Services;
@@ -161,4 +162,16 @@ public class ServiceKit14() : ServiceKit("Sxc.Kit14") // , IServiceKitForTypedDa
     /// </summary>
     [field: AllowNull, MaybeNull]
     public IToolbarService Toolbar => field ??= GetKitService<IToolbarService>();
+
+
+    #region Late addition v21.06 - added because much old code may not be able to quickly upgrade
+
+    /// <summary>
+    /// Output cache management service, used to invalidate LightSpeed output-cache markers for a specific app.
+    /// </summary>
+    [PrivateApi("Still internal v21.06")]
+    [field: AllowNull, MaybeNull]
+    public IPageShield PageShield => field ??= GetKitService<IPageShield>();
+
+    #endregion
 }

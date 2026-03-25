@@ -10,6 +10,7 @@ using ToSic.Sxc.Services.Link.Sys;
 using ToSic.Sxc.Services.Mail.Sys;
 using ToSic.Sxc.Services.OutputCache;
 using ToSic.Sxc.Services.Page.Sys;
+using ToSic.Sxc.Services.PageShield;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Services.Sys.Cms;
 using ToSic.Sxc.Services.Sys.ConvertService;
@@ -77,6 +78,9 @@ public static class StartupSxcServices
 
         services.AddSxcServicesFallbacks();
         services.ExternalConfig();
+
+        // v21.06
+        services.TryAddTransient<IPageShield, PageShield>();
 
         return services;
     }
