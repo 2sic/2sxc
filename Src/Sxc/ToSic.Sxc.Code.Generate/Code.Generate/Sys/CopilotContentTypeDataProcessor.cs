@@ -2,13 +2,14 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data.Processing;
 using ToSic.Sys.DI;
 using static ToSic.Eav.Data.Processing.DataProcessingEvents;
+using static ToSic.Eav.Data.Processing.DataProcessingContextSources;
 
 namespace ToSic.Sxc.Code.Generate.Sys;
 
 /// <summary>
 /// Runs copilot code generation after content-type schema saves.
-/// Uses content-type specific post-save actions and expects an <see cref="IEntity"/>
-/// context carrying the app id and changed content-type.
+/// Uses the shared <see cref="PostSave"/> action plus schema context and expects an
+/// <see cref="IEntity"/> payload carrying the app id and changed content-type.
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -31,15 +32,16 @@ internal class CopilotContentTypeDataProcessor(
     /// <summary>
     /// Handle post-save processing for a changed content-type and run matching auto-generate configurations.
     /// </summary>
-    /// <param name="action">Expected to be one of the content-type post-save actions.</param>
+    /// <param name="action">Expected to be <see cref="PostSave"/> for schema triggers.</param>
     /// <param name="data">Processor payload containing the trigger entity context.</param>
     /// <returns>Original or enriched processor result with collected exceptions.</returns>
     public Task<DataProcessorResult<IEntity?>> Process(string action, DataProcessorResult<IEntity?> data)
     {
         var l = Log.Fn<DataProcessorResult<IEntity?>>($"action:{action}");
-        // 1) Guard: this processor only reacts to content-type schema post-save events.
-        if (!IsContentTypeSchemaAction(action))
-            return Task.FromResult(l.Return(data, "unsupported action"));
+        // 1) Guard: this processor only reacts to schema post-save events, never normal entity saves.
+        var context = data.Context;
+        if (!IsSchemaPostSave(action, context))
+            return Task.FromResult(l.Return(data, "unsupported action/context"));
 
         // 2) Keep processor-chain diagnostics and resolve changed content-type from trigger entity.
         var errors = data.Exceptions.ToList();
@@ -67,6 +69,8 @@ internal class CopilotContentTypeDataProcessor(
             Log.A($"Copilot auto-generate skipped: content-type '{changedTypeNameId}' not found in app '{appId}'.");
             return Task.FromResult(l.Return(ResultWithErrors(data, errors), "content-type not found"));
         }
+
+        Log.A($"Copilot auto-generate: source '{context!.Source}' for content-type '{changedType.NameId}'.");
 
         // 3) Collect all auto-generate configurations that target this content-type.
         var matchingConfigurations = appReader.List
@@ -154,12 +158,10 @@ internal class CopilotContentTypeDataProcessor(
             ? original
             : original with { Exceptions = errors };
 
-    private static bool IsContentTypeSchemaAction(string action)
-        => action.EqualsInsensitive(PostSaveContentTypeCreate)
-           || action.EqualsInsensitive(PostSaveContentTypeRename)
-           || action.EqualsInsensitive(PostSaveContentTypeScopeChange)
-           || action.EqualsInsensitive(PostSaveContentTypeFieldChange)
-           || action.EqualsInsensitive(PostSaveContentTypeUpdate);
+    private static bool IsSchemaPostSave(string action, DataProcessingContext? context)
+        => action.EqualsInsensitive(PostSave)
+           && context?.Source is { } source
+           && (source.EqualsInsensitive(ContentType) || source.EqualsInsensitive(ContentTypeField));
 
     private static string? Sanitize(string? value)
         => value.HasValue() ? value.Trim() : null;
