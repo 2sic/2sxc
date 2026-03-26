@@ -14,10 +14,16 @@ internal class PageShield(IPageServiceShared pageServiceShared, IUser user)
 
     private IPageServiceSharedInternal PssInternal => (IPageServiceSharedInternal)pageServiceShared;
 
-    public string? Allow(string keys, string? values = null)
+    public string Allow(string keys, string? values = null)
     {
         PssInternal.UrlSpecs.Add(keys, values);
-        return null;
+        return "";
+    }
+
+    public string LoadConfiguration(string configuration)
+    {
+        PssInternal.UrlSpecs.LoadConfiguration(configuration);
+        return "";
     }
 
     public string ParametersAllowed =>

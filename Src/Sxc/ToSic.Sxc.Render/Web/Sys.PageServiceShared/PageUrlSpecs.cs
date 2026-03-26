@@ -1,4 +1,5 @@
 ﻿using System.Collections.Specialized;
+using ToSic.Sxc.Configuration.Sys;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Web.Sys.PageServiceShared;
@@ -39,6 +40,22 @@ public class PageUrlSpecs
         {
             // If there are no existing values, just set the new ones
             Set(key, values);
+        }
+    }
+
+    public void LoadConfiguration(string configuration)
+    {
+        if (string.IsNullOrWhiteSpace(configuration))
+            return;
+
+        var lines = ConfigStringHelpers.ConfigLinesWithoutComments(configuration);
+        foreach (var line in lines)
+        {
+            var pair = line.Split('=');
+            // it's very important that if there is no "=" then we must use null
+            // as that specifies that any value is possible, while an empty string would specify that only an empty value is possible
+            var value = pair.Length == 2 ? pair[1].Trim() : null;
+            Add(pair[0].Trim(), value);
         }
     }
     

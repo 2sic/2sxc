@@ -1,7 +1,6 @@
-﻿using ToSic.Razor.Blade;
+﻿using ToSic.Sxc.Configuration.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sys.Caching.PiggyBack;
-using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
@@ -73,17 +72,11 @@ internal class LightSpeedUrlParams
 
     private static string ExtractConfigCsv(LightSpeedDecorator lsConfig)
     {
-        var paramNames = string.IsNullOrWhiteSpace(lsConfig.UrlParameterNames)
-            ? null
-            : lsConfig.UrlParameterNames
-                .SplitNewLine()
-                .Select(line => (line.Before("//") ?? line).TrimEnd())
-                .ToList();
+        var paramNames = ConfigStringHelpers.ConfigLinesWithoutComments(lsConfig.UrlParameterNames);
 
         // Get the params, filter them new v17.10 and return the string - or exit
-        var namesCsv = paramNames == null
-            ? ""
-            : string.Join(",", paramNames).Trim();
+        var namesCsv = string.Join(",", paramNames).Trim();
         return namesCsv;
     }
+
 }
