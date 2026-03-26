@@ -100,6 +100,8 @@ public class PageUrlSpecs
             nvc.Add(pair.Key, pair.Value);
 
         var result = new Context.Sys.Parameters { Nvc = nvc };
+        //var result = (Context.Sys.Parameters)parameters with { Nvc = nvc };
+
         return result;
     }
 

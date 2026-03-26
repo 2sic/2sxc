@@ -12,6 +12,6 @@ public interface IPageShield
     IParameters ParametersUnexpected { get; }
     IParameters Parameters { get; }
     bool ParametersAreValid { get; }
-    IHtmlTag? Enforce(ILinkService link);
+    IHtmlTag? Enforce(ILinkService link, string? prioritize = null);
     string LoadConfiguration(string configuration);
 }

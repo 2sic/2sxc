@@ -97,9 +97,9 @@ public partial class SxcFeatures
         ScopedToModule = true,
     };
 
-    public static readonly Feature PageShield = new()
+    public static readonly Feature PageShieldFloodGates = new()
     {
-        NameId = nameof(PageShield),
+        NameId = nameof(PageShieldFloodGates),
         Guid = new("429d3b22-4bbd-4fd0-ac4d-4d7c865bac13"),
         Name = "PageShield - WIP",
         IsPublic = false,

@@ -42,7 +42,7 @@ internal class PageShield(IPageServiceShared pageServiceShared, IUser user)
         ExCtxOrNull?.GetBlock().Context.Page.Parameters ?? new Context.Sys.Parameters();
 
     // TODO: this can't work yet...
-    public IHtmlTag? Enforce(ILinkService link)
+    public IHtmlTag? Enforce(ILinkService link, string? prioritize = null)
     {
         if (ParametersAreValid)
             return null;
@@ -62,6 +62,10 @@ internal class PageShield(IPageServiceShared pageServiceShared, IUser user)
                 )
             );
 
+        var parameters = Parameters;
+        if (prioritize != null)
+            parameters = parameters.Prioritize(prioritize);
+
 #if NETFRAMEWORK
         var response = System.Web.HttpContext.Current.Response;
 
@@ -73,7 +77,7 @@ internal class PageShield(IPageServiceShared pageServiceShared, IUser user)
         response.StatusDescription = "Moved Permanently";
 
         // Set the destination
-        response.AddHeader("Location", link.To(parameters: Parameters));
+        response.AddHeader("Location", link.To(parameters: parameters));
 
         // End the response to prevent further processing
         response.End();
