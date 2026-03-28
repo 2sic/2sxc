@@ -48,12 +48,12 @@ internal sealed class OqtSite(
     public override Site GetContents() => UnwrappedSite;
 
     /// <inheritdoc />
-    public override string DefaultCultureCode => field ??= oqtCulture.Value.DefaultCultureCode;
+    public override string DefaultCultureCode => field ??= oqtCulture.Value.GetPrimaryContentCulture(UnwrappedSite);
 
-    public string DefaultLanguageCode => field ??= oqtCulture.Value.DefaultLanguageCode(Alias.SiteId).ToLowerInvariant();
+    public string DefaultLanguageCode => field ??= oqtCulture.Value.DefaultLanguageCode(Id);
 
     /// <inheritdoc />
-    public override string CurrentCultureCode => field ??= oqtCulture.Value.CurrentCultureCode.ToLowerInvariant();
+    public override string CurrentCultureCode => field ??= oqtCulture.Value.GetCurrentContentCulture(UnwrappedSite);
 
     /// <inheritdoc />
     public override int Id => UnwrappedSite.SiteId;

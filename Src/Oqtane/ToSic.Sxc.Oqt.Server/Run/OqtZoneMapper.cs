@@ -86,7 +86,10 @@ internal class OqtZoneMapper(
     {
         if (_supportedCultures != null) return _supportedCultures;
         var availableEavLanguages = AppsCatalog.Zone(site.ZoneId).Languages;
-        _supportedCultures = oqtCulture.GetSupportedCultures(site.Id, availableEavLanguages);
+        var oqtaneSite = (site as IWrapper<Oqtane.Models.Site>)?.GetContents() ?? siteRepository.GetSite(site.Id);
+        _supportedCultures = oqtaneSite == null
+            ? []
+            : oqtCulture.GetSupportedCultures(oqtaneSite, availableEavLanguages);
         return _supportedCultures;
     }
     private List<ISiteLanguageState> _supportedCultures;

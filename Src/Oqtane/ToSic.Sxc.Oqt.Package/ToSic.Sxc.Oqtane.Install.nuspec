@@ -7,7 +7,7 @@
     <owners>2sic internet solutions GmbH, Switzerland</owners>
     <title>2sxc CMS and Meta-Module for Oqtane</title>
     <description>2sxc is an Oqtane module to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
-    <copyright>Copyright MIT © 2sic 2025</copyright>
+    <copyright>Copyright MIT © 2sic 2026</copyright>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">MIT</license>
     <projectUrl>https://github.com/2sic/2sxc</projectUrl>
@@ -19,7 +19,7 @@
     <releaseNotes>https://github.com/2sic/2sxc/releases</releaseNotes>
     <summary>2sxc - CMS &amp; App-Engine for Oqtane</summary>
     <dependencies>
-      <dependency id="Oqtane.Framework" version="6.1.3" />
+      <dependency id="Oqtane.Framework" version="10.1.2" />
       <dependency id="ToSic.Imageflow.Oqtane" version="1.12.0" />
     </dependencies>
   </metadata>

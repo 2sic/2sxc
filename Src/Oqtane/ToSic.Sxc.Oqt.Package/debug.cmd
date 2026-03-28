@@ -63,8 +63,8 @@ XCOPY "..\..\..\Dependencies\Koi\net6.0\Connect.Koi.pdb" "%OqtaneBin%\" /Y
 
 ECHO(
 ECHO Copy RazorBlade DLLs from Debug
-XCOPY "..\..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.dll" "%OqtaneBin%\" /Y
-XCOPY "..\..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.pdb" "%OqtaneBin%\" /Y
+XCOPY "..\..\..\Dependencies\RazorBlade\Release\net7.0\ToSic.Razor.dll" "%OqtaneBin%\" /Y
+XCOPY "..\..\..\Dependencies\RazorBlade\Release\net7.0\ToSic.Razor.pdb" "%OqtaneBin%\" /Y
 
 ECHO(
 ECHO the target for js, css, json etc is: %BuildTarget%
