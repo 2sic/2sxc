@@ -14,8 +14,10 @@ namespace ToSic.Sxc.Render.Sys;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize
+public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize, IOptimizeMemory
 {
+    private readonly string? _html;
+
     #region HybridHtmlString / HybridHtmlRecord
 
     protected override string ToHtmlString()
@@ -35,7 +37,28 @@ public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize
     #endregion
 
     /// <inheritdoc />
-    public string? Html { get; init; }
+    public string? Html
+    {
+        get => !UseCompression
+            ? _html
+            : CompressedHtml == null
+                ? null
+                : null; // TODO: OutputCacheItemHtmlCompression.Decompress(CompressedHtml);
+        init => _html = value;
+    }
+
+    public bool UseCompression { get; init; }
+
+    public string? CompressedHtml
+    {
+        get;
+        init
+        {
+            field = value;
+            UseCompression = true;
+            _html = null;
+        }
+    }
 
     /// <inheritdoc />
     public bool CanCache { get; init; }
