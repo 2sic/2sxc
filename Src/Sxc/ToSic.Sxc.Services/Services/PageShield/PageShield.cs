@@ -8,8 +8,8 @@ using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Services.PageShield;
 
-internal class PageShield(IPageServiceShared pageServiceShared, IUser user)
-    : ServiceWithContext("Sxc.OutCac", connect: [pageServiceShared]), IPageShield
+internal class PageShield(IPageServiceShared pageServiceShared, IUser user, IHttpContextService httpContextService)
+    : ServiceWithContext("Sxc.OutCac", connect: [pageServiceShared, httpContextService]), IPageShield
 {
 
     private IPageServiceSharedInternal PssInternal => (IPageServiceSharedInternal)pageServiceShared;
@@ -44,16 +44,24 @@ internal class PageShield(IPageServiceShared pageServiceShared, IUser user)
     // TODO: this can't work yet...
     public IHtmlTag? Enforce(ILinkService link, string? prioritize = null)
     {
+        var l = Log.Fn<IHtmlTag?>($"{nameof(prioritize)}:'{prioritize}'");
         if (ParametersAreValid)
-            return null;
+            return l.ReturnNull();
 
         if (user.IsContentEditor)
-            return Tag.Div().Class("alert alert-danger").Wrap(
+        {
+            var result = Tag.Div().Class("alert alert-danger").Wrap(
                 Tag.H4("Warning: Unexpected URL Parameters Detected"),
                 Tag.P(
-                    "The URL contains parameters which are not expected on this page, and may cause problems. If you are not logged it, this will trigger a redirect. Please check the URL and remove any parameters which are not expected, or update the configuration to expect these parameters.",
+                    """
+                    The URL contains parameters which are not expected on this page, and may cause problems. 
+                    If you are not logged it, this will trigger a redirect. 
+                    """,
                     Tag.Br(),
-                    "Please check the URL and remove any parameters which are not expected, or update the configuration to expect these parameters."
+                    """
+                    Please check the URL and remove any parameters which are not expected, 
+                    or update the configuration to expect these parameters.
+                    """
                 ),
                 Tag.Ol().Wrap(
                     Tag.Li(Tag.Strong("Expected"), ": ", Tag.Code(Parameters + "")),
@@ -61,28 +69,18 @@ internal class PageShield(IPageServiceShared pageServiceShared, IUser user)
                     Tag.Li(Tag.Strong("Unexpected"), ": ", Tag.Code(ParametersUnexpected + ""))
                 )
             );
+            return l.Return(result, "showing warning");
+        }
+
 
         var parameters = Parameters;
         if (prioritize != null)
             parameters = parameters.Prioritize(prioritize);
 
-#if NETFRAMEWORK
-        var response = System.Web.HttpContext.Current.Response;
+        l.A("Not editor, will enforce redirect to: " + parameters);
 
-        // Clear any previous headers/content
-        response.Clear();
+        httpContextService.Redirect301(link.To(parameters: parameters));
 
-        // Manually set the 301 status
-        response.StatusCode = 301;
-        response.StatusDescription = "Moved Permanently";
-
-        // Set the destination
-        response.AddHeader("Location", link.To(parameters: parameters));
-
-        // End the response to prevent further processing
-        response.End();
-
-#endif
         return null;
     }
 }

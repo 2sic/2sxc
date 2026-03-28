@@ -6,6 +6,7 @@ using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.Cache.Sys;
 using ToSic.Sxc.Services.Cms.Sys;
 using ToSic.Sxc.Services.Data.Sys;
+using ToSic.Sxc.Services.HttpCtx;
 using ToSic.Sxc.Services.Link.Sys;
 using ToSic.Sxc.Services.Mail.Sys;
 using ToSic.Sxc.Services.OutputCache;
@@ -81,6 +82,7 @@ public static class StartupSxcServices
 
         // v21.06
         services.TryAddTransient<IPageShield, PageShield>();
+        services.TryAddTransient<IHttpContextService, HttpContextService>();
 
         return services;
     }
