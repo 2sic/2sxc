@@ -621,7 +621,7 @@
                 "Metadata": [
                   {
                     "Id": 176327,
-                    "Version": 5,
+                    "Version": 6,
                     "Guid": "c1f8cd4a-c057-4e98-8bd6-75aaea8dd8eb",
                     "Type": {
                       "Id": "@All",
@@ -642,7 +642,7 @@
                           "en-us": "WarningGlobalFile"
                         },
                         "Notes": {
-                          "en-us": "<h3>&nbsp;⚠️ Warning: This is a Shared File</h3>\n<p><em>Normally you would add settings to images which belong to a specific thing, like images which belong to a blog-post. This file is shared, so it could be used in many places. The settings you edit here will apply everywhere this file used.&nbsp;</em></p>",
+                          "en-us": "<h3>&nbsp;⚠️ Warning: This is a Shared File</h3>\n<p><em>Normally you would add settings to images which belong to a specific thing, like images which belong to a blog-post. This file is shared, so it could be used in many places. The settings you edit here will apply everywhere this file used. See <a href=\"https://go.2sxc.org/image-share-warning\" target=\"_blank\" rel=\"noopener\">docs</a>.</em></p>",
                           "de-de": "<h3>&nbsp;⚠️Warnung: Gemeinsam genutzte Datei</h3>\n<p><em>Normalerweise setzt man Einstellungen bei Bildern, die zu einem bestimmten Ding geh&ouml;ren, beispielsweise Bilder eines Blog-Beitrags.&nbsp;Diese Datei ist global und kann an vielen Orten verwendet werden. Diese Einstellungen gelten auch, wenn diese Datei anderswo eingesetzt wird.</em></p>"
                         },
                         "Placeholder": {
