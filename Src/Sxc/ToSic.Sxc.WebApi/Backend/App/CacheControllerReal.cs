@@ -10,21 +10,18 @@ public class CacheControllerReal(
 {
     public const string LogSuffix = "AppCac";
 
-    public bool Flush(string appPath, AppCacheFlushRequest? request)
-        => FlushInternal(ctxService.SetAppOrGetBlock(appPath), request);
+    public bool Flush(string appPath, AppCacheFlushSpecs? request)
+        => FlushInternal(ctxService.SetAppOrGetBlock(appPath).AppReaderRequired.AppId, request);
 
-    public bool FlushAuto(AppCacheFlushRequest? request, int? appId = null)
+    public bool FlushAuto(int? appId, AppCacheFlushSpecs? request)
         => FlushInternal(
-            appId != null
-                ? ctxService.GetExistingAppOrSet(appId.Value)
-                : ctxService.BlockContextRequired(),
+            appId ?? ctxService.BlockContextRequired().AppReaderRequired.AppId,
             request
         );
 
-    private bool FlushInternal(IContextOfApp context, AppCacheFlushRequest? request)
+    private bool FlushInternal(int appId, AppCacheFlushSpecs? specs)
     {
-        var l = Log.Fn<bool>($"app:{context.AppReaderRequired.AppId}");
-        var appId = context.AppReaderRequired.AppId;
+        var l = Log.Fn<bool>($"app:{appId}");
 
         //if (!context.User.IsContentAdmin)
         //{
@@ -32,7 +29,7 @@ public class CacheControllerReal(
         //    throw l.Done(new HttpExceptionAbstraction(HttpStatusCode.Unauthorized, message, "Request not allowed"));
         //}
 
-        var touched = OutputCacheManagement.Flush(appId, request?.Dependencies);
+        var touched = OutputCacheManagement.Flush(appId, dependencies: specs?.Dependencies);
         return touched == 0
             ? l.ReturnTrue("app-wide cache dependency touched")
             : l.ReturnTrue($"{touched} dependencies touched");

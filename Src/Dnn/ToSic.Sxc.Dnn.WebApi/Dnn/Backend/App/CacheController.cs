@@ -13,14 +13,14 @@ public class CacheController() : DnnSxcControllerBase(CacheControllerReal.LogSuf
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public bool Flush([FromBody] AppCacheFlushRequest request, [FromUri] int? appId = null)
-        => Real.FlushAuto(request, appId);
+    public bool Flush([FromBody] AppCacheFlushSpecs specs, [FromUri] int? appId = null)
+        => Real.FlushAuto(appId, specs);
 
     // Handles the named-app route app/{appPath}/cache/flush for callers outside of a block context.
     [HttpPost]
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public bool Flush([FromUri] string appPath, [FromBody] AppCacheFlushRequest request)
-        => Real.Flush(appPath, request);
+    public bool Flush([FromUri] string appPath, [FromBody] AppCacheFlushSpecs specs)
+        => Real.Flush(appPath, specs);
 }

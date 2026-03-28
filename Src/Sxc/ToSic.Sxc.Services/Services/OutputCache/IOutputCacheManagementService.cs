@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Services.OutputCache;
 /// current render. Management operations require the target <paramref name="appId"/> explicitly, so they do not
 /// depend on ambient execution context.
 /// </remarks>
-[PublicApi]
+[WorkInProgressApi("Still WIP v21.06")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IOutputCacheManagementService
 {
@@ -16,6 +16,7 @@ public interface IOutputCacheManagementService
     /// Flush output-cache entries for a specific app.
     /// </summary>
     /// <param name="appId">The app whose output-cache markers should be touched.</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="dependencies">
     /// Optional named dependencies to flush selectively.
     /// If omitted or empty after normalization, the app-wide output-cache marker is touched.
@@ -24,5 +25,5 @@ public interface IOutputCacheManagementService
     /// The number of normalized named dependency markers that were touched.
     /// Returns <c>0</c> when the app-wide flush path is used.
     /// </returns>
-    int Flush(int appId, IEnumerable<string>? dependencies = null);
+    int Flush(int appId, NoParamOrder npo = default, IEnumerable<string>? dependencies = null);
 }

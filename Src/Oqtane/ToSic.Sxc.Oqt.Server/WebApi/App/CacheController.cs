@@ -17,12 +17,12 @@ public class CacheController() : OqtStatefulControllerBase(CacheControllerReal.L
     [HttpPost("{appPath}/{controller}/{action}")]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool Flush([FromRoute] string appPath, [FromBody] AppCacheFlushRequest request)
-        => Real.Flush(appPath, request);
+    public bool Flush([FromRoute] string appPath, [FromBody] AppCacheFlushSpecs specs)
+        => Real.Flush(appPath, specs);
 
     [HttpPost($"{AppParts.Auto}/{{controller}}/{{action}}")]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool Flush([FromBody] AppCacheFlushRequest request, [FromQuery] int? appId = null)
-        => Real.FlushAuto(request, appId);
+    public bool Flush([FromBody] AppCacheFlushSpecs specs, [FromQuery] int? appId = null)
+        => Real.FlushAuto(appId, specs);
 }
