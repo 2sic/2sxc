@@ -9,6 +9,7 @@ using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.Backend;
 using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.WebApi;
@@ -26,18 +27,21 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
 {
     private readonly ITenantResolver _tenantResolver;
     private readonly IWebHostEnvironment _hostingEnvironment;
+    private readonly OqtSiteGroup _oqtSiteGroup;
 
 
     public AppApiDynamicRouteValueTransformer(
         ITenantResolver tenantResolver,
         IWebHostEnvironment hostingEnvironment,
+        OqtSiteGroup oqtSiteGroup,
         ILogStore logStore)
     {
         Log = new Log(HistoryLogName, null, nameof(AppApiDynamicRouteValueTransformer));
         logStore.Add(HistoryLogGroup, Log);
         this.ConnectLogs([
             _tenantResolver = tenantResolver,
-            _hostingEnvironment = hostingEnvironment
+            _hostingEnvironment = hostingEnvironment,
+            _oqtSiteGroup = oqtSiteGroup
         ]);
     }
 
@@ -71,7 +75,8 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
                             $"Error: missing required 'alias' route value.", "Not Found");
             }
 
-            var aliasPart = OqtServerPaths.GetAppRootWithTenantAndSiteId(alias.TenantId, alias.SiteId);
+            var contentSiteId = _oqtSiteGroup.GetPrimaryLocalizationSiteId(alias.SiteId);
+            var aliasPart = OqtServerPaths.GetAppRootWithTenantAndSiteId(alias.TenantId, contentSiteId);
 
             #endregion
 

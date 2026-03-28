@@ -50,6 +50,7 @@ partial class OqtRegisterServices
         //services.TryAddScoped<RequestHelper>();
 
         // Manage oqtane site culture info
+        services.TryAddTransient<OqtSiteGroup>();
         services.TryAddTransient<OqtCulture>();
 
         // Site State Initializer for APIs etc. to ensure that the SiteState exists and is correctly preloaded

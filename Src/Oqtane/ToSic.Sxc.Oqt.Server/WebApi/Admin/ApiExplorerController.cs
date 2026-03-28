@@ -7,12 +7,12 @@ using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Eav.WebApi.Sys.ApiExplorer;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Oqt.Server.Code.Sys;
+using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Polymorphism.Sys;
-using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Sys;
 using ToSic.Sys.Utils;
 using RealController = ToSic.Eav.WebApi.Sys.ApiExplorer.ApiExplorerControllerReal;
@@ -47,7 +47,7 @@ public class ApiExplorerController() : OqtStatefulControllerBase(RealController.
     {
         // get path from root
         var alias = GetService<SiteState>()?.Alias ?? GetService<AliasResolver>().Alias;
-        var siteId = alias.SiteId;
+        var siteId = GetService<OqtSiteGroup>().GetPrimaryLocalizationSiteId(alias.SiteId);
         var tenantId = alias.TenantId;
         var appFolder = GetService<AppFolderLookupForWebApi>().GetAppFolder();
         var pathFromRoot = OqtServerPaths.GetAppApiPath(tenantId, siteId, appFolder, path);

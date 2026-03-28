@@ -90,15 +90,15 @@ internal class DnnZoneMapper(Generator<ISite> site, LazySvc<ZoneCreator> zoneCre
     }
 
     /// <inheritdoc />
-    public override List<ISiteLanguageState> CulturesWithState(ISite ofSite)
+    public override List<ISiteLanguageState> CulturesWithState(ISite site)
     {
         if (_supportedCultures != null)
             return _supportedCultures;
 
-        var availableEavLanguages = AppsCatalog.Zone(ofSite.ZoneId).Languages;
-        var defaultLanguageCode = ofSite.DefaultCultureCode;
+        var availableEavLanguages = AppsCatalog.Zone(site.ZoneId).Languages;
+        var defaultLanguageCode = site.DefaultCultureCode;
 
-        return _supportedCultures = LocaleController.Instance.GetLocales(ofSite.Id)
+        return _supportedCultures = LocaleController.Instance.GetLocales(site.Id)
             .Select(c => new SiteLanguageState(
                 c.Value.Code, 
                 c.Value.Text,

@@ -38,7 +38,8 @@ public class OqtSxcRenderService(
                 return Forbidden("Unauthorized Alias Get Attempt {AliasId}", @params.AliasId);
 
             // Set User culture
-            if (@params.Culture != CultureInfo.CurrentUICulture.Name) OqtCulture.SetCulture(@params.Culture);
+            //if (@params.Culture != CultureInfo.CurrentUICulture.Name)
+                //OqtCulture.SetCulture(@params.Culture);
 
             var site = sites.GetSiteAsync(alias.SiteId).GetAwaiter().GetResult();
             if (site == null)

@@ -11,12 +11,12 @@ namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class HyperlinkBackend(
-    LazySvc<AdamContext> adamCtxLazy,
+    Generator<AdamContext> adamCtxGen,
     ISxcCurrentContextService ctxService,
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions,
     Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> adamDtoMaker,
     IValueConverter valueConverter)
-    : ServiceBase("Bck.HypLnk", connect: [adamCtxLazy, appPermissions, ctxService, adamDtoMaker, valueConverter])
+    : ServiceBase("Bck.HypLnk", connect: [adamCtxGen, appPermissions, ctxService, adamDtoMaker, valueConverter])
 {
     public LinkInfoDto LookupHyperlink(int appId, string hyperlink, string? contentType, Guid guid, string? field)
     {
@@ -51,7 +51,7 @@ public class HyperlinkBackend(
 
             // file-check, more abilities to allow
             // this will already do a ensure-or-throw inside it if outside of adam
-            var adamCtx = adamCtxLazy.Value;
+            var adamCtx = adamCtxGen.New();
             adamCtx.Init(context, contentType!, field!, guid, isOutsideOfAdam);
             if (adamCtx.Security.UserIsRestrictedAndAccessingItemOutsideOfFolder(resolved, out var exp))
                 throw exp;
