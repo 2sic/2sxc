@@ -8,76 +8,109 @@ using ExecutionContext = ToSic.Sxc.Sys.ExecutionContext.ExecutionContext;
 namespace ToSic.Sxc.WebLightSpeed;
 
 [Startup(typeof(StartupSxcWithDbWithoutLightSpeed))]
-public class OutputCacheManagementServiceWithoutLightSpeedTests
+public class OutputCacheManagementServiceWithoutLightSpeedTests(ExecutionContext exCtx)
 {
-    private const int CurrentAppId = 7;
-    private readonly ExecutionContext exCtx;
+    public class LightSpeedTestCase(ExecutionContext exCtx, string key)
+    {
+        public int CurrentAppId = 7;
 
-    public OutputCacheManagementServiceWithoutLightSpeedTests(ExecutionContext exCtx) => this.exCtx = exCtx;
+        private INamedCacheDependencyService Dependencies =>
+            exCtx.GetService<INamedCacheDependencyService>(reuse: true);
 
-    private IOutputCacheManagementService OutputCacheManagement => exCtx.GetService<IOutputCacheManagementService>(reuse: true);
-    private INamedCacheDependencyService Dependencies => exCtx.GetService<INamedCacheDependencyService>(reuse: true);
-    private MemoryCacheService Cache => exCtx.GetService<MemoryCacheService>(reuse: true);
-    private int OtherAppId => CurrentAppId + 1;
+        private MemoryCacheService Cache =>
+            exCtx.GetService<MemoryCacheService>(reuse: true);
+
+        public int OtherAppId =>
+            CurrentAppId + 1;
+
+        public string EntryKeyA => key + "-a";
+        public string EntryKeyB => key + "-b";
+        public string EntryKeyC => key + "-c";
+
+        public LightSpeedTestCase Setup()
+        {
+            Cache.Set(EntryKeyA, new OutputCacheItem(new RenderResult()), policy => policy.WatchCacheKeys(GetDependencies(CurrentAppId, ["products"])));
+            Cache.Set(EntryKeyB, new OutputCacheItem(new RenderResult()), policy => policy.WatchCacheKeys(GetDependencies(CurrentAppId, ["pricing"])));
+            Cache.Set(EntryKeyC, new OutputCacheItem(new RenderResult()), policy => policy.WatchCacheKeys(GetDependencies(OtherAppId, ["products"])));
+
+            // Verify everything is as it should be
+            NotNull(Cache.Get<OutputCacheItem>(EntryKeyA));
+            NotNull(Cache.Get<OutputCacheItem>(EntryKeyB));
+            NotNull(Cache.Get<OutputCacheItem>(EntryKeyC));
+            return this;
+        }
+
+        private IEnumerable<string> GetDependencies(int appId, IEnumerable<string> keys) =>
+            Dependencies.GetOrEnsureKeys(CacheDependencyScopes.OutputCache, appId, keys);
+    }
+
+    private IOutputCacheManagementService OutputCacheManagement =>
+        exCtx.GetService<IOutputCacheManagementService>(reuse: true);
+
+    private MemoryCacheService Cache =>
+        exCtx.GetService<MemoryCacheService>(reuse: true);
+
 
     [Fact]
     public void OutputCacheManagementServiceResolvesWithoutLightSpeed()
         => NotNull(OutputCacheManagement);
 
-    [Fact]
-    public void FlushSelectiveDependenciesWithoutLightSpeed()
+
+
+    [Theory]
+    [InlineData(1, "basic case, run 1x")]
+    [InlineData(2, "repeat case, verify second flush works")]
+    public void FlushSelectiveDependenciesWithoutLightSpeed(int runCount, string comment)
     {
-        var entryKeyA = nameof(FlushSelectiveDependenciesWithoutLightSpeed) + "-a";
-        var entryKeyB = nameof(FlushSelectiveDependenciesWithoutLightSpeed) + "-b";
-        var entryKeyC = nameof(FlushSelectiveDependenciesWithoutLightSpeed) + "-c";
+        var testCase = new LightSpeedTestCase(exCtx, nameof(FlushSelectiveDependenciesWithoutLightSpeed));
 
-        Cache.Set(entryKeyA, new OutputCacheItem(new RenderResult()), policy => policy.WatchCacheKeys(Dependencies.GetOrEnsureKeys(CacheDependencyScopes.OutputCache, CurrentAppId, ["products"])));
-        Cache.Set(entryKeyB, new OutputCacheItem(new RenderResult()), policy => policy.WatchCacheKeys(Dependencies.GetOrEnsureKeys(CacheDependencyScopes.OutputCache, CurrentAppId, ["pricing"])));
-        Cache.Set(entryKeyC, new OutputCacheItem(new RenderResult()), policy => policy.WatchCacheKeys(Dependencies.GetOrEnsureKeys(CacheDependencyScopes.OutputCache, OtherAppId, ["products"])));
-
-        var touched = OutputCacheManagement.Flush(CurrentAppId, [" products ", "PRODUCTS"]);
+        var touched = 0;
+        for (var i = 0; i < runCount; i++)
+        {
+            testCase.Setup();
+            touched = OutputCacheManagement.Flush(testCase.CurrentAppId, dependencies: [" products ", "PRODUCTS"]);
+        }
 
         Equal(1, touched);
-        Null(Cache.Get<OutputCacheItem>(entryKeyA));
-        NotNull(Cache.Get<OutputCacheItem>(entryKeyB));
-        NotNull(Cache.Get<OutputCacheItem>(entryKeyC));
+        Null(Cache.Get<OutputCacheItem>(testCase.EntryKeyA));
+        NotNull(Cache.Get<OutputCacheItem>(testCase.EntryKeyB));
+        NotNull(Cache.Get<OutputCacheItem>(testCase.EntryKeyC));
     }
 
-    [Fact]
-    public void FlushNullTouchesAppWideMarkerForCurrentApp()
+    [Theory]
+    [InlineData(1, true, "basic case, run 1x")]
+    [InlineData(1, false, "basic case, run 1x")]
+    [InlineData(2, true, "repeat case, verify second flush works")]
+    public void FlushNullTouchesAppWideMarkerForCurrentApp(int runCount, bool nullDependencies, string comment)
     {
-        var entryKeyA = nameof(FlushNullTouchesAppWideMarkerForCurrentApp) + "-a";
-        var entryKeyB = nameof(FlushNullTouchesAppWideMarkerForCurrentApp) + "-b";
-        var entryKeyC = nameof(FlushNullTouchesAppWideMarkerForCurrentApp) + "-c";
+        var testCase = new LightSpeedTestCase(exCtx, nameof(FlushNullTouchesAppWideMarkerForCurrentApp) + nullDependencies);
 
-        Cache.Set(entryKeyA, new OutputCacheItem(new RenderResult()), policy => policy.WatchCacheKeys(Dependencies.GetOrEnsureKeys(CacheDependencyScopes.OutputCache, CurrentAppId, ["products"])));
-        Cache.Set(entryKeyB, new OutputCacheItem(new RenderResult()), policy => policy.WatchCacheKeys(Dependencies.GetOrEnsureKeys(CacheDependencyScopes.OutputCache, CurrentAppId, ["pricing"])));
-        Cache.Set(entryKeyC, new OutputCacheItem(new RenderResult()), policy => policy.WatchCacheKeys(Dependencies.GetOrEnsureKeys(CacheDependencyScopes.OutputCache, OtherAppId, ["products"])));
-
-        var touched = OutputCacheManagement.Flush(CurrentAppId);
+        var touched = 0;
+        for (var i = 0; i < runCount; i++)
+        {
+            testCase.Setup();
+            touched = nullDependencies
+                ? OutputCacheManagement.Flush(testCase.CurrentAppId)
+                : OutputCacheManagement.Flush(testCase.CurrentAppId, dependencies: []);
+        }
 
         Equal(0, touched);
-        Null(Cache.Get<OutputCacheItem>(entryKeyA));
-        Null(Cache.Get<OutputCacheItem>(entryKeyB));
-        NotNull(Cache.Get<OutputCacheItem>(entryKeyC));
+        Null(Cache.Get<OutputCacheItem>(testCase.EntryKeyA));
+        Null(Cache.Get<OutputCacheItem>(testCase.EntryKeyB));
+        NotNull(Cache.Get<OutputCacheItem>(testCase.EntryKeyC));
     }
 
-    [Fact]
-    public void FlushEmptyTouchesAppWideMarkerForCurrentApp()
-    {
-        var entryKeyA = nameof(FlushEmptyTouchesAppWideMarkerForCurrentApp) + "-a";
-        var entryKeyB = nameof(FlushEmptyTouchesAppWideMarkerForCurrentApp) + "-b";
-        var entryKeyC = nameof(FlushEmptyTouchesAppWideMarkerForCurrentApp) + "-c";
+    //[Fact]
+    //public void FlushEmptyTouchesAppWideMarkerForCurrentApp()
+    //{
+    //    var testCase = new LightSpeedTestCase(exCtx, nameof(FlushEmptyTouchesAppWideMarkerForCurrentApp))
+    //        .Setup();
 
-        Cache.Set(entryKeyA, new OutputCacheItem(new RenderResult()), policy => policy.WatchCacheKeys(Dependencies.GetOrEnsureKeys(CacheDependencyScopes.OutputCache, CurrentAppId, ["products"])));
-        Cache.Set(entryKeyB, new OutputCacheItem(new RenderResult()), policy => policy.WatchCacheKeys(Dependencies.GetOrEnsureKeys(CacheDependencyScopes.OutputCache, CurrentAppId, ["pricing"])));
-        Cache.Set(entryKeyC, new OutputCacheItem(new RenderResult()), policy => policy.WatchCacheKeys(Dependencies.GetOrEnsureKeys(CacheDependencyScopes.OutputCache, OtherAppId, ["products"])));
+    //    var touched = OutputCacheManagement.Flush(testCase.CurrentAppId, dependencies: []);
 
-        var touched = OutputCacheManagement.Flush(CurrentAppId, []);
-
-        Equal(0, touched);
-        Null(Cache.Get<OutputCacheItem>(entryKeyA));
-        Null(Cache.Get<OutputCacheItem>(entryKeyB));
-        NotNull(Cache.Get<OutputCacheItem>(entryKeyC));
-    }
+    //    Equal(0, touched);
+    //    Null(Cache.Get<OutputCacheItem>(testCase.EntryKeyA));
+    //    Null(Cache.Get<OutputCacheItem>(testCase.EntryKeyB));
+    //    NotNull(Cache.Get<OutputCacheItem>(testCase.EntryKeyC));
+    //}
 }
