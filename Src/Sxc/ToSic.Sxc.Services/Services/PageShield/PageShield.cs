@@ -1,15 +1,17 @@
 ﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Services.Sys;
+using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Web.Sys.PageServiceShared;
+using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Services.PageShield;
 
-internal class PageShield(IPageServiceShared pageServiceShared, IUser user, IHttpContextService httpContextService)
-    : ServiceWithContext("Sxc.OutCac", connect: [pageServiceShared, httpContextService]), IPageShield
+internal class PageShield(IPageServiceShared pageServiceShared, IUser user, IHttpContextService httpContextService, ISysFeaturesService features)
+    : ServiceWithContext("Sxc.OutCac", connect: [pageServiceShared, httpContextService, features]), IPageShield
 {
 
     private IPageServiceSharedInternal PssInternal => (IPageServiceSharedInternal)pageServiceShared;
@@ -45,8 +47,12 @@ internal class PageShield(IPageServiceShared pageServiceShared, IUser user, IHtt
     public IHtmlTag? Enforce(ILinkService link, string? prioritize = null)
     {
         var l = Log.Fn<IHtmlTag?>($"{nameof(prioritize)}:'{prioritize}'");
+
+        if (!features.IsEnabled(SxcFeatures.PageShieldFloodGates))
+            return l.ReturnNull("feature not enabled");
+
         if (ParametersAreValid)
-            return l.ReturnNull();
+            return l.ReturnNull("parameters are valid");
 
         if (user.IsContentEditor)
         {
