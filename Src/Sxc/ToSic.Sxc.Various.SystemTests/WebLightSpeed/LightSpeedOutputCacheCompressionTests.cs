@@ -3,6 +3,7 @@ using System.Text;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Web.Sys.LightSpeed;
+using ToSic.Sys.Memory;
 using Xunit.Abstractions;
 
 namespace ToSic.Sxc.WebLightSpeed;
@@ -62,9 +63,9 @@ public class LightSpeedOutputCacheCompressionTests(ITestOutputHelper output)
         var html = LightSpeedOutputCacheCompressionTestData.CreateRealisticHtml(10_000);
         var result = CreateRenderResult(html);
 
-        var cacheItem = OutputCacheItem.Create(result, useCompression: false, minBytes: 5_000);
+        var cacheItem = new OutputCacheItem(LightSpeedDataCompression.OptimizeForCache(result, useCompression: false, minBytes: 5_000));
 
-        False(cacheItem.IsCompressed);
+        False(IsCompressed(cacheItem.Data));
         Same(result, cacheItem.Data);
     }
 
@@ -74,9 +75,9 @@ public class LightSpeedOutputCacheCompressionTests(ITestOutputHelper output)
         var html = LightSpeedOutputCacheCompressionTestData.CreateRealisticHtml(1_000);
         var result = CreateRenderResult(html);
 
-        var cacheItem = OutputCacheItem.Create(result, useCompression: true, minBytes: 5_000);
+        var cacheItem = new OutputCacheItem(LightSpeedDataCompression.OptimizeForCache(result, useCompression: true, minBytes: 5_000));
 
-        False(cacheItem.IsCompressed);
+        False(IsCompressed(cacheItem.Data));
         Same(result, cacheItem.Data);
     }
 
@@ -86,9 +87,9 @@ public class LightSpeedOutputCacheCompressionTests(ITestOutputHelper output)
         const string html = "<p class=\"teaser\">Hi</p>";
         var result = CreateRenderResult(html);
 
-        var cacheItem = OutputCacheItem.Create(result, useCompression: true, minBytes: 1);
+        var cacheItem = new OutputCacheItem(LightSpeedDataCompression.OptimizeForCache(result, useCompression: true, minBytes: 1));
 
-        False(cacheItem.IsCompressed);
+        False(IsCompressed(cacheItem.Data));
         Same(result, cacheItem.Data);
     }
 
@@ -105,12 +106,13 @@ public class LightSpeedOutputCacheCompressionTests(ITestOutputHelper output)
         };
         result.DependentApps.Add(new TestDependentApp(7));
 
-        var cacheItem = OutputCacheItem.Create(result, useCompression: true, minBytes: 5_000);
+        var cacheItem = new OutputCacheItem(LightSpeedDataCompression.OptimizeForCache(result, useCompression: true, minBytes: 5_000));
+        var compressedResult = (RenderResult)cacheItem.Data;
 
-        True(cacheItem.IsCompressed);
-        NotNull(cacheItem.CompressedHtmlBytes);
-        NotNull(cacheItem.OriginalHtmlUtf8Bytes);
-        True(cacheItem.CompressedHtmlBytes < cacheItem.OriginalHtmlUtf8Bytes);
+        True(IsCompressed(cacheItem.Data));
+        NotNull(compressedResult.CompressedHtmlBytes);
+        NotNull(compressedResult.OriginalHtmlUtf8Bytes);
+        True(compressedResult.CompressedHtmlBytes < compressedResult.OriginalHtmlUtf8Bytes);
 
         var cachedResult = cacheItem.Data;
         Equal(html, cachedResult.Html);
@@ -124,21 +126,21 @@ public class LightSpeedOutputCacheCompressionTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void OutputCacheItem_ReDecompressesHtml_OnEachRead_WhenCompressed()
+    public void RenderResult_ReDecompressesHtml_OnEachRead_WhenCompressed()
     {
         var html = LightSpeedOutputCacheCompressionTestData.CreateRealisticHtml(10_000);
         var result = CreateRenderResult(html);
 
-        var cacheItem = OutputCacheItem.Create(result, useCompression: true, minBytes: 5_000);
+        var cacheItem = new OutputCacheItem(LightSpeedDataCompression.OptimizeForCache(result, useCompression: true, minBytes: 5_000));
 
-        True(cacheItem.IsCompressed);
+        True(IsCompressed(cacheItem.Data));
 
         var firstRead = cacheItem.Data;
         var secondRead = cacheItem.Data;
 
         Equal(html, firstRead.Html);
         Equal(html, secondRead.Html);
-        NotSame(firstRead, secondRead);
+        Same(firstRead, secondRead);
         False(ReferenceEquals(firstRead.Html, secondRead.Html));
     }
 
@@ -150,6 +152,9 @@ public class LightSpeedOutputCacheCompressionTests(ITestOutputHelper output)
         ModuleId = 4,
         IsPartial = false,
     };
+
+    private static bool IsCompressed(IRenderResult result)
+        => (result as IOptimizeMemory)?.UseCompression == true;
 
     private static TimeSpan Measure<T>(Func<T> action, int iterations)
     {

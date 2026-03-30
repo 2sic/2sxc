@@ -199,8 +199,8 @@ public partial class View : PortalModuleBase, IActionable
                     // #Lightspeed
                     var lLightSpeed = Log.Fn(message: "Lightspeed", timer: true);
 
-                    // Do not save cache hits again. Compressed cache items materialize a new RenderResult on each Data access,
-                    // which would otherwise trigger a redundant recompress/rewrite on every request.
+                    // Do not save cache hits again. Cached entries may already carry compressed HTML,
+                    // so saving them again would just trigger another decompress/recompress cycle.
                     if (!cacheHit)
                         // #RemovedV20 #OldDnnAutoJQuery
                         OutputCache.Save(renderResult/*, _enforcePre1025JQueryLoading*/);

@@ -83,8 +83,8 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
             finalMessage = !useLightspeed ? "" :
                 cacheHit ? "⚡⚡" : "⚡⏳";
 
-            // Do not save cache hits again. Compressed cache items materialize a new RenderResult on each Data access,
-            // which would otherwise trigger a redundant recompress/rewrite on every request.
+            // Do not save cache hits again. Cached entries may already carry compressed HTML,
+            // so saving them again would just trigger another decompress/recompress cycle.
             if (!cacheHit)
                 OutputCache?.Save(renderResult);
 

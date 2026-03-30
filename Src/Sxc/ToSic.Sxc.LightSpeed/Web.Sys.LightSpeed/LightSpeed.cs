@@ -102,10 +102,10 @@ internal class LightSpeed(
         // Add to cache
         try
         {
-            var cacheItem = OutputCacheItem.Create(
+            var cacheItem = new OutputCacheItem(LightSpeedDataCompression.OptimizeForCache(
                 data,
                 useCompression: features.IsEnabled(LightSpeedOutputCacheCompression.NameId)
-            );
+            ));
             // #RemovedV20 #OldDnnAutoJQuery
             //doOtherStuff?.Invoke(cacheItem);
 

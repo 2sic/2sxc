@@ -43,22 +43,26 @@ public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize, 
             ? _html
             : CompressedHtml == null
                 ? null
-                : null; // TODO: OutputCacheItemHtmlCompression.Decompress(CompressedHtml);
+                : RenderResultHtmlCompression.Decompress(CompressedHtml);
         init => _html = value;
     }
 
-    public bool UseCompression { get; init; }
+    public bool UseCompression => CompressedHtml != null;
 
-    public string? CompressedHtml
+    public byte[]? CompressedHtml
     {
         get;
         init
         {
             field = value;
-            UseCompression = true;
-            _html = null;
+            if (value != null)
+                _html = null;
         }
     }
+
+    public int? OriginalHtmlUtf8Bytes { get; init; }
+
+    public int? CompressedHtmlBytes => CompressedHtml?.Length;
 
     /// <inheritdoc />
     public bool CanCache { get; init; }
@@ -119,8 +123,11 @@ public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize, 
         var estimator = new MemorySizeEstimator(log);
         try
         {
-            var size = Html?.Length ?? 0;
-            var known = new SizeEstimate(size, 300, true);
+            var known = new SizeEstimate(0, 300, true);
+            if (UseCompression && CompressedHtml != null)
+                known += new SizeEstimate(CompressedHtml.Length, 32, true);
+            else if (_html != null)
+                known += new SizeEstimate(_html.Length, 0, true);
             if (Errors != null)
                 known += estimator.Estimate(Errors);
             return l.Return(known);

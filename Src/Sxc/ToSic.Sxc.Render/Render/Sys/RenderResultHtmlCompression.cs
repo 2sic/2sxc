@@ -1,9 +1,9 @@
 using System.IO.Compression;
 using System.Text;
 
-namespace ToSic.Sxc.Web.Sys.LightSpeed;
+namespace ToSic.Sxc.Render.Sys;
 
-internal static class OutputCacheItemHtmlCompression
+internal static class RenderResultHtmlCompression
 {
     private static readonly UTF8Encoding Utf8NoBom = new(false);
 
