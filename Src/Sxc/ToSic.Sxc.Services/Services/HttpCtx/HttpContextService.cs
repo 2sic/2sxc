@@ -1,10 +1,17 @@
 ﻿using ToSic.Sxc.Services.Sys;
+#if !NETFRAMEWORK
+using Microsoft.AspNetCore.Http;
+#endif
 
 // Important: the namespace cannot be "HttpContext" because that would cause a conflict with the System.Web.HttpContext class in .net framework
 // which is used in the implementation. So we use "HttpCtx" instead.
 namespace ToSic.Sxc.Services.HttpCtx;
 
+#if NETFRAMEWORK
 internal class HttpContextService(): ServiceWithContext("Sxc.HttpCx"), IHttpContextService
+#else
+internal class HttpContextService(IHttpContextAccessor httpContextAccessor): ServiceWithContext("Sxc.HttpCx", connect: [httpContextAccessor]), IHttpContextService
+#endif
 {
     public void Redirect301(string url) => Redirect(url, 301);
 
@@ -32,7 +39,26 @@ internal class HttpContextService(): ServiceWithContext("Sxc.HttpCx"), IHttpCont
         // End the response to prevent further processing
         response.End();
 #else
-        // TODO: @STV IMPLEMENT
+        // Resolve HttpContext once to avoid repeated property access on the accessor
+        var httpContext = httpContextAccessor.HttpContext;
+        if (httpContext is null)
+        {
+            Log.A($"Can't redirect to '{url}' because there is no current HttpContext.");
+            return;
+        }
+
+        var response = httpContext.Response;
+        if (response.HasStarted)
+        {
+            Log.A($"Can't redirect to '{url}' because the response has already started.");
+            return;
+        }
+
+        // ASP.NET Core doesn't support StatusDescription, so just set the code and location.
+        response.Clear();
+        response.StatusCode = statusCode;
+        response.Headers["Location"] = url;
+        response.ContentLength = 0;
 #endif
 
     }
