@@ -48,15 +48,18 @@ public class PageUrlSpecs
         if (string.IsNullOrWhiteSpace(configuration))
             return;
 
-        var lines = ConfigStringHelpers.ConfigLinesWithoutComments(configuration);
-        foreach (var line in lines)
-        {
-            var pair = line.Split('=');
-            // it's very important that if there is no "=" then we must use null
-            // as that specifies that any value is possible, while an empty string would specify that only an empty value is possible
-            var value = pair.Length == 2 ? pair[1].Trim() : null;
-            Add(pair[0].Trim(), value);
-        }
+        //var lines = ConfigStringHelpers.ConfigLinesWithoutComments(configuration);
+        //foreach (var line in lines)
+        //{
+        //    var pair = line.Split('=');
+        //    // it's very important that if there is no "=" then we must use null
+        //    // as that specifies that any value is possible, while an empty string would specify that only an empty value is possible
+        //    var value = pair.Length == 2 ? pair[1].Trim() : null;
+        //    Add(pair[0].Trim(), value);
+        //}
+
+        foreach (var line in ConfigStringHelpers.ConfigPairs(configuration))
+            Add(line.Key, line.Values);
     }
     
     public void Remove(string key)

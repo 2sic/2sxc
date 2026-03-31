@@ -33,7 +33,7 @@ internal class LightSpeedUrlParams
     {
         var l = log.Fn<(bool, string)>();
 
-        if (pageParameters == null)
+        if (pageParameters == null! /* paranoid */)
             return l.Return((false, ""), "No page parameters / context, probably an error, certainly don't cache.");
 
         if (namesCsv.Length == 0)
@@ -66,16 +66,16 @@ internal class LightSpeedUrlParams
             return l.Return((true, ""), "no url params found");
 
         return lsConfig.UrlParametersCaseSensitive
-            ? l.ReturnAndLog((true, urlParams!), "case sensitive")
-            : l.ReturnAndLog((true, urlParams!.ToLowerInvariant()), "case insensitive");
+            ? l.ReturnAndLog((true, urlParams), "case sensitive")
+            : l.ReturnAndLog((true, urlParams.ToLowerInvariant()), "case insensitive");
     }
 
     private static string ExtractConfigCsv(LightSpeedDecorator lsConfig)
     {
-        var paramNames = ConfigStringHelpers.ConfigLinesWithoutComments(lsConfig.UrlParameterNames);
+        var paramNames = ConfigStringHelpers.ConfigPairs(lsConfig.UrlParameterNames);
 
         // Get the params, filter them new v17.10 and return the string - or exit
-        var namesCsv = string.Join(",", paramNames).Trim();
+        var namesCsv = string.Join(",", paramNames.Select(p => p.Key)).Trim();
         return namesCsv;
     }
 

@@ -16,6 +16,8 @@ internal class PageShield(IPageServiceShared pageServiceShared, IUser user, IHtt
 
     private IPageServiceSharedInternal PssInternal => (IPageServiceSharedInternal)pageServiceShared;
 
+    private ILinkService LinkSvc => field ??= ExCtx.GetService<ILinkService>(reuse: true);
+
     public string Allow(string keys, string? values = null)
     {
         PssInternal.UrlSpecs.Add(keys, values);
@@ -43,10 +45,13 @@ internal class PageShield(IPageServiceShared pageServiceShared, IUser user, IHtt
     private IParameters PageParametersSafe =>
         ExCtxOrNull?.GetBlock().Context.Page.Parameters ?? new Context.Sys.Parameters();
 
-    // TODO: this can't work yet...
-    public IHtmlTag? Enforce(ILinkService link, string? prioritize = null)
+    [Obsolete]
+    public IHtmlTag? Enforce(ILinkService link, string? prioritize = null) =>
+        Enforce(prioritizeParameters: prioritize);
+
+    public IHtmlTag? Enforce(NoParamOrder npo = default, string? prioritizeParameters = null)
     {
-        var l = Log.Fn<IHtmlTag?>($"{nameof(prioritize)}:'{prioritize}'");
+        var l = Log.Fn<IHtmlTag?>($"{nameof(prioritizeParameters)}:'{prioritizeParameters}'");
 
         if (!features.IsEnabled(SxcFeatures.PageShieldFloodGates))
             return l.ReturnNull("feature not enabled");
@@ -80,12 +85,12 @@ internal class PageShield(IPageServiceShared pageServiceShared, IUser user, IHtt
 
 
         var parameters = Parameters;
-        if (prioritize != null)
-            parameters = parameters.Prioritize(prioritize);
+        if (prioritizeParameters != null)
+            parameters = parameters.Prioritize(prioritizeParameters);
 
-        l.A("Not editor, will enforce redirect to: " + parameters);
+        l.A($"Not editor, will enforce redirect to: {parameters}");
 
-        httpContextService.Redirect301(link.To(parameters: parameters));
+        httpContextService.Redirect301(LinkSvc.To(parameters: parameters));
 
         return null;
     }
