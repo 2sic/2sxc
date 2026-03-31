@@ -10,7 +10,7 @@ public class LinkToBasicTests(ILinkService Link)
     [Fact]
     public void NormalPage()
     {
-        Equal($"{LinkServiceUnknown.DefRoot}/page0", Link.TestTo(pageId: 0));
-        Equal($"{LinkServiceUnknown.DefRoot}/page27", Link.TestTo(pageId: 27));
+        Equal($"{LinkServiceUnknown.DefRoot}/page0", Link.ToTac(pageId: 0));
+        Equal($"{LinkServiceUnknown.DefRoot}/page27", Link.ToTac(pageId: 27));
     }
 }

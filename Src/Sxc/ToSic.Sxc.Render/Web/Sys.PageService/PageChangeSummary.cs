@@ -57,7 +57,9 @@ public class PageChangeSummary(
             .ToList();
 
         // New beta 2025-03-18 v19.03.03
-        var cacheSettings = moduleId != 0 ? ((ModuleHtmlService)moduleHtmlService).GetOutputCache(moduleId) : null;
+        var cacheSettings = moduleId != 0
+            ? ((ModuleHtmlService)moduleHtmlService).GetOutputCache(moduleId)
+            : null;
 
         var csp = ((IPageServiceSharedInternal)pss).Csp;
         var result = new RenderResult

@@ -9,6 +9,6 @@ public class LinkHelperToCommonTests(ILinkService Link)
     //[ExpectedException(typeof(ArgumentException))]
     public void ToConflictingValuesProvidedTest()
     {
-        Throws<ArgumentException>(() => Link.TestTo(pageId: 27, api: "api"));
+        Throws<ArgumentException>(() => Link.ToTac(pageId: 27, api: "api"));
     }
 }
