@@ -101,6 +101,10 @@ public class RouteMapper : IServiceRouteMapper
 
         #endregion
 
+        // v21 - app cache/Lightspeed
+        AddBasic("2sxc-app-cache-auto", $"{AppRoots.AppAuto}/{ValueTokens.SetControllerAction}", [typeof(CacheController).Namespace]);
+        AddBasic("2sxc-app-cache-name", $"{AppRoots.AppNamed}/{ValueTokens.SetControllerAction}", [typeof(CacheController).Namespace]);
+
         // DNN: System calls to dnn - this is just for module delete
         AddBasic("dnn", $"dnn/{ValueTokens.SetControllerAction}", [typeof(ModuleController).Namespace]);
 

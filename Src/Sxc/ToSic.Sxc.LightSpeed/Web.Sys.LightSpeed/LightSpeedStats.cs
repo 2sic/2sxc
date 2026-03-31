@@ -10,25 +10,45 @@ namespace ToSic.Sxc.Web.Sys.LightSpeed;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class LightSpeedStats(MemoryCacheService memoryCacheService) : ServiceBase(SxcLogName + ".LightSpeedStats", connect: [memoryCacheService])
 {
-    public Dictionary<int, int> ItemsCount => All
-        .GroupBy(i => i.Data.AppId)
-        .ToDictionary(
-            g => g.Key,
-            g => g.Count()
-        );
+    private MemorySizeEstimator Estimator => field ??= new(Log);
 
-    public Dictionary<int, int> Size => All
-        .GroupBy(i => i.Data.AppId)
-        .ToDictionary(
-            g => g.Key,
-            g => new MemorySizeEstimator(Log).EstimateMany(g.ToArray<object>()).Total
-        );
+    private static string[] CacheKeyPrefixes =>
+    [
+        OutputCacheKeys.GlobalCacheKeyModuleRoot,
+        OutputCacheKeys.GlobalCacheKeyPartialRoot
+    ];
 
-    private List<OutputCacheItem> All => _all.Get(() => MemoryCache.Default
-        .Where(pair => pair.Key.StartsWith(OutputCacheKeys.GlobalCacheKeyModuleRoot) || pair.Key.StartsWith(OutputCacheKeys.GlobalCacheKeyPartialRoot))
-        .Select(pair => (pair.Value as OutputCacheItem)!)
-        .Where(p => p != null!)
-        .ToList()
-    )!;
-    private readonly GetOnce<List<OutputCacheItem>> _all = new();
+    public Dictionary<int, LightSpeedStat> GetStats()
+    {
+        var all = MemoryCache.Default
+            .Where(pair => CacheKeyPrefixes.Any(prefix => pair.Key.StartsWith(prefix)))
+            .Select(pair => (pair.Value as OutputCacheItem)!)
+            .Where(p => p != null!)
+            .ToList();
+
+        var allStats = all
+            .GroupBy(i => i.AppId)
+            .ToDictionary(
+                g => g.Key,
+                g =>
+                {
+                    var stats = Estimator.EstimateMany(g.ToArray<object>());
+                    var compressed = g.Where(i => (i?.Data as IOptimizeMemory)?.UseCompression == true);
+                    var compressedStats = Estimator.EstimateMany(compressed.ToArray<object>());
+
+                    return new LightSpeedStat(
+                        g.Count(),
+                        stats.Total,
+                        compressedStats.Total,
+                        stats.Total - compressedStats.Total,
+                        compressedStats.Expanded,
+                        stats.Total - compressedStats.Total + compressedStats.Expanded
+                    );
+                });
+
+        return allStats;
+    }
+
 }
+
+public record LightSpeedStat(int Count, long MemoryUse, long Compressed, long Uncompressed, long Expanded, long GrandTotal);

@@ -40,7 +40,10 @@ public partial class SxcFeatures
             LightSpeedOutputCache,
             LightSpeedOutputCacheAppFileChanges,
             LightSpeedOutputCachePartials, // v20
+            LightSpeedOutputCacheCompression, // v21
             SmartDataCache, // v19.01
+
+            PageShieldFloodGates, // v21.06
 
             RazorCacheCompiledToDisk    // v20.00-09
         );

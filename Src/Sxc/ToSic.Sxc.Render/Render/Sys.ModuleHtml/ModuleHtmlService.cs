@@ -73,13 +73,58 @@ internal class ModuleHtmlService() : ServiceBase(SxcLogName + ".ModSvc"), IModul
 
     #region Output Caching
 
+    // Output-cache settings and DependOn(...) calls can happen in any order during one render,
+    // so we keep a small per-module buffer until the final render result is assembled.
     public void ConfigureOutputCache(int moduleId, OutputCacheSettings settings)
-        => _moduleOutputCache[moduleId] = settings;
+    {
+        var cacheState = GetOrCreateOutputCacheData(moduleId);
+        // Dependencies are accumulated separately because multiple DependOn(...) calls may follow.
+        cacheState.Settings = settings with { ExternalDependencyKeys = null };
+
+        foreach (var dependency in settings.ExternalDependencyKeys ?? [])
+            cacheState.ExternalDependencyKeys.Add(dependency.Trim());
+    }
+
+    public void AddOutputCacheDependency(int moduleId, string key)
+    {
+        if (string.IsNullOrWhiteSpace(key))
+            return;
+
+        // DependOn(...) is additive for the current render, so just normalize and union the key.
+        GetOrCreateOutputCacheData(moduleId).ExternalDependencyKeys.Add(key.Trim());
+    }
 
     public OutputCacheSettings? GetOutputCache(int moduleId)
-        => _moduleOutputCache.TryGetValue(moduleId, out var settings) ? settings : null;
+    {
+        if (!_moduleOutputCache.TryGetValue(moduleId, out var cacheState))
+            return null;
 
-    private readonly Dictionary<int, OutputCacheSettings> _moduleOutputCache = new();
+        // Flush once consumed so the next render starts with a clean state buffer.
+        _moduleOutputCache.Remove(moduleId);
+
+        var hasDependencies = cacheState.ExternalDependencyKeys.Count > 0;
+        if (cacheState.Settings == null && !hasDependencies)
+            return null;
+
+        // Rehydrate the final settings object with the merged dependency keys collected during rendering.
+        return (cacheState.Settings ?? new()) with
+        {
+            ExternalDependencyKeys = hasDependencies
+                ? cacheState.ExternalDependencyKeys.OrderBy(key => key, StringComparer.Ordinal).ToArray()
+                : null
+        };
+    }
+
+    private ModuleOutputCacheState GetOrCreateOutputCacheData(int moduleId)
+    {
+        if (_moduleOutputCache.TryGetValue(moduleId, out var cacheState))
+            return cacheState;
+
+        return _moduleOutputCache[moduleId] = new();
+    }
+
+    // Separate from _moduleTags because tags and output-cache state are flushed at different points in the pipeline.
+    private readonly Dictionary<int, ModuleOutputCacheState> _moduleOutputCache = new();
 
 
     #endregion

@@ -4,6 +4,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneCulture;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Render.Sys;
+using ToSic.Sxc.Services.Cache;
 using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Utils;
 using static ToSic.Sxc.Sys.Configuration.SxcFeatures;
@@ -14,8 +15,9 @@ namespace ToSic.Sxc.Web.Sys.LightSpeed;
 internal class LightSpeed(
     ISysFeaturesService features,
     LazySvc<ISite> site,
-    LazySvc<OutputCacheManager> outputCacheManager
-) : ServiceBase(SxcLogName + ".Lights", connect: [features, outputCacheManager]), IOutputCache
+    LazySvc<OutputCacheManager> outputCacheManager,
+    LazySvc<INamedCacheDependencyService> namedDependencies
+) : ServiceBase(SxcLogName + ".Lights", connect: [features, outputCacheManager, namedDependencies]), IOutputCache
 {
     [field: AllowNull, MaybeNull]
     private LightSpeedConfigHelper LsConfigHelper => field ??= new(Log);
@@ -80,7 +82,7 @@ internal class LightSpeed(
         {
             l.A($"{nameof(data.DependentApps)} count {data.DependentApps.Count}");
 
-            // when dependent apps have disabled caching, parent app should not cache also 
+            // when dependent apps have disabled caching, parent app should not cache also
             if (!IsEnabledOnDependentApps(data.DependentApps))
                 return l.ReturnFalse("disabled in dependent app");
 
@@ -100,7 +102,10 @@ internal class LightSpeed(
         // Add to cache
         try
         {
-            var cacheItem = new OutputCacheItem(data);
+            var cacheItem = new OutputCacheItem(LightSpeedDataCompression.OptimizeForCache(
+                data,
+                useCompression: features.IsEnabled(LightSpeedOutputCacheCompression.NameId)
+            ));
             // #RemovedV20 #OldDnnAutoJQuery
             //doOtherStuff?.Invoke(cacheItem);
 
@@ -114,6 +119,15 @@ internal class LightSpeed(
                 : null;
             l.A($"{nameof(appPathsToMonitor)} done");
 
+            // The returned list always includes the app-wide output-cache marker and may also include
+            // named external dependency keys declared through Kit.OutputCache.DependOn(...).
+            var externalCacheKeys = NamedDependencies.GetOrEnsureKeys(
+                CacheDependencyScopes.OutputCache,
+                AppReaderOrNull.AppId,
+                data.OutputCacheSettings?.ExternalDependencyKeys
+            );
+            l.A($"{nameof(externalCacheKeys)} done");
+
             // add to cache and log
             string? cacheKey = null;
             l.Do(message: "outputCacheManager add", timer: true,
@@ -122,6 +136,7 @@ internal class LightSpeed(
                     cacheItem,
                     duration,
                     data.DependentApps.SelectMany(r => r.CacheKeys).ToList(),
+                    externalCacheKeys,
                     appPathsToMonitor
                 )
             );
@@ -162,7 +177,7 @@ internal class LightSpeed(
         LightSpeedUrlParams.GetUrlParams(ViewConfigOrNull ?? AppConfig, _block?.Context.Page.Parameters, Log)
     );
     private readonly GetOnce<(bool CachingAllowed, string Extension)> _urlParams = new();
-    
+
     private string CurrentCulture => _currentCulture.Get(() => site.Value.SafeCurrentCultureCode())!;
     private readonly GetOnce<string> _currentCulture = new();
 
@@ -205,7 +220,7 @@ internal class LightSpeed(
 
             // This is a bit unclear - it seems that only if dependent apps are registered, will the cache be treated as valid...?
             // compare cache time-stamps
-            var dependentApp = result.Data.DependentApps?.FirstOrDefault();
+            var dependentApp = result.DependentApps?.FirstOrDefault();
             return dependentApp == null
                 ? l.ReturnNull("no dep app")
                 : l.Return(result, "found");
@@ -285,5 +300,6 @@ internal class LightSpeed(
     private readonly GetOnce<LightSpeedDecorator?> _viewConfig = new();
 
     private OutputCacheManager OutCacheMan => outputCacheManager.Value;
+    private INamedCacheDependencyService NamedDependencies => namedDependencies.Value;
 
 }

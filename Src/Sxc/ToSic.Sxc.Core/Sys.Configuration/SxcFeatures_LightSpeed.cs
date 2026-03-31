@@ -40,4 +40,17 @@ public partial class SxcFeatures
         LicenseRules = SxcLicenseRules.ForPatronsPerfectionistAndPerformance,
     };
 
+    public static readonly Feature LightSpeedOutputCacheCompression = new()
+    {
+        NameId = nameof(LightSpeedOutputCacheCompression),
+        Guid = new("64f25cbc-5fb9-4501-bf74-78700ff42591"),
+        Name = "LightSpeed Output Cache - Compression",
+        IsPublic = false,
+        Ui = false,
+        Description = "High-Performance OutputCache - Compressing cached output.",
+        Security = FeaturesCatalogRules.Security0Neutral,
+        LicenseRules = BuiltInFeatures.ForPatronPerformanceNotEnabled,
+    };
+
+
 }

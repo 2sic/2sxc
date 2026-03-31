@@ -32,8 +32,8 @@ public class ConvertToEavLightWithCmsInfo(ConvertToEavLight.Dependencies service
 
         AddPresentation(entity, dictionary!);
 
-        // The edit info is an old feature. To phase out, we'll disable it if the new $select is used
-        if (!PresetFilters.SerializeTitleForce == true)
+        // The edit info is an old feature. To phase it out, disable it whenever a $select filter is active.
+        if (PresetFilters.FilterFieldsEnabled != true)
             AddEditInfo(entity, dictionary!);
 
         return dictionary;

@@ -259,6 +259,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sys.TestHelpers", "..
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sys.Security.TestHelpers", "..\..\eav-server\ToSic.Sys.Security.TestHelpers\ToSic.Sys.Security.TestHelpers.csproj", "{C386DA5C-248C-4B91-BB00-C083EC7914AA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.RenderTests", "Sxc\ToSic.Sxc.RenderTests\ToSic.Sxc.RenderTests.csproj", "{82DC9B95-9015-4EF3-87A6-07848CB1D89E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -763,6 +765,10 @@ Global
 		{C386DA5C-248C-4B91-BB00-C083EC7914AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C386DA5C-248C-4B91-BB00-C083EC7914AA}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
 		{C386DA5C-248C-4B91-BB00-C083EC7914AA}.Testing|Any CPU.Build.0 = Debug|Any CPU
+		{82DC9B95-9015-4EF3-87A6-07848CB1D89E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82DC9B95-9015-4EF3-87A6-07848CB1D89E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82DC9B95-9015-4EF3-87A6-07848CB1D89E}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
+		{82DC9B95-9015-4EF3-87A6-07848CB1D89E}.Testing|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -890,9 +896,10 @@ Global
 		{679DA9D4-D38E-4F50-AA27-3A5F50A3ED58} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
 		{AA708E63-59DE-4677-B8ED-4E8549482B90} = {32E45183-6A02-41A2-A4D5-6CB58A6D39A9}
 		{C386DA5C-248C-4B91-BB00-C083EC7914AA} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{82DC9B95-9015-4EF3-87A6-07848CB1D89E} = {5CD8015A-76D8-4633-8469-53B62A6C1894}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
+		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 	EndGlobalSection
 EndGlobal

@@ -30,7 +30,8 @@ public static class UrlHelpers
 
         foreach (var vp in query.Split('&'))
         {
-            if (string.IsNullOrWhiteSpace(vp)) continue;
+            if (string.IsNullOrWhiteSpace(vp))
+                continue;
 
             var singlePair = vp.Split('=');
             nvc.Add(singlePair[0], singlePair.Length == 2 ? singlePair[1] : string.Empty);
@@ -52,13 +53,28 @@ public static class UrlHelpers
         // Figure Out best key order, respecting the custom prioritization
         var customKeys = prioritize.CsvToArrayWithoutEmpty().ToList();
         var keys = customKeys.Count > 0
-            ? nvc.AllKeys.OrderBy(k =>
+            ? nvc.AllKeys.OrderBy(key =>
             {
                 // find index case-insensitive
-                var index = customKeys.FindIndex(x => x.EqualsInsensitive(k));
-                return (index != -1 ? index.ToString("000") : "999") + "-" + k;
+                var index = customKeys.FindIndex(x => x.EqualsInsensitive(key));
+                var prefix = index != -1
+                    ? index.ToString("000")
+                    : "999";
+                return $"{prefix}-{key}";
+                // 2026-03-23 check if it has a value, because otherwise we want it at the end
+                // goal was to prevent this kind of url: "details=234&1-this-is-a-title" from re-sorting and placing the value "1-..." in front.
+                // But this does not work, so it's disabled again and left here so the next person won't try it again
+                // we wanted to have slugs at the end, but there is no clear way to detect the slug,
+                // because "&not-slug=&slug-url-part" will both have a null-value, so sorting it would not be
+                // what we expect.
+                // So the only reliable way to get slugs at the end is to say "name=slug"
+                //return prefix + "-" + (nvc.GetValues(key)?.Length > 0 ? $"a-{key}" : $"z-{key}");
             })
-            : nvc.AllKeys.OrderBy(k => k);
+            : nvc.AllKeys.OrderBy(key => key
+                // check if it has a value, because otherwise we want it at the end
+                // see note above, this cannot work
+                //nvc.GetValues(key)?.Length > 0 ? $"a-{key}" : $"z-{key}"
+            );
 
         // create a new NVC but sorted
         var sorted = new NameValueCollection();

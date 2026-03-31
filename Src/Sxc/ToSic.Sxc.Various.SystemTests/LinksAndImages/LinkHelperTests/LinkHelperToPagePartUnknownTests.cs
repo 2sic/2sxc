@@ -10,23 +10,23 @@ public class LinkHelperToPagePartUnknownTests (ILinkService Link)
     [Fact]
     public void ToNoPageIdOrParamsTest()
     {
-        Equal(LinkServiceUnknown.NiceCurrentUrl, Link.TestTo());
+        Equal(LinkServiceUnknown.NiceCurrentUrl, Link.ToTac());
     }
 
     [Fact]
     public void ToPageCommonsTest()
     {
         //Equal($"{LinkHelperUnknown.MockHost}/page", Link.TestTo(pageId: null));
-        Equal($"{LinkServiceUnknown.DefRoot}/page{27}", Link.TestTo(pageId: 27));
+        Equal($"{LinkServiceUnknown.DefRoot}/page{27}", Link.ToTac(pageId: 27));
     }
 
     [Fact]
     public void ToPageParametersTest()
     {
-        Equal($"{LinkServiceUnknown.DefRoot}/page27", Link.TestTo(pageId: 27));
-        Equal($"{LinkServiceUnknown.DefRoot}/page27", Link.TestTo(pageId: 27, parameters: null));
-        Equal($"{LinkServiceUnknown.DefRoot}/page27?a=1&b=2#fragment", Link.TestTo(pageId: 27, parameters: "a=1&b=2#fragment"));
-        Equal($"{LinkServiceUnknown.DefRoot}/page27?a=1&b=2&c=3", Link.TestTo(pageId: 27, parameters: NewParameters(new()
+        Equal($"{LinkServiceUnknown.DefRoot}/page27", Link.ToTac(pageId: 27));
+        Equal($"{LinkServiceUnknown.DefRoot}/page27", Link.ToTac(pageId: 27, parameters: null));
+        Equal($"{LinkServiceUnknown.DefRoot}/page27?a=1&b=2#fragment", Link.ToTac(pageId: 27, parameters: "a=1&b=2#fragment"));
+        Equal($"{LinkServiceUnknown.DefRoot}/page27?a=1&b=2&c=3", Link.ToTac(pageId: 27, parameters: NewParameters(new()
         {
             { "a", "1" },
             { "b", "2" },

@@ -35,6 +35,8 @@ public record LightSpeedDecorator : ModelFromEntityBasic, IOutputCacheSettings
 
     public bool UrlParametersOthersDisableCache => GetThis(true);
 
+    public IReadOnlyCollection<string> ExternalDependencyKeys => [];
+
     public string Advanced => GetThis("");
 
     public static LightSpeedDecorator GetFromAppStatePiggyBack(IAppReader? appReader)

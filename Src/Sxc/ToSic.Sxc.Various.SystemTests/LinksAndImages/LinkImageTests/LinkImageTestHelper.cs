@@ -54,7 +54,7 @@ public class LinkImageTestHelper
         //if (variants != null) return;
 
         var linkHelper = GetLinkHelper();
-        var helperResult = linkHelper.TestImage(url: url, settings: settings, factor: factor, width: width,
+        var helperResult = linkHelper.ImageTac(url: url, settings: settings, factor: factor, width: width,
             height: height,
             quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format,
             aspectRatio: aspectRatio);

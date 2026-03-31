@@ -39,4 +39,9 @@ public partial class PageServiceShared(IPageFeatures pageFeatures, IFeaturesServ
             PageChangeModes.Replace or PageChangeModes.Append or PageChangeModes.Prepend => ChangeMode,
             _ => throw new ArgumentOutOfRangeException(nameof(ChangeMode), ChangeMode, null)
         };
+
+    /// <summary>
+    /// WIP v21.06
+    /// </summary>
+    public PageUrlSpecs UrlSpecs { get; } = new();
 }

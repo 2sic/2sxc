@@ -13,7 +13,7 @@ public class LinkHelperToTestBase(ILinkService Link)
         {
             if (expected == SkipTest) return;
             // note: we do this on 2 lines of code to make debugging easier if the value is not what's expected
-            var result = Link.TestTo(pageId: pageId, parameters: p, type: type);
+            var result = Link.ToTac(pageId: pageId, parameters: p, type: type);
             Equal(expected, result);//, $"Tested with type: {type}");
         }
 

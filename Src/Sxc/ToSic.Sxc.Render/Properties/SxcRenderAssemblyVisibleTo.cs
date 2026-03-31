@@ -8,5 +8,6 @@
 // output cache variables
 [assembly: InternalsVisibleTo("ToSic.Sxc.LightSpeed")]
 
+[assembly: InternalsVisibleTo("ToSic.Sxc.RenderTests")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Various.UnitTests")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Various.SystemTests")]

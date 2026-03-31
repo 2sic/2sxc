@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.Data.Processing;
 using ToSic.Eav.ImportExport.Integration;
 using ToSic.Eav.ImportExport.Sys.ImportHelpers;
 using ToSic.Eav.ImportExport.Sys.XmlImport;
@@ -7,6 +8,7 @@ using ToSic.Eav.Persistence.Sys.Logging;
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys.Security;
 using ToSic.Sys.Capabilities.Features;
+using ToSic.Sys.Capabilities.SysFeatures;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Backend.ImportExport;
@@ -15,7 +17,7 @@ namespace ToSic.Sxc.Backend.ImportExport;
 /// This object will ensure that an app is reset to the state it was in when the app.xml was last exported
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ResetApp(
+public class AppStateSyncRestore(
     LazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
     ImpExpHelpers impExpHelpers,
     WorkAppsRemove workAppsRemove,
@@ -26,21 +28,27 @@ public class ResetApp(
     ISysFeaturesService features,
     IAppPathsMicroSvc appPathSvc)
     : ServiceBase("Bck.Export",
-        connect:
-        [
-            xmlImportWithFilesLazy, impExpHelpers, workAppsRemove, site, user, env, zipImport, features, appPathSvc
-        ])
+        connect: [xmlImportWithFilesLazy, impExpHelpers, workAppsRemove, site, user, env, zipImport, features, appPathSvc]),
+        ILowCodeAction<AppStateSyncRestore.Parameters, ImportResultDto>
 {
+    public record Parameters(int ZoneId, int AppId, string DefaultLanguage, bool WithSiteFiles);
 
-    internal ImportResultDto Reset(int zoneId, int appId, string defaultLanguage, bool withSiteFiles)
+    public async Task<ActionData<ImportResultDto>> Run(LowCodeActionContext context, ActionData<Parameters> ad)
     {
+        var parameters = ad.Data;
+        var zoneId = parameters.ZoneId;
+        var appId = parameters.AppId;
         var l = Log.Fn<ImportResultDto>($"Reset App {zoneId}/{appId}");
         var result = new ImportResultDto();
 
         SecurityHelpers.ThrowIfNotSiteAdmin(user, Log);
 
+        if (features.IsEnabled(BuiltInFeatures.AppStateSyncRestoreDisabled))
+            throw new FeaturesRefusingException(BuiltInFeatures.AppStateSyncRestoreDisabled.NameId,
+                "App Sync Restore Disabled is active, probably as a protective measure.");
+
         // Ensure feature available...
-        ExportApp.SyncWithSiteFilesVerifyFeaturesOrThrow(features, withSiteFiles);
+        ExportApp.SyncWithSiteFilesVerifyFeaturesOrThrow(features, parameters.WithSiteFiles);
 
         var contextZoneId = site.ZoneId;
         var appRead = impExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, contextZoneId);
@@ -64,14 +72,14 @@ public class ResetApp(
         {
             result.Success = false;
             result.Messages.Add(new($"Can't find the {FolderConstants.AppDataFile} in the folder", Message.MessageTypes.Error));
-            return result;
+            return new(result);
         }
 
         // 2. Now we can delete the app before we prepare the import
         workAppsRemove.RemoveAppInSiteAndEav(zoneId, appId, false);
 
         // 3. Optional reset SiteFiles
-        if (withSiteFiles)
+        if (parameters.WithSiteFiles)
         {
             var sourcePath = Path.Combine(appPaths.PhysicalPath, FolderConstants.DataFolderProtected);
 
@@ -90,10 +98,10 @@ public class ResetApp(
 
         // 4. Now import the App.xml
         var allowSystemChanges = user.IsSystemAdmin;
-        var xmlImport = xmlImportWithFilesLazy.Value.Init(defaultLanguage, allowSystemChanges);
+        var xmlImport = xmlImportWithFilesLazy.Value.Init(parameters.DefaultLanguage, allowSystemChanges);
         var imp = new ImportXmlReader(filePath, xmlImport, Log);
         result.Success = xmlImport.ImportXml(zoneId, appId, parentAppId: null /* not sure if we never have a parent here */, imp.XmlDoc);
         result.Messages.AddRange(xmlImport.Messages);
-        return l.Return(result);
+        return new(l.Return(result));
     }
 }

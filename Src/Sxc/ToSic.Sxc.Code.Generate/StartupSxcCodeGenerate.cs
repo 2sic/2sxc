@@ -25,7 +25,8 @@ public static class StartupSxcCodeGenerate
         services.TryAddTransient<CSharpCustomModelsGenerator>();  // direct registration
         services.AddTransient<IFileGenerator, CSharpCustomModelsGenerator>(); // with interface and no try, so all can be listed in DI
 
-        // v21.04 Copilot auto-generate on content-type changes
+        // v21.04 Copilot auto-generate on schema changes
+        services.TryAddTransient<CopilotContentTypeAutoGenerateService>();
         services.TryAddTransient<CopilotContentTypeDataProcessor>();
         services.TryAddEnumerable(ServiceDescriptor.Transient(typeof(IDataProcessor), typeof(CopilotContentTypeDataProcessor)));
 

@@ -2,13 +2,16 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Render.Sys.ModuleHtml;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.Cache.Sys;
 using ToSic.Sxc.Services.Cms.Sys;
 using ToSic.Sxc.Services.Data.Sys;
+using ToSic.Sxc.Services.HttpCtx;
 using ToSic.Sxc.Services.Link.Sys;
 using ToSic.Sxc.Services.Mail.Sys;
 using ToSic.Sxc.Services.OutputCache;
 using ToSic.Sxc.Services.Page.Sys;
+using ToSic.Sxc.Services.PageShield;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Services.Sys.Cms;
 using ToSic.Sxc.Services.Sys.ConvertService;
@@ -53,8 +56,9 @@ public static class StartupSxcServices
         // 19.03.03 - CmsService improving SoC
         services.TryAddTransient<HtmlImgToPictureHelper>();
         services.TryAddTransient<HtmlInnerContentHelper>();
-        services.TryAddTransient<IOutputCacheService, OutputCacheService>();    // WIP v19.03.03, not official ATM
-        services.TryAddTransient<OutputCacheService>();                         // WIP v19.03.03, not official ATM
+        services.TryAddTransient<IModuleOutputCacheService, ModuleOutputCacheService>();    // WIP v19.03.03, not official ATM
+        services.TryAddTransient<ModuleOutputCacheService>();                         // WIP v19.03.03, not official ATM
+        services.TryAddTransient<IOutputCacheManagementService, OutputCacheManagementService>(); // v21.06.00
 
         // Kits v14 - v16
         services.TryAddTransient<ServiceKit>();
@@ -66,6 +70,7 @@ public static class StartupSxcServices
 
         // Cache Service - WIP v17
         services.TryAddTransient<ICacheService, CacheService>();
+        services.TryAddTransient<INamedCacheDependencyService, NamedCacheDependencyService>();
 
         // v17.01
         services.TryAddTransient<IUserService, UserService>();
@@ -74,6 +79,10 @@ public static class StartupSxcServices
 
         services.AddSxcServicesFallbacks();
         services.ExternalConfig();
+
+        // v21.06
+        services.TryAddTransient<IPageShield, PageShield>();
+        services.TryAddTransient<IHttpContextService, HttpContextService>();
 
         return services;
     }

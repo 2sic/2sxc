@@ -7,7 +7,7 @@ public class LinkHelperImagePartUndefinedTests(ILinkService Link)
 {
     private void ImageVerifyUrlEqual(string testUrl)
     {
-        Equal(testUrl, Link.TestImage(url: testUrl));
+        Equal(testUrl, Link.ImageTac(url: testUrl));
     }
 
     [Fact]
@@ -53,17 +53,17 @@ public class LinkHelperImagePartUndefinedTests(ILinkService Link)
     [Fact]
     public void ImageWithoutProtocolTest() // current behavior, potentially we can improve like in part "full"
     {
-        Equal("//unknown.2sxc.org/test", Link.TestImage(url: "//unknown.2sxc.org/test"));
+        Equal("//unknown.2sxc.org/test", Link.ImageTac(url: "//unknown.2sxc.org/test"));
     }
 
     [Fact]
     public void ImageUrlWithTildeTest() // current behavior, potentially we can improve like in part "full"
     {
-        Equal("~", Link.TestImage(url: "~"));
-        Equal("~/", Link.TestImage(url: "~/"));
-        Equal("~/page", Link.TestImage(url: "~/page"));
-        Equal("~/file.ext", Link.TestImage(url: "~/file.ext"));
-        Equal("~/folder/", Link.TestImage(url: "~/folder/"));
+        Equal("~", Link.ImageTac(url: "~"));
+        Equal("~/", Link.ImageTac(url: "~/"));
+        Equal("~/page", Link.ImageTac(url: "~/page"));
+        Equal("~/file.ext", Link.ImageTac(url: "~/file.ext"));
+        Equal("~/folder/", Link.ImageTac(url: "~/folder/"));
     }
 
     [Fact]

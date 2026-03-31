@@ -1,5 +1,8 @@
 ﻿using Connect.Koi;
 using ToSic.Razor.Blade;
+using ToSic.Razor.Html5;
+using ToSic.Sxc.Services.OutputCache;
+using ToSic.Sxc.Services.PageShield;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Services.Sys.Cms;
 
@@ -69,7 +72,7 @@ public class ServiceKit16() : ServiceKit("Sxc.Kit16")
     [field: AllowNull, MaybeNull]
     public IJsonService Json => field ??= GetKitService<IJsonService>();
 
-    /// <inheritdoc cref="IDynamicCodeDocs.Link" />
+    /// <inheritdoc cref="Razor.Html5.Link" />
     [field: AllowNull, MaybeNull]
     public ILinkService Link => field ??= GetKitService<ILinkService>();
 
@@ -154,5 +157,24 @@ public class ServiceKit16() : ServiceKit("Sxc.Kit16")
     [field: AllowNull, MaybeNull]
     public ICacheService Cache => field ??= GetKitService<ICacheService>();
 
+    /// <summary>
+    /// Output cache service, used to influence LightSpeed output-cache behavior for the current render.
+    /// </summary>
+    [field: AllowNull, MaybeNull]
+    public IModuleOutputCacheService OutputCache => field ??= GetKitService<IModuleOutputCacheService>();
+
+    /// <summary>
+    /// Output cache management service, used to invalidate LightSpeed output-cache markers for a specific app.
+    /// </summary>
+    [PrivateApi("Still internal v21.06")]
+    [field: AllowNull, MaybeNull]
+    public IOutputCacheManagementService OutputCacheManagement => field ??= GetKitService<IOutputCacheManagementService>();
+
+    /// <summary>
+    /// Output cache management service, used to invalidate LightSpeed output-cache markers for a specific app.
+    /// </summary>
+    [PrivateApi("Still internal v21.06")]
+    [field: AllowNull, MaybeNull]
+    public IPageShield PageShield => field ??= GetKitService<IPageShield>();
     #endregion
 }

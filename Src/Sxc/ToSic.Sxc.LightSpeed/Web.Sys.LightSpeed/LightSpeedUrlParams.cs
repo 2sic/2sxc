@@ -1,7 +1,6 @@
-﻿using ToSic.Razor.Blade;
+﻿using ToSic.Sxc.Configuration.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sys.Caching.PiggyBack;
-using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
@@ -34,7 +33,7 @@ internal class LightSpeedUrlParams
     {
         var l = log.Fn<(bool, string)>();
 
-        if (pageParameters == null)
+        if (pageParameters == null! /* paranoid */)
             return l.Return((false, ""), "No page parameters / context, probably an error, certainly don't cache.");
 
         if (namesCsv.Length == 0)
@@ -67,23 +66,17 @@ internal class LightSpeedUrlParams
             return l.Return((true, ""), "no url params found");
 
         return lsConfig.UrlParametersCaseSensitive
-            ? l.ReturnAndLog((true, urlParams!), "case sensitive")
-            : l.ReturnAndLog((true, urlParams!.ToLowerInvariant()), "case insensitive");
+            ? l.ReturnAndLog((true, urlParams), "case sensitive")
+            : l.ReturnAndLog((true, urlParams.ToLowerInvariant()), "case insensitive");
     }
 
     private static string ExtractConfigCsv(LightSpeedDecorator lsConfig)
     {
-        var paramNames = string.IsNullOrWhiteSpace(lsConfig.UrlParameterNames)
-            ? null
-            : lsConfig.UrlParameterNames
-                .SplitNewLine()
-                .Select(line => (line.Before("//") ?? line).TrimEnd())
-                .ToList();
+        var paramNames = ConfigStringHelpers.ConfigPairs(lsConfig.UrlParameterNames);
 
         // Get the params, filter them new v17.10 and return the string - or exit
-        var namesCsv = paramNames == null
-            ? ""
-            : string.Join(",", paramNames).Trim();
+        var namesCsv = string.Join(",", paramNames.Select(p => p.Key)).Trim();
         return namesCsv;
     }
+
 }

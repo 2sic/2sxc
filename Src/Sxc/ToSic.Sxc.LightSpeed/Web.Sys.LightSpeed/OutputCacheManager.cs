@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
 public class OutputCacheManager(MemoryCacheService memoryCacheService, LazySvc<ISysFeaturesService> featuresDoNotConnect) : ServiceBase(SxcLogName + ".OutputCacheManager", connect: [memoryCacheService])
 {
-    public string Add(string cacheKey, OutputCacheItem data, int duration, List<string> apps, IList<string>? appPaths)
+    public string Add(string cacheKey, OutputCacheItem data, int duration, List<string> apps, IEnumerable<string>? externalDependencies, IList<string>? appPaths)
     {
         var l = Log.Fn<string>($"key: {cacheKey}", timer: true);
 
@@ -17,8 +17,16 @@ public class OutputCacheManager(MemoryCacheService memoryCacheService, LazySvc<I
         {
             // Never store 0, that's like never-expire
             //var expiration = new TimeSpan(0, 0, duration);
-            List<string> keys = [.. apps, MemoryCacheService.ExpandDependencyId(featuresDoNotConnect.Value)];
-            
+            // LightSpeed entries watch:
+            // 1. the app cache keys collected from dependent apps
+            // 2. the optional external dependency keys declared via DependOn(...)
+            // 3. the LightSpeed feature key itself
+            List<string> keys = [
+                .. apps,
+                .. (externalDependencies ?? []).Distinct(StringComparer.Ordinal),
+                MemoryCacheService.ExpandDependencyId(featuresDoNotConnect.Value)
+            ];
+
             l.A("Keys: " + string.Join(", ", keys));
 
             // experimental, maybe use as replacement... v17.09+

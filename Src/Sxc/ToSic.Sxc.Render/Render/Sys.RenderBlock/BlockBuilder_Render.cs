@@ -91,7 +91,6 @@ public partial class BlockBuilder
             // This way first the top block does this, later on inner-child blocks
             // will also do it (since this same code is called for them when they render).
             // Later on we'll collect the result.
-
             Services.BlockCachingHelper.PushAppDependenciesToRoot(Block);
 
             // do pre-check to see if system is stable & ready

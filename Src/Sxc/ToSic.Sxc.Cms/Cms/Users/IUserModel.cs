@@ -87,5 +87,8 @@ public interface IUserModel : IModelFromData
     /// <summary>
     /// Roles of the user.
     /// </summary>
+    /// <remarks>
+    /// Added ca. v20, but not quite sure when exactly.
+    /// </remarks>
     IEnumerable<IUserRoleModel> Roles { get; }
 }

@@ -7,4 +7,9 @@ interface IPageServiceSharedInternal: IPageServiceShared
 {
     CspOfModule Csp { get; }
 
+    /// <summary>
+    /// WIP v21.06
+    /// </summary>
+    PageUrlSpecs UrlSpecs { get; }
+
 }

@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps.Sys.AppStack;
 using ToSic.Eav.Apps.Sys.Caching;
+using ToSic.Eav.Data.Processing;
 using ToSic.Eav.DataSources.Sys;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.Sys;
@@ -25,7 +26,8 @@ public class AppControllerReal(
     LazySvc<ExportApp> exportAppLazy,
     LazySvc<ImportApp> importAppLazy,
     LazySvc<AppCreator> appBuilderLazy,
-    LazySvc<ResetApp> resetAppLazy,
+    LazySvc<AppStateSyncSave> appStateSyncSave,
+    LazySvc<AppStateSyncRestore> appStateSyncRestore,
     LazySvc<AppCachePurger> systemManagerLazy,
     LazySvc<LanguagesBackend> languagesBackendLazy,
     LazySvc<IAppReaderFactory> appReadersLazy,
@@ -35,7 +37,7 @@ public class AppControllerReal(
     : Services_ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
         connect:
         [
-            appsBackendLazy, workAppsRemove, exportAppLazy, importAppLazy, appBuilderLazy, resetAppLazy,
+            appsBackendLazy, workAppsRemove, exportAppLazy, importAppLazy, appBuilderLazy, appStateSyncRestore, appStateSyncSave,
             systemManagerLazy, languagesBackendLazy, appReadersLazy, appStackBackendLazy, json, globalConfiguration
         ])
 {
@@ -73,14 +75,14 @@ public class AppControllerReal(
     public FileToUploadToClient Export(AppExportSpecs specs)
         => exportAppLazy.Value.Export(specs);
 
-    public bool SaveData(AppExportSpecs specs)
-        => exportAppLazy.Value.SaveDataForVersionControl(specs);
+    public Task<ActionData<bool>> SaveData(AppExportSpecs specs)
+        => appStateSyncSave.Value.Run(new(), new(specs));
 
     public List<AppStackDataRaw> GetStack(int appId, string? part, string? key = null, Guid? view = null)
         => appStackBackendLazy.Value.GetAll(appId, part ?? AppStackConstants.RootNameSettings, key, view);
 
-    public ImportResultDto Reset(int zoneId, int appId, string defaultLanguage, bool withPortalFiles)
-        => resetAppLazy.Value.Reset(zoneId, appId, defaultLanguage, withPortalFiles);
+    public async Task<ImportResultDto> Reset(int zoneId, int appId, string defaultLanguage, bool withPortalFiles)
+        => (await appStateSyncRestore.Value.Run(new(), new(new(zoneId, appId, defaultLanguage, withPortalFiles)))).Data;
 
     /// <summary>
     /// Import App from import zip.
