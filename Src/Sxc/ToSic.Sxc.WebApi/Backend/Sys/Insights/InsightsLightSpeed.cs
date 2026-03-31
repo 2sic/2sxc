@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps.Assets.Sys;
-using ToSic.Eav.Sys;
 using ToSic.Eav.Sys.Insights;
 using ToSic.Eav.Sys.Insights.HtmlHelpers;
 using ToSic.Sxc.Web.Sys.LightSpeed;
@@ -18,11 +17,11 @@ internal class InsightsLightSpeed(LightSpeedStats lightSpeedStats, IAppReaderFac
         var msg = H1("LightSpeed Stats").ToString();
         try
         {
-            var countStats = lightSpeedStats.AppsWithCount;
+            var countStats = lightSpeedStats.GetStats();
             //var sizeStats = lightSpeedStats.Size;
             msg += P($"Apps in Cache: {countStats.Count}");
             msg += "<table id='table'>"
-                   + InsightsHtmlTable.HeadFields(["#", "ZoneId", "AppId", "Name", "Items in Cache", "Ca. Memory Use", "Uncompressed", "Compressed", "NameId"])
+                   + InsightsHtmlTable.HeadFields(["#", "ZoneId", "AppId", "Name", "Items in Cache", "Ca. Memory Use", "Uncompressed", "Compressed", "Expanded", "Grand-Total", "Mem-Saved", "NameId"])
                    + "<tbody>";
             var count = 0;
             var totalItems = 0;
@@ -33,6 +32,7 @@ internal class InsightsLightSpeed(LightSpeedStats lightSpeedStats, IAppReaderFac
                     ? appReader.Get(cacheItem.Key).Specs
                     : null;
 
+                var stats = cacheItem.Value;
                 msg += InsightsHtmlTable.RowFields([
                     ++count,
                     // ZoneId, AppId, Name
@@ -41,15 +41,18 @@ internal class InsightsLightSpeed(LightSpeedStats lightSpeedStats, IAppReaderFac
                     appSpecs?.Name ?? "unknown",
 
                     // Count, Size, Uncompressed, Compressed
-                    SpecialField.Right(cacheItem.Value.Count),
-                    SpecialField.Right(new SizeInfo(cacheItem.Value.Total).ToString()),
-                    SpecialField.Right(new SizeInfo(cacheItem.Value.Uncompressed).ToString()),
-                    SpecialField.Right(new SizeInfo(cacheItem.Value.Compressed).ToString()),
+                    SpecialField.Right(stats.Count),
+                    SpecialField.Right(new SizeInfo(stats.MemoryUse).ToString("N")),
+                    SpecialField.Right(new SizeInfo(stats.Uncompressed).ToString("N")),
+                    SpecialField.Right(new SizeInfo(stats.Compressed).ToString("N")),
+                    SpecialField.Right(new SizeInfo(stats.Expanded).ToString("N")),
+                    SpecialField.Right(new SizeInfo(stats.GrandTotal).ToString("N")),
+                    SpecialField.Right(new SizeInfo(stats.GrandTotal - stats.Compressed).ToString("N")),
 
                     appSpecs?.NameId ?? "unknown"
                 ]);
-                totalItems += cacheItem.Value.Count;
-                totalMemory += cacheItem.Value.Total;
+                totalItems += stats.Count;
+                totalMemory += stats.MemoryUse;
             }
             msg += "</tbody>";
             msg += "<tfoot>";

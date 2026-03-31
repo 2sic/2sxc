@@ -25,7 +25,7 @@ internal static class LightSpeedDataCompression
         {
             Html = null,
             CompressedHtml = compressedHtml,
-            OriginalHtmlUtf8Bytes = originalHtmlUtf8Bytes,
+            CompressedTrueSize = originalHtmlUtf8Bytes,
         };
     }
 }

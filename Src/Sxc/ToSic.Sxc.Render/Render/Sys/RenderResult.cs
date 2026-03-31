@@ -16,23 +16,20 @@ namespace ToSic.Sxc.Render.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize, IOptimizeMemory
 {
-    private readonly string? _html;
+    /// <summary>
+    /// Estimated size of this object in memory, with all the default properties but without the payload.
+    /// </summary>
+    private const int DefaultEstimatedSize = 300;
 
-    #region HybridHtmlString / HybridHtmlRecord
+    #region HybridHtmlString / HybridHtmlRecord ToString() overrides
 
-    protected override string ToHtmlString()
-    {
-        return Html!;
-    }
+    protected override string ToHtmlString() => Html!;
 
     /// <summary>
     /// Return a string for the recommended way in ASP.net to render it, which just uses a &lt;%= theRenderResult %&gt;
     /// </summary>
     /// <returns></returns>
-    public override string ToString()
-    {
-        return Html!;
-    }
+    public override string ToString() => Html!;
 
     #endregion
 
@@ -46,6 +43,7 @@ public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize, 
                 : RenderResultHtmlCompression.Decompress(CompressedHtml);
         init => _html = value;
     }
+    private readonly string? _html;
 
     public bool UseCompression => CompressedHtml != null;
 
@@ -60,9 +58,7 @@ public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize, 
         }
     }
 
-    public int? OriginalHtmlUtf8Bytes { get; init; }
-
-    public int? CompressedHtmlBytes => CompressedHtml?.Length;
+    public int? CompressedTrueSize { get; init; }
 
     /// <inheritdoc />
     public bool CanCache { get; init; }
@@ -123,18 +119,18 @@ public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize, 
         var estimator = new MemorySizeEstimator(log);
         try
         {
-            var known = new SizeEstimate(0, 300, true);
+            var known = new SizeEstimate(0, DefaultEstimatedSize, IsUnknown: true);
             if (UseCompression && CompressedHtml != null)
-                known += new SizeEstimate(CompressedHtml.Length, 32, true);
+                known += new SizeEstimate(CompressedHtml.Length, Expanded: CompressedTrueSize ?? 0);
             else if (_html != null)
-                known += new SizeEstimate(_html.Length, 0, true);
+                known += new SizeEstimate(_html.Length);
             if (Errors != null)
                 known += estimator.Estimate(Errors);
             return l.Return(known);
         }
         catch
         {
-            return l.ReturnAsError(new(Error: true));
+            return l.ReturnAsError(new(IsError: true));
         }
     }
 

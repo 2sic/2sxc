@@ -110,9 +110,10 @@ public class LightSpeedOutputCacheCompressionTests(ITestOutputHelper output)
         var compressedResult = (RenderResult)cacheItem.Data;
 
         True(IsCompressed(cacheItem.Data));
-        NotNull(compressedResult.CompressedHtmlBytes);
-        NotNull(compressedResult.OriginalHtmlUtf8Bytes);
-        True(compressedResult.CompressedHtmlBytes < compressedResult.OriginalHtmlUtf8Bytes);
+        var compressedBytes = result.CompressedHtml?.Length;
+        NotNull(compressedBytes);
+        NotNull(compressedResult.CompressedTrueSize);
+        True(compressedBytes < compressedResult.CompressedTrueSize);
 
         var cachedResult = cacheItem.Data;
         Equal(html, cachedResult.Html);

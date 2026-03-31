@@ -12,34 +12,43 @@ public class LightSpeedStats(MemoryCacheService memoryCacheService) : ServiceBas
 {
     private MemorySizeEstimator Estimator => field ??= new(Log);
 
-    public Dictionary<int, LightSpeedStat> AppsWithCount =>
-        All
+    private static string[] CacheKeyPrefixes =>
+    [
+        OutputCacheKeys.GlobalCacheKeyModuleRoot,
+        OutputCacheKeys.GlobalCacheKeyPartialRoot
+    ];
+
+    public Dictionary<int, LightSpeedStat> GetStats()
+    {
+        var all = MemoryCache.Default
+            .Where(pair => CacheKeyPrefixes.Any(prefix => pair.Key.StartsWith(prefix)))
+            .Select(pair => (pair.Value as OutputCacheItem)!)
+            .Where(p => p != null!)
+            .ToList();
+
+        var allStats = all
             .GroupBy(i => i.AppId)
             .ToDictionary(
                 g => g.Key,
                 g =>
                 {
-                    var size = Estimator.EstimateMany(g.ToArray<object>()).Total;
+                    var stats = Estimator.EstimateMany(g.ToArray<object>());
                     var compressed = g.Where(i => (i?.Data as IOptimizeMemory)?.UseCompression == true);
-                    var compressedSize = Estimator.EstimateMany(compressed.ToArray<object>()).Total;
-                    return new LightSpeedStat(g.Count(), size, compressedSize, size - compressedSize);
+                    var compressedStats = Estimator.EstimateMany(compressed.ToArray<object>());
+
+                    return new LightSpeedStat(
+                        g.Count(),
+                        stats.Total,
+                        compressedStats.Total,
+                        stats.Total - compressedStats.Total,
+                        compressedStats.Expanded,
+                        stats.Total - compressedStats.Total + compressedStats.Expanded
+                    );
                 });
 
+        return allStats;
+    }
 
-    //public Dictionary<int, int> Size => All
-    //    .GroupBy(i => i.AppId)
-    //    .ToDictionary(
-    //        g => g.Key,
-    //        g => Estimator.EstimateMany(g.ToArray<object>()).Total
-    //    );
-
-    private List<OutputCacheItem> All => _all.Get(() => MemoryCache.Default
-        .Where(pair => pair.Key.StartsWith(OutputCacheKeys.GlobalCacheKeyModuleRoot) || pair.Key.StartsWith(OutputCacheKeys.GlobalCacheKeyPartialRoot))
-        .Select(pair => (pair.Value as OutputCacheItem)!)
-        .Where(p => p != null!)
-        .ToList()
-    )!;
-    private readonly GetOnce<List<OutputCacheItem>> _all = new();
 }
 
-public record LightSpeedStat(int Count, long Total, long Compressed, long Uncompressed);
+public record LightSpeedStat(int Count, long MemoryUse, long Compressed, long Uncompressed, long Expanded, long GrandTotal);

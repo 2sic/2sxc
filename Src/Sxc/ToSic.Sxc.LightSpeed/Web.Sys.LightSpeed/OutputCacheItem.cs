@@ -6,11 +6,9 @@ using ToSic.Sys.Memory;
 namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class OutputCacheItem : ICanEstimateSize, ITimestamped
+public class OutputCacheItem(IRenderResult data) : ICanEstimateSize, ITimestamped
 {
-    public OutputCacheItem(IRenderResult data) => Data = data;
-
-    public IRenderResult Data { get; }
+    public IRenderResult Data { get; } = data;
 
     public int AppId => Data.AppId;
 
@@ -25,7 +23,7 @@ public class OutputCacheItem : ICanEstimateSize, ITimestamped
 //#endif
     public SizeEstimate EstimateSize(ILog? log = default)
                 => (Data as ICanEstimateSize)?.EstimateSize(log)
-                    ?? new SizeEstimate(0, 0, Unknown: true);
+                    ?? new SizeEstimate(0, 0, IsUnknown: true);
 
     /// <summary>
     /// Timestamp info to better analyze cache data
