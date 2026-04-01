@@ -1,0 +1,5 @@
+<Project>
+  <PropertyGroup>
+    <DnnMvcPipelineBin Condition="'$(DnnMvcPipelineBin)' == ''">$(MSBuildThisFileDirectory)..\..\..\..\..\2sxc-dnn-mvcpl\Website\bin\</DnnMvcPipelineBin>
+  </PropertyGroup>
+</Project>

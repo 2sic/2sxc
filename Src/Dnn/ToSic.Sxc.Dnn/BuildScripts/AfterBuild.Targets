@@ -138,6 +138,7 @@
     <Exec Command="robocopy /S &quot;$(ProjectDir)dist/&quot; &quot;$(BuildTarget)/dist/&quot; &quot;Default.aspx&quot;" IgnoreExitCode="true"/>
     <Exec Command="robocopy /MIR &quot;$(ProjectDir)ImportExport/&quot; &quot;$(BuildTarget)/ImportExport/&quot;" IgnoreExitCode="true"/>
     <Exec Command="robocopy /MIR &quot;$(ProjectDir)App_LocalResources/&quot; &quot;$(BuildTarget)/App_LocalResources/&quot;" IgnoreExitCode="true"/>
+    <Exec Command="robocopy /MIR &quot;$(ProjectDir)Views/&quot; &quot;$(BuildTarget)/Views/&quot;" IgnoreExitCode="true"/>
 
     <!-- 2025-11-18 2dm: since  -->
     <!--<Exec Command="robocopy /MIR &quot;$(ProjectDir)Extensions/&quot; &quot;$(BuildTarget)/Extensions/&quot;" IgnoreExitCode="true"/>-->

@@ -1,4 +1,6 @@
-﻿using DotNetNuke.Common;
+using DotNetNuke.Abstractions.Pages;
+using DotNetNuke.Common;
+using DotNetNuke.Web.MvcPipeline.ModuleControl.Page;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Render.Sys.JsContext;
 
@@ -20,7 +22,21 @@ internal class DnnJsApiHeader(IJsApiService dnnJsApiService, ILog parentLog = nu
 #pragma warning restore CS0618
         return l.ReturnTrue("added");
     }
-  
+
+    public bool AddHeadersMvc(PageConfigurationContext pageContext)
+    {
+        var l = Log.Fn<bool>();
+        // ensure we only do this once
+        if (MarkAddedAndReturnIfAlreadyDone()) return l.ReturnFalse("already");
+
+        var json = dnnJsApiService.GetJsApiJson(pageId: null, siteRoot: null, rvt: null, withPublicKey: false);
+        if (json == null) return l.ReturnFalse("no path");
+
+        var meta = Tag.Meta().Name(JsApi.MetaName).Content(json).ToString();
+        pageContext.PageService.AddToHead(new PageTag(meta, 0));
+        return l.ReturnTrue("added");
+    }
+
     private const string KeyToMarkAdded = "2sxcApiHeadersAdded";
 
     private static bool MarkAddedAndReturnIfAlreadyDone()

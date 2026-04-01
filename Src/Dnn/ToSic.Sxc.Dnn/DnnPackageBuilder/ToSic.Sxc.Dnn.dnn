@@ -16,7 +16,7 @@
       <azureCompatible>true</azureCompatible>
       <dependencies>
         <dependency type="type">System.Dynamic.ExpandoObject</dependency>
-        <dependency type="CoreVersion">09.11.00</dependency>
+        <dependency type="CoreVersion">10.99.00</dependency>
       </dependencies>
       
       <components>
@@ -100,6 +100,7 @@
                   <moduleControl>
                     <controlKey />
                     <controlSrc>DesktopModules/ToSic.Sxc/View.ascx</controlSrc>
+                    <mvcControlClass>ToSic.Sxc.Dnn.Mvc.SxcMvcModuleControl, ToSic.Sxc.Dnn</mvcControlClass>
                     <supportsPartialRendering>False</supportsPartialRendering>
                     <controlTitle />
                     <controlType>View</controlType>
@@ -495,6 +496,54 @@
                         nameSpacePrefix="ab">
                     <codeBase version="9.0.0.0" href="bin\2sxc\Microsoft.Bcl.AsyncInterfaces.dll" xmlns="urn:schemas-microsoft-com:asm.v1" />
                   </node>
+                  <!-- part2: ensure System.Text.Encodings.Web bindingRedirect matches the packaged v9 assembly -->
+                  <node path="/configuration/runtime/ab:assemblyBinding"
+                        action="update"
+                        targetpath="ab:dependentAssembly[
+                          ab:assemblyIdentity/@name='System.Text.Encodings.Web'
+                        ]"
+                        collision="overwrite"
+                        nameSpace="urn:schemas-microsoft-com:asm.v1"
+                        nameSpacePrefix="ab">
+                    <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
+                      <assemblyIdentity name="System.Text.Encodings.Web" publicKeyToken="cc7b13ffcd2ddd51" />
+                      <bindingRedirect oldVersion="0.0.0.0-9.0.0.0" newVersion="9.0.0.0" />
+                    </dependentAssembly>
+                  </node>
+                  <node path="/configuration/runtime/ab:assemblyBinding[not(ab:dependentAssembly/ab:assemblyIdentity/@name='System.Text.Encodings.Web')]"
+                        action="add"
+                        collision="overwrite"
+                        nameSpace="urn:schemas-microsoft-com:asm.v1"
+                        nameSpacePrefix="ab">
+                    <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
+                      <assemblyIdentity name="System.Text.Encodings.Web" publicKeyToken="cc7b13ffcd2ddd51" />
+                      <bindingRedirect oldVersion="0.0.0.0-9.0.0.0" newVersion="9.0.0.0" />
+                    </dependentAssembly>
+                  </node>
+                  <!-- part2: keep System.Text.Json aligned with the packaged v9 assembly as well -->
+                  <node path="/configuration/runtime/ab:assemblyBinding"
+                        action="update"
+                        targetpath="ab:dependentAssembly[
+                          ab:assemblyIdentity/@name='System.Text.Json'
+                        ]"
+                        collision="overwrite"
+                        nameSpace="urn:schemas-microsoft-com:asm.v1"
+                        nameSpacePrefix="ab">
+                    <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
+                      <assemblyIdentity name="System.Text.Json" publicKeyToken="cc7b13ffcd2ddd51" />
+                      <bindingRedirect oldVersion="0.0.0.0-9.0.0.0" newVersion="9.0.0.0" />
+                    </dependentAssembly>
+                  </node>
+                  <node path="/configuration/runtime/ab:assemblyBinding[not(ab:dependentAssembly/ab:assemblyIdentity/@name='System.Text.Json')]"
+                        action="add"
+                        collision="overwrite"
+                        nameSpace="urn:schemas-microsoft-com:asm.v1"
+                        nameSpacePrefix="ab">
+                    <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
+                      <assemblyIdentity name="System.Text.Json" publicKeyToken="cc7b13ffcd2ddd51" />
+                      <bindingRedirect oldVersion="0.0.0.0-9.0.0.0" newVersion="9.0.0.0" />
+                    </dependentAssembly>
+                  </node>
                 </nodes>
               </configuration>
             </install>
@@ -605,6 +654,7 @@
                   <moduleControl>
                     <controlKey />
                     <controlSrc>DesktopModules/ToSic.Sxc/View.ascx</controlSrc>
+                    <mvcControlClass>ToSic.Sxc.Dnn.Mvc.SxcMvcModuleControl, ToSic.Sxc.Dnn</mvcControlClass>
                     <supportsPartialRendering>False</supportsPartialRendering>
                     <controlTitle />
                     <controlType>View</controlType>
@@ -704,7 +754,7 @@
       <azureCompatible>True</azureCompatible>
 
       <dependencies>
-        <dependency type="CoreVersion">09.11.00</dependency>
+        <dependency type="CoreVersion">10.99.00</dependency>
       </dependencies>
 
       <components>

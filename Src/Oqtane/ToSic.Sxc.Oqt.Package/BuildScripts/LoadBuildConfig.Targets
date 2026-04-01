@@ -11,11 +11,11 @@
 
   <!-- Use different helper DLLs depending on run mode - in VS 2022 it's .net Framework, in the command line it's .net core -->
   <UsingTask Condition="'$(MSBuildRuntimeType)' == 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net9.0\ToSic.Sxc.BuildTasks.dll" TaskName="GetBuildConfig"/>
-  <UsingTask Condition="'$(MSBuildRuntimeType)' != 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll" TaskName="GetBuildConfig"/>
+  <UsingTask Condition="'$(MSBuildRuntimeType)' != 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net48\ToSic.Sxc.BuildTasks.dll" TaskName="GetBuildConfig"/>
   <UsingTask Condition="'$(MSBuildRuntimeType)' == 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net9.0\ToSic.Sxc.BuildTasks.dll" TaskName="ColorMessage"/>
-  <UsingTask Condition="'$(MSBuildRuntimeType)' != 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll" TaskName="ColorMessage"/>
+  <UsingTask Condition="'$(MSBuildRuntimeType)' != 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net48\ToSic.Sxc.BuildTasks.dll" TaskName="ColorMessage"/>
   <UsingTask Condition="'$(MSBuildRuntimeType)' == 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net9.0\ToSic.Sxc.BuildTasks.dll" TaskName="ModifyXmlDocumentation"/>
-  <UsingTask Condition="'$(MSBuildRuntimeType)' != 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll" TaskName="ModifyXmlDocumentation"/>
+  <UsingTask Condition="'$(MSBuildRuntimeType)' != 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net48\ToSic.Sxc.BuildTasks.dll" TaskName="ModifyXmlDocumentation"/>
 
   <Target Name="BuildConfigTarget" AfterTargets="CheckBuildTool">
     <Message Text="Running BuildConfigTarget" Importance="high"/>

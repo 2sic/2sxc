@@ -2,7 +2,7 @@
 
 
   <PropertyGroup>
-    <TargetFrameworks>net472;net9.0;</TargetFrameworks>
+    <TargetFrameworks>net48;net9.0;</TargetFrameworks>
     <RootNamespace>ToSic.Sxc</RootNamespace>
     <AssemblyName>ToSic.Sxc.Edit</AssemblyName>
     <Deterministic>true</Deterministic>
@@ -39,7 +39,7 @@
 
 
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
     <!--<Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />-->
@@ -50,7 +50,7 @@
       <Private>False</Private>
     </Reference>-->
     <!--<Reference Include="ToSic.Razor">
-      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net472\ToSic.Razor.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net48\ToSic.Razor.dll</HintPath>
     </Reference>-->
     <!--<Reference Include="Microsoft.CSharp" />-->
   </ItemGroup>

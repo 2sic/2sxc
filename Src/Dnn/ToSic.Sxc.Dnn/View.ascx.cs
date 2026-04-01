@@ -1,15 +1,10 @@
-﻿using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Modules;
 using System.Web.UI;
 using ToSic.Eav.Web.Sys;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Blocks.Sys.BlockBuilder;
-using ToSic.Sxc.Dnn.Features;
-using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Render.Sys;
-using ToSic.Sxc.Render.Sys.RenderBlock;
-using ToSic.Sxc.Web.Sys.LightSpeed;
 
 namespace ToSic.Sxc.Dnn;
 
@@ -32,9 +27,9 @@ public partial class View : PortalModuleBase, IActionable
     /// Get the service provider only once - ideally in Dnn9.4 we will get it from Dnn
     /// If we would get it multiple times, there are edge cases where it could be different each time! #2614
     /// </summary>
-    private IServiceProvider ServiceProvider => field ??= DnnStaticDi.CreateModuleScopedServiceProvider();
+    private IServiceProvider ServiceProvider => Runtime.ServiceProvider;
 
-    private TService GetService<TService>() => ServiceProvider.Build<TService>(Log);
+    private TService GetService<TService>() => Runtime.GetService<TService>(Log);
 
     #endregion
 
@@ -42,10 +37,7 @@ public partial class View : PortalModuleBase, IActionable
     /// Block needs to self-initialize when first requested, because it's used in the Actions-Menu builder
     /// which runs before page-load
     /// </summary>
-    private IBlock Block => _blockGetOnce.Get(Log, () => GetService<IModuleAndBlockBuilder>().BuildBlock(ModuleConfiguration, null), timer: true);
-    private readonly GetOnce<IBlock> _blockGetOnce = new();
-
-    private IBlockBuilder BlockBuilder => field ??= GetService<IBlockBuilder>().Setup(Block);
+    private IBlock Block => Runtime.Block;
 
     #region Logging
 
@@ -56,11 +48,9 @@ public partial class View : PortalModuleBase, IActionable
     /// - Must use ServiceProvider.Build directly, as the `GetService` method would try to use the Log before it's created.
     /// - delay creating until first use to really just track our time when needed.
     /// </remarks>
-    private HttpRequestLoggingScoped RequestLogging => field
-        ??= ServiceProvider.Build<Generator<HttpRequestLoggingScoped, HttpRequestLoggingScoped.Opts>>()
-            .New(new() { Segment = "module", RootName = "Sxc.View" });
+    private HttpRequestLoggingScoped RequestLogging => Runtime.RequestLogging;
 
-    private ILog Log => field ??= new Log("Sxc.View", RequestLogging.RootLog);
+    private ILog Log => Runtime.Log;
 
     /// <summary>
     /// Log Timer to use everywhere we want to track the cumulative time.
@@ -77,59 +67,15 @@ public partial class View : PortalModuleBase, IActionable
     /// </summary>
     protected void Page_Load(object sender, EventArgs e)
     {
-        // Add first logging message which will become the title in the logs
-        RequestLogging.RootLog.A($"Module Title New: '{ModuleConfiguration.ModuleTitle}'");
+        Runtime.BeginRequest(ModuleConfiguration.ModuleTitle);
 
         LogTimer.DoInTimer(() =>
         {
             var l = Log.Fn(message: nameof(Page_Load), timer: true);
-            // todo: this should be dynamic at some future time, because normally once it's been checked, it wouldn't need checking again
-            var checkPortalIsReady = true;
-
-            // #RemovedV20 #OldDnnAutoJQuery
-            //bool? requiresPre1025Behavior = null; // null = auto-detect, true/false
-
-            // get the block early, to see any errors separately - before accessing cache (which also uses the block)
-            var block = TryCatchAndLogToDnn(() => Block);
-
-            #region Lightspeed
-
-            try
-            {
-                if (OutputCache.Existing != null)
-                {
-                    checkPortalIsReady = false;
-                    // #RemovedV20 #OldDnnAutoJQuery
-                    //requiresPre1025Behavior = OutputCache.Existing.EnforcePre1025;
-                }
-            }
-            catch
-            {
-                /* ignore */
-            }
-
-            #endregion
-
-            // Always do this, part of the guarantee that everything will work
-            // new mechanism in 10.25
-            // this must happen in Page-Load, so we know what supporting scripts to add
-            // at this stage of the lifecycle
-            // We moved this to Page_Load because RequestAjaxAntiForgerySupport didn't work in later events
-            // ensure everything is ready and that we know if we should activate the client-dependency
             TryCatchAndLogToDnn(() =>
             {
-                if (checkPortalIsReady)
-                    if (!DnnReadyCheckTurbo.QuickCheckSiteAndAppFoldersAreReady(this, Log))
-                        GetService<DnnReadyCheckTurbo>().EnsureSiteAndAppFoldersAreReady(this, block);
-
-                // #RemovedV20 #OldDnnAutoJQuery
-                // var blockBuilder = requiresPre1025Behavior == false ? null : BlockBuilder;
-                _dnnClientResources = GetService<DnnClientResources>().Init(Page, /*null,*/ null /*blockBuilder*/);
-
-                // #RemovedV20 #OldDnnAutoJQuery
-                //_enforcePre1025JQueryLoading = requiresPre1025Behavior ?? _dnnClientResources.NeedsPre1025Behavior();
-                //if (_enforcePre1025JQueryLoading)
-                //    _dnnClientResources.EnforcePre1025Behavior();
+                Runtime.Prepare(this);
+                _dnnClientResources = GetService<DnnClientResources>().Init(Page);
                 return true;
             });
             l.Done();
@@ -137,43 +83,26 @@ public partial class View : PortalModuleBase, IActionable
     }
 
     private DnnClientResources _dnnClientResources;
-    //private bool _enforcePre1025JQueryLoading;
-
 
     /// <summary>
     /// Process View if a Template has been set
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
     protected void Page_PreRender(object sender, EventArgs e)
     {
         var l = Log.Fn();
         var finalMessage = "";
         LogTimer.DoInTimer(() =>
         {
-            // #lightspeed
-            var cachedResult = OutputCache.Existing?.Data;
-            var cacheHit = cachedResult != null;
-            if (cacheHit)
-                l.A("Lightspeed hit - will use cached");
-
             IRenderResult renderResult = null;
             var headersAndScriptsAdded = false;
 
-            // skip this if something before this caused an error
             if (!IsError)
                 TryCatchAndLogToDnn(() =>
                 {
-                    // Try to build the html and everything
-                    renderResult = cachedResult;
+                    var renderState = Runtime.Render(RenderNaked);
+                    renderResult = renderState.RenderResult;
+                    finalMessage = renderState.FinalMessage;
 
-                    var useLightspeed = OutputCache.IsEnabled; // ?? false;
-                    finalMessage = !useLightspeed ? "" : cacheHit ? "⚡⚡" : "⚡⏳";
-
-                    // Generate Render Result if not already provided by cache
-                    renderResult ??= RenderViewAndGatherJsCssSpecs(useLightspeed);
-
-                    // Apply page settings, assets, resources etc. from Render Result
                     try
                     {
                         GetService<DnnPageChanges>().Apply(Page, renderResult);
@@ -183,75 +112,25 @@ public partial class View : PortalModuleBase, IActionable
                         /* ignore */
                     }
 
-                    // Try to add page specs about the request to the log (new v16.02)
-                    RequestLogging.StoreEntry.TryUpdateSpecs(() => new SpecsForLogHistory().BuildSpecsForLogHistory(Block));
-
-                    // call this after rendering templates, because the template may change what resources are registered
                     _dnnClientResources.AddEverything(renderResult.Features);
-                    headersAndScriptsAdded = true; // will be true if we make it this far
+                    headersAndScriptsAdded = true;
 
-                    // If standalone is specified, output just the template without anything else
                     if (RenderNaked)
                         SendStandalone(renderResult.Html);
                     else
                         phOutput.Controls.Add(new LiteralControl(renderResult.Html));
 
-                    // #Lightspeed
-                    var lLightSpeed = Log.Fn(message: "Lightspeed", timer: true);
-
-                    // Do not save cache hits again. Cached entries may already carry compressed HTML,
-                    // so saving them again would just trigger another decompress/recompress cycle.
-                    if (!cacheHit)
-                        // #RemovedV20 #OldDnnAutoJQuery
-                        OutputCache.Save(renderResult/*, _enforcePre1025JQueryLoading*/);
-                    lLightSpeed.Done();
-
-                    return true; // dummy result for TryCatchAndLogToDnn
+                    return true;
                 });
 
-            // if we had an error before, or have one now, re-check assets
             if (IsError && !headersAndScriptsAdded)
                 _dnnClientResources?.AddEverything(renderResult?.Features);
         });
 
-        // Mini workaround: We must briefly start the timer again, so that the Done() call will stop and propagate the value to the proper place
         LogTimer.Timer.Start();
         LogTimer.Done(IsError ? "⚠️" : finalMessage);
         l.Done();
     }
 
-    private IRenderResult RenderViewAndGatherJsCssSpecs(bool useLightspeed)
-    {
-        var l = Log.Fn<IRenderResult>(message: $"module {ModuleId} on page {TabId}", timer: true);
-
-        var result = new RenderResult();
-        TryCatchAndLogToDnn(() =>
-        {
-            if (RenderNaked)
-                BlockBuilder.WrapInDiv = false;
-            result = (RenderResult)BlockBuilder.Run(
-                true,
-                specs: new()
-                {
-                    UseLightspeed = useLightspeed,
-                    RenderEngineResult = GetService<DnnRequirements>().GetMessageForRequirements()
-                }
-            );
-
-            if (result.Errors?.Any() ?? false)
-            {
-                var warnings = result.Errors
-                    .Select(e => BlockBuilder.RenderingHelper.DesignError(e));
-
-                result = result with { Html = string.Join("", warnings) + result.Html };
-            }
-
-            result = result with { Html = result.Html + GetOptionalDetailedLogToAttach() };
-            return true; // dummy result for TryCatchAndLogToDnn
-        });
-
-        return l.ReturnAsOk(result);
-    }
-
-    protected IOutputCache OutputCache => field ??= GetService<IOutputCache>().Init(ModuleId, TabId, Block);
+    private ModuleViewRuntime Runtime => field ??= new(ModuleConfiguration, ModuleId, TabId, DnnStaticDi.CreateModuleScopedServiceProvider(), GetOptionalDetailedLogToAttach);
 }

@@ -16,6 +16,13 @@ build/
 [Bb]in/
 [Oo]bj/
 
+!Build/
+!Build/ToSic.Sxc.BuildTasks/
+!Build/ToSic.Sxc.BuildTasks/bin/
+!Build/ToSic.Sxc.BuildTasks/bin/Debug/
+!Build/ToSic.Sxc.BuildTasks/bin/Debug/net48/
+!Build/ToSic.Sxc.BuildTasks/bin/Debug/net48/**
+
 # Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
 !packages/*/build/
 

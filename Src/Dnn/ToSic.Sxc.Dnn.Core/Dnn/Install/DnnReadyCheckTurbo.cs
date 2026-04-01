@@ -20,8 +20,13 @@ internal class DnnReadyCheckTurbo(LazySvc<AppFolderInitializer> appFolderInitial
     /// <param name="log"></param>
     public static bool QuickCheckSiteAndAppFoldersAreReady(PortalModuleBase module, ILog log)
     {
-        var l = log.Fn<bool>($"module: {module.ModuleId}; page: {module.TabId}");
-        return CachedModuleResults.TryGetValue(module.ModuleId, out var exists) && exists
+        return QuickCheckSiteAndAppFoldersAreReady(module.ModuleId, module.TabId, log);
+    }
+
+    public static bool QuickCheckSiteAndAppFoldersAreReady(int moduleId, int tabId, ILog log)
+    {
+        var l = log.Fn<bool>($"module: {moduleId}; page: {tabId}");
+        return CachedModuleResults.TryGetValue(moduleId, out var exists) && exists
             ? l.ReturnTrue("quick-check: ready")
             : l.ReturnFalse("deep-check: not ready, must do extensive check");
     }
@@ -30,9 +35,12 @@ internal class DnnReadyCheckTurbo(LazySvc<AppFolderInitializer> appFolderInitial
     /// Verify that the portal is ready, otherwise show a good error
     /// </summary>
     public bool EnsureSiteAndAppFoldersAreReady(PortalModuleBase module, IBlock block)
+        => EnsureSiteAndAppFoldersAreReady(module.ModuleConfiguration, module.ModuleId, module.TabId, block);
+
+    public bool EnsureSiteAndAppFoldersAreReady(ModuleInfo moduleConfiguration, int moduleId, int tabId, IBlock block)
     {
-        var l = Log.Fn<bool>(timer: true, message: $"module {module.ModuleId} on page {module.TabId}");
-        if (CachedModuleResults.TryGetValue(module.ModuleId, out var exists) && exists)
+        var l = Log.Fn<bool>(timer: true, message: $"module {moduleId} on page {tabId}");
+        if (CachedModuleResults.TryGetValue(moduleId, out var exists) && exists)
             return l.ReturnTrue("Previous check completed, will skip");
 
         // throw better error if SxcInstance isn't available
@@ -43,7 +51,7 @@ internal class DnnReadyCheckTurbo(LazySvc<AppFolderInitializer> appFolderInitial
                                        "You may also have EnterpriseCMS features enabled but are missing the license activation (but this is super rare). "));
 
         // check things if it's a module of this portal (ensure everything is ok, etc.)
-        var isSharedModule = module.ModuleConfiguration.PortalID != module.ModuleConfiguration.OwnerPortalID;
+        var isSharedModule = moduleConfiguration.PortalID != moduleConfiguration.OwnerPortalID;
         if (isSharedModule)
             return l.ReturnFalse("skip, shared");
 
@@ -51,10 +59,10 @@ internal class DnnReadyCheckTurbo(LazySvc<AppFolderInitializer> appFolderInitial
         if (block.AppIsReady)
         {
             l.A("Will check if site is ready and app folder exists");
-            EnsureSiteIsConfiguredAndTemplateFolderExists(module, block);
+            EnsureSiteIsConfiguredAndTemplateFolderExists(moduleId, tabId, block);
 
             // If no exception was raised inside, everything is fine - must cache
-            CachedModuleResults.AddOrUpdate(module.ModuleId, true, (_, _) => true);
+            CachedModuleResults.AddOrUpdate(moduleId, true, (_, _) => true);
         }
         else
             l.A("skip, content-block not ready");
@@ -65,9 +73,9 @@ internal class DnnReadyCheckTurbo(LazySvc<AppFolderInitializer> appFolderInitial
     /// <summary>
     /// Returns true if the Portal HomeDirectory Contains the 2sxc Folder and this folder contains the web.config and a Content folder
     /// </summary>
-    private void EnsureSiteIsConfiguredAndTemplateFolderExists(PortalModuleBase module, IBlock block)
+    private void EnsureSiteIsConfiguredAndTemplateFolderExists(int moduleId, int tabId, IBlock block)
     {
-        var l = Log.Fn($"module {module.ModuleId} on page {module.TabId}");
+        var l = Log.Fn($"module {moduleId} on page {tabId}");
         var sxcFolder = new DirectoryInfo(block.Context.Site.AppsRootPhysicalFull);
         var contentFolder = new DirectoryInfo(Path.Combine(sxcFolder.FullName, KnownAppsConstants.ContentAppFolder));
         if (!(sxcFolder.Exists && contentFolder.Exists))

@@ -1,6 +1,7 @@
 ﻿using System.Web;
 using System.Web.Caching;
 using DotNetNuke.Entities.Portals;
+using DotNetNuke.Entities.Urls;
 using DotNetNuke.Framework;
 using ToSic.Eav.ImportExport.Integration;
 using ToSic.Sxc.Dnn.Web;
@@ -155,7 +156,7 @@ public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to pre
             if (portalId == UnknownSiteId)
             {
                 l.A($"fallback, unknown portalId, trying to get it from {nameof(pageId)}");
-                portalId = PortalController.GetPortalDictionary()[pageId];
+                portalId = FriendlyUrlController.GetTab(pageId, addStdUrls: false)?.PortalID ?? UnknownSiteId;
                 l.A($"{nameof(portalId)}: {portalId}");
             }
 
