@@ -24,7 +24,8 @@ public class RazorConfiguration(RenderSpecs renderSpecs, ILog parentLog): Helper
             return null;
 
         var l = Log.Fn<string?>($"{nameof(seconds)}: '{seconds}', {nameof(watch)}: '{watch}', {nameof(varyBy)}: '{varyBy}', {nameof(url)}: '{url}', {nameof(model)}: '{model}'");
-        if (seconds != null || watch != null || varyBy != null || url != null || model != null)
+        var hasParams = new[] { seconds as object, watch, varyBy, url, model }.Any(x => x != null);
+        if (hasParams)
         {
             l.A("Set aspects using values");
             var config = new CacheKeyConfig(seconds: seconds, varyBy: varyBy, url: url, model: model);
@@ -32,16 +33,18 @@ public class RazorConfiguration(RenderSpecs renderSpecs, ILog parentLog): Helper
             Parent.CacheSpecs = Parent.CacheSpecs.RestoreAll(config, writeConfig);
         }
 
-        if (tweak != null)
-            try
-            {
-                l.A("Set aspects using function");
-                Parent.CacheSpecs = tweak(Parent.CacheSpecs);
-            }
-            catch (Exception ex)
-            {
-                Log.Ex(ex);
-            }
+        if (tweak == null)
+            return l.ReturnNull();
+
+        try
+        {
+            l.A("Set aspects using tweak function");
+            Parent.CacheSpecs = tweak(Parent.CacheSpecs);
+        }
+        catch (Exception ex)
+        {
+            Log.Ex(ex);
+        }
 
         return l.ReturnNull();
     }

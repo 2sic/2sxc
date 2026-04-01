@@ -5,11 +5,14 @@ using ToSic.Sys.Utils;
 namespace ToSic.Sxc.Services.Cache.Sys.CacheKey;
 
 /// <summary>
-/// Internal configuration for the cache which will be relevant to the final key.
+/// Internal configuration for the cache which will be relevant for generating the cache key.
+/// </summary>
+/// <remarks>
 /// This is used to determine which parameters will be used to pre-check the cache.
 /// Because of this, it must be a pure, simple record (to allow for easy comparison)
 /// and never contain any objects which are specific to the current request.
-/// </summary>
+/// </remarks>
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
 public record CacheKeyConfig(): ICanEstimateSize
 {
     public const int Disabled = -1;
