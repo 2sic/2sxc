@@ -5,8 +5,10 @@
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <Import Project="MSBuild.Community.Tasks.Targets" />
-  <UsingTask TaskName="CopyNewerFileVersion" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll" />
-  <UsingTask TaskName="ModifyXmlDocumentation" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll" />
+  <UsingTask TaskName="CopyNewerFileVersion" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net9.0\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' == 'Core'" />
+  <UsingTask TaskName="CopyNewerFileVersion" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' != 'Core'" />
+  <UsingTask TaskName="ModifyXmlDocumentation" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net9.0\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' == 'Core'" />
+  <UsingTask TaskName="ModifyXmlDocumentation" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' != 'Core'" />
 
   <!-- The Dnn Build Package - Should only run after release compile -->
   <Target Name="PackageModule" AfterTargets="Build" DependsOnTargets="BuildConfigTarget" Condition=" '$(Configuration)|$(Platform)|$(SourceExist)' == 'Release|AnyCPU|true' ">
@@ -14,10 +16,15 @@
     <!-- Properties / Variables for the DNN Build which we need early on-->
     <PropertyGroup>
       <DnnManifestFile>DnnPackageBuilder/ToSic.Sxc.Dnn.dnn</DnnManifestFile>
+      <PackageVersionFile>$(IntermediateOutputPath)PackageModule.version.txt</PackageVersionFile>
     </PropertyGroup>
 
     <!-- Get the Version out of the DNN Manifest for this release -->
-    <XmlRead Prefix="n" Namespace="http://schemas.microsoft.com/developer/msbuild/2003" XPath="dotnetnuke/packages/package[1]/@version" XmlFileName="$(DnnManifestFile)">
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;$xml = [xml](Get-Content '$(DnnManifestFile)'); Set-Content -LiteralPath '$(PackageVersionFile)' -Value $xml.dotnetnuke.packages.package[0].version&quot;" Condition="'$(MSBuildRuntimeType)' == 'Core'" />
+    <ReadLinesFromFile File="$(PackageVersionFile)" Condition="'$(MSBuildRuntimeType)' == 'Core'">
+      <Output TaskParameter="Lines" PropertyName="Version" />
+    </ReadLinesFromFile>
+    <XmlRead Prefix="n" Namespace="http://schemas.microsoft.com/developer/msbuild/2003" XPath="dotnetnuke/packages/package[1]/@version" XmlFileName="$(DnnManifestFile)" Condition="'$(MSBuildRuntimeType)' != 'Core'">
       <Output TaskParameter="Value" PropertyName="Version" />
     </XmlRead>
 
@@ -74,6 +81,7 @@
       <InstallInclude Include="**\*.ascx" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.aspx" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.asmx" Exclude="@(DefaultExclude)" />
+      <InstallInclude Include="**\*.cshtml" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.css" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.html" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.htm" Exclude="@(DefaultExclude)" />
@@ -297,19 +305,22 @@
     <CreateItem Include="$(TempPackageResourcesFolder)\**\*.*">
       <Output TaskParameter="Include" ItemName="ResourcesContent" />
     </CreateItem>
-    <Zip Files="@(ResourcesContent)" WorkingDirectory="$(TempPackageResourcesFolder)" ZipFileName="$(TempPackageFolder)\Resources.zip" />
+    <Zip Files="@(ResourcesContent)" WorkingDirectory="$(TempPackageResourcesFolder)" ZipFileName="$(TempPackageFolder)\Resources.zip" Condition="'$(MSBuildRuntimeType)' != 'Core'" />
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;$zip = '$(TempPackageFolder)\Resources.zip'; if (Test-Path $zip) { Remove-Item -LiteralPath $zip -Force }; Push-Location '$(TempPackageResourcesFolder)'; Compress-Archive -Path * -DestinationPath $zip -CompressionLevel Optimal; Pop-Location&quot;" Condition="'$(MSBuildRuntimeType)' == 'Core'" />
 
     <CreateItem Include="$(TempPackagePdbFolder)\**\*.*">
       <Output TaskParameter="Include" ItemName="AssemblyHelperContent" />
     </CreateItem>
-    <Zip Files="@(AssemblyHelperContent)" WorkingDirectory="$(TempPackagePdbFolder)" ZipFileName="$(TempPackageFolder)\tosic.bin.debug-helpers.zip" />
+    <Zip Files="@(AssemblyHelperContent)" WorkingDirectory="$(TempPackagePdbFolder)" ZipFileName="$(TempPackageFolder)\tosic.bin.debug-helpers.zip" Condition="'$(MSBuildRuntimeType)' != 'Core'" />
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;$zip = '$(TempPackageFolder)\tosic.bin.debug-helpers.zip'; if (Test-Path $zip) { Remove-Item -LiteralPath $zip -Force }; Push-Location '$(TempPackagePdbFolder)'; Compress-Archive -Path * -DestinationPath $zip -CompressionLevel Optimal; Pop-Location&quot;" Condition="'$(MSBuildRuntimeType)' == 'Core'" />
 
     <!-- Create the Install package -->
     <Message Text="DnnBuild: Creating final Zip file $(FinalZipFileName) in $(DnnInstallPackage)" Importance="high" />
     <CreateItem Include="$(TempPackageFolder)\**\*.*">
       <Output TaskParameter="Include" ItemName="OutputContent" />
     </CreateItem>
-    <Zip Files="@(OutputContent)" WorkingDirectory="$(TempPackageFolder)" ZipFileName="$(DnnInstallPackage)/$(FinalZipFileName)" />
+    <Zip Files="@(OutputContent)" WorkingDirectory="$(TempPackageFolder)" ZipFileName="$(DnnInstallPackage)/$(FinalZipFileName)" Condition="'$(MSBuildRuntimeType)' != 'Core'" />
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;$zip = '$(DnnInstallPackage)\$(FinalZipFileName)'; if (Test-Path $zip) { Remove-Item -LiteralPath $zip -Force }; Push-Location '$(TempPackageFolder)'; Compress-Archive -Path * -DestinationPath $zip -CompressionLevel Optimal; Pop-Location&quot;" Condition="'$(MSBuildRuntimeType)' == 'Core'" />
 
     <!-- Cleanup -->
     <Message Text="DnnBuild: Clean-up temporary folders" Importance="high" />

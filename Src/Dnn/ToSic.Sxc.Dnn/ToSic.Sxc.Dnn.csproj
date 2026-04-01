@@ -19,7 +19,7 @@
     <RootNamespace>ToSic.Sxc.Dnn</RootNamespace>
     <AssemblyName>ToSic.Sxc.Dnn</AssemblyName>
     <!--For reasons unknown, this is relevant, even though we import the specs with the correct moniker-->
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <TargetFrameworkProfile />
 
     <!-- This places the EAV DLLs here, for the copy-deploy during Dev to work -->
@@ -37,29 +37,22 @@
     <NoWarn>$(NoWarn);MSB4011</NoWarn>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DnnMvcPipelineBin>A:\2sxc\2sxc-dnn-mvcpl\Website\bin\</DnnMvcPipelineBin>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="DotNetNuke.Core" Version="9.11.0">
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="DotNetNuke.DependencyInjection" Version="9.11.0">
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="DotNetNuke.Web" Version="9.11.0">
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="DotNetNuke.Web.Client" Version="9.11.0">
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.1">
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1">
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9">
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.AspNet.WebApi.WebHost" Version="5.2.9">
+    <PackageReference Include="Microsoft.AspNet.WebApi.WebHost" Version="5.3.0">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="MSBuildTasks">
@@ -70,6 +63,26 @@
     <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.11" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="DotNetNuke">
+      <HintPath>$(DnnMvcPipelineBin)DotNetNuke.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.DependencyInjection">
+      <HintPath>$(DnnMvcPipelineBin)DotNetNuke.DependencyInjection.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.Web">
+      <HintPath>$(DnnMvcPipelineBin)DotNetNuke.Web.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.Web.Client">
+      <HintPath>$(DnnMvcPipelineBin)DotNetNuke.Web.Client.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.Web.MvcPipeline">
+      <HintPath>$(DnnMvcPipelineBin)DotNetNuke.Web.MvcPipeline.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Connect.Dnn.Koi, Version=2.0.0.27364, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>koi\bin\Connect.Dnn.Koi.dll</HintPath>

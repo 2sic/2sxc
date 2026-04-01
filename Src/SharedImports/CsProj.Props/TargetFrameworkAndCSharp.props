@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <!-- Dual Compile for DNN and Oqtane -->
-    <TargetFrameworks>net472;net9.0;</TargetFrameworks>
+    <TargetFrameworks>net48;net9.0;</TargetFrameworks>
 
     <!-- C# Latest -->
     <LangVersion>preview</LangVersion>

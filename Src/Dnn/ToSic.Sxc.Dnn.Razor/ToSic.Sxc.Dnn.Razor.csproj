@@ -15,6 +15,7 @@
     <RootNamespace>ToSic.Sxc</RootNamespace>
     <AssemblyName>ToSic.Sxc.Dnn.Razor</AssemblyName>
 
+    <TargetFramework>net48</TargetFramework>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
@@ -32,14 +33,18 @@
     <NoWarn>$(NoWarn);MSB3277</NoWarn>
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
+  <PropertyGroup>
+    <DnnMvcPipelineBin>A:\2sxc\2sxc-dnn-mvcpl\Website\bin\</DnnMvcPipelineBin>
+  </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DotNetNuke.Core" Version="9.11.0">
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.AspNet.Razor" Version="3.2.9" />
     <PackageReference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform" Version="3.6.0" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="DotNetNuke">
+      <HintPath>$(DnnMvcPipelineBin)DotNetNuke.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
