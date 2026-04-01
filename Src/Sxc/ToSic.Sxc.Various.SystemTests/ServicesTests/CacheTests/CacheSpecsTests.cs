@@ -16,6 +16,8 @@ public class CacheSpecsTests(ExecutionContext exCtx)
 
     private ICacheService CacheSvc => exCtx.GetService<ICacheService>(reuse: true);
 
+    private string CurrentCultureCode => exCtx.GetService<Context.ICmsContext>(reuse: true).Culture.CurrentCode;
+
     private ICacheSpecs GetForMain(string name = "Main") =>
         CacheSvc.CreateSpecsTac(name);
 
@@ -162,6 +164,22 @@ public class CacheSpecsTests(ExecutionContext exCtx)
             Equal(expected, specsAll.Key);
         else
             NotEqual(expected, specsAll.Key);
+    }
+
+    [Fact]
+    public void VaryByLanguage()
+    {
+        var expected = MainPrefix + $"VaryByLanguage={CurrentCultureCode}".ToLowerInvariant();
+        var specs = GetForMain().VaryByLanguage();
+        Equal(expected, specs.Key);
+    }
+
+    [Fact]
+    public void VaryByLanguageFromConfig()
+    {
+        var expected = MainPrefix + $"VaryByLanguage={CurrentCultureCode}".ToLowerInvariant();
+        var specs = GetForMain().RestoreAll(new(varyBy: "language"), new());
+        Equal(expected, specs.Key);
     }
 
     [Fact]

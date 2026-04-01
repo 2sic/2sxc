@@ -8,6 +8,7 @@ public static class CacheKeyConfigExtensions
         {
             CacheSpecConstants.ByModule => keyConfig with { ByModule = true },
             CacheSpecConstants.ByPage => keyConfig with { ByPage = true },
+            CacheSpecConstants.ByLanguage => keyConfig with { ByLanguage = true },
             CacheSpecConstants.ByUser => keyConfig with { ByUser = true },
             CacheSpecConstants.ByPageParameters when !string.IsNullOrWhiteSpace(keys) => keyConfig with { ByPageParameters = Update(keyConfig.ByPageParameters, keys, caseSensitive) },
             CacheSpecConstants.ByModel when !string.IsNullOrWhiteSpace(keys) => keyConfig with { ByModel = Update(keyConfig.ByModel, keys, caseSensitive) },

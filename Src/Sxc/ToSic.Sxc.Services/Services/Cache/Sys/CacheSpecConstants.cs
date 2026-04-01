@@ -5,6 +5,8 @@ public class CacheSpecConstants
 
     public const string ByPage = "Page";
 
+    public const string ByLanguage = "Language";
+
     public const string ByPageParameters = "PageParameters";
 
     public const string ByParameters = "Parameters";

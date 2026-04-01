@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Context;
-using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys;
@@ -57,6 +56,9 @@ internal record CacheSpecsContextAndTools : HelperRecordBase
 
     [field: AllowNull, MaybeNull]
     public ICmsPage Page => field ??= ExCtx.GetCmsContext().Page;
+
+    [field: AllowNull, MaybeNull]
+    public ICmsCulture Culture => field ??= ExCtx.GetCmsContext().Culture;
 
     public ISite? Site => field ??= ExCtx.GetContextOfBlock()?.Site;
 
@@ -127,6 +129,9 @@ internal record CacheSpecsContextAndTools : HelperRecordBase
 
         if (keyConfig.ByPage)
             keySpecs = Update(keySpecs, CacheSpecConstants.ByPage, Page?.Id);
+
+        if (keyConfig.ByLanguage)
+            keySpecs = keySpecs.WithUpdatedVaryBy(CacheSpecConstants.ByLanguage, Culture?.CurrentCode ?? "", caseSensitive: false);
 
         return keySpecs;
 

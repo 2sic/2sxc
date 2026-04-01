@@ -166,6 +166,14 @@ public interface ICacheSpecs
     /// <returns></returns>
     ICacheSpecs VaryByPage();
 
+    /// <summary>
+    /// Vary the cache by the _current_ language/culture, so that each language has its own cache.
+    /// </summary>
+    /// <remarks>
+    /// This uses the CMS context language such as `en-us` or `de-ch`.
+    /// </remarks>
+    ICacheSpecs VaryByLanguage();
+
     ///// <summary>
     ///// Vary the cache by page, so that each page has its own cache.
     ///// By default, it will take the current page, but you can optionally specify a custom page or ID.

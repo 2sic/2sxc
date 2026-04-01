@@ -13,7 +13,7 @@ public interface IRazorConfiguration
     /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="seconds">sliding seconds to keep the cache, like `60`, `300`, `3600`</param>
     /// <param name="watch">what to watch for to flush the cache - recommended: `data,folder`</param>
-    /// <param name="varyBy">what to vary the cache by, like `user,module`</param>
+    /// <param name="varyBy">what to vary the cache by, like `user,module,language`</param>
     /// <param name="model">when caching by model properties, the model property names like `id,key`</param>
     /// <param name="url">url parameters to vary by</param>
     /// <param name="tweak">extended / custom configuration of the cache - use for advanced config like elevation based variants</param>
