@@ -27,8 +27,8 @@ public record PageModelRaw: IRawEntity, IPageModel, IHasRelationshipKeys
 
     internal static DataFactoryOptions Option = new()
     {
-        TypeName = TypeName,
-        TitleField = nameof(Title)
+        TitleField = nameof(Title),
+        Type = typeof(PageModelRaw)
     };
 
     IDictionary<string, object?> IRawEntity.Attributes(RawConvertOptions options)

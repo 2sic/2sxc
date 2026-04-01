@@ -28,8 +28,8 @@ public record UserRoleModel: IRawEntity, IRole, IUserRoleModel
     internal static DataFactoryOptions Options = new()
     {
         AutoId = false,
-        TypeName = TypeName,
         TitleField = nameof(Name),
+        Type = typeof(UserRoleModel)
     };
 
     IDictionary<string, object?> IRawEntity.Attributes(RawConvertOptions options)
