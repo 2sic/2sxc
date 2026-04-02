@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.Cms.Users;
-using ToSic.Sxc.Context;
+﻿using ToSic.Sxc.Context;
 using ToSic.Sxc.Services.Cache.Sys.CacheKey;
 using ToSic.Sys.Caching.Policies;
 using ToSic.Sys.Users;
@@ -171,7 +170,7 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
 
     #endregion
 
-    #region VaryBy Int, Page, Module, User
+    #region VaryBy Int, Page, Language, Module, User
 
     /// <inheritdoc />
     public ICacheSpecs VaryBy(string name, int value)
@@ -200,6 +199,10 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
     /// <inheritdoc />
     public ICacheSpecs VaryByPage() =>
         WithChanges(KeyConfig with { ByPage = true });
+
+    /// <inheritdoc />
+    public ICacheSpecs VaryByLanguage() =>
+        WithChanges(KeyConfig with { ByLanguage = true });
 
     ///// <inheritdoc />
     //public ICacheSpecs VaryByUser(int id)

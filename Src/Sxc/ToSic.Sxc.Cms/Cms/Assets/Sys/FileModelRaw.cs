@@ -28,8 +28,8 @@ public record FileModelRaw: FileFolderBase, IFileModelSync
 
     internal static DataFactoryOptions Options = new()
     {
-        TypeName = TypeName,
-        TitleField = nameof(Path)
+        TitleField = nameof(Path),
+        Type = typeof(FileModelRaw)
     };
 
     /// <inheritdoc cref="IFileModelSync.Name"/>

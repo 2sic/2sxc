@@ -1,16 +1,18 @@
-﻿using ToSic.Sxc.Cms.Users;
-using ToSic.Sys.Memory;
+﻿using ToSic.Sys.Memory;
 using ToSic.Sys.Users;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.Cache.Sys.CacheKey;
 
 /// <summary>
-/// Internal configuration for the cache which will be relevant to the final key.
+/// Internal configuration for the cache which will be relevant for generating the cache key.
+/// </summary>
+/// <remarks>
 /// This is used to determine which parameters will be used to pre-check the cache.
 /// Because of this, it must be a pure, simple record (to allow for easy comparison)
 /// and never contain any objects which are specific to the current request.
-/// </summary>
+/// </remarks>
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
 public record CacheKeyConfig(): ICanEstimateSize
 {
     public const int Disabled = -1;
@@ -26,6 +28,9 @@ public record CacheKeyConfig(): ICanEstimateSize
             {
                 case "page":
                     ByPage = true;
+                    break;
+                case "language":
+                    ByLanguage = true;
                     break;
                 case "user":
                     ByUser = true;
@@ -54,6 +59,7 @@ public record CacheKeyConfig(): ICanEstimateSize
 
 
     public bool ByPage { get; init; }
+    public bool ByLanguage { get; init; }
     public bool ByModule { get; init; }
     public bool ByUser { get; init; }
 
@@ -71,7 +77,7 @@ public record CacheKeyConfig(): ICanEstimateSize
     public Dictionary<UserElevation, int> ForElevation { get; init; } = [];
 
     SizeEstimate ICanEstimateSize.EstimateSize(ILog? log) => new(
-        sizeof(bool) * 3 // ByPage, ByModule, ByUser
+        sizeof(bool) * 4 // ByPage, ByLanguage, ByModule, ByUser
         + (ByPageParameters?.Names?.Length ?? 0) // ByParameters
         + (ByModel?.Names?.Length ?? 0) // ByModel
     );

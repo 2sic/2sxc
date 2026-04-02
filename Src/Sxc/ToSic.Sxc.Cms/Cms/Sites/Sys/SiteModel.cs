@@ -27,8 +27,8 @@ public record SiteModel: IRawEntity, ISiteModel
     internal static DataFactoryOptions Options => new()
     {
         AutoId = false,
-        TypeName = TypeName,
         TitleField = nameof(Name),
+        Type = typeof(SiteModel)
     };
 
     IDictionary<string, object?> IRawEntity.Attributes(RawConvertOptions options)

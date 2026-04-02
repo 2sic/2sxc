@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.Cms.Users;
-using ToSic.Sxc.Context;
+﻿using ToSic.Sxc.Context;
 using ToSic.Sxc.Services.Cache.Sys.CacheKey;
 using ToSic.Sys.Caching.Policies;
 using ToSic.Sys.Users;
@@ -165,6 +164,14 @@ public interface ICacheSpecs
     /// </summary>
     /// <returns></returns>
     ICacheSpecs VaryByPage();
+
+    /// <summary>
+    /// Vary the cache by the _current_ language/culture, so that each language has its own cache.
+    /// </summary>
+    /// <remarks>
+    /// This uses the CMS context language such as `en-us` or `de-ch`.
+    /// </remarks>
+    ICacheSpecs VaryByLanguage();
 
     ///// <summary>
     ///// Vary the cache by page, so that each page has its own cache.

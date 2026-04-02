@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Context;
-using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys;
@@ -47,21 +46,27 @@ internal record CacheSpecsContextAndTools : HelperRecordBase
     #region Retrieved / Calculated values for Re-Use
 
     [field: AllowNull, MaybeNull]
-    public ICmsUser User => field ??= ExCtx.GetCmsContext().User;
+    private ICmsContext Context => field ??= ExCtx.GetCmsContext();
 
-    public UserElevation UserElevation => _userElevation ??= User?.GetElevation() ?? UserElevation.Unknown;
+    //[field: AllowNull, MaybeNull]
+    //public ICmsUser User => field ??= ExCtx.GetCmsContext().User;
+
+    //[field: AllowNull, MaybeNull]
+    //public ICmsModule Module => field ??= ExCtx.GetCmsContext().Module;
+
+    //[field: AllowNull, MaybeNull]
+    //public ICmsPage Page => field ??= ExCtx.GetCmsContext().Page;
+
+    //[field: AllowNull, MaybeNull]
+    //public ICmsCulture Culture => field ??= ExCtx.GetCmsContext().Culture;
+
+    public UserElevation UserElevation => _userElevation ??= Context.User.GetElevation(); // ?? UserElevation.Unknown;
     private UserElevation? _userElevation;
 
-    [field: AllowNull, MaybeNull]
-    public ICmsModule Module => field ??= ExCtx.GetCmsContext().Module;
+    private ISite? Site => field ??= ExCtx.GetContextOfBlock()?.Site;
 
     [field: AllowNull, MaybeNull]
-    public ICmsPage Page => field ??= ExCtx.GetCmsContext().Page;
-
-    public ISite? Site => field ??= ExCtx.GetContextOfBlock()?.Site;
-
-    [field: AllowNull, MaybeNull]
-    internal IAppReader AppReader => field ??= ExCtx.GetState<IAppReader>();
+    private IAppReader AppReader => field ??= ExCtx.GetState<IAppReader>();
 
     #endregion
 
@@ -102,7 +107,7 @@ internal record CacheSpecsContextAndTools : HelperRecordBase
         var keySpecs = BaseKeyParts;
         if (keyConfig.ByPageParameters is { } byParameters)
         {
-            var parameters = Page.Parameters ?? new Parameters { Nvc = [] };
+            var parameters = Context.Page.Parameters ?? new Parameters { Nvc = [] };
             var asUrl = CacheVaryByHelper.VaryByParameters(parameters, byParameters.Names);
             keySpecs = keySpecs.WithUpdatedVaryBy(CacheSpecConstants.ByPageParameters, asUrl, byParameters.CaseSensitive);
         }
@@ -120,13 +125,16 @@ internal record CacheSpecsContextAndTools : HelperRecordBase
             keySpecs = ReplayByModel(keySpecs, byModel.Names, caseSensitive: byModel.CaseSensitive);
 
         if (keyConfig.ByUser)
-            keySpecs = Update(keySpecs, CacheSpecConstants.ByUser, User?.Id);
+            keySpecs = Update(keySpecs, CacheSpecConstants.ByUser, Context.User.Id);
 
         if (keyConfig.ByModule)
-            keySpecs = Update(keySpecs, CacheSpecConstants.ByModule, Module?.Id);
+            keySpecs = Update(keySpecs, CacheSpecConstants.ByModule, Context.Module.Id);
 
         if (keyConfig.ByPage)
-            keySpecs = Update(keySpecs, CacheSpecConstants.ByPage, Page?.Id);
+            keySpecs = Update(keySpecs, CacheSpecConstants.ByPage, Context.Page.Id);
+
+        if (keyConfig.ByLanguage)
+            keySpecs = keySpecs.WithUpdatedVaryBy(CacheSpecConstants.ByLanguage, Context.Culture.CurrentCode, caseSensitive: false);
 
         return keySpecs;
 

@@ -25,8 +25,8 @@ public record UserModel : IRawEntity, IHasIdentityNameId, IUserModel
     internal const string TypeName = "User";
     internal static DataFactoryOptions Options = new()
     {
-        TypeName = TypeName,
-        TitleField = nameof(Name)
+        TitleField = nameof(Name),
+        Type = typeof(UserModel)
     };
 
     IDictionary<string, object?> IRawEntity.Attributes(RawConvertOptions options)

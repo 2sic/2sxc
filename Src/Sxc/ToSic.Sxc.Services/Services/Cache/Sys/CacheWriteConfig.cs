@@ -4,12 +4,18 @@ using ToSic.Sys.Utils;
 namespace ToSic.Sxc.Services.Cache.Sys;
 
 /// <summary>
-/// Cache configuration information which is only relevant when writing to the cache.
-/// This information is either
-/// - not relevant for retrieving from the cache
+/// Partial Cache configuration information which is only relevant for **writing** to the cache.
+/// </summary>
+/// <remarks>
+/// The object itself will not be serialized or stored in the cache,
+/// but is used to specify how the cache will be set up - for example timeouts or watchers.
+/// 
+/// Any information in this object is either
+/// - not relevant for _retrieving_ from the cache
 /// - too complex / changing to be serialized
 /// - would cause trouble if also cached, since it might change fairly randomly
-/// </summary>
+/// </remarks>
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
 public record CacheWriteConfig
 {
     public CacheWriteConfig(NoParamOrder npo = default, string? watch = null)
