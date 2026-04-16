@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.Edit.Toolbar;
-using ToSic.Sxc.Edit.Toolbar.Sys.Rules;
+﻿using ToSic.Sxc.Edit.Toolbar.Sys.Rules;
 using static ToSic.Sxc.Edit.Toolbar.Sys.Rules.ToolbarRuleToolbar;
 
 namespace ToSic.Sxc.Tests.EditTests.ToolbarRuleTests;

@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.WebApi.Sys.App;
 using ToSic.Sxc.Dnn.WebApi.Sys;
-using static ToSic.Eav.WebApi.Sys.EavWebApiConstants;
 using RealController = ToSic.Sxc.Backend.App.AppDataControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.App;

@@ -1,6 +1,5 @@
 ﻿using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Web.Sys.LightSpeed;
-using ToSic.Sys.Caching;
 
 namespace ToSic.Sxc.Render.Sys.RenderBlock;
 

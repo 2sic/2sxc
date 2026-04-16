@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Text;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Web.Sys.LightSpeed;

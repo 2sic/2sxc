@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Processing;
-using ToSic.Eav.Metadata;
 using ToSic.Eav.Models;
 using ToSic.Sys.Utils.Assemblies;
 using static ToSic.Eav.WebApi.Sys.Helpers.Validation.ValidatorBase;

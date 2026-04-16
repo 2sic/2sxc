@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Models.Factory;
 using ToSic.Eav.Models.Sys;
-using ToSic.Sxc.Data.Sys.Factory;
 
 namespace ToSic.Sxc.Data.Models.Sys;
 
