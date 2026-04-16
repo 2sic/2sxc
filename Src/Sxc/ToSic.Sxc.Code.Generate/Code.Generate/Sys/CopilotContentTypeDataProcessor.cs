@@ -21,41 +21,62 @@ internal class CopilotContentTypeDataProcessor(
     /// <param name="action">Expected to be <see cref="PostSave"/> for schema triggers.</param>
     /// <param name="data">Processor payload containing the schema trigger context.</param>
     /// <returns>Original or enriched processor result with collected exceptions.</returns>
-    public Task<DataProcessorResult<IEntity?>> Process(string action, DataProcessorResult<IEntity?> data)
+    public async Task<DataProcessorResult<IEntity?>> Process(string action, DataProcessorResult<IEntity?> data)
     {
         var l = Log.Fn<DataProcessorResult<IEntity?>>($"action:{action}");
 
         var context = data.Context;
         if (!IsContentTypeSchemaPostSave(action, context))
-            return Task.FromResult(l.Return(data, "unsupported action/context"));
+            return l.Return(data, "unsupported action/context");
 
         var errors = data.Exceptions.ToList();
         var appId = context!.AppId;
         if (!appId.HasValue)
         {
             Log.A("Copilot auto-generate skipped: schema context is missing AppId.");
-            return Task.FromResult(l.Return(data, "missing app id"));
+            return l.Return(data, "missing app id");
         }
 
         var changedTypeNameId = context.ContentTypeNameId;
         if (changedTypeNameId.IsEmptyOrWs())
         {
             Log.A("Copilot auto-generate skipped: schema context is missing content-type name-id.");
-            return Task.FromResult(l.Return(data, "missing content-type name-id"));
+            return l.Return(data, "missing content-type name-id");
         }
 
         var source = context.Source ?? "";
         Log.A($"Copilot auto-generate: source '{source}' for content-type '{changedTypeNameId}'.");
-        errors.AddRange(autoGenerate.Generate(appId.Value, changedTypeNameId, origin: source));
+        // The IDataProcessor remains the external contract.
+        // Internally we now map the validated processor envelope to a typed ILowCodeAction pipeline
+        // so schema context and upstream processor state stay intact through the pipeline.
+        var triggerData = new ActionData<CopilotSchemaTrigger>(new(
+            AppId: appId.Value,
+            ContentTypeNameId: changedTypeNameId,
+            Source: source))
+        {
+            Context = data.Context,
+            Exceptions = errors,
+            Decision = data.Decision,
+            LogMessage = data.LogMessage,
+            ErrorMessage = data.ErrorMessage,
+        };
 
-        var result = ResultWithErrors(data, errors);
-        return Task.FromResult(l.Return(result, $"errors: {result.Exceptions.Count}"));
+        var pipelineResult = await autoGenerate.Run(triggerData);
+
+        var result = ResultWithPipelineState(data, pipelineResult);
+        return l.Return(result, $"errors: {result.Exceptions.Count}");
     }
 
-    private static DataProcessorResult<IEntity?> ResultWithErrors(DataProcessorResult<IEntity?> original, List<Exception> errors)
-        => errors.Count == original.Exceptions.Count
-            ? original
-            : original with { Exceptions = errors };
+    private static DataProcessorResult<IEntity?> ResultWithPipelineState(
+        DataProcessorResult<IEntity?> original,
+        ActionData<CopilotGenerationBatch> pipelineResult)
+        => original with
+        {
+            Exceptions = pipelineResult.Exceptions,
+            Decision = pipelineResult.Decision,
+            LogMessage = pipelineResult.LogMessage,
+            ErrorMessage = pipelineResult.ErrorMessage,
+        };
 
     private static bool IsContentTypeSchemaPostSave(string action, DataProcessingContext? context)
         => action.EqualsInsensitive(PostSave)
