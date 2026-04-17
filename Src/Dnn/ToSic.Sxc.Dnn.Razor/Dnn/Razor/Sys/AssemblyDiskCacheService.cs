@@ -1,6 +1,7 @@
 using System.Reflection;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sys.Configuration;
@@ -22,8 +23,9 @@ public class AssemblyDiskCacheService(
     AssemblyResolver assemblyResolver,
     IAppReaderFactory appReadFac,
     LazySvc<IAppPathsMicroSvc> appPathsLazy,
+    LazySvc<IZoneMapper> zoneMapper,
     ISite site)
-  : ServiceBase("Dnn.AsmDskCch", connect: [featureService, globalConfiguration, diskCache, assemblyUtilities, assemblyResolver, appReadFac, appPathsLazy, site]), IAssemblyDiskCacheService
+  : ServiceBase("Dnn.AsmDskCch", connect: [featureService, globalConfiguration, diskCache, assemblyUtilities, assemblyResolver, appReadFac, appPathsLazy, zoneMapper, site]), IAssemblyDiskCacheService
 {
     /// <summary>
     /// Attempts to load a cached assembly from disk for the specified template.
@@ -132,7 +134,9 @@ public class AssemblyDiskCacheService(
         if (spec.AppId <= 0)
             return string.Empty;
 
-        return appPathsLazy.Value.Get(appReadFac.Get(spec.AppId), site).RelativePath;
+        var appReader = appReadFac.Get(spec.AppId);
+        var resolvedSite = HotBuildSiteResolver.ResolveForApp(site, appReader, zoneMapper.Value);
+        return appPathsLazy.Value.Get(appReader, resolvedSite).RelativePath;
     }
 
     /// <summary>
