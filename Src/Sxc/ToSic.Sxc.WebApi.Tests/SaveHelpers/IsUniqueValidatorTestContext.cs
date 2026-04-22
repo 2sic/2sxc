@@ -5,6 +5,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Build.Sys;
 using ToSic.Eav.Data.Sys.Dimensions;
+using ToSic.Eav.Data.Sys.Entities.Sources;
 using ToSic.Sxc.Backend.SaveHelpers;
 
 namespace ToSic.Sxc.WebApi.Tests.SaveHelpers;
@@ -88,6 +89,19 @@ internal sealed class IsUniqueValidatorTestContext : IDisposable
 
     public IAttribute LocalizedAttribute(string name, ValueTypes type, params (object? Value, string Language)[] values)
         => BuildAttribute(name, type, values.Select(value => (value.Value, new[] { value.Language })).ToArray());
+
+    public IAttribute EntityRelationshipAttributeUsingRepoIds(string name, params IEntity[] relatedEntities)
+        => DirectEntitiesSource.Using(sourceAndList =>
+        {
+            sourceAndList.List.AddRange(relatedEntities);
+            var references = relatedEntities
+                .Select(entity => (int?)(entity.RepositoryId > 0 ? entity.RepositoryId : entity.EntityId))
+                .ToList();
+            var relationship = DataAssembler.Relationship.Relationship(
+                DataAssembler.Relationship.ToSource(references, sourceAndList.Source)
+            );
+            return DataAssembler.Attribute.Create(name, ValueTypes.Entity, [relationship]);
+        });
 
     private IAttribute BuildAttribute(string name, ValueTypes type, params (object? Value, string[] Languages)[] values)
     {

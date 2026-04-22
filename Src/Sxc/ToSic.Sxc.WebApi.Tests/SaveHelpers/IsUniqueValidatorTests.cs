@@ -16,11 +16,16 @@ public class IsUniqueValidatorTests
 
     public static TheoryData<ValueTypes, object> UnsupportedUniqueFieldValues => new()
     {
-        { ValueTypes.Entity, "11111111-1111-1111-1111-111111111111" },
         { ValueTypes.Empty, "same-marker" },
         { ValueTypes.Object, new { Marker = "same-marker" } },
         { ValueTypes.Json, "{\"marker\":\"same-marker\"}" },
         { ValueTypes.Undefined, "same-marker" }
+    };
+
+    public static TheoryData<string> UniqueEntityValues => new()
+    {
+        { "11111111-1111-1111-1111-111111111111" },
+        { "11111111-1111-1111-1111-111111111111,22222222-2222-2222-2222-222222222222" }
     };
 
     #endregion
@@ -226,6 +231,104 @@ public class IsUniqueValidatorTests
 
         Assert.NotNull(exception);
         Assert.Contains("Article.UniqueValue", exception.Value);
+    }
+
+    [Theory]
+    [MemberData(nameof(UniqueEntityValues))]
+    public void EntityDuplicates_BlockSave(string value)
+    {
+        using var ctx = IsUniqueValidatorTestContext.Create();
+        var contentType = ctx.CreateType("Article",
+            ctx.CreateField("Title", ValueTypes.String, isTitle: true),
+            ctx.CreateField("Related", ValueTypes.Entity, isUnique: true));
+
+        var existing = ctx.CreateEntity(contentType, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Existing"),
+            ctx.InvariantAttribute("Related", ValueTypes.Entity, value));
+
+        var pending = ctx.CreateEntity(contentType, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Pending"),
+            ctx.InvariantAttribute("Related", ValueTypes.Entity, value));
+
+        var exception = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pending]);
+
+        Assert.NotNull(exception);
+        Assert.Contains("Article.Related", exception.Value);
+    }
+
+    [Fact]
+    public void EntityDuplicates_BlockSave_WhenExistingUsesRepoIdsAndPendingUsesGuids()
+    {
+        using var ctx = IsUniqueValidatorTestContext.Create();
+        var relatedGuid = Guid.Parse("11111111-1111-1111-1111-111111111111");
+        var relatedType = ctx.CreateType("Category",
+            ctx.CreateField("Title", ValueTypes.String, isTitle: true));
+        var relatedEntity = ctx.CreateEntity(relatedType, relatedGuid,
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Shared Child"));
+
+        var contentType = ctx.CreateType("Article",
+            ctx.CreateField("Title", ValueTypes.String, isTitle: true),
+            ctx.CreateField("Related", ValueTypes.Entity, isUnique: true));
+
+        var existing = ctx.CreateEntity(contentType, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Existing"),
+            ctx.EntityRelationshipAttributeUsingRepoIds("Related", relatedEntity));
+
+        var pending = ctx.CreateEntity(contentType, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Pending"),
+            ctx.InvariantAttribute("Related", ValueTypes.Entity, relatedGuid.ToString()));
+
+        var exception = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pending]);
+
+        Assert.NotNull(exception);
+        Assert.Contains("Article.Related", exception.Value);
+    }
+
+    [Fact]
+    public void EntityDuplicates_BlockSave_WhenRelationshipListsShareAChild()
+    {
+        using var ctx = IsUniqueValidatorTestContext.Create();
+        var sharedGuid = Guid.Parse("11111111-1111-1111-1111-111111111111");
+        var secondGuid = Guid.Parse("22222222-2222-2222-2222-222222222222");
+        var thirdGuid = Guid.Parse("33333333-3333-3333-3333-333333333333");
+        var contentType = ctx.CreateType("Article",
+            ctx.CreateField("Title", ValueTypes.String, isTitle: true),
+            ctx.CreateField("Related", ValueTypes.Entity, isUnique: true));
+
+        var existing = ctx.CreateEntity(contentType, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Existing"),
+            ctx.InvariantAttribute("Related", ValueTypes.Entity, $"{sharedGuid},{secondGuid}"));
+
+        var pending = ctx.CreateEntity(contentType, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Pending"),
+            ctx.InvariantAttribute("Related", ValueTypes.Entity, $"{sharedGuid},{thirdGuid}"));
+
+        var exception = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pending]);
+
+        Assert.NotNull(exception);
+        Assert.Contains("Article.Related", exception.Value);
+        Assert.Contains(sharedGuid.ToString(), exception.Value);
+    }
+
+    [Fact]
+    public void EmptyEntityRelationshipsDoNotBlockSave()
+    {
+        using var ctx = IsUniqueValidatorTestContext.Create();
+        var contentType = ctx.CreateType("Article",
+            ctx.CreateField("Title", ValueTypes.String, isTitle: true),
+            ctx.CreateField("Related", ValueTypes.Entity, isUnique: true));
+
+        var existing = ctx.CreateEntity(contentType, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Existing"),
+            ctx.InvariantAttribute("Related", ValueTypes.Entity, null));
+
+        var pending = ctx.CreateEntity(contentType, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Pending"),
+            ctx.InvariantAttribute("Related", ValueTypes.Entity, null));
+
+        var exception = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pending]);
+
+        Assert.Null(exception);
     }
 
     [Theory]
