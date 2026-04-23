@@ -2,24 +2,55 @@ using System.Collections;
 using ToSic.Eav.Data.Sys.Entities.Sources;
 using ToSic.Eav.Data.Sys.Relationships;
 using ToSic.Eav.Sys;
-using ToSic.Eav.WebApi.Sys.Helpers.Validation;
+using static ToSic.Eav.WebApi.Sys.Helpers.Validation.ValidatorBase;
 
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
 /// <summary>
-/// Validates save packages for fields marked with <c>IsUnique</c> and reports collisions
-/// against already persisted entities or other items in the same request.
+/// Validates save-time uniqueness for fields marked with <c>IsUnique</c>.
+/// The current save pipeline validates one pending entity at a time against already persisted data.
 /// </summary>
-internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val.UnqOk")
+[PrivateApi]
+internal class IsUniqueValidator : ServiceBase, ISaveEntityValidator
 {
     private const string IsUniqueMetadataKey = "IsUnique";
     private const string InvariantLanguageBucket = "";
     private const string InvariantLanguageBucketLabel = "invariant";
     private static readonly UniqueValueKeyComparer UniqueKeyComparer = new();
 
+    public IsUniqueValidator()
+        : base("Val.UnqOk")
+    { }
+
+    internal IsUniqueValidator(ILog parentLog)
+        : this()
+        => ConnectLogs([parentLog]);
+
+    SaveEntityValidationResult ISaveEntityValidator.Validate(SaveEntityValidationContext context)
+        => new(UniqueValueOnly(context.ExistingEntities, context.Entity, context.Index));
+
     /// <summary>
-    /// Checks all pending entities for duplicate values on unique fields and returns a bad-request
-    /// exception when at least one conflict is found.
+    /// Checks one pending entity for duplicate values on unique fields and returns a bad-request
+    /// exception when at least one persisted collision is found.
+    /// </summary>
+    internal HttpExceptionAbstraction? UniqueValueOnly(IEnumerable<IEntity> existingEntities, IEntity pendingEntity, int index = 0)
+    {
+        var l = Log.Fn<HttpExceptionAbstraction?>($"index:{index}");
+
+        var existingByKey = IndexExistingEntries(existingEntities);
+        var errors = new List<string>();
+        var duplicateCount = AddExistingConflicts(errors, existingByKey, EnumerateEntries([pendingEntity], UniqueValueSource.Pending, index));
+        var errorText = errors.Count == 0
+            ? string.Empty
+            : string.Join("\n", errors);
+
+        var exception = BuildExceptionIfHasIssues(errorText, l, "UniqueValueOnly() done");
+        return l.Return(exception, exception == null ? "ok" : $"duplicates:{duplicateCount}");
+    }
+
+    /// <summary>
+    /// Compatibility shim which validates each pending entity independently against existing data.
+    /// Duplicate values inside the same save package are intentionally ignored by this refactored flow.
     /// </summary>
     internal HttpExceptionAbstraction? UniqueValuesOnly(IEnumerable<IEntity> existingEntities, IReadOnlyCollection<IEntity> pendingEntities)
     {
@@ -29,21 +60,17 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
             return l.ReturnNull("no pending entities");
 
         var existingByKey = IndexExistingEntries(existingEntities);
-        var pendingByKey = GroupPendingEntries(pendingEntities);
         var errors = new List<string>();
         var duplicateCount = 0;
 
-        foreach (var pendingGroup in pendingByKey.Values)
-            if (pendingGroup.HasDuplicates)
-                duplicateCount += AddPendingConflicts(errors, pendingGroup);
-            else
-                duplicateCount += AddExistingConflictIfAny(errors, existingByKey, pendingGroup.First);
+        foreach (var (pendingEntity, index) in pendingEntities.Select((entity, index) => (entity, index)))
+            duplicateCount += AddExistingConflicts(errors, existingByKey, EnumerateEntries([pendingEntity], UniqueValueSource.Pending, index));
 
-        Errors = errors.Count == 0
+        var errorText = errors.Count == 0
             ? string.Empty
             : string.Join("\n", errors);
 
-        var exception = BuildExceptionIfHasIssues(Errors, l, "UniqueValuesOnly() done");
+        var exception = BuildExceptionIfHasIssues(errorText, l, "UniqueValuesOnly() done");
         return l.Return(exception, exception == null ? "ok" : $"duplicates:{duplicateCount}");
     }
 
@@ -62,53 +89,6 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
                 existingByKey.Add(entry.Key, entry);
 
         return existingByKey;
-    }
-
-    /// <summary>
-    /// Groups pending entities by uniqueness key while removing duplicate logical entities from the same request.
-    /// </summary>
-    private Dictionary<UniqueValueKey, PendingGroupState> GroupPendingEntries(IEnumerable<IEntity> entities)
-    {
-        var pendingByKey = new Dictionary<UniqueValueKey, PendingGroupState>(UniqueKeyComparer);
-
-        foreach (var entry in EnumerateEntries(entities, UniqueValueSource.Pending))
-        {
-            if (!pendingByKey.TryGetValue(entry.Key, out var pendingGroup))
-            {
-                pendingByKey.Add(entry.Key, new(entry));
-                continue;
-            }
-
-            if (!pendingGroup.TryAdd(entry))
-                continue;
-
-            pendingByKey[entry.Key] = pendingGroup;
-        }
-
-        return pendingByKey;
-    }
-
-    /// <summary>
-    /// Adds a validation error for every pending item in a duplicate pending group.
-    /// </summary>
-    private int AddPendingConflicts(List<string> errors, PendingGroupState pendingGroup)
-    {
-        if (!pendingGroup.HasThirdOrMore)
-        {
-            return AddConflict(errors, pendingGroup.First, pendingGroup.Second)
-                   + AddConflict(errors, pendingGroup.Second, pendingGroup.First);
-        }
-
-        // Keep larger duplicate groups readable by anchoring later entries to the first item
-        // instead of producing every possible pairwise combination.
-        var count = 0;
-        count += AddConflict(errors, pendingGroup.First, pendingGroup.Second);
-        count += AddConflict(errors, pendingGroup.Second, pendingGroup.First);
-
-        foreach (var entry in pendingGroup.More!)
-            count += AddConflict(errors, entry, pendingGroup.First);
-
-        return count;
     }
 
     /// <summary>
@@ -134,13 +114,26 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
     }
 
     /// <summary>
+    /// Adds persisted conflicts for the supplied pending entries.
+    /// </summary>
+    private int AddExistingConflicts(List<string> errors, IReadOnlyDictionary<UniqueValueKey, UniqueValueEntry> existingByKey, IEnumerable<UniqueValueEntry> pendingEntries)
+    {
+        var count = 0;
+
+        foreach (var pendingEntry in pendingEntries)
+            count += AddExistingConflictIfAny(errors, existingByKey, pendingEntry);
+
+        return count;
+    }
+
+    /// <summary>
     /// Projects entities into normalized uniqueness entries for each supported field value that participates
     /// in duplicate detection.
     /// </summary>
-    private IEnumerable<UniqueValueEntry> EnumerateEntries(IEnumerable<IEntity> entities, UniqueValueSource source)
+    private IEnumerable<UniqueValueEntry> EnumerateEntries(IEnumerable<IEntity> entities, UniqueValueSource source, int startIndex = 0)
     {
         var uniqueFieldsByType = new Dictionary<string, IContentTypeAttribute[]>(StringComparer.OrdinalIgnoreCase);
-        var index = 0;
+        var index = startIndex;
         foreach (var entity in entities)
         {
             var logicalId = BuildLogicalId(entity, source, index);
@@ -503,92 +496,6 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
     /// even if they appear more than once during validation?"
     /// </remarks>
     private readonly record struct LogicalId(LogicalIdKind Kind, Guid Guid, int Primary, int Secondary);
-
-    /// <summary>
-    /// Tracks all pending entries that currently share the same uniqueness key.
-    /// </summary>
-    /// <remarks>
-    /// The first two distinct logical entities are stored in <see cref="First"/> and <see cref="Second"/>,
-    /// and <see cref="More"/> is created only when a third different logical entity appears.
-    /// <para>
-    /// Entries with the same <see cref="UniqueValueEntry.LogicalId"/> are ignored so the validator does not
-    /// report the same logical item colliding with itself because of duplicate raw values or draft/published
-    /// variants within the same request.
-    /// </para>
-    /// </remarks>
-    private struct PendingGroupState
-    {
-        /// <summary>
-        /// Initializes a new group with the first distinct logical entry seen for a uniqueness key.
-        /// </summary>
-        public PendingGroupState(UniqueValueEntry first)
-        {
-            First = first;
-            Second = default;
-            HasSecond = false;
-            More = null;
-        }
-
-        /// <summary>
-        /// Gets the first distinct logical entry seen for the key.
-        /// </summary>
-        public UniqueValueEntry First { get; }
-
-        /// <summary>
-        /// Gets the second distinct logical entry seen for the key when <see cref="HasSecond"/> is <c>true</c>.
-        /// </summary>
-        public UniqueValueEntry Second { get; private set; }
-
-        /// <summary>
-        /// Gets whether <see cref="Second"/> has been populated with a real duplicate candidate.
-        /// </summary>
-        public bool HasSecond { get; private set; }
-
-        /// <summary>
-        /// Gets additional distinct logical entries for the same key, allocated only if more than two exist.
-        /// </summary>
-        public List<UniqueValueEntry>? More { get; private set; }
-
-        /// <summary>
-        /// Gets whether at least two distinct logical entities share the same unique key.
-        /// </summary>
-        public bool HasDuplicates => HasSecond;
-
-        /// <summary>
-        /// Gets whether more than two distinct logical entities share the same unique key.
-        /// </summary>
-        public bool HasThirdOrMore => More is { Count: > 0 };
-
-        /// <summary>
-        /// Adds another entry when it represents a new logical entity for the same key.
-        /// </summary>
-        /// <returns>
-        /// <c>true</c> when the group changed; <c>false</c> when the entry belongs to a logical entity already tracked.
-        /// </returns>
-        public bool TryAdd(UniqueValueEntry entry)
-        {
-            if (First.LogicalId == entry.LogicalId)
-                return false;
-
-            if (!HasSecond)
-            {
-                Second = entry;
-                HasSecond = true;
-                return true;
-            }
-
-            if (Second.LogicalId == entry.LogicalId)
-                return false;
-
-            if (More != null)
-                foreach (var existing in More)
-                    if (existing.LogicalId == entry.LogicalId)
-                        return false;
-
-            (More ??= []).Add(entry);
-            return true;
-        }
-    }
 
     private sealed class UniqueValueKeyComparer : IEqualityComparer<UniqueValueKey>
     {

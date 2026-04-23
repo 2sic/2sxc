@@ -48,7 +48,7 @@ public class IsUniqueValidatorTests
             ctx.InvariantAttribute("Title", ValueTypes.String, "Pending"),
             ctx.InvariantAttribute("Slug", ValueTypes.String, "same-slug"));
 
-        var exception = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pending]);
+        var exception = ctx.CreateValidator().UniqueValueOnlyTac([existing], pending);
 
         Assert.NotNull(exception);
         Assert.Contains("Article.Slug", exception.Value);
@@ -72,7 +72,7 @@ public class IsUniqueValidatorTests
             ctx.InvariantAttribute("Title", ValueTypes.String, "Updated"),
             ctx.InvariantAttribute("Slug", ValueTypes.String, "same-slug"));
 
-        var exception = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pending]);
+        var exception = ctx.CreateValidator().UniqueValueOnlyTac([existing], pending);
 
         Assert.Null(exception);
     }
@@ -82,7 +82,7 @@ public class IsUniqueValidatorTests
     #region Same Request Conflicts
 
     [Fact]
-    public void TwoItemsInSameSavePackageWithSameUniqueValue_BlockSave()
+    public void TwoItemsInSameSavePackageWithSameUniqueValue_DoNotBlockCurrentEntityValidation()
     {
         using var ctx = IsUniqueValidatorTestContext.Create();
         var type = ctx.CreateType("Article",
@@ -99,12 +99,11 @@ public class IsUniqueValidatorTests
 
         var exception = ctx.CreateValidator().UniqueValuesOnlyTac([], [first, second]);
 
-        Assert.NotNull(exception);
-        Assert.Contains("same request", exception.Value);
+        Assert.Null(exception);
     }
 
     [Fact]
-    public void UpdatedEntityAndAnotherPendingDuplicate_PreferSameRequestConflict()
+    public void UpdatedEntityAndAnotherPendingDuplicate_OnlyReportsExistingEntityConflict()
     {
         using var ctx = IsUniqueValidatorTestContext.Create();
         var entityGuid = Guid.NewGuid();
@@ -127,9 +126,9 @@ public class IsUniqueValidatorTests
         var exception = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [updated, second]);
 
         Assert.NotNull(exception);
-        Assert.Contains("same request", exception.Value);
-        Assert.DoesNotContain("saved entity", exception.Value);
-        Assert.Equal(2, exception.Value.Split(["Article.Slug"], StringSplitOptions.None).Length - 1);
+        Assert.DoesNotContain("same request", exception.Value);
+        Assert.Contains("saved entity", exception.Value);
+        Assert.Equal(1, exception.Value.Split(["Article.Slug"], StringSplitOptions.None).Length - 1);
     }
 
     #endregion
@@ -156,8 +155,8 @@ public class IsUniqueValidatorTests
             ctx.InvariantAttribute("Title", ValueTypes.String, "Same Lang"),
             ctx.LocalizedAttribute("Slug", ValueTypes.String, ("same-slug", "en-us")));
 
-        var noConflict = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pendingOtherLanguage]);
-        var conflict = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pendingSameLanguage]);
+        var noConflict = ctx.CreateValidator().UniqueValueOnlyTac([existing], pendingOtherLanguage);
+        var conflict = ctx.CreateValidator().UniqueValueOnlyTac([existing], pendingSameLanguage);
 
         Assert.Null(noConflict);
         Assert.NotNull(conflict);
@@ -180,7 +179,7 @@ public class IsUniqueValidatorTests
             ctx.InvariantAttribute("Title", ValueTypes.String, "Pending"),
             ctx.InvariantAttribute("Slug", ValueTypes.String, "same-slug"));
 
-        var exception = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pending]);
+        var exception = ctx.CreateValidator().UniqueValueOnlyTac([existing], pending);
 
         Assert.NotNull(exception);
     }
@@ -201,7 +200,7 @@ public class IsUniqueValidatorTests
             ctx.InvariantAttribute("Title", ValueTypes.String, "Pending"),
             ctx.InvariantAttribute("Slug", ValueTypes.String, ""));
 
-        var exception = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pending]);
+        var exception = ctx.CreateValidator().UniqueValueOnlyTac([existing], pending);
 
         Assert.Null(exception);
     }
@@ -227,7 +226,7 @@ public class IsUniqueValidatorTests
             ctx.InvariantAttribute("Title", ValueTypes.String, "Pending"),
             ctx.InvariantAttribute("UniqueValue", type, value));
 
-        var exception = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pending]);
+        var exception = ctx.CreateValidator().UniqueValueOnlyTac([existing], pending);
 
         Assert.NotNull(exception);
         Assert.Contains("Article.UniqueValue", exception.Value);
@@ -250,7 +249,7 @@ public class IsUniqueValidatorTests
             ctx.InvariantAttribute("Title", ValueTypes.String, "Pending"),
             ctx.InvariantAttribute("Related", ValueTypes.Entity, value));
 
-        var exception = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pending]);
+        var exception = ctx.CreateValidator().UniqueValueOnlyTac([existing], pending);
 
         Assert.NotNull(exception);
         Assert.Contains("Article.Related", exception.Value);
@@ -278,7 +277,7 @@ public class IsUniqueValidatorTests
             ctx.InvariantAttribute("Title", ValueTypes.String, "Pending"),
             ctx.InvariantAttribute("Related", ValueTypes.Entity, relatedGuid.ToString()));
 
-        var exception = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pending]);
+        var exception = ctx.CreateValidator().UniqueValueOnlyTac([existing], pending);
 
         Assert.NotNull(exception);
         Assert.Contains("Article.Related", exception.Value);
@@ -303,7 +302,7 @@ public class IsUniqueValidatorTests
             ctx.InvariantAttribute("Title", ValueTypes.String, "Pending"),
             ctx.InvariantAttribute("Related", ValueTypes.Entity, $"{sharedGuid},{thirdGuid}"));
 
-        var exception = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pending]);
+        var exception = ctx.CreateValidator().UniqueValueOnlyTac([existing], pending);
 
         Assert.NotNull(exception);
         Assert.Contains("Article.Related", exception.Value);
@@ -326,7 +325,7 @@ public class IsUniqueValidatorTests
             ctx.InvariantAttribute("Title", ValueTypes.String, "Pending"),
             ctx.InvariantAttribute("Related", ValueTypes.Entity, null));
 
-        var exception = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pending]);
+        var exception = ctx.CreateValidator().UniqueValueOnlyTac([existing], pending);
 
         Assert.Null(exception);
     }
@@ -348,7 +347,7 @@ public class IsUniqueValidatorTests
             ctx.InvariantAttribute("Title", ValueTypes.String, "Pending"),
             ctx.InvariantAttribute("Marker", fieldType, value));
 
-        var exception = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pending]);
+        var exception = ctx.CreateValidator().UniqueValueOnlyTac([existing], pending);
 
         Assert.Null(exception);
     }

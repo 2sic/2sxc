@@ -68,6 +68,9 @@ public static class StartupSxcWebApi
 
         services.TryAddTransient<EditSaveBackend>();
         services.TryAddTransient<SaveSecurity>();
+        services.TryAddTransient<SaveEntityValidatorRunner>();
+        services.TryAddTransient<IsUniqueValidator>();
+        services.TryAddEnumerable(ServiceDescriptor.Transient<ISaveEntityValidator, IsUniqueValidator>());
         services.TryAddTransient<AppViewPickerBackend>();
         services.TryAddTransient<ContentBlockBackend>();
         services.TryAddTransient<UsageBackend>();

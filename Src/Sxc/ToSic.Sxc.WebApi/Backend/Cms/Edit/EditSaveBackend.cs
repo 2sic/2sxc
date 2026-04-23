@@ -16,10 +16,11 @@ public class EditSaveBackend(
     ISxcCurrentContextService ctxService,
     JsonSerializer jsonSerializer,
     SaveSecurity saveSecurity,
+    SaveEntityValidatorRunner saveEntityValidatorRunner,
     SaveEntities saveBackendHelper,
     LazySvc<DataValidatorContentTypeDataStore> valContentTypeDataStore,
     DataAssembler dataAssembler)
-    : ServiceBase("Cms.SaveBk", connect: [pagePublishing, workEntities, ctxService, jsonSerializer, saveSecurity, saveBackendHelper, dataAssembler, valContentTypeDataStore])
+    : ServiceBase("Cms.SaveBk", connect: [pagePublishing, workEntities, ctxService, jsonSerializer, saveSecurity, saveEntityValidatorRunner, saveBackendHelper, dataAssembler, valContentTypeDataStore])
 {
     public async Task<Dictionary<Guid, int>> Save(int appId, EditSaveDto package, bool partOfPage)
     {
@@ -47,6 +48,7 @@ public class EditSaveBackend(
         // new API WIP
         var appEntities = workEntities.New(appId);
         var appCtx = appEntities.AppWorkCtx;
+        var existingEntities = appEntities.All().ToList();
 
         var ser = jsonSerializer.SetApp(appCtx.AppReader);
         // Since we're importing directly into this app, we would prefer local content-types
@@ -121,6 +123,8 @@ public class EditSaveBackend(
                         i.Header.Add = false;
                 }
 
+                saveEntityValidatorRunner.ValidateOrThrow(new(existingEntities, ent, index));
+
                 return (
                     Bundle: new BundleWithHeader<IEntity>
                     {
@@ -140,14 +144,6 @@ public class EditSaveBackend(
         var itemsWithoutProcessor = items
             .Select(i => i.Bundle)
             .ToList();
-
-        var isUniqueValidator = new IsUniqueValidator(Log);
-        var isUniqueValidationException = isUniqueValidator.UniqueValuesOnly(
-            appEntities.All(),
-            itemsWithoutProcessor.Select(i => i.Entity).ToList()
-        );
-        if (isUniqueValidationException != null)
-            throw isUniqueValidationException;
 
         var result = pagePublishing.SaveInPagePublishing(
             context,
