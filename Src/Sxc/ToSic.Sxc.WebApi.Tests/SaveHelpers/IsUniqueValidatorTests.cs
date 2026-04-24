@@ -200,7 +200,7 @@ public class IsUniqueValidatorTests
 
         Assert.Null(noConflict);
         Assert.NotNull(conflict);
-        Assert.Contains("[en-us]", conflict.Value);
+        Assert.Contains("language: en-us", conflict.Value);
     }
 
     [Fact]
@@ -378,6 +378,9 @@ public class IsUniqueValidatorTests
 
         Assert.NotNull(exception);
         Assert.Contains("Article.Related", exception.Value);
+        Assert.Contains($"value '{value.Split(',')[0]}'", exception.Value);
+        Assert.Contains("language: invariant", exception.Value);
+        Assert.DoesNotContain("[invariant]:", exception.Value);
     }
 
     [Fact]
@@ -406,6 +409,8 @@ public class IsUniqueValidatorTests
 
         Assert.NotNull(exception);
         Assert.Contains("Article.Related", exception.Value);
+        Assert.Contains("value 'Shared Child'", exception.Value);
+        Assert.DoesNotContain($"value '{relatedGuid}'", exception.Value);
     }
 
     [Fact]

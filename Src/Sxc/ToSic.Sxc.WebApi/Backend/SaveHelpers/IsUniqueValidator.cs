@@ -24,7 +24,7 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
     /// </summary>
     internal HttpExceptionAbstraction? UniqueValuesOnly(IEnumerable<IEntity> existingEntities, IReadOnlyCollection<IEntity> pendingEntities)
     {
-        var l = Log.Fn<HttpExceptionAbstraction?>($"{nameof(pendingEntities)}:{pendingEntities.Count}");
+        var l = Log.Fn<HttpExceptionAbstraction?>($"{nameof(pendingEntities)}:{pendingEntities.Count}", timer: true);
 
         if (pendingEntities.Count == 0)
             return l.ReturnNull("no pending entities");
@@ -32,17 +32,8 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
         var existingByKey = IndexExistingEntries(existingEntities);
         var pendingByKey = GroupPendingEntries(pendingEntities);
         var errors = new List<string>();
-        var duplicateCount = 0;
-
-        foreach (var pendingGroup in pendingByKey.Values)
-            if (pendingGroup.HasDuplicates)
-                duplicateCount += AddPendingConflicts(errors, pendingGroup);
-            else
-                duplicateCount += AddExistingConflictIfAny(errors, existingByKey, pendingGroup.First);
-
-        Errors = errors.Count == 0
-            ? string.Empty
-            : string.Join("\n", errors);
+        var duplicateCount = AddConflicts(errors, existingByKey, pendingByKey);
+        Errors = BuildErrorsText(errors);
 
         var exception = BuildExceptionIfHasIssues(Errors, l, "UniqueValuesOnly() done");
         return l.Return(exception, exception == null ? "ok" : $"duplicates:{duplicateCount}");
@@ -53,10 +44,13 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
     /// </summary>
     private Dictionary<UniqueValueKey, PendingGroupState> IndexExistingEntries(IEnumerable<IEntity> entities)
     {
+        var l = Log.Fn<Dictionary<UniqueValueKey, PendingGroupState>>(timer: true);
         var existingByKey = new Dictionary<UniqueValueKey, PendingGroupState>(UniqueKeyComparer);
+        var entries = 0;
 
         foreach (var entry in EnumerateEntries(entities, UniqueValueSource.Existing))
         {
+            entries++;
             if (!existingByKey.TryGetValue(entry.Key, out var existingGroup))
             {
                 existingByKey.Add(entry.Key, new(entry));
@@ -69,7 +63,7 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
             existingByKey[entry.Key] = existingGroup;
         }
 
-        return existingByKey;
+        return l.Return(existingByKey, $"entries:{entries}; keys:{existingByKey.Count}; duplicateKeys:{CountDuplicateGroups(existingByKey.Values)}");
     }
 
     /// <summary>
@@ -77,10 +71,13 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
     /// </summary>
     private Dictionary<UniqueValueKey, PendingGroupState> GroupPendingEntries(IEnumerable<IEntity> entities)
     {
+        var l = Log.Fn<Dictionary<UniqueValueKey, PendingGroupState>>(timer: true);
         var pendingByKey = new Dictionary<UniqueValueKey, PendingGroupState>(UniqueKeyComparer);
+        var entries = 0;
 
         foreach (var entry in EnumerateEntries(entities, UniqueValueSource.Pending))
         {
+            entries++;
             if (!pendingByKey.TryGetValue(entry.Key, out var pendingGroup))
             {
                 pendingByKey.Add(entry.Key, new(entry));
@@ -93,8 +90,53 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
             pendingByKey[entry.Key] = pendingGroup;
         }
 
-        return pendingByKey;
+        return l.Return(pendingByKey, $"entries:{entries}; keys:{pendingByKey.Count}; duplicateKeys:{CountDuplicateGroups(pendingByKey.Values)}");
     }
+
+    /// <summary>
+    /// Compares grouped pending values against same-request and persisted duplicates.
+    /// </summary>
+    private int AddConflicts(
+        List<string> errors,
+        IReadOnlyDictionary<UniqueValueKey, PendingGroupState> existingByKey,
+        IReadOnlyDictionary<UniqueValueKey, PendingGroupState> pendingByKey
+    )
+    {
+        var l = Log.Fn<int>($"{nameof(existingByKey)}:{existingByKey.Count}; {nameof(pendingByKey)}:{pendingByKey.Count}", timer: true);
+        var duplicateCount = 0;
+        var pendingDuplicateGroups = 0;
+        var existingConflictChecks = 0;
+
+        foreach (var pendingGroup in pendingByKey.Values)
+            if (pendingGroup.HasDuplicates)
+            {
+                pendingDuplicateGroups++;
+                duplicateCount += AddPendingConflicts(errors, pendingGroup);
+            }
+            else
+            {
+                existingConflictChecks++;
+                duplicateCount += AddExistingConflictIfAny(errors, existingByKey, pendingGroup.First);
+            }
+
+        return l.Return(duplicateCount, $"duplicates:{duplicateCount}; pendingDuplicateGroups:{pendingDuplicateGroups}; existingConflictChecks:{existingConflictChecks}; errors:{errors.Count}");
+    }
+
+    /// <summary>
+    /// Builds the final validation error text; timed separately because large duplicate batches can make string joining visible.
+    /// </summary>
+    private string BuildErrorsText(IReadOnlyCollection<string> errors)
+    {
+        var l = Log.Fn<string>($"{nameof(errors)}:{errors.Count}", timer: true);
+        var result = errors.Count == 0
+            ? string.Empty
+            : string.Join("\n", errors);
+
+        return l.Return(result, result.Length == 0 ? "empty" : $"length:{result.Length}");
+    }
+
+    private static int CountDuplicateGroups(IEnumerable<PendingGroupState> groups)
+        => groups.Count(group => group.HasDuplicates);
 
     /// <summary>
     /// Adds a validation error for every pending item in a duplicate pending group.
@@ -279,6 +321,16 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
     /// </summary>
     private static IEnumerable<NormalizedValue> NormalizeEntityValues(IValue rawValue)
     {
+        var foundEntityValue = false;
+        foreach (var normalized in BuildEntityNormalizedValues(TryGetRelationshipEntities(rawValue)))
+        {
+            foundEntityValue = true;
+            yield return normalized;
+        }
+
+        if (foundEntityValue)
+            yield break;
+
         var foundGuidValue = false;
         foreach (var normalized in BuildEntityNormalizedValues(TryGetRelationshipGuids(rawValue)))
         {
@@ -292,6 +344,14 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
         foreach (var normalized in BuildEntityNormalizedValues(TryGetRelationshipIdentifiers(rawValue)))
             yield return normalized;
     }
+
+    /// <summary>
+    /// Tries to use loaded related entities so validation messages can show readable child titles.
+    /// </summary>
+    private static IEnumerable<IEntity?>? TryGetRelationshipEntities(IValue rawValue)
+        => rawValue.ObjectContents is IEnumerable<IEntity?> entities
+            ? entities
+            : null;
 
     /// <summary>
     /// Tries to resolve relationship references to entity guids so persisted int-based relationships
@@ -350,6 +410,24 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
         foreach (var identifier in identifiers)
             if (NormalizeEntityIdentifier(identifier) is { } token)
                 yield return new(token, token);
+    }
+
+    /// <summary>
+    /// Creates comparison keys from loaded related entities while keeping readable titles for messages.
+    /// </summary>
+    private static IEnumerable<NormalizedValue> BuildEntityNormalizedValues(IEnumerable<IEntity?>? entities)
+    {
+        if (entities == null)
+            yield break;
+
+        foreach (var entity in entities)
+        {
+            if (NormalizeEntityIdentifier(entity) is not { } token)
+                continue;
+
+            var displayValue = entity?.GetBestTitle();
+            yield return new(token, string.IsNullOrWhiteSpace(displayValue) ? token : displayValue!);
+        }
     }
 
     /// <summary>
@@ -443,8 +521,9 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
     {
         var languageLabel = FormatLanguageLabel(pendingEntry.LanguageBucket);
         var conflictDescription = DescribeConflictTarget(conflict);
+        var displayValue = FormatDisplayValue(pendingEntry, conflict);
 
-        return $"Duplicate unique value in {pendingEntry.ContentTypeNameId}.{pendingEntry.FieldName} [{languageLabel}]: '{pendingEntry.DisplayValue}' already exists on {conflictDescription}.";
+        return $"Duplicate unique value in {pendingEntry.ContentTypeNameId}.{pendingEntry.FieldName}: value '{displayValue}' (language: {languageLabel}) already exists on {conflictDescription}.";
     }
 
     /// <summary>
@@ -453,10 +532,23 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
     private static string FormatLogConflict(UniqueValueEntry pendingEntry, UniqueValueEntry conflict)
     {
         var languageLabel = FormatLanguageLabel(pendingEntry.LanguageBucket);
+        var displayValue = FormatDisplayValue(pendingEntry, conflict);
 
-        return $"Unique conflict ct:{pendingEntry.ContentTypeNameId} field:{pendingEntry.FieldName} lang:{languageLabel} value:'{pendingEntry.DisplayValue}' " +
+        return $"Unique conflict ct:{pendingEntry.ContentTypeNameId} field:{pendingEntry.FieldName} value:'{displayValue}' lang:{languageLabel} " +
                $"pending[{DescribeEntity(pendingEntry)}] conflict[{DescribeEntity(conflict)}]";
     }
+
+    /// <summary>
+    /// Returns the most readable duplicate value available. Relationship saves can arrive as raw guids
+    /// while persisted/cache-backed relationships may still know the child title.
+    /// </summary>
+    private static string FormatDisplayValue(UniqueValueEntry pendingEntry, UniqueValueEntry conflict)
+        => IsIdentifierFallbackDisplay(pendingEntry) && !IsIdentifierFallbackDisplay(conflict)
+            ? conflict.DisplayValue
+            : pendingEntry.DisplayValue;
+
+    private static bool IsIdentifierFallbackDisplay(UniqueValueEntry entry)
+        => entry.DisplayValue.Equals(entry.Key.NormalizedKey, StringComparison.OrdinalIgnoreCase);
 
     /// <summary>
     /// Formats the language bucket for human-readable diagnostics.
