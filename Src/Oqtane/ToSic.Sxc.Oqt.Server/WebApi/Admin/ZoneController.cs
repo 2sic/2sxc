@@ -23,6 +23,10 @@ public class ZoneController() : OqtStatefulControllerBase(RealController.LogSuff
     private RealController Real => GetService<RealController>();
 
 
+    ///// <inheritdoc />
+    //[HttpGet]
+    //public IList<SiteLanguageDto> GetLanguages() => Real.GetLanguages();
+
     /// <inheritdoc />
     [HttpGet]
     public void SwitchLanguage(string cultureCode, bool enable) => Real.SwitchLanguage(cultureCode, enable);

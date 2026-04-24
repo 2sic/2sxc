@@ -141,6 +141,14 @@ public class EditSaveBackend(
             .Select(i => i.Bundle)
             .ToList();
 
+        var isUniqueValidator = new IsUniqueValidator(Log);
+        var isUniqueValidationException = isUniqueValidator.UniqueValuesOnly(
+            appEntities.All(),
+            itemsWithoutProcessor.Select(i => i.Entity).ToList()
+        );
+        if (isUniqueValidationException != null)
+            throw isUniqueValidationException;
+
         var result = pagePublishing.SaveInPagePublishing(
             context,
             ctxService.BlockOrNull(),

@@ -14,6 +14,11 @@ public class ZoneController() : DnnSxcControllerBase(RealController.LogSuffix), 
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
+    ///// <inheritdoc />
+    //[HttpGet]
+    //public IList<SiteLanguageDto> GetLanguages()
+    //    => Real.GetLanguages();
+
     /// <inheritdoc />
     [HttpGet]
     public void SwitchLanguage(string cultureCode, bool enable)

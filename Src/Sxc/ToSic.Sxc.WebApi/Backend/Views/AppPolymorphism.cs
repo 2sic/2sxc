@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Backend.Views;
 [VisualQuery(
     NiceName = "App Polymorphism Configuration",
     NameId = "a495b51f-44e7-4335-81db-b8a7e33120f0",
-    NameIds = ["System.Polymorphism"], // Internal name for the system, used in some entity-pickers. Can change at any time.
+    NameIds = ["System.Polymorphism"], // Internal name for the system, used in some entity-pickers (to configure Copilot). Can change at any time.
     Type = DataSourceType.System,
     Audience = Audience.System,
     DataConfidentiality = DataConfidentiality.Confidential,
