@@ -168,7 +168,7 @@ public class IsUniqueValidatorTests
         Assert.NotNull(exception);
         Assert.Contains("same request", exception.Value);
         Assert.DoesNotContain("saved entity", exception.Value);
-        Assert.Equal(2, exception.Value.Split(["Article.Slug"], StringSplitOptions.None).Length - 1);
+        Assert.Equal(1, exception.Value.Split(["Article.Slug"], StringSplitOptions.None).Length - 1);
     }
 
     #endregion

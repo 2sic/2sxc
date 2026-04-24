@@ -29,14 +29,17 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
         if (pendingEntities.Count == 0)
             return l.ReturnNull("no pending entities");
 
-        var existingByKey = IndexExistingEntries(existingEntities);
         var pendingByKey = GroupPendingEntries(pendingEntities);
-        var errors = new List<string>();
-        var duplicateCount = AddConflicts(errors, existingByKey, pendingByKey);
-        Errors = BuildErrorsText(errors);
+        if (FindPendingConflict(pendingByKey) is { } pendingConflict)
+            return ReturnDuplicate(l, pendingConflict, "same request");
 
+        var existingByKey = IndexExistingEntries(existingEntities);
+        if (FindExistingConflict(existingByKey, pendingByKey) is { } existingConflict)
+            return ReturnDuplicate(l, existingConflict, "existing");
+
+        Errors = string.Empty;
         var exception = BuildExceptionIfHasIssues(Errors, l, "UniqueValuesOnly() done");
-        return l.Return(exception, exception == null ? "ok" : $"duplicates:{duplicateCount}");
+        return l.Return(exception, "ok");
     }
 
     /// <summary>
@@ -93,100 +96,72 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
         return l.Return(pendingByKey, $"entries:{entries}; keys:{pendingByKey.Count}; duplicateKeys:{CountDuplicateGroups(pendingByKey.Values)}");
     }
 
-    /// <summary>
-    /// Compares grouped pending values against same-request and persisted duplicates.
-    /// </summary>
-    private int AddConflicts(
-        List<string> errors,
-        IReadOnlyDictionary<UniqueValueKey, PendingGroupState> existingByKey,
-        IReadOnlyDictionary<UniqueValueKey, PendingGroupState> pendingByKey
-    )
-    {
-        var l = Log.Fn<int>($"{nameof(existingByKey)}:{existingByKey.Count}; {nameof(pendingByKey)}:{pendingByKey.Count}", timer: true);
-        var duplicateCount = 0;
-        var pendingDuplicateGroups = 0;
-        var existingConflictChecks = 0;
-
-        foreach (var pendingGroup in pendingByKey.Values)
-            if (pendingGroup.HasDuplicates)
-            {
-                pendingDuplicateGroups++;
-                duplicateCount += AddPendingConflicts(errors, pendingGroup);
-            }
-            else
-            {
-                existingConflictChecks++;
-                duplicateCount += AddExistingConflictIfAny(errors, existingByKey, pendingGroup.First);
-            }
-
-        return l.Return(duplicateCount, $"duplicates:{duplicateCount}; pendingDuplicateGroups:{pendingDuplicateGroups}; existingConflictChecks:{existingConflictChecks}; errors:{errors.Count}");
-    }
-
-    /// <summary>
-    /// Builds the final validation error text; timed separately because large duplicate batches can make string joining visible.
-    /// </summary>
-    private string BuildErrorsText(IReadOnlyCollection<string> errors)
-    {
-        var l = Log.Fn<string>($"{nameof(errors)}:{errors.Count}", timer: true);
-        var result = errors.Count == 0
-            ? string.Empty
-            : string.Join("\n", errors);
-
-        return l.Return(result, result.Length == 0 ? "empty" : $"length:{result.Length}");
-    }
-
     private static int CountDuplicateGroups(IEnumerable<PendingGroupState> groups)
         => groups.Count(group => group.HasDuplicates);
 
     /// <summary>
-    /// Adds a validation error for every pending item in a duplicate pending group.
+    /// Finds the first same-request duplicate conflict.
     /// </summary>
-    private int AddPendingConflicts(List<string> errors, PendingGroupState pendingGroup)
+    private UniqueValueConflict? FindPendingConflict(IReadOnlyDictionary<UniqueValueKey, PendingGroupState> pendingByKey)
     {
-        if (!pendingGroup.HasThirdOrMore)
+        var l = Log.Fn<UniqueValueConflict?>($"{nameof(pendingByKey)}:{pendingByKey.Count}", timer: true);
+        var groupsChecked = 0;
+
+        foreach (var pendingGroup in pendingByKey.Values)
         {
-            return AddConflict(errors, pendingGroup.First, pendingGroup.Second)
-                   + AddConflict(errors, pendingGroup.Second, pendingGroup.First);
+            groupsChecked++;
+            if (pendingGroup.HasDuplicates)
+                return l.Return(new(pendingGroup.First, pendingGroup.Second), $"duplicate; groupsChecked:{groupsChecked}");
         }
 
-        // Keep larger duplicate groups readable by anchoring later entries to the first item
-        // instead of producing every possible pairwise combination.
-        var count = 0;
-        count += AddConflict(errors, pendingGroup.First, pendingGroup.Second);
-        count += AddConflict(errors, pendingGroup.Second, pendingGroup.First);
-
-        foreach (var entry in pendingGroup.More!)
-            count += AddConflict(errors, entry, pendingGroup.First);
-
-        return count;
+        return l.ReturnNull($"none; groupsChecked:{groupsChecked}");
     }
 
     /// <summary>
-    /// Adds a formatted conflict to the validation result and to the diagnostics log.
+    /// Finds the first persisted duplicate conflict for a pending entry.
     /// </summary>
-    private int AddConflict(List<string> errors, UniqueValueEntry pendingEntry, UniqueValueEntry conflict)
+    private UniqueValueConflict? FindExistingConflict(
+        IReadOnlyDictionary<UniqueValueKey, PendingGroupState> existingByKey,
+        IReadOnlyDictionary<UniqueValueKey, PendingGroupState> pendingByKey
+    )
     {
-        errors.Add(FormatError(pendingEntry, conflict));
-        Log.A(FormatLogConflict(pendingEntry, conflict));
-        return 1;
+        var l = Log.Fn<UniqueValueConflict?>($"{nameof(existingByKey)}:{existingByKey.Count}; {nameof(pendingByKey)}:{pendingByKey.Count}", timer: true);
+        var checks = 0;
+
+        foreach (var pendingGroup in pendingByKey.Values)
+        {
+            checks++;
+            if (FindExistingConflictEntry(existingByKey, pendingGroup.First) is { } existingEntry)
+                return l.Return(new(pendingGroup.First, existingEntry), $"duplicate; checks:{checks}");
+        }
+
+        return l.ReturnNull($"none; checks:{checks}");
     }
 
     /// <summary>
-    /// Adds a conflict when the pending entry matches an already persisted item with a different logical identity.
+    /// Finds a persisted item that conflicts with the pending entry.
     /// </summary>
-    private int AddExistingConflictIfAny(List<string> errors, IReadOnlyDictionary<UniqueValueKey, PendingGroupState> existingByKey, UniqueValueEntry pendingEntry)
+    private static UniqueValueEntry? FindExistingConflictEntry(IReadOnlyDictionary<UniqueValueKey, PendingGroupState> existingByKey, UniqueValueEntry pendingEntry)
     {
         if (!existingByKey.TryGetValue(pendingEntry.Key, out var existingGroup))
-            return 0;
+            return null;
 
         var existingEntry = existingGroup.First.LogicalId == pendingEntry.LogicalId && existingGroup.HasSecond
             ? existingGroup.Second
             : existingGroup.First;
 
-        if (existingEntry.LogicalId == pendingEntry.LogicalId)
-            return 0;
+        return existingEntry.LogicalId == pendingEntry.LogicalId
+            ? null
+            : existingEntry;
+    }
 
-        return AddConflict(errors, pendingEntry, existingEntry);
+    private HttpExceptionAbstraction? ReturnDuplicate(ILogCall<HttpExceptionAbstraction?>? l, UniqueValueConflict conflict, string source)
+    {
+        Errors = FormatError(conflict.PendingEntry, conflict.ConflictEntry);
+        Log.A(FormatLogConflict(conflict.PendingEntry, conflict.ConflictEntry));
+
+        var exception = BuildExceptionIfHasIssues(Errors, l, "UniqueValuesOnly() done");
+        return l.Return(exception, $"duplicate:first; source:{source}");
     }
 
     /// <summary>
@@ -606,6 +581,8 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
         IEntity Entity,
         int Index
     );
+
+    private readonly record struct UniqueValueConflict(UniqueValueEntry PendingEntry, UniqueValueEntry ConflictEntry);
 
     private readonly record struct NormalizedValue(string NormalizedKey, string DisplayValue);
 
