@@ -50,11 +50,17 @@ internal sealed class IsUniqueValidatorTestContext : IDisposable
             attributes: attributes.ToList()
         );
 
-    public IContentTypeAttribute CreateField(string name, ValueTypes type, bool isUnique = false, bool isTitle = false)
+    public IContentTypeAttribute CreateField(string name, ValueTypes type, bool isUnique = false, bool isTitle = false, string? inputType = default)
+        => CreateField(name, type, uniqueSetting: isUnique ? true : null, isTitle: isTitle, inputType: inputType, includeUniqueMetadata: isUnique);
+
+    public IContentTypeAttribute CreateField(string name, ValueTypes type, bool? uniqueSetting, bool isTitle = false, string? inputType = default, bool includeUniqueMetadata = true)
     {
-        var metadataItems = isUnique
-            ? new List<IEntity> { CreateUniqueMetadataEntity() }
-            : null;
+        List<IEntity>? metadataItems = null;
+        if (includeUniqueMetadata)
+            (metadataItems ??= []).Add(CreateUniqueMetadataEntity(uniqueSetting));
+
+        if (!string.IsNullOrWhiteSpace(inputType))
+            (metadataItems ??= []).Add(CreateInputTypeMetadataEntity(inputType!));
 
         return ContentTypeAssembler.Attribute.Create(
             appId: AppId,
@@ -117,7 +123,7 @@ internal sealed class IsUniqueValidatorTestContext : IDisposable
             .Select((language, index) => (ILanguage)new Language(language, readOnly: false, dimensionId: index + 1))
             .ToImmutableList();
 
-    private IEntity CreateUniqueMetadataEntity()
+    private IEntity CreateUniqueMetadataEntity(bool? isUnique)
     {
         var metadataAttribute = ContentTypeAssembler.Attribute.Create(
             appId: AppId,
@@ -136,10 +142,44 @@ internal sealed class IsUniqueValidatorTestContext : IDisposable
             attributes: new List<IContentTypeAttribute> { metadataAttribute }
         );
 
+        var values = new Dictionary<string, object>();
+        if (isUnique.HasValue)
+            values["IsUnique"] = isUnique.Value;
+
         return DataAssembler.CreateEntityTac(
             appId: AppId,
             contentType: metadataType,
-            values: new Dictionary<string, object> { { "IsUnique", true } },
+            values: values,
+            entityId: ++_entityId,
+            repositoryId: _entityId,
+            guid: Guid.NewGuid(),
+            owner: "test:metadata"
+        );
+    }
+
+    private IEntity CreateInputTypeMetadataEntity(string inputType)
+    {
+        var metadataAttribute = ContentTypeAssembler.Attribute.Create(
+            appId: AppId,
+            name: "InputType",
+            type: ValueTypes.String,
+            isTitle: false,
+            id: ++_attributeId,
+            sortOrder: _attributeId
+        );
+
+        var metadataType = ContentTypeAssembler.Type.CreateContentTypeTac(
+            appId: AppId,
+            name: "@All",
+            nameId: "@All",
+            scope: "TestMetadata",
+            attributes: new List<IContentTypeAttribute> { metadataAttribute }
+        );
+
+        return DataAssembler.CreateEntityTac(
+            appId: AppId,
+            contentType: metadataType,
+            values: new Dictionary<string, object> { { "InputType", inputType } },
             entityId: ++_entityId,
             repositoryId: _entityId,
             guid: Guid.NewGuid(),

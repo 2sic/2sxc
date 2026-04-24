@@ -77,6 +77,45 @@ public class IsUniqueValidatorTests
         Assert.Null(exception);
     }
 
+    [Fact]
+    public void UpdatingFirstExistingDuplicateWithSameUniqueValue_BlocksSave()
+    {
+        using var ctx = IsUniqueValidatorTestContext.Create();
+        var firstGuid = Guid.NewGuid();
+        var type = ctx.CreateType("Article",
+            ctx.CreateField("Title", ValueTypes.String, isTitle: true),
+            ctx.CreateField("Slug", ValueTypes.String, isUnique: true));
+
+        var firstExisting = ctx.CreateEntity(type, firstGuid,
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Existing 1"),
+            ctx.InvariantAttribute("Slug", ValueTypes.String, "same-slug"));
+
+        var secondExisting = ctx.CreateEntity(type, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Existing 2"),
+            ctx.InvariantAttribute("Slug", ValueTypes.String, "same-slug"));
+
+        var thirdExisting = ctx.CreateEntity(type, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Existing 3"),
+            ctx.InvariantAttribute("Slug", ValueTypes.String, "same-slug"));
+
+        var fourthExisting = ctx.CreateEntity(type, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Existing 4"),
+            ctx.InvariantAttribute("Slug", ValueTypes.String, "same-slug"));
+
+        var pendingFirst = ctx.CreateEntity(type, firstGuid,
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Updated 1"),
+            ctx.InvariantAttribute("Slug", ValueTypes.String, "same-slug"));
+
+        var exception = ctx.CreateValidator().UniqueValuesOnlyTac(
+            [firstExisting, secondExisting, thirdExisting, fourthExisting],
+            [pendingFirst]);
+
+        Assert.NotNull(exception);
+        Assert.Contains("Article.Slug", exception.Value);
+        Assert.Contains("saved entity", exception.Value);
+        Assert.Contains(secondExisting.EntityId.ToString(), exception.Value);
+    }
+
     #endregion
 
     #region Same Request Conflicts
@@ -200,6 +239,91 @@ public class IsUniqueValidatorTests
         var pending = ctx.CreateEntity(type, Guid.NewGuid(),
             ctx.InvariantAttribute("Title", ValueTypes.String, "Pending"),
             ctx.InvariantAttribute("Slug", ValueTypes.String, ""));
+
+        var exception = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pending]);
+
+        Assert.Null(exception);
+    }
+
+    [Fact]
+    public void PlainStringWithoutIsUniqueMetadata_UsesDefaultFalse()
+    {
+        using var ctx = IsUniqueValidatorTestContext.Create();
+        var type = ctx.CreateType("Article",
+            ctx.CreateField("Title", ValueTypes.String, isTitle: true),
+            ctx.CreateField("Slug", ValueTypes.String));
+
+        var existing = ctx.CreateEntity(type, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Existing"),
+            ctx.InvariantAttribute("Slug", ValueTypes.String, "same-slug"));
+
+        var pending = ctx.CreateEntity(type, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Pending"),
+            ctx.InvariantAttribute("Slug", ValueTypes.String, "same-slug"));
+
+        var exception = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pending]);
+
+        Assert.Null(exception);
+    }
+
+    [Fact]
+    public void StringUrlWithNullIsUniqueMetadata_UsesDefaultTrue()
+    {
+        using var ctx = IsUniqueValidatorTestContext.Create();
+        var type = ctx.CreateType("Article",
+            ctx.CreateField("Title", ValueTypes.String, isTitle: true),
+            ctx.CreateField("Slug", ValueTypes.String, uniqueSetting: null, inputType: "string-url-path"));
+
+        var existing = ctx.CreateEntity(type, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Existing"),
+            ctx.InvariantAttribute("Slug", ValueTypes.String, "same-slug"));
+
+        var pending = ctx.CreateEntity(type, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Pending"),
+            ctx.InvariantAttribute("Slug", ValueTypes.String, "same-slug"));
+
+        var exception = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pending]);
+
+        Assert.NotNull(exception);
+        Assert.Contains("Article.Slug", exception.Value);
+    }
+
+    [Fact]
+    public void StringUrlWithExplicitFalseIsUniqueMetadata_OverridesDefaultTrue()
+    {
+        using var ctx = IsUniqueValidatorTestContext.Create();
+        var type = ctx.CreateType("Article",
+            ctx.CreateField("Title", ValueTypes.String, isTitle: true),
+            ctx.CreateField("Slug", ValueTypes.String, uniqueSetting: false, inputType: "string-url-path"));
+
+        var existing = ctx.CreateEntity(type, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Existing"),
+            ctx.InvariantAttribute("Slug", ValueTypes.String, "same-slug"));
+
+        var pending = ctx.CreateEntity(type, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Pending"),
+            ctx.InvariantAttribute("Slug", ValueTypes.String, "same-slug"));
+
+        var exception = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pending]);
+
+        Assert.Null(exception);
+    }
+
+    [Fact]
+    public void StringUrlWithOtherInputTypeAndNullIsUniqueMetadata_UsesDefaultFalse()
+    {
+        using var ctx = IsUniqueValidatorTestContext.Create();
+        var type = ctx.CreateType("Article",
+            ctx.CreateField("Title", ValueTypes.String, isTitle: true),
+            ctx.CreateField("Slug", ValueTypes.String, uniqueSetting: null, inputType: "string-url-other"));
+
+        var existing = ctx.CreateEntity(type, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Existing"),
+            ctx.InvariantAttribute("Slug", ValueTypes.String, "same-slug"));
+
+        var pending = ctx.CreateEntity(type, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Pending"),
+            ctx.InvariantAttribute("Slug", ValueTypes.String, "same-slug"));
 
         var exception = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pending]);
 

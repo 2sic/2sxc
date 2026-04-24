@@ -13,6 +13,7 @@ namespace ToSic.Sxc.Backend.SaveHelpers;
 internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val.UnqOk")
 {
     private const string IsUniqueMetadataKey = "IsUnique";
+    private const string StringUrlPathInputType = "string-url-path";
     private const string InvariantLanguageBucket = "";
     private const string InvariantLanguageBucketLabel = "invariant";
     private static readonly UniqueValueKeyComparer UniqueKeyComparer = new();
@@ -48,18 +49,25 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
     }
 
     /// <summary>
-    /// Indexes existing entities by uniqueness key and keeps one representative entry per logical collision target.
+    /// Indexes existing entities by uniqueness key and tracks distinct logical collision targets.
     /// </summary>
-    private Dictionary<UniqueValueKey, UniqueValueEntry> IndexExistingEntries(IEnumerable<IEntity> entities)
+    private Dictionary<UniqueValueKey, PendingGroupState> IndexExistingEntries(IEnumerable<IEntity> entities)
     {
-        var existingByKey = new Dictionary<UniqueValueKey, UniqueValueEntry>(UniqueKeyComparer);
+        var existingByKey = new Dictionary<UniqueValueKey, PendingGroupState>(UniqueKeyComparer);
 
-        // A single representative per unique key is enough for existing data.
-        // Additional entries are ignored, including draft/published variants
-        // of the same logical entity.
         foreach (var entry in EnumerateEntries(entities, UniqueValueSource.Existing))
-            if (!existingByKey.ContainsKey(entry.Key))
-                existingByKey.Add(entry.Key, entry);
+        {
+            if (!existingByKey.TryGetValue(entry.Key, out var existingGroup))
+            {
+                existingByKey.Add(entry.Key, new(entry));
+                continue;
+            }
+
+            if (!existingGroup.TryAdd(entry))
+                continue;
+
+            existingByKey[entry.Key] = existingGroup;
+        }
 
         return existingByKey;
     }
@@ -124,10 +132,16 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
     /// <summary>
     /// Adds a conflict when the pending entry matches an already persisted item with a different logical identity.
     /// </summary>
-    private int AddExistingConflictIfAny(List<string> errors, IReadOnlyDictionary<UniqueValueKey, UniqueValueEntry> existingByKey, UniqueValueEntry pendingEntry)
+    private int AddExistingConflictIfAny(List<string> errors, IReadOnlyDictionary<UniqueValueKey, PendingGroupState> existingByKey, UniqueValueEntry pendingEntry)
     {
-        if (!existingByKey.TryGetValue(pendingEntry.Key, out var existingEntry)
-            || existingEntry.LogicalId == pendingEntry.LogicalId)
+        if (!existingByKey.TryGetValue(pendingEntry.Key, out var existingGroup))
+            return 0;
+
+        var existingEntry = existingGroup.First.LogicalId == pendingEntry.LogicalId && existingGroup.HasSecond
+            ? existingGroup.Second
+            : existingGroup.First;
+
+        if (existingEntry.LogicalId == pendingEntry.LogicalId)
             return 0;
 
         return AddConflict(errors, pendingEntry, existingEntry);
@@ -208,7 +222,7 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
         List<IContentTypeAttribute>? fields = null;
         foreach (var attribute in contentType.Attributes)
         {
-            if (!IsSupportedType(attribute.Type) || !attribute.Metadata.Get<bool>(IsUniqueMetadataKey))
+            if (!IsSupportedType(attribute.Type) || !MustBeUnique(attribute))
                 continue;
 
             (fields ??= []).Add(attribute);
@@ -218,6 +232,14 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
         cache[contentTypeNameId] = uniqueFields;
         return uniqueFields;
     }
+
+    private static bool MustBeUnique(IContentTypeAttribute attribute)
+        => attribute.Metadata.Get<bool?>(IsUniqueMetadataKey)
+           ?? IsStringUrlField(attribute);
+
+    private static bool IsStringUrlField(IContentTypeAttribute attribute)
+        => attribute.Type == ValueTypes.String
+           && attribute.InputType?.Equals(StringUrlPathInputType, StringComparison.OrdinalIgnoreCase) == true;
 
     /// <summary>
     /// Restricts uniqueness checks to the field types supported by the current implementation.
