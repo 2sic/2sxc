@@ -415,48 +415,70 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
     /// </summary>
     /// <param name="relativePath"></param>
     /// <returns></returns>
-    private IEnumerable<MetadataReference> GetMetadataReferences(string relativePath)
+    private IReadOnlyList<MetadataReference> GetMetadataReferences(string relativePath)
     {
-        IEnumerable<MetadataReference> references = new List<MetadataReference>();
-        var appCodePath = GetAppCodeDllPath(relativePath);
-        if (appCodePath != null)
-            references = references.Append(MetadataReference.CreateFromFile(appCodePath));
-        return references;
-    }
+        var l = base.Log.Fn<IReadOnlyList<MetadataReference>>($"{nameof(relativePath)}:'{relativePath}'");
 
-    private string? GetAppCodeDllPath(string relativePath)
-    {
-        var (appRelativePath, edition) = GetSxcAppRelativePathWithEdition(relativePath);
-        if (appRelativePath == null)
-            return null;
-        if (edition.HasValue()) appRelativePath = Path.Combine(appRelativePath, edition);
-        appRelativePath = appRelativePath.Backslash();
-        var appCodeDllPath = _assemblyResolver.GetAssemblyLocation(appRelativePath);
-        return appCodeDllPath;
+        var references = new List<MetadataReference>();
+        var razorType = _sourceAnalyzer.TypeOfVirtualPath(relativePath);
+        var requiresAppCode = razorType.IsHotBuildSupported();
+        var appPath = GetSxcAppPathResolutionWithEdition(relativePath);
+        var resolverKey = AppCodeResolverKey(appPath);
+        var appCodeDllPath = resolverKey == null
+            ? null
+            : _assemblyResolver.GetAssemblyLocation(resolverKey);
+        var appCodeDllExists = appCodeDllPath.HasValue() && File.Exists(appCodeDllPath);
+
+        l.A($"Source analysis: {Describe(razorType)}; requires AppCode reference:{requiresAppCode}");
+        l.A($"Metadata reference decision: normalizedPath:'{relativePath}'; appRelativePath:'{appPath.AppRelativePath}'; edition:'{appPath.Edition}'; editionSource:'{appPath.Source}'; resolverKey:'{resolverKey}'; appCodeDllPath:'{appCodeDllPath}'; appCodeDllExists:{appCodeDllExists}");
+
+        if (requiresAppCode && !appCodeDllExists)
+            l.W($"AppCode reference missing for '{relativePath}'. Razor compilation will continue unchanged.");
+
+        if (appCodeDllPath != null)
+            references.Add(MetadataReference.CreateFromFile(appCodeDllPath));
+
+        l.A($"Metadata reference decision final: additionalReferences:{references.Count}");
+        return l.ReturnAsOk(references);
     }
 
     private (string? appRelativePath, string? edition) GetSxcAppRelativePathWithEdition(string relativePath)
     {
+        var result = GetSxcAppPathResolutionWithEdition(relativePath);
+        return (result.AppRelativePath, result.Edition);
+    }
+
+    private AppPathResolution GetSxcAppPathResolutionWithEdition(string relativePath)
+    {
         if (_httpContextAccessor?.HttpContext == null)
-            return GetSxcAppRelativePathWithEditionFallback(relativePath);
+        {
+            var fallback = GetSxcAppRelativePathWithEditionFallback(relativePath);
+            return new(fallback.appRelativePath, fallback.edition, "fallback:no-http-context");
+        }
         
         var sp = _httpContextAccessor.HttpContext.RequestServices;
         var ctxResolver = sp.GetService<ISxcCurrentContextService>();
 
         var block = ctxResolver?.BlockOrNull();
         if (block == null)
-            return GetSxcAppRelativePathWithEditionFallback(relativePath);
+        {
+            var fallback = GetSxcAppRelativePathWithEditionFallback(relativePath);
+            return new(fallback.appRelativePath, fallback.edition, "fallback:no-block");
+        }
 
         // appRelativePath from block (this is not working for inner-content)
         var appRelativePath = block.App.RelativePath;
 
         // Inner-content app case
         if (!IsTemplateLocatedInAppFolder(appRelativePath, relativePath))
-            return GetSxcAppRelativePathWithEditionFallback(relativePath);
+        {
+            var fallback = GetSxcAppRelativePathWithEditionFallback(relativePath);
+            return new(fallback.appRelativePath, fallback.edition, "fallback:template-outside-block-app");
+        }
 
         // Standard case (appRelativePath and edition from block)
         var edition = sp.GetService<PolymorphConfigReader>()!.UseViewEditionOrGet(block);
-        return (appRelativePath, edition);
+        return new(appRelativePath, edition, "block-context");
     }
 
     /// <summary>
@@ -591,6 +613,23 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
 
         public CompiledViewDescriptor Descriptor { get; set; } = default!;
     }
+
+    private sealed record AppPathResolution(string? AppRelativePath, string? Edition, string Source);
+
+    private static string? AppCodeResolverKey(AppPathResolution appPath)
+    {
+        if (appPath.AppRelativePath == null)
+            return null;
+
+        var resolverKey = appPath.Edition.HasValue()
+            ? Path.Combine(appPath.AppRelativePath, appPath.Edition)
+            : appPath.AppRelativePath;
+
+        return resolverKey.Backslash();
+    }
+
+    private static string Describe(CodeFileInfo codeFileInfo)
+        => $"{nameof(codeFileInfo.Inherits)}:'{codeFileInfo.Inherits}'; {nameof(codeFileInfo.Type)}:'{codeFileInfo.Type}'; {nameof(codeFileInfo.AppCode)}:{codeFileInfo.AppCode}; {nameof(codeFileInfo.RelativePath)}:'{codeFileInfo.RelativePath}'; {nameof(codeFileInfo.FullPath)}:'{codeFileInfo.FullPath}'";
 
 #pragma warning disable CS0108, CS0114
     private static partial class Log

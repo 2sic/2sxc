@@ -65,8 +65,16 @@ internal class RazorCompiler(
             // TODO: SHOULD OPTIMIZE so the file doesn't need to read multiple times
             // 1. probably change so the CodeFileInfo contains the source code
             var razorType = sourceAnalyzer.TypeOfVirtualPath(partialName);
-            if (razorType.IsHotBuildSupported())
-                AddAppCodeAssembly(partialName, app, spec);
+            var shouldRegisterAppCode = razorType.IsHotBuildSupported();
+            l.A($"Source analysis: {Describe(razorType)}; {nameof(partialName)}:'{partialName}'; {nameof(app.RelativePath)}:'{app.RelativePath}'; {nameof(spec.Edition)}:'{spec.Edition}'; {spec}; AppCode registration attempted:{shouldRegisterAppCode}");
+
+            if (shouldRegisterAppCode)
+            {
+                var appCodeReferenceAvailable = AddAppCodeAssembly(partialName, app, spec);
+                l.A($"AppCode registration result: attempted:true; reference available:{appCodeReferenceAvailable}");
+                if (!appCodeReferenceAvailable)
+                    l.W($"AppCode reference missing after registration attempt for '{partialName}'. Razor compilation will continue unchanged.");
+            }
 
             var firstAttempt = viewEngine.GetView(null, partialName, false);
             l.A($"firstAttempt: {firstAttempt}");
@@ -124,23 +132,43 @@ internal class RazorCompiler(
         return l.ReturnAsOk(new(httpContext, new(), new()));
     }
 
-    private void AddAppCodeAssembly(string partialName, IApp app, HotBuildSpec spec)
+    private bool AddAppCodeAssembly(string partialName, IApp app, HotBuildSpec spec)
     {
         var log = Log.Fn($"{nameof(partialName)}:{partialName}; {nameof(app.RelativePath)}:{app.RelativePath}; {spec}", timer: true);
 
         // Get assembly - try to get from cache, otherwise compile
-        var (assemblyResult, _) = appCodeLoader.Value.GetAppCode(spec);
-        log.A($"has AppCode assembly: {assemblyResult?.HasAssembly}");
+        var (assemblyResult, resultSpec) = appCodeLoader.Value.GetAppCode(spec);
+        var assembly = assemblyResult?.Assembly;
+        var resolverKey = AppRelativePathWithEdition(app, spec);
+        var resultResolverKey = AppRelativePathWithEdition(app, resultSpec);
+        log.A($"AppCode loader result: requestedSpec:'{spec}'; resultSpec:'{resultSpec}'; hasResult:{assemblyResult != null}; hasAssembly:{assemblyResult?.HasAssembly}; assembly:'{assembly?.FullName}'; assemblyLocation:'{assembly?.Location}'; assemblyLocations:'{string.Join(";", assemblyResult?.AssemblyLocations ?? [])}'; errorMessages:'{assemblyResult?.ErrorMessages}'; resolverKey:'{resolverKey}'; resultResolverKey:'{resultResolverKey}'");
 
-        if (assemblyResult?.Assembly != null)
+        if (assembly != null)
         {
-            var appRelativePathWithEdition = spec.Edition.HasValue() ? Path.Combine(app.RelativePath, spec.Edition) : app.RelativePath;
-            log.A($"{nameof(appRelativePathWithEdition)}: '{appRelativePathWithEdition}'");
-
             // Add assembly to resolver, so it will be provided to the compiler when used in cshtml
-            assemblyResolver.AddAssembly(assemblyResult.Assembly, appRelativePathWithEdition);
-        };
+            assemblyResolver.AddAssembly(assembly, resolverKey);
+
+            var resolverLookup = assemblyResolver.GetAssemblyLocation(resolverKey);
+            var resolverLookupExists = resolverLookup.HasValue() && File.Exists(resolverLookup);
+            log.A($"Resolver lookup after registration: resolverKey:'{resolverKey.Backslash()}'; resolvedLocation:'{resolverLookup}'; exists:{resolverLookupExists}");
+            if (!resolverLookupExists)
+                log.W($"AppCode assembly was loaded but no file reference is available for resolver key '{resolverKey}'.");
+
+            log.Done();
+            return resolverLookupExists;
+        }
+
+        log.W($"AppCode registration requested for '{partialName}' but AppCodeLoader returned no assembly.");
 
         log.Done();
+        return false;
     }
+
+    private static string AppRelativePathWithEdition(IApp app, HotBuildSpec spec)
+        => spec.Edition.HasValue()
+            ? Path.Combine(app.RelativePath, spec.Edition)
+            : app.RelativePath;
+
+    private static string Describe(CodeFileInfo codeFileInfo)
+        => $"{nameof(codeFileInfo.Inherits)}:'{codeFileInfo.Inherits}'; {nameof(codeFileInfo.Type)}:'{codeFileInfo.Type}'; {nameof(codeFileInfo.AppCode)}:{codeFileInfo.AppCode}; {nameof(codeFileInfo.RelativePath)}:'{codeFileInfo.RelativePath}'; {nameof(codeFileInfo.FullPath)}:'{codeFileInfo.FullPath}'";
 }
