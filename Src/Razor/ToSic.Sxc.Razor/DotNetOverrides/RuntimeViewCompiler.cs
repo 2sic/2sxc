@@ -424,19 +424,24 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
         var requiresAppCode = razorType.IsHotBuildSupported();
         var appPath = GetSxcAppPathResolutionWithEdition(relativePath);
         var resolverKey = AppCodeResolverKey(appPath);
-        var appCodeDllPath = resolverKey == null
-            ? null
-            : _assemblyResolver.GetAssemblyLocation(resolverKey);
+        var resolverKeys = AppCodeResolverKeys.Build(relativePath,
+        [
+            resolverKey,
+            appPath.AppRelativePath
+        ]);
+        var resolverLookups = AppCodeResolverKeys.Resolve(_assemblyResolver, resolverKeys);
+        var resolverLookup = AppCodeResolverKeys.PickBest(resolverLookups);
+        var appCodeDllPath = resolverLookup?.Location;
         var appCodeDllExists = appCodeDllPath.HasValue() && File.Exists(appCodeDllPath);
 
         l.A($"Source analysis: {Describe(razorType)}; requires AppCode reference:{requiresAppCode}");
-        l.A($"Metadata reference decision: normalizedPath:'{relativePath}'; appRelativePath:'{appPath.AppRelativePath}'; edition:'{appPath.Edition}'; editionSource:'{appPath.Source}'; resolverKey:'{resolverKey}'; appCodeDllPath:'{appCodeDllPath}'; appCodeDllExists:{appCodeDllExists}");
+        l.A($"Metadata reference decision: normalizedPath:'{relativePath}'; appRelativePath:'{appPath.AppRelativePath}'; edition:'{appPath.Edition}'; editionSource:'{appPath.Source}'; resolverKey:'{resolverKey}'; resolverKeys:'{AppCodeResolverKeys.Describe(resolverKeys)}'; resolverResults:'{AppCodeResolverKeys.DescribeResults(resolverLookups)}'; matchedResolverKey:'{resolverLookup?.Key}'; appCodeDllPath:'{appCodeDllPath}'; appCodeDllExists:{appCodeDllExists}");
 
         if (requiresAppCode && !appCodeDllExists)
             l.W($"AppCode reference missing for '{relativePath}'. Razor compilation will continue unchanged.");
 
-        if (appCodeDllPath != null)
-            references.Add(MetadataReference.CreateFromFile(appCodeDllPath));
+        if (appCodeDllExists)
+            references.Add(MetadataReference.CreateFromFile(appCodeDllPath!));
 
         l.A($"Metadata reference decision final: additionalReferences:{references.Count}");
         return l.ReturnAsOk(references);

@@ -33,7 +33,8 @@ internal class RazorCompiler(
         var actionContext = actionContextAccessor.ActionContext ?? NewActionContext();
         var partial = await FindViewAsync(actionContext, partialName, app, spec);
         // do callback to configure the object we received
-        if (partial is RazorView rzv) configure?.Invoke(rzv);
+        if (partial is RazorView rzv)
+            configure.Invoke(rzv);
         return l.ReturnAsOk((partial, actionContext));
     }
 
@@ -134,34 +135,44 @@ internal class RazorCompiler(
 
     private bool AddAppCodeAssembly(string partialName, IApp app, HotBuildSpec spec)
     {
-        var log = Log.Fn($"{nameof(partialName)}:{partialName}; {nameof(app.RelativePath)}:{app.RelativePath}; {spec}", timer: true);
+        var log = Log.Fn<bool>($"{nameof(partialName)}:{partialName}; {nameof(app.RelativePath)}:{app.RelativePath}; {spec}", timer: true);
 
         // Get assembly - try to get from cache, otherwise compile
         var (assemblyResult, resultSpec) = appCodeLoader.Value.GetAppCode(spec);
         var assembly = assemblyResult?.Assembly;
         var resolverKey = AppRelativePathWithEdition(app, spec);
         var resultResolverKey = AppRelativePathWithEdition(app, resultSpec);
+        var resolverKeys = AppCodeResolverKeys.Build(partialName,
+        [
+            resolverKey,
+            resultResolverKey,
+            app.RelativePath
+        ]);
         log.A($"AppCode loader result: requestedSpec:'{spec}'; resultSpec:'{resultSpec}'; hasResult:{assemblyResult != null}; hasAssembly:{assemblyResult?.HasAssembly}; assembly:'{assembly?.FullName}'; assemblyLocation:'{assembly?.Location}'; assemblyLocations:'{string.Join(";", assemblyResult?.AssemblyLocations ?? [])}'; errorMessages:'{assemblyResult?.ErrorMessages}'; resolverKey:'{resolverKey}'; resultResolverKey:'{resultResolverKey}'");
 
         if (assembly != null)
         {
             // Add assembly to resolver, so it will be provided to the compiler when used in cshtml
-            assemblyResolver.AddAssembly(assembly, resolverKey);
+            foreach (var key in resolverKeys)
+                assemblyResolver.AddAssembly(assembly, key);
 
-            var resolverLookup = assemblyResolver.GetAssemblyLocation(resolverKey);
-            var resolverLookupExists = resolverLookup.HasValue() && File.Exists(resolverLookup);
-            log.A($"Resolver lookup after registration: resolverKey:'{resolverKey.Backslash()}'; resolvedLocation:'{resolverLookup}'; exists:{resolverLookupExists}");
-            if (!resolverLookupExists)
-                log.W($"AppCode assembly was loaded but no file reference is available for resolver key '{resolverKey}'.");
+            var resolverLookups = AppCodeResolverKeys.Resolve(assemblyResolver, resolverKeys);
+            var matchedResolver = AppCodeResolverKeys.PickBest(resolverLookups);
+            var referenceAvailable = matchedResolver?.Exists == true;
+            log.A($"Resolver lookup after registration: keys:'{AppCodeResolverKeys.Describe(resolverKeys)}'; results:'{AppCodeResolverKeys.DescribeResults(resolverLookups)}'");
+            if (!referenceAvailable)
+            {
+                log.W($"AppCode assembly was loaded but no file reference is available for any resolver key. Requested:'{resolverKey}'; result:'{resultResolverKey}'.");
+                return log.ReturnFalse("no file reference");
+            }
 
-            log.Done();
-            return resolverLookupExists;
+            log.A($"Resolver lookup matched key:'{matchedResolver!.Key.Backslash()}'; location:'{matchedResolver.Location}'");
+            return log.ReturnTrue("reference available");
         }
 
         log.W($"AppCode registration requested for '{partialName}' but AppCodeLoader returned no assembly.");
 
-        log.Done();
-        return false;
+        return log.ReturnFalse("no assembly");
     }
 
     private static string AppRelativePathWithEdition(IApp app, HotBuildSpec spec)

@@ -1,9 +1,8 @@
-using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.StaticFiles;
 using Oqtane.Models;
 using Oqtane.Shared;
+using System.Text.RegularExpressions;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sys.Utils;
 using File = System.IO.File;
 
 namespace ToSic.Sxc.Oqt.Server.Adam;
@@ -54,10 +53,10 @@ public class OqtAssetsFileHelper() : ServiceBase(OqtConstants.OqtLogPrefix + ".F
             return l.Return(string.Empty, "code extension");
 
         // Nothing in a ".xyz" folder or a subfolder of this should be allowed (like .data must be protected).
-        if (appName.StartsWith(".") || filePath.StartsWith(".") || Path.GetDirectoryName(filePath).Backslash().Contains(@"\.")) 
+        if (StartsWithDot(appName) || StartsWithDot(filePath) || HasHiddenFolderSegment(filePath))
             return l.Return(string.Empty, "folders or subfolder that start with . are not allowed");
 
-        string fullFilePath = route switch
+        var fullFilePath = route switch
         {
             "" => AdamPathWithoutAppName(contentRootPath, alias, filePath),
             RouteAdam => AdamPath(contentRootPath, alias, appName, filePath),
@@ -67,10 +66,10 @@ public class OqtAssetsFileHelper() : ServiceBase(OqtConstants.OqtLogPrefix + ".F
             _ => SxcPath(contentRootPath, alias, appName, filePath),
         };
 
-        // Check that file exists in file system.
-        return File.Exists(fullFilePath) 
-            ? l.Return(fullFilePath, "found")
-            : l.Return(string.Empty, "file not found");
+        if (File.Exists(fullFilePath))
+            return l.Return(fullFilePath, "found");
+
+        return l.Return(string.Empty, "file not found");
     }
 
     private static bool IsKnownRiskyExtension(string fileName)
@@ -79,16 +78,27 @@ public class OqtAssetsFileHelper() : ServiceBase(OqtConstants.OqtLogPrefix + ".F
         return !string.IsNullOrEmpty(extension) && RiskyDetector.IsMatch(extension);
     }
 
+    private static bool HasHiddenFolderSegment(string filePath)
+        => (Path.GetDirectoryName(filePath) ?? string.Empty)
+            .Split([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries)
+            .Any(StartsWithDot);
+
+    private static bool StartsWithDot(string value)
+        => value != null && value.StartsWith(".", StringComparison.Ordinal);
+
     private static string AdamPathWithoutAppName(string contentRootPath, Alias alias, string filePath)
-        => Path.Combine(contentRootPath, string.Format(OqtConstants.ContentRootPublicBase, alias.TenantId, alias.SiteId), filePath).Backslash();
+        => BuildPhysicalPath(contentRootPath, string.Format(OqtConstants.ContentRootPublicBase, alias.TenantId, alias.SiteId), filePath);
 
     private static string AdamPath(string contentRootPath, Alias alias, string appName, string filePath)
-        => Path.Combine(contentRootPath, string.Format(OqtConstants.ContentRootPublicBase, alias.TenantId, alias.SiteId), "adam", appName, filePath).Backslash();
+        => BuildPhysicalPath(contentRootPath, string.Format(OqtConstants.ContentRootPublicBase, alias.TenantId, alias.SiteId), RouteAdam, appName, filePath);
 
     private static string SxcPath(string contentRootPath, Alias alias, string appName, string filePath)
-        => Path.Combine(contentRootPath, string.Format(OqtConstants.AppRootTenantSiteBase, alias.TenantId, alias.SiteId), appName, filePath).Backslash();
+        => BuildPhysicalPath(contentRootPath, string.Format(OqtConstants.AppRootTenantSiteBase, alias.TenantId, alias.SiteId), appName, filePath);
 
     private static string SharedPath(string contentRootPath, Alias alias, string appName, string filePath)
-        => Path.Combine(contentRootPath, string.Format(OqtConstants.AppRootTenantSiteBase, alias.TenantId, OqtConstants.SharedAppFolder), appName, filePath).Backslash();
+        => BuildPhysicalPath(contentRootPath, string.Format(OqtConstants.AppRootTenantSiteBase, alias.TenantId, OqtConstants.SharedAppFolder), appName, filePath);
+
+    private static string BuildPhysicalPath(params string[] segments)
+        => Path.GetFullPath(Path.Combine(segments));
 
 }

@@ -80,6 +80,7 @@ public class AssemblyResolver : ServiceBase, ILogShouldNeverConnect
 
         if (appRelativePath != null && !string.IsNullOrEmpty(assembly.Location))
         {
+            appRelativePath = appRelativePath.Backslash();
             _assemblyPathPerApp[appRelativePath] = assembly.Location;
             l.A($"add or update {nameof(_assemblyPathPerApp)} {nameof(appRelativePath)}:'{appRelativePath}'; {nameof(assembly.Location)}:'{assembly.Location}'");
         }
