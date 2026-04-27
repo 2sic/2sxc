@@ -56,6 +56,54 @@ public class IsUniqueValidatorTests
     }
 
     [Fact]
+    public void ExistingMatchInNonFirstRawValue_BlocksSave()
+    {
+        using var ctx = IsUniqueValidatorTestContext.Create();
+        var type = ctx.CreateType("Article",
+            ctx.CreateField("Title", ValueTypes.String, isTitle: true),
+            ctx.CreateField("Slug", ValueTypes.String, isUnique: true));
+
+        var existing = ctx.CreateEntity(type, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Existing"),
+            ctx.InvariantAttributeValues("Slug", ValueTypes.String, "other-slug", "same-slug"));
+
+        var pending = ctx.CreateEntity(type, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Pending"),
+            ctx.InvariantAttribute("Slug", ValueTypes.String, "same-slug"));
+
+        var exception = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pending]);
+
+        Assert.NotNull(exception);
+        Assert.Contains("Article.Slug", exception.Value);
+    }
+
+    [Fact]
+    public void UnrelatedContentTypesWithSameUniqueFieldAndValue_DoNotBlockSave()
+    {
+        using var ctx = IsUniqueValidatorTestContext.Create();
+        var articleType = ctx.CreateType("Article",
+            ctx.CreateField("Title", ValueTypes.String, isTitle: true),
+            ctx.CreateField("Slug", ValueTypes.String, isUnique: true));
+        var productType = ctx.CreateType("Product",
+            ctx.CreateField("Title", ValueTypes.String, isTitle: true),
+            ctx.CreateField("Slug", ValueTypes.String, isUnique: true));
+
+        var unrelatedExisting = Enumerable.Range(0, 100)
+            .Select(index => ctx.CreateEntity(productType, Guid.NewGuid(),
+                ctx.InvariantAttribute("Title", ValueTypes.String, $"Product {index}"),
+                ctx.InvariantAttribute("Slug", ValueTypes.String, "same-slug")))
+            .ToList();
+
+        var pending = ctx.CreateEntity(articleType, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Pending"),
+            ctx.InvariantAttribute("Slug", ValueTypes.String, "same-slug"));
+
+        var exception = ctx.CreateValidator().UniqueValuesOnlyTac(unrelatedExisting, [pending]);
+
+        Assert.Null(exception);
+    }
+
+    [Fact]
     public void UpdatingSameEntityWithSameUniqueValue_Passes()
     {
         using var ctx = IsUniqueValidatorTestContext.Create();
@@ -201,6 +249,27 @@ public class IsUniqueValidatorTests
         Assert.Null(noConflict);
         Assert.NotNull(conflict);
         Assert.Contains("language: en-us", conflict.Value);
+    }
+
+    [Fact]
+    public void InvariantAndTranslatedValuesWithSameText_DoNotConflictAcrossLanguageBuckets()
+    {
+        using var ctx = IsUniqueValidatorTestContext.Create();
+        var type = ctx.CreateType("Article",
+            ctx.CreateField("Title", ValueTypes.String, isTitle: true),
+            ctx.CreateField("Slug", ValueTypes.String, isUnique: true));
+
+        var existing = ctx.CreateEntity(type, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Existing"),
+            ctx.InvariantAttribute("Slug", ValueTypes.String, "same-slug"));
+
+        var pending = ctx.CreateEntity(type, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Pending"),
+            ctx.LocalizedAttribute("Slug", ValueTypes.String, ("same-slug", "en-us")));
+
+        var exception = ctx.CreateValidator().UniqueValuesOnlyTac([existing], [pending]);
+
+        Assert.Null(exception);
     }
 
     [Fact]

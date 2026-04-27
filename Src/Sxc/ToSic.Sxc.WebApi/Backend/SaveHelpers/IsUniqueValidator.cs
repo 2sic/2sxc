@@ -29,11 +29,11 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
         if (pendingEntities.Count == 0)
             return l.ReturnNull("no pending entities");
 
-        var pendingByKey = GroupPendingEntries(pendingEntities);
+        var pendingByKey = BuildPendingGroups(pendingEntities);
         if (FindPendingConflict(pendingByKey) is { } pendingConflict)
             return ReturnDuplicate(l, pendingConflict, "same request");
 
-        var existingByKey = IndexExistingEntries(existingEntities);
+        var existingByKey = IndexExistingEntries(existingEntities, pendingByKey);
         if (FindExistingConflict(existingByKey, pendingByKey) is { } existingConflict)
             return ReturnDuplicate(l, existingConflict, "existing");
 
@@ -43,15 +43,22 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
     }
 
     /// <summary>
-    /// Indexes existing entities by uniqueness key and tracks distinct logical collision targets.
+    /// Indexes existing entities by pending uniqueness keys and tracks distinct logical collision targets.
     /// </summary>
-    private Dictionary<UniqueValueKey, PendingGroupState> IndexExistingEntries(IEnumerable<IEntity> entities)
+    private Dictionary<UniqueValueKey, PendingGroupState> IndexExistingEntries(
+        IEnumerable<IEntity> entities,
+        IReadOnlyDictionary<UniqueValueKey, PendingGroupState> pendingByKey
+    )
     {
-        var l = Log.Fn<Dictionary<UniqueValueKey, PendingGroupState>>(timer: true);
+        var l = Log.Fn<Dictionary<UniqueValueKey, PendingGroupState>>($"{nameof(pendingByKey)}:{pendingByKey.Count}", timer: true);
         var existingByKey = new Dictionary<UniqueValueKey, PendingGroupState>(UniqueKeyComparer);
+        if (pendingByKey.Count == 0)
+            return l.Return(existingByKey, "no pending unique keys");
+
+        var neededFieldsByType = BuildNeededFieldsByType(pendingByKey);
         var entries = 0;
 
-        foreach (var entry in EnumerateEntries(entities, UniqueValueSource.Existing))
+        foreach (var entry in EnumerateMatchingExistingEntries(entities, neededFieldsByType))
         {
             entries++;
             if (!existingByKey.TryGetValue(entry.Key, out var existingGroup))
@@ -66,13 +73,13 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
             existingByKey[entry.Key] = existingGroup;
         }
 
-        return l.Return(existingByKey, $"entries:{entries}; keys:{existingByKey.Count}; duplicateKeys:{CountDuplicateGroups(existingByKey.Values)}");
+        return l.Return(existingByKey, $"types:{neededFieldsByType.Count}; entries:{entries}; keys:{existingByKey.Count}; duplicateKeys:{CountDuplicateGroups(existingByKey.Values)}");
     }
 
     /// <summary>
     /// Groups pending entities by uniqueness key while removing duplicate logical entities from the same request.
     /// </summary>
-    private Dictionary<UniqueValueKey, PendingGroupState> GroupPendingEntries(IEnumerable<IEntity> entities)
+    private Dictionary<UniqueValueKey, PendingGroupState> BuildPendingGroups(IEnumerable<IEntity> entities)
     {
         var l = Log.Fn<Dictionary<UniqueValueKey, PendingGroupState>>(timer: true);
         var pendingByKey = new Dictionary<UniqueValueKey, PendingGroupState>(UniqueKeyComparer);
@@ -94,6 +101,79 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
         }
 
         return l.Return(pendingByKey, $"entries:{entries}; keys:{pendingByKey.Count}; duplicateKeys:{CountDuplicateGroups(pendingByKey.Values)}");
+    }
+
+    /// <summary>
+    /// Builds the smallest existing-data scan plan needed to validate the pending unique values.
+    /// </summary>
+    private static Dictionary<string, NeededTypeFields> BuildNeededFieldsByType(IReadOnlyDictionary<UniqueValueKey, PendingGroupState> pendingByKey)
+    {
+        var neededFieldsByType = new Dictionary<string, NeededTypeFields>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var key in pendingByKey.Keys)
+        {
+            if (!neededFieldsByType.TryGetValue(key.ContentTypeNameId, out var fields))
+            {
+                fields = new();
+                neededFieldsByType.Add(key.ContentTypeNameId, fields);
+            }
+
+            fields.Add(key);
+        }
+
+        return neededFieldsByType;
+    }
+
+    /// <summary>
+    /// Projects only existing values that could collide with pending unique values.
+    /// </summary>
+    private IEnumerable<UniqueValueEntry> EnumerateMatchingExistingEntries(
+        IEnumerable<IEntity> entities,
+        IReadOnlyDictionary<string, NeededTypeFields> neededFieldsByType
+    )
+    {
+        var fieldsByType = new Dictionary<string, IContentTypeAttribute[]>(StringComparer.OrdinalIgnoreCase);
+        foreach (var neededType in neededFieldsByType)
+        {
+            var index = 0;
+            foreach (var entity in entities.GetAll(neededType.Key))
+            {
+                var contentTypeNameId = entity.Type.NameId;
+                if (!fieldsByType.TryGetValue(contentTypeNameId, out var fields))
+                {
+                    fields = GetMatchingUniqueFields(entity.Type, neededType.Value);
+                    fieldsByType.Add(contentTypeNameId, fields);
+                }
+
+                if (fields.Length == 0)
+                {
+                    index++;
+                    continue;
+                }
+
+                foreach (var entry in EnumerateEntityEntries(entity, fields, neededType.Value.Keys, UniqueValueSource.Existing, index))
+                    yield return entry;
+
+                index++;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Retrieves unique fields that also have pending values worth checking.
+    /// </summary>
+    private static IContentTypeAttribute[] GetMatchingUniqueFields(IContentType contentType, NeededTypeFields neededFields)
+    {
+        List<IContentTypeAttribute>? fields = null;
+        foreach (var attribute in contentType.Attributes)
+        {
+            if (!neededFields.FieldNames.Contains(attribute.Name) || !IsSupportedType(attribute.Type) || !MustBeUnique(attribute))
+                continue;
+
+            (fields ??= []).Add(attribute);
+        }
+
+        return fields?.ToArray() ?? [];
     }
 
     private static int CountDuplicateGroups(IEnumerable<PendingGroupState> groups)
@@ -174,7 +254,6 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
         var index = 0;
         foreach (var entity in entities)
         {
-            var logicalId = BuildLogicalId(entity, source, index);
             var contentTypeNameId = entity.Type.NameId;
             var uniqueFields = GetUniqueFields(entity.Type, contentTypeNameId, uniqueFieldsByType);
             if (uniqueFields.Length == 0)
@@ -183,48 +262,66 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
                 continue;
             }
 
-            // Ignore repeated raw values inside the same logical entity. This keeps draft/published
-            // variants or duplicate raw entries from creating false positives against themselves.
-            var seenKeys = new HashSet<UniqueValueKey>(UniqueKeyComparer);
-
-            foreach (var contentTypeAttribute in uniqueFields)
-            {
-                var entityAttribute = entity[contentTypeAttribute.Name];
-                if (entityAttribute == null)
-                    continue;
-
-                var fieldName = contentTypeAttribute.Name;
-                foreach (var rawValue in entityAttribute.Values)
-                {
-                    var languageBucket = GetLanguageBucket(rawValue);
-                    foreach (var normalized in NormalizeValues(contentTypeAttribute.Type, rawValue))
-                    {
-                        var key = new UniqueValueKey(
-                            contentTypeNameId,
-                            fieldName,
-                            languageBucket,
-                            normalized.NormalizedKey
-                        );
-
-                        if (!seenKeys.Add(key))
-                            continue;
-
-                        yield return new(
-                            key,
-                            contentTypeNameId,
-                            fieldName,
-                            normalized.DisplayValue,
-                            languageBucket,
-                            source,
-                            logicalId,
-                            entity,
-                            index
-                        );
-                    }
-                }
-            }
+            foreach (var entry in EnumerateEntityEntries(entity, uniqueFields, neededKeys: null, source, index))
+                yield return entry;
 
             index++;
+        }
+    }
+
+    /// <summary>
+    /// Projects one entity into normalized uniqueness entries for selected fields.
+    /// </summary>
+    private static IEnumerable<UniqueValueEntry> EnumerateEntityEntries(
+        IEntity entity,
+        IEnumerable<IContentTypeAttribute> uniqueFields,
+        ISet<UniqueValueKey>? neededKeys,
+        UniqueValueSource source,
+        int index
+    )
+    {
+        var logicalId = BuildLogicalId(entity, source, index);
+        var contentTypeNameId = entity.Type.NameId;
+
+        // Ignore repeated raw values inside the same logical entity. This keeps draft/published
+        // variants or duplicate raw entries from creating false positives against themselves.
+        var seenKeys = new HashSet<UniqueValueKey>(UniqueKeyComparer);
+
+        foreach (var contentTypeAttribute in uniqueFields)
+        {
+            var entityAttribute = entity[contentTypeAttribute.Name];
+            if (entityAttribute == null)
+                continue;
+
+            var fieldName = contentTypeAttribute.Name;
+            foreach (var rawValue in entityAttribute.Values)
+            {
+                var languageBucket = GetLanguageBucket(rawValue);
+                foreach (var normalized in NormalizeValues(contentTypeAttribute.Type, rawValue))
+                {
+                    var key = new UniqueValueKey(
+                        contentTypeNameId,
+                        fieldName,
+                        languageBucket,
+                        normalized.NormalizedKey
+                    );
+
+                    if (neededKeys?.Contains(key) == false || !seenKeys.Add(key))
+                        continue;
+
+                    yield return new(
+                        key,
+                        contentTypeNameId,
+                        fieldName,
+                        normalized.DisplayValue,
+                        languageBucket,
+                        source,
+                        logicalId,
+                        entity,
+                        index
+                    );
+                }
+            }
         }
     }
 
@@ -585,6 +682,19 @@ internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val
     private readonly record struct UniqueValueConflict(UniqueValueEntry PendingEntry, UniqueValueEntry ConflictEntry);
 
     private readonly record struct NormalizedValue(string NormalizedKey, string DisplayValue);
+
+    private sealed class NeededTypeFields
+    {
+        public HashSet<string> FieldNames { get; } = new(StringComparer.OrdinalIgnoreCase);
+
+        public HashSet<UniqueValueKey> Keys { get; } = new(UniqueKeyComparer);
+
+        public void Add(UniqueValueKey key)
+        {
+            FieldNames.Add(key.FieldName);
+            Keys.Add(key);
+        }
+    }
 
     /// <summary>
     /// Compact value object describing the logical entity identity behind a uniqueness entry.
