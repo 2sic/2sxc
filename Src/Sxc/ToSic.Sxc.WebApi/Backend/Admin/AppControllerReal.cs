@@ -59,9 +59,9 @@ public class AppControllerReal(
         appBuilderLazy.Value.Init(zoneId).Create(name, null, inheritAppId);
         l.Done("ok");
     }
-
-    public List<SiteLanguageDto> Languages(int appId)
-        => languagesBackendLazy.Value.GetLanguagesOfApp(appReadersLazy.Value.Get(appId), true);
+    // Replaced by DataSource System.AppLanguages
+    //public List<SiteLanguageDto> Languages(int appId)
+    //    => languagesBackendLazy.Value.GetLanguagesOfApp(appReadersLazy.Value.Get(appId), true);
 
     public AppExportInfoDto Statistics(int zoneId, int appId) => exportAppLazy.Value.GetAppInfo(zoneId, appId);
 

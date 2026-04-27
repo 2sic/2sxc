@@ -51,11 +51,12 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
     public void App(int zoneId, string name, int? inheritAppId = null) => Real.App(zoneId, name, inheritAppId);
 
     /// <inheritdoc />
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [Authorize(Roles = RoleNames.Admin)]
-    public ICollection<SiteLanguageDto> Languages(int appId)
-        => Real.Languages(appId);
+    /// Replaced by DataSource System.AppLanguages
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[Authorize(Roles = RoleNames.Admin)]
+    //public ICollection<SiteLanguageDto> Languages(int appId)
+    //    => Real.Languages(appId);
 
     /// <inheritdoc />
     [HttpGet]
