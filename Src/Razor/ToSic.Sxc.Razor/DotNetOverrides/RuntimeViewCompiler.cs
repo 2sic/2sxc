@@ -424,6 +424,8 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
         var requiresAppCode = razorType.IsHotBuildSupported();
         var appPath = GetSxcAppPathResolutionWithEdition(relativePath);
         var resolverKey = AppCodeResolverKey(appPath);
+        // Must mirror RazorCompiler registration; otherwise runtime compilation can
+        // load AppCode but still miss it as a Roslyn metadata reference after restart.
         var resolverKeys = AppCodeResolverKeys.Build(relativePath,
         [
             resolverKey,
@@ -440,6 +442,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
         if (requiresAppCode && !appCodeDllExists)
             l.W($"AppCode reference missing for '{relativePath}'. Razor compilation will continue unchanged.");
 
+        // Roslyn metadata references must point to an existing physical DLL.
         if (appCodeDllExists)
             references.Add(MetadataReference.CreateFromFile(appCodeDllPath!));
 

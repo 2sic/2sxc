@@ -3,26 +3,37 @@ using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Razor;
 
+// Keeps AppCode registration and Razor metadata lookup in sync when Oqtane exposes
+// the same app through view paths, app paths, or edition paths.
 internal static class AppCodeResolverKeys
 {
     private const char Separator = '\\';
     private const string AppRootSegment = "2sxc";
     private const string TenantsSegment = "Tenants";
     private const string SitesSegment = "Sites";
-    private const string SharedSegment = "Shared";
     private static readonly char[] Separators = ['\\', '/'];
 
+    /// <summary>
+    /// Builds all resolver keys that may identify the AppCode assembly for a view.
+    /// </summary>
     public static IReadOnlyList<string> Build(string viewPath, IEnumerable<string?> appPathSeeds)
-        => Seeds(viewPath, appPathSeeds)
+        => (appPathSeeds ?? [])
+            .Concat(AppPathSeedsFromViewPath(viewPath))
+            .OfType<string>()
+            .Select(seed => Normalize(seed).TrimStart(Separator))
             .Where(seed => seed.HasValue())
-            .Select(seed => Normalize(seed!))
-            .SelectMany(Variants)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 
+    /// <summary>
+    /// Formats resolver keys for diagnostics with consistent path separators.
+    /// </summary>
     public static string Describe(IEnumerable<string> keys)
         => string.Join(";", keys.Select(key => key.Backslash()));
 
+    /// <summary>
+    /// Resolves each key through the singleton assembly resolver and records if the physical DLL still exists.
+    /// </summary>
     public static IReadOnlyList<AppCodeResolverLookupResult> Resolve(AssemblyResolver assemblyResolver, IEnumerable<string> keys)
         => keys
             .Select(key =>
@@ -32,24 +43,26 @@ internal static class AppCodeResolverKeys
             })
             .ToList();
 
+    /// <summary>
+    /// Picks the best resolver hit, preferring a location that exists on disk because Roslyn needs a file reference.
+    /// </summary>
     public static AppCodeResolverLookupResult? PickBest(IReadOnlyList<AppCodeResolverLookupResult> results)
         => results.FirstOrDefault(result => result.Exists)
             ?? results.FirstOrDefault(result => result.Location.HasValue());
 
+    /// <summary>
+    /// Formats lookup results so logs show which keys were tried and why one did or did not match.
+    /// </summary>
     public static string DescribeResults(IEnumerable<AppCodeResolverLookupResult> results)
         => string.Join(";", results.Select(result => $"{result.Key.Backslash()}=>{result.Location}|exists:{result.Exists}"));
 
-    private static IEnumerable<string?> Seeds(string viewPath, IEnumerable<string?> appPathSeeds)
-    {
-        foreach (var seed in appPathSeeds ?? [])
-            yield return seed;
-
-        foreach (var seed in AppPathSeedsFromViewPath(viewPath))
-            yield return seed;
-    }
-
+    /// <summary>
+    /// Infers app and edition resolver seeds from a physical or virtual view path.
+    /// </summary>
     private static IEnumerable<string> AppPathSeedsFromViewPath(string viewPath)
     {
+        // Fallback for cases where the current block context points to one app,
+        // but the compiled view path belongs to a shared app.
         var parts = Normalize(viewPath)
             .Trim(Separator)
             .Split(Separators, StringSplitOptions.RemoveEmptyEntries);
@@ -65,23 +78,22 @@ internal static class AppCodeResolverKeys
             yield break;
         }
 
-        var appIndex = IsOqtaneLegacySitePath(parts, appRootIndex)
-            ? appRootIndex + 2
-            : appRootIndex + 1;
-        foreach (var seed in AppAndEditionSeeds(parts, appIndex))
+        // Non-Oqtane hosts keep the app folder directly below 2sxc.
+        foreach (var seed in AppAndEditionSeeds(parts, appRootIndex + 1))
             yield return seed;
     }
 
+    /// <summary>
+    /// Detects the current Oqtane app path shape: 2sxc\Tenants\{tenant}\Sites\{site}\{app}.
+    /// </summary>
     private static bool IsOqtaneTenantSitePath(IReadOnlyList<string> parts, int appRootIndex)
         => parts.Count > appRootIndex + 5
             && parts[appRootIndex + 1].Equals(TenantsSegment, StringComparison.OrdinalIgnoreCase)
             && parts[appRootIndex + 3].Equals(SitesSegment, StringComparison.OrdinalIgnoreCase);
 
-    private static bool IsOqtaneLegacySitePath(IReadOnlyList<string> parts, int appRootIndex)
-        => parts.Count > appRootIndex + 2
-            && (int.TryParse(parts[appRootIndex + 1], out _)
-                || parts[appRootIndex + 1].Equals(SharedSegment, StringComparison.OrdinalIgnoreCase));
-
+    /// <summary>
+    /// Produces the app root key and, when present, the edition-specific key.
+    /// </summary>
     private static IEnumerable<string> AppAndEditionSeeds(IReadOnlyList<string> parts, int appIndex)
     {
         if (parts.Count <= appIndex)
@@ -94,19 +106,15 @@ internal static class AppCodeResolverKeys
             yield return JoinThrough(parts, editionIndex);
     }
 
+    /// <summary>
+    /// Joins path parts from the beginning through the requested segment index.
+    /// </summary>
     private static string JoinThrough(IEnumerable<string> parts, int index)
         => string.Join(Separator.ToString(), parts.Take(index + 1));
 
-    private static IEnumerable<string> Variants(string key)
-    {
-        var normalized = Normalize(key).TrimStart(Separator);
-        if (!normalized.HasValue())
-            yield break;
-
-        yield return normalized;
-        yield return $"{Separator}{normalized}";
-    }
-
+    /// <summary>
+    /// Normalizes path separators and trims whitespace before key comparison or lookup.
+    /// </summary>
     private static string Normalize(string key)
         => key.Backslash().Trim();
 }

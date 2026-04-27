@@ -80,7 +80,8 @@ public class AssemblyResolver : ServiceBase, ILogShouldNeverConnect
 
         if (appRelativePath != null && !string.IsNullOrEmpty(assembly.Location))
         {
-            appRelativePath = appRelativePath.Backslash();
+            // Canonicalize on write as well as read so resolver aliases match reliably.
+            appRelativePath = NormalizeAppRelativePath(appRelativePath);
             _assemblyPathPerApp[appRelativePath] = assembly.Location;
             l.A($"add or update {nameof(_assemblyPathPerApp)} {nameof(appRelativePath)}:'{appRelativePath}'; {nameof(assembly.Location)}:'{assembly.Location}'");
         }
@@ -92,7 +93,7 @@ public class AssemblyResolver : ServiceBase, ILogShouldNeverConnect
         if (appRelativePath == null)
             return null; // No app-relative path means no assembly location can be found
 
-        appRelativePath = appRelativePath.Backslash();
+        appRelativePath = NormalizeAppRelativePath(appRelativePath);
         var l = Debug
             ? Log.Fn<string?>($"{nameof(appRelativePath)}:'{appRelativePath}'")
             : null; 
@@ -101,4 +102,7 @@ public class AssemblyResolver : ServiceBase, ILogShouldNeverConnect
             : null;
         return l.Return(r, r != null ? $"Ok:'{r}'" : "can't find");
     }
+
+    private static string NormalizeAppRelativePath(string appRelativePath)
+        => appRelativePath.Backslash().Trim().TrimStart('\\');
 }

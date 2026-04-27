@@ -78,6 +78,8 @@ public class OqtAssetsFileHelper() : ServiceBase(OqtConstants.OqtLogPrefix + ".F
         return !string.IsNullOrEmpty(extension) && RiskyDetector.IsMatch(extension);
     }
 
+    // Path.GetDirectoryName gives the parent path; split it to catch nested
+    // protected folders such as .data regardless of slash direction.
     private static bool HasHiddenFolderSegment(string filePath)
         => (Path.GetDirectoryName(filePath) ?? string.Empty)
             .Split([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries)

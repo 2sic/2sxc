@@ -142,6 +142,8 @@ internal class RazorCompiler(
         var assembly = assemblyResult?.Assembly;
         var resolverKey = AppRelativePathWithEdition(app, spec);
         var resultResolverKey = AppRelativePathWithEdition(app, resultSpec);
+        // Register all app/edition aliases the RuntimeViewCompiler may later use
+        // when resolving the physical AppCode DLL after an Oqtane restart.
         var resolverKeys = AppCodeResolverKeys.Build(partialName,
         [
             resolverKey,
