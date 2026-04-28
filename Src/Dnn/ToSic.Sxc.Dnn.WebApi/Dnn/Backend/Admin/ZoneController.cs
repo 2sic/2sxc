@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [ValidateAntiForgeryToken]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ZoneController() : DnnSxcControllerBase(RealController.LogSuffix), IZoneController
+public class ZoneController() : DnnSxcControllerBase(RealController.LogSuffix)
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
@@ -25,7 +25,8 @@ public class ZoneController() : DnnSxcControllerBase(RealController.LogSuffix), 
         => Real.SwitchLanguage(cultureCode, enable);
 
     /// <inheritdoc />
-    [HttpGet]
-    public SystemInfoSetDto GetSystemInfo()
-        => Real.GetSystemInfo();
+    /// Replaced by "System.SystemInfo" DataSource; endpoint disabled.
+    //[HttpGet]
+    //public SystemInfoSetDto GetSystemInfo()
+    //    => Real.GetSystemInfo();
 }

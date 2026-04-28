@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ZoneController() : OqtStatefulControllerBase(RealController.LogSuffix), IZoneController
+public class ZoneController() : OqtStatefulControllerBase(RealController.LogSuffix)
 {
     private RealController Real => GetService<RealController>();
 
@@ -32,7 +32,8 @@ public class ZoneController() : OqtStatefulControllerBase(RealController.LogSuff
     public void SwitchLanguage(string cultureCode, bool enable) => Real.SwitchLanguage(cultureCode, enable);
 
     /// <inheritdoc />
-    [HttpGet]
-    public SystemInfoSetDto GetSystemInfo() => Real.GetSystemInfo();
+    /// replaced by "System.SystemInfo" DataSource; endpoint disabled.
+    //[HttpGet]
+    //public SystemInfoSetDto GetSystemInfo() => Real.GetSystemInfo();
 
 }
