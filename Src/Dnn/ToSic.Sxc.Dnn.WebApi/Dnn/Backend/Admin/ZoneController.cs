@@ -25,7 +25,8 @@ public class ZoneController() : DnnSxcControllerBase(RealController.LogSuffix), 
         => Real.SwitchLanguage(cultureCode, enable);
 
     /// <inheritdoc />
-    [HttpGet]
-    public SystemInfoSetDto GetSystemInfo()
-        => Real.GetSystemInfo();
+    /// Replaced by "System.SystemInfo" DataSource; endpoint disabled.
+    //[HttpGet]
+    //public SystemInfoSetDto GetSystemInfo()
+    //    => Real.GetSystemInfo();
 }

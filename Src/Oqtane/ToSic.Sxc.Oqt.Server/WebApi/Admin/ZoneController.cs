@@ -32,7 +32,8 @@ public class ZoneController() : OqtStatefulControllerBase(RealController.LogSuff
     public void SwitchLanguage(string cultureCode, bool enable) => Real.SwitchLanguage(cultureCode, enable);
 
     /// <inheritdoc />
-    [HttpGet]
-    public SystemInfoSetDto GetSystemInfo() => Real.GetSystemInfo();
+    /// replaced by "System.SystemInfo" DataSource; endpoint disabled.
+    //[HttpGet]
+    //public SystemInfoSetDto GetSystemInfo() => Real.GetSystemInfo();
 
 }
