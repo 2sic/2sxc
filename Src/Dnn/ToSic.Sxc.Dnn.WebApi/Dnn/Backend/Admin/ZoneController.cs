@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [ValidateAntiForgeryToken]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ZoneController() : DnnSxcControllerBase(RealController.LogSuffix)
+public class ZoneController() : DnnSxcControllerBase(RealController.LogSuffix), IZoneController
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
