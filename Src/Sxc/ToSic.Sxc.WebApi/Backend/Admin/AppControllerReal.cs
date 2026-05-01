@@ -43,8 +43,9 @@ public class AppControllerReal(
 {
     public const string LogSuffix = "AppCon";
 
-    public ICollection<AppDto> List(int zoneId)
-        => appsBackendLazy.Value.Apps();
+    // Replayed by DataSource System.Apps
+    //public ICollection<AppDto> List(int zoneId)
+    //    => appsBackendLazy.Value.Apps();
 
     public ICollection<AppDto> InheritableApps()
         => appsBackendLazy.Value.GetInheritableApps();
