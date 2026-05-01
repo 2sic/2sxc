@@ -20,11 +20,12 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     private RealController Real => SysHlp.GetService<RealController>();
 
     /// <inheritdoc />
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [SupportedModules(DnnSupportedModuleNames)]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public ICollection<AppDto> List(int zoneId) => Real.List(zoneId);
+    /// Replayed by DataSource System.Apps
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[SupportedModules(DnnSupportedModuleNames)]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //public ICollection<AppDto> List(int zoneId) => Real.List(zoneId);
 
     /// <inheritdoc />
     [HttpGet]

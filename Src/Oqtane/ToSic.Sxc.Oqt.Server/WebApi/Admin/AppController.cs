@@ -24,11 +24,12 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
     private RealController Real => GetService<RealController>();
 
     /// <inheritdoc />
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [Authorize(Roles = RoleNames.Admin)]
-    public ICollection<AppDto> List(int zoneId)
-        => Real.List(zoneId);
+    /// Replaced by DataSource System.Apps
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[Authorize(Roles = RoleNames.Admin)]
+    //public ICollection<AppDto> List(int zoneId)
+    //    => Real.List(zoneId);
 
     /// <inheritdoc />
     [HttpGet]
