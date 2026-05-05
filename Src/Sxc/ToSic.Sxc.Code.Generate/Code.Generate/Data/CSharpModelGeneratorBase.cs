@@ -1,5 +1,6 @@
 using System.Text;
 using ToSic.Eav.Data.Sys;
+using ToSic.Eav.Data.Sys.Attributes;
 using ToSic.Sxc.Code.Generate.Sys;
 
 namespace ToSic.Sxc.Code.Generate.Data;
@@ -111,8 +112,14 @@ internal abstract class CSharpModelGeneratorBase(CSharpModelsGeneratorBase gener
     {
         var l = Log.Fn<(bool, string?, List<string>?, string?)>($"{nameof(attributes)}: {attributes.Count}");
 
+        // Ephemeral fields only exist in the edit UI and are not persisted.
+        // Generated properties would access missing data and fail during serialization.
+        var persistedAttributes = attributes
+            .Where(ShouldGenerateProperty)
+            .ToList();
+
         // Generate all properties with the helpers
-        var propsSnippets = attributes
+        var propsSnippets = persistedAttributes
             .Select(a => new
             {
                 Attribute = a,
@@ -154,6 +161,11 @@ internal abstract class CSharpModelGeneratorBase(CSharpModelsGeneratorBase gener
 
         return l.Return((true, properties, usings, deduplicated.First().NameId), $"props string len: {properties.Length}");
     }
+
+    private static bool ShouldGenerateProperty(IContentTypeAttribute attribute)
+        => !attribute.Metadata.Get<bool>(
+            AttributeMetadataConstants.MetadataFieldAllIsEphemeral,
+            typeName: AttributeMetadataConstants.TypeGeneral);
 
     #endregion
 
