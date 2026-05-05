@@ -191,7 +191,10 @@ public class ExtensionExportService(
                 .DistinctBy(t => t.zipPath, StringComparer.OrdinalIgnoreCase)
                 .ToList();
 
-            zipping.AddFiles(archive, allFiles);
+            // Use the local ZIP writer instead of the generic helper so extension export can attach
+            // long-path diagnostics to the exact source file. The ZIP entry path stays normal; only
+            // the physical read path needs special handling on Windows.
+            AddFilesToZip(archive, allFiles);
             l.A($"Added {allFiles.Count} files to ZIP");
 
             // Add extension.json + bundles + lock files for each extension
@@ -500,19 +503,35 @@ public class ExtensionExportService(
     {
         var l = Log.Fn<List<(string, string)>>($"source:{sourcePath}, base:{baseSourcePath}, zipBase:{baseZipPath}");
 
-        if (!Directory.Exists(sourcePath))
+        // Directory enumeration is one of the first places Windows legacy MAX_PATH fails. Convert
+        // physical paths to the extended namespace for disk access, but keep ZIP paths and log output
+        // in normal form so packages remain portable and diagnostics are readable.
+        var diskSourcePath = PathForDiskAccess(sourcePath);
+        var diskBaseSourcePath = PathForDiskAccess(baseSourcePath);
+
+        if (!Directory.Exists(diskSourcePath))
             return l.Return([], "Directory doesn't exist, returning");
 
-        var allFiles = Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories);
+        string[] allFiles;
+        try
+        {
+            allFiles = Directory.GetFiles(diskSourcePath, "*.*", SearchOption.AllDirectories);
+        }
+        catch (Exception ex) when (IsFileSystemException(ex))
+        {
+            throw l.Ex(new IOException($"Error collecting extension files from '{sourcePath}' (length: {sourcePath.Length}).", ex));
+        }
         l.A($"Found {allFiles.Length} files");
 
         var filePathList = allFiles
             .Select(file =>
             {
-                // Use string manipulation instead of Path.GetRelativePath for .NET Framework compatibility
-                var relativePath = file.StartsWith(baseSourcePath)
-                    ? file.Substring(baseSourcePath.Length).TrimStart('\\', '/')
-                    : file;
+                // Use string manipulation instead of Path.GetRelativePath for .NET Framework
+                // compatibility. Because enumeration returned disk paths, compare against the disk
+                // base path and strip the \\?\ prefix only after the relative path is known.
+                var relativePath = file.StartsWith(diskBaseSourcePath, StringComparison.OrdinalIgnoreCase)
+                    ? file.Substring(diskBaseSourcePath.Length).TrimStart('\\', '/')
+                    : DisplayPath(file);
 
                 // Check exclusions
                 if (exclude != null && exclude.Any(f => relativePath.StartsWith(f, StringComparison.OrdinalIgnoreCase)))
@@ -522,7 +541,7 @@ public class ExtensionExportService(
                 }
 
                 var zipPath = Path.Combine(baseZipPath, relativePath).Replace("\\", "/");
-                l.A($"Add file '{file}' to ZIP as '{zipPath}'");
+                l.A($"Add file '{DisplayPath(file)}' to ZIP as '{zipPath}'");
                 return (file, zipPath);
             })
             .Where(pair => pair.file != null)
@@ -580,12 +599,10 @@ public class ExtensionExportService(
 
         l.A($"{nameof(version)}:{version}");
 
+        // Hashing reads the same physical files that were added to the archive. Keep that read behind
+        // a small wrapper so long-path failures point to the specific file and package entry.
         var fileList = files
-            .Select(f => new PackageIndexFileEntry
-            {
-                File = "/" + f.zipPath,
-                Hash = Sha256.Hash(File.ReadAllBytes(f.sourcePath))
-            })
+            .Select(CreatePackageIndexEntry)
             .ToList();
 
         // Include bundles
@@ -643,5 +660,98 @@ public class ExtensionExportService(
 
         return l.Return(package, $"Created package object for {exports.Count} extensions");
     }
+
+    private void AddFilesToZip(ZipArchive archive, IReadOnlyCollection<(string sourcePath, string zipPath)> files)
+    {
+        var l = Log.Fn($"{nameof(files)}:{files.Count}");
+
+        foreach (var (sourcePath, zipPath) in files)
+        {
+            try
+            {
+                // CreateEntry takes the portable path inside the ZIP. File.OpenRead touches the
+                // Windows filesystem and can fail on long physical paths, so wrap it with context.
+                var entry = archive.CreateEntry(zipPath, CompressionLevel.Optimal);
+                using var entryStream = entry.Open();
+                using var fileStream = File.OpenRead(sourcePath);
+                fileStream.CopyTo(entryStream);
+                l.A($"add: {zipPath}");
+            }
+            catch (Exception ex) when (IsFileSystemException(ex))
+            {
+                throw l.Ex(new IOException(ZipFileErrorMessage("adding file to extension ZIP", sourcePath, zipPath), ex));
+            }
+        }
+
+        l.Done("ok");
+    }
+
+    private PackageIndexFileEntry CreatePackageIndexEntry((string sourcePath, string zipPath) file)
+    {
+        try
+        {
+            // The lock file must describe the package path, not the local disk path. The source path
+            // is used only to compute the hash while creating the export.
+            return new()
+            {
+                File = "/" + file.zipPath,
+                Hash = Sha256.Hash(File.ReadAllBytes(file.sourcePath))
+            };
+        }
+        catch (Exception ex) when (IsFileSystemException(ex))
+        {
+            throw Log.Ex(new IOException(ZipFileErrorMessage("hashing extension file", file.sourcePath, file.zipPath), ex));
+        }
+    }
+
+    private static string ZipFileErrorMessage(string action, string sourcePath, string zipPath)
+    {
+        // Export errors are often first seen as a failed browser download. Include both path spaces:
+        // the physical source tells the admin what to rename, and the ZIP path tells which package
+        // entry was being produced.
+        var path = DisplayPath(sourcePath);
+        var hint = path.Length >= WindowsLegacyMaxPath
+            ? " The physical path is longer than the legacy Windows MAX_PATH limit; long paths must be enabled on the server."
+            : "";
+
+        return $"Error {action}. Source: '{path}' (length: {path.Length}), ZIP path: '{zipPath}' (length: {zipPath.Length}).{hint}";
+    }
+
+    private static bool IsFileSystemException(Exception ex)
+        => ex is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException;
+
+    private const int WindowsLegacyMaxPath = 260;
+    private const string ExtendedPathPrefix = @"\\?\";
+    private const string UncPrefix = @"\\";
+
+    private static string PathForDiskAccess(string path)
+    {
+        // Keep long-path handling local to physical disk reads. ZIP entry names should never receive
+        // a \\?\ prefix, otherwise exported packages would contain Windows implementation details.
+        if (!IsWindowsFileSystem() || string.IsNullOrWhiteSpace(path) || path.StartsWith(ExtendedPathPrefix, StringComparison.Ordinal))
+            return path;
+
+        var fullPath = Path.GetFullPath(path);
+
+        return fullPath.StartsWith(UncPrefix, StringComparison.Ordinal)
+            ? @"\\?\UNC\" + fullPath.Substring(UncPrefix.Length)
+            : ExtendedPathPrefix + fullPath;
+    }
+
+    private static string DisplayPath(string path)
+    {
+        // Directory enumeration can return extended paths after PathForDiskAccess. Convert them back
+        // before building ZIP-relative paths or writing log messages.
+        if (!path.StartsWith(ExtendedPathPrefix, StringComparison.Ordinal))
+            return path;
+
+        const string extendedUncPrefix = @"\\?\UNC\";
+        return path.StartsWith(extendedUncPrefix, StringComparison.Ordinal)
+            ? UncPrefix + path.Substring(extendedUncPrefix.Length)
+            : path.Substring(ExtendedPathPrefix.Length);
+    }
+
+    private static bool IsWindowsFileSystem()
+        => Path.DirectorySeparatorChar == '\\';
 
 }

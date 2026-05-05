@@ -56,8 +56,11 @@ internal class ExtensionInstallHelper(ReadOnlyFileHelper readOnlyHelper, ILog? p
     {
         var l = Log.Fn<ValidationResult>($"area:{areaName}");
 
-        var sourceExists = Directory.Exists(tempSourcePath);
-        var targetExists = Directory.Exists(targetPath);
+        // The source temp folder may have been created from a long ZIP entry, and the target may
+        // already contain long installed files. Check existence through the same disk-access helper
+        // used by extraction/copy so overwrite decisions don't fail before the real operation starts.
+        var sourceExists = Directory.Exists(Zipping.PathForDiskAccess(tempSourcePath));
+        var targetExists = Directory.Exists(Zipping.PathForDiskAccess(targetPath));
 
         if (!sourceExists && !targetExists)
             return l.ReturnAsOk(new(true, null));
@@ -105,11 +108,30 @@ internal class ExtensionInstallHelper(ReadOnlyFileHelper readOnlyHelper, ILog? p
                 if (!destinationPath.StartsWith(targetRootFull, StringComparison.OrdinalIgnoreCase))
                     return l.ReturnAsError(new(false, $"illegal destination path:'{rel}'"));
 
-                Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
-                readOnlyHelper.RemoveReadOnlyIfNeeded(destinationPath, rel);
-                File.Copy(file, destinationPath, overwrite: true);
-                readOnlyHelper.EnsureReadOnly(destinationPath, rel);
-                l.A($"copied:'{rel}'");
+                // Preserve exact package paths when possible, but reject impossible Windows paths
+                // before copy. The extended-path fallback solves total length, not overlong segments.
+                var pathLimitError = Zipping.WindowsPathLimitError(destinationPath, rel);
+                if (pathLimitError != null)
+                    return l.ReturnAsError(new(false, pathLimitError));
+
+                try
+                {
+                    // Copying is the second long-path-sensitive phase after extraction: validation has
+                    // read files from temp, now the same file must be written under the real app root.
+                    var destinationDiskPath = Zipping.PathForDiskAccess(destinationPath);
+                    Directory.CreateDirectory(Zipping.PathForDiskAccess(Path.GetDirectoryName(destinationPath)!));
+                    readOnlyHelper.RemoveReadOnlyIfNeeded(destinationDiskPath, rel);
+                    File.Copy(Zipping.PathForDiskAccess(file), destinationDiskPath, overwrite: true);
+                    readOnlyHelper.EnsureReadOnly(destinationDiskPath, rel);
+                    l.A($"copied:'{rel}'");
+                }
+                catch (Exception ex) when (Zipping.IsFileSystemException(ex))
+                {
+                    // Return a validation-style error instead of letting a raw IOException escape from
+                    // the helper; callers already turn ValidationResult into the install/preflight UX.
+                    l.Ex(ex);
+                    return l.ReturnAsError(new(false, Zipping.FileSystemErrorMessage("copying extension file", rel, destinationPath)));
+                }
             }
         }
 

@@ -675,4 +675,88 @@ public class ExtensionInstallBackendTest
         Assert.True(ok2);
         Assert.Equal("console.log('v2');", File.ReadAllText(filePath));
     }
+
+    [Fact]
+    public void InstallZip_LongPathFile_Works()
+    {
+        using var ctx = ExtensionsBackendTestContext.Create();
+        const string folder = "long-path";
+        const string extensionJsonContent = """{ "id":"long-path", "isInstalled": true }""";
+        const string jsContent = "console.log('long path');";
+
+        // The ZIP entry is long only after it is rooted in the app folder. This verifies the whole
+        // import chain: extract to temp, validate lock hashes, copy to app root, and read back.
+        var longSegment = new string('a', 70);
+        var longFile = $"{AppExtensionsFolder}/{folder}/dist/{longSegment}/{longSegment}/{longSegment}/main.js";
+        var expectedTargetPath = Path.Combine(ctx.TempRoot, longFile.Replace('/', Path.DirectorySeparatorChar));
+
+        using var ms = new MemoryStream();
+        using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
+        {
+            var extensionJson = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionJsonFile}");
+            using (var stream = extensionJson.Open())
+            {
+                using var writer = new StreamWriter(stream, new UTF8Encoding(false));
+                writer.Write(extensionJsonContent);
+            }
+
+            var asset = zip.CreateEntry(longFile);
+            using (var stream = asset.Open())
+            {
+                using var writer = new StreamWriter(stream, new UTF8Encoding(false));
+                writer.Write(jsContent);
+            }
+
+            var lockJson = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{LockFileName}");
+            using (var stream = lockJson.Open())
+            {
+                using var writer = new StreamWriter(stream, new UTF8Encoding(false));
+                var lockData = new
+                {
+                    version = TestVersion,
+                    files = new[]
+                    {
+                        new
+                        {
+                            file = $"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionJsonFile}",
+                            hash = Sha256.Hash(extensionJsonContent)
+                        },
+                        new
+                        {
+                            file = longFile,
+                            hash = Sha256.Hash(jsContent)
+                        }
+                    }
+                };
+                writer.Write(ctx.JsonSvc.ToJson(lockData, indentation: 2));
+            }
+        }
+        ms.Position = 0;
+
+        Assert.True(Path.GetFullPath(expectedTargetPath).Length >= 260);
+
+        var ok = ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: "long-path.zip");
+
+        Assert.True(ok);
+        Assert.True(File.Exists(PathForDiskAccess(expectedTargetPath)));
+        Assert.Equal(jsContent, File.ReadAllText(PathForDiskAccess(expectedTargetPath)));
+    }
+
+    private static string PathForDiskAccess(string path)
+    {
+        // The assertion reads the installed file from disk, so it needs the same Windows long-path
+        // representation as production. Keep the helper private to avoid making tests depend on
+        // internal production methods just for filesystem verification.
+        if (Path.DirectorySeparatorChar != '\\' || path.StartsWith(ExtendedPathPrefix, StringComparison.Ordinal))
+            return path;
+
+        var fullPath = Path.GetFullPath(path);
+        return fullPath.StartsWith(UncPrefix, StringComparison.Ordinal)
+            ? ExtendedUncPathPrefix + fullPath.Substring(UncPrefix.Length)
+            : ExtendedPathPrefix + fullPath;
+    }
+
+    private const string ExtendedPathPrefix = @"\\?\";
+    private const string ExtendedUncPathPrefix = @"\\?\UNC\";
+    private const string UncPrefix = @"\\";
 }

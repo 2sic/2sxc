@@ -437,6 +437,32 @@ public class ExportExtensionTests
     }
 
     [Fact]
+    public void Export_FileWithLongPhysicalPath_IncludesFile()
+    {
+        using var ctx = ExportExtensionTestContext.Create();
+
+        const string extName = "long-path-extension";
+        ctx.SetupExtension(extName, new ExtensionManifest { Version = "1.0.0" });
+
+        // Three valid path segments push the full physical path beyond legacy MAX_PATH while keeping
+        // each segment below the NTFS component limit. That is the scenario the \\?\ fallback should
+        // support without changing the exported ZIP path.
+        var longFolder = new string('a', 80);
+        var relativePath = Path.Combine("dist", longFolder, longFolder, longFolder, "long-path.txt");
+        var physicalPath = ctx.CreateExtensionFile(extName, relativePath, "long path file");
+
+        Assert.True(physicalPath.Length >= 260, $"Test path must exceed legacy Windows MAX_PATH. Actual length: {physicalPath.Length}");
+
+        var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
+
+        using var zipStream = new MemoryStream(result.FileBytes);
+        using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
+
+        var expectedZipPath = $"{AppExtensionsFolder}/{extName}/{relativePath.Replace("\\", "/")}";
+        Assert.Contains(zip.Entries, e => e.FullName.Equals(expectedZipPath, StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
     public void Export_FilePathsStartWithExtensions()
     {
         using var ctx = ExportExtensionTestContext.Create();

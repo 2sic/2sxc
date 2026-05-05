@@ -1,4 +1,5 @@
 using System.Text.Json;
+using ToSic.Eav.ImportExport.Sys.Zip;
 using ToSic.Sxc.ImportExport.Package.Sys;
 using ToSic.Sys.Security.Encryption;
 using ToSic.Sys.Utils;
@@ -57,15 +58,28 @@ internal static class ExtensionLockHelper
     }
 
     internal static IEnumerable<string> EnumerateFilesSafe(string? path)
-        => !string.IsNullOrWhiteSpace(path) && Directory.Exists(path)
-            ? Directory.GetFiles(path, "*", SearchOption.AllDirectories)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return [];
+
+        // Lock validation runs after ZIP extraction but before the files are copied to the app root.
+        // Enumerate through the shared ZIP long-path helper so a package that extracted successfully
+        // can also be validated and hashed successfully.
+        var diskPath = Zipping.PathForDiskAccess(path!);
+        return Directory.Exists(diskPath)
+            ? Directory
+                .GetFiles(diskPath, "*", SearchOption.AllDirectories)
+                .Select(Zipping.DisplayPath)
             : [];
+    }
 
     internal static string EnsureTrailingBackslash(string path)
         => path.SuffixSlash().Backslash();
 
     internal static string CalculateHash(string path)
-        => Sha256.Hash(File.ReadAllBytes(path));
+        // Hashing is another physical file read, so it must use the same long-path disk form as
+        // enumeration/copy. The package-index value remains the relative ZIP path, not this disk path.
+        => Sha256.Hash(File.ReadAllBytes(Zipping.PathForDiskAccess(path)));
 }
 
 internal record LockFileReadResult(bool Success, string? Error, Dictionary<string, string>? ExpectedWithHash, HashSet<string>? AllowedFiles);

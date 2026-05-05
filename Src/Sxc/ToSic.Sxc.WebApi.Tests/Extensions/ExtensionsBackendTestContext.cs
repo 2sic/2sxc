@@ -132,8 +132,35 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
     public void Dispose()
     {
         try { _sp.Dispose(); } catch { /* Ignore */ }
-        try { Directory.Delete(TempRoot, recursive: true); } catch { /* Ignore */ }
+        try { DeleteDirectory(TempRoot); } catch { /* Ignore */ }
     }
+
+    private static void DeleteDirectory(string directory)
+    {
+        // Long-path install tests can leave temp trees that Directory.Delete cannot address through
+        // legacy Windows paths. Cleanup through \\?\ keeps test isolation reliable after success and
+        // after assertion failures.
+        var diskDirectory = PathForDiskAccess(directory);
+        if (Directory.Exists(diskDirectory))
+            Directory.Delete(diskDirectory, recursive: true);
+    }
+
+    private static string PathForDiskAccess(string path)
+    {
+        // Test-only copy of the production long-path fallback. This avoids exposing production helpers
+        // just for cleanup while still exercising the same Windows filesystem behavior.
+        if (Path.DirectorySeparatorChar != '\\' || path.StartsWith(ExtendedPathPrefix, StringComparison.Ordinal))
+            return path;
+
+        var fullPath = Path.GetFullPath(path);
+        return fullPath.StartsWith(UncPrefix, StringComparison.Ordinal)
+            ? ExtendedUncPathPrefix + fullPath.Substring(UncPrefix.Length)
+            : ExtendedPathPrefix + fullPath;
+    }
+
+    private const string ExtendedPathPrefix = @"\\?\";
+    private const string ExtendedUncPathPrefix = @"\\?\UNC\";
+    private const string UncPrefix = @"\\";
 
     #endregion
 

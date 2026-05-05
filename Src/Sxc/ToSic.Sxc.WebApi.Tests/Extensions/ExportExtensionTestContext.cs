@@ -148,6 +148,17 @@ internal sealed class ExportExtensionTestContext : IDisposable
         }
     }
 
+    public string CreateExtensionFile(string name, string relativePath, string content)
+    {
+        // Test setup must be able to create the same long physical paths that production export is
+        // expected to read. Use the Windows extended path only for disk writes; returned paths stay in
+        // normal form because that is what production code receives from app path services.
+        var filePath = Path.Combine(TempRoot, FolderConstants.AppExtensionsFolder, name, relativePath);
+        Directory.CreateDirectory(PathForDiskAccess(Path.GetDirectoryName(filePath)!));
+        File.WriteAllText(PathForDiskAccess(filePath), content);
+        return filePath;
+    }
+
     /// <summary>
     /// Create AppCode files for extension
     /// </summary>
@@ -160,6 +171,23 @@ internal sealed class ExportExtensionTestContext : IDisposable
         {
             File.WriteAllText(Path.Combine(appCodePath, fileName), content);
         }
+    }
+
+    private const string ExtendedPathPrefix = @"\\?\";
+    private const string UncPrefix = @"\\";
+
+    private static string PathForDiskAccess(string path)
+    {
+        // Keep this local to tests so the fixture can create/verify long paths without depending on
+        // production internals. The behavior intentionally mirrors the export service helper.
+        if (Path.DirectorySeparatorChar != '\\' || path.StartsWith(ExtendedPathPrefix, StringComparison.Ordinal))
+            return path;
+
+        var fullPath = Path.GetFullPath(path);
+
+        return fullPath.StartsWith(UncPrefix, StringComparison.Ordinal)
+            ? @"\\?\UNC\" + fullPath.Substring(UncPrefix.Length)
+            : ExtendedPathPrefix + fullPath;
     }
 
     #endregion

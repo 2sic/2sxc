@@ -36,7 +36,10 @@ internal class ExtensionExtractionHelper(
         catch (Exception ex)
         {
             l.Ex(ex);
-            throw new InvalidOperationException("invalid zip", ex);
+
+            // Keep the stable "invalid zip" wrapper for callers, but include the inner message so UI
+            // and logs can distinguish malformed packages from long-path or path-security failures.
+            throw new InvalidOperationException($"invalid zip: {ex.Message}", ex);
         }
 
         var extensionsDir = Path.Combine(tempDir, FolderConstants.AppExtensionsFolder);
