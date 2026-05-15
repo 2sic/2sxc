@@ -64,7 +64,7 @@ public abstract class CodeApiServiceBase(CodeApiServiceBase.Dependencies service
     {
         if (_logInitDone) return;
         _logInitDone = true;
-        Services.LogStore.Value.Add("dynamic-code-service", Log);
+        Services.LogStore.Value.Add("code-api-service", Log);
     }
 
 }
