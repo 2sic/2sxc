@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Data.Sys;
 
-public class InputTypes
+public class InputTypesWysiwyg
 {
     /// <summary>
     /// This is the input type for a wysiwyg editor.

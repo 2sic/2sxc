@@ -7,6 +7,6 @@ public class MockHtmlContentType
 {
     public string? SomeText { get; set; }
 
-    [ContentTypeAttributeSpecs(InputTypeWIP = InputTypes.InputTypeWysiwyg)]
+    [ContentTypeAttributeSpecs(InputTypeWIP = InputTypesWysiwyg.InputTypeWysiwyg)]
     public string? SomeHtml { get; set; }
 }

@@ -38,7 +38,7 @@ public class EditLoadActivityAddContentTypes(Generator<JsonSerializer> jsonSeria
                             .Select(a => a with
                             {
                                 // ensure that the input-type is set, otherwise it will be null
-                                InputType = InputTypes.MapInputTypeV10(a.InputType! /* it can't really be null, only in very old imports, and this is not an import */)
+                                InputType = InputTypesWysiwyg.MapInputTypeV10(a.InputType! /* it can't really be null, only in very old imports, and this is not an import */)
                             })
                             .ToListOpt(),
                         }

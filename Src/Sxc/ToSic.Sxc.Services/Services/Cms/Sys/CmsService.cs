@@ -1,12 +1,12 @@
 ﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Sys;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Services.Sys.Cms;
 using ToSic.Sxc.Services.Tweaks;
 using ToSic.Sxc.Services.Tweaks.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
-using InputTypes = ToSic.Sxc.Data.Sys.InputTypes;
 
 namespace ToSic.Sxc.Services.Cms.Sys;
 
@@ -77,7 +77,7 @@ internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
         if (debug) l.A($"Field type is: {ValueTypes.String}:{inputType}");
 
         // Not WYSIWYG = normal string, no toolbar by default
-        if (inputType != InputTypes.InputTypeWysiwyg)
+        if (inputType != InputTypesWysiwyg.InputTypeWysiwyg)
             return l.Return(cntHelper.Wrap(value, defaultToolbar: false), "string, default no toolbar");
 
         // WYSIWYG
