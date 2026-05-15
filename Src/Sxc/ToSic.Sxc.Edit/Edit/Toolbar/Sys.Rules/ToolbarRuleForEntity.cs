@@ -1,4 +1,6 @@
-﻿using ToSic.Sxc.Web.Sys.Url;
+﻿using System.Numerics;
+using ToSic.Eav.Data.Build.Sys;
+using ToSic.Sxc.Web.Sys.Url;
 
 namespace ToSic.Sxc.Edit.Toolbar.Sys.Rules;
 
@@ -19,9 +21,13 @@ internal class ToolbarRuleForEntity: ToolbarRuleTargeted
     ) : base(target, commandName, operation: operation, ui: ui, parameters: parameters, context: context, decoHelper: decoHelper)
     {
         if (target is int intTarget)
-            EditInfo.entityId = intTarget;
+            EditInfo!.entityId = intTarget;
         if (contentType != null)
-            EditInfo.contentType = contentType;
+            EditInfo!.contentType = contentType;
+
+        // new 21.08 2dm 2026-05-15 skip content-type if it's a virtual content-type
+        if (EditInfo!.contentType == DataAssemblerExtensions.FakeEntityContentType)
+            EditInfo.contentType = null;
 
         if (propsSkip != null)
             _urlValueFilterNames = new(true, propsSkip);
@@ -38,8 +44,8 @@ internal class ToolbarRuleForEntity: ToolbarRuleTargeted
     protected IEntity? TargetEntity => _entity.Get(() => Target as IEntity ?? (Target as ICanBeEntity)?.Entity);
     private readonly GetOnce<IEntity?> _entity = new();
 
-    internal EntityEditInfo EditInfo => _editInfo.Get(() => new(TargetEntity))!;
-    private readonly GetOnce<EntityEditInfo> _editInfo = new();
+    [field: AllowNull, MaybeNull]
+    internal EntityEditInfo EditInfo => field ??= new(TargetEntity);
 
     protected override string DecoratorTypeName => TargetEntity?.Type?.Name ?? "";
 
