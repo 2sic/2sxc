@@ -175,8 +175,7 @@ public class ContentGroupList(
 
                     // if there is no content-type for this, then skip it (don't deliver anything)
                     if (contentTypeName == "")
-                        return l.ReturnNull(
-                            $"identifier is ContentBlockMode, but no content-type on field {identifier.Field}");
+                        return l.ReturnNull($"identifier is ContentBlockMode, but no content-type on field {identifier.Field}");
 
                     identifier = identifier with { ContentTypeName = contentTypeName };
                     identifier = ConvertListIndexToEntityIds(identifier, contentGroup);
@@ -194,6 +193,9 @@ public class ContentGroupList(
                 if (identifier.AddSafe)
                 {
                     lOuter.A("identifier is new");
+                    if (identifier.ContentTypeName.HasValue())
+                        return l.Return(identifier, $"using identifier with existing type {identifier.ContentTypeName}");
+                    
                     // look up type
                     var target = AppCtx.AppReader.List.GetOne(identifier.Parent.Value)!;
                     var field = target.Type[identifier.Field]!;
