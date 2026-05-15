@@ -78,9 +78,9 @@ public class EditSaveBackend(
         var saveValidator = new SaveDataValidator(Log);
         var updateValidator = new SaveDataUpdateValidator(Log);
         var items = await Task.WhenAll(itemsToProcess
-            .Select(async (i, index) => // index is helpful in case of errors
+            .Select(async (bundle, index) => // index is helpful in case of errors
             {
-                var ent = ser.Deserialize(i.Entity, false, false);
+                var ent = ser.Deserialize(bundle.Entity, false, false);
 
                 // Check basic entity integrity
                 var isOkException = saveValidator.EntityNotNullAndAttributeCountOk(index, ent);
@@ -110,23 +110,20 @@ public class EditSaveBackend(
                 );
 
                 // new in 11.01
-                if (i.Header.Parent != null)
+                var header = bundle.Header;
+                if (header.Parent != null)
                 {
                     // Check if Add was true, and fix if it had already been saved (EntityId != 0)
                     // the entityId is reset by the validator if it turns out to be an update
                     // todo: verify use - maybe it's to set before we save, as maybe afterward it's always != 0?
-                    var add = i.Header.AddSafe;
-                    i.Header.Add = add;
-                    if (ent.EntityId > 0 && add)
-                        i.Header.Add = false;
+                    var add = header.AddSafe && ent.EntityId <= 0;
+                    header = header with { Add = add };
+                    //if (ent.EntityId > 0 && add)
+                    //    header.Add = false;
                 }
 
                 return (
-                    Bundle: new BundleWithHeader<IEntity>
-                    {
-                        Header = i.Header,
-                        Entity = ent
-                    },
+                    Bundle: new BundleWithHeader<IEntity> { Header = header, Entity = ent },
                     Processor: processor
                 );
             })

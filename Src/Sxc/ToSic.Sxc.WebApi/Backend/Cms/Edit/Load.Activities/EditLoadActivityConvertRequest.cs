@@ -12,6 +12,7 @@ public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerial
     : ServiceBase("UoW.AddCtx", connect: [jsonSerializerGenerator, entityAssembler]),
         ILowCodeAction<List<BundleWithHeaderOptional<IEntity>>, EditLoadDto>
 {
+    // Note: reworked this 2026-05-15 2dm to make the objects immutable, hope no side effects #ImmutableIsTheNewBlack
     public async Task<ActionData<EditLoadDto>> Run(LowCodeActionContext actionCtx, ActionData<List<BundleWithHeaderOptional<IEntity>>> data)
     {
         var l = Log.Fn<EditLoadDto>();
@@ -20,30 +21,34 @@ public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerial
         var appWorkCtxPlus = actionCtx.Get<IAppWorkCtxPlus>(EditLoadContextConstants.AppCtxWork);
         var jsonSerializer = jsonSerializerGenerator.New().SetApp(appReader);
 
-        var list = data.Data;
+        // Exit early if no data
+        if (!data.Data.Any())
+            return ActionData.Create(l.Return(new() { Items = [] }));
+        
+        // set published if some data already exists
+        var entity = data.Data.First().Entity;
+        var isPublished = entity?.IsPublished ?? true; // Entity could be null (new), then true
+        // only set draft-should-branch if this draft already has a published item
+        var draftShouldBranch = !isPublished && appReader.GetPublished(entity) != null;
+
         var result = new EditLoadDto
         {
-            Items = list
+            Items = data.Data
                 .Select(bundle => new BundleWithHeaderOptional<JsonEntity>
                 {
-                    Header = bundle.Header,
-                    Entity = GetSerializeAndMdAssignJsonEntity(actionCtx.Get<int>("AppId"), bundle, jsonSerializer, appReader, appWorkCtxPlus)
+                    // new UI doesn't use the 'For' anymore, so make sure we reset it, to protect from follow-up problems
+                    Header = bundle.Header?.For == null
+                        ? bundle.Header
+                        : bundle.Header with { For = null },
+                    Entity = GetSerializeAndMdAssignJsonEntity(actionCtx.Get<int>("AppId"), bundle, jsonSerializer,
+                        appReader, appWorkCtxPlus)
                 })
                 .ToList(),
+
+            IsPublished = isPublished,
+            DraftShouldBranch = draftShouldBranch,
         };
 
-        // set published if some data already exists
-        if (list.Any())
-        {
-            var entity = list.First().Entity;
-            var isPublished = entity?.IsPublished ?? true; // Entity could be null (new), then true
-            result = result with
-            {
-                IsPublished = isPublished,
-                // only set draft-should-branch if this draft already has a published item
-                DraftShouldBranch = !isPublished && (appReader.GetPublished(entity)) != null
-            };
-        }
         return ActionData.Create(l.Return(result));
     }
 
@@ -59,8 +64,9 @@ public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerial
         // attach original metadata assignment when creating a new one
         var ent = GetJsonEntityOrCreateEmpty();
 
-        // new UI doesn't use this anymore, reset it
-        bundle.Header?.For = null;
+        // new UI doesn't use this anymore, reset it - moved up
+        //if (bundle.Header?.For != null)
+        //    bundle.Header = bundle.Header with { For = null };
 
         // If entity is not for something, we're done...
         if (ent.For == null)

@@ -5,7 +5,6 @@ using ToSic.Sxc.Blocks.Sys.BlockEditor;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Blocks.Sys.Work;
 using ToSic.Sys.Utils;
-using static System.StringComparison;
 
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
@@ -127,9 +126,8 @@ public class ContentGroupList(
         var l = Log.Fn<int?>();
         int? presentationId = null;
         var presItem =
-            bundle.FirstOrDefault(e => string.Equals(e.Header.Field, ViewParts.Presentation, OrdinalIgnoreCase))
-            ?? bundle.FirstOrDefault(e =>
-                string.Equals(e.Header.Field, ViewParts.ListPresentation, OrdinalIgnoreCase));
+            bundle.FirstOrDefault(e => e.Header.Field.EqualsInsensitive(ViewParts.Presentation))
+            ?? bundle.FirstOrDefault(e => e.Header.Field.EqualsInsensitive(ViewParts.ListPresentation));
 
         if (presItem == null)
             return l.ReturnNull("no presentation");
@@ -143,75 +141,81 @@ public class ContentGroupList(
         return l.Return(presentationId, "found");
     }
 
-    internal ContentGroupList ConvertGroup(List<ItemIdentifier> identifiers)
+    internal List<ItemIdentifier> ConvertGroup(List<ItemIdentifier> identifiers)
     {
-        var l = Log.Fn<ContentGroupList>();
-        foreach (var identifier in identifiers.Where(identifier => identifier != null))
-            identifier.IsContentBlockMode = DetectContentBlockMode(identifier);
-        return l.Return(this);
+        var l = Log.Fn<List<ItemIdentifier>>();
+        var result = identifiers
+            .Select(identifier => identifier == null
+                ? null
+                : identifier with { IsContentBlockMode = DetectContentBlockMode(identifier) }
+            )
+            .ToList();
+        //foreach (var identifier in identifiers.Where(identifier => identifier != null))
+        //    identifier.IsContentBlockMode = DetectContentBlockMode(identifier);
+        return l.Return(result);
     }
 
     internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers)
     {
-        var l = Log.Fn<List<ItemIdentifier>>();
-        var corrected = new List<ItemIdentifier>();
+        var lOuter = Log.Fn<List<ItemIdentifier>>();
+         //new List<ItemIdentifier>();
         var appBlocks = blocks.New(AppCtx);
-        foreach (var identifier in identifiers)
-        {
-            // Case one, it's a Content-Group - in this case the content-type name comes from View configuration
-            if (identifier.IsContentBlockMode)
+        var corrected = identifiers
+            .Select((identifier, index) =>
             {
-                l.A("identifier is ContentBlockMode");
-                if (!identifier.Parent.HasValue)
-                    continue;
+                var l = lOuter.Fn<ItemIdentifier>($"{index}");
+                // Case one, it's a Content-Group - in this case the content-type name comes from View configuration
+                if (identifier.IsContentBlockMode)
+                {
+                    if (!identifier.Parent.HasValue)
+                        return l.ReturnNull("identifier is ContentBlockMode, but no parent");
 
-                var contentGroup = appBlocks.GetBlockConfig(identifier.GetParentEntityOrError());
-                var contentTypeName = contentGroup.View?.GetTypeStaticName(identifier.Field!) ?? "";
+                    var contentGroup = appBlocks.GetBlockConfig(identifier.GetParentEntityOrError());
+                    var contentTypeName = contentGroup.View?.GetTypeStaticName(identifier.Field!) ?? "";
 
-                // if there is no content-type for this, then skip it (don't deliver anything)
-                if (contentTypeName == "")
-                    continue;
+                    // if there is no content-type for this, then skip it (don't deliver anything)
+                    if (contentTypeName == "")
+                        return l.ReturnNull(
+                            $"identifier is ContentBlockMode, but no content-type on field {identifier.Field}");
 
-                identifier.ContentTypeName = contentTypeName;
-                ConvertListIndexToEntityIds(identifier, contentGroup);
-                corrected.Add(identifier);
-                continue;
-            }
+                    identifier = identifier with { ContentTypeName = contentTypeName };
+                    identifier = ConvertListIndexToEntityIds(identifier, contentGroup);
+                    return l.Return(identifier, $"identifier is ContentBlockMode, type is '{contentTypeName}'");
+                }
 
-            // Case #2 it's an entity inside a field of another entity
-            // Added in v11.01
-            if (identifier is { Parent: not null, Field: not null })
-            {
+                // Not Case #2
+                // Default case - just a normal identifier
+                if (identifier is not { Parent: not null, Field: not null })
+                    return l.Return(identifier, "default case, normal identifier");
+
+                // Case #2 it's an entity inside a field of another entity
+                // Added in v11.01
                 // check if it's a request for new, in which case we should check the create-type
                 if (identifier.AddSafe)
                 {
-                    l.A("identifier is new");
+                    lOuter.A("identifier is new");
                     // look up type
                     var target = AppCtx.AppReader.List.GetOne(identifier.Parent.Value)!;
                     var field = target.Type[identifier.Field]!;
-                    identifier.ContentTypeName = new WorkAttributeEntityInspectType().PrimaryTypeName(field);
-                    corrected.Add(identifier);
-                    continue;
+                    identifier = identifier with { ContentTypeName = new WorkAttributeEntityInspectType().PrimaryTypeName(field) }; 
+                    return l.Return(identifier, "identifier is new");
                 }
-                
+
                 // Otherwise it's an edit operation, and it could be a different content-type than is configured for the field
                 // because the field may be configured for multiple types
-                l.A("identifier is edit");
+                lOuter.A("identifier is edit");
                 var realEntity = AppCtx.AppReader.List.GetOne(identifier.EntityId);
                 if (realEntity == null)
-                    continue;
-                identifier.ContentTypeName = realEntity.Type.NameId;
-                corrected.Add(identifier);
-                continue;
-            }
+                    return l.ReturnNull("identifier is edit, but couldn't find real entity.");
+                identifier = identifier with { ContentTypeName = realEntity.Type.NameId };
+                return l.Return(identifier, $"identity is edit, content-Type is {identifier.ContentTypeName}");
 
-            // Default case - just a normal identifier
-            corrected.Add(identifier);
-        }
-        
-        
+            })
+            .Where(id => id != null)
+            .Cast<ItemIdentifier>()
+            .ToList();
 
-        return l.Return(corrected, $"{corrected.Count}");
+        return lOuter.Return(corrected, $"{corrected.Count}");
     }
 
 
@@ -232,34 +236,35 @@ public class ContentGroupList(
     }
 
 
-    private bool ConvertListIndexToEntityIds(ItemIdentifier identifier, BlockConfiguration blockConfiguration)
+    private ItemIdentifier ConvertListIndexToEntityIds(ItemIdentifier identifier, BlockConfiguration blockConfiguration)
     {
-        var l = Log.Fn<bool>();
+        var l = Log.Fn<ItemIdentifier>();
         var part = blockConfiguration[identifier.Field!];
         if (!identifier.AddSafe) // not in add-mode
         {
             var idx = identifier.IndexSafeOrFallback(part.Count - 1);
             if (idx >= 0 && part.Count > idx && // has as many items as desired
                 part[idx] != null) // and the slot has something
-                identifier.EntityId = part[idx].EntityId;
+                identifier = identifier with { EntityId = part[idx].EntityId };
         }
 
         // tell the UI that it should not actually use this data yet, keep it locked
         if (!identifier.Field!.ToLowerInvariant().Contains(ViewParts.PresentationLower))
-            return l.ReturnFalse("no presentation");
+            return l.Return(identifier, "no presentation");
 
         // the following steps are only for presentation items
-        identifier.IsEmptyAllowed = true;
+        identifier = identifier with { IsEmptyAllowed = true };
 
         if (identifier.EntityId != 0)
-            return l.ReturnFalse("id != 0");
+            return l.Return(identifier, "id != 0");
 
-        identifier.IsEmpty = true;
+        identifier = identifier with { IsEmpty = true };
 
-        identifier.DuplicateEntity = identifier.Field.ToLowerInvariant() == ViewParts.PresentationLower
+        var duplicate = identifier.Field.ToLowerInvariant() == ViewParts.PresentationLower
             ? blockConfiguration.View!.PresentationItem?.EntityId
             : blockConfiguration.View!.HeaderPresentationItem?.EntityId;
+        identifier = identifier with { DuplicateEntity = duplicate };
 
-        return l.ReturnTrue("ok");
+        return l.Return(identifier,"ok");
     }
 }
