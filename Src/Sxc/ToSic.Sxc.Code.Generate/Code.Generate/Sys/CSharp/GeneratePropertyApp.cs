@@ -1,4 +1,6 @@
-﻿using ToSic.Sxc.Code.Generate.Data;
+﻿using ToSic.Eav.Data.Sys;
+using ToSic.Eav.Data.Sys.ContentTypes;
+using ToSic.Sxc.Code.Generate.Data;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Code.Generate.Sys;
@@ -9,14 +11,13 @@ internal class GeneratePropertyApp(CSharpGeneratorHelper helper) : GeneratePrope
 
     public override List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs)
     {
-
-
-
-
+        // Note: 2dm 2026-05-15 - this looks very similar to GeneratePropertyEntity but I'm not sure what this code is for
         var name = attribute.Name;
 
-        var entityType = attribute.Metadata.Get<string>("EntityType");
-        var allowMulti = attribute.Metadata.Get<bool>("AllowMultiValue");
+        var inspector = new WorkAttributeEntityInspectType();
+        var entityType = inspector.PrimaryTypeName(attribute, create: false);
+        //var entityType = attribute.Metadata.Get<string>(AttributeNames.EntityFieldType);
+        var allowMulti = attribute.Metadata.Get<bool>(AttributeNames.EntityFieldAllowMulti);
 
         var msgPrefix = $"{name} as " + (allowMulti ? "list" : "single item") + " of";
         // var msgSuffix = "Use methods such as .Children(\"{name}\") or .Child(\"{name}\") to get the actual items.";
