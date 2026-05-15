@@ -57,47 +57,46 @@ public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerial
     {
         var l = Log.Fn<JsonEntity>();
         // attach original metadata assignment when creating a new one
-        JsonEntity ent;
-        if (bundle.Entity != null)
-        {
-            ent = jsonSerializer.ToJson(bundle.Entity, 1);
-
-        }
-        else
-        {
-            ent = jsonSerializer.ToJson(ConstructEmptyEntity(appId, bundle.Header!, appSysCtx), metadataDepth: 0);
-
-            // only attach metadata, if no metadata already exists
-            if (ent.For == null && bundle.Header?.For != null)
-                ent = ent with { For = bundle.Header.For };
-        }
+        var ent = GetJsonEntityOrCreateEmpty();
 
         // new UI doesn't use this anymore, reset it
-        if (bundle.Header != null)
-            bundle.Header.For = null;
+        bundle.Header?.For = null;
 
+        // If entity is not for something, we're done...
+        if (ent.For == null)
+            return l.Return(ent, "done, no 'For'");
+        
+        // ...otherwise we must convert older 'For' signatures
         try
         {
-            if (ent.For != null)
-            {
-                var eFor = ent.For;
-                // #TargetTypeIdInsteadOfTarget
-                var targetType = eFor.TargetType != 0
-                    ? eFor.TargetType
-                    : jsonSerializer.MetadataTargets.GetId(eFor.Target!);
-                ent = ent with
-                {
-                    For = eFor with
-                    {
-                        Title = appReader.FindTargetTitle(targetType, eFor.String ?? eFor.Guid?.ToString() ?? eFor.Number?.ToString()),
-                    }
-                };
-            }
+            var eFor = ent.For;
+            // #TargetTypeIdInsteadOfTarget
+            var targetType = eFor.TargetType != 0
+                ? eFor.TargetType
+                : jsonSerializer.MetadataTargets.GetId(eFor.Target!);
+            var newTitle = appReader.FindTargetTitle(targetType, eFor.String ?? eFor.Guid?.ToString() ?? eFor.Number?.ToString());
+            ent = ent with { For = eFor with { Title = newTitle } };
         }
         catch { /* ignore experimental */ }
 
         return l.Return(ent);
+
+        // Quick helper to get the JsonEntity, or create an empty one if no entity exists in the bundle
+        JsonEntity GetJsonEntityOrCreateEmpty()
+        {
+            if (bundle.Entity != null)
+                return jsonSerializer.ToJson(bundle.Entity, 1);
+
+            var emptyEntity = ConstructEmptyEntity(appId, bundle.Header!, appSysCtx);
+            var jsonEntity = jsonSerializer.ToJson(emptyEntity, metadataDepth: 0);
+
+            // only attach metadata, if no metadata already exists
+            return jsonEntity.For == null && bundle.Header?.For != null
+                ? jsonEntity with { For = bundle.Header.For }
+                : jsonEntity;
+        }
     }
+    
     private IEntity ConstructEmptyEntity(int appId, ItemIdentifier header, IAppWorkCtx appSysCtx)
     {
         var l = Log.Fn<IEntity>();

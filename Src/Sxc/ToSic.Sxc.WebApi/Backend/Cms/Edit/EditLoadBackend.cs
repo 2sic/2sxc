@@ -44,7 +44,7 @@ public class EditLoadBackend(
         var appContext = ctxService.GetExistingAppOrSet(appId);
 
         // Note 2026-02-26 2dm - changed this to use from context, should be identical, but maybe it's not? keep an eye on this till 2026-Q2
-        var appReader = appContext.AppReaderRequired; // appReaders.Get(appId);
+        var appReader = appContext.AppReaderRequired;
         var actContext = new LowCodeActionContext
         {
             Context = new(StringComparer.OrdinalIgnoreCase)

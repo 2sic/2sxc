@@ -110,21 +110,17 @@ public class ContentGroupList(
         var primaryItem =
             bundle.FirstOrDefault(e => e.Header.Field.EqualsInsensitive(ViewParts.Content))
             ?? bundle.FirstOrDefault(e => e.Header.Field.EqualsInsensitive(ViewParts.FieldHeader));
-        if (primaryItem == null)
-            throw new("unexpected group-entity assignment, cannot figure it out");
-        return primaryItem;
+        return primaryItem
+               ?? throw new("unexpected group-entity assignment, cannot figure it out");
     }
 
     /// <summary>
     /// Get saved entity (to get its ID)
     /// </summary>
-    private static int GetIdFromGuidOrError(IReadOnlyDictionary<Guid, int> postSaveIds, Guid guid)
-    {
-        if (!postSaveIds.TryGetValue(guid, out var id))
-            throw new("Saved entity not found - not able to update BlockConfiguration");
-
-        return id;
-    }
+    private static int GetIdFromGuidOrError(IReadOnlyDictionary<Guid, int> postSaveIds, Guid guid) =>
+        postSaveIds.TryGetValue(guid, out var id)
+            ? id
+            : throw new("Saved entity not found - not able to update BlockConfiguration");
 
     private int? FindPresentationItem(IReadOnlyDictionary<Guid, int> postSaveIds, IGrouping<string, BundleWithHeader<IEntity>> bundle)
     {
@@ -158,16 +154,17 @@ public class ContentGroupList(
     internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers)
     {
         var l = Log.Fn<List<ItemIdentifier>>();
-        var newItems = new List<ItemIdentifier>();
+        var corrected = new List<ItemIdentifier>();
         var appBlocks = blocks.New(AppCtx);
         foreach (var identifier in identifiers)
         {
             // Case one, it's a Content-Group - in this case the content-type name comes from View configuration
             if (identifier.IsContentBlockMode)
             {
-                if (!identifier.Parent.HasValue) continue;
+                l.A("identifier is ContentBlockMode");
+                if (!identifier.Parent.HasValue)
+                    continue;
 
-                //var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(identifier.GetParentEntityOrError());
                 var contentGroup = appBlocks.GetBlockConfig(identifier.GetParentEntityOrError());
                 var contentTypeName = contentGroup.View?.GetTypeStaticName(identifier.Field!) ?? "";
 
@@ -177,7 +174,7 @@ public class ContentGroupList(
 
                 identifier.ContentTypeName = contentTypeName;
                 ConvertListIndexToEntityIds(identifier, contentGroup);
-                newItems.Add(identifier);
+                corrected.Add(identifier);
                 continue;
             }
 
@@ -185,19 +182,36 @@ public class ContentGroupList(
             // Added in v11.01
             if (identifier is { Parent: not null, Field: not null })
             {
-                // look up type
-                var target = AppCtx.AppReader.List.GetOne(identifier.Parent.Value)!;
-                var field = target.Type[identifier.Field]!;
-                identifier.ContentTypeName = field.EntityFieldItemTypePrimary();
-                newItems.Add(identifier);
+                // check if it's a request for new, in which case we should check the create-type
+                if (identifier.AddSafe)
+                {
+                    l.A("identifier is new");
+                    // look up type
+                    var target = AppCtx.AppReader.List.GetOne(identifier.Parent.Value)!;
+                    var field = target.Type[identifier.Field]!;
+                    identifier.ContentTypeName = new WorkAttributeEntityInspectType().PrimaryTypeName(field);
+                    corrected.Add(identifier);
+                    continue;
+                }
+                
+                // Otherwise it's an edit operation, and it could be a different content-type than is configured for the field
+                // because the field may be configured for multiple types
+                l.A("identifier is edit");
+                var realEntity = AppCtx.AppReader.List.GetOne(identifier.EntityId);
+                if (realEntity == null)
+                    continue;
+                identifier.ContentTypeName = realEntity.Type.NameId;
+                corrected.Add(identifier);
                 continue;
             }
 
             // Default case - just a normal identifier
-            newItems.Add(identifier);
+            corrected.Add(identifier);
         }
+        
+        
 
-        return l.Return(newItems, $"{newItems.Count}");
+        return l.Return(corrected, $"{corrected.Count}");
     }
 
 
