@@ -1,12 +1,17 @@
 using System.Collections.Immutable;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Build.Sys;
+using ToSic.Eav.DataSource;
 using ToSic.Eav.Data.Sys.Dimensions;
 using ToSic.Eav.Data.Sys.Entities.Sources;
+using ToSic.Eav.LookUp.Sys.Engines;
+using ToSic.Eav.Services;
 using ToSic.Sxc.Backend.SaveHelpers;
+using ToSic.Sys.Services;
 
 namespace ToSic.Sxc.WebApi.Tests.SaveHelpers;
 
@@ -29,13 +34,28 @@ internal sealed class IsUniqueValidatorTestContext : IDisposable
 
     public ContentTypeAssembler ContentTypeAssembler { get; }
 
-    public IsUniqueValidator CreateValidator()
-        => new(new Log("Tst.Unq"));
+    public IsUniqueValidator CreateValidator(params IEntity[] existingEntities)
+        => new(CreateUniqueValueLookup(), CreateDataSource(existingEntities), new Log("Tst.Unq"));
+
+    public UniqueValueLookup CreateUniqueValueLookup()
+        => new(_serviceProvider.GetRequiredService<IDataSourcesService>(), new Log("Tst.UnqLkp"));
+
+    public IDataSource CreateDataSource(params IEntity[] entities)
+    {
+        var services = _serviceProvider.GetRequiredService<DataSourceBase.Dependencies>();
+        var source = new TestEntitiesDataSource(services, entities);
+        ((IServiceWithSetup<IDataSourceOptions>)source).Setup(new DataSourceOptions
+        {
+            AppIdentityOrReader = new AppIdentity(0, AppId),
+            LookUp = new LookUpEngine(new Log("Tst.UnqSrc")),
+        });
+        return source;
+    }
 
     public static IsUniqueValidatorTestContext Create()
     {
         var services = new ServiceCollection();
-        new StartupTestsEavDataBuild().ConfigureServices(services);
+        new StartupCoreDataSourcesAndTestData().ConfigureServices(services);
         var serviceProvider = services.BuildServiceProvider()
                               ?? throw new InvalidOperationException("Failed to build service provider");
         return new(serviceProvider);
@@ -192,4 +212,13 @@ internal sealed class IsUniqueValidatorTestContext : IDisposable
 
     public void Dispose()
         => _serviceProvider.Dispose();
+
+    private sealed class TestEntitiesDataSource : DataSourceBase
+    {
+        public TestEntitiesDataSource(Dependencies services, IEnumerable<IEntity> entities) : base(services, "Tst.UnqSrc")
+        {
+            var list = entities.ToList();
+            ProvideOut(() => list);
+        }
+    }
 }

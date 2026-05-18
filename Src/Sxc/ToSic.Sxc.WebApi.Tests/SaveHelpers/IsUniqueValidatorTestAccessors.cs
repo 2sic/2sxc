@@ -13,6 +13,6 @@ internal static class IsUniqueValidatorTestAccessors
     /// <summary>
     /// Test accessor for <see cref="IsUniqueValidator.UniqueValuesOnly"/>.
     /// </summary>
-    public static HttpExceptionAbstraction? UniqueValuesOnlyTac(this IsUniqueValidator validator, IEnumerable<IEntity> existingEntities, IReadOnlyCollection<IEntity> pendingEntities)
-        => validator.UniqueValuesOnly(existingEntities, pendingEntities);
+    public static HttpExceptionAbstraction? UniqueValuesOnlyTac(this IsUniqueValidator validator, IReadOnlyCollection<IEntity> pendingEntities)
+        => validator.UniqueValuesOnly(pendingEntities);
 }

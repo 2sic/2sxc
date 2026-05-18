@@ -2,6 +2,7 @@
 using ToSic.Eav.Data.Processing;
 using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.Serialization.Sys;
+using ToSic.Eav.Services;
 using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Backend.SaveHelpers;
 using ToSic.Sys.Security.Permissions;
@@ -17,9 +18,10 @@ public class EditSaveBackend(
     JsonSerializer jsonSerializer,
     SaveSecurity saveSecurity,
     SaveEntities saveBackendHelper,
+    IDataSourcesService dataSourcesService,
     LazySvc<DataValidatorContentTypeDataStore> valContentTypeDataStore,
     DataAssembler dataAssembler)
-    : ServiceBase("Cms.SaveBk", connect: [pagePublishing, workEntities, ctxService, jsonSerializer, saveSecurity, saveBackendHelper, dataAssembler, valContentTypeDataStore])
+    : ServiceBase("Cms.SaveBk", connect: [pagePublishing, workEntities, ctxService, jsonSerializer, saveSecurity, saveBackendHelper, dataSourcesService, dataAssembler, valContentTypeDataStore])
 {
     public async Task<Dictionary<Guid, int>> Save(int appId, EditSaveDto package, bool partOfPage)
     {
@@ -138,11 +140,13 @@ public class EditSaveBackend(
             .Select(i => i.Bundle)
             .ToList();
 
-        var isUniqueValidator = new IsUniqueValidator(Log);
-        var isUniqueValidationException = isUniqueValidator.UniqueValuesOnly(
-            appEntities.All(),
-            itemsWithoutProcessor.Select(i => i.Entity).ToList()
-        );
+        var isUniqueValidator = new IsUniqueValidator(
+                new UniqueValueLookup(dataSourcesService, Log),
+                appEntities.AppWorkCtx.Data,
+                Log
+            );
+        
+        var isUniqueValidationException = isUniqueValidator.UniqueValuesOnly(itemsWithoutProcessor.Select(i => i.Entity).ToList());
         if (isUniqueValidationException != null)
             throw isUniqueValidationException;
 

@@ -1,856 +1,165 @@
-using System.Collections;
-using ToSic.Eav.Data.Sys.Entities.Sources;
-using ToSic.Eav.Data.Sys.Relationships;
-using ToSic.Eav.Sys;
+using ToSic.Eav.DataSource;
 using ToSic.Eav.WebApi.Sys.Helpers.Validation;
 
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
 /// <summary>
-/// Validates save packages for fields marked with <c>IsUnique</c> and reports collisions
-/// against already persisted entities or other items in the same request.
+/// Validates save packages for fields marked with <c>IsUnique</c>.
 /// </summary>
-internal class IsUniqueValidator(ILog parentLog) : ValidatorBase(parentLog, "Val.UnqOk")
+internal class IsUniqueValidator(UniqueValueLookup lookup, IDataSource appData, ILog parentLog) : ValidatorBase(parentLog, "Val.UnqOk")
 {
     private const string IsUniqueMetadataKey = "IsUnique";
     private const string StringUrlPathInputType = "string-url-path";
-    private const string InvariantLanguageBucket = "";
-    private const string InvariantLanguageBucketLabel = "invariant";
-    private static readonly UniqueValueKeyComparer UniqueKeyComparer = new();
+    private const string InvariantLanguage = "";
 
-    /// <summary>
-    /// Checks all pending entities for duplicate values on unique fields and returns a bad-request
-    /// exception when at least one conflict is found.
-    /// </summary>
-    internal HttpExceptionAbstraction? UniqueValuesOnly(IEnumerable<IEntity> existingEntities, IReadOnlyCollection<IEntity> pendingEntities)
+    internal HttpExceptionAbstraction? UniqueValuesOnly(IReadOnlyCollection<IEntity> pendingEntities)
     {
         var l = Log.Fn<HttpExceptionAbstraction?>($"{nameof(pendingEntities)}:{pendingEntities.Count}", timer: true);
-
+        
         if (pendingEntities.Count == 0)
             return l.ReturnNull("no pending entities");
 
-        var pendingByKey = BuildPendingGroups(pendingEntities);
-        if (FindPendingConflict(pendingByKey) is { } pendingConflict)
-            return ReturnDuplicate(l, pendingConflict, "same request");
+        // Materialize once so we can first detect duplicates inside the same save package,
+        // then reuse the same normalized values for persisted-entity lookups.
+        var pending = PendingValues(pendingEntities).ToList();
 
-        var existingByKey = IndexExistingEntries(existingEntities, pendingByKey);
-        if (FindExistingConflict(existingByKey, pendingByKey) is { } existingConflict)
-            return ReturnDuplicate(l, existingConflict, "existing");
+        if (FindSameRequestConflict(pending) is { } sameRequest)
+            return DuplicateException(l, sameRequest.Entry, sameRequest.Conflict, sameRequest.ConflictIndex, "same request");
+
+        foreach (var entry in pending)
+            if (lookup.FindConflict(appData, LookupRequest(entry)) is { } conflict)
+                return DuplicateException(l, entry, conflict, null, "existing");
 
         Errors = string.Empty;
         var exception = BuildExceptionIfHasIssues(Errors, l, "UniqueValuesOnly() done");
         return l.Return(exception, "ok");
     }
 
-    /// <summary>
-    /// Indexes existing entities by pending uniqueness keys and tracks distinct logical collision targets.
-    /// </summary>
-    private Dictionary<UniqueValueKey, PendingGroupState> IndexExistingEntries(
-        IEnumerable<IEntity> entities,
-        IReadOnlyDictionary<UniqueValueKey, PendingGroupState> pendingByKey
-    )
+    private IEnumerable<PendingValue> PendingValues(IEnumerable<IEntity> pendingEntities)
     {
-        var l = Log.Fn<Dictionary<UniqueValueKey, PendingGroupState>>($"{nameof(pendingByKey)}:{pendingByKey.Count}", timer: true);
-        var existingByKey = new Dictionary<UniqueValueKey, PendingGroupState>(UniqueKeyComparer);
-        if (pendingByKey.Count == 0)
-            return l.Return(existingByKey, "no pending unique keys");
-
-        var neededFieldsByType = BuildNeededFieldsByType(pendingByKey);
-        var entries = 0;
-
-        foreach (var entry in EnumerateMatchingExistingEntries(entities, neededFieldsByType))
-        {
-            entries++;
-            if (!existingByKey.TryGetValue(entry.Key, out var existingGroup))
-            {
-                existingByKey.Add(entry.Key, new(entry));
-                continue;
-            }
-
-            if (!existingGroup.TryAdd(entry))
-                continue;
-
-            existingByKey[entry.Key] = existingGroup;
-        }
-
-        return l.Return(existingByKey, $"types:{neededFieldsByType.Count}; entries:{entries}; keys:{existingByKey.Count}; duplicateKeys:{CountDuplicateGroups(existingByKey.Values)}");
-    }
-
-    /// <summary>
-    /// Groups pending entities by uniqueness key while removing duplicate logical entities from the same request.
-    /// </summary>
-    private Dictionary<UniqueValueKey, PendingGroupState> BuildPendingGroups(IEnumerable<IEntity> entities)
-    {
-        var l = Log.Fn<Dictionary<UniqueValueKey, PendingGroupState>>(timer: true);
-        var pendingByKey = new Dictionary<UniqueValueKey, PendingGroupState>(UniqueKeyComparer);
-        var entries = 0;
-
-        foreach (var entry in EnumerateEntries(entities, UniqueValueSource.Pending))
-        {
-            entries++;
-            if (!pendingByKey.TryGetValue(entry.Key, out var pendingGroup))
-            {
-                pendingByKey.Add(entry.Key, new(entry));
-                continue;
-            }
-
-            if (!pendingGroup.TryAdd(entry))
-                continue;
-
-            pendingByKey[entry.Key] = pendingGroup;
-        }
-
-        return l.Return(pendingByKey, $"entries:{entries}; keys:{pendingByKey.Count}; duplicateKeys:{CountDuplicateGroups(pendingByKey.Values)}");
-    }
-
-    /// <summary>
-    /// Builds the smallest existing-data scan plan needed to validate the pending unique values.
-    /// </summary>
-    private static Dictionary<string, NeededTypeFields> BuildNeededFieldsByType(IReadOnlyDictionary<UniqueValueKey, PendingGroupState> pendingByKey)
-    {
-        var neededFieldsByType = new Dictionary<string, NeededTypeFields>(StringComparer.OrdinalIgnoreCase);
-
-        foreach (var key in pendingByKey.Keys)
-        {
-            if (!neededFieldsByType.TryGetValue(key.ContentTypeNameId, out var fields))
-            {
-                fields = new();
-                neededFieldsByType.Add(key.ContentTypeNameId, fields);
-            }
-
-            fields.Add(key);
-        }
-
-        return neededFieldsByType;
-    }
-
-    /// <summary>
-    /// Projects only existing values that could collide with pending unique values.
-    /// </summary>
-    private IEnumerable<UniqueValueEntry> EnumerateMatchingExistingEntries(
-        IEnumerable<IEntity> entities,
-        IReadOnlyDictionary<string, NeededTypeFields> neededFieldsByType
-    )
-    {
-        var fieldsByType = new Dictionary<string, IContentTypeAttribute[]>(StringComparer.OrdinalIgnoreCase);
-        foreach (var neededType in neededFieldsByType)
-        {
-            var index = 0;
-            foreach (var entity in entities.GetAll(neededType.Key))
-            {
-                var contentTypeNameId = entity.Type.NameId;
-                if (!fieldsByType.TryGetValue(contentTypeNameId, out var fields))
-                {
-                    fields = GetMatchingUniqueFields(entity.Type, neededType.Value);
-                    fieldsByType.Add(contentTypeNameId, fields);
-                }
-
-                if (fields.Length == 0)
-                {
-                    index++;
-                    continue;
-                }
-
-                foreach (var entry in EnumerateEntityEntries(entity, fields, neededType.Value.Keys, UniqueValueSource.Existing, index))
-                    yield return entry;
-
-                index++;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Retrieves unique fields that also have pending values worth checking.
-    /// </summary>
-    private static IContentTypeAttribute[] GetMatchingUniqueFields(IContentType contentType, NeededTypeFields neededFields)
-    {
-        List<IContentTypeAttribute>? fields = null;
-        foreach (var attribute in contentType.Attributes)
-        {
-            if (!neededFields.FieldNames.Contains(attribute.Name) || !IsSupportedType(attribute.Type) || !MustBeUnique(attribute))
-                continue;
-
-            (fields ??= []).Add(attribute);
-        }
-
-        return fields?.ToArray() ?? [];
-    }
-
-    private static int CountDuplicateGroups(IEnumerable<PendingGroupState> groups)
-        => groups.Count(group => group.HasDuplicates);
-
-    /// <summary>
-    /// Finds the first same-request duplicate conflict.
-    /// </summary>
-    private UniqueValueConflict? FindPendingConflict(IReadOnlyDictionary<UniqueValueKey, PendingGroupState> pendingByKey)
-    {
-        var l = Log.Fn<UniqueValueConflict?>($"{nameof(pendingByKey)}:{pendingByKey.Count}", timer: true);
-        var groupsChecked = 0;
-
-        foreach (var pendingGroup in pendingByKey.Values)
-        {
-            groupsChecked++;
-            if (pendingGroup.HasDuplicates)
-                return l.Return(new(pendingGroup.First, pendingGroup.Second), $"duplicate; groupsChecked:{groupsChecked}");
-        }
-
-        return l.ReturnNull($"none; groupsChecked:{groupsChecked}");
-    }
-
-    /// <summary>
-    /// Finds the first persisted duplicate conflict for a pending entry.
-    /// </summary>
-    private UniqueValueConflict? FindExistingConflict(
-        IReadOnlyDictionary<UniqueValueKey, PendingGroupState> existingByKey,
-        IReadOnlyDictionary<UniqueValueKey, PendingGroupState> pendingByKey
-    )
-    {
-        var l = Log.Fn<UniqueValueConflict?>($"{nameof(existingByKey)}:{existingByKey.Count}; {nameof(pendingByKey)}:{pendingByKey.Count}", timer: true);
-        var checks = 0;
-
-        foreach (var pendingGroup in pendingByKey.Values)
-        {
-            checks++;
-            if (FindExistingConflictEntry(existingByKey, pendingGroup.First) is { } existingEntry)
-                return l.Return(new(pendingGroup.First, existingEntry), $"duplicate; checks:{checks}");
-        }
-
-        return l.ReturnNull($"none; checks:{checks}");
-    }
-
-    /// <summary>
-    /// Finds a persisted item that conflicts with the pending entry.
-    /// </summary>
-    private static UniqueValueEntry? FindExistingConflictEntry(IReadOnlyDictionary<UniqueValueKey, PendingGroupState> existingByKey, UniqueValueEntry pendingEntry)
-    {
-        if (!existingByKey.TryGetValue(pendingEntry.Key, out var existingGroup))
-            return null;
-
-        var existingEntry = existingGroup.First.LogicalId == pendingEntry.LogicalId && existingGroup.HasSecond
-            ? existingGroup.Second
-            : existingGroup.First;
-
-        return existingEntry.LogicalId == pendingEntry.LogicalId
-            ? null
-            : existingEntry;
-    }
-
-    private HttpExceptionAbstraction? ReturnDuplicate(ILogCall<HttpExceptionAbstraction?>? l, UniqueValueConflict conflict, string source)
-    {
-        Errors = FormatError(conflict.PendingEntry, conflict.ConflictEntry);
-        Log.A(FormatLogConflict(conflict.PendingEntry, conflict.ConflictEntry));
-
-        var exception = BuildExceptionIfHasIssues(Errors, l, "UniqueValuesOnly() done");
-        return l.Return(exception, $"duplicate:first; source:{source}");
-    }
-
-    /// <summary>
-    /// Projects entities into normalized uniqueness entries for each supported field value that participates
-    /// in duplicate detection.
-    /// </summary>
-    private IEnumerable<UniqueValueEntry> EnumerateEntries(IEnumerable<IEntity> entities, UniqueValueSource source)
-    {
-        var uniqueFieldsByType = new Dictionary<string, IContentTypeAttribute[]>(StringComparer.OrdinalIgnoreCase);
         var index = 0;
-        foreach (var entity in entities)
-        {
-            var contentTypeNameId = entity.Type.NameId;
-            var uniqueFields = GetUniqueFields(entity.Type, contentTypeNameId, uniqueFieldsByType);
-            if (uniqueFields.Length == 0)
-            {
-                index++;
-                continue;
-            }
 
-            foreach (var entry in EnumerateEntityEntries(entity, uniqueFields, neededKeys: null, source, index))
-                yield return entry;
+        foreach (var entity in pendingEntities)
+        {
+            foreach (var pendingValue in PendingValues(entity, index))
+                yield return pendingValue;
 
             index++;
         }
     }
 
-    /// <summary>
-    /// Projects one entity into normalized uniqueness entries for selected fields.
-    /// </summary>
-    private static IEnumerable<UniqueValueEntry> EnumerateEntityEntries(
-        IEntity entity,
-        IEnumerable<IContentTypeAttribute> uniqueFields,
-        ISet<UniqueValueKey>? neededKeys,
-        UniqueValueSource source,
-        int index
-    )
+    private IEnumerable<PendingValue> PendingValues(IEntity entity, int index)
     {
-        var logicalId = BuildLogicalId(entity, source, index);
-        var contentTypeNameId = entity.Type.NameId;
-
-        // Ignore repeated raw values inside the same logical entity. This keeps draft/published
-        // variants or duplicate raw entries from creating false positives against themselves.
-        var seenKeys = new HashSet<UniqueValueKey>(UniqueKeyComparer);
-
-        foreach (var contentTypeAttribute in uniqueFields)
-        {
-            var entityAttribute = entity[contentTypeAttribute.Name];
-            if (entityAttribute == null)
-                continue;
-
-            var fieldName = contentTypeAttribute.Name;
-            foreach (var rawValue in entityAttribute.Values)
-            {
-                var languageBucket = GetLanguageBucket(rawValue);
-                foreach (var normalized in NormalizeValues(contentTypeAttribute.Type, rawValue))
-                {
-                    var key = new UniqueValueKey(
-                        contentTypeNameId,
-                        fieldName,
-                        languageBucket,
-                        normalized.NormalizedKey
-                    );
-
-                    if (neededKeys?.Contains(key) == false || !seenKeys.Add(key))
-                        continue;
-
-                    yield return new(
-                        key,
-                        contentTypeNameId,
-                        fieldName,
-                        normalized.DisplayValue,
-                        languageBucket,
-                        source,
-                        logicalId,
-                        entity,
-                        index
-                    );
-                }
-            }
-        }
+        // Flatten the entity into comparable values so request-local and persisted checks
+        // use the exact same normalization and identity data.
+        foreach (var field in UniqueFields(entity.Type))
+            if (entity[field.Name] is { } attribute)
+                foreach (var raw in attribute.Values)
+                    if (NormalizedValue(field.Type, raw) is { } value)
+                    {
+                        var language = LanguageKey(raw);
+                        yield return new(entity.Type.NameId, field.Name, field.Type, value, language, PendingValueKey(entity.Type.NameId, field.Name, language, value), entity, index);
+                    }
     }
 
-    /// <summary>
-    /// Retrieves and caches the fields which participate in unique validation for a content type.
-    /// </summary>
-    private static IContentTypeAttribute[] GetUniqueFields(IContentType contentType, string contentTypeNameId, IDictionary<string, IContentTypeAttribute[]> cache)
-    {
-        if (cache.TryGetValue(contentTypeNameId, out var uniqueFields))
-            return uniqueFields;
+    private static IContentTypeAttribute[] UniqueFields(IContentType contentType)
+        // Url-path fields are unique by default unless metadata explicitly overrides that behavior.
+        => contentType.Attributes
+            .Where(attribute => UniqueValueLookup.IsSupported(attribute.Type)
+                                && (attribute.Metadata.Get<bool?>(IsUniqueMetadataKey) ?? IsUrlPath(attribute)))
+            .ToArray();
 
-        List<IContentTypeAttribute>? fields = null;
-        foreach (var attribute in contentType.Attributes)
-        {
-            if (!IsSupportedType(attribute.Type) || !MustBeUnique(attribute))
-                continue;
-
-            (fields ??= []).Add(attribute);
-        }
-
-        uniqueFields = fields?.ToArray() ?? [];
-        cache[contentTypeNameId] = uniqueFields;
-        return uniqueFields;
-    }
-
-    private static bool MustBeUnique(IContentTypeAttribute attribute)
-        => attribute.Metadata.Get<bool?>(IsUniqueMetadataKey)
-           ?? IsStringUrlField(attribute);
-
-    private static bool IsStringUrlField(IContentTypeAttribute attribute)
+    private static bool IsUrlPath(IContentTypeAttribute attribute)
         => attribute.Type == ValueTypes.String
            && attribute.InputType?.Equals(StringUrlPathInputType, StringComparison.OrdinalIgnoreCase) == true;
 
-    /// <summary>
-    /// Restricts uniqueness checks to the field types supported by the current implementation.
-    /// </summary>
-    private static bool IsSupportedType(ValueTypes type)
-        => type switch
-        {
-            ValueTypes.String => true,
-            ValueTypes.Hyperlink => true,
-            ValueTypes.Custom => true,
-            ValueTypes.Number => true,
-            ValueTypes.Boolean => true,
-            ValueTypes.DateTime => true,
-            ValueTypes.Entity => true,
-            _ => false
-        };
-
-    /// <summary>
-    /// Normalizes a raw attribute value into one or more comparison keys.
-    /// Entity fields yield one normalized item per related child, because the DB stores them
-    /// as separate relationship rows.
-    /// </summary>
-    private static IEnumerable<NormalizedValue> NormalizeValues(ValueTypes type, IValue rawValue)
+    private static string? NormalizedValue(ValueTypes type, IValue raw)
     {
-        if (type == ValueTypes.Entity)
-            foreach (var normalized in NormalizeEntityValues(rawValue))
-                yield return normalized;
+        var value = type is ValueTypes.String or ValueTypes.Hyperlink or ValueTypes.Custom
+            ? raw.ObjectContents as string ?? raw.SerializableObject as string ?? raw.Serialized
+            : raw.Serialized;
 
-        else if ((type is ValueTypes.String or ValueTypes.Hyperlink or ValueTypes.Custom
-            ? GetRawStringValue(rawValue)?.Trim()
-            : rawValue.Serialized) is { Length: > 0 } normalizedValue)
-            yield return new(normalizedValue, normalizedValue);
+        return string.IsNullOrWhiteSpace(value) ? null : value;
     }
 
-    /// <summary>
-    /// Normalizes relationship values one child at a time using child entity guids whenever possible.
-    /// </summary>
-    private static IEnumerable<NormalizedValue> NormalizeEntityValues(IValue rawValue)
+    private static string LanguageKey(IValue raw)
     {
-        var foundEntityValue = false;
-        foreach (var normalized in BuildEntityNormalizedValues(TryGetRelationshipEntities(rawValue)))
-        {
-            foundEntityValue = true;
-            yield return normalized;
-        }
+        var languages = raw.Languages
+            .Select(language => language.Key)
+            .Where(language => !string.IsNullOrWhiteSpace(language))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(language => language, StringComparer.OrdinalIgnoreCase);
 
-        if (foundEntityValue)
-            yield break;
-
-        var foundGuidValue = false;
-        foreach (var normalized in BuildEntityNormalizedValues(TryGetRelationshipGuids(rawValue)))
-        {
-            foundGuidValue = true;
-            yield return normalized;
-        }
-
-        if (foundGuidValue)
-            yield break;
-
-        foreach (var normalized in BuildEntityNormalizedValues(TryGetRelationshipIdentifiers(rawValue)))
-            yield return normalized;
+        return string.Join("|", languages);
     }
 
-    /// <summary>
-    /// Tries to use loaded related entities so validation messages can show readable child titles.
-    /// </summary>
-    private static IEnumerable<IEntity?>? TryGetRelationshipEntities(IValue rawValue)
-        => rawValue.ObjectContents is IEnumerable<IEntity?> entities
-            ? entities
-            : null;
+    private static string PendingValueKey(string type, string field, string language, string value)
+        => string.Join("\n", type, field, language, value).ToLowerInvariant();
 
-    /// <summary>
-    /// Tries to resolve relationship references to entity guids so persisted int-based relationships
-    /// can be compared with pending guid-based relationships before the save pipeline attaches the app cache.
-    /// </summary>
-    private static IEnumerable? TryGetRelationshipGuids(IValue rawValue)
+    private static UniqueValueLookupRequest LookupRequest(PendingValue entry)
+        // The invariant bucket is represented as null for datasource filtering.
+        => new(
+            entry.ContentType,
+            entry.Field,
+            entry.Type,
+            entry.Value,
+            CurrentGuid: entry.Entity.EntityGuid,
+            CurrentRepositoryId: entry.Entity.RepositoryId,
+            CurrentEntityId: entry.Entity.EntityId,
+            Languages: entry.Language == InvariantLanguage ? null : entry.Language
+        );
+
+    private static (PendingValue Entry, IEntity Conflict, int ConflictIndex)? FindSameRequestConflict(IEnumerable<PendingValue> pending)
     {
-        if (rawValue.ObjectContents is LazyEntitiesSource lazyEntities)
-            try
+        // Reuse the same composite key shape as the persisted lookup so request-local duplicates
+        // are detected before we hit the datasource.
+        var seen = new Dictionary<string, PendingValue>(StringComparer.Ordinal);
+        foreach (var entry in pending)
+        {
+            if (!seen.TryGetValue(entry.Key, out var existing))
             {
-                return lazyEntities.ResolveGuids();
-            }
-            catch
-            {
-                // Fall back to raw identifiers when the lazy relationship does not have a lookup source.
-            }
-
-        return AsNonStringEnumerable(rawValue.SerializableObject);
-    }
-
-    /// <summary>
-    /// Falls back to the raw relationship identifiers when guid resolution is unavailable.
-    /// </summary>
-    private static IEnumerable? TryGetRelationshipIdentifiers(IValue rawValue)
-    {
-        if (rawValue.ObjectContents is IRelatedEntitiesValue relatedEntities)
-            return relatedEntities.Identifiers;
-
-        return AsNonStringEnumerable(rawValue.ObjectContents);
-    }
-
-    /// <summary>
-    /// Retrieves the raw textual representation used for uniqueness comparisons on text-like fields.
-    /// </summary>
-    private static string? GetRawStringValue(IValue rawValue)
-        => rawValue.ObjectContents as string
-           ?? rawValue.SerializableObject as string
-           ?? rawValue.Serialized;
-
-    /// <summary>
-    /// Returns an enumerable when the supplied object is a collection-like value but not a string.
-    /// </summary>
-    private static IEnumerable? AsNonStringEnumerable(object? value)
-        => value is IEnumerable enumerable and not string
-            ? enumerable
-            : null;
-
-    /// <summary>
-    /// Creates the canonical comparison token for each child in a relationship value.
-    /// </summary>
-    private static IEnumerable<NormalizedValue> BuildEntityNormalizedValues(IEnumerable? identifiers)
-    {
-        if (identifiers == null)
-            yield break;
-
-        foreach (var identifier in identifiers)
-            if (NormalizeEntityIdentifier(identifier) is { } token)
-                yield return new(token, token);
-    }
-
-    /// <summary>
-    /// Creates comparison keys from loaded related entities while keeping readable titles for messages.
-    /// </summary>
-    private static IEnumerable<NormalizedValue> BuildEntityNormalizedValues(IEnumerable<IEntity?>? entities)
-    {
-        if (entities == null)
-            yield break;
-
-        foreach (var entity in entities)
-        {
-            if (NormalizeEntityIdentifier(entity) is not { } token)
+                seen.Add(entry.Key, entry);
                 continue;
+            }
 
-            var displayValue = entity?.GetBestTitle();
-            yield return new(token, string.IsNullOrWhiteSpace(displayValue) ? token : displayValue!);
+            if (!SameEntity(existing.Entity, entry.Entity))
+                return (entry, existing.Entity, existing.Index);
         }
+
+        return null;
     }
 
-    /// <summary>
-    /// Converts a relationship identifier into the canonical token used by raw EAV serialization.
-    /// </summary>
-    private static string? NormalizeEntityIdentifier(object? identifier)
+    private static bool SameEntity(IEntity first, IEntity second)
+        => first.EntityGuid != Guid.Empty && first.EntityGuid == second.EntityGuid
+           || first.RepositoryId > 0 && first.RepositoryId == second.RepositoryId
+           || first.EntityId > 0 && first.EntityId == second.EntityId;
+
+    private HttpExceptionAbstraction? DuplicateException(ILogCall<HttpExceptionAbstraction?>? l, PendingValue entry, IEntity conflict, int? requestIndex, string source)
     {
-        switch (identifier)
-        {
-            case null:
-                return null;
+        var language = entry.Language == InvariantLanguage ? "invariant" : entry.Language;
+        var target = requestIndex.HasValue
+            ? $"another item in the same request (item {requestIndex.Value})"
+            : $"saved entity {conflict.EntityId}";
 
-            case Guid guid when guid == Guid.Empty:
-                return null;
+        // Keep the message and log in one place so request-local and persisted conflicts explain
+        // duplicates in the same format.
+        Errors = $"Duplicate unique value in {entry.ContentType}.{entry.Field}: value '{entry.Value}' (language: {language}) already exists on {target}.";
+        Log.A($"Unique conflict ct:{entry.ContentType} field:{entry.Field} value:'{entry.Value}' lang:{language} " +
+              $"pending[item:{entry.Index}, entityId:{entry.Entity.EntityId}, repoId:{entry.Entity.RepositoryId}, guid:{entry.Entity.EntityGuid}] " +
+              $"conflict[entityId:{conflict.EntityId}, repoId:{conflict.RepositoryId}, guid:{conflict.EntityGuid}]");
 
-            case Guid guid:
-                return guid.ToString();
-
-            case IEntity entity when entity.EntityGuid != Guid.Empty:
-                return entity.EntityGuid.ToString();
-
-            case IEntity { RepositoryId: > 0 } entity:
-                return entity.RepositoryId.ToString();
-
-            case IEntity { EntityId: > 0 } entity:
-                return entity.EntityId.ToString();
-
-            case string text when string.IsNullOrWhiteSpace(text) || text.Equals(EavConstants.EmptyRelationship, StringComparison.OrdinalIgnoreCase):
-                return null;
-
-            case string text:
-                return text.Trim();
-
-            default:
-                var value = identifier.ToString();
-                return string.IsNullOrWhiteSpace(value)
-                    ? null
-                    : value;
-        }
+        var exception = BuildExceptionIfHasIssues(Errors, l, "UniqueValuesOnly() done");
+        return l.Return(exception, $"duplicate:first; source:{source}");
     }
 
-    /// <summary>
-    /// Builds the exact language bucket used for uniqueness comparisons so invariant and translated
-    /// values are checked within their own scope.
-    /// </summary>
-    private static string GetLanguageBucket(IValue rawValue)
-    {
-        var languages = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
-
-        foreach (var language in rawValue.Languages)
-            if (!string.IsNullOrWhiteSpace(language.Key))
-                languages.Add(language.Key);
-
-        return languages.Count switch
-        {
-            0 => InvariantLanguageBucket,
-            1 => languages.Min!,
-            _ => string.Join("|", languages)
-        };
-    }
-
-    /// <summary>
-    /// Resolves the compact logical identity used to decide whether two uniqueness entries represent
-    /// the same real-world item.
-    /// </summary>
-    /// <remarks>
-    /// The method prefers identifiers that survive round-trips between persisted and pending states.
-    /// When that is impossible, it falls back step by step to request-local values that are still
-    /// stable enough to suppress self-collisions inside the current validation pass.
-    /// </remarks>
-    private static LogicalId BuildLogicalId(IEntity entity, UniqueValueSource source, int index)
-    {
-        // Prefer stable logical IDs so an edited entity does not collide with its already-saved version.
-        // New items can still have Guid.Empty, so pending entries fall back to their request index.
-        if (entity.EntityGuid != Guid.Empty)
-            return new(LogicalIdKind.Guid, entity.EntityGuid, 0, 0);
-
-        if (source == UniqueValueSource.Pending)
-            return new(LogicalIdKind.PendingIndex, Guid.Empty, index, 0);
-
-        if (entity.RepositoryId > 0)
-            return new(LogicalIdKind.RepositoryId, Guid.Empty, entity.RepositoryId, 0);
-
-        return new(LogicalIdKind.EntityIdAndIndex, Guid.Empty, entity.EntityId, index);
-    }
-
-    /// <summary>
-    /// Formats the user-facing validation message for a detected uniqueness conflict.
-    /// </summary>
-    private static string FormatError(UniqueValueEntry pendingEntry, UniqueValueEntry conflict)
-    {
-        var languageLabel = FormatLanguageLabel(pendingEntry.LanguageBucket);
-        var conflictDescription = DescribeConflictTarget(conflict);
-        var displayValue = FormatDisplayValue(pendingEntry, conflict);
-
-        return $"Duplicate unique value in {pendingEntry.ContentTypeNameId}.{pendingEntry.FieldName}: value '{displayValue}' (language: {languageLabel}) already exists on {conflictDescription}.";
-    }
-
-    /// <summary>
-    /// Formats a log line with both the duplicate value and the entity identifiers involved.
-    /// </summary>
-    private static string FormatLogConflict(UniqueValueEntry pendingEntry, UniqueValueEntry conflict)
-    {
-        var languageLabel = FormatLanguageLabel(pendingEntry.LanguageBucket);
-        var displayValue = FormatDisplayValue(pendingEntry, conflict);
-
-        return $"Unique conflict ct:{pendingEntry.ContentTypeNameId} field:{pendingEntry.FieldName} value:'{displayValue}' lang:{languageLabel} " +
-               $"pending[{DescribeEntity(pendingEntry)}] conflict[{DescribeEntity(conflict)}]";
-    }
-
-    /// <summary>
-    /// Returns the most readable duplicate value available. Relationship saves can arrive as raw guids
-    /// while persisted/cache-backed relationships may still know the child title.
-    /// </summary>
-    private static string FormatDisplayValue(UniqueValueEntry pendingEntry, UniqueValueEntry conflict)
-        => IsIdentifierFallbackDisplay(pendingEntry) && !IsIdentifierFallbackDisplay(conflict)
-            ? conflict.DisplayValue
-            : pendingEntry.DisplayValue;
-
-    private static bool IsIdentifierFallbackDisplay(UniqueValueEntry entry)
-        => entry.DisplayValue.Equals(entry.Key.NormalizedKey, StringComparison.OrdinalIgnoreCase);
-
-    /// <summary>
-    /// Formats the language bucket for human-readable diagnostics.
-    /// </summary>
-    private static string FormatLanguageLabel(string languageBucket)
-        => languageBucket == InvariantLanguageBucket
-            ? InvariantLanguageBucketLabel
-            : languageBucket;
-
-    /// <summary>
-    /// Describes where the conflicting value currently lives for user-facing messages.
-    /// </summary>
-    private static string DescribeConflictTarget(UniqueValueEntry conflict)
-        => conflict.Source == UniqueValueSource.Pending
-            ? $"another item in the same request (item {conflict.Index})"
-            : $"saved entity {conflict.Entity.EntityId}";
-
-    /// <summary>
-    /// Describes an entity involved in a unique conflict for diagnostics logging.
-    /// </summary>
-    private static string DescribeEntity(UniqueValueEntry entry)
-    {
-        var entity = entry.Entity;
-        return $"source:{entry.Source}, item:{entry.Index}, entityId:{entity.EntityId}, repoId:{entity.RepositoryId}, guid:{entity.EntityGuid}, logicalId:{FormatLogicalId(entry.LogicalId)}";
-    }
-
-    /// <summary>
-    /// Converts a <see cref="LogicalId"/> into the short diagnostic form used in log messages.
-    /// </summary>
-    private static string FormatLogicalId(LogicalId logicalId)
-        => logicalId.Kind switch
-        {
-            LogicalIdKind.Guid => "g:" + logicalId.Guid,
-            LogicalIdKind.PendingIndex => "p:" + logicalId.Primary,
-            LogicalIdKind.RepositoryId => "r:" + logicalId.Primary,
-            LogicalIdKind.EntityIdAndIndex => $"e:{logicalId.Primary}:{logicalId.Secondary}",
-            _ => string.Empty
-        };
-
-    private readonly record struct UniqueValueKey(
-        string ContentTypeNameId,
-        string FieldName,
-        string LanguageBucket,
-        string NormalizedKey
-    );
-
-    private readonly record struct UniqueValueEntry(
-        UniqueValueKey Key,
-        string ContentTypeNameId,
-        string FieldName,
-        string DisplayValue,
-        string LanguageBucket,
-        UniqueValueSource Source,
-        LogicalId LogicalId,
+    private readonly record struct PendingValue(
+        string ContentType,
+        string Field,
+        ValueTypes Type,
+        string Value,
+        string Language,
+        string Key,
         IEntity Entity,
         int Index
     );
-
-    private readonly record struct UniqueValueConflict(UniqueValueEntry PendingEntry, UniqueValueEntry ConflictEntry);
-
-    private readonly record struct NormalizedValue(string NormalizedKey, string DisplayValue);
-
-    private sealed class NeededTypeFields
-    {
-        public HashSet<string> FieldNames { get; } = new(StringComparer.OrdinalIgnoreCase);
-
-        public HashSet<UniqueValueKey> Keys { get; } = new(UniqueKeyComparer);
-
-        public void Add(UniqueValueKey key)
-        {
-            FieldNames.Add(key.FieldName);
-            Keys.Add(key);
-        }
-    }
-
-    /// <summary>
-    /// Compact value object describing the logical entity identity behind a uniqueness entry.
-    /// </summary>
-    /// <remarks>
-    /// Equality on this struct answers the question: "should these entries be treated as the same item
-    /// even if they appear more than once during validation?"
-    /// </remarks>
-    private readonly record struct LogicalId(LogicalIdKind Kind, Guid Guid, int Primary, int Secondary);
-
-    /// <summary>
-    /// Tracks all pending entries that currently share the same uniqueness key.
-    /// </summary>
-    /// <remarks>
-    /// The first two distinct logical entities are stored in <see cref="First"/> and <see cref="Second"/>,
-    /// and <see cref="More"/> is created only when a third different logical entity appears.
-    /// <para>
-    /// Entries with the same <see cref="UniqueValueEntry.LogicalId"/> are ignored so the validator does not
-    /// report the same logical item colliding with itself because of duplicate raw values or draft/published
-    /// variants within the same request.
-    /// </para>
-    /// </remarks>
-    private struct PendingGroupState
-    {
-        /// <summary>
-        /// Initializes a new group with the first distinct logical entry seen for a uniqueness key.
-        /// </summary>
-        public PendingGroupState(UniqueValueEntry first)
-        {
-            First = first;
-            Second = default;
-            HasSecond = false;
-            More = null;
-        }
-
-        /// <summary>
-        /// Gets the first distinct logical entry seen for the key.
-        /// </summary>
-        public UniqueValueEntry First { get; }
-
-        /// <summary>
-        /// Gets the second distinct logical entry seen for the key when <see cref="HasSecond"/> is <c>true</c>.
-        /// </summary>
-        public UniqueValueEntry Second { get; private set; }
-
-        /// <summary>
-        /// Gets whether <see cref="Second"/> has been populated with a real duplicate candidate.
-        /// </summary>
-        public bool HasSecond { get; private set; }
-
-        /// <summary>
-        /// Gets additional distinct logical entries for the same key, allocated only if more than two exist.
-        /// </summary>
-        public List<UniqueValueEntry>? More { get; private set; }
-
-        /// <summary>
-        /// Gets whether at least two distinct logical entities share the same unique key.
-        /// </summary>
-        public bool HasDuplicates => HasSecond;
-
-        /// <summary>
-        /// Gets whether more than two distinct logical entities share the same unique key.
-        /// </summary>
-        public bool HasThirdOrMore => More is { Count: > 0 };
-
-        /// <summary>
-        /// Adds another entry when it represents a new logical entity for the same key.
-        /// </summary>
-        /// <returns>
-        /// <c>true</c> when the group changed; <c>false</c> when the entry belongs to a logical entity already tracked.
-        /// </returns>
-        public bool TryAdd(UniqueValueEntry entry)
-        {
-            if (First.LogicalId == entry.LogicalId)
-                return false;
-
-            if (!HasSecond)
-            {
-                Second = entry;
-                HasSecond = true;
-                return true;
-            }
-
-            if (Second.LogicalId == entry.LogicalId)
-                return false;
-
-            if (More != null)
-                foreach (var existing in More)
-                    if (existing.LogicalId == entry.LogicalId)
-                        return false;
-
-            (More ??= []).Add(entry);
-            return true;
-        }
-    }
-
-    private sealed class UniqueValueKeyComparer : IEqualityComparer<UniqueValueKey>
-    {
-        private static readonly StringComparer Comparer = StringComparer.OrdinalIgnoreCase;
-
-        public bool Equals(UniqueValueKey x, UniqueValueKey y)
-            => Comparer.Equals(x.ContentTypeNameId, y.ContentTypeNameId)
-               && Comparer.Equals(x.FieldName, y.FieldName)
-               && Comparer.Equals(x.LanguageBucket, y.LanguageBucket)
-               && Comparer.Equals(x.NormalizedKey, y.NormalizedKey);
-
-        public int GetHashCode(UniqueValueKey obj)
-        {
-            var hash = new HashCode();
-            hash.Add(obj.ContentTypeNameId, Comparer);
-            hash.Add(obj.FieldName, Comparer);
-            hash.Add(obj.LanguageBucket, Comparer);
-            hash.Add(obj.NormalizedKey, Comparer);
-            return hash.ToHashCode();
-        }
-    }
-
-    /// <summary>
-    /// Identifies whether a uniqueness entry came from persisted data or from the current save request.
-    /// </summary>
-    /// <remarks>
-    /// This source influences both conflict wording and the fallback strategy used by <see cref="BuildLogicalId"/>.
-    /// </remarks>
-    private enum UniqueValueSource
-    {
-        Existing,
-        Pending
-    }
-
-    /// <summary>
-    /// Describes which fields on <see cref="LogicalId"/> contain the meaningful identity payload.
-    /// </summary>
-    private enum LogicalIdKind : byte
-    {
-        /// <summary>
-        /// The logical identity is the stable entity guid stored in <see cref="LogicalId.Guid"/>.
-        /// This is the preferred form because it survives persisted and pending representations.
-        /// </summary>
-        Guid,
-
-        /// <summary>
-        /// The logical identity is the zero-based item index of a pending request stored in <see cref="LogicalId.Primary"/>.
-        /// Used for new items that do not have a guid yet, so they still do not collide with themselves inside one request.
-        /// </summary>
-        PendingIndex,
-
-        /// <summary>
-        /// The logical identity is the persisted repository id stored in <see cref="LogicalId.Primary"/>.
-        /// This is a fallback for existing items when no guid is available but repository identity is known.
-        /// </summary>
-        RepositoryId,
-
-        /// <summary>
-        /// The logical identity combines a fallback entity id in <see cref="LogicalId.Primary"/> with the enumeration index in <see cref="LogicalId.Secondary"/>.
-        /// This last-resort form keeps legacy or partially populated entities distinct even when no better stable identifier exists.
-        /// </summary>
-        EntityIdAndIndex
-    }
 }
