@@ -9,12 +9,12 @@ public class IsUniqueValidatorTests
     public static TheoryData<ValueTypes, object> UniqueScalarValues => new()
     {
         { ValueTypes.Number, 42m },
-        { ValueTypes.Boolean, true },
         { ValueTypes.DateTime, new DateTime(2024, 2, 3, 4, 5, 6, DateTimeKind.Utc) }
     };
 
     public static TheoryData<ValueTypes, object> UnsupportedUniqueFieldValues => new()
     {
+        { ValueTypes.Boolean, true },
         { ValueTypes.Empty, "same-marker" },
         { ValueTypes.Object, new { Marker = "same-marker" } },
         { ValueTypes.Json, "{\"marker\":\"same-marker\"}" },

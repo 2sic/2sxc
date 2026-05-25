@@ -60,7 +60,7 @@ internal sealed class UniqueValueLookup(IDataSourcesService dataSources, ILog pa
         => request.CurrentGuid != Guid.Empty && entity.EntityGuid == request.CurrentGuid
            || request.CurrentRepositoryId > 0 && entity.RepositoryId == request.CurrentRepositoryId
            || request.CurrentEntityId > 0 && entity.EntityId == request.CurrentEntityId;
-
+    
     internal static bool IsSupported(ValueTypes type)
         // Keep this in sync with IsUniqueValidator.NormalizedValue so only values that can be
         // compared reliably are sent through the lookup pipeline.
