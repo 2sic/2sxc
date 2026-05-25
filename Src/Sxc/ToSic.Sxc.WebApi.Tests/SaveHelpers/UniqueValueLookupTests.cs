@@ -63,7 +63,7 @@ public class UniqueValueLookupTests
 
         var conflict = ctx.CreateUniqueValueLookup().FindConflict(
             ctx.CreateDataSource(current),
-            new("Article", "Slug", ValueTypes.String, "same-slug", CurrentGuid: entityGuid)
+            new("Article", "Slug", ValueTypes.String, "same-slug", CurrentEntity: current)
         );
 
         Assert.Null(conflict);
@@ -87,7 +87,7 @@ public class UniqueValueLookupTests
 
         var conflict = ctx.CreateUniqueValueLookup().FindConflict(
             ctx.CreateDataSource(current, duplicate),
-            new("Article", "Slug", ValueTypes.String, "same-slug", CurrentGuid: entityGuid)
+            new("Article", "Slug", ValueTypes.String, "same-slug", CurrentEntity: current)
         );
 
         Assert.Same(duplicate, conflict);

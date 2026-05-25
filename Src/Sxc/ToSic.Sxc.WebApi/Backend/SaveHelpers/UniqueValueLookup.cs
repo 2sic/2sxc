@@ -20,8 +20,9 @@ internal sealed class UniqueValueLookup(IDataSourcesService dataSources, ILog pa
 
         // The datasource may still return the current entity, so the final pass must exclude it
         // before treating the result as a uniqueness conflict.
+        var current = request.CurrentEntity;
         var conflict = MatchingCandidates(appData, request)
-            .FirstOrDefault(entity => !IsCurrentEntity(entity, request));
+            .FirstOrDefault(entity => current == null || !IsSameEntity(entity, current));
 
         return l.Return(conflict, conflict == null ? "unique" : $"conflict:{conflict.EntityId}");
     }
@@ -56,11 +57,11 @@ internal sealed class UniqueValueLookup(IDataSourcesService dataSources, ILog pa
         return valueFilter;
     }
 
-    private static bool IsCurrentEntity(IEntity entity, UniqueValueLookupRequest request)
-        => request.CurrentGuid != Guid.Empty && entity.EntityGuid == request.CurrentGuid
-           || request.CurrentRepositoryId > 0 && entity.RepositoryId == request.CurrentRepositoryId
-           || request.CurrentEntityId > 0 && entity.EntityId == request.CurrentEntityId;
-    
+    internal static bool IsSameEntity(IEntity first, IEntity second)
+        => first.EntityGuid != Guid.Empty && first.EntityGuid == second.EntityGuid
+           || first.RepositoryId > 0 && first.RepositoryId == second.RepositoryId
+           || first.EntityId > 0 && first.EntityId == second.EntityId;
+
     internal static bool IsSupported(ValueTypes type)
         // Keep this in sync with IsUniqueValidator.NormalizedValue so only values that can be
         // compared reliably are sent through the lookup pipeline.
@@ -77,8 +78,6 @@ internal sealed record UniqueValueLookupRequest(
     string FieldName,
     ValueTypes FieldType,
     string Value,
-    Guid CurrentGuid = default,
-    int CurrentRepositoryId = default,
-    int CurrentEntityId = default,
+    IEntity? CurrentEntity = default,
     string? Languages = default
 );

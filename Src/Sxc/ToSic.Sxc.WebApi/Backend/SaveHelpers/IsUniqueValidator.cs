@@ -103,9 +103,7 @@ internal class IsUniqueValidator(UniqueValueLookup lookup, IDataSource appData, 
             entry.Field,
             entry.Type,
             entry.Value,
-            CurrentGuid: entry.Entity.EntityGuid,
-            CurrentRepositoryId: entry.Entity.RepositoryId,
-            CurrentEntityId: entry.Entity.EntityId,
+            CurrentEntity: entry.Entity,
             Languages: entry.Language == InvariantLanguage ? null : entry.Language
         );
 
@@ -122,17 +120,12 @@ internal class IsUniqueValidator(UniqueValueLookup lookup, IDataSource appData, 
                 continue;
             }
 
-            if (!SameEntity(existing.Entity, entry.Entity))
+            if (!UniqueValueLookup.IsSameEntity(existing.Entity, entry.Entity))
                 return (entry, existing.Entity, existing.Index);
         }
 
         return null;
     }
-
-    private static bool SameEntity(IEntity first, IEntity second)
-        => first.EntityGuid != Guid.Empty && first.EntityGuid == second.EntityGuid
-           || first.RepositoryId > 0 && first.RepositoryId == second.RepositoryId
-           || first.EntityId > 0 && first.EntityId == second.EntityId;
 
     private HttpExceptionAbstraction? DuplicateException(ILogCall<HttpExceptionAbstraction?>? l, PendingValue entry, IEntity conflict, int? requestIndex, string source)
     {
