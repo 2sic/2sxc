@@ -1,4 +1,3 @@
-using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Backend.SaveHelpers;
 
@@ -59,6 +58,26 @@ public class UniqueValueValidationTests
 
         Assert.True(result.IsValid);
         Assert.Equal("blank", result.Reason);
+    }
+
+    [Fact]
+    public void DuplicateExistingDateValue_WithUiIsoRequest_ReturnsDuplicateConflict()
+    {
+        using var ctx = IsUniqueValidatorTestContext.Create();
+        var date = new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Unspecified);
+        var type = ctx.CreateType("Article",
+            ctx.CreateField("Title", ValueTypes.String, isTitle: true),
+            ctx.CreateField("PublishDate", ValueTypes.DateTime, isUnique: true));
+
+        var existing = ctx.CreateEntity(type, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Existing"),
+            ctx.InvariantAttribute("PublishDate", ValueTypes.DateTime, date));
+
+        var result = Validate(ctx, [type], [existing], new(type.NameId, "PublishDate", "2026-05-20T00:00:00.000Z"));
+
+        Assert.False(result.IsValid);
+        Assert.Equal("duplicate", result.Reason);
+        Assert.Equal(existing.EntityId, result.ConflictEntityId);
     }
 
     [Fact]
