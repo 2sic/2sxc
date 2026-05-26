@@ -8,10 +8,6 @@ namespace ToSic.Sxc.Backend.SaveHelpers;
 /// </summary>
 internal class IsUniqueValidator(UniqueValueLookup lookup, IDataSource appData, ILog parentLog) : ValidatorBase(parentLog, "Val.UnqOk")
 {
-    private const string IsUniqueMetadataKey = "IsUnique";
-    private const string StringUrlPathInputType = "string-url-path";
-    private const string InvariantLanguage = "";
-
     internal HttpExceptionAbstraction? UniqueValuesOnly(IReadOnlyCollection<IEntity> pendingEntities)
     {
         var l = Log.Fn<HttpExceptionAbstraction?>($"{nameof(pendingEntities)}:{pendingEntities.Count}", timer: true);
@@ -52,45 +48,14 @@ internal class IsUniqueValidator(UniqueValueLookup lookup, IDataSource appData, 
     {
         // Flatten the entity into comparable values so request-local and persisted checks
         // use the exact same normalization and identity data.
-        foreach (var field in UniqueFields(entity.Type))
+        foreach (var field in UniqueValueValidationRules.UniqueFields(entity.Type))
             if (entity[field.Name] is { } attribute)
                 foreach (var raw in attribute.Values)
-                    if (NormalizedValue(field.Type, raw) is { } value)
+                    if (UniqueValueValidationRules.NormalizedValue(field.Type, raw) is { } value)
                     {
-                        var language = LanguageKey(raw);
+                        var language = UniqueValueValidationRules.LanguageKey(raw);
                         yield return new(entity.Type.NameId, field.Name, field.Type, value, language, PendingValueKey(entity.Type.NameId, field.Name, language, value), entity, index);
                     }
-    }
-
-    private static IContentTypeAttribute[] UniqueFields(IContentType contentType)
-        // Url-path fields are unique by default unless metadata explicitly overrides that behavior.
-        => contentType.Attributes
-            .Where(attribute => UniqueValueLookup.IsSupported(attribute.Type)
-                                && (attribute.Metadata.Get<bool?>(IsUniqueMetadataKey) ?? IsUrlPath(attribute)))
-            .ToArray();
-
-    private static bool IsUrlPath(IContentTypeAttribute attribute)
-        => attribute.Type == ValueTypes.String
-           && attribute.InputType?.Equals(StringUrlPathInputType, StringComparison.OrdinalIgnoreCase) == true;
-
-    private static string? NormalizedValue(ValueTypes type, IValue raw)
-    {
-        var value = type is ValueTypes.String or ValueTypes.Hyperlink or ValueTypes.Custom
-            ? raw.ObjectContents as string ?? raw.SerializableObject as string ?? raw.Serialized
-            : raw.Serialized;
-
-        return string.IsNullOrWhiteSpace(value) ? null : value;
-    }
-
-    private static string LanguageKey(IValue raw)
-    {
-        var languages = raw.Languages
-            .Select(language => language.Key)
-            .Where(language => !string.IsNullOrWhiteSpace(language))
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .OrderBy(language => language, StringComparer.OrdinalIgnoreCase);
-
-        return string.Join("|", languages);
     }
 
     private static string PendingValueKey(string type, string field, string language, string value)
@@ -104,7 +69,7 @@ internal class IsUniqueValidator(UniqueValueLookup lookup, IDataSource appData, 
             entry.Type,
             entry.Value,
             CurrentEntity: entry.Entity,
-            Languages: entry.Language == InvariantLanguage ? null : entry.Language
+            Languages: UniqueValueValidationRules.LanguageFilterOrNull(entry.Language)
         );
 
     private static (PendingValue Entry, IEntity Conflict, int ConflictIndex)? FindSameRequestConflict(IEnumerable<PendingValue> pending)
@@ -129,7 +94,7 @@ internal class IsUniqueValidator(UniqueValueLookup lookup, IDataSource appData, 
 
     private HttpExceptionAbstraction? DuplicateException(ILogCall<HttpExceptionAbstraction?>? l, PendingValue entry, IEntity conflict, int? requestIndex, string source)
     {
-        var language = entry.Language == InvariantLanguage ? "invariant" : entry.Language;
+        var language = entry.Language == UniqueValueValidationRules.InvariantLanguage ? "invariant" : entry.Language;
         var target = requestIndex.HasValue
             ? $"another item in the same request (item {requestIndex.Value})"
             : $"saved entity {conflict.EntityId}";
