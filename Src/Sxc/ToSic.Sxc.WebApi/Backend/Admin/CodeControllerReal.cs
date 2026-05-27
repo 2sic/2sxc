@@ -2,17 +2,18 @@
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sxc.Code.Sys.Documentation;
-using ToSic.Sys.Utils;
 using ToSic.Sys.Utils.Assemblies;
 
 namespace ToSic.Sxc.Backend.Admin;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGenerator>> generators, LazySvc<IAppJsonConfigurationService> appJsonService, LazySvc<IAppReaderFactory> appReaders) 
-    : ServiceBase("Api.CodeRl", connect: [appJsonService, appReaders])
+public class CodeControllerReal(
+    CopilotContentTypeAutoGenerateService codeGenerate,
+    LazySvc<IEnumerable<IFileGenerator>> generators,
+    LazySvc<IAppJsonConfigurationService> appJsonService) 
+    : ServiceBase("Api.CodeRl", connect: [codeGenerate, appJsonService])
 {
     public const string LogSuffix = "Code";
-    private const string DataCopilotConfigurationContentType = "DataCopilotConfiguration";
 
     public class HelpItem
     {
@@ -57,114 +58,13 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGe
     {
         var l = Log.Fn<RichResult>($"{nameof(appId)}:{appId};{nameof(edition)}:{edition}", timer: true);
 
-        try
-        {
-            // Determine the specs to generate with
-            var specs = new FileGeneratorSpecs
+        var result = codeGenerate.GenerateDataModels(appId, edition, generator, configurationId);
+        return l.Return(new RichResult
             {
-                AppId = appId,
-                Edition = edition ?? ""
-            };
-
-            var generatorName = generator;
-            if (configurationId > 0)
-            {
-                var configuration = appReaders.Value.Get(appId).List.GetOne(configurationId);
-                if (configuration == null)
-                    return l.Return(new RichResult
-                        {
-                            Ok = false,
-                            Message = $"Configuration '{configurationId}' not found in app '{appId}'.",
-                        }
-                        .WithTime(l)
-                    );
-
-                // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
-                if (!DataCopilotConfigurationContentType.EqualsInsensitive(configuration.Type?.Name))
-                    return l.Return(new RichResult
-                        {
-                            Ok = false,
-                            Message = $"Configuration '{configurationId}' is not a '{DataCopilotConfigurationContentType}' entity.",
-                        }
-                        .WithTime(l)
-                    );
-
-                var configuredGenerator = Sanitize(configuration.Get<string>("CodeGenerator"));
-                if (configuredGenerator.HasValue())
-                    generatorName = configuredGenerator;
-
-                specs = specs with
-                {
-                    Configuration = $"{configurationId} {configuration.GetBestTitle()}",
-                    Namespace = Sanitize(configuration.Get<string>("Namespace")),
-                    TargetPath = Sanitize(configuration.Get<string>("TargetFolder")),
-                    ContentTypes = Normalize(configuration.Get<string>("ContentTypes")),
-                    Prefix = Sanitize(configuration.Get<string>("Prefix")),
-                    Suffix = Sanitize(configuration.Get<string>("Suffix")),
-                    Edition = Sanitize(configuration.Get<string>("Edition")) ?? edition,
-                };
+                Ok = result.Ok,
+                Message = result.Message,
             }
-
-            // find the generator
-            var gen = generators.Value.FirstOrDefault(g => g.Name == generatorName);
-            if (gen == null)
-                return l.Return(new RichResult
-                    {
-                        Ok = false,
-                        Message = $"Generator '{generatorName}' not found.",
-                    }
-                    .WithTime(l)
-                );
-
-            // Make sure the generator has the logger - if supported
-            (gen as IHasLog)?.LinkLog(Log);
-
-            // generate and save files
-            fileSaver.GenerateAndSaveFiles(gen, specs);
-
-            return l.Return(new RichResult
-                {
-                    Ok = true,
-                    Message = $"Data models generated in {specs.Edition}/{specs.TargetPath ?? "AppCode/Data"}.",
-                }
-                .WithTime(l)
-            );
-        }
-        catch (Exception e)
-        {
-            return l.Return(new RichResult
-                {
-                    Ok = false,
-                    Message = $"Error generating data models in {edition}/AppCode/Data. {e.GetType().FullName} - {e.Message}",
-                }
-                .WithTime(l)
-            );
-        }
-    }
-
-    private static string? Sanitize(string? value) => value.HasValue() ? value?.Trim() : null;
-
-    private static ICollection<string>? Normalize(string? raw)
-    {
-        var cleaned = Sanitize(raw);
-        return cleaned == null ? null : Normalize([cleaned]);
-    }
-
-    private static ICollection<string>? Normalize(IEnumerable<string>? raw)
-    {
-        if (raw == null)
-            return null;
-
-        var cleaned = raw
-            .SelectMany(item => item?
-                .Split([',', ';', '\n', '\r'], StringSplitOptions.RemoveEmptyEntries)
-                ?? [])
-            .Where(item => !string.IsNullOrWhiteSpace(item))
-            .Select(item => item.Trim())
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToList();
-
-        return cleaned.Any() ? cleaned : null;
+            .WithTime(l));
     }
 
     // #MigrateSimpleDataToSysDataAccess

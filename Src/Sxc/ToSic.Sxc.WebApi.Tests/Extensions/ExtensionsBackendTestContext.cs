@@ -78,11 +78,14 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
         services.AddSingleton(sp => new LazySvc<ExtensionInspectBackend>(sp));
         services.AddTransient<ExtensionInspectBackend>();
         services.AddSingleton<FileSaver>();
-        services.AddSingleton<CodeControllerReal>(sp => new CodeControllerReal(
+        services.AddSingleton<CopilotContentTypeAutoGenerateService>(sp => new CopilotContentTypeAutoGenerateService(
             sp.GetRequiredService<FileSaver>(),
             sp.GetRequiredService<LazySvc<IEnumerable<IFileGenerator>>>(),
-            sp.GetRequiredService<LazySvc<IAppJsonConfigurationService>>(),
-            sp.GetRequiredService<LazySvc<IAppReaderFactory>>()));
+            sp.GetRequiredService<IAppReaderFactory>()));
+        services.AddSingleton<CodeControllerReal>(sp => new CodeControllerReal(
+            sp.GetRequiredService<CopilotContentTypeAutoGenerateService>(),
+            sp.GetRequiredService<LazySvc<IEnumerable<IFileGenerator>>>(),
+            sp.GetRequiredService<LazySvc<IAppJsonConfigurationService>>()));
         services.AddSingleton(sp => new LazySvc<CodeControllerReal>(sp));
         
         services.AddSingleton<ExtensionReaderBackend>(sp => new ExtensionReaderBackend(

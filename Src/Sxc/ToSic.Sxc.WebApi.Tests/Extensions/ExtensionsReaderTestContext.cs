@@ -61,11 +61,14 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
         services.AddSingleton<IAppJsonConfigurationService>(sp => sp.GetRequiredService<FakeAppJsonConfigurationService>());
         services.AddSingleton(sp => new LazySvc<IAppJsonConfigurationService>(sp));
         services.AddSingleton<FileSaver>();
-        services.AddSingleton<CodeControllerReal>(sp => new CodeControllerReal(
+        services.AddSingleton<CopilotContentTypeAutoGenerateService>(sp => new CopilotContentTypeAutoGenerateService(
             sp.GetRequiredService<FileSaver>(),
             sp.GetRequiredService<LazySvc<IEnumerable<IFileGenerator>>>(),
-            sp.GetRequiredService<LazySvc<IAppJsonConfigurationService>>(),
-            sp.GetRequiredService<LazySvc<IAppReaderFactory>>()));
+            sp.GetRequiredService<IAppReaderFactory>()));
+        services.AddSingleton<CodeControllerReal>(sp => new CodeControllerReal(
+            sp.GetRequiredService<CopilotContentTypeAutoGenerateService>(),
+            sp.GetRequiredService<LazySvc<IEnumerable<IFileGenerator>>>(),
+            sp.GetRequiredService<LazySvc<IAppJsonConfigurationService>>()));
         services.AddSingleton(sp => new LazySvc<CodeControllerReal>(sp));
             
         var sp = services.BuildServiceProvider() 
