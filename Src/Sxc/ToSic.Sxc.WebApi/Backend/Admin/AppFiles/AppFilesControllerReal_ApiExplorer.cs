@@ -22,13 +22,12 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
 
         var appPath = ResolveAppPath(appId, global: false);
         var app = appReaders.Get(appId).Specs;
-        var editions = codeController.Value.GetEditions(appId).Editions;
+        var editions = AvailableEditionNames(appId);
         l.A($"{nameof(app.Folder)}:'{app.Folder}', appPath:'{appPath}', editions:{editions.Count}");
 
         List<AllApiFileDto> appCodeApiControllerFiles = [];
-        foreach (var editionDto in editions)
+        foreach (var edition in editions)
         {
-            var edition = editionDto.Name;
             l.A($"collect ApiController files in AppCode for edition:'{edition}'");
 
             if (!Directory.Exists(Path.Combine(appPath, edition, FolderConstants.AppCodeFolder)))

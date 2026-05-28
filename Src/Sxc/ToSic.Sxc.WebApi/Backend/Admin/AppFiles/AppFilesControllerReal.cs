@@ -1,8 +1,11 @@
 ﻿using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.DataSource;
+using ToSic.Eav.Services;
 using ToSic.Sxc.Apps.Sys.EditAssets;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sys.Users;
 using static System.StringComparison;
+using AppEditionsDataSource = ToSic.Sxc.DataSources.AppEditions;
 
 namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
@@ -12,14 +15,14 @@ public partial class AppFilesControllerReal(
     IUser user,
     Generator<AssetEditor> assetEditorGenerator,
     IAppReaderFactory appReaders,
-    LazySvc<CodeControllerReal> codeController,
+    IDataSourceGenerator<AppEditionsDataSource> appEditions,
     LazySvc<AppCodeLoader> appCodeLoader,
     AssetTemplates assetTemplates,
     IAppPathsMicroSvc appPathsFactoryTemp)
     : ServiceBase("Bck.Assets",
         connect:
         [
-            assetEditorGenerator, assetTemplates, appReaders, codeController, appCodeLoader, appPathsFactoryTemp
+            assetEditorGenerator, assetTemplates, appReaders, appEditions, appCodeLoader, appPathsFactoryTemp
         ]), IAppFilesController
 {
     public const string LogSuffix = "AppAss";
@@ -186,4 +189,13 @@ public partial class AppFilesControllerReal(
         }
 
     }
+
+    private ICollection<string> AvailableEditionNames(int appId)
+        => appEditions
+            .New(new DataSourceOptions { AppIdentityOrReader = appReaders.AppIdentity(appId) })
+            .List
+            .Select(edition => edition.Get<string>("Name"))
+            .Where(name => name != null)
+            .Select(name => name!)
+            .ToListOpt();
 }

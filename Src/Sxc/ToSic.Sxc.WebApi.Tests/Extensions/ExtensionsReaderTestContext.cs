@@ -1,15 +1,18 @@
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.Run.Startup;
+using ToSic.Eav.Services;
 using ToSic.Eav.Sys;
-using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.App;
-using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
 
 // ReSharper disable once CheckNamespace
@@ -49,27 +52,22 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
         var appPathSvc = new FakeAppPathsMicroSvc(tempRoot);
 
         var services = new ServiceCollection();
+        new StartupTestsEavDataBuild().ConfigureServices(services);
+        services.AddDataSourceSystem();
+        services.AddContextFallbacks();
+
         services.AddSingleton<IAppReaderFactory, FakeAppReaderFactory>();
         services.AddSingleton<IJsonService, SimpleJsonService>();
         services.AddTransient<ExtensionManifestService>();
         services.AddSingleton<ISite>(site);
         services.AddSingleton<IAppPathsMicroSvc>(appPathSvc);
         services.AddSingleton(sp => new LazySvc<IAppReaderFactory>(sp));
-        services.AddSingleton<IEnumerable<IFileGenerator>>(_ => []);
-        services.AddSingleton(sp => new LazySvc<IEnumerable<IFileGenerator>>(sp));
+        services.RemoveAll<IAppJsonConfigurationService>();
+        services.RemoveAll<LazySvc<IAppJsonConfigurationService>>();
         services.AddSingleton<FakeAppJsonConfigurationService>(_ => new FakeAppJsonConfigurationService(tempRoot));
         services.AddSingleton<IAppJsonConfigurationService>(sp => sp.GetRequiredService<FakeAppJsonConfigurationService>());
         services.AddSingleton(sp => new LazySvc<IAppJsonConfigurationService>(sp));
-        services.AddSingleton<FileSaver>();
-        services.AddSingleton<CopilotContentTypeAutoGenerateService>(sp => new CopilotContentTypeAutoGenerateService(
-            sp.GetRequiredService<FileSaver>(),
-            sp.GetRequiredService<LazySvc<IEnumerable<IFileGenerator>>>(),
-            sp.GetRequiredService<IAppReaderFactory>()));
-        services.AddSingleton<CodeControllerReal>(sp => new CodeControllerReal(
-            sp.GetRequiredService<CopilotContentTypeAutoGenerateService>(),
-            sp.GetRequiredService<LazySvc<IEnumerable<IFileGenerator>>>(),
-            sp.GetRequiredService<LazySvc<IAppJsonConfigurationService>>()));
-        services.AddSingleton(sp => new LazySvc<CodeControllerReal>(sp));
+        services.AddTransient<AppEditions>();
             
         var sp = services.BuildServiceProvider() 
             ?? throw new InvalidOperationException("Failed to build service provider");
@@ -77,7 +75,7 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
         var appReadersLazy = new LazySvc<IAppReaderFactory>(sp);
         var jsonLazy = new LazySvc<IJsonService>(sp);
         var manifestHelper = sp.GetRequiredService<ExtensionManifestService>();
-        var codeLazy = sp.GetRequiredService<LazySvc<CodeControllerReal>>();
+        var appEditions = sp.GetRequiredService<IDataSourceGenerator<AppEditions>>();
 
         var readerBackend = new ExtensionReaderBackend(
             appReadersLazy, 
@@ -85,7 +83,7 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
             sp.GetRequiredService<IAppPathsMicroSvc>(), 
             jsonLazy,
             manifestHelper,
-            codeLazy);
+            appEditions);
 
         var appJsonService = sp.GetRequiredService<FakeAppJsonConfigurationService>();
 
@@ -166,7 +164,7 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
         public IAppReader GetSystemPreset()
             => null!;
         public IAppIdentityPure AppIdentity(int appId)
-            => new AppIdentity(1, appId) as IAppIdentityPure ?? throw new();
+            => new AppIdentityPure(1, appId);
         public IAppReader GetZonePrimary(int zoneId)
             => throw new NotImplementedException();
         public IAppReader? TryGet(IAppIdentity appIdentity)
@@ -247,7 +245,8 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
         {
         }
 
-        public AppJsonConfiguration? GetAppJson(int appId, bool useShared) => _configuration;
+        public AppJsonConfiguration? GetAppJson(int appId, bool useShared)
+            => _configuration;
 
         public string AppJsonCacheKey(int appId, bool useShared) => string.Empty;
 

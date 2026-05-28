@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sxc.Code.Sys.Documentation;
 using ToSic.Sys.Utils.Assemblies;
@@ -8,10 +7,8 @@ namespace ToSic.Sxc.Backend.Admin;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeControllerReal(
-    CopilotContentTypeAutoGenerateService codeGenerate,
-    LazySvc<IEnumerable<IFileGenerator>> generators,
-    LazySvc<IAppJsonConfigurationService> appJsonService) 
-    : ServiceBase("Api.CodeRl", connect: [codeGenerate, appJsonService])
+    CopilotContentTypeAutoGenerateService codeGenerate) 
+    : ServiceBase("Api.CodeRl", connect: [codeGenerate])
 {
     public const string LogSuffix = "Code";
 
@@ -67,38 +64,4 @@ public class CodeControllerReal(
             .WithTime(l));
     }
 
-    // #MigrateSimpleDataToSysDataAccess
-    // TODO: @STV this is not used the way it was intended anymore.
-    // Pls
-    // - slim down to only provide Editions (which is the only thing still used)
-    // - consider moving that functionality away from this controller - either standalone or elsewhere
-    public EditionsDto GetEditions(int appId)
-    {
-        var l = Log.Fn<EditionsDto>($"{nameof(appId)}:{appId}");
-
-        // get generators
-        var fileGenerators = generators.Value
-            .Select(g => new GeneratorDto(g))
-            .ToListOpt();
-
-        var appJson = appJsonService.Value.GetAppJson(appId);
-        // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
-        if (appJson?.Editions?.Count > 0)
-        {
-            l.A($"has editions in app.json: {appJson.Editions.Count}");
-            return l.ReturnAsOk(appJson.ToEditionsDto(fileGenerators));
-        }
-
-        l.A("editions are not specified, so using default edition data");
-        // default data
-        var nothingSpecified = new EditionsDto
-        {
-            Ok = true,
-            IsConfigured = false,
-            Editions = [ new() { Name = "", Description = "Root edition", IsDefault = true } ],
-            Generators = fileGenerators
-        };
-
-        return l.Return(nothingSpecified, "editions not specified in app.json");
-    }
 }

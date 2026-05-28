@@ -1,11 +1,13 @@
 using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.DataSource;
 using ToSic.Eav.ImportExport.Sys.Zip;
+using ToSic.Eav.Services;
 using ToSic.Eav.Sys;
-using ToSic.Sxc.Backend.Admin;
 using ToSic.Sys.Configuration;
 using ToSic.Sys.Utils;
+using AppEditionsDataSource = ToSic.Sxc.DataSources.AppEditions;
 
 namespace ToSic.Sxc.Backend.App;
 
@@ -17,9 +19,9 @@ public class ExtensionInstallBackend(
     IGlobalConfiguration globalConfiguration,
     ExtensionManifestService manifestService,
     LazySvc<ExtensionInspectBackend> inspectorLazy,
-    LazySvc<CodeControllerReal> codeLazy,
+    IDataSourceGenerator<AppEditionsDataSource> appEditions,
     LazySvc<AppCachePurger> appCachePurgerLazy)
-    : ServiceBase("Bck.ExtZip", connect: [appReadersLazy, site, appPathSvc, globalConfiguration, manifestService, inspectorLazy, codeLazy, appCachePurgerLazy])
+    : ServiceBase("Bck.ExtZip", connect: [appReadersLazy, site, appPathSvc, globalConfiguration, manifestService, inspectorLazy, appEditions, appCachePurgerLazy])
 {
     private ReadOnlyFileHelper ReadOnlyHelper => field ??= new(Log);
     private ExtensionValidationHelper Validation => field ??= new(manifestService, Log);
@@ -113,7 +115,7 @@ public class ExtensionInstallBackend(
 
             var appRoot = prep.AppRoot;
             var requestedEditions = prep.Editions;
-            var availableEditions = codeLazy.Value.GetEditions(appId).Editions.Select(e => e.Name).ToList();
+            var availableEditions = AvailableEditionNames(appId);
             var lockResults = prep.LockResults;
             var manifestResults = prep.ManifestResults;
 
@@ -185,4 +187,13 @@ public class ExtensionInstallBackend(
         => editionList.Any(e => e.HasValue()) && !editionsSupported
             ? "extension does not support editions"
             : null;
+
+    private List<string> AvailableEditionNames(int appId)
+        => appEditions
+            .New(new DataSourceOptions { AppIdentityOrReader = appReadersLazy.Value.AppIdentity(appId) })
+            .List
+            .Select(edition => edition.Get<string>("Name"))
+            .Where(name => name != null)
+            .Select(name => name!)
+            .ToList();
 }

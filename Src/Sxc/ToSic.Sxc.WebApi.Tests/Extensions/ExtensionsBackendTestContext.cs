@@ -1,15 +1,18 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Text.Json;
+using ToSic.Eav;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Apps.Sys.Loaders;
 using ToSic.Eav.Apps.Sys.Paths;
-using ToSic.Sxc.Backend.Admin;
+using ToSic.Eav.Run.Startup;
+using ToSic.Eav.Services;
 using ToSic.Sxc.Backend.App;
-using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
 using ToSic.Sys.Configuration;
 
@@ -55,6 +58,10 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
         var appPathSvc = new FakeAppPathsMicroSvc(tempRoot);
 
         var services = new ServiceCollection();
+        new StartupTestsEavDataBuild().ConfigureServices(services);
+        services.AddDataSourceSystem();
+        services.AddContextFallbacks();
+
         services.AddSingleton<IAppReaderFactory, FakeAppReaderFactory>();
         services.AddSingleton<IJsonService, SimpleJsonService>();
         services.AddSingleton<IGlobalConfiguration, FakeGlobalConfiguration>();
@@ -68,25 +75,16 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
         services.AddSingleton<AppsCacheSwitch>(sp => new FakeAppsCacheSwitch());
         services.AddSingleton<AppCachePurger>(sp => new AppCachePurger(sp.GetRequiredService<IAppsCatalog>(), sp.GetRequiredService<AppsCacheSwitch>()));
         services.AddSingleton(sp => new LazySvc<AppCachePurger>(sp));
-        services.AddSingleton<IEnumerable<IFileGenerator>>(_ => []);
-        services.AddSingleton(sp => new LazySvc<IEnumerable<IFileGenerator>>(sp));
+        services.RemoveAll<IAppJsonConfigurationService>();
+        services.RemoveAll<LazySvc<IAppJsonConfigurationService>>();
         services.AddSingleton<IAppJsonConfigurationService, FakeAppJsonConfigurationService>();
         services.AddSingleton(sp => new LazySvc<IAppJsonConfigurationService>(sp));
+        services.AddTransient<AppEditions>();
 
         // Register backend dependencies explicitly so they can be resolved by LazySvc later
         services.AddTransient<ExtensionManifestService>();
         services.AddSingleton(sp => new LazySvc<ExtensionInspectBackend>(sp));
         services.AddTransient<ExtensionInspectBackend>();
-        services.AddSingleton<FileSaver>();
-        services.AddSingleton<CopilotContentTypeAutoGenerateService>(sp => new CopilotContentTypeAutoGenerateService(
-            sp.GetRequiredService<FileSaver>(),
-            sp.GetRequiredService<LazySvc<IEnumerable<IFileGenerator>>>(),
-            sp.GetRequiredService<IAppReaderFactory>()));
-        services.AddSingleton<CodeControllerReal>(sp => new CodeControllerReal(
-            sp.GetRequiredService<CopilotContentTypeAutoGenerateService>(),
-            sp.GetRequiredService<LazySvc<IEnumerable<IFileGenerator>>>(),
-            sp.GetRequiredService<LazySvc<IAppJsonConfigurationService>>()));
-        services.AddSingleton(sp => new LazySvc<CodeControllerReal>(sp));
         
         services.AddSingleton<ExtensionReaderBackend>(sp => new ExtensionReaderBackend(
             sp.GetRequiredService<LazySvc<IAppReaderFactory>>(),
@@ -94,7 +92,7 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
             sp.GetRequiredService<IAppPathsMicroSvc>(),
             sp.GetRequiredService<LazySvc<IJsonService>>(),
             sp.GetRequiredService<ExtensionManifestService>(),
-            sp.GetRequiredService<LazySvc<CodeControllerReal>>()));
+            sp.GetRequiredService<IDataSourceGenerator<AppEditions>>()));
 
         services.AddSingleton<ExtensionWriterBackend>(sp => new ExtensionWriterBackend(
             sp.GetRequiredService<LazySvc<IAppReaderFactory>>(),
@@ -108,7 +106,7 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
             sp.GetRequiredService<IGlobalConfiguration>(),
             sp.GetRequiredService<ExtensionManifestService>(),
             sp.GetRequiredService<LazySvc<ExtensionInspectBackend>>(),
-            sp.GetRequiredService<LazySvc<CodeControllerReal>>(),
+            sp.GetRequiredService<IDataSourceGenerator<AppEditions>>(),
             sp.GetRequiredService<LazySvc<AppCachePurger>>()));
 
         var sp = services.BuildServiceProvider() 

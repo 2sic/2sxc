@@ -1,10 +1,13 @@
+using System.Text.Json;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.DataSource;
+using ToSic.Eav.Services;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Services;
 using ToSic.Sys.Utils;
-using System.Text.Json;
+using AppEditionsDataSource = ToSic.Sxc.DataSources.AppEditions;
 
 namespace ToSic.Sxc.Backend.App;
 
@@ -15,8 +18,8 @@ public class ExtensionReaderBackend(
     IAppPathsMicroSvc appPathSvc,
     LazySvc<IJsonService> jsonLazy,
     ExtensionManifestService manifestService,
-    LazySvc<CodeControllerReal> codeLazy)
-    : ServiceBase("Bck.ExtRead", connect: [appReadersLazy, site, appPathSvc, jsonLazy, manifestService, codeLazy])
+    IDataSourceGenerator<AppEditionsDataSource> appEditions)
+    : ServiceBase("Bck.ExtRead", connect: [appReadersLazy, site, appPathSvc, jsonLazy, manifestService, appEditions])
 {
     private const string IconFileName = "icon.png";
 
@@ -30,7 +33,7 @@ public class ExtensionReaderBackend(
             string.Empty
         };
 
-        foreach (var edition in codeLazy.Value.GetEditions(appId).Editions.Select(e => e.Name))
+        foreach (var edition in AvailableEditionNames(appId))
             editionNames.Add(edition);
 
         var availableEditions = editionNames
@@ -129,6 +132,15 @@ public class ExtensionReaderBackend(
 
         string EditionLabel(string editionName) => editionName.IsEmpty() ? "(primary)" : editionName;
     }
+
+    private ICollection<string> AvailableEditionNames(int appId)
+        => appEditions
+            .New(new DataSourceOptions { AppIdentityOrReader = appReadersLazy.Value.AppIdentity(appId) })
+            .List
+            .Select(edition => edition.Get<string>("Name"))
+            .Where(name => name != null)
+            .Select(name => name!)
+            .ToListOpt();
 
     // TODO: @STV - WARNING - THIS CODE LOOKS EXTREMELY SIMILAR TO AppFileSystemInputTypesLoader.BuildUiAssets
     // PLS CHECK AGAIN TO AVOID DUPLICATE CODE

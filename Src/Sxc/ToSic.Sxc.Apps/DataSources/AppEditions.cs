@@ -15,14 +15,14 @@ namespace ToSic.Sxc.DataSources;
     UiHint = "App Editions")]
 public class AppEditions : CustomDataSource
 {
-    public AppEditions(Dependencies services, LazySvc<IAppJsonConfigurationService> appJsonService)
+    public AppEditions(Dependencies services, IAppJsonConfigurationService appJsonService)
         : base(services, logName: "App.EditDS", connect: [appJsonService])
     {
         ProvideOutRaw(
-            () => GetList(appJsonService.Value),
+            () => GetList(appJsonService),
             options: () => new()
             {
-                AutoId = false,
+                AutoId = true,
                 TitleField = "Name",
                 TypeName = "Edition",
             });
