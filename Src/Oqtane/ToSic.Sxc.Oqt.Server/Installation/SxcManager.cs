@@ -151,12 +151,14 @@ public class SxcManager(
             LogError($"2sxc {EavSystemInfo.VersionString} install error: {version} Upgrade Error moving 2sxc folders - {ex}");
         }
 
-        AssemblyCleanupRule[] assemblyCleanupRules =
-        [
-            new("Microsoft.AspNetCore.Authorization.dll", MinRuntimeMajor: 10)
-        ];
+        // Commented 2026-05-29 because this looks like an Oqtane upgrade cleanup problem, not a 2sxc package-file problem.
+        // Oqtane should remove stale root framework assemblies during major upgrades.
+        //AssemblyCleanupRule[] assemblyCleanupRules =
+        //[
+        //    new("Microsoft.AspNetCore.Authorization.dll", MinRuntimeMajor: 10)
+        //];
 
-        RemoveAssemblies(tenant, assemblyCleanupRules, version);
+        //RemoveAssemblies(tenant, assemblyCleanupRules, version);
     }
 
     /// <summary>
