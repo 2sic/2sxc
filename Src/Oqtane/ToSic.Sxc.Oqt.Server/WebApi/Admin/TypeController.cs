@@ -38,11 +38,11 @@ public class TypeController() : OqtStatefulControllerBase(RealController.LogSuff
     [Authorize(Roles = RoleNames.Admin)]
     public ScopesDto Scopes(int appId) => Real.Scopes(appId);
 
-
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [Authorize(Roles = RoleNames.Admin)]
-    public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) => Real.Get(appId, contentTypeId, scope);
+    // 2rb: Replaced by ContentTypeDetails DataSource.
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[Authorize(Roles = RoleNames.Admin)]
+    //public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) => Real.Get(appId, contentTypeId, scope);
 
 
     [HttpDelete]

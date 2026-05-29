@@ -64,12 +64,12 @@ public class TypeControllerReal(
             .ToList();
         return l.Return(new() { Old = dic, Scopes = infos });
     }
-
+    // 2rb: Replaced by ContentTypeDetails DataSource.
     /// <summary>
     /// Used to be GET ContentTypes/Scopes
     /// </summary>
-    public ContentTypeDto Get(int appId, string contentTypeId, string? scope = null)
-        => ctApiLazy.Value.GetSingle(appId, contentTypeId, scope);
+    //public ContentTypeDto Get(int appId, string contentTypeId, string? scope = null)
+    //    => ctApiLazy.Value.GetSingle(appId, contentTypeId, scope);
 
 
     public bool Delete(int appId, string staticName)

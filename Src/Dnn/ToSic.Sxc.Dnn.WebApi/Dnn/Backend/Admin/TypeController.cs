@@ -50,16 +50,16 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     public ScopesDto Scopes(int appId)
         => Real.Scopes(appId);
 
-
+    // 2rb: Replaced by ContentTypeDetails DataSource.
     /// <summary>
     /// Used to be GET ContentTypes.
     /// See https://docs.2sxc.org/basics/data/content-types/index.html
     /// </summary>
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public ContentTypeDto Get(int appId, string contentTypeId, string scope = null)
-        => Real.Get(appId, contentTypeId, scope);
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //public ContentTypeDto Get(int appId, string contentTypeId, string scope = null)
+    //    => Real.Get(appId, contentTypeId, scope);
 
 
     /// <summary>
