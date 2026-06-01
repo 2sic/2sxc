@@ -202,6 +202,9 @@ public abstract class MailServiceBase(LazySvc<IUser> userLazy, object[]? connect
                         file.FullName));
                 return l.ReturnTrue(nameof(IEnumerable<IFile>));
 
+            case null:
+                return l.ReturnTrue("null");
+
             default:
                 throw new ArgumentException($"Unknown type for {nameof(attachments)}");
         }
