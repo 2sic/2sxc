@@ -19,6 +19,17 @@ public class ContentTypeDetails : CustomDataSource
     private readonly GenWorkPlus<WorkEntities> _workEntities;
     private readonly ConvertContentTypeToDto _convTypeDto;
 
+    #region Configuration Properties
+
+    /// <summary>
+    /// The static name or GUID of the content type to retrieve.
+    /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
+    /// </summary>
+    [Configuration(Fallback = "")]
+    public string ContentTypeId => Configuration.GetThis(fallback: "");
+
+    #endregion
+
     public ContentTypeDetails(
         Dependencies services,
         GenWorkPlus<WorkEntities> workEntities,
@@ -39,11 +50,8 @@ public class ContentTypeDetails : CustomDataSource
     {
         var l = Log.Fn<IEnumerable<IRawEntity>>();
 
-        var appId = Configuration.GetThis(0, "AppId");
-        var contentTypeStaticName = Configuration.GetThis<string>("ContentTypeId");
-
-        var appCtxPlus = _workEntities.CtxSvc.ContextPlus(appId);
-        var contentType = appCtxPlus.AppReader.GetContentType(contentTypeStaticName);
+        var appCtxPlus = _workEntities.CtxSvc.ContextPlus(AppId);
+        var contentType = appCtxPlus.AppReader.GetContentType(ContentTypeId);
 
         if (contentType == null)
             return l.Return([], "not found");
