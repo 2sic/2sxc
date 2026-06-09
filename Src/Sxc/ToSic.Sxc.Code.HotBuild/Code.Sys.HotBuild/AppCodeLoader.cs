@@ -112,7 +112,7 @@ public class AppCodeLoader(
             if (result != null)
                 return l.Return(result, "inside lock, start");
 
-            // Get paths
+            // Get paths and add to specs
             var (physicalPath, relativePath, physicalPathShared, relativePathShared) = GetAppPaths(FolderConstants.AppCodeFolder, spec);
             logSummary.AddSpec("PhysicalPath", physicalPath);
             logSummary.AddSpec("RelativePath", relativePath);
