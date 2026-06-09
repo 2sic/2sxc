@@ -89,7 +89,10 @@ public class ContentTypeDetails : CustomDataSource
             { nameof(ContentTypeDto.Properties), dto.Properties },
             { nameof(ContentTypeDto.Permissions), dto.Permissions },
             { nameof(ContentTypeDto.EditInfo), dto.EditInfo },
-        });
+        })
+        {
+            Id = dto.Id,
+        };
 
         return l.Return([entity], "ok");
     }
@@ -124,7 +127,10 @@ public class ContentTypeDetails : CustomDataSource
             { nameof(ContentTypeFieldDto.SysSettings), field.SysSettings },
             { nameof(ContentTypeFieldDto.ContentType), field.ContentType },
             { nameof(ContentTypeFieldDto.ConfigTypes), field.ConfigTypes },
-        })).ToList();
+        })
+        {
+            Id = field.Id,
+        }).ToList();
 
         return l.Return(entities, $"{entities.Count}");
     }
