@@ -40,20 +40,20 @@ public class Apps : CustomDataSource
         var entities = _appsBackend.Value.Apps()
             .Select(app => new RawEntity(new()
             {
-            { nameof(AppDto.IsApp), app.IsApp },
-            { nameof(AppDto.Guid), app.Guid },
-            { nameof(AppDto.Name), app.Name },
-            { nameof(AppDto.Folder), app.Folder },
-            { nameof(AppDto.AppRoot), app.AppRoot },
-            { nameof(AppDto.IsHidden), app.IsHidden },
-            { nameof(AppDto.ConfigurationId), app.ConfigurationId },
-            { nameof(AppDto.Items), app.Items },
-            { nameof(AppDto.Thumbnail), app.Thumbnail },
-            { nameof(AppDto.Version), app.Version },
-            { nameof(AppDto.IsGlobal), app.IsGlobal },
-            { nameof(AppDto.IsInherited), app.IsInherited },
-            { nameof(AppDto.Lightspeed), app.Lightspeed },
-            { nameof(AppDto.HasCodeWarnings), app.HasCodeWarnings },
+                { nameof(AppDto.IsApp), app.IsApp },
+                { nameof(AppDto.Guid), app.Guid },
+                { nameof(AppDto.Name), app.Name },
+                { nameof(AppDto.Folder), app.Folder },
+                { nameof(AppDto.AppRoot), app.AppRoot },
+                { nameof(AppDto.IsHidden), app.IsHidden },
+                { nameof(AppDto.ConfigurationId), app.ConfigurationId },
+                { nameof(AppDto.Items), app.Items },
+                { nameof(AppDto.Thumbnail), app.Thumbnail },
+                { nameof(AppDto.Version), app.Version },
+                { nameof(AppDto.IsGlobal), app.IsGlobal },
+                { nameof(AppDto.IsInherited), app.IsInherited },
+                { nameof(AppDto.Lightspeed), app.Lightspeed },
+                { nameof(AppDto.HasCodeWarnings), app.HasCodeWarnings },
             })
             {
                 Id = app.Id
