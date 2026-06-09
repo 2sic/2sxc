@@ -39,7 +39,7 @@ internal class HotBuildReferenceManager(
             if (sourcePath.HasValue())
             {
                 var referenceReader = extensionReference.Value;
-                foreach (var reference in referenceReader.GetReferences(sourcePath, netFramework: false))
+                foreach (var reference in referenceReader.GetReferences(sourcePath, isNetFramework: false))
                 {
                     var resolved = ExtensionCompileReferenceService.IsAssemblyName(reference.Value)
                         ? referenceReader.TryResolveAssemblyLocation(reference.Value)

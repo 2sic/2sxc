@@ -21,8 +21,17 @@ public class ReferencedAssembliesProvider(
     public List<string> Locations(string virtualPath, HotBuildSpec spec)
     {
         var l = Log.Fn<List<string>>($"for: '{virtualPath}'");
+
+        // BUG: @STV this causes a problem
+        // If an app installs an extension like Radmin, which contains a config.json
+        // the server building the AppCode still has the cached list.
+        // This also applies to any app where a user manually adds a config.json - it won't be noticed/added.
+        // So Please check if this is really time-consuming
+        // At the level of a cshtml then using the cached makes sense, but at the level of the AppCode
+        // it should probably never ruse the cache, but always start over (and fill the cache for the cshtml level)
+
         if (ReferencedAssembliesCache.TryGetValue(virtualPath, out var cachedResult))
-            return l.Return(new(cachedResult), "cached, re-wrapped in new list");
+            return l.Return([..cachedResult], "cached, re-wrapped in new list");
 
         var lTimer = Log.Fn("timer for AppRef", timer: true);
         var referencedAssemblies = new List<string>(AppReferencedAssemblies());
@@ -97,7 +106,7 @@ public class ReferencedAssembliesProvider(
             return;
 
         var referenceReader = extensionReference.Value;
-        foreach (var reference in referenceReader.GetReferences(physicalPath, netFramework: true))
+        foreach (var reference in referenceReader.GetReferences(physicalPath, isNetFramework: true))
         {
             if (ExtensionCompileReferenceService.IsAssemblyName(reference.Value))
             {

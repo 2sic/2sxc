@@ -27,9 +27,9 @@ public class ExtensionCompileReferenceService(MemoryCacheService cache)
     /// <summary>
     /// Load extension reference definitions underneath the AppCode/Extensions folder that contains <paramref name="startPath"/>.
     /// </summary>
-    public IReadOnlyList<ExtensionReference> GetReferences(string? startPath, bool netFramework)
+    public IReadOnlyList<ExtensionReference> GetReferences(string? startPath, bool isNetFramework)
     {
-        var l = Log.Fn<List<ExtensionReference>>($"start:{startPath}, net4:{netFramework}");
+        var l = Log.Fn<List<ExtensionReference>>($"start:{startPath}, net4:{isNetFramework}");
         var appCodeFolder = FindAppCodeFolder(startPath);
         if (appCodeFolder.IsEmpty())
             return l.Return([], "no-appcode");
@@ -38,23 +38,33 @@ public class ExtensionCompileReferenceService(MemoryCacheService cache)
         if (!Directory.Exists(extensionsRoot))
             return l.Return([], "no-extensions");
 
-        var references = new List<ExtensionReference>();
-        foreach (var extensionDir in Directory.EnumerateDirectories(extensionsRoot))
-        {
-            var configPath = Path.Combine(extensionDir, CompileConfigFileName);
-            if (!File.Exists(configPath))
-                continue;
-
-            var config = LoadConfig(configPath);
-            var entries = netFramework ? config.NetFrameworkReferences : config.NetCoreReferences;
-            foreach (var entry in entries)
+        var configPaths = Directory.EnumerateDirectories(extensionsRoot)
+            .Select(folder => new
             {
-                if (!entry.HasValue())
-                    continue;
+                Folder = folder,
+                FilePath = Path.Combine(folder, CompileConfigFileName)
+            })
+            .Where(p => l.Bool(File.Exists(p.FilePath), ifTrue: $"Found config: {p.FilePath}", ifFalse: $"No Config: {p.FilePath}"))
+            .ToList();
 
-                references.Add(new(entry.Trim(), extensionDir));
-            }
-        }
+        var references = configPaths
+            .SelectMany(configFiles =>
+            {
+                var configData = LoadConfig(configFiles.FilePath);
+                var entries = isNetFramework
+                    ? configData.NetFrameworkReferences
+                    : configData.NetCoreReferences;
+
+                var entryRefs = entries
+                    .Where(e => e.HasValue())
+                    .Select(e => e.Trim())
+                    .Select(entry => new ExtensionReference(entry.Trim(), configFiles.Folder))
+                    .ToList();
+
+                return entryRefs;
+            })
+            .ToList();
+
 
         return l.Return(references, $"found:{references.Count}");
     }

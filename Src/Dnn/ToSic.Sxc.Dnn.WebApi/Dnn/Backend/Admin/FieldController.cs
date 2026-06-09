@@ -23,8 +23,9 @@ public class FieldController() : DnnSxcControllerBase(RealController.LogSuffix),
     /// <summary>
     /// Returns the configuration for a content type
     /// </summary>
-    [HttpGet]
-    public IEnumerable<ContentTypeFieldDto> All(int appId, string staticName) => Real.All(appId, staticName);
+    // 2rb: Replaced by ContentTypeDetails DataSource.
+    //[HttpGet]
+    //public IEnumerable<ContentTypeFieldDto> All(int appId, string staticName) => Real.All(appId, staticName);
 
     /// <summary>
     /// Used to be GET ContentType/DataTypes
