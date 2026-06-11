@@ -34,18 +34,21 @@ public class FieldController() : OqtStatefulControllerBase(RealController.LogSuf
     /// <summary>
     /// Used to be GET ContentType/DataTypes
     /// </summary>
-    [HttpGet]
-    public string[] DataTypes(int appId) => Real.DataTypes(appId);
+    // 2rb: Replaced by InputTypes DataSource.
+    //[HttpGet]
+    //public string[] DataTypes(int appId) => Real.DataTypes(appId);
 
     /// <summary>
     /// Used to be GET ContentType/InputTypes
     /// </summary>
-    [HttpGet]
-    public ICollection<InputTypeInfo> InputTypes(int appId) => Real.InputTypes(appId);
+    // 2rb: Replaced by InputTypes DataSource.
+    //[HttpGet]
+    //public ICollection<InputTypeInfo> InputTypes(int appId) => Real.InputTypes(appId);
 
     /// <inheritdoc />
-    [HttpGet]
-    public Dictionary<string, string> ReservedNames() => AttributeNames.ReservedNames;
+    // 2rb: Replaced by InputTypes DataSource.
+    //[HttpGet]
+    //public Dictionary<string, string> ReservedNames() => AttributeNames.ReservedNames;
 
     /// <summary>
     /// Used to be GET ContentType/AddField
