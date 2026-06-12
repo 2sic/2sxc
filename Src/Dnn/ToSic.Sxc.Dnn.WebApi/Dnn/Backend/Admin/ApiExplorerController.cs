@@ -73,9 +73,11 @@ public class ApiExplorerController() : DnnSxcControllerRoot(RealController.LogSu
         return assembly;
     }
 
-    [HttpGet]
-    [JsonFormatter(Casing = Casing.Camel)]
-    public AllApiFilesDto AppApiFiles(int appId) => Real.AppApiFiles(appId);
+
+    // 2rb: 2026-06-12: Replaced by AppWebApiControllers Datasource
+    //[HttpGet]
+    //[JsonFormatter(Casing = Casing.Camel)]
+    //public AllApiFilesDto AppApiFiles(int appId) => Real.AppApiFiles(appId);
 
     private bool FileInAppCode(string path) => path.StartsWith("AppCode\\api\\", StringComparison.InvariantCultureIgnoreCase) || path.ContainsInsensitive("\\AppCode\\api\\");
 
