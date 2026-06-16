@@ -2,9 +2,10 @@
 
 namespace ToSic.Sxc.Code.Generate.Data;
 
-internal abstract class GeneratePropertyBase(CSharpGeneratorHelper helper)
+internal abstract class GeneratePropertyBase(CSharpGeneratorHelper helper, string? logName = null): IHasLog
 {
     protected CSharpCodeSpecs Specs = helper.Specs;
+    public ILog? Log => field ??= helper.Log.SubLogOrNull(logName ?? "unknown");
 
     public abstract ValueTypes ForDataType { get; }
 
@@ -76,8 +77,5 @@ internal abstract class GeneratePropertyBase(CSharpGeneratorHelper helper)
         => jsonIgnore 
             ? ["System.Text.Json.Serialization", .. usings] 
             : usings;
-
-
-
 
 }
