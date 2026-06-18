@@ -9,6 +9,7 @@ internal static class UniqueValueValidationRules
     internal const string IsUniqueMetadataKey = "IsUnique";
     internal const string StringUrlPathInputType = "string-url-path";
     internal const string InvariantLanguage = "";
+    internal const string DefaultLanguageWildcard = "*";
     private static readonly ValueAssembler ScalarValueAssembler = new();
 
     internal static IContentTypeAttribute[] UniqueFields(IContentType contentType)
@@ -63,7 +64,7 @@ internal static class UniqueValueValidationRules
     internal static string LanguageKey(IValue raw)
     {
         var languages = raw.Languages
-            .Select(language => language.Key)
+            .Select(language => NormalizeLanguage(language.Key))
             .Where(language => !string.IsNullOrWhiteSpace(language))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(language => language, StringComparer.OrdinalIgnoreCase);
@@ -72,7 +73,16 @@ internal static class UniqueValueValidationRules
     }
 
     internal static string? LanguageFilterOrNull(string language)
-        => language == InvariantLanguage
+    {
+        var normalized = NormalizeLanguage(language);
+        return normalized == InvariantLanguage
             ? null
-            : language;
+            : normalized;
+    }
+
+    private static string NormalizeLanguage(string? language)
+        // EAV JSON uses "*" as the persisted marker for the default/non-localized bucket.
+        => language == DefaultLanguageWildcard
+            ? InvariantLanguage
+            : language ?? InvariantLanguage;
 }
