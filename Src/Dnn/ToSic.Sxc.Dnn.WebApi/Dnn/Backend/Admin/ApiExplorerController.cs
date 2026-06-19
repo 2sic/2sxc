@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Hosting;
 using ToSic.Eav.Apps.Sys.AppJson;
@@ -18,17 +18,18 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 [ValidateAntiForgeryToken]
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ApiExplorerController() : DnnSxcControllerRoot(RealController.LogSuffix), IApiExplorerController
+public class ApiExplorerController() : DnnSxcControllerRoot(RealController.LogSuffix)
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
-    [HttpGet]
-    public HttpResponseMessage Inspect(string path)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        SysHlp.SetupResponseMaker(this);
-        return Real.Inspect(path, GetCompiledAssembly);
-    }
+    // @2rb 2026-06-19: Replaced by System.AppWebApiControllerDetails and System.AppWebApiControllerEndpoints DataSources.
+    //[HttpGet]
+    //public HttpResponseMessage Inspect(string path)
+    //{
+    //    // Make sure the Scoped ResponseMaker has this controller context
+    //    SysHlp.SetupResponseMaker(this);
+    //    return Real.Inspect(path, GetCompiledAssembly);
+    //}
 
     private Assembly GetCompiledAssembly(string path)
     {
