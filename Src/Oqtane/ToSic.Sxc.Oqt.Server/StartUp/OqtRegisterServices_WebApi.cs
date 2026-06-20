@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.WebApi.Sys.ApiExplorer;
 using ToSic.Sxc.Oqt.Server.WebApi;
@@ -16,6 +16,7 @@ partial class OqtRegisterServices
     {
         // ApiExplorer helper - inspects a custom WebApi class to figure out what it provides
         services.TryAddTransient<IApiInspector, OqtApiInspector>();
+        services.TryAddTransient<IAppWebApiControllerAssemblyLoader, OqtAppWebApiControllerAssemblyLoader>();
 
         return services;
     }

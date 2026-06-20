@@ -99,6 +99,25 @@ public class UniqueValueValidationTests
     }
 
     [Fact]
+    public void DefaultLanguageWildcardRequest_IsHandledAsInvariant()
+    {
+        using var ctx = IsUniqueValidatorTestContext.Create();
+        var type = ctx.CreateType("Article",
+            ctx.CreateField("Title", ValueTypes.String, isTitle: true),
+            ctx.CreateField("Slug", ValueTypes.String, isUnique: true));
+
+        var existing = ctx.CreateEntity(type, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Existing"),
+            ctx.InvariantAttribute("Slug", ValueTypes.String, "same-slug"));
+
+        var result = Validate(ctx, [type], [existing], new(type.NameId, "Slug", "same-slug", UniqueValueValidationRules.DefaultLanguageWildcard));
+
+        Assert.False(result.IsValid);
+        Assert.Equal("duplicate", result.Reason);
+        Assert.Equal(existing.EntityId, result.ConflictEntityId);
+    }
+
+    [Fact]
     public void PlainNonUniqueField_ReturnsNotApplicable()
     {
         using var ctx = IsUniqueValidatorTestContext.Create();

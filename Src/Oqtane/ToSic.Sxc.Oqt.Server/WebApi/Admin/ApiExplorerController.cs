@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Reflection;
@@ -29,18 +29,19 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Authorize(Roles = RoleNames.Admin)]
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ApiExplorerController() : OqtStatefulControllerBase(RealController.LogSuffix), IApiExplorerController
+public class ApiExplorerController() : OqtStatefulControllerBase(RealController.LogSuffix)
 {
     private RealController Real => GetService<RealController>();
     private Generator<Compiler> Compiler => GetService<Generator<Compiler>>();
 
-    [HttpGet]
-    public IActionResult Inspect(string path)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        CtxHlp.SetupResponseMaker();
-        return Real.Inspect(path, GetCompiledAssembly);
-    }
+    // @2rb 2026-06-19: Replaced by System.AppWebApiControllerDetails and System.AppWebApiControllerEndpoints DataSources.
+    //[HttpGet]
+    //public IActionResult Inspect(string path)
+    //{
+    //    // Make sure the Scoped ResponseMaker has this controller context
+    //    CtxHlp.SetupResponseMaker();
+    //    return Real.Inspect(path, GetCompiledAssembly);
+    //}
 
     private Assembly GetCompiledAssembly(string path)
     {

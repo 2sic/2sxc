@@ -1,4 +1,5 @@
 using ToSic.Eav.Data;
+using ToSic.Sxc.Backend.SaveHelpers;
 
 namespace ToSic.Sxc.WebApi.Tests.SaveHelpers;
 
@@ -204,6 +205,27 @@ public class IsUniqueValidatorTests
         Assert.Null(noConflict);
         Assert.NotNull(conflict);
         Assert.Contains("language: en-us", conflict.Value);
+    }
+
+    [Fact]
+    public void DefaultLanguageWildcard_DoesNotBreakUniqueValidation()
+    {
+        using var ctx = IsUniqueValidatorTestContext.Create();
+        var type = ctx.CreateType("Article",
+            ctx.CreateField("Title", ValueTypes.String, isTitle: true),
+            ctx.CreateField("Slug", ValueTypes.String, isUnique: true));
+
+        var existing = ctx.CreateEntity(type, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Existing"),
+            ctx.LocalizedAttribute("Slug", ValueTypes.String, ("same-slug", UniqueValueValidationRules.DefaultLanguageWildcard)));
+        var pending = ctx.CreateEntity(type, Guid.NewGuid(),
+            ctx.InvariantAttribute("Title", ValueTypes.String, "Pending"),
+            ctx.LocalizedAttribute("Slug", ValueTypes.String, ("same-slug", UniqueValueValidationRules.DefaultLanguageWildcard)));
+
+        var exception = ctx.CreateValidator(existing).UniqueValuesOnlyTac([pending]);
+
+        Assert.NotNull(exception);
+        Assert.Contains("Article.Slug", exception.Value);
     }
 
     [Fact]
