@@ -20,12 +20,16 @@ partial record ToolbarBuilder
     {
         TargetCheck(target);
         var pars = PreCleanParams(tweak, defOp: OprAuto, operation: operation, ui: ui, parameters: parameters, methodName: methodName);
-        var command = new ToolbarRuleForEntity(commandName, target, 
+        var command = new ToolbarRuleForEntity(
+            commandName: commandName,
+            decoHelper: Services.ToolbarButtonHelper.Value,
+            target: target,
             contentType: contentType,
             ui: pars.Ui,
             parameters: pars.Parameters,
-            propsKeep: KeysOfLists, 
-            operation: pars.Operation);
+            propsKeep: KeysOfLists,
+            operation: pars.Operation
+        );
         return this.AddInternal([command], methodName: methodName);
 
     }

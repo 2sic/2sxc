@@ -76,11 +76,15 @@ partial record ToolbarBuilder
     )
     {
         TargetCheck(target);
-        var command = new ToolbarRuleForEntity(verb, target, pars.Operation,
+        var command = new ToolbarRuleForEntity(
+            commandName: verb,
+            decoHelper: Services.ToolbarButtonHelper.Value,
+            target: target,
+            operation: pars.Operation,
             ui: pars.Ui, parameters: pars.Parameters,
             contentType: contentType,
-            propsKeep: propsKeep, propsSkip: propsSkip,
-            decoHelper: Services.ToolbarButtonHelper.Value);
+            propsKeep: propsKeep, propsSkip: propsSkip
+        );
         var builder = this.AddInternal([command], methodName: verb);
         return (command, builder);
     }
@@ -188,13 +192,13 @@ partial record ToolbarBuilder
                     : pars;
 
                 return new ToolbarRuleMetadata(
-                    target,
-                    type,
+                    target: target,
+                    typeName: type,
                     operation: parsForThis.Operation,
+                    decoHelper: Services.ToolbarButtonHelper.Value,
                     ui: parsForThis.Ui,
                     parameters: parsForThis.Parameters,
-                    context: realContext,
-                    decoHelper: Services.ToolbarButtonHelper.Value
+                    context: realContext
                 );
             })
             .ToArray();

@@ -52,11 +52,13 @@ partial record ToolbarBuilder
 
         //var parsWithPrefill = Utils.Prefill2Url.SerializeWithChild(partsWithPrevious, prefill, PrefixPrefill);
 
-        var newParamsRule = new ToolbarRuleForParams(target,
-            parts.Ui,
-            parts.Parameters,
-            GenerateContext(target, context) ?? previous?.Context,
-            Services.ToolbarButtonHelper.Value);
+        var newParamsRule = new ToolbarRuleForParams(
+            target: target,
+            ui: parts.Ui,
+            parameters: parts.Parameters,
+            context: GenerateContext(target, context) ?? previous?.Context,
+            decoHelper: Services.ToolbarButtonHelper.Value
+        );
 
         clone.Rules.Add(newParamsRule);
 

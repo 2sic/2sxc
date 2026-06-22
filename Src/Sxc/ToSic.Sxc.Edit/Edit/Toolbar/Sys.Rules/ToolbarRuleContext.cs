@@ -2,10 +2,11 @@
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class ToolbarRuleContext(
+    ToolbarButtonDecoratorHelper decoHelper,
     object? target,
-    ToolbarContext? context = null,
-    ToolbarButtonDecoratorHelper? decoHelper = null)
-    : ToolbarRuleTargeted(target, CommandName, null, null, null, context, decoHelper)
+    ToolbarContext? context = null
+    )
+    : ToolbarRuleTargeted(target: target, command: CommandName, decoHelper: decoHelper, ui: null, parameters: null, operation: null, context: context)
 {
     internal const string CommandName = "context";
 }

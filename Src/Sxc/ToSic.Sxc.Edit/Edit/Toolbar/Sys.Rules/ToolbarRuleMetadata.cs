@@ -9,10 +9,10 @@ internal class ToolbarRuleMetadata(
     object target,
     string typeName,
     char operation,
+    ToolbarButtonDecoratorHelper decoHelper,
     string? ui = null,
     string? parameters = null,
-    ToolbarContext? context = null,
-    ToolbarButtonDecoratorHelper? decoHelper = null
+    ToolbarContext? context = null
     ) : ToolbarRuleTargeted(target, ActionNames.Metadata, operation: operation, ui: ui, parameters: parameters, context: context, decoHelper: decoHelper)
 {
     protected override string DecoratorTypeName => typeName;
@@ -33,17 +33,19 @@ internal class ToolbarRuleMetadata(
         var targetId = hasMetadata.Metadata.Target;
 
         // Check if it already has this metadata
-        var existing = hasMetadata.Metadata.OfType(typeName).FirstOrDefault();
+        var existing = hasMetadata.Metadata
+            .OfType(typeName)
+            .FirstOrDefault();
 
         // add / update rule
         var newRule = $"{KeyEntityId}={existing?.EntityId ?? 0}"
                       + (existing == null
-                          ? $"&{KeyContentType}={typeName}&{MdFor()}"
+                          ? $"&{KeyContentType}={typeName}&{BuildMdForString()}"
                           : "");
         return newRule;
 
         // Build target string containing IDs if not yet created
-        string MdFor() =>
+        string BuildMdForString() =>
             "for=" + targetId.TargetType + "," +
             (targetId.KeyGuid != null ? $"guid,{targetId.KeyGuid}"
                 : targetId.KeyString != null ? $"string,{targetId.KeyString}"
