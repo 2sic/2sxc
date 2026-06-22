@@ -52,18 +52,18 @@ public class ContentGroupControllerReal(
     }
         
 
-    public void Replace(Guid guid, string part, int index, int entityId, bool add = false) 
-        => listController.Value.Replace(guid, part, index, entityId, add);
+    public void Replace(Guid parent, string part, int index, int entityId, bool add = false) 
+        => listController.Value.Replace(parent, part, index, entityId, add);
 
 
     /// <summary>
     /// Special Replace just like list-replace, but with content type name coming from View definition
     /// </summary>
-    public ReplacementListDto? Replace(Guid guid, string part, int index)
+    public ReplacementListDto? Replace(Guid parent, string part, int index)
     {
-        var l = Log.Fn<ReplacementListDto?>($"target:{guid}, part:{part}, index:{index}");
-        var typeNameOfField = FindTypeNameOnContentGroup(guid, part);
-        var result = listController.Value.GetListToReorder(guid, part, index, typeNameOfField);
+        var l = Log.Fn<ReplacementListDto?>($"target:{parent}, part:{part}, index:{index}");
+        var typeNameOfField = FindTypeNameOnContentGroup(parent, part);
+        var result = listController.Value.GetListToReorder(parent, part, index, typeNameOfField);
         return l.Return(result);
     }
 
@@ -87,10 +87,10 @@ public class ContentGroupControllerReal(
 
 
 
-    public List<EntityInListDto> ItemList(Guid guid, string part)
+    public List<EntityInListDto> ItemList(Guid parent, string part)
     {
-        var l = Log.Fn<List<EntityInListDto>>($"item list for:{guid}");
-        var cg = Context.AppReaderRequired.GetDraftOrPublished(guid)!;
+        var l = Log.Fn<List<EntityInListDto>>($"item list for:{parent}");
+        var cg = Context.AppReaderRequired.GetDraftOrPublished(parent)!;
         var itemList = cg.Children(part);
         var list = itemList
             .Select(Context.AppReaderRequired.GetDraftOrKeep)
@@ -102,15 +102,15 @@ public class ContentGroupControllerReal(
 
 
     // TODO: part should be handed in with all the relevant names! atm it's "content" in the content-block scenario
-    public bool ItemList(Guid guid, List<EntityInListDto>? list,  string? part = null)
+    public bool ItemList(Guid parent, List<EntityInListDto>? list,  string? part = null)
     {
-        var l = Log.Fn<bool>($"list for:{guid}, items:{list?.Count}");
+        var l = Log.Fn<bool>($"list for:{parent}, items:{list?.Count}");
         if (list == null)
             throw l.Done(new ArgumentNullException(nameof(list)));
 
         publishing.Value.DoInsidePublishing(Context, _ =>
         {
-            var entity = Context.AppReaderRequired.GetDraftOrPublished(guid);
+            var entity = Context.AppReaderRequired.GetDraftOrPublished(parent);
             var sequence = list
                 .Select(i => i.Index)
                 .ToArray();

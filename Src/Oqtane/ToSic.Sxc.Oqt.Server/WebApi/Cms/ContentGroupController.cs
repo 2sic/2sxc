@@ -32,28 +32,28 @@ public class ContentGroupController() : OqtStatefulControllerBase(RealController
     [HttpPost]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public void Replace(Guid guid, string part, int index, int entityId, bool add = false)
-        => Real.Replace(guid, part, index, entityId, add);
+    public void Replace(Guid parent, string part, int index, int entityId, bool add = false)
+        => Real.Replace(parent, part, index, entityId, add);
 
 
     // TODO: WIP changing this from ContentGroup editing to any list editing
     [HttpGet]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public ReplacementListDto Replace(Guid guid, string part, int index)
-        => Real.Replace(guid, part, index);
+    public ReplacementListDto Replace(Guid parent, string part, int index)
+        => Real.Replace(parent, part, index);
 
     [HttpGet]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public List<EntityInListDto> ItemList(Guid guid, string part)
-        => Real.ItemList(guid, part);
+    public List<EntityInListDto> ItemList(Guid parent, string part)
+        => Real.ItemList(parent, part);
 
 
     // TODO: part should be handed in with all the relevant names! atm it's "content" in the content-block scenario
     [HttpPost]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool ItemList([FromQuery] Guid guid, List<EntityInListDto> list, [FromQuery] string part = null)
-        => Real.ItemList(guid, list, part);
+    public bool ItemList([FromQuery] Guid parent, List<EntityInListDto> list, [FromQuery] string part = null)
+        => Real.ItemList(parent, list, part);
 }
