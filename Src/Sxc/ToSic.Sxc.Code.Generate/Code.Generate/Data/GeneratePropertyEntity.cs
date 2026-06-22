@@ -16,12 +16,12 @@ internal class GeneratePropertyEntity(CSharpGeneratorHelper helper) : GeneratePr
 
         var inspector = new WorkAttributeEntityInspectType();
         this.ConnectLogs([inspector]);
-        var entityType = inspector.PrimaryTypeName(attribute, create: false);
-        if (entityType.IsEmpty())
-        {
-            entityType = inspector.PrimaryTypeName(attribute, create: true);
-            l.A($"Entity type was empty, will try for create resulting in: '{entityType}'");
-        }
+        var entityType = inspector.PrimaryTypeName(attribute, modeCreate: false, tryOtherModes: true);
+        //if (entityType.IsEmpty())
+        //{
+        //    entityType = inspector.PrimaryTypeName(attribute, modeCreate: true);
+        //    l.A($"Entity type was empty, will try for create resulting in: '{entityType}'");
+        //}
         //var entityType = attribute.Metadata.Get<string>(AttributeNames.EntityFieldType);
         var allowMulti = attribute.Metadata.Get<bool>(AttributeNames.EntityFieldAllowMulti);
 

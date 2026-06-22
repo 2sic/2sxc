@@ -199,7 +199,11 @@ public class ContentGroupList(
                     // look up type
                     var target = AppCtx.AppReader.List.GetOne(identifier.Parent.Value)!;
                     var field = target.Type[identifier.Field]!;
-                    identifier = identifier with { ContentTypeName = new WorkAttributeEntityInspectType().PrimaryTypeName(field) }; 
+                    identifier = identifier with
+                    {
+                        ContentTypeName = new WorkAttributeEntityInspectType()
+                            .PrimaryTypeName(field, modeCreate: true)
+                    }; 
                     return l.Return(identifier, "identifier is new");
                 }
 

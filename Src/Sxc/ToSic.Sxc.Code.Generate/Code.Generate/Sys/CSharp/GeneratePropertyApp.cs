@@ -15,7 +15,7 @@ internal class GeneratePropertyApp(CSharpGeneratorHelper helper) : GeneratePrope
         var name = attribute.Name;
 
         var inspector = new WorkAttributeEntityInspectType();
-        var entityType = inspector.PrimaryTypeName(attribute, create: false);
+        var entityType = inspector.PrimaryTypeName(attribute, modeCreate: false);
         //var entityType = attribute.Metadata.Get<string>(AttributeNames.EntityFieldType);
         var allowMulti = attribute.Metadata.Get<bool>(AttributeNames.EntityFieldAllowMulti);
 

@@ -102,7 +102,8 @@ partial class ListControllerReal
         var attribute = parent.Type[part];
         if (attribute == null)
             throw l.Done(new Exception($"Attribute definition for '{part}' not found on the item {guid}"));
-        var typeNameForField = new WorkAttributeEntityInspectType().PrimaryTypeName(attribute);
+        var typeNameForField = new WorkAttributeEntityInspectType()
+            .PrimaryTypeName(attribute, modeCreate: true, tryOtherModes: true);
         return l.ReturnAsOk((itemList, typeNameForField));
     }
 
