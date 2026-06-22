@@ -44,33 +44,42 @@ partial class ListControllerReal
     }
 
 
-    internal ReplacementListDto? GetListToReorder(Guid guid, string part, int index, string? typeName)
+    internal ReplacementListDto? GetListToReorder(Guid guid, string part, int index, string? typeNames)
     {
-        var l = Log.Fn<ReplacementListDto>($"{nameof(typeName)}:{typeName}, {nameof(part)}:{part}, {nameof(index)}:{index}");
+        var l = Log.Fn<ReplacementListDto>($"{nameof(typeNames)}:{typeNames}, {nameof(part)}:{part}, {nameof(index)}:{index}");
 
         var (existingItemsInField, typeNameOfField) = FindItemAndFieldTypeName(guid, part);
 
-        typeName ??= typeNameOfField;
+        var typeNameList = typeNames.CsvToArrayWithoutEmpty().ToListOpt();
+        if (!typeNameList.Any())
+            typeNameList = typeNameOfField;
+        //typeNames ??= typeNameOfField;
 
         // if no type was defined in this set, then return an empty list as there is nothing to choose from
-        if (string.IsNullOrEmpty(typeName))
+        if (!typeNameList.Any())
             return l.ReturnNull("no type name, so no data");
 
-        var ct = Context.AppReaderRequired.GetContentType(typeName);
+        var contentTypes = typeNameList
+            .Select(typeName => Context.AppReaderRequired.GetContentType(typeName))
+            .ToList();
 
-        var listTemp = workEntities.New(Context.AppReaderRequired)
-            .Get(typeName)
+        var entitiesHelper = workEntities.New(Context.AppReaderRequired);
+        var listTemp = typeNameList
+            .SelectMany(t => entitiesHelper.Get(t))
             .ToList();
 
         var preferDraft = listTemp
             .Select(Context.AppReaderRequired.GetDraftOrKeep)
-            .GroupBy(e => e!.EntityId)
-            .Select(g => g.OrderBy(e => e!.RepositoryId).Last())
+            .Cast<IEntity>()
+            // 2026-06-22 2dm - this seems like old code, where we ended up with both the draft and published.
+            // disabled for now
+            //.GroupBy(e => e.EntityId)
+            //.Select(g => g.OrderBy(e => e.RepositoryId).Last())
             .ToList();
 
         var results = preferDraft.ToDictionary(
-            p => p!.EntityId,
-            p => p!.GetBestTitle() ?? ""
+            p => p.EntityId,
+            p => p.GetBestTitle() ?? ""
         );
 
         // if list is empty or shorter than index (would happen in an add-to-end-request) return null
@@ -78,19 +87,30 @@ partial class ListControllerReal
             ? existingItemsInField[index]?.EntityId
             : null;
 
-        var result = new ReplacementListDto { SelectedId = selectedId, Items = results, ContentTypeName = ct.NameId };
+        var result = new ReplacementListDto
+        {
+            SelectedId = selectedId,
+            Items = results,
+            ContentTypeName = contentTypes.First().NameId
+        };
         return l.Return(result);
     }
 
 
-    private (List<IEntity> items, string typeName) FindItemAndFieldTypeName(Guid guid, string part)
+    private (List<IEntity> items, IList<string> typeNames) FindItemAndFieldTypeName(Guid guid, string part)
     {
-        var l = Log.Fn<(List<IEntity>, string)>($"guid:{guid},part:{part}");
+        var l = Log.Fn<(List<IEntity>, IList<string>)>($"guid:{guid},part:{part}");
+
+        // Find owner/parent
         var parent = Context.AppReaderRequired.GetDraftOrPublished(guid);
         if (parent == null)
             throw l.Done(new Exception($"No item found for {guid}"));
+
+        // Verify it has specified attribute
         if (!parent.Attributes.ContainsKey(part))
             throw l.Done(new Exception($"Could not find field {part} in item {guid}"));
+
+        // Find children in the attribute
         var itemList = parent
             .Children(part)
             .Select(Context.AppReaderRequired.GetDraftOrKeep)
@@ -103,7 +123,7 @@ partial class ListControllerReal
         if (attribute == null)
             throw l.Done(new Exception($"Attribute definition for '{part}' not found on the item {guid}"));
         var typeNameForField = new WorkAttributeEntityInspectType()
-            .PrimaryTypeName(attribute, modeCreate: true, tryOtherModes: true);
+            .PrimaryTypeNames(attribute, modeCreate: true, tryOtherModes: true);
         return l.ReturnAsOk((itemList, typeNameForField));
     }
 
