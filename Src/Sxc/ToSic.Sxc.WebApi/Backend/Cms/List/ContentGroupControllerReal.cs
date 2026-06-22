@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps.Sys.State;
-using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Blocks.Sys.Work;
 using ToSic.Sxc.Cms.Publishing.Sys;
@@ -34,27 +33,22 @@ public class ContentGroupControllerReal(
 
     public EntityInListDto? Header(Guid guid)
     {
-        Log.A($"header for:{guid}");
-        //var cg = CmsManager.Read.Blocks.GetBlockConfig(guid);
+        var l = Log.Fn<EntityInListDto?>($"header for:{guid}");
         var cg = appBlocks.New(AppCtx).GetBlockConfig(guid);
 
         // new in v11 - this call might be run on a non-content-block, in which case we return null
         var ent = (cg as ICanBeEntity)?.Entity;
         if (ent == null!)
-            return null;
+            return l.ReturnNull("No entity found");
         if (ent.Type.Name != WorkBlocks.BlockTypeName)
-            return null;
+            return l.ReturnNull("Entity type mismatch");
 
         var header = cg.Header.FirstOrDefault();
 
-        return new()
+        return l.Return(new(header, 0)
         {
-            Index = 0,
-            Id = header?.EntityId ?? 0,
-            Guid = header?.EntityGuid ?? Guid.Empty,
-            Title = header?.GetBestTitle() ?? "",
             Type = header?.Type.NameId ?? cg.View!.HeaderType
-        };
+        });
     }
         
 
@@ -95,32 +89,24 @@ public class ContentGroupControllerReal(
 
     public List<EntityInListDto> ItemList(Guid guid, string part)
     {
-        Log.A($"item list for:{guid}");
+        var l = Log.Fn<List<EntityInListDto>>($"item list for:{guid}");
         var cg = Context.AppReaderRequired.GetDraftOrPublished(guid)!;
         var itemList = cg.Children(part);
         var list = itemList
             .Select(Context.AppReaderRequired.GetDraftOrKeep)
-            .Select((c, index) => new EntityInListDto
-            {
-                Index = index,
-                Id = c?.EntityId ?? 0,
-                Guid = c?.EntityGuid ?? Guid.Empty,
-                Title = c?.GetBestTitle() ?? "",
-                Type = c?.Type.NameId,
-                TypeWip = c?.Type.NameId == null ? null : new JsonType(c)
-            })
+            .Select((e, index) => new EntityInListDto(e, index))
             .ToList();
 
-        return list;
+        return l.Return(list);
     }
 
 
     // TODO: part should be handed in with all the relevant names! atm it's "content" in the content-block scenario
     public bool ItemList(Guid guid, List<EntityInListDto>? list,  string? part = null)
     {
-        Log.A($"list for:{guid}, items:{list?.Count}");
+        var l = Log.Fn<bool>($"list for:{guid}, items:{list?.Count}");
         if (list == null)
-            throw new ArgumentNullException(nameof(list));
+            throw l.Done(new ArgumentNullException(nameof(list)));
 
         publishing.Value.DoInsidePublishing(Context, _ =>
         {
@@ -135,8 +121,6 @@ public class ContentGroupControllerReal(
                 .FieldListReorder(entity!, fields, sequence, Context.Publishing.ForceDraft);
         });
 
-        return true;
+        return l.ReturnTrue();
     }
-
-
 }
