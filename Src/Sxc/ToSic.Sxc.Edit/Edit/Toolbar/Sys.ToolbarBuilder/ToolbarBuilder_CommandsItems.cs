@@ -119,6 +119,7 @@ partial record ToolbarBuilder
     public IToolbarBuilder New(
         object? target = null,
         NoParamOrder npo = default,
+        object? contentType = null,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
@@ -127,9 +128,18 @@ partial record ToolbarBuilder
     {
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill);
 
-        return EntityRule(ActionNames.New, target, pars,
+        var contentTypeName =
+            contentType as string                           // contentType as string
+            ?? (contentType as IContentType)?.NameId        // contentType as IContentType
+            ?? (contentType as Type)?.Name                  // contentType as .net Type
+            ?? target as string;                            // fallback and oldest implementation, where the contentType was passed as target
+
+        return EntityRule(verb: ActionNames.New,
+            target: target,
+            pars: pars,
             propsSkip: [KeyEntityGuid, KeyEntityId, KeyTitle, KeyPublished],
-            contentType: target as string).Builder;
+            contentType: contentTypeName
+        ).Builder;
     }
 
 

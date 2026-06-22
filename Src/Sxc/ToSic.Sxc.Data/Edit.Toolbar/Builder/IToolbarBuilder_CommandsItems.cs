@@ -62,15 +62,20 @@ public partial interface IToolbarBuilder
     /// * a string with the content-type name
     /// </param>
     /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="contentType">_optional_ content type for the new item</param>
     /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters</param>
     /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
     /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
     /// <param name="prefill">_optional_ prefill for the edit-UI, see [prefill guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Prefill)</param>
     /// <param name="operation">_optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation)</param>
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
+    /// <remarks>
+    /// Parameter `contentType` added in v22, to make the API clearer; previously you could already specify it as the first parameter, but it was hard to discover.
+    /// </remarks>
     IToolbarBuilder New(
         object? target = null,
         NoParamOrder npo = default,
+        object? contentType = null,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
