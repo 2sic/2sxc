@@ -17,6 +17,10 @@ partial record ToolbarBuilder
 
     private class CleanedParamsWithParts: CleanedParams
     {
+        /// <summary>
+        /// If the tweaks have any named sub-tweaks, this will contain the pre-cleaned parameters for each of those sub-tweaks.
+        /// Used in Metadata which could produce multiple buttons, each with its own tweaks.
+        /// </summary>
         public Dictionary<string, CleanedParams>? Parts;
     }
 
@@ -32,22 +36,27 @@ partial record ToolbarBuilder
         object? prefill = default,
         object? filter = default,
         string? fields = default,
-        ITweakButton? initialButton = default,
+        ITweakButton? tweakMixin = default, // this is usually null, but allows for more specs to be set to mix with the tweak
         [CallerMemberName] string? methodName = default)
     {
-        // process tweaks, but skip early to reduce calls if null
-        var tweaks = tweak == null
+        // Process tweaks #1, but skip early to reduce calls if null
+        var tweaks = tweak == null && tweakMixin == null
             ? null
-            : RunTweaksOrErrorIfCombined(tweak: tweak, initial: initialButton, ui: ui, parameters: parameters, prefill: prefill, filter: filter, methodName: methodName);
+            : RunTweaksOrErrorIfCombined(tweak: tweak, tweakMixin: tweakMixin, ui: ui, parameters: parameters, prefill: prefill, filter: filter, methodName: methodName);
 
+        // Process tweaks #2
         var paramsString = tweaks == null && parameters == null
             ? null
             : Utils.PrepareParams(parameters, tweaks);
 
+        // Combine parameters with prefill and fields
         var parsWithPrefill = Utils.Prefill2Url.SerializeWithChild(paramsString, prefill, ToolbarConstants.RuleParamPrefixPrefill);
         if (fields != null)
             parsWithPrefill = Utils.Filter2Url.SerializeWithChild(parsWithPrefill, new { fields });
 
+        // Check if the tweaks have any named sub-tweaks
+        // Basically this means that we have tweaks which only apply to specific targets - used in Metadata
+        // So in case metadata has many buttons (for different metadata types) they could have different tweaks configuring each
         var namedParts = tweaks?.Named.Any() == true
             ? tweaks.Named
                 .ToDictionary(
@@ -66,11 +75,11 @@ partial record ToolbarBuilder
 
     }
 
-    private (ToolbarRuleForEntity Rule, IToolbarBuilder Builder) EntityRule(
+    private (ToolbarRuleForEntity Rule, IToolbarBuilder Builder) AddEntityRule(
         string verb, 
         object? target,
         CleanedParams pars,
-        string []? propsSkip = null,
+        string[]? propsSkip = null,
         string[]? propsKeep = null,
         string? contentType = null
     )
@@ -81,9 +90,11 @@ partial record ToolbarBuilder
             decoHelper: Services.ToolbarButtonHelper.Value,
             target: target,
             operation: pars.Operation,
-            ui: pars.Ui, parameters: pars.Parameters,
+            ui: pars.Ui,
+            parameters: pars.Parameters,
             contentType: contentType,
-            propsKeep: propsKeep, propsSkip: propsSkip
+            propsKeep: propsKeep,
+            propsSkip: propsSkip
         );
         var builder = this.AddInternal([command], methodName: verb);
         return (command, builder);
@@ -103,7 +114,7 @@ partial record ToolbarBuilder
 
         var pars = PreCleanParams(tweak, defOp: defOp, operation: operation, ui: ui, uiMerge: "show=true", parameters: parameters);
 
-        return EntityRule(ActionNames.Delete, target, pars, 
+        return AddEntityRule(ActionNames.Delete, target, pars, 
             propsKeep: [KeyTitle, KeyEntityId, KeyEntityGuid]).Builder;
     }
 
@@ -117,7 +128,7 @@ partial record ToolbarBuilder
         string? operation = null)
     {
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill);
-        return EntityRule(ActionNames.Edit, target, pars, propsSkip: [KeyEntityGuid, KeyTitle, KeyPublished]).Builder;
+        return AddEntityRule(ActionNames.Edit, target, pars, propsSkip: [KeyEntityGuid, KeyTitle, KeyPublished]).Builder;
     }
 
     public IToolbarBuilder New(
@@ -138,7 +149,7 @@ partial record ToolbarBuilder
             ?? (contentType as Type)?.Name                  // contentType as .net Type
             ?? target as string;                            // fallback and oldest implementation, where the contentType was passed as target
 
-        return EntityRule(verb: ActionNames.New,
+        return AddEntityRule(verb: ActionNames.New,
             target: target,
             pars: pars,
             propsSkip: [KeyEntityGuid, KeyEntityId, KeyTitle, KeyPublished],
@@ -158,7 +169,7 @@ partial record ToolbarBuilder
     {
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters);
 
-        return EntityRule(ActionNames.Publish, target, pars,
+        return AddEntityRule(ActionNames.Publish, target, pars,
             propsKeep: [KeyEntityId, KeyPublished, KeyIndex, KeyUseModule]).Builder;
     }
 
@@ -187,17 +198,17 @@ partial record ToolbarBuilder
         var mdsToAdd = finalTypes
             .Select(ToolbarRuleBase (type) =>
             {
-                var parsForThis = pars.Parts?.TryGetValue(type, out var p) == true
+                var partsForThis = pars.Parts?.TryGetValue(type, out var p) == true
                     ? p
                     : pars;
 
                 return new ToolbarRuleMetadata(
                     target: target,
                     typeName: type,
-                    operation: parsForThis.Operation,
+                    operation: partsForThis.Operation,
                     decoHelper: Services.ToolbarButtonHelper.Value,
-                    ui: parsForThis.Ui,
-                    parameters: parsForThis.Parameters,
+                    ui: partsForThis.Ui,
+                    parameters: partsForThis.Parameters,
                     context: realContext
                 );
             })
@@ -220,7 +231,7 @@ partial record ToolbarBuilder
     {
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill);
 
-        return EntityRule(ActionNames.Copy, target, pars, propsKeep: [KeyEntityId, KeyContentType],
+        return AddEntityRule(ActionNames.Copy, target, pars, propsKeep: [KeyEntityId, KeyContentType],
             contentType: contentType).Builder;
     }
 
@@ -237,7 +248,7 @@ partial record ToolbarBuilder
     {
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, filter: filter);
 
-        return EntityRule(ActionNames.Data, target, pars, propsKeep: [KeyContentType], contentType: target as string)
+        return AddEntityRule(ActionNames.Data, target, pars, propsKeep: [KeyContentType], contentType: target as string)
             .Builder;
     }
         

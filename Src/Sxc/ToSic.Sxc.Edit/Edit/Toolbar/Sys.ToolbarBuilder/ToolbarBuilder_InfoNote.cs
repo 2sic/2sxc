@@ -11,21 +11,21 @@ partial record ToolbarBuilder
         Func<ITweakButton, ITweakButton>? tweak = default
     ) => InfoLikeButton(npo: npo,
         verb: ActionNames.Info,
-        paramsMergeInTweak: link != default ? new { link, target } : null,
+        paramsToMergeIntoTweak: link != default ? new { link, target } : null,
         tweak: tweak);
 
     private IToolbarBuilder InfoLikeButton(
         NoParamOrder npo,
         string verb,
-        object? paramsMergeInTweak,
+        object? paramsToMergeIntoTweak,
         Func<ITweakButton, ITweakButton>? tweak
     )
     {
-        tweak ??= TweakButton.TweakButton.NoOp; 
-        var initial = paramsMergeInTweak == null
+        //tweak ??= TweakButton.TweakButton.NoOp; 
+        var tweakMixin = paramsToMergeIntoTweak == null
             ? null
-            : new TweakButton.TweakButton().Parameters(paramsMergeInTweak);
-        var pars = PreCleanParams(tweak, defOp: OprNone, initialButton: initial);
-        return EntityRule(verb, null, pars).Builder;
+            : new TweakButton.TweakButton().Parameters(paramsToMergeIntoTweak);
+        var pars = PreCleanParams(tweak, defOp: OprNone, tweakMixin: tweakMixin);
+        return AddEntityRule(verb, null, pars).Builder;
     }
 }

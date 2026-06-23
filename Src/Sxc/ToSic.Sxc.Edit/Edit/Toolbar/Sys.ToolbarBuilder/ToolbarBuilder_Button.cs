@@ -19,7 +19,7 @@ partial record ToolbarBuilder
     {
         var pars = PreCleanParams(tweak, defOp: OprNone, operation: operation, ui: ui, parameters: parameters);
 
-        return EntityRule(name, target, pars).Builder;
+        return AddEntityRule(name, target, pars).Builder;
     }
         
 }
