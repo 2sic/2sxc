@@ -12,24 +12,20 @@ public class ContentGroupControllerReal(
     GenWorkDb<WorkFieldList> workFieldList,
     GenWorkPlus<WorkBlocks> appBlocks,
     LazySvc<IPagePublishing> publishing,
-    ISxcCurrentContextService ctxService,
-    LazySvc<ListControllerReal> listController)
-    : ServiceBase("Api.CntGrpRl", connect: [workFieldList, appBlocks, ctxService, publishing, listController]),
+    ISxcCurrentContextService ctxService
+    )
+    : ServiceBase("Api.CntGrpRl", connect: [workFieldList, appBlocks, ctxService, publishing]),
         IContentGroupController
 {
     #region Constructor / di
 
     public const string LogSuffix = "CntGrp";
 
-
-    public ISxcCurrentContextService CtxService { get; } = ctxService;
-
-
     [field: AllowNull, MaybeNull]
-    private IContextOfBlock Context => field ??= CtxService.BlockContextRequired();
+    private IContextOfBlock Context => field ??= ctxService.BlockContextRequired();
 
-    private IAppWorkCtxPlus AppCtx => _appCtx.Get(() => appBlocks.CtxSvc.ContextPlus(Context.AppReaderRequired))!;
-    private readonly GetOnce<IAppWorkCtxPlus> _appCtx = new();
+    private IAppWorkCtxPlus AppCtx => field ??= appBlocks.CtxSvc.ContextPlus(Context.AppReaderRequired);
+
     #endregion
 
     public EntityInListDto? Header(Guid guid)
@@ -53,37 +49,20 @@ public class ContentGroupControllerReal(
     }
         
 
-    public void Replace(Guid parent, string part, int index, int entityId, bool add = false) 
-        => listController.Value.Replace(parent, part, index, entityId, add);
+    //public void Replace(Guid parent, string part, int index, int entityId, bool add = false) 
+    //    => listController.Value.Replace(parent, part, index, entityId, add);
 
 
-    /// <summary>
-    /// Special Replace just like list-replace, but with content type name coming from View definition
-    /// </summary>
-    public ReplacementListDto? Replace(Guid parent, string part, int index)
-    {
-        var l = Log.Fn<ReplacementListDto?>($"target:{parent}, part:{part}, index:{index}");
-        var typeNameOfField = FindTypeNameOnContentGroup(parent, part);
-        var result = listController.Value.GetListToReorder(parent, part, index, typeNameOfField);
-        return l.Return(result);
-    }
-
-
-    private string? FindTypeNameOnContentGroup(Guid guid, string part)
-    {
-        var l = Log.Fn<string>($"{guid}, {part}");
-
-        //var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(guid);
-        var contentGroup = appBlocks.New(AppCtx).GetBlockConfig(guid);
-        if ((contentGroup as ICanBeEntity)?.Entity == null || contentGroup.View == null)
-            return l.ReturnNull("Doesn't seem to be a content-group. Cancel.");
-
-        var typeNameForField = string.Equals(part, ViewParts.ContentLower, OrdinalIgnoreCase)
-            ? contentGroup.View.ContentType
-            : contentGroup.View.HeaderType;
-
-        return l.Return(typeNameForField);
-    }
+    ///// <summary>
+    ///// Special Replace just like list-replace, but with content type name coming from View definition
+    ///// </summary>
+    //public ReplacementListDto? Replace(Guid parent, string part, int index)
+    //{
+    //    var l = Log.Fn<ReplacementListDto?>($"target:{parent}, part:{part}, index:{index}");
+    //    var typeNameOfField = FindTypeNameOnContentGroup(parent, part);
+    //    var result = listController.Value.GetListToReorder(parent, part, index, typeNameOfField);
+    //    return l.Return(result);
+    //}
 
 
 

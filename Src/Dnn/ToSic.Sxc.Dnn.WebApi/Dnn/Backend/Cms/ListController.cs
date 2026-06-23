@@ -11,6 +11,17 @@ public class ListController() : DnnSxcControllerBase(RealController.LogSuffix), 
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
+    [HttpPost]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    public void Replace(Guid parent, string part, int index, int entityId, bool add = false)
+        => Real.Replace(parent, part, index, entityId, add);
+
+
+    [HttpGet]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    public ReplacementListDto ReplaceOptions(Guid parent, string part, int index)
+        => Real.ReplaceOptions(parent, part, index);
+
     /// <inheritdoc />
     /// <summary>
     /// used to be GET Module/ChangeOrder

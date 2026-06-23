@@ -2,86 +2,79 @@
 using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Blocks.Sys.Views;
-using ToSic.Sxc.Cms.Publishing.Sys;
+using ToSic.Sxc.Blocks.Sys.Work;
 using ToSic.Sys.Utils;
+using static System.StringComparison;
 
 namespace ToSic.Sxc.Backend.Cms;
 
-partial class ListControllerReal
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public class ListActivityReplaceOptions(
+    GenWorkPlus<WorkBlocks> appBlocks,
+    GenWorkPlus<WorkEntities> workEntities,
+    ISxcCurrentContextService ctxService
+) : ServiceBase("Act.LstRep", connect: [appBlocks, workEntities, ctxService])
 {
-
-    public void Replace(Guid guid, string part, int index, int entityId, bool add)
+    /// <summary>
+    /// Special Replace just like list-replace, but with content type name coming from View definition
+    /// </summary>
+    public ReplacementListDto Replace(Guid parent, string part, int index)
     {
-        var isContentPair = ViewParts.ContentLower.EqualsInsensitive(part);
-
-        var l = Log.Fn($"target:{guid}, {nameof(part)}:{part}, {nameof(isContentPair)}: {isContentPair}, {nameof(index)}:{index}, {nameof(entityId)}:{entityId}, {nameof(add)}: {add}");
-
-        // use dnn versioning - this is always part of page
-        publishing.New().DoInsidePublishing(Context, InternalSave);
-        l.Done();
-        return;
-
-        void InternalSave(VersioningActionInfo _)
-        {
-            var entity = Context.AppReaderRequired.GetDraftOrPublished(guid)
-                         ?? throw l.Done( new Exception($"Can't find item '{guid}'"));
-
-            // Make sure we have the correct casing for the field names
-            part = entity.Type[part]!.Name;
-
-            var fList = workFieldList.New(Context.AppReaderRequired);
-
-            var forceDraft = Context.Publishing.ForceDraft;
-            if (add)
-            {
-                var fields = isContentPair ? ViewParts.ContentPair : [part];
-                var values = isContentPair ? [entityId, null] : new int?[] { entityId };
-                fList.FieldListAdd(entity, fields, index, values, forceDraft, false);
-            }
-            else
-                fList.FieldListReplaceIfModified(entity, [part], index, [entityId],
-                    forceDraft);
-        }
+        var l = Log.Fn<ReplacementListDto>($"target:{parent}, part:{part}, index:{index}");
+        var appReader = ctxService.BlockContextRequired().AppReaderRequired;
+        var typeNameOfField = FindTypeNameOnContentGroup(appReader, parent, part);
+        var result = GetListToReorder(appReader, parent, part, index, typeNameOfField);
+        return l.Return(result);
     }
 
 
-    internal ReplacementListDto? GetListToReorder(Guid guid, string part, int index, string? typeNames)
+    private string? FindTypeNameOnContentGroup(IAppReader appReader, Guid guid, string part)
+    {
+        var l = Log.Fn<string>($"{guid}, {part}");
+
+        var appCtx = appBlocks.CtxSvc.ContextPlus(appReader);
+        var contentGroup = appBlocks.New(appCtx).GetBlockConfig(guid);
+        if ((contentGroup as ICanBeEntity)?.Entity == null || contentGroup.View == null)
+            return l.ReturnNull("Doesn't seem to be a content-group. Cancel.");
+
+        var typeNameForField = string.Equals(part, ViewParts.ContentLower, OrdinalIgnoreCase)
+            ? contentGroup.View.ContentType
+            : contentGroup.View.HeaderType;
+
+        return l.Return(typeNameForField);
+    }
+
+    private ReplacementListDto GetListToReorder(IAppReader appReader, Guid guid, string part, int index, string? typeNames)
     {
         var l = Log.Fn<ReplacementListDto>($"{nameof(typeNames)}:{typeNames}, {nameof(part)}:{part}, {nameof(index)}:{index}");
 
-        var (existingItemsInField, typeNameOfField) = FindItemAndFieldTypeName(guid, part);
+        var (existingItemsInField, typeNameOfField) = FindItemAndFieldTypeName(appReader, guid, part);
 
         var typeNameList = typeNames.CsvToArrayWithoutEmpty().ToListOpt();
         if (!typeNameList.Any())
             typeNameList = typeNameOfField;
-        //typeNames ??= typeNameOfField;
 
         // if no type was defined in this set, then return an empty list as there is nothing to choose from
         if (!typeNameList.Any())
-            return l.ReturnNull("no type name, so no data");
+            return l.Return(new() { SelectedId = 0, Items = [] }, "no type name, so no data");
 
         var contentTypes = typeNameList
-            .Select(typeName => Context.AppReaderRequired.GetContentType(typeName))
+            .Select(appReader.GetContentType)
             .ToList();
 
-        var entitiesHelper = workEntities.New(Context.AppReaderRequired);
+        var entitiesHelper = workEntities.New(appReader);
         var listTemp = typeNameList
             .SelectMany(t => entitiesHelper.Get(t))
             .ToList();
 
         var preferDraft = listTemp
-            .Select(Context.AppReaderRequired.GetDraftOrKeep)
+            .Select(appReader.GetDraftOrKeep)
             .Cast<IEntity>()
             // 2026-06-22 2dm - this seems like old code, where we ended up with both the draft and published.
             // disabled for now
             //.GroupBy(e => e.EntityId)
             //.Select(g => g.OrderBy(e => e.RepositoryId).Last())
             .ToList();
-
-        var results = preferDraft.ToDictionary(
-            p => p.EntityId,
-            p => p.GetBestTitle() ?? ""
-        );
 
         // if list is empty or shorter than index (would happen in an add-to-end-request) return null
         var selectedId = existingItemsInField.Count > index
@@ -101,13 +94,12 @@ partial class ListControllerReal
         return l.Return(result);
     }
 
-
-    private (List<IEntity> items, IList<string> typeNames) FindItemAndFieldTypeName(Guid guid, string part)
+    private (List<IEntity> items, IList<string> typeNames) FindItemAndFieldTypeName(IAppReader appReader, Guid guid, string part)
     {
         var l = Log.Fn<(List<IEntity>, IList<string>)>($"guid:{guid},part:{part}");
 
         // Find owner/parent
-        var parent = Context.AppReaderRequired.GetDraftOrPublished(guid);
+        var parent = appReader.GetDraftOrPublished(guid);
         if (parent == null)
             throw l.Done(new Exception($"No item found for {guid}"));
 
@@ -118,7 +110,7 @@ partial class ListControllerReal
         // Find children in the attribute
         var itemList = parent
             .Children(part)
-            .Select(Context.AppReaderRequired.GetDraftOrKeep)
+            .Select(appReader.GetDraftOrKeep)
             .Where(e => e != null)
             .Cast<IEntity>()
             .ToList();
@@ -131,6 +123,5 @@ partial class ListControllerReal
             .PrimaryTypeNames(attribute, modeCreate: true, tryOtherModes: true);
         return l.ReturnAsOk((itemList, typeNameForField));
     }
-
 
 }

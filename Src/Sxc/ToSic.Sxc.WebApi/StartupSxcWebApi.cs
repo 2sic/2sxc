@@ -128,6 +128,10 @@ public static class StartupSxcWebApi
         // SaveData PreSave
         services.TryAddTransient<DataValidatorContentTypeDataStore>();
 
+        // Separate list Activities into isolated classes v22
+        services.TryAddTransient<ListActivityReplaceOptions>();
+        services.TryAddTransient<ListActivityReplace>();
+
         services.AddLoadSettingsProviders();
 
         services.AddSxcInsights();

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Backend.Cms;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.Backend.Cms.ContentGroupControllerReal;
@@ -28,21 +27,6 @@ public class ContentGroupController() : OqtStatefulControllerBase(RealController
     public EntityInListDto Header(Guid guid)
         => Real.Header(guid);
 
-
-    // TODO: shouldn't be part of ContentGroupController any more, as it's generic now
-    [HttpPost]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    [Authorize(Roles = RoleNames.Admin)]
-    public void Replace(Guid parent, string part, int index, int entityId, bool add = false)
-        => Real.Replace(parent, part, index, entityId, add);
-
-
-    // TODO: WIP changing this from ContentGroup editing to any list editing
-    [HttpGet]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    [Authorize(Roles = RoleNames.Admin)]
-    public ReplacementListDto Replace(Guid parent, string part, int index)
-        => Real.Replace(parent, part, index);
 
     [HttpGet]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]

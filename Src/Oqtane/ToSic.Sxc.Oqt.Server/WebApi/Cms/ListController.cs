@@ -20,6 +20,18 @@ public class ListController() : OqtStatefulControllerBase(RealController.LogSuff
 {
     private RealController Real => GetService<RealController>();
 
+    [HttpPost]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    [Authorize(Roles = RoleNames.Admin)]
+    public void Replace(Guid parent, string part, int index, int entityId, bool add = false)
+        => Real.Replace(parent, part, index, entityId, add);
+
+
+    [HttpGet]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    [Authorize(Roles = RoleNames.Admin)]
+    public ReplacementListDto ReplaceOptions(Guid parent, string part, int index)
+        => Real.ReplaceOptions(parent, part, index);
 
     /// <inheritdoc />
     /// <summary>

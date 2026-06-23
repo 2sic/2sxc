@@ -7,23 +7,28 @@ using ToSic.Sys.Utils;
 namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public partial class ListControllerReal(
+public class ListControllerReal(
     GenWorkDb<WorkFieldList> workFieldList,
-    GenWorkPlus<WorkEntities> workEntities,
     ISxcCurrentContextService ctxService,
-    Generator<IPagePublishing> publishing)
-    : ServiceBase("Api.LstRl",
-        connect: [workFieldList, workEntities, publishing, ctxService]), IListController
+    Generator<IPagePublishing> publishing,
+    LazySvc<ListActivityReplace> actReplace,
+    LazySvc<ListActivityReplaceOptions> actReplaceOptions)
+    : ServiceBase("Api.LstRl", connect: [workFieldList, publishing, ctxService, actReplace, actReplaceOptions]),
+        IListController
 {
     public const string LogSuffix = "Lst";
 
-    private IContextOfBlock Context => field ??= ctxService.BlockContextRequired();
+    public void Replace(Guid parent, string part, int index, int entityId, bool add = false)
+        => actReplace.Value.Replace(new(parent, part, index, entityId, add));
+
+    public ReplacementListDto ReplaceOptions(Guid parent, string part, int index)
+        => actReplaceOptions.Value.Replace(parent, part, index);
 
 
     public void Move(Guid? parent, string fields, int index, int toIndex) 
     {
         var l = Log.Fn($"parent:{parent}, fields:{fields}, index:{index}, toIndex:{toIndex}");
-        var fList = workFieldList.New(Context.AppReaderRequired);
+        var fList = workFieldList.New(ctxService.BlockContextRequired().AppReaderRequired);
         ModifyList(FindOrThrow(parent), fields,
             (entity, fieldList, versioning) => fList.FieldListMove(entity, fieldList, index, toIndex, versioning));
         l.Done();
@@ -33,14 +38,11 @@ public partial class ListControllerReal(
     public void Delete(Guid? parent, string fields, int index) 
     {
         var l = Log.Fn($"parent:{parent}, fields:{fields}, index:{index}");
-        var fList = workFieldList.New(Context.AppReaderRequired);
+        var fList = workFieldList.New(ctxService.BlockContextRequired().AppReaderRequired);
         ModifyList(FindOrThrow(parent), fields,
             (entity, fieldList, versioning) => fList.FieldListRemove(entity, fieldList, index, versioning));
         l.Done();
     }
-
-
-
 
     private void ModifyList(IEntity target, string fields, Action<IEntity, string[], bool> action)
     {
