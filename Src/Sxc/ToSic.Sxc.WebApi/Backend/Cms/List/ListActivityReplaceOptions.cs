@@ -15,15 +15,22 @@ public class ListActivityReplaceOptions(
     ISxcCurrentContextService ctxService
 ) : ServiceBase("Act.LstRep", connect: [appBlocks, workEntities, ctxService])
 {
+    public record Options(
+        Guid Parent,
+        string Part,
+        int Index
+    );
+
     /// <summary>
     /// Special Replace just like list-replace, but with content type name coming from View definition
     /// </summary>
-    public ReplacementListDto Replace(Guid parent, string part, int index)
+    public ReplacementListDto ReplaceOptions(Options options)
     {
+        var (parent, part, index) = options;
         var l = Log.Fn<ReplacementListDto>($"target:{parent}, part:{part}, index:{index}");
         var appReader = ctxService.BlockContextRequired().AppReaderRequired;
         var typeNameOfField = FindTypeNameOnContentGroup(appReader, parent, part);
-        var result = GetListToReorder(appReader, parent, part, index, typeNameOfField);
+        var result = GetOptions(appReader, parent, part, index, typeNameOfField);
         return l.Return(result);
     }
 
@@ -44,7 +51,7 @@ public class ListActivityReplaceOptions(
         return l.Return(typeNameForField);
     }
 
-    private ReplacementListDto GetListToReorder(IAppReader appReader, Guid guid, string part, int index, string? typeNames)
+    private ReplacementListDto GetOptions(IAppReader appReader, Guid guid, string part, int index, string? typeNames)
     {
         var l = Log.Fn<ReplacementListDto>($"{nameof(typeNames)}:{typeNames}, {nameof(part)}:{part}, {nameof(index)}:{index}");
 

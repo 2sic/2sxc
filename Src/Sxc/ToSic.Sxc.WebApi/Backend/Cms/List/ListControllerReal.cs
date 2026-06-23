@@ -22,7 +22,7 @@ public class ListControllerReal(
         => actReplace.Value.Replace(new(parent, part, index, entityId, add));
 
     public ReplacementListDto ReplaceOptions(Guid parent, string part, int index)
-        => actReplaceOptions.Value.Replace(parent, part, index);
+        => actReplaceOptions.Value.ReplaceOptions(new(parent, part, index));
 
 
     public void Move(Guid? parent, string fields, int index, int toIndex) 

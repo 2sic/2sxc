@@ -1,9 +1,7 @@
 ﻿using ToSic.Eav.Apps.Sys.State;
-using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Blocks.Sys.Work;
 using ToSic.Sxc.Cms.Publishing.Sys;
-using static System.StringComparison;
 
 namespace ToSic.Sxc.Backend.Cms;
 
@@ -24,14 +22,13 @@ public class ContentGroupControllerReal(
     [field: AllowNull, MaybeNull]
     private IContextOfBlock Context => field ??= ctxService.BlockContextRequired();
 
-    private IAppWorkCtxPlus AppCtx => field ??= appBlocks.CtxSvc.ContextPlus(Context.AppReaderRequired);
-
     #endregion
 
     public EntityInListDto? Header(Guid guid)
     {
         var l = Log.Fn<EntityInListDto?>($"header for:{guid}");
-        var cg = appBlocks.New(AppCtx).GetBlockConfig(guid);
+        var appCtx = appBlocks.CtxSvc.ContextPlus(Context.AppReaderRequired);
+        var cg = appBlocks.New(appCtx).GetBlockConfig(guid);
 
         // new in v11 - this call might be run on a non-content-block, in which case we return null
         var ent = (cg as ICanBeEntity)?.Entity;
@@ -47,24 +44,6 @@ public class ContentGroupControllerReal(
             Type = header?.Type.NameId ?? cg.View!.HeaderType
         });
     }
-        
-
-    //public void Replace(Guid parent, string part, int index, int entityId, bool add = false) 
-    //    => listController.Value.Replace(parent, part, index, entityId, add);
-
-
-    ///// <summary>
-    ///// Special Replace just like list-replace, but with content type name coming from View definition
-    ///// </summary>
-    //public ReplacementListDto? Replace(Guid parent, string part, int index)
-    //{
-    //    var l = Log.Fn<ReplacementListDto?>($"target:{parent}, part:{part}, index:{index}");
-    //    var typeNameOfField = FindTypeNameOnContentGroup(parent, part);
-    //    var result = listController.Value.GetListToReorder(parent, part, index, typeNameOfField);
-    //    return l.Return(result);
-    //}
-
-
 
 
     public List<EntityInListDto> ItemList(Guid parent, string part)
