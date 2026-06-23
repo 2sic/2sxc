@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Backend.Cms;
+﻿using ToSic.Eav.WebApi.Sys.Cms;
+
+namespace ToSic.Sxc.Backend.Cms;
 
 public interface IContentGroupController
 {

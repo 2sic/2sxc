@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.Data.Sys.ContentTypes;
+using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sys.Utils;
@@ -90,8 +91,12 @@ partial class ListControllerReal
         var result = new ReplacementListDto
         {
             SelectedId = selectedId,
-            Items = results,
-            ContentTypeName = contentTypes.First().NameId
+            Items = preferDraft.Select(e => new ReplacementListItemDto
+            {
+                Id = e.EntityId,
+                Title = e.GetBestTitle() ?? "(no title)",
+                ContentType = e.Type.Name,
+            })
         };
         return l.Return(result);
     }
