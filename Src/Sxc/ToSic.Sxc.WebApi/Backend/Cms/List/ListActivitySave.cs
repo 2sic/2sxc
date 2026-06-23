@@ -10,10 +10,8 @@ public class ListActivitySave(
     GenWorkDb<WorkFieldList> workFieldList,
     LazySvc<IPagePublishing> publishing,
     ISxcCurrentContextService ctxService
-    )
-    : ServiceBase("Api.CntGrpRl", connect: [workFieldList, ctxService, publishing])
+    ) : ServiceBase("Api.CntGrpRl", connect: [workFieldList, ctxService, publishing])
 {
-    // TODO: part should be handed in with all the relevant names! atm it's "content" in the content-block scenario
     public bool ItemList(Guid parent, List<EntityInListDto>? list,  string part)
     {
         var l = Log.Fn<bool>($"list for:{parent}, items:{list?.Count}");

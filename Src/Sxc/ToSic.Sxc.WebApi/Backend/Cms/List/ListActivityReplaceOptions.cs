@@ -18,7 +18,8 @@ public class ListActivityReplaceOptions(
     public record Options(
         Guid Parent,
         string Part,
-        int Index
+        int Index,
+        string? TypeNames = null
     );
 
     /// <summary>
@@ -26,38 +27,46 @@ public class ListActivityReplaceOptions(
     /// </summary>
     public ReplacementListDto ReplaceOptions(Options options)
     {
-        var (parent, part, index) = options;
-        var l = Log.Fn<ReplacementListDto>($"target:{parent}, part:{part}, index:{index}");
+        var l = Log.Fn<ReplacementListDto>($"{options}");
         var appReader = ctxService.BlockContextRequired().AppReaderRequired;
-        var typeNameOfField = FindTypeNameOnContentGroup(appReader, parent, part);
-        var result = GetOptions(appReader, parent, part, index, typeNameOfField);
+        options = options with
+        {
+            TypeNames = options.TypeNames ?? FindTypeNameOnContentGroup(appReader, options)
+        };
+        //var typeNameOfField = FindTypeNameOnContentGroup(appReader, options);
+        var result = GetOptions(appReader, options);
         return l.Return(result);
     }
 
-
-    private string? FindTypeNameOnContentGroup(IAppReader appReader, Guid guid, string part)
+    /// <summary>
+    /// Special edge case for Content-Groups.
+    /// Content-groups have pairs of content+presentation.
+    /// This affects what content-types must be retrieved.
+    /// </summary>
+    /// <returns></returns>
+    private string? FindTypeNameOnContentGroup(IAppReader appReader, Options options)
     {
-        var l = Log.Fn<string>($"{guid}, {part}");
+        var l = Log.Fn<string>($"{options}");
 
         var appCtx = appBlocks.CtxSvc.ContextPlus(appReader);
-        var contentGroup = appBlocks.New(appCtx).GetBlockConfig(guid);
+        var contentGroup = appBlocks.New(appCtx).GetBlockConfig(options.Parent);
         if ((contentGroup as ICanBeEntity)?.Entity == null || contentGroup.View == null)
             return l.ReturnNull("Doesn't seem to be a content-group. Cancel.");
 
-        var typeNameForField = string.Equals(part, ViewParts.ContentLower, OrdinalIgnoreCase)
+        var typeNameForField = string.Equals(options.Part, ViewParts.ContentLower, OrdinalIgnoreCase)
             ? contentGroup.View.ContentType
             : contentGroup.View.HeaderType;
 
         return l.Return(typeNameForField);
     }
 
-    private ReplacementListDto GetOptions(IAppReader appReader, Guid guid, string part, int index, string? typeNames)
+    private ReplacementListDto GetOptions(IAppReader appReader, Options options)
     {
-        var l = Log.Fn<ReplacementListDto>($"{nameof(typeNames)}:{typeNames}, {nameof(part)}:{part}, {nameof(index)}:{index}");
+        var l = Log.Fn<ReplacementListDto>($"{options}");
 
-        var (existingItemsInField, typeNameOfField) = FindItemAndFieldTypeName(appReader, guid, part);
+        var (existingItemsInField, typeNameOfField) = FindItemAndFieldTypeName(appReader, options);
 
-        var typeNameList = typeNames.CsvToArrayWithoutEmpty().ToListOpt();
+        var typeNameList = options.TypeNames.CsvToArrayWithoutEmpty().ToListOpt();
         if (!typeNameList.Any())
             typeNameList = typeNameOfField;
 
@@ -84,8 +93,8 @@ public class ListActivityReplaceOptions(
             .ToList();
 
         // if list is empty or shorter than index (would happen in an add-to-end-request) return null
-        var selectedId = existingItemsInField.Count > index
-            ? existingItemsInField[index]?.EntityId
+        var selectedId = existingItemsInField.Count > options.Index
+            ? existingItemsInField[options.Index]?.EntityId
             : null;
 
         var result = new ReplacementListDto
@@ -101,8 +110,9 @@ public class ListActivityReplaceOptions(
         return l.Return(result);
     }
 
-    private (List<IEntity> items, IList<string> typeNames) FindItemAndFieldTypeName(IAppReader appReader, Guid guid, string part)
+    private (List<IEntity> items, IList<string> typeNames) FindItemAndFieldTypeName(IAppReader appReader, Options options)
     {
+        var (guid, part, _, _) = options;
         var l = Log.Fn<(List<IEntity>, IList<string>)>($"guid:{guid},part:{part}");
 
         // Find owner/parent

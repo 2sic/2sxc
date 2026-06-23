@@ -30,8 +30,8 @@ public class ListController() : OqtStatefulControllerBase(RealController.LogSuff
     [HttpGet]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public ReplacementListDto ReplaceOptions(Guid parent, string part, int index)
-        => Real.ReplaceOptions(parent, part, index);
+    public ReplacementListDto ReplaceOptions(Guid parent, string part, int index, string? contentType = null)
+        => Real.ReplaceOptions(parent, part, index, contentType);
 
     /// <inheritdoc />
     /// <summary>

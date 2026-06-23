@@ -3,6 +3,10 @@ using ToSic.Sxc.Blocks.Sys.Work;
 
 namespace ToSic.Sxc.Backend.Cms;
 
+/// <summary>
+/// Special List-Action to get information about a Content Block Header.
+/// This is unusual, because if it's empty, we must retrieve the definition of the expected content-type from the view definition.
+/// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ListActivityGetBlockHeader(
     GenWorkPlus<WorkBlocks> appBlocks,

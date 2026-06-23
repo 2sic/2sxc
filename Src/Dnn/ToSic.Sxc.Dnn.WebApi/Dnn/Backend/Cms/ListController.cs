@@ -19,8 +19,8 @@ public class ListController() : DnnSxcControllerBase(RealController.LogSuffix), 
 
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public ReplacementListDto ReplaceOptions(Guid parent, string part, int index)
-        => Real.ReplaceOptions(parent, part, index);
+    public ReplacementListDto ReplaceOptions(Guid parent, string part, int index, string? contentType = null)
+        => Real.ReplaceOptions(parent, part, index, contentType);
 
     /// <inheritdoc />
     /// <summary>

@@ -25,8 +25,8 @@ public class ListControllerReal(
     public void Replace(Guid parent, string part, int index, int entityId, bool add = false)
         => actReplace.Value.Replace(new(parent, part, index, entityId, add));
 
-    public ReplacementListDto ReplaceOptions(Guid parent, string part, int index)
-        => actReplaceOptions.Value.ReplaceOptions(new(parent, part, index));
+    public ReplacementListDto ReplaceOptions(Guid parent, string part, int index, string? contentType = null)
+        => actReplaceOptions.Value.ReplaceOptions(new(parent, part, index, contentType));
 
     public List<EntityInListDto> Items(Guid parent, string part)
         => actGetItems.Value.ItemList(parent, part);
