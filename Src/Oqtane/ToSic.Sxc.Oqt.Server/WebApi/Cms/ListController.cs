@@ -48,4 +48,25 @@ public class ListController() : OqtStatefulControllerBase(RealController.LogSuff
     [HttpDelete]
     public void Delete(Guid? parent, string fields, int index) 
         => Real.Delete(parent, fields, index);
+
+    [HttpGet]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    [Authorize(Roles = RoleNames.Admin)]
+    public List<EntityInListDto> Items(Guid parent, string part)
+        => Real.Items(parent, part);
+
+
+    // TODO: part should be handed in with all the relevant names! atm it's "content" in the content-block scenario
+    [HttpPost]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    [Authorize(Roles = RoleNames.Admin)]
+    public bool Items([FromQuery] Guid parent, List<EntityInListDto> list, [FromQuery] string part)
+        => Real.Items(parent, list, part);
+
+    [HttpGet]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    [Authorize(Roles = RoleNames.Admin)]
+    public List<EntityInListDto> ContentBlockHeader(Guid parent)
+        => Real.ContentBlockHeader(parent);
+
 }

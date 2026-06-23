@@ -111,7 +111,7 @@ public static class StartupSxcWebApi
         services.TryAddTransient<AppDataControllerReal>();
         services.TryAddTransient<AppQueryControllerReal>();
         services.TryAddTransient<CacheControllerReal>();
-        services.TryAddTransient<ContentGroupControllerReal>();
+        //services.TryAddTransient<ContentGroupControllerReal>();
         services.TryAddTransient<EditControllerReal>();
         services.TryAddTransient<HistoryControllerReal>();
         services.TryAddTransient<ListControllerReal>();
@@ -131,6 +131,9 @@ public static class StartupSxcWebApi
         // Separate list Activities into isolated classes v22
         services.TryAddTransient<ListActivityReplaceOptions>();
         services.TryAddTransient<ListActivityReplace>();
+        services.TryAddTransient<ListActivityGetItems>();
+        services.TryAddTransient<ListActivitySave>();
+        services.TryAddTransient<ListActivityGetBlockHeader>();
 
         services.AddLoadSettingsProviders();
 
