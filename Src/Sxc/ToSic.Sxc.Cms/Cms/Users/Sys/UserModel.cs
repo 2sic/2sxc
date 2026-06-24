@@ -16,13 +16,13 @@ namespace ToSic.Sxc.Cms.Users.Sys;
 [ContentTypeSpecs(
     Guid = "612f9341-ff91-443d-be58-500e55bec2d8",
     Description = "User Information",
-    Name = TypeName
+    Name = MyContentTypeName
 )]
 public record UserModel : IRawEntity, IHasIdentityNameId, IUserModel
 {
     #region Types and Names for Raw Entities
 
-    internal const string TypeName = "User";
+    private const string MyContentTypeName = "User";
     internal static DataFactoryOptions Options = new()
     {
         TitleField = nameof(Name),
@@ -46,7 +46,7 @@ public record UserModel : IRawEntity, IHasIdentityNameId, IUserModel
         if (options.ShouldAddKey(nameof(IUserModel.Roles)))
             data.Add(
                 nameof(IUserModel.Roles),
-                new RawRelationship(keys: Roles?.Select(object (r) => $"{RoleRelationshipPrefix}{r.Id}").ToList() ?? [])
+                new RawRelationship(keys: Roles.Select(object (r) => $"{RoleRelationshipPrefix}{r.Id}").ToList() ?? [])
             );
 
         return data;
