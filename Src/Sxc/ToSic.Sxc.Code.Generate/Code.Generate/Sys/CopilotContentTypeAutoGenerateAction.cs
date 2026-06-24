@@ -15,7 +15,7 @@ internal class CopilotContentTypeAutoGenerateAction(
     public Task<ActionData<ContentTypeChange>> Run(LowCodeActionContext mainCtx, ActionData<ContentTypeChange> data)
     {
         var change = data.Data;
-        var l = Log.Fn<ActionData<ContentTypeChange>>($"source:{change.Source}, app:{change.AppId}, type:{change.ContentTypeNameId}");
+        var l = Log.Fn<ActionData<ContentTypeChange>>($"source:{change.Source}, app:{change.AppId}, typeId:{change.ContentTypeId}");
 
         var errors = data.Exceptions.ToList();
         errors.AddRange(autoGenerate.AutoGenerate(change));

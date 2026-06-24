@@ -68,18 +68,11 @@ public class CopilotContentTypeAutoGenerateService(
 
     public List<Exception> AutoGenerate(ContentTypeChange change)
     {
-        var l = Log.Fn<List<Exception>>($"source:{change.Source}, app:{change.AppId}, type:{change.ContentTypeNameId}");
+        var l = Log.Fn<List<Exception>>($"source:{change.Source}, app:{change.AppId}, typeId:{change.ContentTypeId}");
         var errors = new List<Exception>();
 
         var appReader = appReaders.Get(change.AppId);
-        var changedType = appReader.TryGetContentType(change.ContentTypeNameId);
-        if (changedType == null)
-        {
-            errors.Add(new ArgumentException(
-                $"Content-Type '{change.ContentTypeNameId}' not found in app '{change.AppId}'."));
-            Log.A($"Copilot auto-generate skipped: content-type '{change.ContentTypeNameId}' not found in app '{change.AppId}'.");
-            return l.Return(errors, "content-type not found");
-        }
+        var changedType = appReader.GetContentTypeRequired(change.ContentTypeId);
 
         var jobs = appReader.List
             .GetAll(DataCopilotConfigurationContentType)
@@ -89,7 +82,7 @@ public class CopilotContentTypeAutoGenerateService(
             .Cast<Job>()
             .ToList();
 
-        if (!jobs.Any())
+        if (jobs.Count == 0)
         {
             Log.A($"Copilot auto-generate: no matching configurations for content-type '{changedType.NameId}' ({change.Source}).");
             return l.Return(errors, "no matching auto-generate configurations");
@@ -136,8 +129,7 @@ public class CopilotContentTypeAutoGenerateService(
             return null;
 
         var selectedTypes = GetSelectedContentTypes(configuration);
-        if (selectedTypes != null && !selectedTypes.Any(selection =>
-                selection.EqualsInsensitive(changedType.NameId) || selection.EqualsInsensitive(changedType.Name)))
+        if (selectedTypes != null && !selectedTypes.Any(selection => selection.EqualsInsensitive(changedType.NameId)))
             return null;
 
         var specs = BuildSpecs(configuration, new()
@@ -162,37 +154,19 @@ public class CopilotContentTypeAutoGenerateService(
         };
 
     private static ICollection<string>? GetSelectedContentTypes(IEntity configuration)
-        => Normalize(configuration.Get<string>(FieldContentTypes));
-
-    private static string? Sanitize(string? value)
-        => value?.Trim().NullIfNoValue();
-
-    private static ICollection<string>? Normalize(string? raw)
     {
-        var cleaned = Sanitize(raw);
-        return cleaned == null
-            ? null
-            : Normalize([cleaned]);
-    }
-
-    private static ICollection<string>? Normalize(IEnumerable<string>? raw)
-    {
-        if (raw == null)
-            return null;
-
-        var cleaned = raw
-            .SelectMany(item => item?
-                .Split([',', ';', '\n', '\r'], StringSplitOptions.RemoveEmptyEntries)
-                ?? [])
-            .Where(item => !string.IsNullOrWhiteSpace(item))
-            .Select(item => item.Trim())
+        var selected = configuration.Get<string>(FieldContentTypes)
+            .CsvToArrayWithoutEmpty()
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        return cleaned.Any()
-            ? cleaned
+        return selected.Any()
+            ? selected
             : null;
     }
+
+    private static string? Sanitize(string? value)
+        => value?.Trim().NullIfNoValue();
 
     public record Result(bool Ok, string Message);
 
