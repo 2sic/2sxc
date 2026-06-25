@@ -27,6 +27,11 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     //public ICollection<AppDto> List(int zoneId) => Real.List(zoneId);
 
+    // TODO: @2rb #next
+    // Info: used in Apps-Admin (list of apps)
+    // To work, you must enable the patron feature to share an app (on another site)
+    // ...then it should appear in the list of InheritableApps
+    // Make sure you have a working setup, before you make changes
     /// <inheritdoc />
     [HttpGet]
     [ValidateAntiForgeryToken]
@@ -96,7 +101,9 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
         return Real.Reset(zoneId, appId, PortalSettings.DefaultLanguage, withPortalFiles);
     }
 
-
+    // TODO: @2rb #next
+    // Info: there is already a data source - SystemStack
+    // It's probably used in the App details - to see resources / settings
     /// <inheritdoc />
     [HttpGet]
     [ValidateAntiForgeryToken]
