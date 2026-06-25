@@ -1,11 +1,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Apps.Sys.State.AppStateBuilder;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Build.Sys;
+using ToSic.Eav.Data.Processing;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.Attributes;
 using ToSic.Eav.Run.Startup;
@@ -25,6 +26,42 @@ public class CSharpModelGeneratorTests
 
         AssertGeneratorSkipsEphemeral(new CSharpTypedDataModelsGenerator(context.User, context.AppReaders), context);
         AssertGeneratorSkipsEphemeral(new CSharpCustomModelsGenerator(context.User, context.AppReaders), context);
+    }
+
+    [Fact]
+    public async Task AutoGenerate_MatchingConfiguration_WritesGeneratedFile()
+    {
+        using var context = CodeGeneratorTestContext.CreateWithAutoGenerateConfiguration();
+        using var generatorServiceProvider = new ServiceCollection().BuildServiceProvider();
+
+        var appRoot = Path.Combine(Path.GetTempPath(), $"{nameof(CSharpModelGeneratorTests)}-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(appRoot);
+
+        try
+        {
+            var generator = new TestAutoGenerateFileGenerator();
+            var lazyGenerators = new LazySvc<IEnumerable<IFileGenerator>>(generatorServiceProvider);
+            lazyGenerators.Inject([generator]);
+
+            var fileSaver = new FileSaver(new TestSite(appRoot), context.AppReaders, new TestAppPathsMicroSvc(appRoot));
+            var codeGenerate = new CopilotCodeGenerateService(fileSaver, lazyGenerators, context.AppReaders);
+            var action = new CopilotContentTypeAutoGenerateAction(codeGenerate, context.AppReaders);
+            var change = new ContentTypeChange(CodeGeneratorTestContext.AppId, context.ContentType.NameId, ContentTypeChangeSources.ContentType);
+
+            var result = await action.Run(new LowCodeActionContext(), ActionData.Create(change));
+
+            Assert.Empty(result.Exceptions);
+
+            var specs = Assert.Single(generator.ReceivedSpecs);
+            Assert.Equal(CodeGeneratorTestContext.AppId, specs.AppId);
+            Assert.Equal([context.ContentType.NameId], specs.ContentTypes);
+            Assert.True(File.Exists(Path.Combine(appRoot, "AppCode", "Data", TestAutoGenerateFileGenerator.FileName)));
+        }
+        finally
+        {
+            if (Directory.Exists(appRoot))
+                Directory.Delete(appRoot, recursive: true);
+        }
     }
 
     private static void AssertGeneratorSkipsEphemeral(IFileGenerator generator, CodeGeneratorTestContext context)
@@ -47,6 +84,12 @@ public class CSharpModelGeneratorTests
     private sealed class CodeGeneratorTestContext : IDisposable
     {
         internal const int AppId = 42;
+        private const string FieldContentTypes = "ContentTypes";
+        private const string FieldNamespace = "Namespace";
+        private const string FieldTargetFolder = "TargetFolder";
+        private const string FieldPrefix = "Prefix";
+        private const string FieldSuffix = "Suffix";
+        private const string FieldEdition = "Edition";
 
         private readonly ServiceProvider _serviceProvider;
 
@@ -62,6 +105,12 @@ public class CSharpModelGeneratorTests
         }
 
         public static CodeGeneratorTestContext Create()
+            => Create(false);
+
+        public static CodeGeneratorTestContext CreateWithAutoGenerateConfiguration()
+            => Create(true);
+
+        private static CodeGeneratorTestContext Create(bool includeAutoGenerateConfiguration)
         {
             var services = new ServiceCollection();
             new StartupTestsEavDataBuild().ConfigureServices(services);
@@ -71,12 +120,24 @@ public class CSharpModelGeneratorTests
                                   ?? throw new InvalidOperationException("Failed to build service provider");
 
             var contentType = CreateContentType(serviceProvider);
+            var contentTypes = new List<IContentType> { contentType };
+            IEntity? autoGenerateConfiguration = null;
+
+            if (includeAutoGenerateConfiguration)
+            {
+                var configurationType = CreateAutoGenerateConfigurationType(serviceProvider);
+                contentTypes.Add(configurationType);
+                autoGenerateConfiguration = CreateAutoGenerateConfiguration(serviceProvider, configurationType, contentType.NameId);
+            }
 
             var appBuilder = serviceProvider.GetRequiredService<IAppStateBuilder>().InitForPreset();
             appBuilder.Load("test code generation content types", _ =>
             {
                 appBuilder.InitMetadata();
-                appBuilder.InitContentTypes(new List<IContentType> { contentType });
+                appBuilder.InitContentTypes(contentTypes);
+
+                if (autoGenerateConfiguration != null)
+                    appBuilder.Add(autoGenerateConfiguration, publishedId: null, log: false);
             });
 
             return new(serviceProvider, contentType, appBuilder.Reader);
@@ -115,6 +176,71 @@ public class CSharpModelGeneratorTests
                 nameId: "Article",
                 scope: ScopeConstants.Default,
                 attributes: new List<IContentTypeAttribute> { title, hasData }
+            );
+        }
+
+        private static IContentType CreateAutoGenerateConfigurationType(IServiceProvider serviceProvider)
+        {
+            var contentTypeAssembler = serviceProvider.GetRequiredService<ContentTypeAssembler>();
+            var attributeId = 100;
+
+            IContentTypeAttribute Attribute(string name, ValueTypes type, bool isTitle = false)
+                => contentTypeAssembler.Attribute.Create(
+                    appId: AppId,
+                    name: name,
+                    type: type,
+                    isTitle: isTitle,
+                    id: ++attributeId,
+                    sortOrder: attributeId
+                );
+
+            return contentTypeAssembler.Type.CreateContentTypeTac(
+                appId: AppId,
+                name: CopilotCodeGenerateService.DataCopilotConfigurationContentType,
+                id: 8,
+                nameId: CopilotCodeGenerateService.DataCopilotConfigurationContentType,
+                scope: ScopeConstants.Default,
+                attributes:
+                [
+                    Attribute(CopilotCodeGenerateService.FieldCodeGenerator, ValueTypes.String, isTitle: true),
+                    Attribute(CopilotCodeGenerateService.FieldAutoGenerate, ValueTypes.Boolean),
+                    Attribute(FieldContentTypes, ValueTypes.String),
+                    Attribute(FieldNamespace, ValueTypes.String),
+                    Attribute(FieldTargetFolder, ValueTypes.String),
+                    Attribute(FieldPrefix, ValueTypes.String),
+                    Attribute(FieldSuffix, ValueTypes.String),
+                    Attribute(FieldEdition, ValueTypes.String),
+                ]
+            );
+        }
+
+        private static IEntity CreateAutoGenerateConfiguration(
+            IServiceProvider serviceProvider,
+            IContentType configurationType,
+            string contentTypeNameId)
+        {
+            const int entityId = 2000;
+            var dataAssembler = serviceProvider.GetRequiredService<DataAssembler>();
+
+            return dataAssembler.CreateEntityTac(
+                appId: AppId,
+                contentType: configurationType,
+                values: new Dictionary<string, object>
+                {
+                    { CopilotCodeGenerateService.FieldCodeGenerator, TestAutoGenerateFileGenerator.GeneratorName },
+                    { CopilotCodeGenerateService.FieldAutoGenerate, true },
+                    { FieldContentTypes, contentTypeNameId },
+                    { FieldNamespace, "" },
+                    { FieldTargetFolder, "" },
+                    { FieldPrefix, "" },
+                    { FieldSuffix, "" },
+                    { FieldEdition, "" }
+                },
+                entityId: entityId,
+                repositoryId: entityId,
+                guid: Guid.NewGuid(),
+                titleField: CopilotCodeGenerateService.FieldCodeGenerator,
+                owner: "test:auto-generate"
             );
         }
 
@@ -159,6 +285,48 @@ public class CSharpModelGeneratorTests
             => _serviceProvider.Dispose();
     }
 
+    private sealed class TestAutoGenerateFileGenerator : IFileGenerator
+    {
+        internal const string GeneratorName = "TestAutoGenerateGenerator";
+        internal const string FileName = "AutoGenerated.txt";
+
+        private readonly List<IFileGeneratorSpecs> _receivedSpecs = [];
+
+        public IReadOnlyList<IFileGeneratorSpecs> ReceivedSpecs => _receivedSpecs;
+        public string NameId => Name;
+        public string Name => GeneratorName;
+        public string Version => "1.0.0";
+        public string Description => "Test auto-generate file generator";
+        public string DescriptionHtml => Description;
+        public string OutputLanguage => "Text";
+        public string OutputType => "Test";
+
+        public IGeneratedFileSet[] Generate(IFileGeneratorSpecs specs)
+        {
+            _receivedSpecs.Add(specs);
+
+            return
+            [
+                new GeneratedFileSet
+                {
+                    Name = "Test auto-generate output",
+                    Description = "Test auto-generate output",
+                    Generator = Name,
+                    Path = GenerateConstants.PathToAppCode,
+                    Files =
+                    [
+                        new GeneratedFile
+                        {
+                            FileName = FileName,
+                            Path = "Data",
+                            Body = "auto-generated"
+                        }
+                    ]
+                }
+            ];
+        }
+    }
+
     private sealed record TestFileGeneratorSpecs : IFileGeneratorSpecs
     {
         public string? Configuration { get; init; }
@@ -183,6 +351,38 @@ public class CSharpModelGeneratorTests
         public IAppReader? TryGet(IAppIdentity appIdentity) => reader;
         public IAppReader Get(IAppIdentity appIdentity) => reader;
         public IAppReader GetSystemPreset() => reader;
+    }
+
+    private sealed class TestAppPathsMicroSvc(string root) : IAppPathsMicroSvc
+    {
+        public IAppPaths Get(IAppReader appReader) => new TestAppPaths(root);
+        public IAppPaths Get(IAppReader appReader, ISite? siteOrNull) => new TestAppPaths(root);
+    }
+
+    private sealed class TestAppPaths(string physicalPath) : IAppPaths
+    {
+        public string Path => "/";
+        public string PhysicalPath { get; } = physicalPath;
+        public string PathShared => "/";
+        public string PhysicalPathShared { get; } = physicalPath;
+        public string RelativePath => "/";
+        public string RelativePathShared => "/";
+    }
+
+    private sealed class TestSite(string appsRootPhysicalFull) : ISite
+    {
+        public ISite Init(int siteId, ILog? parentLogOrNull) => this;
+        public int Id { get; } = 1;
+        public string Name { get; } = "Test";
+        public string AppsRootPhysical { get; } = appsRootPhysicalFull;
+        public string AppsRootPhysicalFull { get; } = appsRootPhysicalFull;
+        public string AppAssetsLinkTemplate { get; } = "/app/{appFolder}";
+        public string ContentPath { get; } = "/";
+        public string Url { get; } = "/";
+        public string UrlRoot { get; } = "/";
+        public string CurrentCultureCode { get; } = "en-us";
+        public string DefaultCultureCode { get; } = "en-us";
+        public int ZoneId { get; } = 1;
     }
 
     private sealed class TestUser : IUser
