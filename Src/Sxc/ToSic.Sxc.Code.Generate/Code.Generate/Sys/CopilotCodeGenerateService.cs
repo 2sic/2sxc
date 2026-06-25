@@ -1,4 +1,5 @@
 using ToSic.Eav.Apps;
+using ToSic.Eav.Models;
 using ToSic.Sys.DI;
 
 namespace ToSic.Sxc.Code.Generate.Sys;
@@ -11,16 +12,6 @@ public class CopilotCodeGenerateService(
     IAppReaderFactory appReaders)
     : ServiceBase(SxcLogName + ".AutoGen.Run", connect: [fileSaver, generators, appReaders])
 {
-    internal const string DataCopilotConfigurationContentType = "DataCopilotConfiguration";
-    internal const string FieldAutoGenerate = "AutoGenerate";
-    internal const string FieldCodeGenerator = "CodeGenerator";
-    private const string FieldNamespace = "Namespace";
-    private const string FieldTargetFolder = "TargetFolder";
-    private const string FieldContentTypes = "ContentTypes";
-    private const string FieldPrefix = "Prefix";
-    private const string FieldSuffix = "Suffix";
-    private const string FieldEdition = "Edition";
-
     public Result GenerateDataModels(int appId, string? edition, string generatorName, int configurationId = 0)
     {
         var l = Log.Fn<Result>($"{nameof(appId)}:{appId};{nameof(edition)}:{edition};{nameof(generatorName)}:{generatorName};{nameof(configurationId)}:{configurationId}", timer: true);
@@ -35,15 +26,18 @@ public class CopilotCodeGenerateService(
 
             if (configurationId > 0)
             {
-                var configuration = appReaders.Get(appId).List.GetOne(configurationId);
+                // TODO: Bug 2dm - the type-name check isn't correct
+                // ATM it fails if we don't use skipTypeCheck
+                var configuration = appReaders.Get(appId).List.GetModel<IDataCopilotConfiguration>(configurationId, skipTypeCheck: true);
                 if (configuration == null)
                     return l.Return(new(false, $"Configuration '{configurationId}' not found in app '{appId}'."));
 
+                // note 2026-06-25 2dm - check not necessary with GetModel, which does the check
                 // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
-                if (!DataCopilotConfigurationContentType.EqualsInsensitive(configuration.Type?.Name))
-                    return l.Return(new(false, $"Configuration '{configurationId}' is not a '{DataCopilotConfigurationContentType}' entity."));
+                //if (!DataCopilotConfiguration.DataCopilotConfigurationContentType.EqualsInsensitive(configuration.Type?.Name))
+                //    return l.Return(new(false, $"Configuration '{configurationId}' is not a '{DataCopilotConfiguration.DataCopilotConfigurationContentType}' entity."));
 
-                var configuredGenerator = Sanitize(configuration.Get<string>(FieldCodeGenerator));
+                var configuredGenerator = Sanitize(configuration.CodeGenerator);
                 if (configuredGenerator.HasValue())
                     generatorName = configuredGenerator;
 
@@ -101,29 +95,17 @@ public class CopilotCodeGenerateService(
     private IFileGenerator? FindGenerator(string generatorName)
         => generators.Value.FirstOrDefault(g => g.Name.EqualsInsensitive(generatorName));
 
-    internal static FileGeneratorSpecs BuildFileGeneratorSpecs(IEntity configuration, FileGeneratorSpecs baseSpecs)
+    internal static FileGeneratorSpecs BuildFileGeneratorSpecs(IDataCopilotConfiguration configuration, FileGeneratorSpecs baseSpecs)
         => baseSpecs with
         {
-            Configuration = $"{configuration.EntityId} {configuration.GetBestTitle()}",
-            Namespace = Sanitize(configuration.Get<string>(FieldNamespace)),
-            TargetPath = Sanitize(configuration.Get<string>(FieldTargetFolder)),
-            ContentTypes = baseSpecs.ContentTypes ?? GetSelectedContentTypes(configuration),
-            Prefix = Sanitize(configuration.Get<string>(FieldPrefix)),
-            Suffix = Sanitize(configuration.Get<string>(FieldSuffix)),
-            Edition = Sanitize(configuration.Get<string>(FieldEdition)) ?? baseSpecs.Edition,
+            Configuration = $"{configuration.Id} {configuration.CodeGenerator}",
+            Namespace = Sanitize(configuration.Namespace),
+            TargetPath = Sanitize(configuration.TargetFolder),
+            ContentTypes = baseSpecs.ContentTypes ?? configuration.GetSelectedContentTypes(),
+            Prefix = Sanitize(configuration.Prefix),
+            Suffix = Sanitize(configuration.Suffix),
+            Edition = Sanitize(configuration.Edition) ?? baseSpecs.Edition,
         };
-
-    internal static ICollection<string>? GetSelectedContentTypes(IEntity configuration)
-    {
-        var selected = configuration.Get<string>(FieldContentTypes)
-            .CsvToArrayWithoutEmpty()
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToList();
-
-        return selected.Any()
-            ? selected
-            : null;
-    }
 
     internal static string? Sanitize(string? value)
         => value?.Trim().NullIfNoValue();

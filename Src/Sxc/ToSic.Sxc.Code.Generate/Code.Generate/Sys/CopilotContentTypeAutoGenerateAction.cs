@@ -1,5 +1,7 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data.Processing;
+using ToSic.Eav.Data.Sys;
+using ToSic.Eav.Models;
 
 namespace ToSic.Sxc.Code.Generate.Sys;
 
@@ -24,8 +26,9 @@ internal class CopilotContentTypeAutoGenerateAction(
         var changedType = appReader.GetContentType(change.ContentTypeNameId);
 
         var jobs = appReader.List
-            .GetAll(CopilotCodeGenerateService.DataCopilotConfigurationContentType)
-            .Where(configuration => configuration.Get<bool>(CopilotCodeGenerateService.FieldAutoGenerate))
+            // TODO: @2dm SHOULD WORK WITHOUT specifying name
+            .GetModels<IDataCopilotConfiguration>(typeName: DataCopilotConfiguration.MyContentTypeName)
+            .Where(configuration => configuration.AutoGenerate)
             .Select(configuration => BuildJob(configuration, changedType))
             .OfType<CopilotCodeGenerateService.Job>()
             .ToList();
@@ -42,23 +45,28 @@ internal class CopilotContentTypeAutoGenerateAction(
         return Task.FromResult(l.Return(data with { Exceptions = errors }, $"processed {jobs.Count} configuration(s); errors:{errors.Count}"));
     }
 
-    private static CopilotCodeGenerateService.Job? BuildJob(IEntity configuration, IContentType changedType)
+    private static CopilotCodeGenerateService.Job? BuildJob(IDataCopilotConfiguration configuration, IContentType changedType)
     {
-        var generatorName = CopilotCodeGenerateService.Sanitize(
-            configuration.Get<string>(CopilotCodeGenerateService.FieldCodeGenerator));
+        var generatorName = CopilotCodeGenerateService.Sanitize(configuration.CodeGenerator);
         if (generatorName.IsEmptyOrWs())
             return null;
 
-        var selectedTypes = CopilotCodeGenerateService.GetSelectedContentTypes(configuration);
-        if (selectedTypes != null && !selectedTypes.Any(selection => selection.EqualsInsensitive(changedType.NameId)))
-            return null;
+        switch (configuration.ContentTypeSet)
+        {
+            // Empty is default, meaning all in scope "Default" + app settings/resources
+            case "" when changedType.Scope != ScopeConstants.Default && changedType.Name != "AppSettings" && changedType.Name != "AppResources":
+            // Only on custom do we check specifically for the type name/id
+            case "custom" when !(configuration.GetSelectedContentTypes() ?? []).Any(s => s.EqualsInsensitive(changedType.NameId)):
+                return null;
+        }
 
         var specs = CopilotCodeGenerateService.BuildFileGeneratorSpecs(configuration, new()
         {
             AppId = changedType.AppId,
-            ContentTypes = selectedTypes,
+            ContentTypes = [changedType.NameId],
         });
 
-        return new(configuration.EntityId, generatorName, specs);
+        return new(configuration.Id, generatorName, specs);
     }
+
 }

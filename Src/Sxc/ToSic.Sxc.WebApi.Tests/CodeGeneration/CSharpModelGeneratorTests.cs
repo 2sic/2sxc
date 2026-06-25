@@ -17,6 +17,7 @@ using ToSic.Sys.Users;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.Tests.CodeGeneration;
 
+// TODO: SETUP ISN'T good - should use constructor dependency injection, see example ContentTypeFactoryIsConfigured
 public class CSharpModelGeneratorTests
 {
     [Fact]
@@ -32,6 +33,7 @@ public class CSharpModelGeneratorTests
     public async Task AutoGenerate_MatchingConfiguration_WritesGeneratedFile()
     {
         using var context = CodeGeneratorTestContext.CreateWithAutoGenerateConfiguration();
+        // TODO: SHOULD Be changed to test-harness like other tests
         using var generatorServiceProvider = new ServiceCollection().BuildServiceProvider();
 
         var appRoot = Path.Combine(Path.GetTempPath(), $"{nameof(CSharpModelGeneratorTests)}-{Guid.NewGuid():N}");
@@ -84,12 +86,12 @@ public class CSharpModelGeneratorTests
     private sealed class CodeGeneratorTestContext : IDisposable
     {
         internal const int AppId = 42;
-        private const string FieldContentTypes = "ContentTypes";
-        private const string FieldNamespace = "Namespace";
-        private const string FieldTargetFolder = "TargetFolder";
-        private const string FieldPrefix = "Prefix";
-        private const string FieldSuffix = "Suffix";
-        private const string FieldEdition = "Edition";
+        //private const string FieldContentTypes = "ContentTypes";
+        //private const string FieldNamespace = "Namespace";
+        //private const string FieldTargetFolder = "TargetFolder";
+        //private const string FieldPrefix = "Prefix";
+        //private const string FieldSuffix = "Suffix";
+        //private const string FieldEdition = "Edition";
 
         private readonly ServiceProvider _serviceProvider;
 
@@ -181,37 +183,40 @@ public class CSharpModelGeneratorTests
 
         private static IContentType CreateAutoGenerateConfigurationType(IServiceProvider serviceProvider)
         {
-            var contentTypeAssembler = serviceProvider.GetRequiredService<ContentTypeAssembler>();
-            var attributeId = 100;
+            var codeContentTypeManager = serviceProvider.GetRequiredService<CodeContentTypesManager>();
+            return codeContentTypeManager.Get<DataCopilotConfigurationFromEntity>(); // note: should use Tac, but that's in another test helper project
+            
+            //var contentTypeAssembler = serviceProvider.GetRequiredService<ContentTypeAssembler>();
+            //var attributeId = 100;
 
-            IContentTypeAttribute Attribute(string name, ValueTypes type, bool isTitle = false)
-                => contentTypeAssembler.Attribute.Create(
-                    appId: AppId,
-                    name: name,
-                    type: type,
-                    isTitle: isTitle,
-                    id: ++attributeId,
-                    sortOrder: attributeId
-                );
+            //IContentTypeAttribute Attribute(string name, ValueTypes type, bool isTitle = false)
+            //    => contentTypeAssembler.Attribute.Create(
+            //        appId: AppId,
+            //        name: name,
+            //        type: type,
+            //        isTitle: isTitle,
+            //        id: ++attributeId,
+            //        sortOrder: attributeId
+            //    );
 
-            return contentTypeAssembler.Type.CreateContentTypeTac(
-                appId: AppId,
-                name: CopilotCodeGenerateService.DataCopilotConfigurationContentType,
-                id: 8,
-                nameId: CopilotCodeGenerateService.DataCopilotConfigurationContentType,
-                scope: ScopeConstants.Default,
-                attributes:
-                [
-                    Attribute(CopilotCodeGenerateService.FieldCodeGenerator, ValueTypes.String, isTitle: true),
-                    Attribute(CopilotCodeGenerateService.FieldAutoGenerate, ValueTypes.Boolean),
-                    Attribute(FieldContentTypes, ValueTypes.String),
-                    Attribute(FieldNamespace, ValueTypes.String),
-                    Attribute(FieldTargetFolder, ValueTypes.String),
-                    Attribute(FieldPrefix, ValueTypes.String),
-                    Attribute(FieldSuffix, ValueTypes.String),
-                    Attribute(FieldEdition, ValueTypes.String),
-                ]
-            );
+            //return contentTypeAssembler.Type.CreateContentTypeTac(
+            //    appId: AppId,
+            //    name: CopilotContentTypeAutoGenerateAction.DataCopilotConfiguration.DataCopilotConfigurationContentType,
+            //    id: 8,
+            //    nameId: CopilotContentTypeAutoGenerateAction.DataCopilotConfiguration.DataCopilotConfigurationContentType,
+            //    scope: ScopeConstants.Default,
+            //    attributes:
+            //    [
+            //        Attribute(CopilotCodeGenerateService.FieldCodeGenerator, ValueTypes.String, isTitle: true),
+            //        Attribute(CopilotCodeGenerateService.FieldAutoGenerate, ValueTypes.Boolean),
+            //        Attribute(FieldContentTypes, ValueTypes.String),
+            //        Attribute(FieldNamespace, ValueTypes.String),
+            //        Attribute(FieldTargetFolder, ValueTypes.String),
+            //        Attribute(FieldPrefix, ValueTypes.String),
+            //        Attribute(FieldSuffix, ValueTypes.String),
+            //        Attribute(FieldEdition, ValueTypes.String),
+            //    ]
+            //);
         }
 
         private static IEntity CreateAutoGenerateConfiguration(
@@ -219,29 +224,40 @@ public class CSharpModelGeneratorTests
             IContentType configurationType,
             string contentTypeNameId)
         {
-            const int entityId = 2000;
-            var dataAssembler = serviceProvider.GetRequiredService<DataAssembler>();
+            var config = new DataCopilotConfiguration()
+            {
+                Id = 2000,
+                CodeGenerator = TestAutoGenerateFileGenerator.GeneratorName,
+                AutoGenerate = true,
+                ContentTypes = contentTypeNameId,
+            };
 
-            return dataAssembler.CreateEntityTac(
-                appId: AppId,
-                contentType: configurationType,
-                values: new Dictionary<string, object>
-                {
-                    { CopilotCodeGenerateService.FieldCodeGenerator, TestAutoGenerateFileGenerator.GeneratorName },
-                    { CopilotCodeGenerateService.FieldAutoGenerate, true },
-                    { FieldContentTypes, contentTypeNameId },
-                    { FieldNamespace, "" },
-                    { FieldTargetFolder, "" },
-                    { FieldPrefix, "" },
-                    { FieldSuffix, "" },
-                    { FieldEdition, "" }
-                },
-                entityId: entityId,
-                repositoryId: entityId,
-                guid: Guid.NewGuid(),
-                titleField: CopilotCodeGenerateService.FieldCodeGenerator,
-                owner: "test:auto-generate"
-            );
+            var codeCtManager = serviceProvider.Build<IDataFactory>();
+            return codeCtManager.Create(config);
+            
+            //const int entityId = 2000;
+            //var dataAssembler = serviceProvider.GetRequiredService<DataAssembler>();
+
+            //return dataAssembler.CreateEntityTac(
+            //    appId: AppId,
+            //    contentType: configurationType,
+            //    values: new Dictionary<string, object>
+            //    {
+            //        { CopilotCodeGenerateService.FieldCodeGenerator, TestAutoGenerateFileGenerator.GeneratorName },
+            //        { CopilotCodeGenerateService.FieldAutoGenerate, true },
+            //        { FieldContentTypes, contentTypeNameId },
+            //        { FieldNamespace, "" },
+            //        { FieldTargetFolder, "" },
+            //        { FieldPrefix, "" },
+            //        { FieldSuffix, "" },
+            //        { FieldEdition, "" }
+            //    },
+            //    entityId: entityId,
+            //    repositoryId: entityId,
+            //    guid: Guid.NewGuid(),
+            //    titleField: CopilotCodeGenerateService.FieldCodeGenerator,
+            //    owner: "test:auto-generate"
+            //);
         }
 
         private static IEntity CreateEphemeralMetadataEntity(
@@ -369,6 +385,8 @@ public class CSharpModelGeneratorTests
         public string RelativePathShared => "/";
     }
 
+    // TODO: this is not ideal - test site models should already exist, and should be reused - possibly improved and merged (search for MockSite)
+    // this is just more code to maintain
     private sealed class TestSite(string appsRootPhysicalFull) : ISite
     {
         public ISite Init(int siteId, ILog? parentLogOrNull) => this;
@@ -385,6 +403,8 @@ public class CSharpModelGeneratorTests
         public int ZoneId { get; } = 1;
     }
 
+    // TODO: this is not ideal - test user models already exists - see UserMock, and should be reused
+    // this is just more code to maintain
     private sealed class TestUser : IUser
     {
         public int Id => 1;
