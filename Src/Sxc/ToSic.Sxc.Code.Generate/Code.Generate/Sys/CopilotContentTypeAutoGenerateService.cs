@@ -61,18 +61,18 @@ public class CopilotContentTypeAutoGenerateService(
         }
         catch (Exception ex)
         {
-            Log.Ex(ex);
+            l.Ex(ex);
             return l.Return(new(false, $"Error generating data models in {edition}/AppCode/Data. {ex.GetType().FullName} - {ex.Message}"));
         }
     }
 
     public List<Exception> AutoGenerate(ContentTypeChange change)
     {
-        var l = Log.Fn<List<Exception>>($"source:{change.Source}, app:{change.AppId}, typeId:{change.ContentTypeId}");
+        var l = Log.Fn<List<Exception>>($"source:{change.Source}, app:{change.AppId}, type:{change.ContentTypeNameId}");
         var errors = new List<Exception>();
 
         var appReader = appReaders.Get(change.AppId);
-        var changedType = appReader.GetContentTypeRequired(change.ContentTypeId);
+        var changedType = appReader.GetContentType(change.ContentTypeNameId);
 
         var jobs = appReader.List
             .GetAll(DataCopilotConfigurationContentType)
@@ -84,7 +84,7 @@ public class CopilotContentTypeAutoGenerateService(
 
         if (jobs.Count == 0)
         {
-            Log.A($"Copilot auto-generate: no matching configurations for content-type '{changedType.NameId}' ({change.Source}).");
+            l.A($"Copilot auto-generate: no matching configurations for content-type '{changedType.NameId}' ({change.Source}).");
             return l.Return(errors, "no matching auto-generate configurations");
         }
 
@@ -95,7 +95,7 @@ public class CopilotContentTypeAutoGenerateService(
                 var generator = FindGenerator(job.GeneratorName);
                 if (generator == null)
                 {
-                    Log.A($"Copilot auto-generate: generator '{job.GeneratorName}' not found.");
+                    l.A($"Copilot auto-generate: generator '{job.GeneratorName}' not found.");
                     errors.Add(new InvalidOperationException(
                         $"Generator '{job.GeneratorName}' not found for configuration '{job.ConfigurationId}'."));
                     continue;
@@ -106,7 +106,7 @@ public class CopilotContentTypeAutoGenerateService(
             catch (Exception ex)
             {
                 errors.Add(ex);
-                Log.Ex(ex);
+                l.Ex(ex);
             }
         }
 
