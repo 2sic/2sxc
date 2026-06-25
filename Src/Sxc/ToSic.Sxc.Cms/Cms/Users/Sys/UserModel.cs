@@ -88,6 +88,8 @@ public record UserModel : IRawEntity, IHasIdentityNameId, IUserModel
 
     public string? Username { get; init; }
     public string? Email { get; init; } // aka PreferredEmail
+
+    [ContentTypeAttributeSpecs(IsTitle = true)]
     public string? Name { get; init; } // aka DisplayName
 
     public IEnumerable<IUserRoleModel> Roles { get; init; } = [];
