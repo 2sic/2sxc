@@ -79,8 +79,10 @@ public class AppControllerReal(
     public Task<ActionData<bool>> SaveData(AppExportSpecs specs)
         => appStateSyncSave.Value.Run(new(), new(specs));
 
-    public List<AppStackDataRaw> GetStack(int appId, string? part, string? key = null, Guid? view = null)
-        => appStackBackendLazy.Value.GetAll(appId, part ?? AppStackConstants.RootNameSettings, key, view);
+    // Replaced by DataSource System.SystemStack through query System.SysData.
+    // Use app/auto/query/System.SysData/Default with SysDataSource=System.SystemStack.
+    //public List<AppStackDataRaw> GetStack(int appId, string? part, string? key = null, Guid? view = null)
+    //    => appStackBackendLazy.Value.GetAll(appId, part ?? AppStackConstants.RootNameSettings, key, view);
 
     public async Task<ImportResultDto> Reset(int zoneId, int appId, string defaultLanguage, bool withPortalFiles)
         => (await appStateSyncRestore.Value.Run(new(), new(new(zoneId, appId, defaultLanguage, withPortalFiles)))).Data;

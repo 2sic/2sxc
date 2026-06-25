@@ -101,15 +101,14 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
         return Real.Reset(zoneId, appId, PortalSettings.DefaultLanguage, withPortalFiles);
     }
 
-    // TODO: @2rb #next
-    // Info: there is already a data source - SystemStack
-    // It's probably used in the App details - to see resources / settings
-    /// <inheritdoc />
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null)
-        => Real.GetStack(appId, part, key, view);
+    // Replaced by DataSource System.SystemStack through query System.SysData.
+    // Use app/auto/query/System.SysData/Default with SysDataSource=System.SystemStack.
+    ///// <inheritdoc />
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null)
+    //    => Real.GetStack(appId, part, key, view);
 
     /// <inheritdoc />
     [HttpPost]
