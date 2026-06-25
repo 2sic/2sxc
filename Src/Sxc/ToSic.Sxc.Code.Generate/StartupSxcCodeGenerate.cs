@@ -26,7 +26,7 @@ public static class StartupSxcCodeGenerate
         services.AddTransient<IFileGenerator, CSharpCustomModelsGenerator>(); // with interface and no try, so all can be listed in DI
 
         // v21.04 Copilot auto-generate on schema changes.
-        services.TryAddTransient<CopilotContentTypeAutoGenerateService>();
+        services.TryAddTransient<CopilotCodeGenerateService>();
         services.AddTransient<ILowCodeAction<ContentTypeChange, ContentTypeChange>, CopilotContentTypeAutoGenerateAction>();
 
         return services;

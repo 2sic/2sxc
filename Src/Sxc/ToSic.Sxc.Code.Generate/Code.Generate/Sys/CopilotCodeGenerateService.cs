@@ -1,20 +1,19 @@
 using ToSic.Eav.Apps;
-using ToSic.Eav.Data.Processing;
 using ToSic.Sys.DI;
 
 namespace ToSic.Sxc.Code.Generate.Sys;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class CopilotContentTypeAutoGenerateService(
+public class CopilotCodeGenerateService(
     FileSaver fileSaver,
     LazySvc<IEnumerable<IFileGenerator>> generators,
     IAppReaderFactory appReaders)
     : ServiceBase(SxcLogName + ".AutoGen.Run", connect: [fileSaver, generators, appReaders])
 {
-    private const string DataCopilotConfigurationContentType = "DataCopilotConfiguration";
-    private const string FieldAutoGenerate = "AutoGenerate";
-    private const string FieldCodeGenerator = "CodeGenerator";
+    internal const string DataCopilotConfigurationContentType = "DataCopilotConfiguration";
+    internal const string FieldAutoGenerate = "AutoGenerate";
+    internal const string FieldCodeGenerator = "CodeGenerator";
     private const string FieldNamespace = "Namespace";
     private const string FieldTargetFolder = "TargetFolder";
     private const string FieldContentTypes = "ContentTypes";
@@ -48,7 +47,7 @@ public class CopilotContentTypeAutoGenerateService(
                 if (configuredGenerator.HasValue())
                     generatorName = configuredGenerator;
 
-                specs = BuildSpecs(configuration, specs);
+                specs = BuildFileGeneratorSpecs(configuration, specs);
             }
 
             var generator = FindGenerator(generatorName);
@@ -66,51 +65,31 @@ public class CopilotContentTypeAutoGenerateService(
         }
     }
 
-    public List<Exception> AutoGenerate(ContentTypeChange change)
+    internal List<Exception> AutoGenerate(Job job)
     {
-        var l = Log.Fn<List<Exception>>($"source:{change.Source}, app:{change.AppId}, type:{change.ContentTypeNameId}");
+        var l = Log.Fn<List<Exception>>($"job:{job}");
         var errors = new List<Exception>();
 
-        var appReader = appReaders.Get(change.AppId);
-        var changedType = appReader.GetContentType(change.ContentTypeNameId);
-
-        var jobs = appReader.List
-            .GetAll(DataCopilotConfigurationContentType)
-            .Where(configuration => configuration.Get<bool>(FieldAutoGenerate))
-            .Select(configuration => BuildJob(configuration, changedType))
-            .Where(job => job != null)
-            .Cast<Job>()
-            .ToList();
-
-        if (jobs.Count == 0)
+        try
         {
-            l.A($"Copilot auto-generate: no matching configurations for content-type '{changedType.NameId}' ({change.Source}).");
-            return l.Return(errors, "no matching auto-generate configurations");
+            var generator = FindGenerator(job.GeneratorName);
+            if (generator == null)
+            {
+                l.A($"Copilot auto-generate: generator '{job.GeneratorName}' not found.");
+                errors.Add(new InvalidOperationException(
+                    $"Generator '{job.GeneratorName}' not found for configuration '{job.ConfigurationId}'."));
+                return l.Return(errors, "generator not found");
+            }
+
+            GenerateAndSave(generator, job.Specs);
+        }
+        catch (Exception ex)
+        {
+            errors.Add(ex);
+            l.Ex(ex);
         }
 
-        foreach (var job in jobs)
-        {
-            try
-            {
-                var generator = FindGenerator(job.GeneratorName);
-                if (generator == null)
-                {
-                    l.A($"Copilot auto-generate: generator '{job.GeneratorName}' not found.");
-                    errors.Add(new InvalidOperationException(
-                        $"Generator '{job.GeneratorName}' not found for configuration '{job.ConfigurationId}'."));
-                    continue;
-                }
-
-                GenerateAndSave(generator, job.Specs);
-            }
-            catch (Exception ex)
-            {
-                errors.Add(ex);
-                l.Ex(ex);
-            }
-        }
-
-        return l.Return(errors, $"processed {jobs.Count} configuration(s)");
+        return l.Return(errors, $"errors:{errors.Count}");
     }
 
     private void GenerateAndSave(IFileGenerator generator, IFileGeneratorSpecs specs)
@@ -122,26 +101,7 @@ public class CopilotContentTypeAutoGenerateService(
     private IFileGenerator? FindGenerator(string generatorName)
         => generators.Value.FirstOrDefault(g => g.Name.EqualsInsensitive(generatorName));
 
-    private static Job? BuildJob(IEntity configuration, IContentType changedType)
-    {
-        var generatorName = Sanitize(configuration.Get<string>(FieldCodeGenerator));
-        if (generatorName.IsEmptyOrWs())
-            return null;
-
-        var selectedTypes = GetSelectedContentTypes(configuration);
-        if (selectedTypes != null && !selectedTypes.Any(selection => selection.EqualsInsensitive(changedType.NameId)))
-            return null;
-
-        var specs = BuildSpecs(configuration, new()
-        {
-            AppId = changedType.AppId,
-            ContentTypes = selectedTypes,
-        });
-
-        return new(configuration.EntityId, generatorName, specs);
-    }
-
-    private static FileGeneratorSpecs BuildSpecs(IEntity configuration, FileGeneratorSpecs baseSpecs)
+    internal static FileGeneratorSpecs BuildFileGeneratorSpecs(IEntity configuration, FileGeneratorSpecs baseSpecs)
         => baseSpecs with
         {
             Configuration = $"{configuration.EntityId} {configuration.GetBestTitle()}",
@@ -153,7 +113,7 @@ public class CopilotContentTypeAutoGenerateService(
             Edition = Sanitize(configuration.Get<string>(FieldEdition)) ?? baseSpecs.Edition,
         };
 
-    private static ICollection<string>? GetSelectedContentTypes(IEntity configuration)
+    internal static ICollection<string>? GetSelectedContentTypes(IEntity configuration)
     {
         var selected = configuration.Get<string>(FieldContentTypes)
             .CsvToArrayWithoutEmpty()
@@ -165,12 +125,12 @@ public class CopilotContentTypeAutoGenerateService(
             : null;
     }
 
-    private static string? Sanitize(string? value)
+    internal static string? Sanitize(string? value)
         => value?.Trim().NullIfNoValue();
 
     public record Result(bool Ok, string Message);
 
-    private record Job(
+    internal record Job(
         int ConfigurationId,
         string GeneratorName,
         FileGeneratorSpecs Specs);

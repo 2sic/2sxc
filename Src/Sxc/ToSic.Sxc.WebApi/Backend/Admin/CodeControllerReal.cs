@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Backend.Admin;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeControllerReal(
-    CopilotContentTypeAutoGenerateService codeGenerate) 
+    CopilotCodeGenerateService codeGenerate) 
     : ServiceBase("Api.CodeRl", connect: [codeGenerate])
 {
     public const string LogSuffix = "Code";
