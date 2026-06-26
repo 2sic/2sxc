@@ -32,11 +32,12 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
     //    => Real.List(zoneId);
 
     /// <inheritdoc />
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [Authorize(Roles = RoleNames.Host)]
-    public ICollection<AppDto> InheritableApps()
-        => Real.InheritableApps();
+    /// Replaced by DataSource System.InheritableApps
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[Authorize(Roles = RoleNames.Host)]
+    //public ICollection<AppDto> InheritableApps()
+    //    => Real.InheritableApps();
 
     /// <inheritdoc />
     [HttpDelete]
