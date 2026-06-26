@@ -1,14 +1,24 @@
+using ToSic.Eav;
 using ToSic.Eav.Data;
-using ToSic.Sxc.Backend.SaveHelpers;
+using ToSic.Eav.Data.Build.Sys;
+using ToSic.Eav.DataSource;
+using ToSic.Eav.Services;
+using Xunit.DependencyInjection;
 
 namespace ToSic.Sxc.WebApi.Tests.SaveHelpers;
 
+[Startup(typeof(StartupCoreDataSourcesAndTestData))]
 public class UniqueValueLookupTests
+(
+    DataAssembler dataAssembler,
+    ContentTypeAssembler contentTypeAssembler,
+    IDataSourcesService dataSourcesService,
+    DataSourceBase.Dependencies dataSourceDependencies)
 {
     [Fact]
     public void IsUnique_FindsExistingScalarConflict()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
             ctx.CreateField("Slug", ValueTypes.String, isUnique: true));
@@ -28,7 +38,7 @@ public class UniqueValueLookupTests
     [Fact]
     public void IsUnique_FiltersByContentType()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var articleType = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
             ctx.CreateField("Slug", ValueTypes.String, isUnique: true));
@@ -51,7 +61,7 @@ public class UniqueValueLookupTests
     [Fact]
     public void IsUnique_ExcludesCurrentEntity()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var entityGuid = Guid.NewGuid();
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
@@ -72,7 +82,7 @@ public class UniqueValueLookupTests
     [Fact]
     public void IsUnique_ReportsOtherEntityWhenCurrentEntityAlsoMatches()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var entityGuid = Guid.NewGuid();
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
@@ -92,4 +102,7 @@ public class UniqueValueLookupTests
 
         Assert.Same(duplicate, conflict);
     }
+
+    private IsUniqueValidatorTestContext CreateContext()
+        => IsUniqueValidatorTestContext.Create(dataAssembler, contentTypeAssembler, dataSourcesService, dataSourceDependencies);
 }

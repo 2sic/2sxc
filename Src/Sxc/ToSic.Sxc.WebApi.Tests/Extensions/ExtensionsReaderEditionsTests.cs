@@ -1,4 +1,9 @@
+using ToSic.Eav.Apps.Sys.FileSystemState;
+using ToSic.Eav.Services;
 using ToSic.Eav.Sys;
+using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Services;
+using Xunit.DependencyInjection;
 // ReSharper disable once CheckNamespace
 
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
@@ -6,14 +11,20 @@ namespace ToSic.Sxc.WebApi.Tests.Extensions;
 /// <summary>
 /// Unit tests for ExtensionReaderBackend editions detection
 /// </summary>
-public class ExtensionsReaderEditionsTests
+[Startup(typeof(StartupExtensionsTests))]
+public class ExtensionsReaderEditionsTests(
+    LazySvc<IAppReaderFactory> appReadersLazy,
+    LazySvc<IJsonService> jsonLazy,
+    ExtensionManifestService manifestService,
+    IDataSourceGenerator<AppEditions> appEditions,
+    ExtensionsTestAppJsonConfigurationService appJsonService)
 {
     #region Basic Editions Tests
 
     [Fact]
     public void GetExtensions_NoEditions_WhenEditionsSupportedFalse()
     {
-        using var ctx = ExtensionsReaderTestContext.Create();
+        using var ctx = CreateContext();
         
         const string extName = "no-editions-ext";
         ctx.SetupExtension(extName, new 
@@ -36,7 +47,7 @@ public class ExtensionsReaderEditionsTests
     [Fact]
     public void GetExtensions_NoEditions_WhenEditionsSupportedMissing()
     {
-        using var ctx = ExtensionsReaderTestContext.Create();
+        using var ctx = CreateContext();
         
         const string extName = "no-flag-ext";
         ctx.SetupExtension(extName, new 
@@ -55,7 +66,7 @@ public class ExtensionsReaderEditionsTests
     [Fact]
     public void GetExtensions_DetectsEdition_WhenEditionFolderExists()
     {
-        using var ctx = ExtensionsReaderTestContext.Create();
+        using var ctx = CreateContext();
         
         const string extName = "multi-edition";
         const string inputType = "string-font-icon";
@@ -92,7 +103,7 @@ public class ExtensionsReaderEditionsTests
     [Fact]
     public void GetExtensions_DetectsMultipleEditions()
     {
-        using var ctx = ExtensionsReaderTestContext.Create();
+        using var ctx = CreateContext();
         
         const string extName = "multi-edition";
         const string inputType = "string-dropdown";
@@ -136,7 +147,7 @@ public class ExtensionsReaderEditionsTests
     [Fact]
     public void GetExtensions_ReturnsIconUrlsPerEdition()
     {
-        using var ctx = ExtensionsReaderTestContext.Create();
+        using var ctx = CreateContext();
 
         const string extName = "icon-ext";
         const string inputType = "string-icon";
@@ -176,7 +187,7 @@ public class ExtensionsReaderEditionsTests
     //[Fact]
     //public void GetExtensions_SkipsEdition_WhenInputTypeMismatch()
     //{
-    //    using var ctx = ExtensionsReaderTestContext.Create();
+    //    using var ctx = CreateContext();
         
     //    const string extName = "mismatch-test";
         
@@ -204,7 +215,7 @@ public class ExtensionsReaderEditionsTests
     //[Fact]
     //public void GetExtensions_SkipsEdition_WhenManifestMissing()
     //{
-    //    using var ctx = ExtensionsReaderTestContext.Create();
+    //    using var ctx = CreateContext();
         
     //    const string extName = "no-manifest-edition";
         
@@ -228,7 +239,7 @@ public class ExtensionsReaderEditionsTests
     //[Fact]
     //public void GetExtensions_SkipsEdition_WhenInputTypeInvalid()
     //{
-    //    using var ctx = ExtensionsReaderTestContext.Create();
+    //    using var ctx = CreateContext();
         
     //    const string extName = "invalid-input-type";
         
@@ -260,7 +271,7 @@ public class ExtensionsReaderEditionsTests
     [Fact]
     public void GetExtensions_EditionConfiguration_PreservesAllProperties()
     {
-        using var ctx = ExtensionsReaderTestContext.Create();
+        using var ctx = CreateContext();
         const string extName = "config-test";
         const string inputType = "string-test";
         ctx.SetupExtension(extName, new
@@ -296,7 +307,7 @@ public class ExtensionsReaderEditionsTests
     [Fact]
     public void GetExtensions_DoesNotTreatExtensionsFolderAsEdition()
     {
-        using var ctx = ExtensionsReaderTestContext.Create();
+        using var ctx = CreateContext();
         
         const string extName = "filter-test";
         
@@ -323,7 +334,7 @@ public class ExtensionsReaderEditionsTests
     [Fact]
     public void GetExtensions_HandlesMultipleExtensionsWithDifferentEditionSetups()
     {
-        using var ctx = ExtensionsReaderTestContext.Create();
+        using var ctx = CreateContext();
         
         // Extension 1: with editions
         ctx.SetupExtension("ext-with-editions", new 
@@ -361,4 +372,12 @@ public class ExtensionsReaderEditionsTests
     }
 
     #endregion
+
+    private ExtensionsReaderTestContext CreateContext()
+        => ExtensionsReaderTestContext.Create(
+            appReadersLazy,
+            jsonLazy,
+            manifestService,
+            appEditions,
+            appJsonService);
 }

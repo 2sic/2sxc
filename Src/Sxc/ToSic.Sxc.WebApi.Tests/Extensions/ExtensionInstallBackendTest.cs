@@ -1,6 +1,14 @@
 using System.IO.Compression;
 using System.Text;
+using ToSic.Eav.Apps.Sys.Caching;
+using ToSic.Eav.Apps.Sys.FileSystemState;
+using ToSic.Eav.Services;
+using ToSic.Sxc.Backend.App;
+using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Services;
 using ToSic.Sys.Security.Encryption;
+using ToSic.Sys.Configuration;
+using Xunit.DependencyInjection;
 using static ToSic.Eav.Sys.FolderConstants;
 using static ToSic.Sxc.ImportExport.Package.Sys.PackageIndexFile;
 
@@ -10,7 +18,17 @@ namespace ToSic.Sxc.WebApi.Tests.Extensions;
 /// <summary>
 /// Unit tests for ExtensionInstallBackend focusing on ZIP install scenarios
 /// </summary>
-public class ExtensionInstallBackendTest
+[Startup(typeof(StartupExtensionsTests))]
+public class ExtensionInstallBackendTest(
+    LazySvc<IAppReaderFactory> appReadersLazy,
+    LazySvc<IJsonService> jsonLazy,
+    IJsonService jsonSvc,
+    IGlobalConfiguration globalConfiguration,
+    ExtensionManifestService manifestService,
+    LazySvc<ExtensionInspectBackend> inspectorLazy,
+    IDataSourceGenerator<AppEditions> appEditions,
+    LazySvc<AppCachePurger> appCachePurgerLazy,
+    ExtensionsTestAppJsonConfigurationService appJsonService)
 {
     private const int TestZoneId = 1;
     private const int TestAppId = 42;
@@ -20,7 +38,7 @@ public class ExtensionInstallBackendTest
     public void InstallZip_Simple_Works()
     {
         // Arrange
-        using var ctx = ExtensionsBackendTestContext.Create();
+        using var ctx = CreateContext();
         const string extensionName = "color-picker";
 
         using var ms = new MemoryStream();
@@ -84,7 +102,7 @@ public class ExtensionInstallBackendTest
     public void InstallZip_BlocksTraversal()
     {
         // Arrange
-        using var ctx = ExtensionsBackendTestContext.Create();
+        using var ctx = CreateContext();
         const string extensionName = "bad";
 
         using var ms = new MemoryStream();
@@ -142,7 +160,7 @@ public class ExtensionInstallBackendTest
     public void InstallZip_Overwrite_Behavior()
     {
         // Arrange
-        using var ctx = ExtensionsBackendTestContext.Create();
+        using var ctx = CreateContext();
         const string extensionName = "dup";
 
         // Create a properly structured extension ZIP
@@ -231,7 +249,7 @@ public class ExtensionInstallBackendTest
     [Fact]
     public void InstallZip_MissingTopLevelExtensionsFolder_Fails()
     {
-        using var ctx = ExtensionsBackendTestContext.Create();
+        using var ctx = CreateContext();
         using var ms = new MemoryStream();
         using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
         {
@@ -251,7 +269,7 @@ public class ExtensionInstallBackendTest
     [Fact]
     public void InstallZip_MissingLockFile_Fails()
     {
-        using var ctx = ExtensionsBackendTestContext.Create();
+        using var ctx = CreateContext();
         const string folder = "no-lock";
         using var ms = new MemoryStream();
         using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
@@ -280,7 +298,7 @@ public class ExtensionInstallBackendTest
     [Fact]
     public void InstallZip_InvalidExtensionJson_Fails()
     {
-        using var ctx = ExtensionsBackendTestContext.Create();
+        using var ctx = CreateContext();
         const string folder = "invalid-json";
         using var ms = new MemoryStream();
         using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
@@ -311,7 +329,7 @@ public class ExtensionInstallBackendTest
     [Fact]
     public void InstallZip_MissingFilesListedInLock_Fails()
     {
-        using var ctx = ExtensionsBackendTestContext.Create();
+        using var ctx = CreateContext();
         const string folder = "missing-file";
         using var ms = new MemoryStream();
         using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
@@ -349,7 +367,7 @@ public class ExtensionInstallBackendTest
     [Fact]
     public void InstallZip_UnexpectedExtraFiles_Fails()
     {
-        using var ctx = ExtensionsBackendTestContext.Create();
+        using var ctx = CreateContext();
         const string folder = "extra-file";
         using var ms = new MemoryStream();
         using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
@@ -388,7 +406,7 @@ public class ExtensionInstallBackendTest
     [Fact]
     public void InstallZip_HashMismatch_Fails()
     {
-        using var ctx = ExtensionsBackendTestContext.Create();
+        using var ctx = CreateContext();
         const string folder = "bad-hash";
         using var ms = new MemoryStream();
         using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
@@ -433,7 +451,7 @@ public class ExtensionInstallBackendTest
     [Fact]
     public void InstallZip_WithAppCodeFiles()
     {
-        using var ctx = ExtensionsBackendTestContext.Create();
+        using var ctx = CreateContext();
         const string folder = "with-appcode";
 
         using var ms = new MemoryStream();
@@ -488,7 +506,7 @@ public class ExtensionInstallBackendTest
     [Fact]
     public void InstallZip_MultipleExtensions()
     {
-        using var ctx = ExtensionsBackendTestContext.Create();
+        using var ctx = CreateContext();
         const string a = "ext-a";
         const string b = "ext-b";
 
@@ -542,7 +560,7 @@ public class ExtensionInstallBackendTest
     [Fact]
     public void InstallZip_MultipleExtensions_OneInvalid_FailsAndNoneInstalled()
     {
-        using var ctx = ExtensionsBackendTestContext.Create();
+        using var ctx = CreateContext();
         const string good = "ext-good";
         const string bad = "ext-bad";
 
@@ -591,7 +609,7 @@ public class ExtensionInstallBackendTest
     [Fact]
     public void InstallZip_LockFileCopiedAndReadOnly()
     {
-        using var ctx = ExtensionsBackendTestContext.Create();
+        using var ctx = CreateContext();
         const string folder = "lockfile";
 
         using var ms = new MemoryStream();
@@ -630,7 +648,7 @@ public class ExtensionInstallBackendTest
     [Fact]
     public void InstallZip_Overwrite_ReplacesPreviousFileContent()
     {
-        using var ctx = ExtensionsBackendTestContext.Create();
+        using var ctx = CreateContext();
         const string folder = "replace";
 
         MemoryStream MakeZip(string jsContent)
@@ -679,7 +697,7 @@ public class ExtensionInstallBackendTest
     [Fact]
     public void InstallZip_LongPathFile_Works()
     {
-        using var ctx = ExtensionsBackendTestContext.Create();
+        using var ctx = CreateContext();
         const string folder = "long-path";
         const string extensionJsonContent = """{ "id":"long-path", "isInstalled": true }""";
         const string jsContent = "console.log('long path');";
@@ -759,4 +777,16 @@ public class ExtensionInstallBackendTest
     private const string ExtendedPathPrefix = @"\\?\";
     private const string ExtendedUncPathPrefix = @"\\?\UNC\";
     private const string UncPrefix = @"\\";
+
+    private ExtensionsBackendTestContext CreateContext()
+        => ExtensionsBackendTestContext.Create(
+            appReadersLazy,
+            jsonLazy,
+            jsonSvc,
+            globalConfiguration,
+            manifestService,
+            inspectorLazy,
+            appEditions,
+            appCachePurgerLazy,
+            appJsonService);
 }

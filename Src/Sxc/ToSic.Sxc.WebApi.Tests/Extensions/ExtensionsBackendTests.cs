@@ -1,6 +1,12 @@
 using ToSic.Eav.Apps.Sys.FileSystemState;
+using ToSic.Eav.Apps.Sys.Caching;
+using ToSic.Eav.Services;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Backend.App;
+using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Services;
+using ToSic.Sys.Configuration;
+using Xunit.DependencyInjection;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
@@ -8,7 +14,17 @@ namespace ToSic.Sxc.WebApi.Tests.Extensions;
 /// <summary>
 /// Unit tests for extension read/write backends covering read and write operations
 /// </summary>
-public class ExtensionsBackendTests
+[Startup(typeof(StartupExtensionsTests))]
+public class ExtensionsBackendTests(
+    LazySvc<IAppReaderFactory> appReadersLazy,
+    LazySvc<IJsonService> jsonLazy,
+    IJsonService jsonSvc,
+    IGlobalConfiguration globalConfiguration,
+    ExtensionManifestService manifestService,
+    LazySvc<ExtensionInspectBackend> inspectorLazy,
+    IDataSourceGenerator<AppEditions> appEditions,
+    LazySvc<AppCachePurger> appCachePurgerLazy,
+    ExtensionsTestAppJsonConfigurationService appJsonService)
 {
     #region Constants
 
@@ -24,7 +40,7 @@ public class ExtensionsBackendTests
     public void SaveThenRead_Roundtrip_Works()
     {
         // Arrange
-        using var ctx = ExtensionsBackendTestContext.Create();
+        using var ctx = CreateContext();
         const string extensionName = "test";
         var manifest = new ExtensionManifest
         {
@@ -68,7 +84,7 @@ public class ExtensionsBackendTests
     [Fact]
     public void SaveThenRead_WithSampleSimpleExtension_Config_Works()
     {
-        using var ctx = ExtensionsBackendTestContext.Create();
+        using var ctx = CreateContext();
         const string folder = "test";
         var folderPath = Path.Combine(ctx.TempRoot, FolderConstants.AppExtensionsFolder, folder);
         Directory.CreateDirectory(folderPath);
@@ -98,4 +114,16 @@ public class ExtensionsBackendTests
     }
 
     #endregion
+
+    private ExtensionsBackendTestContext CreateContext()
+        => ExtensionsBackendTestContext.Create(
+            appReadersLazy,
+            jsonLazy,
+            jsonSvc,
+            globalConfiguration,
+            manifestService,
+            inspectorLazy,
+            appEditions,
+            appCachePurgerLazy,
+            appJsonService);
 }

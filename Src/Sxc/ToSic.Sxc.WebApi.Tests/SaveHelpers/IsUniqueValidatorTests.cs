@@ -1,9 +1,20 @@
+using ToSic.Eav;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Build.Sys;
+using ToSic.Eav.DataSource;
+using ToSic.Eav.Services;
 using ToSic.Sxc.Backend.SaveHelpers;
+using Xunit.DependencyInjection;
 
 namespace ToSic.Sxc.WebApi.Tests.SaveHelpers;
 
+[Startup(typeof(StartupCoreDataSourcesAndTestData))]
 public class IsUniqueValidatorTests
+(
+    DataAssembler dataAssembler,
+    ContentTypeAssembler contentTypeAssembler,
+    IDataSourcesService dataSourcesService,
+    DataSourceBase.Dependencies dataSourceDependencies)
 {
     #region Theory Data
 
@@ -30,7 +41,7 @@ public class IsUniqueValidatorTests
     [Fact]
     public void DuplicateExistingEntityValue_BlocksSave()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
             ctx.CreateField("Slug", ValueTypes.String, isUnique: true));
@@ -53,7 +64,7 @@ public class IsUniqueValidatorTests
     [Fact]
     public void UnrelatedContentTypesWithSameUniqueFieldAndValue_DoNotBlockSave()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var articleType = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
             ctx.CreateField("Slug", ValueTypes.String, isUnique: true));
@@ -79,7 +90,7 @@ public class IsUniqueValidatorTests
     [Fact]
     public void UpdatingSameEntityWithSameUniqueValue_Passes()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var entityGuid = Guid.NewGuid();
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
@@ -101,7 +112,7 @@ public class IsUniqueValidatorTests
     [Fact]
     public void UpdatingFirstExistingDuplicateWithSameUniqueValue_BlocksSave()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var firstGuid = Guid.NewGuid();
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
@@ -133,7 +144,7 @@ public class IsUniqueValidatorTests
     [Fact]
     public void TwoItemsInSameSavePackageWithSameUniqueValue_BlockSave()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
             ctx.CreateField("Slug", ValueTypes.String, isUnique: true));
@@ -154,7 +165,7 @@ public class IsUniqueValidatorTests
     [Fact]
     public void UpdatedEntityAndAnotherPendingDuplicate_PreferSameRequestConflict()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var entityGuid = Guid.NewGuid();
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
@@ -184,7 +195,7 @@ public class IsUniqueValidatorTests
     [Fact]
     public void SameRequestTranslatedValuesOnlyConflictInsideSameLanguageBucket()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
             ctx.CreateField("Slug", ValueTypes.String, isUnique: true));
@@ -210,7 +221,7 @@ public class IsUniqueValidatorTests
     [Fact]
     public void DefaultLanguageWildcard_DoesNotBreakUniqueValidation()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
             ctx.CreateField("Slug", ValueTypes.String, isUnique: true));
@@ -231,7 +242,7 @@ public class IsUniqueValidatorTests
     [Fact]
     public void StringDuplicatesDifferingByCase_BlockSave()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
             ctx.CreateField("Slug", ValueTypes.String, isUnique: true));
@@ -252,7 +263,7 @@ public class IsUniqueValidatorTests
     [Fact]
     public void BlankStringsDoNotBlockSave()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
             ctx.CreateField("Slug", ValueTypes.String, isUnique: true));
@@ -272,7 +283,7 @@ public class IsUniqueValidatorTests
     [Fact]
     public void PlainStringWithoutIsUniqueMetadata_UsesDefaultFalse()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
             ctx.CreateField("Slug", ValueTypes.String));
@@ -292,7 +303,7 @@ public class IsUniqueValidatorTests
     [Fact]
     public void StringUrlWithNullIsUniqueMetadata_UsesDefaultTrue()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
             ctx.CreateField("Slug", ValueTypes.String, uniqueSetting: null, inputType: "string-url-path"));
@@ -313,7 +324,7 @@ public class IsUniqueValidatorTests
     [Fact]
     public void StringUrlWithExplicitFalseIsUniqueMetadata_OverridesDefaultTrue()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
             ctx.CreateField("Slug", ValueTypes.String, uniqueSetting: false, inputType: "string-url-path"));
@@ -333,7 +344,7 @@ public class IsUniqueValidatorTests
     [Fact]
     public void StringUrlWithOtherInputTypeAndNullIsUniqueMetadata_UsesDefaultFalse()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
             ctx.CreateField("Slug", ValueTypes.String, uniqueSetting: null, inputType: "string-url-other"));
@@ -358,7 +369,7 @@ public class IsUniqueValidatorTests
     [MemberData(nameof(UniqueScalarValues))]
     public void ScalarNonStringDuplicates_BlockSave(ValueTypes type, object value)
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var contentType = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
             ctx.CreateField("UniqueValue", type, isUnique: true));
@@ -380,7 +391,7 @@ public class IsUniqueValidatorTests
     [MemberData(nameof(UnsupportedUniqueFieldValues))]
     public void UnsupportedFieldTypesAreIgnoredEvenIfMarkedUnique(ValueTypes fieldType, object value)
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var contentType = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
             ctx.CreateField("Marker", fieldType, isUnique: true));
@@ -398,4 +409,7 @@ public class IsUniqueValidatorTests
     }
 
     #endregion
+
+    private IsUniqueValidatorTestContext CreateContext()
+        => IsUniqueValidatorTestContext.Create(dataAssembler, contentTypeAssembler, dataSourcesService, dataSourceDependencies);
 }

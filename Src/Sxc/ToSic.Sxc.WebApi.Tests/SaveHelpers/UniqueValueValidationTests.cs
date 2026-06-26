@@ -1,16 +1,27 @@
+using ToSic.Eav;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Build.Sys;
+using ToSic.Eav.DataSource;
+using ToSic.Eav.Services;
 using ToSic.Sxc.Backend.SaveHelpers;
+using Xunit.DependencyInjection;
 
 namespace ToSic.Sxc.WebApi.Tests.SaveHelpers;
 
+[Startup(typeof(StartupCoreDataSourcesAndTestData))]
 public class UniqueValueValidationTests
+(
+    DataAssembler dataAssembler,
+    ContentTypeAssembler contentTypeAssembler,
+    IDataSourcesService dataSourcesService,
+    DataSourceBase.Dependencies dataSourceDependencies)
 {
     #region Unique Validation
 
     [Fact]
     public void DuplicateExistingValue_ReturnsDuplicateConflict()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
             ctx.CreateField("Slug", ValueTypes.String, isUnique: true));
@@ -30,7 +41,7 @@ public class UniqueValueValidationTests
     [Fact]
     public void CurrentEntityWithSameValue_ReturnsOk()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var entityGuid = Guid.NewGuid();
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
@@ -49,7 +60,7 @@ public class UniqueValueValidationTests
     [Fact]
     public void BlankValue_ReturnsBlank()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
             ctx.CreateField("Slug", ValueTypes.String, isUnique: true));
@@ -63,7 +74,7 @@ public class UniqueValueValidationTests
     [Fact]
     public void DuplicateExistingDateValue_WithUiIsoRequest_ReturnsDuplicateConflict()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var date = new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Unspecified);
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
@@ -83,7 +94,7 @@ public class UniqueValueValidationTests
     [Fact]
     public void UrlPathFieldWithoutMetadata_StillValidatesAsUnique()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
             ctx.CreateField("Slug", ValueTypes.String, uniqueSetting: null, inputType: "string-url-path", includeUniqueMetadata: false));
@@ -101,7 +112,7 @@ public class UniqueValueValidationTests
     [Fact]
     public void DefaultLanguageWildcardRequest_IsHandledAsInvariant()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
             ctx.CreateField("Slug", ValueTypes.String, isUnique: true));
@@ -120,7 +131,7 @@ public class UniqueValueValidationTests
     [Fact]
     public void PlainNonUniqueField_ReturnsNotApplicable()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var type = ctx.CreateType("Article",
             ctx.CreateField("Title", ValueTypes.String, isTitle: true),
             ctx.CreateField("Slug", ValueTypes.String));
@@ -134,7 +145,7 @@ public class UniqueValueValidationTests
     [Fact]
     public void MissingContentType_ReturnsTypeNotFound()
     {
-        using var ctx = IsUniqueValidatorTestContext.Create();
+        using var ctx = CreateContext();
         var result = Validate(ctx, [], [], new("Missing.Type", "Slug", "same-slug"));
 
         Assert.True(result.IsValid);
@@ -165,4 +176,7 @@ public class UniqueValueValidationTests
             => TryGetContentType(name)
                ?? throw new ArgumentException($"Can't find content type with name '{name}'", nameof(name));
     }
+
+    private IsUniqueValidatorTestContext CreateContext()
+        => IsUniqueValidatorTestContext.Create(dataAssembler, contentTypeAssembler, dataSourcesService, dataSourceDependencies);
 }

@@ -1,6 +1,8 @@
 using System.IO.Compression;
 using System.Text.Json;
 using ToSic.Eav.Apps.Sys.FileSystemState;
+using ToSic.Eav.WebApi.Sys.ImportExport;
+using Xunit.DependencyInjection;
 using static ToSic.Eav.Sys.FolderConstants;
 using static ToSic.Sxc.ImportExport.Package.Sys.PackageIndexFile;
 using static ToSic.Sxc.ImportExport.Package.Sys.PackageInstallFile;
@@ -12,14 +14,18 @@ namespace ToSic.Sxc.WebApi.Tests.Extensions;
 /// <summary>
 /// Unit tests for ExtensionExportService service
 /// </summary>
-public class ExportExtensionTests
+[Startup(typeof(StartupExtensionsTests))]
+public class ExportExtensionTests(
+    LazySvc<IAppReaderFactory> appReadersLazy,
+    LazySvc<ContentExportApi> contentExportLazy,
+    ExtensionManifestService manifestService)
 {
     #region Basic Export Tests
 
     [Fact]
     public void Export_BasicExtension_CreatesZipStructure()
     {
-        using var ctx = ExportExtensionTestContext.Create();
+        using var ctx = CreateContext();
         
         const string extName = "test-extension";
         const string version = "1.0.0";
@@ -36,7 +42,7 @@ public class ExportExtensionTests
     [Fact]
     public void Export_VerifyZipContainsExtensionJson()
     {
-        using var ctx = ExportExtensionTestContext.Create();
+        using var ctx = CreateContext();
         
         const string extName = "test-extension";
         ctx.SetupExtension(extName, new ExtensionManifest { Version = "1.0.0" });
@@ -51,7 +57,7 @@ public class ExportExtensionTests
     [Fact]
     public void Export_VerifyZipContainsLockJson()
     {
-        using var ctx = ExportExtensionTestContext.Create();
+        using var ctx = CreateContext();
         
         const string extName = "test-extension";
         ctx.SetupExtension(extName, new ExtensionManifest { Version = "1.0.0" });
@@ -70,7 +76,7 @@ public class ExportExtensionTests
     [Fact]
     public void Export_IncludesBundledExtensions_AndListsAllInPackageInstall()
     {
-        using var ctx = ExportExtensionTestContext.Create();
+        using var ctx = CreateContext();
 
         const string extName = "primary-ext";
         ctx.SetupExtension(extName, new ExtensionManifest
@@ -150,7 +156,7 @@ public class ExportExtensionTests
     [Fact]
     public void Export_SkipsMissingBundledExtensions()
     {
-        using var ctx = ExportExtensionTestContext.Create();
+        using var ctx = CreateContext();
 
         const string extName = "primary-ext";
         ctx.SetupExtension(extName, new ExtensionManifest
@@ -200,7 +206,7 @@ public class ExportExtensionTests
     [Fact]
     public void Export_ThrowsWhenExtensionNotFound()
     {
-        using var ctx = ExportExtensionTestContext.Create();
+        using var ctx = CreateContext();
         
         Assert.Throws<DirectoryNotFoundException>(() =>
             ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: "nonexistent"));
@@ -209,7 +215,7 @@ public class ExportExtensionTests
     [Fact]
     public void Export_ThrowsWhenExtensionJsonMissing()
     {
-        using var ctx = ExportExtensionTestContext.Create();
+        using var ctx = CreateContext();
         
         const string extName = "incomplete";
         var extDir = Path.Combine(ctx.TempRoot, AppExtensionsFolder, extName);
@@ -226,7 +232,7 @@ public class ExportExtensionTests
     [Fact]
     public void Export_SetsIsInstalledToTrue_WhenFalse()
     {
-        using var ctx = ExportExtensionTestContext.Create();
+        using var ctx = CreateContext();
         
         const string extName = "test-extension";
         ctx.SetupExtension(extName, new ExtensionManifest { Version = "1.0.0", IsInstalled = false });
@@ -243,7 +249,7 @@ public class ExportExtensionTests
     [Fact]
     public void Export_SetsIsInstalledToTrue_WhenMissing()
     {
-        using var ctx = ExportExtensionTestContext.Create();
+        using var ctx = CreateContext();
         
         const string extName = "test-extension";
         ctx.SetupExtension(extName, new ExtensionManifest { Version = "1.0.0" });
@@ -260,7 +266,7 @@ public class ExportExtensionTests
     [Fact]
     public void Export_DoesNotModifyOriginalExtensionJson()
     {
-        using var ctx = ExportExtensionTestContext.Create();
+        using var ctx = CreateContext();
         
         const string extName = "test-extension";
         ctx.SetupExtension(extName, new ExtensionManifest { Version = "1.0.0", IsInstalled = false });
@@ -286,7 +292,7 @@ public class ExportExtensionTests
     [Fact]
     public void Export_IncludesAppCode_WhenHasAppCodeTrue()
     {
-        using var ctx = ExportExtensionTestContext.Create();
+        using var ctx = CreateContext();
         
         const string extName = "with-appcode";
         ctx.SetupExtension(extName, new ExtensionManifest { Version = "1.0.0", AppCodeInside = true });
@@ -306,7 +312,7 @@ public class ExportExtensionTests
     [Fact]
     public void Export_ExcludesAppCode_WhenHasAppCodeFalse()
     {
-        using var ctx = ExportExtensionTestContext.Create();
+        using var ctx = CreateContext();
         
         const string extName = "without-appcode";
         ctx.SetupExtension(extName, new ExtensionManifest { Version = "1.0.0", AppCodeInside = false });
@@ -323,7 +329,7 @@ public class ExportExtensionTests
     [Fact]
     public void Export_ExcludesAppCode_WhenPropertyMissing()
     {
-        using var ctx = ExportExtensionTestContext.Create();
+        using var ctx = CreateContext();
         
         const string extName = "no-appcode-property";
         ctx.SetupExtension(extName, new ExtensionManifest { Version = "1.0.0" });
@@ -343,7 +349,7 @@ public class ExportExtensionTests
     [Fact]
     public void Export_LockFileHasCorrectVersion()
     {
-        using var ctx = ExportExtensionTestContext.Create();
+        using var ctx = CreateContext();
         
         const string extName = "test-extension";
         const string version = "2.4.7";
@@ -362,7 +368,7 @@ public class ExportExtensionTests
     [Fact]
     public void Export_LockFileContainsFilesArray()
     {
-        using var ctx = ExportExtensionTestContext.Create();
+        using var ctx = CreateContext();
         
         const string extName = "test-extension";
         ctx.SetupExtension(extName, new ExtensionManifest { Version = "1.0.0" });
@@ -385,7 +391,7 @@ public class ExportExtensionTests
     [Fact]
     public void Export_LockFileEntryHasFileAndHash()
     {
-        using var ctx = ExportExtensionTestContext.Create();
+        using var ctx = CreateContext();
         
         const string extName = "test-extension";
         ctx.SetupExtension(extName, new ExtensionManifest { Version = "1.0.0" });
@@ -419,7 +425,7 @@ public class ExportExtensionTests
     [Fact]
     public void Export_ExtensionFilesIncluded()
     {
-        using var ctx = ExportExtensionTestContext.Create();
+        using var ctx = CreateContext();
         
         const string extName = "test-extension";
         ctx.SetupExtension(extName, new ExtensionManifest { Version = "1.0.0" });
@@ -439,7 +445,7 @@ public class ExportExtensionTests
     [Fact]
     public void Export_FileWithLongPhysicalPath_IncludesFile()
     {
-        using var ctx = ExportExtensionTestContext.Create();
+        using var ctx = CreateContext();
 
         const string extName = "long-path-extension";
         ctx.SetupExtension(extName, new ExtensionManifest { Version = "1.0.0" });
@@ -465,7 +471,7 @@ public class ExportExtensionTests
     [Fact]
     public void Export_FilePathsStartWithExtensions()
     {
-        using var ctx = ExportExtensionTestContext.Create();
+        using var ctx = CreateContext();
         
         const string extName = "test-extension";
         ctx.SetupExtension(extName, new ExtensionManifest { Version = "1.0.0" });
@@ -484,4 +490,7 @@ public class ExportExtensionTests
     }
 
     #endregion
+
+    private ExportExtensionTestContext CreateContext()
+        => ExportExtensionTestContext.Create(appReadersLazy, contentExportLazy, manifestService);
 }

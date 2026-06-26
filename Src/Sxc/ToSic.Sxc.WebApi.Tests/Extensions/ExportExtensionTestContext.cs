@@ -1,14 +1,10 @@
 using System.Text;
 using System.Text.Json;
-using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.Apps.Sys;
-using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.Apps.Mocks;
+using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.App;
-using ToSic.Sxc.Data;
-using ToSic.Sxc.Services;
-using ToSic.Eav.Apps.Sys.FileSystemState;
 using static ToSic.Sxc.ImportExport.Package.Sys.PackageIndexFile;
 
 // ReSharper disable once CheckNamespace
@@ -28,35 +24,22 @@ internal sealed class ExportExtensionTestContext : IDisposable
 
     #region Constructor / Factory
 
-    private readonly ServiceProvider _sp;
-
-    private ExportExtensionTestContext(string tempRoot, ServiceProvider sp, ExtensionExportService exportBackend)
+    private ExportExtensionTestContext(string tempRoot, ExtensionExportService exportBackend)
     {
         TempRoot = tempRoot;
-        _sp = sp;
         ExportBackend = exportBackend;
     }
 
-    public static ExportExtensionTestContext Create()
+    public static ExportExtensionTestContext Create(
+        LazySvc<IAppReaderFactory> appReadersLazy,
+        LazySvc<ContentExportApi> contentExportLazy,
+        ExtensionManifestService manifestService)
     {
         var tempRoot = Path.Combine(Path.GetTempPath(), "2sxc-export-tests", Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(tempRoot);
 
-        var services = new ServiceCollection();
-        services.AddSingleton<IAppReaderFactory, FakeAppReaderFactory>();
-        services.AddSingleton<IJsonService, SimpleJsonService>();
-            
-        var sp = services.BuildServiceProvider() 
-            ?? throw new InvalidOperationException("Failed to build service provider");
-
-        var appReadersLazy = new LazySvc<IAppReaderFactory>(sp);
-        var contentExportLazy = new LazySvc<ContentExportApi>(sp);
-
-        var site = new FakeSite(tempRoot);
-        var appPathSvc = new FakeAppPathsMicroSvc(tempRoot);
-
-        // Create manifest service
-        var manifestService = new ExtensionManifestService();
+        var site = MockSiteTestHelpers.CreateSite(tempRoot);
+        var appPathSvc = new MockAppPathsMicroSvc(tempRoot);
 
         var exportBackend = new ExtensionExportService(
             appReadersLazy, 
@@ -65,7 +48,7 @@ internal sealed class ExportExtensionTestContext : IDisposable
             contentExportLazy,
             manifestService);
 
-        return new ExportExtensionTestContext(tempRoot, sp, exportBackend);
+        return new ExportExtensionTestContext(tempRoot, exportBackend);
     }
 
     #endregion
@@ -196,76 +179,7 @@ internal sealed class ExportExtensionTestContext : IDisposable
 
     public void Dispose()
     {
-        try { _sp.Dispose(); } catch { /* Ignore */ }
         try { Directory.Delete(TempRoot, recursive: true); } catch { /* Ignore */ }
-    }
-
-    #endregion
-
-    #region Fake Implementations
-
-    private class FakeAppReaderFactory : IAppReaderFactory
-    {
-        public IAppReader Get(int appId) => null!;
-        public IAppReader Get(IAppIdentity appIdentity) => null!;
-        public IAppReader GetSystemPreset() => null!;
-        public IAppIdentityPure AppIdentity(int appId) => new AppIdentity(1, appId) as IAppIdentityPure ?? throw new();
-        public IAppReader GetZonePrimary(int zoneId) => throw new NotImplementedException();
-        public IAppReader? TryGet(IAppIdentity appIdentity) => null;
-        public IAppReader? ToReader(IAppStateCache? state) => null;
-        public IAppReader? TryGetSystemPreset(bool nullIfNotLoaded) => null;
-        public IAppReader GetOrKeep(IAppIdentity appIdOrReader) => throw new NotImplementedException();
-    }
-
-    private class FakeAppPathsMicroSvc(string root) : IAppPathsMicroSvc
-    {
-        public IAppPaths Get(IAppReader appReader) => new FakeAppPaths(root);
-        public IAppPaths Get(IAppReader appReader, ISite? siteOrNull) => new FakeAppPaths(root);
-    }
-
-    private class FakeAppPaths(string physicalPath) : IAppPaths
-    {
-        public string Path => "/";
-        public string PhysicalPath { get; } = physicalPath;
-        public string PathShared => "/";
-        public string PhysicalPathShared { get; } = physicalPath;
-        public string RelativePath => "/";
-        public string RelativePathShared => "/";
-    }
-
-    private class SimpleJsonService : IJsonService
-    {
-        private static readonly JsonSerializerOptions Options = new() 
-        { 
-            PropertyNamingPolicy = null,
-            WriteIndented = false 
-        };
-
-        public string ToJson(object item) => JsonSerializer.Serialize(item, Options);
-        public string ToJson(object item, int indentation) => JsonSerializer.Serialize(item, 
-            new JsonSerializerOptions(Options) { WriteIndented = indentation > 0 });
-        public T? To<T>(string json) => JsonSerializer.Deserialize<T>(json, Options);
-        public object? ToObject(string json) => JsonSerializer.Deserialize<object>(json, Options);
-        public ITyped? ToTyped(string json, NoParamOrder npo = default, string? fallback = default, bool? propsRequired = default) 
-            => null;
-        public IEnumerable<ITyped>? ToTypedList(string json, NoParamOrder npo = default, string? fallback = default, bool? propsRequired = default) 
-            => null;
-    }
-
-    private class FakeSite(string appsRootPhysicalFull) : ISite
-    {
-        public ISite Init(int siteId, ILog? parentLogOrNull) => this;
-        public int Id { get; } = 1;
-        public string Name { get; } = "Test";
-        public string AppsRootPhysical { get; } = appsRootPhysicalFull;
-        public string AppsRootPhysicalFull { get; } = appsRootPhysicalFull;
-        public string AppAssetsLinkTemplate { get; } = "/app/{appFolder}";
-        public string ContentPath { get; } = "/";
-        public string Url { get; } = "/";
-        public string UrlRoot { get; } = "/";
-        public string CurrentCultureCode { get; } = "en-us";
-        public string DefaultCultureCode { get; } = "en-us";
-        public int ZoneId { get; } = 1;
     }
 
     #endregion
