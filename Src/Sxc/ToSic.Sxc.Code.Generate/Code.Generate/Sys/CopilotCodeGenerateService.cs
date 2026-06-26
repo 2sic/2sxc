@@ -26,16 +26,9 @@ public class CopilotCodeGenerateService(
 
             if (configurationId > 0)
             {
-                // TODO: Bug 2dm - the type-name check isn't correct
-                // ATM it fails if we don't use skipTypeCheck
-                var configuration = appReaders.Get(appId).List.GetModel<IDataCopilotConfiguration>(configurationId, skipTypeCheck: true);
+                var configuration = appReaders.Get(appId).List.GetModel<IDataCopilotConfiguration>(configurationId);
                 if (configuration == null)
                     return l.Return(new(false, $"Configuration '{configurationId}' not found in app '{appId}'."));
-
-                // note 2026-06-25 2dm - check not necessary with GetModel, which does the check
-                // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
-                //if (!DataCopilotConfiguration.DataCopilotConfigurationContentType.EqualsInsensitive(configuration.Type?.Name))
-                //    return l.Return(new(false, $"Configuration '{configurationId}' is not a '{DataCopilotConfiguration.DataCopilotConfigurationContentType}' entity."));
 
                 var configuredGenerator = Sanitize(configuration.CodeGenerator);
                 if (configuredGenerator.HasValue())

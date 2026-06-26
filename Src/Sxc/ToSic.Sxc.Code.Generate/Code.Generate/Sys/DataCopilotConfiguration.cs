@@ -5,7 +5,7 @@ using ToSic.Eav.Models;
 
 namespace ToSic.Sxc.Code.Generate.Sys;
 
-[ModelSpecs(ContentType = DataCopilotConfiguration.MyContentTypeName, Use = typeof(DataCopilotConfigurationFromEntity))]
+[ModelSpecs(Use = typeof(DataCopilotConfigurationFromEntity))]  // Needed so the model converter knows what to use when converting from entity to model
 [PrivateApi]
 internal interface IDataCopilotConfiguration: IModelFromEntity
 {
@@ -27,7 +27,7 @@ internal interface IDataCopilotConfiguration: IModelFromEntity
 }
 
 [ContentTypeSpecs(
-    Guid = "80f659d4-a2d1-435f-8d23-b7f57d1eeeaa",
+    Guid = "b08dcd23-2eb0-4a5e-a3d0-3178d2aae451", // Matches NameId in data
     Description = "Data Copilot Configuration",
     Name = MyContentTypeName
 )]
@@ -66,6 +66,7 @@ internal record DataCopilotConfiguration: IDataCopilotConfiguration, IRawEntity
         };
 }
 
+[ModelSpecs(ContentType = DataCopilotConfiguration.MyContentTypeName)] // so it knows the real name of the content-type for type checks
 internal record DataCopilotConfigurationFromEntity : ModelFromEntityBasic, IDataCopilotConfiguration
 {
     [ContentTypeAttributeSpecs(IsTitle = true)]
@@ -96,5 +97,4 @@ internal static class DataCopilotConfigurationExtensions
             ? selected
             : null;
     }
-
 }

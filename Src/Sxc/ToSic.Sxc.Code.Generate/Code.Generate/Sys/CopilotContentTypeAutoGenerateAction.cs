@@ -26,8 +26,7 @@ internal class CopilotContentTypeAutoGenerateAction(
         var changedType = appReader.GetContentType(change.ContentTypeNameId);
 
         var jobs = appReader.List
-            // TODO: @2dm SHOULD WORK WITHOUT specifying name
-            .GetModels<IDataCopilotConfiguration>(typeName: DataCopilotConfiguration.MyContentTypeName)
+            .GetModels<IDataCopilotConfiguration>()
             .Where(configuration => configuration.AutoGenerate)
             .Select(configuration => BuildJob(configuration, changedType))
             .OfType<CopilotCodeGenerateService.Job>()
