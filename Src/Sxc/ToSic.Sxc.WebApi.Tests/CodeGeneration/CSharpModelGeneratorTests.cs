@@ -184,7 +184,7 @@ public class CSharpModelGeneratorTests
         private static IContentType CreateAutoGenerateConfigurationType(IServiceProvider serviceProvider)
         {
             var codeContentTypeManager = serviceProvider.GetRequiredService<CodeContentTypesManager>();
-            return codeContentTypeManager.Get<DataCopilotConfigurationFromEntity>(); // note: should use Tac, but that's in another test helper project
+            return codeContentTypeManager.Get<DataCopilotConfiguration>(); // note: should use Tac, but that's in another test helper project
             
             //var contentTypeAssembler = serviceProvider.GetRequiredService<ContentTypeAssembler>();
             //var attributeId = 100;
