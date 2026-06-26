@@ -46,7 +46,7 @@ internal class CopilotContentTypeAutoGenerateAction(
 
     private static CopilotCodeGenerateService.Job? BuildJob(IDataCopilotConfiguration configuration, IContentType changedType)
     {
-        var generatorName = CopilotCodeGenerateService.Sanitize(configuration.CodeGenerator);
+        var generatorName = configuration.CodeGenerator.Trim();
         if (generatorName.IsEmptyOrWs())
             return null;
 

@@ -30,7 +30,7 @@ public class CopilotCodeGenerateService(
                 if (configuration == null)
                     return l.Return(new(false, $"Configuration '{configurationId}' not found in app '{appId}'."));
 
-                var configuredGenerator = Sanitize(configuration.CodeGenerator);
+                var configuredGenerator = configuration.CodeGenerator.Trim();
                 if (configuredGenerator.HasValue())
                     generatorName = configuredGenerator;
 
@@ -92,16 +92,18 @@ public class CopilotCodeGenerateService(
         => baseSpecs with
         {
             Configuration = $"{configuration.Id} {configuration.CodeGenerator}",
-            Namespace = Sanitize(configuration.Namespace),
-            TargetPath = Sanitize(configuration.TargetFolder),
-            ContentTypes = baseSpecs.ContentTypes ?? configuration.GetSelectedContentTypes(),
-            Prefix = Sanitize(configuration.Prefix),
-            Suffix = Sanitize(configuration.Suffix),
-            Edition = Sanitize(configuration.Edition) ?? baseSpecs.Edition,
+            Namespace = configuration.Namespace.Trim(),
+            TargetPath = configuration.TargetFolder.Trim(),
+            ContentTypes = baseSpecs.ContentTypes // Don't NullIfNoValue(), as "" is a valid configuration
+                           ?? configuration.GetSelectedContentTypes(),
+            Prefix = configuration.Prefix.Trim(),
+            Suffix = configuration.Suffix.Trim(),
+            Edition = configuration.Edition.Trim().NullIfNoValue() ?? baseSpecs.Edition,
         };
 
-    internal static string? Sanitize(string? value)
-        => value?.Trim().NullIfNoValue();
+    // 2026-06-26 2dm, removed this, makes things look complex which are trivial.
+    //internal static string? TrimAndToNullIfEmpty(string? value)
+    //    => value?.Trim().NullIfNoValue();
 
     public record Result(bool Ok, string Message);
 
