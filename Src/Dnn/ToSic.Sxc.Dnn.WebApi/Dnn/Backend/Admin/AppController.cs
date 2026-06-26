@@ -33,11 +33,12 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     // ...then it should appear in the list of InheritableApps
     // Make sure you have a working setup, before you make changes
     /// <inheritdoc />
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [SupportedModules(DnnSupportedModuleNames)]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public ICollection<AppDto> InheritableApps() => Real.InheritableApps();
+    /// Replaced by DataSource System.InheritableApps
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[SupportedModules(DnnSupportedModuleNames)]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+    //public ICollection<AppDto> InheritableApps() => Real.InheritableApps();
 
     /// <inheritdoc />
     [HttpDelete]

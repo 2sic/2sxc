@@ -24,11 +24,12 @@ public class AppsBackend(
         return list.Select(CreateAppDto).ToListOpt();
     }
 
-    public ICollection<AppDto> GetInheritableApps()
-    {
-        var list = workApps.GetInheritableApps(context.Site);
-        return list.Select(CreateAppDto).ToListOpt();
-    }
+    // Replaced by DataSource System.InheritableApps
+    //public ICollection<AppDto> GetInheritableApps()
+    //{
+    //    var list = workApps.GetInheritableApps(context.Site);
+    //    return list.Select(CreateAppDto).ToListOpt();
+    //}
 
     private AppDto CreateAppDto(IAppReader appReader)
     {
