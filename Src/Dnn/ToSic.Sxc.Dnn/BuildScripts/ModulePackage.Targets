@@ -161,8 +161,8 @@
       <AssemblyHelper Include="$(OutDir)\ToSic.Sys.*.pdb" />
 
       <!-- XML documentation -->
-      <!--<AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.xml" />-->
-      <AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.Dnn.xml" />
+      <AssemblyDocumentation Include="$(OutDir)\ToSic.*.xml" />
+      <!--<AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.Dnn.xml" />-->
 
       <!-- 2sxc 13+ netstandard2.0/framework 4.7.2 assemblies -->
       <DependencyInclude Include="$(OutDir)\Microsoft.Bcl.AsyncInterfaces.dll" />
