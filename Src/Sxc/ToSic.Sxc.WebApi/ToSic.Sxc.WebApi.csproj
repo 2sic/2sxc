@@ -2,7 +2,8 @@
 
   <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-Nullable.props" />
 
-  <Import Project="../../SharedImports/CsProj.Props/CreateXDocsOnRelease.props" />
+  <!-- As of 2026-06-28 2dm this should not be exported ATM -->
+  <!--<Import Project="../../SharedImports/CsProj.Props/CreateXDocsOnRelease.props" />-->
 
   <PropertyGroup>
     <AssemblyName>ToSic.Sxc.WebApi</AssemblyName>

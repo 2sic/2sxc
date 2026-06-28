@@ -4,7 +4,8 @@
 
   <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
 
-  <Import Project="../../SharedImports/CsProj.Props/CreateXDocsOnRelease.props" />
+  <!-- As of 2026-06-28 2dm this should not be exported ATM, as we also cannot analyze the DLL in our cockpit -->
+  <!--<Import Project="../../SharedImports/CsProj.Props/CreateXDocsOnRelease.props" />-->
 
   <PropertyGroup>
     <RootNamespace>ToSic.Sxc.Oqt.Server</RootNamespace>

@@ -2,6 +2,7 @@
 
   <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-NetFramework.props" />
 
+  <!-- As of 2026-06-28 2dm this should be exported again -->
   <Import Project="../../SharedImports/CsProj.Props/CreateXDocsOnRelease.props" />
 
   <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
