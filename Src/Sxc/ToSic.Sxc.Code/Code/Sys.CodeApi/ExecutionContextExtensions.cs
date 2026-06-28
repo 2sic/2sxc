@@ -2,6 +2,7 @@
 
 namespace ToSic.Sxc.Code.Sys.CodeApi;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class ExecutionContextExtensions
 {
     public static ICodeTypedApiHelper GetTypedApi(this IExecutionContext exCtx) =>

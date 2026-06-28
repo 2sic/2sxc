@@ -10,6 +10,7 @@ namespace ToSic.Sxc.Code.Sys.CodeApi;
 /// <summary>
 /// WIP
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICodeDynamicApiHelper: ICodeAnyApiHelper, ICreateInstance
 {
 

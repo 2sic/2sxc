@@ -6,6 +6,7 @@ namespace ToSic.Sxc.Code.Sys.HotBuild;
 /// On start need to clean the "2sxc.bin" (AppCode) and "2sxc.bin.cshtml" (Razor) folders,
 /// because they are used to temporarily save compiled assemblies.
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class Util(IGlobalConfiguration globalConfiguration)
 {
     private const string Dll = ".dll";

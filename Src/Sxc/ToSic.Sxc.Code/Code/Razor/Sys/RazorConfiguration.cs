@@ -6,6 +6,7 @@ using ToSic.Sxc.Services.Cache.Sys.CacheKey;
 namespace ToSic.Sxc.Code.Razor.Sys;
 
 [PrivateApi("not yet public or final, WIP v20.00.0x, will have to create interface")]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class RazorConfiguration(RenderSpecs renderSpecs, ILog parentLog): HelperBase(parentLog, "Rzr.Config"), IRazorConfiguration
 {
     // This class is a placeholder for future Razor configuration settings.

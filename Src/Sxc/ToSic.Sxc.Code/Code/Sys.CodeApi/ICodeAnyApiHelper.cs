@@ -6,6 +6,7 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.Sys.CodeApi;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICodeAnyApiHelper
 {
     #region TODO: WHEN READY and moved deeper in the structure

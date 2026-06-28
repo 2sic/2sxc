@@ -8,6 +8,8 @@ using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Services.Sys.CodeApiServiceHelpers;
+
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class CodeApiServiceBase(CodeApiServiceBase.Dependencies services, string logName)
     : ServiceBase<CodeApiServiceBase.Dependencies>(services, logName),
         ILogWasConnected

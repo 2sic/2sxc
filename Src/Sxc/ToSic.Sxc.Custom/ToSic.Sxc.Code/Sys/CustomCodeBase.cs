@@ -27,13 +27,6 @@ public abstract class CustomCodeBase : ServiceWithContext, ICompatibilityLevel
         ??= ExCtx.GetService<CompileCodeHelper>().Init(this as IGetCodePath ?? throw new($"Can't cast to {nameof(IGetCodePath)}, but inheriting classes must implement it."));
 
 
-    //[PrivateApi]
-    //[ShowApiWhenReleased(ShowApiMode.Never)]
-    //public override void ConnectToRoot(IExecutionContext exCtx)
-    //{
-    //    base.ConnectToRoot(exCtx);
-    //}
-
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public abstract int CompatibilityLevel { get; }

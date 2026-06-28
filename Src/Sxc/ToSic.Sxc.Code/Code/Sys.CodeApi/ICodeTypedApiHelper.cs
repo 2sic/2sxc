@@ -7,6 +7,7 @@ namespace ToSic.Sxc.Code.Sys.CodeApi;
 /// <summary>
 /// WIP
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICodeTypedApiHelper: ICodeAnyApiHelper
 {
     #region Content, Header, App, Data, Resources, Settings

@@ -7,6 +7,7 @@ using ToSic.Sys.DI;
 namespace ToSic.Sxc.DataSources;
 
 [PrivateApi]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 [VisualQuery(
     NiceName = "Code Generators",
     NameId = "f512e44b-5b34-4a32-bfe3-d46d46800a7f",
