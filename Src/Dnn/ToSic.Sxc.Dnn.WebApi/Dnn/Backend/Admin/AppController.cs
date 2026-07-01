@@ -66,11 +66,13 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     //public ICollection<SiteLanguageDto> Languages(int appId) => Real.Languages(appId);
 
-    /// <inheritdoc />
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public AppExportInfoDto Statistics(int zoneId, int appId) => Real.Statistics(zoneId, appId);
+    // Replaced by DataSource System.AppStatistics through query System.SysData.
+    // Use app/auto/query/System.SysData/Default with SysDataSource=System.AppStatistics.
+    ///// <inheritdoc />
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //public AppExportInfoDto Statistics(int zoneId, int appId) => Real.Statistics(zoneId, appId);
 
 
     /// <inheritdoc />
