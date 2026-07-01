@@ -24,11 +24,6 @@ public class AppStatistics : CustomDataSource
     public AppStatistics(Dependencies services, LazySvc<ExportApp> exportAppLazy)
         : base(services, logName: "Sxc.AppStats", connect: [exportAppLazy])
     {
-        ProvideOutRaw(() => new IRawEntity[] { exportAppLazy.Value.GetAppInfo(OfZoneId, AppId) }, options: () => new()
-        {
-            AutoId = true,
-            TitleField = nameof(AppExportInfoModel.Name),
-            TypeName = "AppStatistics",
-        });
+        ProvideOutRaw(() => new IRawEntity[] { exportAppLazy.Value.GetAppInfo(OfZoneId, AppId) });
     }
 }
