@@ -76,6 +76,7 @@ public static class StartupSxcWebApi
         services.TryAddTransient<AppContent>();
         services.TryAddTransient<SxcPagePublishing>();
         services.TryAddTransient<ExportApp>();
+        services.TryAddTransient<ExportAppInfo>();
         services.TryAddTransient<ImportApp>();
         services.TryAddTransient<ImportContent>();
         services.TryAddTransient<ExportContent>();
@@ -94,6 +95,7 @@ public static class StartupSxcWebApi
             
         // Helpers
         services.TryAddTransient<ImpExpHelpers>();
+        services.TryAddTransient<ExportHelper>();
 
         // Adam shared code across the APIs
         services.TryAddTransient<AdamCode>();

@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Data.Sys;
+﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Models;
@@ -89,7 +90,7 @@ public class ViewsBackend(
     {
         // todo: extra security to only allow zone change if host user
         Log.A($"delete a{appId}, t:{id}");
-        var app = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(context.Site.ZoneId, appId, context.User, context.Site.ZoneId);
+        var app = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(context.Site.ToAppIdentity(appId), context.User, context.Site.ZoneId);
         workViewsMod.New(app).DeleteView(id);
         return true;
     }

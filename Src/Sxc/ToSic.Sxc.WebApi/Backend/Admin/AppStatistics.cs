@@ -3,7 +3,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Sxc.Backend.ImportExport;
 
-namespace ToSic.Eav.WebApi.Sys.Admin;
+namespace ToSic.Sxc.Backend.Admin;
 
 [PrivateApi]
 [VisualQuery(
@@ -15,15 +15,15 @@ namespace ToSic.Eav.WebApi.Sys.Admin;
     DataConfidentiality = DataConfidentiality.Confidential,
     UiHint = "Export statistics for the current app"
 )]
+// ReSharper disable once UnusedMember.Global
 public class AppStatistics : CustomDataSource
 {
-
     [Configuration(Field = "ZoneId")]
     public int OfZoneId => Configuration.GetThis(ZoneId);
 
-    public AppStatistics(Dependencies services, LazySvc<ExportApp> exportAppLazy)
+    public AppStatistics(Dependencies services, ExportAppInfo exportAppLazy)
         : base(services, logName: "Sxc.AppStats", connect: [exportAppLazy])
     {
-        ProvideOutRaw(() => new IRawEntity[] { exportAppLazy.Value.GetAppInfo(OfZoneId, AppId) });
+        ProvideOutRaw(() => new IRawEntity[] { exportAppLazy.GetAppInfo(new AppIdentity(OfZoneId, AppId)) });
     }
 }

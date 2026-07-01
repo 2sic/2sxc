@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.Sys.Paths;
+﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Data.Processing;
 using ToSic.Eav.ImportExport.Integration;
 using ToSic.Eav.ImportExport.Sys.ImportHelpers;
@@ -30,14 +31,12 @@ public class AppStateSyncRestore(
         connect: [xmlImportWithFilesLazy, impExpHelpers, workAppsRemove, site, user, env, zipImport, features, appPathSvc]),
         ILowCodeAction<AppStateSyncRestore.Parameters, ImportResultDto>
 {
-    public record Parameters(int ZoneId, int AppId, string DefaultLanguage, bool WithSiteFiles);
+    public record Parameters(int ZoneId, int AppId, string DefaultLanguage, bool WithSiteFiles): IAppIdentity;
 
     public async Task<ActionData<ImportResultDto>> Run(LowCodeActionContext context, ActionData<Parameters> ad)
     {
         var parameters = ad.Data;
-        var zoneId = parameters.ZoneId;
-        var appId = parameters.AppId;
-        var l = Log.Fn<ImportResultDto>($"Reset App {zoneId}/{appId}");
+        var l = Log.Fn<ImportResultDto>($"Reset App {parameters.Show()}");
         var result = new ImportResultDto();
 
         SecurityHelpers.ThrowIfNotSiteAdmin(user, Log);
@@ -47,10 +46,10 @@ public class AppStateSyncRestore(
                 "App Sync Restore Disabled is active, probably as a protective measure.");
 
         // Ensure feature available...
-        ExportApp.SyncWithSiteFilesVerifyFeaturesOrThrow(features, parameters.WithSiteFiles);
+        ExportHelper.SyncWithSiteFilesVerifyFeaturesOrThrow(features, parameters.WithSiteFiles);
 
         var contextZoneId = site.ZoneId;
-        var appRead = impExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, contextZoneId);
+        var appRead = impExpHelpers.GetAppAndCheckZoneSwitchPermissions(parameters, user, contextZoneId);
         var appPaths = appPathSvc.Get(appRead, site);
 
         // migrate old .data/app.xml to App_Data
@@ -75,6 +74,8 @@ public class AppStateSyncRestore(
         }
 
         // 2. Now we can delete the app before we prepare the import
+        var zoneId = parameters.ZoneId;
+        var appId = parameters.AppId;
         workAppsRemove.RemoveAppInSiteAndEav(zoneId, appId, false);
 
         // 3. Optional reset SiteFiles

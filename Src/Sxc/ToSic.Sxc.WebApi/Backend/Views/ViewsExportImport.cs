@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.Sys.Paths;
+﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Eav.Environment.Sys.ServerPaths;
@@ -42,7 +43,7 @@ public class ViewsExportImport(
     {
         var logCall = Log.Fn<THttpResponseType>($"{appId}, {viewId}");
         SecurityHelpers.ThrowIfNotSiteAdmin(context.User, Log);
-        var appReader = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(context.Site.ZoneId, appId, context.User, context.Site.ZoneId);
+        var appReader = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(context.Site.ToAppIdentity(appId), context.User, context.Site.ZoneId);
         var bundle = new BundleEntityWithAssets
         {
             Entity = appReader.List.GetOne(viewId)!.IfOfType(Settings.TemplateContentType)!
@@ -95,7 +96,7 @@ public class ViewsExportImport(
         try
         {
             // 0.1 Check permissions, get the app, 
-            var appRead = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(context.Site.ZoneId, appId, context.User, context.Site.ZoneId);
+            var appRead = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(context.Site.ToAppIdentity(appId), context.User, context.Site.ZoneId);
             var appPaths = appPathSvc.Get(appRead, context.Site);
 
             // 0.2 Verify it's json etc.

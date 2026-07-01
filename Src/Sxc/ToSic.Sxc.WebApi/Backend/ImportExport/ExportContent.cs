@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.AppReader.Sys;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys.XmlExport;
@@ -22,16 +23,16 @@ public class ExportContent(
 
     public ExportPartsOverviewDto PreExportSummary(int zoneId, int appId, string scope)
     {
-        Log.A($"get content info for z#{zoneId}, a#{appId}, scope:{scope} super?:{user.IsSystemAdmin}");
-        var contextZoneId = site.ZoneId;
-        var currentApp = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, contextZoneId);
+        var appIdentity = new AppIdentity(zoneId, appId);
+        var l = Log.Fn<ExportPartsOverviewDto>($"get content info for {appIdentity.Show()} scope:{scope} super?:{user.IsSystemAdmin}");
+        var currentApp = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(appIdentity, user, site.ZoneId);
 
         var appCtx = workEntities.CtxSvc.ContextPlus(currentApp);
         var contentTypes = currentApp.ContentTypes.OfScope(scope);
         var entities = workEntities.New(appCtx).All();
         var templates = workViews.New(appCtx).GetAll();
 
-        return new()
+        return l.Return(new()
         {
             ContentTypes = contentTypes.Select(c => new ExportPartsContentTypesDto
             {
@@ -59,7 +60,7 @@ public class ExportContent(
                     Id = t.Id,
                     Name = t.Name
                 })
-        };
+        });
     }
 
 
@@ -68,10 +69,11 @@ public class ExportContent(
         var l = Log.Fn<THttpResponseType>($"export content z#{zoneId}, a#{appId}, ids:{entityIdsString}, templId:{templateIdsString}");
         SecurityHelpers.ThrowIfNotSiteAdmin(user, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
-        var currentApp = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, site.ZoneId);
+        var specs = new AppExportSpecs(zoneId, appId);
+        var currentApp = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(specs, user, site.ZoneId);
 
         var fileName = $"2sxcContentExport_{currentApp.Specs.ToFileNameWithVersion()}.xml";
-        var fileXml = xmlExporter.Init(new AppExportSpecs(zoneId, appId), currentApp, false,
+        var fileXml = xmlExporter.Init(specs, currentApp, false,
             contentTypeIdsString?.Split(';') ?? [],
             entityIdsString?.Split(';') ?? []
         ).GenerateNiceXml();
