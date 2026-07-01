@@ -29,9 +29,9 @@ public class ExportApp(
     : ServiceBase("Bck.Export",
         connect: [workEntities, appWorkCtxSvc, workViews, zoneMapper, export, site, user, impExpHelpers, appPathSvc])
 {
-    public AppExportInfoDto GetAppInfo(int zoneId, int appId)
+    public AppExportInfoModel GetAppInfo(int zoneId, int appId)
     {
-        var l = Log.Fn<AppExportInfoDto>($"get app info for app:{appId} and zone:{zoneId}");
+        var l = Log.Fn<AppExportInfoModel>($"get app info for app:{appId} and zone:{zoneId}");
         var contextZoneId = site.ZoneId;
         var appReader = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, contextZoneId);
         var appPaths = appPathSvc.Get(appReader, site);
@@ -47,8 +47,9 @@ public class ExportApp(
 
         return l.Return(new()
         {
+            Id = appId,
             Name = specs.Name,
-            Guid = specs.NameId,
+            NameId = specs.NameId,
             Version = specs.VersionSafe(),
             EntitiesCount = appEntities.All().Count(e => !e.HasAncestor()),
             LanguagesCount = cultCount,
@@ -56,15 +57,20 @@ public class ExportApp(
             HasRazorTemplates = appViews.GetRazor().Any(),
             HasTokenTemplates = appViews.GetToken().Any(),
             FilesCount = zipExport.AppFileManager.AllFiles().Count() // PortalFilesCount
-                         + (appHasCustomParent ? 0 : zipExport.AppFileManagerGlobal.AllFiles().Count()), // GlobalFilesCount
+                         + (appHasCustomParent // GlobalFilesCount
+                             ? 0
+                             : zipExport.AppFileManagerGlobal.AllFiles().Count()),
             TransferableFilesCount = zipExport.AppFileManager.GetAllTransferableFiles().Count() // TransferablePortalFilesCount
-                                     + (appHasCustomParent ? 0 : zipExport.AppFileManagerGlobal.GetAllTransferableFiles().Count()), // TransferableGlobalFilesCount
+                                     + (appHasCustomParent // TransferableGlobalFilesCount
+                                         ? 0
+                                         : zipExport.AppFileManagerGlobal.GetAllTransferableFiles().Count()),
         });
     }
 
     internal static void SyncWithSiteFilesVerifyFeaturesOrThrow(ISysFeaturesService features, bool withSiteFiles)
     {
-        if (!withSiteFiles) return;
+        if (!withSiteFiles)
+            return;
         features.ThrowIfNotEnabled("Requires features enabled to sync with site files ",
             BuiltInFeatures.AppSyncWithSiteFiles.Guid);
     }
