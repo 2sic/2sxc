@@ -1,10 +1,9 @@
-﻿using ToSic.Eav.Apps.Sys;
-using ToSic.Eav.Data.Sys;
+﻿using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Models;
 using ToSic.Eav.Serialization.Sys.Options;
-using ToSic.Sxc.Backend.ImportExport;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Web.Sys.LightSpeed;
 using ToSic.Sys.Utils;
 
@@ -14,10 +13,9 @@ namespace ToSic.Sxc.Backend.Views;
 public class ViewsBackend(
     GenWorkBasic<WorkViewsMod> workViewsMod,
     GenWorkPlus<WorkViews> workViews,
-    IContextOfSite context,
     LazySvc<IConvertToEavLight> convertToEavLight,
     Generator<ImpExpHelpers> impExpHelpers)
-    : ServiceBase("Bck.Views", connect: [workViewsMod, convertToEavLight, impExpHelpers, workViews, context])
+    : ServiceBase("Bck.Views", connect: [workViewsMod, convertToEavLight, impExpHelpers, workViews])
 {
     public IEnumerable<ViewDetailsDto> GetAll(int appId)
     {
@@ -89,9 +87,9 @@ public class ViewsBackend(
     public bool Delete(int appId, int id)
     {
         // todo: extra security to only allow zone change if host user
-        Log.A($"delete a{appId}, t:{id}");
-        var app = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(context.Site.ToAppIdentity(appId), context.User, context.Site.ZoneId);
+        var l = Log.Fn<bool>($"delete a{appId}, t:{id}");
+        var app = impExpHelpers.New().GetReaderAfterZoneSwitchPermissionCheck(appId);
         workViewsMod.New(app).DeleteView(id);
-        return true;
+        return l.ReturnTrue();
     }
 }

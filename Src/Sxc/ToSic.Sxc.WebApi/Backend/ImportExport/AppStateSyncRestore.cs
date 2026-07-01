@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps.Sys;
-using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Data.Processing;
 using ToSic.Eav.ImportExport.Integration;
 using ToSic.Eav.ImportExport.Sys.ImportHelpers;
@@ -7,7 +6,7 @@ using ToSic.Eav.ImportExport.Sys.XmlImport;
 using ToSic.Eav.ImportExport.Sys.Zip;
 using ToSic.Eav.Persistence.Sys.Logging;
 using ToSic.Eav.Sys;
-using ToSic.Eav.WebApi.Sys.Security;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Users;
 
@@ -25,10 +24,9 @@ public class AppStateSyncRestore(
     IUser user,
     IImportExportEnvironment env,
     ZipImport zipImport,
-    ISysFeaturesService features,
-    IAppPathsMicroSvc appPathSvc)
+    ISysFeaturesService features)
     : ServiceBase("Bck.Export",
-        connect: [xmlImportWithFilesLazy, impExpHelpers, workAppsRemove, site, user, env, zipImport, features, appPathSvc]),
+        connect: [xmlImportWithFilesLazy, impExpHelpers, workAppsRemove, site, user, env, zipImport, features]),
         ILowCodeAction<AppStateSyncRestore.Parameters, ImportResultDto>
 {
     public record Parameters(int ZoneId, int AppId, string DefaultLanguage, bool WithSiteFiles): IAppIdentity;
@@ -39,7 +37,6 @@ public class AppStateSyncRestore(
         var l = Log.Fn<ImportResultDto>($"Reset App {parameters.Show()}");
         var result = new ImportResultDto();
 
-        SecurityHelpers.ThrowIfNotSiteAdmin(user, Log);
 
         if (features.IsEnabled(BuiltInFeatures.AppStateSyncRestoreDisabled))
             throw new FeaturesRefusingException(BuiltInFeatures.AppStateSyncRestoreDisabled.NameId,
@@ -48,9 +45,7 @@ public class AppStateSyncRestore(
         // Ensure feature available...
         ExportHelper.SyncWithSiteFilesVerifyFeaturesOrThrow(features, parameters.WithSiteFiles);
 
-        var contextZoneId = site.ZoneId;
-        var appRead = impExpHelpers.GetAppAndCheckZoneSwitchPermissions(parameters, user, contextZoneId);
-        var appPaths = appPathSvc.Get(appRead, site);
+        var (_, appPaths) = impExpHelpers.GetReaderAndPathsAfterZoneSwitchPermissionCheck(parameters);
 
         // migrate old .data/app.xml to App_Data
         ZipImport.MigrateOldAppDataFile(appPaths.PhysicalPath);

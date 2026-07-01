@@ -1,11 +1,9 @@
-﻿using ToSic.Eav.Apps.Sys.Paths;
-using ToSic.Eav.Data.Processing;
+﻿using ToSic.Eav.Data.Processing;
 using ISite = ToSic.Eav.Context.ISite;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys.Zip;
-using ToSic.Eav.WebApi.Sys.Security;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sys.Capabilities.Features;
-using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Backend.ImportExport;
 
@@ -13,11 +11,9 @@ namespace ToSic.Sxc.Backend.ImportExport;
 public class AppStateSyncSave(
     Generator<ZipExport, ZipExport.Options> exportGenerator,
     ISite site,
-    IUser user,
     Generator<ImpExpHelpers> impExpHelpers,
-    ISysFeaturesService features,
-    IAppPathsMicroSvc appPathSvc)
-    : ServiceBase("Bck.Export", connect: [exportGenerator, site, user, features, impExpHelpers, appPathSvc]),
+    ISysFeaturesService features)
+    : ServiceBase("Bck.Export", connect: [exportGenerator, site, features, impExpHelpers]),
         ILowCodeAction<AppExportSpecs, bool>
 {
 
@@ -25,18 +21,16 @@ public class AppStateSyncSave(
     {
         var specs = data.Data;
         var l = Log.Fn<bool>(specs.Dump());
-        SecurityHelpers.ThrowIfNotSiteAdmin(user, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
         if (features.IsEnabled(BuiltInFeatures.AppStateSyncSaveDisabled))
             throw new FeaturesRefusingException(BuiltInFeatures.AppStateSyncSaveDisabled.NameId,
                 "App Sync Save Disabled is active, probably as a protective measure.");
 
+        
         // Ensure feature available...
         ExportHelper.SyncWithSiteFilesVerifyFeaturesOrThrow(features, specs.WithSiteFiles);
 
-        var contextZoneId = site.ZoneId;
-        var appRead = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(specs, user, contextZoneId);
-        var appPaths = appPathSvc.Get(appRead, site);
+        var (appRead, appPaths) = impExpHelpers.New().GetReaderAndPathsAfterZoneSwitchPermissionCheck(specs);
 
         var zipExport = exportGenerator.New(new()
         {
