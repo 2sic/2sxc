@@ -65,7 +65,9 @@ public class AppControllerReal(
     //public List<SiteLanguageDto> Languages(int appId)
     //    => languagesBackendLazy.Value.GetLanguagesOfApp(appReadersLazy.Value.Get(appId), true);
 
-    public AppExportInfoDto Statistics(int zoneId, int appId) => exportAppLazy.Value.GetAppInfo(zoneId, appId);
+    // Replaced by DataSource System.AppStatistics through query System.SysData.
+    // Use app/auto/query/System.SysData/Default with SysDataSource=System.AppStatistics.
+    //public AppExportInfoDto Statistics(int zoneId, int appId) => exportAppLazy.Value.GetAppInfo(zoneId, appId);
 
     public bool FlushCache(int zoneId, int appId)
     {
