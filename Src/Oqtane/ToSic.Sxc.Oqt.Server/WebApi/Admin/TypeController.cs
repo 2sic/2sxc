@@ -33,10 +33,12 @@ public class TypeController() : OqtStatefulControllerBase(RealController.LogSuff
     public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false) => Real.List(appId, scope, withStatistics);
 
 
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [Authorize(Roles = RoleNames.Admin)]
-    public ScopesDto Scopes(int appId) => Real.Scopes(appId);
+    // 2rb: Replaced by System.Scopes DataSource through query System.SysData.
+    // Use app/auto/query/System.SysData/Default with SysDataSource=System.Scopes.
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[Authorize(Roles = RoleNames.Admin)]
+    //public ScopesDto Scopes(int appId) => Real.Scopes(appId);
 
     // 2rb: Replaced by ContentTypeDetails DataSource.
     //[HttpGet]
