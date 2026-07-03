@@ -76,6 +76,8 @@ public class WorkApps(IAppStateCacheService appStates, IAppReaderFactory appRead
     /// <returns></returns>
     public ICollection<IAppReader> GetInheritableApps(ISite site)
     {
+        var l = Log.Fn<ICollection<IAppReader>>();
+        
         var defaultAppId = appsCatalog.DefaultAppIdentity(site.ZoneId).AppId;
 
         // Get existing apps, as we should not list inheritable apps which are already inherited
@@ -88,26 +90,32 @@ public class WorkApps(IAppStateCacheService appStates, IAppReaderFactory appRead
 
         var zones = appsCatalog.Zones;
         var result = zones
-            // Skip all global apps on the current site, as they shouldn't be inheritable
+            // Skip all global apps on the current site, as they shouldn't be inheritable in this site
             .Where(z => z.Key != site.ZoneId)
             .SelectMany(zSet =>
             {
-                // todo: probably the ZoneId should come from the site?
                 var zId = zSet.Key;
                 var appIds = appsCatalog.Apps(zId);
 
                 return appIds
-                    .Select(a => new { Identity = new AppIdentityPure(zId, a.Key), NameId = a.Value })
-                    .Where(a => appStates.IsCached(a.Identity) || a.NameId == KnownAppsConstants.DefaultAppGuid)
-                    .Select(a => appReaders.Get(a.Identity))
-                    .Where(reader => reader.IsShared()
-                                     && !siteApps.Any(sa => sa.Equals(reader.Specs.Folder, StringComparison.InvariantCultureIgnoreCase)))
-                    //.Select(a => _appGenerator.New().PreInit(site).Init(a, buildConfig) as IApp)
-                    .OrderBy(reader => reader!.Specs.Name)
+                    .Select(a => new AppIdentityPure(zId, a.Key))
+                    // Skip all which are not yet in memory - not perfect
+                    // ...but otherwise it can take very long after a restart, especially with hundreds of sites
+                    // Means that for us to be able to find a master app
+                    // that apps-management must have been accessed at least once after the restart, so that the app is in memory
+                    .Where(appStates.IsCached)
+                    .Select(appReaders.Get)
+                    .Where(reader =>
+                        // Only show apps which are shared
+                        reader.IsShared()
+                        // and not already in the current site (with the same folder name)
+                        && !siteApps.Any(sa => sa.EqualsInsensitive(reader.Specs.Folder)))
+                    .OrderBy(reader => reader.Specs.Name)
                     .ToListOpt();
             })
             .ToListOpt();
-        return result;
+        
+        return l.Return(result);
     }
 
 }
