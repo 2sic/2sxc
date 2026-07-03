@@ -76,10 +76,14 @@ public class WorkApps(IAppStateCacheService appStates, IAppReaderFactory appRead
     /// <returns></returns>
     public ICollection<IAppReader> GetInheritableApps(ISite site)
     {
+        var defaultAppId = appsCatalog.DefaultAppIdentity(site.ZoneId).AppId;
+
         // Get existing apps, as we should not list inheritable apps which are already inherited
         var siteApps = appsCatalog.Apps(site.ZoneId)
-            // TODO: #AppStates we could only get the specs here...
-            .Select(a => appReaders.Get(a.Key).Specs.Folder)
+            .Select(a => appReaders.Get(new AppIdentityPure(site.ZoneId, a.Key)))
+            // Content is registered by default; only block inheritance once it has real data.
+            .Where(appReader => appReader.AppId != defaultAppId || appReader.List.Count > 3)
+            .Select(a => a.Specs.Folder)
             .ToListOpt();
 
         var zones = appsCatalog.Zones;
@@ -93,20 +97,9 @@ public class WorkApps(IAppStateCacheService appStates, IAppReaderFactory appRead
                 var appIds = appsCatalog.Apps(zId);
 
                 return appIds
-                    //.Select(a => new AppIdentityPure(zId, a.Key))
-                    .Select(a =>
-                    {
-                        var appIdentity = new AppIdentityPure(zId, a.Key);
-                        return appStates.IsCached(appIdentity)
-                            ? appReaders.Get(appIdentity)
-                            : null!; // will be filtered out later
-                    })
-                    .Where(reader =>
-                    {
-                        if (reader == null)
-                            return false;
-                        return reader.IsShared() && !siteApps.Any(sa => sa.Equals(reader.Specs.Folder, StringComparison.InvariantCultureIgnoreCase));
-                    })
+                    .Select(a => appReaders.Get(new AppIdentityPure(zId, a.Key)))
+                    .Where(reader => reader.IsShared()
+                                     && !siteApps.Any(sa => sa.Equals(reader.Specs.Folder, StringComparison.InvariantCultureIgnoreCase)))
                     //.Select(a => _appGenerator.New().PreInit(site).Init(a, buildConfig) as IApp)
                     .OrderBy(reader => reader!.Specs.Name)
                     .ToListOpt();
