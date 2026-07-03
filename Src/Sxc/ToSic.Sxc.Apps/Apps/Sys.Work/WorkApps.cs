@@ -97,7 +97,9 @@ public class WorkApps(IAppStateCacheService appStates, IAppReaderFactory appRead
                 var appIds = appsCatalog.Apps(zId);
 
                 return appIds
-                    .Select(a => appReaders.Get(new AppIdentityPure(zId, a.Key)))
+                    .Select(a => new { Identity = new AppIdentityPure(zId, a.Key), NameId = a.Value })
+                    .Where(a => appStates.IsCached(a.Identity) || a.NameId == KnownAppsConstants.DefaultAppGuid)
+                    .Select(a => appReaders.Get(a.Identity))
                     .Where(reader => reader.IsShared()
                                      && !siteApps.Any(sa => sa.Equals(reader.Specs.Folder, StringComparison.InvariantCultureIgnoreCase)))
                     //.Select(a => _appGenerator.New().PreInit(site).Init(a, buildConfig) as IApp)
