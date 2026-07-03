@@ -4,7 +4,7 @@ using ToSic.Eav.Services;
 using ToSic.Sxc.Apps.Sys.EditAssets;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sys.Users;
-using static System.StringComparison;
+using ToSic.Sys.Utils;
 using AppEditionsDataSource = ToSic.Sxc.DataSources.AppEditions;
 
 namespace ToSic.Sxc.Backend.Admin.AppFiles;
@@ -111,18 +111,18 @@ public partial class AppFilesControllerReal(
         // TBD: future purpose implementation
         purpose = (purpose ?? AssetTemplates.ForTemplate).ToLowerInvariant().Trim();
         var defId = AssetTemplates.RazorTyped.Key;
-        if (purpose.Equals(AssetTemplates.ForApi, InvariantCultureIgnoreCase))
+        if (purpose.EqualsInsensitive(AssetTemplates.ForApi))
             defId = AssetTemplates.ApiHybrid.Key;
-        if (purpose.Equals(AssetTemplates.ForDataSource, InvariantCultureIgnoreCase))
+        if (purpose.EqualsInsensitive(AssetTemplates.ForDataSource))
             defId = AssetTemplates.DataSourceHybrid.Key;
-        if (purpose.Equals(AssetTemplates.ForSearch, InvariantCultureIgnoreCase))
+        if (purpose.EqualsInsensitive(AssetTemplates.ForSearch))
             defId = AssetTemplates.DnnSearch.Key;
 
         // For templates we also check the type
-        if (purpose.Equals(AssetTemplates.ForTemplate, InvariantCultureIgnoreCase))
+        if (purpose.EqualsInsensitive(AssetTemplates.ForTemplate))
         {
             type = type?.ToLowerInvariant().Trim() ?? "";
-            if (type.Equals(AssetTemplates.TypeToken, InvariantCultureIgnoreCase))
+            if (type.EqualsInsensitive(AssetTemplates.TypeToken))
                 defId = AssetTemplates.Token.Key;
         }
 
