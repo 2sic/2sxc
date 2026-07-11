@@ -120,5 +120,7 @@ public record PageModelRaw: IRawEntity, IPageModel, IHasRelationshipKeys
     // Not implemented, and not sure if we should, since it would potentially introduce a lot of prefetch data
     //[ContentTypeAttributeSpecs(Type = ValueTypes.Entity, Description = "Reference to the child pages.")]
     //public IEnumerable<IPageModel> Children { get; init; }
-    
+
+    IConvertToRawEntity? IGetRawConverter.GetConverter() => null;
+
 }

@@ -73,4 +73,6 @@ public abstract record FileFolderBase: IRawEntity, IHasRelationshipKeys
 
     [PrivateApi]
     public abstract IEnumerable<object> RelationshipKeys(RawConvertOptions options);
+
+    IConvertToRawEntity? IGetRawConverter.GetConverter() => null;
 }

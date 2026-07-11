@@ -220,4 +220,6 @@ public class DnnUserProfileDataRaw : IRawEntity
         { nameof(Name), Name },
     };
 
+    IConvertToRawEntity? IGetRawConverter.GetConverter() => null;
+
 }

@@ -116,6 +116,8 @@ internal record DataCopilotConfiguration: IDataCopilotConfiguration, IRawEntity
         };
 
     #endregion
+
+    IConvertToRawEntity? IGetRawConverter.GetConverter() => null;
 }
 
 /// <summary>

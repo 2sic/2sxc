@@ -48,4 +48,5 @@ public record UserRoleModel: IRawEntity, IRole, IUserRoleModel
 
     public string Name { get; init; } = "unknown";
 
+    IConvertToRawEntity? IGetRawConverter.GetConverter() => null;
 }

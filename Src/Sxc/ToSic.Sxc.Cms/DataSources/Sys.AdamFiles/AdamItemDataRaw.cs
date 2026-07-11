@@ -64,4 +64,6 @@ public class AdamItemDataRaw: IRawEntity
             { nameof(Size), Size },
             { nameof(Path), Path }
         };
+
+    IConvertToRawEntity? IGetRawConverter.GetConverter() => null;
 }

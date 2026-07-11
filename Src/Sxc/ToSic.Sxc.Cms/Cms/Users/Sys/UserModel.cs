@@ -94,4 +94,9 @@ public record UserModel : IRawEntity, IHasIdentityNameId, IUserModel
 
     public IEnumerable<IUserRoleModel> Roles { get; init; } = [];
 
+
+    // TODO: @2dm #ConvertToRawEntity - implement a converter for this, so we can use it in the DataSource
+    IConvertToRawEntity? IGetRawConverter.GetConverter() => null;
+
+
 }
