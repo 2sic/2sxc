@@ -1,4 +1,3 @@
-using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Data.Raw.Sys;
 using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Eav.Models;
@@ -116,7 +115,6 @@ internal record DataCopilotConfiguration: IDataCopilotConfiguration, IRawEntity
 
     #endregion
 
-    IConvertToRawEntity? IGetRawConverter.GetConverter() => null;
 }
 
 /// <summary>

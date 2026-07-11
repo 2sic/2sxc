@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Cms.Users.Sys;
     Description = "User-Role in the site",
     Name = TypeName
 )]
-public record UserRoleModel: IRawEntity, IRole, IUserRoleModel, IGetRawConverter
+public record UserRoleModel: IRawEntity, IRole, IUserRoleModel
 {
     #region IRawEntity
 
@@ -47,7 +47,5 @@ public record UserRoleModel: IRawEntity, IRole, IUserRoleModel, IGetRawConverter
     public DateTime Modified { get; init; } = DateTime.Now;
 
     public string Name { get; init; } = "unknown";
-
-    IConvertToRawEntity? IGetRawConverter.GetConverter() => null;
 
 }

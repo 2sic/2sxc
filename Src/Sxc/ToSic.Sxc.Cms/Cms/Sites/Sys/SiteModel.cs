@@ -78,6 +78,4 @@ public record SiteModel: IRawEntity, ISiteModel
     /// <inheritdoc />
     public int PrimaryAppId { get; init; }
 
-    IConvertToRawEntity? IGetRawConverter.GetConverter() => null;
-
 }

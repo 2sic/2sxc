@@ -5,7 +5,6 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
-using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Data.Raw.Sys;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.DataSource;
@@ -148,32 +147,16 @@ public class DnnUserProfile : CustomDataSourceAdvanced
         return l.Return(userProfileDataFactory.Create(results), "ok");
     }
 
-    private static string GetDnnProfileValue(UserInfo user, string property)
-    {
-        string value;
-        switch (property.ToLowerInvariant())
+    private static string GetDnnProfileValue(UserInfo user, string property) =>
+        property.ToLowerInvariant() switch
         {
-            case "displayname":
-                value = user.DisplayName;
-                break;
-            case "email":
-                value = user.Email;
-                break;
-            case "firstname":
-                value = user.FirstName;
-                break;
-            case "lastname":
-                value = user.LastName;
-                break;
-            case "username":
-                value = user.Username;
-                break;
-            default:
-                value = user.Profile.GetPropertyValue(property);
-                break;
-        }
-        return value;
-    }
+            "displayname" => user.DisplayName,
+            "email" => user.Email,
+            "firstname" => user.FirstName,
+            "lastname" => user.LastName,
+            "username" => user.Username,
+            _ => user.Profile.GetPropertyValue(property)
+        };
 }
 
 /// <summary>
@@ -217,7 +200,5 @@ public class DnnUserProfileDataRaw : IRawEntity
     };
 
     public Dictionary<string, object> Properties { get; } = new();
-
-    IConvertToRawEntity? IGetRawConverter.GetConverter() => null;
 
 }

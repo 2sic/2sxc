@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Data.Build;
-using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Data.Raw.Sys;
 using ToSic.Eav.Data.Sys.ContentTypes;
 
@@ -18,7 +17,7 @@ namespace ToSic.Sxc.Cms.Users.Sys;
     Description = "User Information",
     Name = MyContentTypeName
 )]
-public record UserModel : /*IRawEntity,*/ IHasIdentityNameId, IUserModel, IGetRawConverter
+public record UserModel : IHasIdentityNameId, IUserModel, IGetRawConverter
 {
     #region Types and Names for Raw Entities
 
@@ -96,10 +95,10 @@ public record UserModel : /*IRawEntity,*/ IHasIdentityNameId, IUserModel, IGetRa
 
 
     // TODO: @2dm #ConvertToRawEntity - implement a converter for this, so we can use it in the DataSource
-    IConvertToRawEntity IGetRawConverter.GetConverter() => Converter;
+    IRawEntityConverter IGetRawConverter.GetConverter() => Converter;
 
-    private static IConvertToRawEntity Converter { get; } =
-        new ConvertToRawFactory<UserModel>((source, options) =>
+    private static IRawEntityConverter Converter { get; } =
+        new ConvertToRawWithFactory<UserModel>((source, options) =>
         {
             var data = new Dictionary<string, object?>
             {
