@@ -172,7 +172,7 @@ public class Users : CustomDataSourceAdvanced
             Relationships = relationships,
         });
 
-        var users = userFactory.CreateFromConvertWip(usersRaw);
+        var users = userFactory.Create(usersRaw);
         List<IEntity> roles = [];
 
         // If we should include the roles, create them now and attach
