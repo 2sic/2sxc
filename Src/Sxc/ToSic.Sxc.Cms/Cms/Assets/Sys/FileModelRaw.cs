@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Data.Build;
-using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Data.Sys.ContentTypes;
 
 namespace ToSic.Sxc.Cms.Assets.Sys;
@@ -13,9 +12,10 @@ namespace ToSic.Sxc.Cms.Assets.Sys;
 /// We'll probably move it to another namespace some day.
 /// </summary>
 /// <remarks>
-/// Make sure the property names never change, as they are critical for the created Entity.
+/// * Make sure the property names never change, as they are critical for the created Entity.
+/// * Was InternalApi till v17 - hide till we know how to handle to-typed-conversions
 /// </remarks>
-[PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
+[PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [ContentTypeSpecs(
     Guid = "3cf0822f-d276-469a-bbd1-cc84fd6ff748",
@@ -25,12 +25,6 @@ namespace ToSic.Sxc.Cms.Assets.Sys;
 public record FileModelRaw: FileFolderBase, IFileModelSync
 {
     internal const string TypeName = "File";
-
-    internal static DataFactoryOptions Options = new()
-    {
-        TitleField = nameof(Path),
-        Type = typeof(FileModelRaw)
-    };
 
     /// <inheritdoc cref="IFileModelSync.Name"/>
     [ContentTypeAttributeSpecs(Description = "The file name without extension, like my-image")]
@@ -42,23 +36,17 @@ public record FileModelRaw: FileFolderBase, IFileModelSync
     /// <inheritdoc cref="IFileModelSync.Size"/>
     public int Size { get; init; }
 
-    /// <summary>
-    /// Data but without ID, Guid, Created, Modified
-    /// </summary>
     [PrivateApi]
-    public override IDictionary<string, object?> Attributes(RawConvertOptions options)
-        => new Dictionary<string, object?>(base.Attributes(options))
-        {
-            { nameof(Extension), Extension },
-            { nameof(Size), Size },
-        };
+    public override IDictionary<string, object?> Values => field ??= new Dictionary<string, object?>(base.Values)
+    {
+        { nameof(Extension), Extension },
+        { nameof(Size), Size },
+    };
 
     [PrivateApi]
-    public override IEnumerable<object> RelationshipKeys(RawConvertOptions options)
-        => new List<object>
-        {
-            // For relationships looking for files in this folder
-            $"FileIn:{ParentFolderInternal}"
-        };
-
+    public override IEnumerable<object> RelationshipKeys => field ??= new List<object>
+    {
+        // For relationships looking for files in this folder
+        $"FileIn:{ParentFolderInternal}"
+    };
 }

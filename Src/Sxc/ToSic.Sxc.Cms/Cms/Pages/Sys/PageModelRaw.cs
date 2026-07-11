@@ -31,39 +31,38 @@ public record PageModelRaw: IRawEntity, IPageModel, IHasRelationshipKeys
         Type = typeof(PageModelRaw)
     };
 
-    IDictionary<string, object?> IRawEntity.Attributes(RawConvertOptions options)
-        => new Dictionary<string, object?>
-        {
-            // v14+
-            { nameof(Title), Title },
-            { nameof(Name), Name },
-            { nameof(ParentId), ParentId },
-            { nameof(IsNavigation), IsNavigation },
-            { nameof(Path), Path },
-            { nameof(Url), Url },
-            // New in v15.01
-            { nameof(IsClickable), IsClickable },
-            { nameof(Order), Order },
-            { nameof(IsDeleted), IsDeleted },
-            { nameof(Level), Level },
-            { nameof(HasChildren), HasChildren },
-            // New in v15.02
-            { nameof(LinkTarget), LinkTarget },
+    IDictionary<string, object?> IRawEntity.Values => field ??= new Dictionary<string, object?>
+    {
+        // v14+
+        { nameof(Title), Title },
+        { nameof(Name), Name },
+        { nameof(ParentId), ParentId },
+        { nameof(IsNavigation), IsNavigation },
+        { nameof(Path), Path },
+        { nameof(Url), Url },
+        // New in v15.01
+        { nameof(IsClickable), IsClickable },
+        { nameof(Order), Order },
+        { nameof(IsDeleted), IsDeleted },
+        { nameof(Level), Level },
+        { nameof(HasChildren), HasChildren },
+        // New in v15.02
+        { nameof(LinkTarget), LinkTarget },
 
-            { "Children", ChildrenRaw }
-        };
+        { "Children", ChildrenRaw }
+    };
 
     private const string ParentPrefix = "ParentId:";
 
     private RawRelationship ChildrenRaw => new(key: $"{ParentPrefix}{Id}");
 
 
-    IEnumerable<object> IHasRelationshipKeys.RelationshipKeys(RawConvertOptions options)
-        => new List<object>
-        {
-            // For relationships looking for files in this folder
-            $"{ParentPrefix}{ParentId}"
-        };
+    IEnumerable<object> IHasRelationshipKeys.RelationshipKeys => field ??= new List<object>
+    {
+        // For relationships looking for files in this folder
+        $"{ParentPrefix}{ParentId}"
+    };
+
     #endregion
 
 

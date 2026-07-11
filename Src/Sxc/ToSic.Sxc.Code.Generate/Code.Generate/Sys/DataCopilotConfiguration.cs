@@ -102,18 +102,17 @@ internal record DataCopilotConfiguration: IDataCopilotConfiguration, IRawEntity
     DateTime IRawEntity.Created => DateTime.Now;
     DateTime IRawEntity.Modified => DateTime.Now;
 
-    IDictionary<string, object?> IRawEntity.Attributes(RawConvertOptions options) =>
-        new Dictionary<string, object?>
-        {
-            { nameof(CodeGenerator), CodeGenerator },
-            { nameof(AutoGenerate), AutoGenerate},
-            { nameof(ContentTypes), ContentTypes },
-            { nameof(Namespace), Namespace },
-            { nameof(TargetFolder), TargetFolder },
-            { nameof(Prefix), Prefix },
-            { nameof(Suffix), Suffix },
-            { nameof(Edition), Edition }
-        };
+    IDictionary<string, object?> IRawEntity.Values => field ??= new Dictionary<string, object?>
+    {
+        { nameof(CodeGenerator), CodeGenerator },
+        { nameof(AutoGenerate), AutoGenerate },
+        { nameof(ContentTypes), ContentTypes },
+        { nameof(Namespace), Namespace },
+        { nameof(TargetFolder), TargetFolder },
+        { nameof(Prefix), Prefix },
+        { nameof(Suffix), Suffix },
+        { nameof(Edition), Edition }
+    };
 
     #endregion
 

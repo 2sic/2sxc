@@ -201,6 +201,7 @@ public class DnnUserProfileDataRaw : IRawEntity
         TypeName = TypeName,
         TitleField = nameof(Name)
     };
+    
     public int Id { get; set; }
     public Guid Guid { get; set; }
     public string Name { get; set; } // aka DisplayName
@@ -208,17 +209,14 @@ public class DnnUserProfileDataRaw : IRawEntity
     public DateTime Created { get; set; }
     public DateTime Modified { get; set; }
 
-    public Dictionary<string, object> Properties { get; } = new();
-
-    /// <summary>
-    /// Data but without Id, Guid, Created, Modified
-    /// </summary>
     [PrivateApi]
-    public IDictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>(Properties)
+    public IDictionary<string, object> Values => field ??= new Dictionary<string, object>(Properties)
     {
         { AttributeNames.TitleNiceName, Name },
         { nameof(Name), Name },
     };
+
+    public Dictionary<string, object> Properties { get; } = new();
 
     IConvertToRawEntity? IGetRawConverter.GetConverter() => null;
 

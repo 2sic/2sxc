@@ -54,25 +54,21 @@ public abstract record FileFolderBase: IRawEntity, IHasRelationshipKeys
     [ContentTypeAttributeSpecs(Type = ValueTypes.Entity, Description = "Reference to the parent folder.")]
     public RawRelationship Folder => new(key: $"Folder:{ParentFolderInternal}");
 
-    /// <summary>
-    /// Data but without Id, Guid, Created, Modified
-    /// </summary>
     [PrivateApi]
-    public virtual IDictionary<string, object?> Attributes(RawConvertOptions options)
-        => new Dictionary<string, object?>
-        {
-            { nameof(Name), Name },
-            { nameof(FullName), FullName },
-            { nameof(Path), Path },
-            { nameof(Url), Url },
-            { nameof(Folder), Folder },
+    public virtual IDictionary<string, object?> Values => field ??= new Dictionary<string, object?>
+    {
+        { nameof(Name), Name },
+        { nameof(FullName), FullName },
+        { nameof(Path), Path },
+        { nameof(Url), Url },
+        { nameof(Folder), Folder },
 
-            // For debugging
-            //{ nameof(ParentFolderInternal), ParentFolderInternal },
-        };
+        // For debugging
+        //{ nameof(ParentFolderInternal), ParentFolderInternal },
+    };
 
     [PrivateApi]
-    public abstract IEnumerable<object> RelationshipKeys(RawConvertOptions options);
+    public abstract IEnumerable<object> RelationshipKeys { get; }
 
     IConvertToRawEntity? IGetRawConverter.GetConverter() => null;
 }

@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data.Build;
-using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Data.Raw.Sys;
 using ToSic.Eav.Data.Sys.ContentTypes;
+using ToSic.Sxc.DataSources;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Cms.Users.Sys;
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Cms.Users.Sys;
     Description = "User-Role in the site",
     Name = TypeName
 )]
-public record UserRoleModel: IRawEntity, IRole, IUserRoleModel
+public record UserRoleModel: IRawEntity, IRole, IUserRoleModel, IGetRawConverter
 {
     #region IRawEntity
 
@@ -32,7 +32,7 @@ public record UserRoleModel: IRawEntity, IRole, IUserRoleModel
         Type = typeof(UserRoleModel)
     };
 
-    IDictionary<string, object?> IRawEntity.Attributes(RawConvertOptions options)
+    IDictionary<string, object?> IRawEntity.Values
         => new Dictionary<string, object?>
         {
             { nameof(Name), Name },
@@ -49,4 +49,5 @@ public record UserRoleModel: IRawEntity, IRole, IUserRoleModel
     public string Name { get; init; } = "unknown";
 
     IConvertToRawEntity? IGetRawConverter.GetConverter() => null;
+
 }

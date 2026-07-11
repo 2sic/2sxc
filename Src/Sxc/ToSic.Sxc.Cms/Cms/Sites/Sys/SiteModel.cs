@@ -31,17 +31,16 @@ public record SiteModel: IRawEntity, ISiteModel
         Type = typeof(SiteModel)
     };
 
-    IDictionary<string, object?> IRawEntity.Attributes(RawConvertOptions options)
-        => new Dictionary<string, object?>
-        {
-            { nameof(Name), Name },
-            { nameof(Url), Url },
-            { nameof(Languages), Languages },
-            { nameof(DefaultLanguage), DefaultLanguage },
-            { nameof(ZoneId), ZoneId },
-            { nameof(ContentAppId), ContentAppId },
-            { nameof(PrimaryAppId), PrimaryAppId },
-        };
+    IDictionary<string, object?> IRawEntity.Values => field ??= new Dictionary<string, object?>
+    {
+        { nameof(Name), Name },
+        { nameof(Url), Url },
+        { nameof(Languages), Languages },
+        { nameof(DefaultLanguage), DefaultLanguage },
+        { nameof(ZoneId), ZoneId },
+        { nameof(ContentAppId), ContentAppId },
+        { nameof(PrimaryAppId), PrimaryAppId },
+    };
 
     #endregion
 

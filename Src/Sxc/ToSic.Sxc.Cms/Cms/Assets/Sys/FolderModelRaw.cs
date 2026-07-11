@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.Data.Build;
-using ToSic.Eav.Data.Raw;
-using ToSic.Eav.Data.Raw.Sys;
+﻿using ToSic.Eav.Data.Raw.Sys;
 using ToSic.Eav.Data.Sys.ContentTypes;
 
 namespace ToSic.Sxc.Cms.Assets.Sys;
@@ -14,9 +12,10 @@ namespace ToSic.Sxc.Cms.Assets.Sys;
 /// We'll probably move it to another namespace some day.
 /// </summary>
 /// <remarks>
-/// Make sure the property names never change, as they are critical for the created Entity.
+/// * Make sure the property names never change, as they are critical for the created Entity.
+/// * Was InternalApi till v17 - hide till we know how to handle to-typed-conversions
 /// </remarks>
-[PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
+[PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [ContentTypeSpecs(
     Guid = "96cda931-b677-4589-9eb2-df5a38cefff0",
@@ -26,12 +25,6 @@ namespace ToSic.Sxc.Cms.Assets.Sys;
 public record FolderModelRaw: FileFolderBase, IFolderModelSync
 {
     internal const string TypeName = "Folder";
-
-    internal static DataFactoryOptions Options = new()
-    {
-        TypeName = TypeName,
-        TitleField = nameof(Path)
-    };
 
     /// <inheritdoc cref="IFolderModelSync.Name"/>
     [ContentTypeAttributeSpecs(Description = "The folder name or blank when it's the root.")]
@@ -44,21 +37,18 @@ public record FolderModelRaw: FileFolderBase, IFolderModelSync
     public RawRelationship Files => new(key: $"FileIn:{Path}");
 
     [PrivateApi]
-    public override IDictionary<string, object?> Attributes(RawConvertOptions options)
-        => new Dictionary<string, object?>(base.Attributes(options))
-        {
-            { nameof(Folders), Folders },
-            { nameof(Files), Files },
-        };
+    public override IDictionary<string, object?> Values => field ??= new Dictionary<string, object?>(base.Values)
+    {
+        { nameof(Folders), Folders },
+        { nameof(Files), Files },
+    };
 
     [PrivateApi]
-    public override IEnumerable<object> RelationshipKeys(RawConvertOptions options)
-        => new List<object>
-        {
-            // For Relationships looking for this folder
-            $"Folder:{Path}",
-            // For Relationships looking for folders having a specific parent
-            $"FolderIn:{ParentFolderInternal}",
-        };
-
+    public override IEnumerable<object> RelationshipKeys => field ??= new List<object>
+    {
+        // For Relationships looking for this folder
+        $"Folder:{Path}",
+        // For Relationships looking for folders having a specific parent
+        $"FolderIn:{ParentFolderInternal}",
+    };
 }

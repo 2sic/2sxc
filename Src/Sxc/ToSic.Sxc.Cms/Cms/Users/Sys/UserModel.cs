@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Cms.Users.Sys;
     Description = "User Information",
     Name = MyContentTypeName
 )]
-public record UserModel : IRawEntity, IHasIdentityNameId, IUserModel
+public record UserModel : /*IRawEntity,*/ IHasIdentityNameId, IUserModel, IGetRawConverter
 {
     #region Types and Names for Raw Entities
 
@@ -29,28 +29,28 @@ public record UserModel : IRawEntity, IHasIdentityNameId, IUserModel
         Type = typeof(UserModel)
     };
 
-    IDictionary<string, object?> IRawEntity.Attributes(RawConvertOptions options)
-    {
-        var data = new Dictionary<string, object?>
-        {
-            { nameof(Name), Name },
-            { nameof(NameId), NameId },
-            { nameof(IsSystemAdmin), IsSystemAdmin },
-            { nameof(IsSiteAdmin), IsSiteAdmin },
-            { nameof(IsContentAdmin), IsContentAdmin },
-            { nameof(IsAnonymous), IsAnonymous },
-            { nameof(Username), Username },
-            { nameof(Email), Email },
-        };
+    //IDictionary<string, object?> IRawEntity.Attributes(RawConvertOptions options)
+    //{
+    //    var data = new Dictionary<string, object?>
+    //    {
+    //        { nameof(Name), Name },
+    //        { nameof(NameId), NameId },
+    //        { nameof(IsSystemAdmin), IsSystemAdmin },
+    //        { nameof(IsSiteAdmin), IsSiteAdmin },
+    //        { nameof(IsContentAdmin), IsContentAdmin },
+    //        { nameof(IsAnonymous), IsAnonymous },
+    //        { nameof(Username), Username },
+    //        { nameof(Email), Email },
+    //    };
 
-        if (options.ShouldAddKey(nameof(IUserModel.Roles)))
-            data.Add(
-                nameof(IUserModel.Roles),
-                new RawRelationship(keys: Roles.Select(object (r) => $"{RoleRelationshipPrefix}{r.Id}").ToList() ?? [])
-            );
+    //    if (options.ShouldAddKey(nameof(IUserModel.Roles)))
+    //        data.Add(
+    //            nameof(IUserModel.Roles),
+    //            new RawRelationship(keys: Roles.Select(object (r) => $"{RoleRelationshipPrefix}{r.Id}").ToList() ?? [])
+    //        );
 
-        return data;
-    }
+    //    return data;
+    //}
 
     internal const string RoleRelationshipPrefix = "Role:";
 
@@ -96,7 +96,38 @@ public record UserModel : IRawEntity, IHasIdentityNameId, IUserModel
 
 
     // TODO: @2dm #ConvertToRawEntity - implement a converter for this, so we can use it in the DataSource
-    IConvertToRawEntity? IGetRawConverter.GetConverter() => null;
+    IConvertToRawEntity IGetRawConverter.GetConverter() => Converter;
+
+    private static IConvertToRawEntity Converter { get; } =
+        new ConvertToRawFactory<UserModel>((source, options) =>
+        {
+            var data = new Dictionary<string, object?>
+            {
+                { nameof(Name), source.Name },
+                { nameof(NameId), source.NameId },
+                { nameof(IsSystemAdmin), source.IsSystemAdmin },
+                { nameof(IsSiteAdmin), source.IsSiteAdmin },
+                { nameof(IsContentAdmin), source.IsContentAdmin },
+                { nameof(IsAnonymous), source.IsAnonymous },
+                { nameof(Username), source.Username },
+                { nameof(Email), source.Email },
+            };
+
+            if (options.ShouldAddKey(nameof(IUserModel.Roles)))
+                data.Add(
+                    nameof(IUserModel.Roles),
+                    new RawRelationship(keys: source.Roles
+                        .Select(object (r) => $"{RoleRelationshipPrefix}{r.Id}")
+                        .ToList() ?? [])
+                );
+            
+            return new RawEntityRecord
+            {
+                Id = source.Id,
+                Guid = source.Guid,
+                Values = data,
+            };
+        });
 
 
 }
