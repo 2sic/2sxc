@@ -1,7 +1,5 @@
-﻿using ToSic.Eav.Apps.Sys.AppStack;
-using ToSic.Eav.Apps.Sys.Caching;
+﻿using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Data.Processing;
-using ToSic.Eav.DataSources.Sys;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
@@ -28,6 +26,7 @@ public class AppControllerReal(
     LazySvc<AppCreator> appBuilderLazy,
     LazySvc<AppStateSyncSave> appStateSyncSave,
     LazySvc<AppStateSyncRestore> appStateSyncRestore,
+    GenWorkPlus<WorkViews> workViews,
     LazySvc<AppCachePurger> systemManagerLazy,
     LazySvc<LanguagesBackend> languagesBackendLazy,
     LazySvc<IAppReaderFactory> appReadersLazy,
@@ -38,7 +37,7 @@ public class AppControllerReal(
         connect:
         [
             appsBackendLazy, workAppsRemove, exportAppLazy, importAppLazy, appBuilderLazy, appStateSyncRestore, appStateSyncSave,
-            systemManagerLazy, languagesBackendLazy, appReadersLazy, appStackBackendLazy, json, globalConfiguration
+            workViews, systemManagerLazy, languagesBackendLazy, appReadersLazy, appStackBackendLazy, json, globalConfiguration
         ])
 {
     public const string LogSuffix = "AppCon";
@@ -77,10 +76,37 @@ public class AppControllerReal(
     }
 
     public FileToUploadToClient Export(AppExportSpecs specs)
-        => exportAppLazy.Value.Export(specs);
+        => exportAppLazy.Value.Export(specs, () => PathCaseReferences(specs.AppId));
 
-    public Task<ActionData<bool>> SaveData(AppExportSpecs specs)
-        => appStateSyncSave.Value.Run(new(), new(specs));
+    public PathCasePreflightResult PathCasePreflight(int zoneId, int appId)
+        => exportAppLazy.Value.PathCasePreflight(new(zoneId, appId), () => PathCaseReferences(appId));
+
+    private (IEnumerable<PathCaseItem> App, IEnumerable<PathCaseItem> Shared) PathCaseReferences(int appId)
+    {
+        var views = workViews.New(appId).GetAll();
+        return (
+            views.Where(view => !view.IsShared).Select(view => new PathCaseItem(view.Path)),
+            views.Where(view => view.IsShared).Select(view => new PathCaseItem(view.Path)));
+    }
+
+    public async Task<ActionData<bool>> SaveData(AppExportSpecs specs)
+    {
+        var l = Log.Fn<ActionData<bool>>(specs.Dump());
+
+        // Informational only: a failed audit must never prevent saving the source-control export.
+        try
+        {
+            _ = exportAppLazy.Value.PathCasePreflight(specs, () => PathCaseReferences(specs.AppId));
+        }
+        catch (Exception e)
+        {
+            l.W("Path case preflight failed; source-control export will continue");
+            l.Ex(e);
+        }
+
+        var result = await appStateSyncSave.Value.Run(new(), new(specs));
+        return l.Return(result);
+    }
 
     // Replaced by DataSource System.SystemStack through query System.SysData.
     // Use app/auto/query/System.SysData/Default with SysDataSource=System.SystemStack.
@@ -104,7 +130,7 @@ public class AppControllerReal(
         if (!uploadInfo.HasFiles())
             return l.Return(new(false, "no file uploaded"), "no file uploaded");
 
-        var (_, stream) = uploadInfo.GetStream(0);
+        var (_, stream) = uploadInfo.GetStream();
         if (stream == null!)
             throw new NullReferenceException("File Stream is null, upload canceled");
 
