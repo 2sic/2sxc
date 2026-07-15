@@ -40,11 +40,11 @@ public class FileSaver(ISite site, IAppReaderFactory appReadFac, IAppPathsMicroS
                 if (target.ContainsPathTraversal())
                     throw new($"Invalid target path '{target}' - {PathFixer.PathTraversalMayNotContainMessage}");
 
-                var find = $"{FolderConstants.AppCodeFolder}\\{addPath}";
+                var find = Path.Combine(FolderConstants.AppCodeFolder, addPath.ToSystemPath());
                 if (basePath.EndsWith(find))
                 {
-                    basePath = (basePath.Substring(0, basePath.Length - find.Length) + "\\" + target.TrimPrefixSlash())
-                        .FlattenSlashes();
+                    var parentPath = basePath.Substring(0, basePath.Length - find.Length).TrimLastSlash();
+                    basePath = Path.Combine(parentPath, target.TrimPrefixSlash().ToSystemPath());
 
                     l.A($"custom BasePath: '{basePath}'");
                 }
@@ -99,7 +99,7 @@ public class FileSaver(ISite site, IAppReaderFactory appReadFac, IAppPathsMicroS
             path = path.Replace(GenerateConstants.PathPlaceholderEdition, specs.Edition).TrimLastSlash();
         }
 
-        path = path.FlattenSlashes().Backslash();
+        path = path.FlattenSlashes().ToSystemPath();
 
         var appWithEditionNormalized = new DirectoryInfo(path).FullName;
 

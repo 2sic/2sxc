@@ -73,8 +73,11 @@ internal static class ExtensionLockHelper
             : [];
     }
 
-    internal static string EnsureTrailingBackslash(string path)
-        => path.SuffixSlash().Backslash();
+    internal static string EnsureTrailingSeparator(string path)
+        => path.SuffixSlash().ToSystemPath();
+
+    internal static StringComparison FileSystemPathComparison
+        => Path.DirectorySeparatorChar == '\\' ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
     internal static string CalculateHash(string path)
         // Hashing is another physical file read, so it must use the same long-path disk form as

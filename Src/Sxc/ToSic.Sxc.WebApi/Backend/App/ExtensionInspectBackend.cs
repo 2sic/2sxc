@@ -40,14 +40,14 @@ public class ExtensionInspectBackend(
 
         if (expected is not null)
         {
-            var basePathFull = EnsureTrailingBackslash(Path.GetFullPath(editionRoot));
+            var basePathFull = EnsureTrailingSeparator(Path.GetFullPath(editionRoot));
 
             foreach (var kvp in expected)
             {
                 var rel = kvp.Key;
-                var fullPath = Path.GetFullPath(Path.Combine(editionRoot, rel.Backslash()));
+                var fullPath = Path.GetFullPath(Path.Combine(editionRoot, rel.ToSystemPath()));
 
-                if (!fullPath.StartsWith(basePathFull, StringComparison.OrdinalIgnoreCase) || !File.Exists(fullPath))
+                if (!fullPath.StartsWith(basePathFull, FileSystemPathComparison) || !File.Exists(fullPath))
                 {
                     statuses.Add(new() { Path = rel, Status = "missing" });
                     missing++;
@@ -107,7 +107,7 @@ public class ExtensionInspectBackend(
             foreach (var file in EnumerateFilesSafe(ownRoot))
             {
                 var normalizedFile = Path.GetFullPath(file);
-                if (!normalizedFile.StartsWith(basePathFull, StringComparison.OrdinalIgnoreCase))
+                if (!normalizedFile.StartsWith(basePathFull, FileSystemPathComparison))
                     continue;
 
                 var rel = normalizedFile

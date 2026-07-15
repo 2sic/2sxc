@@ -14,7 +14,7 @@ internal class OqtServerPaths(IWebHostEnvironment hostingEnvironment, LazySvc<IF
 
     public override string FullContentPath(string virtualPath)
     {
-        var path = virtualPath.Backslash().TrimPrefixSlash();
+        var path = virtualPath.TrimPrefixSlash().ToSystemPath();
         return Path.Combine(hostingEnvironment.ContentRootPath, path);
     }
 

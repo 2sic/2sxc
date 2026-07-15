@@ -34,7 +34,7 @@ internal static class HotReloadEnabledCheck
 
     private static bool AddHotReloadProperty()
     {
-        var launchSettingsFile = Path.Combine(Directory.GetCurrentDirectory(), $"Properties\\launchSettings.json");
+        var launchSettingsFile = Path.Combine(Directory.GetCurrentDirectory(), "Properties", "launchSettings.json");
         if (!File.Exists(launchSettingsFile)) return false;
         try
         {

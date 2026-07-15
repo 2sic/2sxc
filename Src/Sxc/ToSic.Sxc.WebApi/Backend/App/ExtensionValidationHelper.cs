@@ -128,7 +128,7 @@ internal class ExtensionValidationHelper(ExtensionManifestService manifestSvc, I
 
         foreach (var rel in allowed)
         {
-            var full = Path.Combine(tempDir, rel.Backslash());
+            var full = Path.Combine(tempDir, rel.ToSystemPath());
             if (!File.Exists(full))
                 return l.ReturnAsError(new(false, $"file for hash missing:{rel}", null));
 

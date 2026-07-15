@@ -129,7 +129,7 @@ internal class OqtAdamFileSystem(
 
     public override void AddFolder(string path) => Log.Do(() =>
     {
-        path = path.Backslash();
+        path = path.EnsureOqtaneFolderFormat();
         if (FolderExists(path)) return "";
 
         try

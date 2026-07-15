@@ -114,7 +114,7 @@ internal class OqtaneBlobService(IServiceProvider serviceProvider) : IBlobProvid
 
     private static bool ExistUnderWebRootPath(IWebHostEnvironment webHostEnvironment, string virtualPath, out string filePath)
     {
-        var path = virtualPath.Backslash().TrimPrefixSlash();
+        var path = virtualPath.TrimPrefixSlash().ToSystemPath();
         filePath = Path.Combine(webHostEnvironment.WebRootPath, path);
         return File.Exists(filePath);
     }

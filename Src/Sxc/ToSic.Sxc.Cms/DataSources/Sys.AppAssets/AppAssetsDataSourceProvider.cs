@@ -35,7 +35,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.Dependencie
         var root = specs.RootFolder;
         var filter = specs.FileFilter;
         var l = Log.Fn<AppAssetsDataSourceProvider>($"a:{specs.AppId}; z:{specs.ZoneId}, root:{root}, filter:{filter}");
-        _root = root.TrimPrefixSlash().Backslash();
+        _root = root.TrimPrefixSlash().ToSystemPath();
         _filter = filter;
 
         var appReader = Services.AppReaders.Get(new AppIdentity(specs.ZoneId, specs.AppId));

@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Sys.Configuration;
-using static System.IO.Path;
 
 namespace ToSic.Sxc.Apps.Sys.Paths;
 
@@ -14,12 +13,12 @@ public class GlobalPaths(LazySvc<IServerPaths> serverPaths, LazySvc<IGlobalConfi
     public string GlobalPathTo(string path, PathTypes pathType)
     {
         var l = Log.Fn<string>($"path:{path},pathType:{pathType}");
-        var assetPath = Combine(config.Value.AssetsVirtualUrl().Backslash(), path);
+        var assetPath = $"{config.Value.AssetsVirtualUrl().TrimLastSlash()}/{path.TrimPrefixSlash()}";
         var assetLocation = pathType switch
         {
             PathTypes.Link => assetPath.ToAbsolutePathForwardSlash(),
-            PathTypes.PhysRelative => assetPath.TrimStart('~').Backslash(),
-            PathTypes.PhysFull => serverPaths.Value.FullAppPath(assetPath).Backslash(),
+            PathTypes.PhysRelative => assetPath.TrimStart('~').ToSystemPath(),
+            PathTypes.PhysFull => serverPaths.Value.FullAppPath(assetPath).ToSystemPath(),
             _ => throw new ArgumentOutOfRangeException(nameof(pathType), pathType, null)
         };
         return l.ReturnAsOk(assetLocation);

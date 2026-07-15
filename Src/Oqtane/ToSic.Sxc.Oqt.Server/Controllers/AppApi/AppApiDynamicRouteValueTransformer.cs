@@ -116,7 +116,7 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
             l.A($"Edition: {edition}");
 
 
-            var controllerFolder = Path.Combine(aliasPart, appFolder, edition.Backslash(), "api");
+            var controllerFolder = Path.Combine(aliasPart.ToSystemPath(), appFolder, edition.ToSystemPath(), "api");
             l.A($"Controller Folder: {controllerFolder}");
 
             var area = $"{alias.SiteId}/{OqtConstants.ApiAppLinkPart}/{appFolder}/{edition}api";
