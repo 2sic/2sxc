@@ -94,9 +94,15 @@ public record UserModel : IHasIdentityNameId, IUserModel, IGetRawConverter
     public IEnumerable<IUserRoleModel> Roles { get; init; } = [];
 
 
-    // TODO: @2dm #ConvertToRawEntity - implement a converter for this, so we can use it in the DataSource
+    /// <summary>
+    /// Use this converter when about to convert to IEntity
+    /// </summary>
+    /// <returns></returns>
     IRawEntityConverter IGetRawConverter.GetConverter() => Converter;
 
+    /// <summary>
+    /// Prepare a reusable, factory-based converter for User Models to IRawEntity
+    /// </summary>
     private static IRawEntityConverter Converter { get; } =
         new ConvertToRawWithFactory<UserModel>((source, options) =>
         {

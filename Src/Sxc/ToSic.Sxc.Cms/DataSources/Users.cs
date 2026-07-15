@@ -173,18 +173,20 @@ public class Users : CustomDataSourceAdvanced
         });
 
         var users = userFactory.Create(usersRaw);
-        List<IEntity> roles = [];
 
         // If we should include the roles, create them now and attach
         if (!AddRoles)
             return l.Return((users, []), $"users {users.Count}; no roles");
 
+        // Process roles and add to relationships, so that the Users can map to the roles
+        List<IEntity> roles = [];
         try
         {
             // Get roles and extend with the property necessary for Users to map to the roles
             roles = GetRolesStream(usersRaw);
-            relationships.Add(roles.Select(r =>
-                new KeyValuePair<object, IEntity>($"{UserModel.RoleRelationshipPrefix}{r.EntityId}", r)));
+            var roleRels = roles
+                .Select(r => new KeyValuePair<object, IEntity>($"{UserModel.RoleRelationshipPrefix}{r.EntityId}", r));
+            relationships.Add(roleRels);
             return l.Return((users, roles), $"users {users.Count}; roles {roles.Count}");
         }
         catch (Exception ex)
