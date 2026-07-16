@@ -352,8 +352,8 @@ public class ExtensionExportService(
             $"{FolderConstants.AppExtensionsFolder}/{extensionName}",
             exclude:
             [
-                $"{FolderConstants.DataFolderProtected}\\{FolderConstants.AppExtensionJsonFile}",
-                $"{FolderConstants.DataFolderProtected}\\{PackageIndexFile.LockFileName}",
+                $"{FolderConstants.DataFolderProtected}{Path.DirectorySeparatorChar}{FolderConstants.AppExtensionJsonFile}",
+                $"{FolderConstants.DataFolderProtected}{Path.DirectorySeparatorChar}{PackageIndexFile.LockFileName}",
             ]);
 
         // 2. Check for hasAppCode setting

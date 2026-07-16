@@ -56,7 +56,7 @@ internal class RazorCodeManager(RazorComponentBase parent, ILog parentLog) : Hel
     {
         var l = Log.Fn<bool>();
         if (BuildComplete) return l.Return(true);
-        var codeFile = Parent.VirtualPath.Replace(".cshtml", ".code.cshtml").Backslash().AfterLast("\\");
+        var codeFile = Parent.VirtualPath.Replace(".cshtml", ".code.cshtml").ToSystemPath().AfterLast(Path.DirectorySeparatorChar.ToString());
         l.A($"Will try to load code from '{codeFile}");
         try
         {

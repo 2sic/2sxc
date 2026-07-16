@@ -119,7 +119,7 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
         var apiControllerFilesInAppCode = filesAfterCheck
             .Select(f => f.FullName)
             .Select(p => EnsurePathMayBeAccessed(p, appPath, user.IsSystemAdmin)) // do another security check
-            .Select(x => x.Replace(appPath + "\\", "")) // truncate / remove internal server root path
+            .Select(x => x.Replace(appPath + Path.DirectorySeparatorChar, "")) // truncate / remove internal server root path
             .Select(x => x.ForwardSlash()) // tip the slashes to web-convention (old template entries used "\")
             .ToListOpt();
 

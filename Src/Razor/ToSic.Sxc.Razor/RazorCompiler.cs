@@ -168,7 +168,7 @@ internal class RazorCompiler(
                 return log.ReturnFalse("no file reference");
             }
 
-            log.A($"Resolver lookup matched key:'{matchedResolver!.Key.Backslash()}'; location:'{matchedResolver.Location}'");
+            log.A($"Resolver lookup matched key:'{matchedResolver!.Key.ToSystemPath()}'; location:'{matchedResolver.Location}'");
             return log.ReturnTrue("reference available");
         }
 

@@ -80,7 +80,7 @@ public partial class AppFilesControllerReal(
 
     private static AppFileDto EnsureRequiredFolder(AppFileDto assetFromTemplateDto)
     {
-        assetFromTemplateDto = assetFromTemplateDto with { Path = assetFromTemplateDto.Path.Replace("/", "\\") };
+        assetFromTemplateDto = assetFromTemplateDto with { Path = assetFromTemplateDto.Path.ToSystemPath() };
 
         // ensure that DataSource is in DataSources folder
         if (assetFromTemplateDto.TemplateKey == AssetTemplates.DataSourceHybrid.Key)
@@ -162,7 +162,7 @@ public partial class AppFilesControllerReal(
             var assetFromTemplateDto = new AppFileDto
             {
                 AppId = appId,
-                Path = path?.Replace("/", "\\") ?? string.Empty,
+                Path = path?.ToSystemPath() ?? string.Empty,
                 Global = b,
                 TemplateKey = templateKey,
             };

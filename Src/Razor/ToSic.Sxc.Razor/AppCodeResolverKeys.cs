@@ -7,7 +7,6 @@ namespace ToSic.Sxc.Razor;
 // the same app through view paths, app paths, or edition paths.
 internal static class AppCodeResolverKeys
 {
-    private const char Separator = '\\';
     private const string AppRootSegment = "2sxc";
     private const string TenantsSegment = "Tenants";
     private const string SitesSegment = "Sites";
@@ -20,7 +19,7 @@ internal static class AppCodeResolverKeys
         => (appPathSeeds ?? [])
             .Concat(AppPathSeedsFromViewPath(viewPath))
             .OfType<string>()
-            .Select(seed => Normalize(seed).TrimStart(Separator))
+            .Select(seed => Normalize(seed).TrimStart(Path.DirectorySeparatorChar))
             .Where(seed => seed.HasValue())
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
@@ -29,7 +28,7 @@ internal static class AppCodeResolverKeys
     /// Formats resolver keys for diagnostics with consistent path separators.
     /// </summary>
     public static string Describe(IEnumerable<string> keys)
-        => string.Join(";", keys.Select(key => key.Backslash()));
+        => string.Join(";", keys.Select(key => key.ToSystemPath()));
 
     /// <summary>
     /// Resolves each key through the singleton assembly resolver and records if the physical DLL still exists.
@@ -54,7 +53,7 @@ internal static class AppCodeResolverKeys
     /// Formats lookup results so logs show which keys were tried and why one did or did not match.
     /// </summary>
     public static string DescribeResults(IEnumerable<AppCodeResolverLookupResult> results)
-        => string.Join(";", results.Select(result => $"{result.Key.Backslash()}=>{result.Location}|exists:{result.Exists}"));
+        => string.Join(";", results.Select(result => $"{result.Key.ToSystemPath()}=>{result.Location}|exists:{result.Exists}"));
 
     /// <summary>
     /// Infers app and edition resolver seeds from a physical or virtual view path.
@@ -64,7 +63,7 @@ internal static class AppCodeResolverKeys
         // Fallback for cases where the current block context points to one app,
         // but the compiled view path belongs to a shared app.
         var parts = Normalize(viewPath)
-            .Trim(Separator)
+            .Trim(Path.DirectorySeparatorChar)
             .Split(Separators, StringSplitOptions.RemoveEmptyEntries);
 
         var appRootIndex = Array.FindIndex(parts, part => part.Equals(AppRootSegment, StringComparison.OrdinalIgnoreCase));
@@ -110,13 +109,13 @@ internal static class AppCodeResolverKeys
     /// Joins path parts from the beginning through the requested segment index.
     /// </summary>
     private static string JoinThrough(IEnumerable<string> parts, int index)
-        => string.Join(Separator.ToString(), parts.Take(index + 1));
+        => string.Join(Path.DirectorySeparatorChar.ToString(), parts.Take(index + 1));
 
     /// <summary>
     /// Normalizes path separators and trims whitespace before key comparison or lookup.
     /// </summary>
     private static string Normalize(string key)
-        => key.Backslash().Trim();
+        => key.ToSystemPath().Trim();
 }
 
 internal sealed record AppCodeResolverLookupResult(string Key, string? Location, bool Exists);
