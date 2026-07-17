@@ -1,0 +1,42 @@
+name: oqtane-postgresql
+
+services:
+  windows:
+    image: postgres:18
+    container_name: oqtane-postgresql-windows
+    environment:
+      POSTGRES_DB: oqtane
+      POSTGRES_USER: oqtane
+      POSTGRES_PASSWORD: ${OQTANE_DB_PASSWORD:?Set OQTANE_DB_PASSWORD before running Docker Compose}
+    ports:
+      - "127.0.0.1:54321:5432"
+    volumes:
+      - postgresql-windows:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  ubuntu:
+    image: postgres:18
+    container_name: oqtane-postgresql-ubuntu
+    environment:
+      POSTGRES_DB: oqtane
+      POSTGRES_USER: oqtane
+      POSTGRES_PASSWORD: ${OQTANE_DB_PASSWORD:?Set OQTANE_DB_PASSWORD before running Docker Compose}
+    ports:
+      - "0.0.0.0:54322:5432"
+    volumes:
+      - postgresql-ubuntu:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  postgresql-windows:
+  postgresql-ubuntu:

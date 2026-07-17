@@ -1,0 +1,46 @@
+name: oqtane-mysql
+
+services:
+  windows:
+    image: mysql:8.4
+    container_name: oqtane-mysql-windows
+    environment:
+      MYSQL_DATABASE: oqtane
+      MYSQL_USER: oqtane
+      MYSQL_PASSWORD: ${OQTANE_DB_PASSWORD:?Set OQTANE_DB_PASSWORD before running Docker Compose}
+      MYSQL_ROOT_PASSWORD: ${OQTANE_DB_PASSWORD:?Set OQTANE_DB_PASSWORD before running Docker Compose}
+    ports:
+      - "127.0.0.1:33061:3306"
+    volumes:
+      - mysql-windows:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=\"$$MYSQL_ROOT_PASSWORD\" mysqladmin ping -h 127.0.0.1 -u root --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+    restart: unless-stopped
+
+  ubuntu:
+    image: mysql:8.4
+    container_name: oqtane-mysql-ubuntu
+    environment:
+      MYSQL_DATABASE: oqtane
+      MYSQL_USER: oqtane
+      MYSQL_PASSWORD: ${OQTANE_DB_PASSWORD:?Set OQTANE_DB_PASSWORD before running Docker Compose}
+      MYSQL_ROOT_PASSWORD: ${OQTANE_DB_PASSWORD:?Set OQTANE_DB_PASSWORD before running Docker Compose}
+    ports:
+      - "0.0.0.0:33062:3306"
+    volumes:
+      - mysql-ubuntu:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=\"$$MYSQL_ROOT_PASSWORD\" mysqladmin ping -h 127.0.0.1 -u root --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+    restart: unless-stopped
+
+volumes:
+  mysql-windows:
+  mysql-ubuntu:
