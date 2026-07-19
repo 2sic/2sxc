@@ -5,7 +5,6 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Build.Sys;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.Attributes;
-using ToSic.Sxc.Code.Generate.Data;
 using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sys.Users;
 
@@ -126,7 +125,7 @@ internal sealed class CodeGeneratorTestContext
             ContentTypes = contentTypeNameId,
         };
 
-        return dataFactory.Create(config);
+        return dataFactory.CreateTac(config);
     }
 
     private static IEntity CreateEphemeralMetadataEntity(
