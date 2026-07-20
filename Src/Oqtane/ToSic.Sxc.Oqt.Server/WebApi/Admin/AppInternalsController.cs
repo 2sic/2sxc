@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -13,15 +13,16 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppInternalsController() : OqtStatefulControllerBase(RealController.LogSuffix), IAppInternalsController
+public class AppInternalsController() : OqtStatefulControllerBase(RealController.LogSuffix)
 {
     private RealController Real => GetService<RealController>();
 
-    /// <inheritdoc/>
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    [Authorize(Roles = RoleNames.Admin)]
-    public AppInternalsDto Get(int appId)
-        => Real.Get(appId);
+    // Replaced by DataSource System.AppEnhancements through query System.SysData.
+    // Use app/auto/query/System.SysData/ with SysDataSource=System.AppEnhancements.
+    ///// <inheritdoc/>
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[Authorize(Roles = RoleNames.Admin)]
+    //public AppInternalsDto Get(int appId)
+    //    => Real.Get(appId);
 }
