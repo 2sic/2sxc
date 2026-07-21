@@ -87,17 +87,8 @@ public class FieldController() : DnnSxcControllerBase(RealController.LogSuffix),
 
     #region Sharing and Inheriting
 
-    [HttpGet]
-    public IEnumerable<ContentTypeFieldDto> GetSharedFields(int appId, int attributeId = default)
-        => Real.GetSharedFields(appId, attributeId);
-
-    [HttpGet]
-    public IEnumerable<ContentTypeFieldDto> GetAncestors(int appId, int attributeId)
-        => Real.GetAncestors(appId, attributeId);
-
-    [HttpGet]
-    public IEnumerable<ContentTypeFieldDto> GetDescendants(int appId, int attributeId)
-        => Real.GetDescendants(appId, attributeId);
+    // 2rb: GetSharedFields, GetAncestors and GetDescendants were replaced by the
+    // System.SharedFields DataSource through query System.SysData.
     
     [HttpPost]
     public bool Share(int appId, int attributeId, bool share, bool hide = false)
