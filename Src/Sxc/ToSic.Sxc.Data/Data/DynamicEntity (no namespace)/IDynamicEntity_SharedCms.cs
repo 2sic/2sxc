@@ -18,7 +18,7 @@ public partial interface IDynamicEntity
     /// <summary>
     /// Show a field in the expected / the best possible way.
     /// As of now it's meant for WYSIWYG fields with Very-Rich Text.
-    /// See [](xref:NetCode.DynamicData.DynamicEntityHtml)
+    /// See [](xref:NetCode.Razor.ItemHtml)
     /// </summary>
     /// <param name="name">the field name</param>
     /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
@@ -26,9 +26,9 @@ public partial interface IDynamicEntity
     /// A wrapper tag for the result.
     /// It's either a RazorBlade tag such as `Kit.HtmlTag.Div()`, a string such as `span` or an empty string `` to indicate no container.
     /// If not set it will default to a div-tag.
-    /// See [docs](xref:NetCode.DynamicData.DynamicEntityHtml)
+    /// See [docs](xref:NetCode.Razor.ItemHtml)
     /// </param>
-    /// <param name="toolbar">Override default toolbar behavior on this field. See [docs](xref:NetCode.DynamicData.DynamicEntityHtml)</param>
+    /// <param name="toolbar">Override default toolbar behavior on this field. See [docs](xref:NetCode.Razor.ItemHtml)</param>
     /// <param name="imageSettings">Settings for resizing. Default is `Wysiwyg` but it can also be `Content` or a settings object.</param>
     /// <param name="debug">Activate debug visualization to better see alignments and such.</param>
     /// <returns></returns>

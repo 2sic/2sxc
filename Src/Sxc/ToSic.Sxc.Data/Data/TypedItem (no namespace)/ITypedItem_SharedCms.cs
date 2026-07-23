@@ -21,7 +21,7 @@ partial interface ITypedItem
     /// <summary>
     /// Show a field in the expected / best possible way.
     /// As of now it's meant for WYSIWYG fields with Very-Rich Text.
-    /// See [](xref:NetCode.DynamicData.DynamicEntityHtml)
+    /// See [](xref:NetCode.Razor.ItemHtml)
     /// </summary>
     /// <param name="name">the field name</param>
     /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
@@ -29,9 +29,9 @@ partial interface ITypedItem
     /// A wrapper tag for the result.
     /// It's either a RazorBlade tag such as `Kit.HtmlTag.Div()`, a string such as `span` or an empty string `` to indicate no container.
     /// If not set it will default to to a div-tag.
-    /// See [docs](xref:NetCode.DynamicData.DynamicEntityHtml)
+    /// See [docs](xref:NetCode.Razor.ItemHtml)
     /// </param>
-    /// <param name="toolbar">Override default toolbar behavior on this field. See [docs](xref:NetCode.DynamicData.DynamicEntityHtml)</param>
+    /// <param name="toolbar">Override default toolbar behavior on this field. See [docs](xref:NetCode.Razor.ItemHtml)</param>
     /// <param name="imageSettings">Settings for resizing. Default is `Wysiwyg` but it can also be `Content` or a settings object.</param>
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <param name="debug">Activate debug visualization to better see alignments and such.</param>
