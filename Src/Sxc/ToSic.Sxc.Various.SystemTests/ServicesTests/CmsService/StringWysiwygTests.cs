@@ -8,7 +8,7 @@ namespace ToSic.Sxc.ServicesTests.CmsService;
 
 public class StringWysiwygTests(
     ExecutionContextMock executionContext,
-    CodeContentTypesManager ctDefFactory,
+    ContentTypesFromCodeManager ctDefFactory,
     DataForCmsServiceTests dataForCmsTests,
     ICodeDataFactory cdf,
     ITestOutputHelper output

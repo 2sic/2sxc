@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Cms.Pages.Sys;
     Description = "Page in the site",
     Name = TypeName
 )]
-public record PageModelRaw: IRawEntity, IPageModel, IHasRelationshipKeys
+public record PageModelRaw: IRawEntity, IPageModel, IRelationshipKeys
 {
     #region IRawEntity
 
@@ -53,10 +53,10 @@ public record PageModelRaw: IRawEntity, IPageModel, IHasRelationshipKeys
 
     private const string ParentPrefix = "ParentId:";
 
-    private RawRelationship ChildrenRaw => new(key: $"{ParentPrefix}{Id}");
+    private RawRelationship ChildrenRaw => new() { Keys = [$"{ParentPrefix}{Id}"] };
 
 
-    IEnumerable<object> IHasRelationshipKeys.RelationshipKeys => field ??= new List<object>
+    IEnumerable<object> IRelationshipKeys.RelationshipKeys => field ??= new List<object>
     {
         // For relationships looking for files in this folder
         $"{ParentPrefix}{ParentId}"

@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Cms.Assets.Sys;
 
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract record FileFolderBase: IRawEntity, IHasRelationshipKeys
+public abstract record FileFolderBase: IRawEntity, IRelationshipKeys
 {
     /// <inheritdoc />
     [ContentTypeAttributeSpecs(Description = "DO NOT USE. This is a temporary, random ID calculated at runtime and will return different values all the time.")]
@@ -51,7 +51,7 @@ public abstract record FileFolderBase: IRawEntity, IHasRelationshipKeys
     public string? Url { get; init; }
 
     [ContentTypeAttributeSpecs(Type = ValueTypes.Entity, Description = "Reference to the parent folder.")]
-    public RawRelationship Folder => new(key: $"Folder:{ParentFolderInternal}");
+    public RawRelationship Folder => new() { Keys = [$"Folder:{ParentFolderInternal}"] };
 
     [PrivateApi]
     public virtual IDictionary<string, object?> Values => field ??= new Dictionary<string, object?>

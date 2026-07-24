@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Cms.Users.Sys;
     Description = "User Information",
     Name = MyContentTypeName
 )]
-public record UserModel : IHasIdentityNameId, IUserModel, IGetRawConverter
+public record UserModel : IHasIdentityNameId, IUserModel, IRawEntityConvertible
 {
     #region Types and Names for Raw Entities
 
@@ -98,13 +98,13 @@ public record UserModel : IHasIdentityNameId, IUserModel, IGetRawConverter
     /// Use this converter when about to convert to IEntity
     /// </summary>
     /// <returns></returns>
-    IRawEntityConverter IGetRawConverter.GetConverter() => Converter;
+    IRawEntityConverter IRawEntityConvertible.GetConverter() => Converter;
 
     /// <summary>
     /// Prepare a reusable, factory-based converter for User Models to IRawEntity
     /// </summary>
     private static IRawEntityConverter Converter { get; } =
-        new ConvertToRawWithFactory<UserModel>((source, options) =>
+        new RawEntityConverterFactory<UserModel>((source, options) =>
         {
             var data = new Dictionary<string, object?>
             {
@@ -121,9 +121,12 @@ public record UserModel : IHasIdentityNameId, IUserModel, IGetRawConverter
             if (options.ShouldAddKey(nameof(IUserModel.Roles)))
                 data.Add(
                     nameof(IUserModel.Roles),
-                    new RawRelationship(keys: source.Roles
-                        .Select(object (r) => $"{RoleRelationshipPrefix}{r.Id}")
-                        .ToList() ?? [])
+                    new RawRelationship
+                    {
+                        Keys = source.Roles
+                            .Select(object (r) => $"{RoleRelationshipPrefix}{r.Id}")
+                            .ToList() ?? []
+                    }
                 );
             
             return new RawEntityRecord

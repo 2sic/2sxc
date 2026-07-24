@@ -12,7 +12,7 @@ namespace ToSic.Sxc.WebApi.Tests.SaveHelpers;
 public class IsUniqueValidatorTests
 (
     DataAssembler dataAssembler,
-    ContentTypeAssembler contentTypeAssembler,
+    ContentTypeAssemblyKit ctAssemblyKit,
     IDataSourcesService dataSourcesService,
     DataSourceBase.Dependencies dataSourceDependencies)
 {
@@ -411,5 +411,5 @@ public class IsUniqueValidatorTests
     #endregion
 
     private IsUniqueValidatorTestContext CreateContext()
-        => IsUniqueValidatorTestContext.Create(dataAssembler, contentTypeAssembler, dataSourcesService, dataSourceDependencies);
+        => IsUniqueValidatorTestContext.Create(dataAssembler, ctAssemblyKit, dataSourcesService, dataSourceDependencies);
 }

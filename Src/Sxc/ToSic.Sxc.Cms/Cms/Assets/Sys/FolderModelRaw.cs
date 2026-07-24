@@ -31,10 +31,10 @@ public record FolderModelRaw: FileFolderBase, IFolderModelSync
     public override string? Name { get; init; }
 
     [ContentTypeAttributeSpecs(Type = ValueTypes.Entity, Description = "Folders in this folder.")]
-    public RawRelationship Folders => new(key: $"FolderIn:{Path}");
+    public RawRelationship Folders => new() { Keys = [$"FolderIn:{Path}"] };
 
     [ContentTypeAttributeSpecs(Type = ValueTypes.Entity, Description = "Files in this folder.")]
-    public RawRelationship Files => new(key: $"FileIn:{Path}");
+    public RawRelationship Files => new() { Keys = [$"FileIn:{Path}"] };
 
     [PrivateApi]
     public override IDictionary<string, object?> Values => field ??= new Dictionary<string, object?>(base.Values)
