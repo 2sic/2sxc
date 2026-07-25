@@ -129,7 +129,7 @@ public record UserModel : IHasIdentityNameId, IUserModel, IRawEntityConvertible
                     }
                 );
             
-            return new RawEntityRecord
+            return new RawEntity
             {
                 Id = source.Id,
                 Guid = source.Guid,

@@ -74,25 +74,29 @@ public class InheritableApps : CustomDataSource
         var specs = appReader.Specs;
         var paths = _appPathsGen.New().Get(appReader, _context.Site);
 
-        return new RawEntity(new()
+        var isApp = specs.NameId != KnownAppsConstants.DefaultAppGuid &&
+                    specs.NameId != KnownAppsConstants.PrimaryAppGuid;
+
+        return new RawEntity
         {
-            { nameof(AppDto.IsApp), specs.NameId != KnownAppsConstants.DefaultAppGuid && specs.NameId != KnownAppsConstants.PrimaryAppGuid },
-            { nameof(AppDto.Guid), specs.NameId },
-            { nameof(AppDto.Name), specs.Name },
-            { nameof(AppDto.Folder), specs.Folder },
-            { nameof(AppDto.AppRoot), paths.Path },
-            { nameof(AppDto.IsHidden), specs.Configuration.IsHidden },
-            { nameof(AppDto.ConfigurationId), specs.Configuration.Id },
-            { nameof(AppDto.Items), appReader.List.Count },
-            { nameof(AppDto.Thumbnail), AppAssetThumbnail.GetUrl(appReader, paths, _globalPaths) },
-            { nameof(AppDto.Version), specs.VersionSafe() },
-            { nameof(AppDto.IsGlobal), appReader.IsShared() },
-            { nameof(AppDto.IsInherited), appReader.IsInherited() },
-            { nameof(AppDto.Lightspeed), LightSpeed(appReader) },
-            { nameof(AppDto.HasCodeWarnings), _codeStats.AppHasWarnings(appReader.AppId) },
-        })
-        {
-            Id = appReader.AppId
+            Id = appReader.AppId,
+            Values = new Dictionary<string, object?>
+            {
+                { nameof(AppDto.IsApp), isApp },
+                { nameof(AppDto.Guid), specs.NameId },
+                { nameof(AppDto.Name), specs.Name },
+                { nameof(AppDto.Folder), specs.Folder },
+                { nameof(AppDto.AppRoot), paths.Path },
+                { nameof(AppDto.IsHidden), specs.Configuration.IsHidden },
+                { nameof(AppDto.ConfigurationId), specs.Configuration.Id },
+                { nameof(AppDto.Items), appReader.List.Count },
+                { nameof(AppDto.Thumbnail), AppAssetThumbnail.GetUrl(appReader, paths, _globalPaths) },
+                { nameof(AppDto.Version), specs.VersionSafe() },
+                { nameof(AppDto.IsGlobal), appReader.IsShared() },
+                { nameof(AppDto.IsInherited), appReader.IsInherited() },
+                { nameof(AppDto.Lightspeed), LightSpeed(appReader) },
+                { nameof(AppDto.HasCodeWarnings), _codeStats.AppHasWarnings(appReader.AppId) },
+            },
         };
     }
 
