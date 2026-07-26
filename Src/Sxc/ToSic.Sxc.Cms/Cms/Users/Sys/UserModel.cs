@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Cms.Users.Sys;
 /// </summary>
 [PrivateApi("this is only internal - public access is always through interface")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-[ContentTypeSpecs(
+[ContentType(
     Guid = "612f9341-ff91-443d-be58-500e55bec2d8",
     Description = "User Information",
     Name = MyContentTypeName

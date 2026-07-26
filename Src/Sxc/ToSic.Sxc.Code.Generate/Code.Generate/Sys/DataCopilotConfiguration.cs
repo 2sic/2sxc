@@ -75,7 +75,7 @@ internal interface IDataCopilotConfiguration: IModelFromEntity
 /// 1. Contains the structure (for auto-generated ContentType definitions)
 /// 2. Is the "raw" configuration which can be used to generate entities of this type - for example in testing.
 /// </summary>
-[ContentTypeSpecs(
+[ContentType(
     Guid = "b08dcd23-2eb0-4a5e-a3d0-3178d2aae451", // Matches NameId in data
     Description = "Data Copilot Configuration",
     Name = MyContentTypeName

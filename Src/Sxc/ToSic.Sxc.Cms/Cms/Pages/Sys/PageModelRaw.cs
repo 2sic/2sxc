@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Cms.Pages.Sys;
 /// </summary>
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-[ContentTypeSpecs(
+[ContentType(
     Guid = "c648a91d-b650-42bf-ad6a-9582015c165e",
     Description = "Page in the site",
     Name = TypeName

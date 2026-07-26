@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Cms.Assets.Sys;
 /// </remarks>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-[ContentTypeSpecs(
+[ContentType(
     Guid = "96cda931-b677-4589-9eb2-df5a38cefff0",
     Description = "Folder in an App",
     Name = TypeName

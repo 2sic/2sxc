@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Cms.Users.Sys;
 /// </summary>
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-[ContentTypeSpecs(
+[ContentType(
     Guid = "dc104414-e61a-4a59-bda8-455772ceb0cc",
     Description = "User-Role in the site",
     Name = TypeName
