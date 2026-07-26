@@ -39,31 +39,6 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
         => Real.List(appId, scope, withStatistics);
 
-
-    // 2rb: Replaced by System.Scopes DataSource through query System.SysData.
-    // Use app/auto/query/System.SysData/Default with SysDataSource=System.Scopes.
-    ///// <summary>
-    ///// Used to be GET Scopes.
-    ///// Scopes are a way to organize content types, see https://docs.2sxc.org/basics/data/content-types/scopes.html
-    ///// </summary>
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    //public ScopesDto Scopes(int appId)
-    //    => Real.Scopes(appId);
-
-    // 2rb: Replaced by ContentTypeDetails DataSource.
-    /// <summary>
-    /// Used to be GET ContentTypes.
-    /// See https://docs.2sxc.org/basics/data/content-types/index.html
-    /// </summary>
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    //public ContentTypeDto Get(int appId, string contentTypeId, string scope = null)
-    //    => Real.Get(appId, contentTypeId, scope);
-
-
     /// <summary>
     /// Delete a Content-Type
     /// </summary>

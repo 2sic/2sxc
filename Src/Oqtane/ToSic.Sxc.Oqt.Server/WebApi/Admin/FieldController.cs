@@ -25,32 +25,6 @@ public class FieldController() : OqtStatefulControllerBase(RealController.LogSuf
     #region Fields - Get, Reorder, Data-Types (for dropdown), etc.
 
     /// <summary>
-    /// Returns the configuration for a content type
-    /// </summary>
-    // 2rb: Replaced by ContentTypeDetails DataSource.
-    //[HttpGet]
-    //public IEnumerable<ContentTypeFieldDto> All(int appId, string staticName) => Real.All(appId, staticName);
-
-    /// <summary>
-    /// Used to be GET ContentType/DataTypes
-    /// </summary>
-    // 2rb: Replaced by InputTypes DataSource.
-    //[HttpGet]
-    //public string[] DataTypes(int appId) => Real.DataTypes(appId);
-
-    /// <summary>
-    /// Used to be GET ContentType/InputTypes
-    /// </summary>
-    // 2rb: Replaced by InputTypes DataSource.
-    //[HttpGet]
-    //public ICollection<InputTypeInfo> InputTypes(int appId) => Real.InputTypes(appId);
-
-    /// <inheritdoc />
-    // 2rb: Replaced by InputTypes DataSource.
-    //[HttpGet]
-    //public Dictionary<string, string> ReservedNames() => AttributeNames.ReservedNames;
-
-    /// <summary>
     /// Used to be GET ContentType/AddField
     /// </summary>
     [HttpPost]

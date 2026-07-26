@@ -1,4 +1,6 @@
-﻿using ToSic.Eav.Data.Raw.Sys;
+﻿using System.Net.Mime;
+using ToSic.Eav.Data.ContentTypes;
+using ToSic.Eav.Data.Raw.Sys;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 
@@ -47,7 +49,7 @@ public class ContentTypeDetails : CustomDataSource
         ProvideOutRaw(GetContentTypeDetails, options: () => new()
         {
             TitleField = nameof(ContentTypeDto.Name),
-            TypeName = "ContentType",
+            TypeName = ContentTypeConstants.ContentTypeName,
             AllowUnknownValueTypes = true,
         });
 
