@@ -6,7 +6,7 @@ using ToSic.Sxc.Web.Sys.LightSpeed;
 
 namespace ToSic.Sxc.WebLightSpeed;
 
-public class LightSpeedTestData(DataAssembler dataAssembler, ContentTypeAssembler typeAssembler)
+public class LightSpeedTestData(DataAssembler dataAssembler, ContentTypeAssemblyKit ctAssemblyKit)
 {
     public const int AppId = -1;
     internal const string DefTitle = "LightSpeed Configuration";
@@ -18,14 +18,14 @@ public class LightSpeedTestData(DataAssembler dataAssembler, ContentTypeAssemble
     /// <summary>
     /// Basic LightSpeed Content Type with Url Fields only for testing
     /// </summary>
-    private IContentType LsCtUrlFields => typeAssembler.Type.CreateContentTypeTac(appId: AppId, name: LightSpeedDecorator.ContentTypeName, attributes:
+    private IContentType LsCtUrlFields => ctAssemblyKit.Type.CreateContentTypeTac(appId: AppId, name: LightSpeedDecorator.ContentTypeName, attributes:
         [
-            typeAssembler.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.Title), DataTypes.Boolean, true),
-            typeAssembler.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.IsEnabled), DataTypes.Boolean),
-            typeAssembler.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.ByUrlParameters), DataTypes.Boolean),
-            typeAssembler.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.UrlParametersCaseSensitive), DataTypes.Boolean),
-            typeAssembler.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.UrlParameterNames), DataTypes.String),
-            typeAssembler.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.UrlParametersOthersDisableCache), DataTypes.Boolean),
+            ctAssemblyKit.ContentTypeFieldTac(AppId, nameof(LightSpeedDecorator.Title), DataTypes.Boolean, true),
+            ctAssemblyKit.ContentTypeFieldTac(AppId, nameof(LightSpeedDecorator.IsEnabled), DataTypes.Boolean),
+            ctAssemblyKit.ContentTypeFieldTac(AppId, nameof(LightSpeedDecorator.ByUrlParameters), DataTypes.Boolean),
+            ctAssemblyKit.ContentTypeFieldTac(AppId, nameof(LightSpeedDecorator.UrlParametersCaseSensitive), DataTypes.Boolean),
+            ctAssemblyKit.ContentTypeFieldTac(AppId, nameof(LightSpeedDecorator.UrlParameterNames), DataTypes.String),
+            ctAssemblyKit.ContentTypeFieldTac(AppId, nameof(LightSpeedDecorator.UrlParametersOthersDisableCache), DataTypes.Boolean),
         ]
     );
 

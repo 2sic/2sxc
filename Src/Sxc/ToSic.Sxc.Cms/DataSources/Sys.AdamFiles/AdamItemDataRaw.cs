@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Data.Build;
-using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Data.Raw.Sys;
 
 namespace ToSic.Sxc.DataSources;
@@ -48,20 +47,15 @@ public class AdamItemDataRaw: IRawEntity
     public DateTime Created { get; set; }
     public DateTime Modified { get; set; }
 
+    IDictionary<string, object?> IRawEntity.Values => field ??= new Dictionary<string, object?>
+    {
+        { nameof(Name), Name },
+        { nameof(ReferenceId), ReferenceId },
+        { nameof(Url), Url },
+        { nameof(Type), Type },
+        { nameof(IsFolder), IsFolder },
+        { nameof(Size), Size },
+        { nameof(Path), Path }
+    };
 
-    /// <summary>
-    /// Data but without Id, Guid, Created, Modified
-    /// </summary>
-    [PrivateApi]
-    public virtual IDictionary<string, object?> Attributes(RawConvertOptions options)
-        => new Dictionary<string, object?>
-        {
-            { nameof(Name), Name },
-            { nameof(ReferenceId), ReferenceId },
-            { nameof(Url), Url },
-            { nameof(Type), Type },
-            { nameof(IsFolder), IsFolder },
-            { nameof(Size), Size },
-            { nameof(Path), Path }
-        };
 }

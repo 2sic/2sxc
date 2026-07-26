@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.State;
-using ToSic.Eav.Data.Sys.ContentTypes;
+using ToSic.Eav.Data.ContentTypes.Fields.Sys;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockEditor;
 using ToSic.Sxc.Blocks.Sys.Views;
@@ -201,7 +201,7 @@ public class ContentGroupList(
                     var field = target.Type[identifier.Field]!;
                     identifier = identifier with
                     {
-                        ContentTypeName = new WorkAttributeEntityInspectType()
+                        ContentTypeName = new WorkFieldEntityInspectType()
                             .PrimaryTypeName(field, modeCreate: true)
                     }; 
                     return l.Return(identifier, "identifier is new");

@@ -11,7 +11,7 @@ namespace ToSic.Sxc.WebApi.Tests.SaveHelpers;
 public class UniqueValueLookupTests
 (
     DataAssembler dataAssembler,
-    ContentTypeAssembler contentTypeAssembler,
+    ContentTypeAssemblyKit ctAssemblyKit,
     IDataSourcesService dataSourcesService,
     DataSourceBase.Dependencies dataSourceDependencies)
 {
@@ -104,5 +104,5 @@ public class UniqueValueLookupTests
     }
 
     private IsUniqueValidatorTestContext CreateContext()
-        => IsUniqueValidatorTestContext.Create(dataAssembler, contentTypeAssembler, dataSourcesService, dataSourceDependencies);
+        => IsUniqueValidatorTestContext.Create(dataAssembler, ctAssemblyKit, dataSourcesService, dataSourceDependencies);
 }

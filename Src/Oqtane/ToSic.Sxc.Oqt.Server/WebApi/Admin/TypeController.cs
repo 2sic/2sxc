@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.Backend.Admin.TypeControllerReal;
 
@@ -32,21 +31,7 @@ public class TypeController() : OqtStatefulControllerBase(RealController.LogSuff
     [Authorize(Roles = RoleNames.Admin)]
     public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false) => Real.List(appId, scope, withStatistics);
 
-
-    // 2rb: Replaced by System.Scopes DataSource through query System.SysData.
-    // Use app/auto/query/System.SysData/Default with SysDataSource=System.Scopes.
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[Authorize(Roles = RoleNames.Admin)]
-    //public ScopesDto Scopes(int appId) => Real.Scopes(appId);
-
-    // 2rb: Replaced by ContentTypeDetails DataSource.
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[Authorize(Roles = RoleNames.Admin)]
-    //public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) => Real.Get(appId, contentTypeId, scope);
-
-
+    
     [HttpDelete]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]

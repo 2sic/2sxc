@@ -73,10 +73,13 @@ public class ToolbarButtonActions : CustomDataSource
                 "info",
             }
             .OrderBy(a => a)
-            .Select(action => new RawEntity(new()
+            .Select(action => new RawEntity
             {
-                { "Name", action },
-            }))
+                Values = new Dictionary<string, object?>
+                {
+                    { "Name", action },
+                }
+            })
             .ToList();
 
         return l.Return(list, $"{list.Count}");

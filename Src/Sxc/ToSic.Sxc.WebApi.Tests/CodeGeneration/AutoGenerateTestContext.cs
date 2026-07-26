@@ -37,17 +37,17 @@ internal sealed class AutoGenerateTestContext : IDisposable
     }
 
     public static AutoGenerateTestContext Create(
-        ContentTypeAssembler contentTypeAssembler,
+        ContentTypeAssemblyKit ctAssemblyKit,
         DataAssembler dataAssembler,
-        CodeContentTypesManager codeContentTypeManager,
+        ContentTypesFromCodeManager ctsFromCodeManager,
         IDataFactory dataFactory,
         IAppStateBuilder appStateBuilder,
         LazySvc<IEnumerable<IFileGenerator>> generators)
     {
         var codeContext = CodeGeneratorTestContext.CreateWithAutoGenerateConfiguration(
-            contentTypeAssembler,
+            ctAssemblyKit,
             dataAssembler,
-            codeContentTypeManager,
+            ctsFromCodeManager,
             dataFactory,
             appStateBuilder);
 

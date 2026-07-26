@@ -3,9 +3,9 @@ using ToSic.Eav.Apps.Sys.State.AppStateBuilder;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Build.Sys;
+using ToSic.Eav.Data.ContentTypes.Fields;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.Attributes;
-using ToSic.Sxc.Code.Generate.Data;
 using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sys.Users;
 
@@ -35,36 +35,36 @@ internal sealed class CodeGeneratorTestContext
     }
 
     public static CodeGeneratorTestContext Create(
-        ContentTypeAssembler contentTypeAssembler,
+        ContentTypeAssemblyKit ctAssemblyKit,
         DataAssembler dataAssembler,
-        CodeContentTypesManager codeContentTypeManager,
+        ContentTypesFromCodeManager ctsFromCodeManager,
         IDataFactory dataFactory,
         IAppStateBuilder appStateBuilder)
-        => Create(contentTypeAssembler, dataAssembler, codeContentTypeManager, dataFactory, appStateBuilder, false);
+        => Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder, false);
 
     public static CodeGeneratorTestContext CreateWithAutoGenerateConfiguration(
-        ContentTypeAssembler contentTypeAssembler,
+        ContentTypeAssemblyKit ctAssemblyKit,
         DataAssembler dataAssembler,
-        CodeContentTypesManager codeContentTypeManager,
+        ContentTypesFromCodeManager ctsFromCodeManager,
         IDataFactory dataFactory,
         IAppStateBuilder appStateBuilder)
-        => Create(contentTypeAssembler, dataAssembler, codeContentTypeManager, dataFactory, appStateBuilder, true);
+        => Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder, true);
 
     private static CodeGeneratorTestContext Create(
-        ContentTypeAssembler contentTypeAssembler,
+        ContentTypeAssemblyKit ctAssemblyKit,
         DataAssembler dataAssembler,
-        CodeContentTypesManager codeContentTypeManager,
+        ContentTypesFromCodeManager ctsFromCodeManager,
         IDataFactory dataFactory,
         IAppStateBuilder appStateBuilder,
         bool includeAutoGenerateConfiguration)
     {
-        var contentType = CreateContentType(contentTypeAssembler, dataAssembler);
+        var contentType = CreateContentType(ctAssemblyKit, dataAssembler);
         var contentTypes = new List<IContentType> { contentType };
         IEntity? autoGenerateConfiguration = null;
 
         if (includeAutoGenerateConfiguration)
         {
-            var configurationType = codeContentTypeManager.Get<DataCopilotConfiguration>();
+            var configurationType = ctsFromCodeManager.Get<DataCopilotConfiguration>();
             contentTypes.Add(configurationType);
             autoGenerateConfiguration = CreateAutoGenerateConfiguration(dataFactory, contentType.NameId);
         }
@@ -82,12 +82,12 @@ internal sealed class CodeGeneratorTestContext
         return new(contentType, appBuilder.Reader);
     }
 
-    private static IContentType CreateContentType(ContentTypeAssembler contentTypeAssembler, DataAssembler dataAssembler)
+    private static IContentType CreateContentType(ContentTypeAssemblyKit ctAssemblyKit, DataAssembler dataAssembler)
     {
         var attributeId = 0;
         var entityId = 1000;
 
-        var title = contentTypeAssembler.Attribute.Create(
+        var title = ctAssemblyKit.Field.Create(
             appId: AppId,
             name: "Title",
             type: ValueTypes.String,
@@ -96,17 +96,17 @@ internal sealed class CodeGeneratorTestContext
             sortOrder: attributeId
         );
 
-        var hasData = contentTypeAssembler.Attribute.Create(
+        var hasData = ctAssemblyKit.Field.Create(
             appId: AppId,
             name: "HasData",
             type: ValueTypes.Boolean,
             isTitle: false,
             id: ++attributeId,
             sortOrder: attributeId,
-            metadataItems: [CreateEphemeralMetadataEntity(contentTypeAssembler, dataAssembler, ref attributeId, ref entityId)]
+            metadataItems: [CreateEphemeralMetadataEntity(ctAssemblyKit, dataAssembler, ref attributeId, ref entityId)]
         );
 
-        return contentTypeAssembler.Type.CreateContentTypeTac(
+        return ctAssemblyKit.Type.CreateContentTypeTac(
             appId: AppId,
             name: "Article",
             id: 7,
@@ -126,28 +126,28 @@ internal sealed class CodeGeneratorTestContext
             ContentTypes = contentTypeNameId,
         };
 
-        return dataFactory.Create(config);
+        return dataFactory.CreateTac(config);
     }
 
     private static IEntity CreateEphemeralMetadataEntity(
-        ContentTypeAssembler contentTypeAssembler,
+        ContentTypeAssemblyKit ctAssemblyKit,
         DataAssembler dataAssembler,
         ref int attributeId,
         ref int entityId)
     {
-        var metadataAttribute = contentTypeAssembler.Attribute.Create(
+        var metadataAttribute = ctAssemblyKit.Field.Create(
             appId: AppId,
-            name: AttributeMetadataConstants.MetadataFieldAllIsEphemeral,
+            name: nameof(IFieldSettingsGeneral.IsEphemeral),
             type: ValueTypes.Boolean,
             isTitle: false,
             id: ++attributeId,
             sortOrder: attributeId
         );
 
-        var metadataType = contentTypeAssembler.Type.CreateContentTypeTac(
+        var metadataType = ctAssemblyKit.Type.CreateContentTypeTac(
             appId: AppId,
-            name: AttributeMetadataConstants.TypeGeneral,
-            nameId: AttributeMetadataConstants.TypeGeneral,
+            name: IFieldSettingsGeneral.Constants.ContentTypeName,
+            nameId: IFieldSettingsGeneral.Constants.ContentTypeName,
             scope: "TestMetadata",
             attributes: new List<IContentTypeAttribute> { metadataAttribute }
         );
@@ -155,9 +155,9 @@ internal sealed class CodeGeneratorTestContext
         return dataAssembler.CreateEntityTac(
             appId: AppId,
             contentType: metadataType,
-            values: new Dictionary<string, object>
+            values: new()
             {
-                { AttributeMetadataConstants.MetadataFieldAllIsEphemeral, true }
+                { nameof(IFieldSettingsGeneral.IsEphemeral), true }
             },
             entityId: ++entityId,
             repositoryId: entityId,

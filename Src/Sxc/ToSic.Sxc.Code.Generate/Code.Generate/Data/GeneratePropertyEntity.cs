@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.Data.Sys;
-using ToSic.Eav.Data.Sys.ContentTypes;
+﻿using ToSic.Eav.Data.ContentTypes.Fields.Sys;
+using ToSic.Eav.Data.Sys;
 using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sxc.Data;
 
@@ -14,7 +14,7 @@ internal class GeneratePropertyEntity(CSharpGeneratorHelper helper) : GeneratePr
         var name = attribute.Name;
         var l = Log.Fn<List<CodeFragment>>($"name: {name}");
 
-        var inspector = new WorkAttributeEntityInspectType();
+        var inspector = new WorkFieldEntityInspectType();
         this.ConnectLogs([inspector]);
         var entityType = inspector.PrimaryTypeName(attribute, modeCreate: false, tryOtherModes: true);
         //if (entityType.IsEmpty())

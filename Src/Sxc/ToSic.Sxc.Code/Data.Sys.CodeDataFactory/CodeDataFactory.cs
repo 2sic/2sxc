@@ -24,7 +24,7 @@ public partial class CodeDataFactory(
     LazySvc<AdamManager> adamManager,
     LazySvc<IContextOfApp> contextOfAppLazy,
     LazySvc<DataAssembler> dataBuilderLazy,
-    LazySvc<ContentTypeTypeAssembler> contentTypeAssembler,
+    LazySvc<ContentTypeAssembler> contentTypeAssembler,
     LazySvc<ICodeDataPoCoWrapperService> codeDataWrapper,
     Generator<CodeJsonWrapper> wrapJsonGenerator,
     LazySvc<CodeInfoService> codeInfoSvc,

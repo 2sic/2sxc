@@ -23,19 +23,19 @@ internal sealed class IsUniqueValidatorTestContext : IDisposable
 
     private IsUniqueValidatorTestContext(
         DataAssembler dataAssembler,
-        ContentTypeAssembler contentTypeAssembler,
+        ContentTypeAssemblyKit ctAssemblyKit,
         IDataSourcesService dataSourcesService,
         DataSourceBase.Dependencies dataSourceDependencies)
     {
         DataAssembler = dataAssembler;
-        ContentTypeAssembler = contentTypeAssembler;
+        ContentTypeAssemblyKit = ctAssemblyKit;
         _dataSourcesService = dataSourcesService;
         _dataSourceDependencies = dataSourceDependencies;
     }
 
     public DataAssembler DataAssembler { get; }
 
-    public ContentTypeAssembler ContentTypeAssembler { get; }
+    public ContentTypeAssemblyKit ContentTypeAssemblyKit { get; }
 
     public IsUniqueValidator CreateValidator(params IEntity[] existingEntities)
         => new(CreateUniqueValueLookup(), CreateDataSource(existingEntities), new Log("Tst.Unq"));
@@ -56,13 +56,13 @@ internal sealed class IsUniqueValidatorTestContext : IDisposable
 
     public static IsUniqueValidatorTestContext Create(
         DataAssembler dataAssembler,
-        ContentTypeAssembler contentTypeAssembler,
+        ContentTypeAssemblyKit ctAssemblyKit,
         IDataSourcesService dataSourcesService,
         DataSourceBase.Dependencies dataSourceDependencies)
-        => new(dataAssembler, contentTypeAssembler, dataSourcesService, dataSourceDependencies);
+        => new(dataAssembler, ctAssemblyKit, dataSourcesService, dataSourceDependencies);
 
     public IContentType CreateType(string name, params IContentTypeAttribute[] attributes)
-        => ContentTypeAssembler.Type.CreateContentTypeTac(
+        => ContentTypeAssemblyKit.Type.CreateContentTypeTac(
             appId: AppId,
             name: name,
             nameId: name,
@@ -82,7 +82,7 @@ internal sealed class IsUniqueValidatorTestContext : IDisposable
         if (!string.IsNullOrWhiteSpace(inputType))
             (metadataItems ??= []).Add(CreateInputTypeMetadataEntity(inputType!));
 
-        return ContentTypeAssembler.Attribute.Create(
+        return ContentTypeAssemblyKit.Field.Create(
             appId: AppId,
             name: name,
             type: type,
@@ -148,7 +148,7 @@ internal sealed class IsUniqueValidatorTestContext : IDisposable
 
     private IEntity CreateUniqueMetadataEntity(bool? isUnique)
     {
-        var metadataAttribute = ContentTypeAssembler.Attribute.Create(
+        var metadataAttribute = ContentTypeAssemblyKit.Field.Create(
             appId: AppId,
             name: "IsUnique",
             type: ValueTypes.Boolean,
@@ -157,7 +157,7 @@ internal sealed class IsUniqueValidatorTestContext : IDisposable
             sortOrder: _attributeId
         );
 
-        var metadataType = ContentTypeAssembler.Type.CreateContentTypeTac(
+        var metadataType = ContentTypeAssemblyKit.Type.CreateContentTypeTac(
             appId: AppId,
             name: "UniqueFieldMetadata",
             nameId: "UniqueFieldMetadata",
@@ -182,7 +182,7 @@ internal sealed class IsUniqueValidatorTestContext : IDisposable
 
     private IEntity CreateInputTypeMetadataEntity(string inputType)
     {
-        var metadataAttribute = ContentTypeAssembler.Attribute.Create(
+        var metadataAttribute = ContentTypeAssemblyKit.Field.Create(
             appId: AppId,
             name: "InputType",
             type: ValueTypes.String,
@@ -191,7 +191,7 @@ internal sealed class IsUniqueValidatorTestContext : IDisposable
             sortOrder: _attributeId
         );
 
-        var metadataType = ContentTypeAssembler.Type.CreateContentTypeTac(
+        var metadataType = ContentTypeAssemblyKit.Type.CreateContentTypeTac(
             appId: AppId,
             name: "@All",
             nameId: "@All",

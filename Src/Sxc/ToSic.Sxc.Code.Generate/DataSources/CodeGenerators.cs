@@ -47,16 +47,19 @@ public class CodeGenerators: CustomDataSource
     {
         var l = Log.Fn<IEnumerable<IRawEntity>>();
         var list = fileGenerators
-            .Select(g => new RawEntity(new()
+            .Select(g => new RawEntity
             {
-                //{ AttributeNames.NameIdNiceName, g.NameId },
-                { nameof(g.Name), g.Name },
-                { nameof(g.Version), g.Version },
-                { nameof(g.Description), g.Description },
-                { nameof(g.DescriptionHtml), g.DescriptionHtml },
-                { nameof(g.OutputLanguage), g.OutputLanguage },
-                { nameof(g.OutputType), g.OutputType },
-            }))
+                Values = new Dictionary<string, object?>
+                {
+                    //{ AttributeNames.NameIdNiceName, g.NameId },
+                    { nameof(g.Name), g.Name },
+                    { nameof(g.Version), g.Version },
+                    { nameof(g.Description), g.Description },
+                    { nameof(g.DescriptionHtml), g.DescriptionHtml },
+                    { nameof(g.OutputLanguage), g.OutputLanguage },
+                    { nameof(g.OutputType), g.OutputType },
+                }
+            })
             .ToList();
 
         return l.Return(list, $"{list.Count}");
@@ -67,10 +70,13 @@ public class CodeGenerators: CustomDataSource
         var l = Log.Fn<IEnumerable<IRawEntity>>();
         var list = fileGenerators
             .GroupBy(g => g.OutputType)
-            .Select(g => new RawEntity(new()
+            .Select(g => new RawEntity
             {
-                { "Name", g.Key },
-            }))
+                Values = new Dictionary<string, object?>
+                {
+                    { "Name", g.Key },
+                }
+            })
             .ToList();
 
         return l.Return(list, $"{list.Count}");

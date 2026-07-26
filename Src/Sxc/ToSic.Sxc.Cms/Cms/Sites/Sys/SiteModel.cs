@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Data.Raw.Sys;
-using ToSic.Eav.Data.Sys.ContentTypes;
 
 namespace ToSic.Sxc.Cms.Sites.Sys;
 
@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Cms.Sites.Sys;
 /// </summary>
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-[ContentTypeSpecs(
+[ContentType(
     Guid = "89ef9f2c-98d3-42e9-a190-b9b3fc814284",
     Description = "Site information",
     Name = TypeName
@@ -31,17 +31,16 @@ public record SiteModel: IRawEntity, ISiteModel
         Type = typeof(SiteModel)
     };
 
-    IDictionary<string, object?> IRawEntity.Attributes(RawConvertOptions options)
-        => new Dictionary<string, object?>
-        {
-            { nameof(Name), Name },
-            { nameof(Url), Url },
-            { nameof(Languages), Languages },
-            { nameof(DefaultLanguage), DefaultLanguage },
-            { nameof(ZoneId), ZoneId },
-            { nameof(ContentAppId), ContentAppId },
-            { nameof(PrimaryAppId), PrimaryAppId },
-        };
+    IDictionary<string, object?> IRawEntity.Values => field ??= new Dictionary<string, object?>
+    {
+        { nameof(Name), Name },
+        { nameof(Url), Url },
+        { nameof(Languages), Languages },
+        { nameof(DefaultLanguage), DefaultLanguage },
+        { nameof(ZoneId), ZoneId },
+        { nameof(ContentAppId), ContentAppId },
+        { nameof(PrimaryAppId), PrimaryAppId },
+    };
 
     #endregion
 

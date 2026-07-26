@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Services;
 /// * Moved to `ToSic.Sxc.Services.IEditService` in v13.05
 /// </remarks>
 [PublicApi]
-public interface IEditService: IHasLog // , INeedsCodeApiService
+public interface IEditService: IHasLog
 {
     /// <summary>
     /// If editing is enabled or not
@@ -38,7 +38,7 @@ public interface IEditService: IHasLog // , INeedsCodeApiService
     /// </summary>
     /// <param name="target">
     /// The content-item this toolbar is for, can be null. <br/>
-    /// Usually a [](xref:NetCode.DynamicData.DynamicEntity) or a [](xref:NetCode.DynamicData.Entity)
+    /// Usually a [](xref:ToSic.Sxc.Data.ITypedItem) or a [](xref:NetCode.DynamicData.Entity)
     ///
     /// If the first parameter is a <see cref="IToolbarBuilder"/> then all other parameters will be ignored. 
     /// </param>
@@ -92,7 +92,7 @@ public interface IEditService: IHasLog // , INeedsCodeApiService
     /// </summary>
     /// <param name="target">
     /// The optional content-item this toolbar is for. Can be null. <br/>
-    /// Usually a [](xref:NetCode.DynamicData.DynamicEntity) or a [](xref:NetCode.DynamicData.Entity)
+    /// Usually a [](xref:ToSic.Sxc.Data.ITypedItem) or a [](xref:NetCode.DynamicData.Entity)
     ///
     /// If the first parameter is a <see cref="IToolbarBuilder"/> then all other parameters will be ignored. 
     /// </param>

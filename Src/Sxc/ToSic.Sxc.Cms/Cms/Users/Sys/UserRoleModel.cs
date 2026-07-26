@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data.Build;
-using ToSic.Eav.Data.Raw;
+using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw.Sys;
-using ToSic.Eav.Data.Sys.ContentTypes;
+using ToSic.Sxc.DataSources;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Cms.Users.Sys;
@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Cms.Users.Sys;
 /// </summary>
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-[ContentTypeSpecs(
+[ContentType(
     Guid = "dc104414-e61a-4a59-bda8-455772ceb0cc",
     Description = "User-Role in the site",
     Name = TypeName
@@ -32,7 +32,7 @@ public record UserRoleModel: IRawEntity, IRole, IUserRoleModel
         Type = typeof(UserRoleModel)
     };
 
-    IDictionary<string, object?> IRawEntity.Attributes(RawConvertOptions options)
+    IDictionary<string, object?> IRawEntity.Values
         => new Dictionary<string, object?>
         {
             { nameof(Name), Name },

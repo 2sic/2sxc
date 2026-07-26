@@ -11,9 +11,9 @@ namespace ToSic.Sxc.WebApi.Tests.CodeGeneration;
 [Startup(typeof(StartupCodeGenerationTests))]
 public class CSharpModelGeneratorTests(
     LazySvc<IEnumerable<IFileGenerator>> generators,
-    ContentTypeAssembler contentTypeAssembler,
+    ContentTypeAssemblyKit ctAssemblyKit,
     DataAssembler dataAssembler,
-    CodeContentTypesManager codeContentTypeManager,
+    ContentTypesFromCodeManager ctsFromCodeManager,
     IDataFactory dataFactory,
     IAppStateBuilder appStateBuilder)
 {
@@ -22,7 +22,7 @@ public class CSharpModelGeneratorTests(
     [Fact]
     public void Generate_SkipsEphemeralFields()
     {
-        var context = CodeGeneratorTestContext.Create(contentTypeAssembler, dataAssembler, codeContentTypeManager, dataFactory, appStateBuilder);
+        var context = CodeGeneratorTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder);
 
         AssertGeneratorSkipsEphemeral(new CSharpTypedDataModelsGenerator(context.User, context.AppReaders), context);
         AssertGeneratorSkipsEphemeral(new CSharpCustomModelsGenerator(context.User, context.AppReaders), context);
@@ -35,7 +35,7 @@ public class CSharpModelGeneratorTests(
     [Fact]
     public async Task AutoGenerate_MatchingConfiguration_CompletesWithoutExceptions()
     {
-        using var context = AutoGenerateTestContext.Create(contentTypeAssembler, dataAssembler, codeContentTypeManager, dataFactory, appStateBuilder, generators);
+        using var context = AutoGenerateTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder, generators);
 
         var result = await context.RunAsync();
 
@@ -45,7 +45,7 @@ public class CSharpModelGeneratorTests(
     [Fact]
     public async Task AutoGenerate_MatchingConfiguration_InvokesGeneratorOnce()
     {
-        using var context = AutoGenerateTestContext.Create(contentTypeAssembler, dataAssembler, codeContentTypeManager, dataFactory, appStateBuilder, generators);
+        using var context = AutoGenerateTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder, generators);
 
         await context.RunAsync();
 
@@ -55,7 +55,7 @@ public class CSharpModelGeneratorTests(
     [Fact]
     public async Task AutoGenerate_MatchingConfiguration_PassesAppId()
     {
-        using var context = AutoGenerateTestContext.Create(contentTypeAssembler, dataAssembler, codeContentTypeManager, dataFactory, appStateBuilder, generators);
+        using var context = AutoGenerateTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder, generators);
 
         await context.RunAsync();
 
@@ -66,7 +66,7 @@ public class CSharpModelGeneratorTests(
     [Fact]
     public async Task AutoGenerate_MatchingConfiguration_PassesContentType()
     {
-        using var context = AutoGenerateTestContext.Create(contentTypeAssembler, dataAssembler, codeContentTypeManager, dataFactory, appStateBuilder, generators);
+        using var context = AutoGenerateTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder, generators);
 
         await context.RunAsync();
 
@@ -77,7 +77,7 @@ public class CSharpModelGeneratorTests(
     [Fact]
     public async Task AutoGenerate_MatchingConfiguration_WritesGeneratedFile()
     {
-        using var context = AutoGenerateTestContext.Create(contentTypeAssembler, dataAssembler, codeContentTypeManager, dataFactory, appStateBuilder, generators);
+        using var context = AutoGenerateTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder, generators);
 
         await context.RunAsync();
 

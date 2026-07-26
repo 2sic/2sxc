@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.Sys.ContentTypes;
+﻿using ToSic.Eav.Data.ContentTypes.Fields.Sys;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Settings;

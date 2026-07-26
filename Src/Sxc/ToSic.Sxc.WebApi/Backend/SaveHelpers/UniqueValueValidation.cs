@@ -140,7 +140,11 @@ public class UniqueValueValidation : CustomDataSource
             : contentType.Attributes.FirstOrDefault(attribute => attribute.Name.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
 
     private IRawEntity Result(UniqueValueValidationResult result)
-        => new RawEntity(new Dictionary<string, object?>
+        => new RawEntity
+        {
+            Id = result.ConflictEntityId ?? 0,
+            Guid = result.ConflictGuid ?? Guid.Empty,
+            Values = new Dictionary<string, object?>
             {
                 { nameof(ValidationResultRaw.IsValid), result.IsValid },
                 { nameof(ValidationResultRaw.Reason), result.Reason },
@@ -151,11 +155,8 @@ public class UniqueValueValidation : CustomDataSource
                 { nameof(ValidationResultRaw.ConflictEntityId), result.ConflictEntityId },
                 { nameof(ValidationResultRaw.ConflictGuid), result.ConflictGuid },
                 { nameof(ValidationResultRaw.ConflictTitle), result.ConflictTitle },
-            })
-            {
-                Id = result.ConflictEntityId ?? 0,
-                Guid = result.ConflictGuid ?? Guid.Empty,
-            };
+            },
+        };
 
     private sealed class ValidationResultRaw
     {

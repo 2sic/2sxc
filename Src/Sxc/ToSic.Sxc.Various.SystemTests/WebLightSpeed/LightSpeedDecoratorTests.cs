@@ -5,11 +5,11 @@ using ToSic.Sxc.Web.Sys.LightSpeed;
 namespace ToSic.Sxc.WebLightSpeed;
 
 [Startup(typeof(StartupSxcCoreOnly))]
-public class LightSpeedDecoratorTests(DataAssembler dataAssembler, ContentTypeAssembler typeAssembler)//: TestBaseEavCore
+public class LightSpeedDecoratorTests(DataAssembler dataAssembler, ContentTypeAssemblyKit ctAssemblyKit)//: TestBaseEavCore
 {
     //public LightSpeedDecoratorTests() => _testData = new(dataBuilder);
 
-    private readonly LightSpeedTestData _testData = new(dataAssembler, typeAssembler);
+    private readonly LightSpeedTestData _testData = new(dataAssembler, ctAssemblyKit);
 
 
     [Fact]

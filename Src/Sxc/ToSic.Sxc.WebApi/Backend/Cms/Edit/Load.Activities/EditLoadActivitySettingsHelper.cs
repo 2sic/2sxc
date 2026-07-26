@@ -1,6 +1,6 @@
 ﻿using System.Collections;
+using ToSic.Eav.Data.ContentTypes.Sys;
 using ToSic.Eav.Data.Processing;
-using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Serialization.Sys;
@@ -128,7 +128,7 @@ public class EditLoadActivitySettingsHelper(
             .Select(t =>
             {
                 var normal = serializerForTypes.ToPackage(t, serSettings).ContentType!;
-                var title = t.DetailsOrNull()?.Title;
+                var title = t.DetailsOrNull()?.Label;
                 return new JsonContentTypeWithTitleWip
                 {
                     Id = normal.Id,

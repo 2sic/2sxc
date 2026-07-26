@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.Data.Sys;
-using ToSic.Eav.Data.Sys.ContentTypes;
+﻿using ToSic.Eav.Data.ContentTypes.Fields.Sys;
+using ToSic.Eav.Data.Sys;
 using ToSic.Sxc.Code.Generate.Data;
 using ToSic.Sxc.Data;
 
@@ -14,7 +14,7 @@ internal class GeneratePropertyApp(CSharpGeneratorHelper helper) : GeneratePrope
         // Note: 2dm 2026-05-15 - this looks very similar to GeneratePropertyEntity but I'm not sure what this code is for
         var name = attribute.Name;
 
-        var inspector = new WorkAttributeEntityInspectType();
+        var inspector = new WorkFieldEntityInspectType();
         var entityType = inspector.PrimaryTypeName(attribute, modeCreate: false);
         //var entityType = attribute.Metadata.Get<string>(AttributeNames.EntityFieldType);
         var allowMulti = attribute.Metadata.Get<bool>(AttributeNames.EntityFieldAllowMulti);

@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Data.Build;
-using ToSic.Eav.Data.Raw;
+using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw.Sys;
-using ToSic.Eav.Data.Sys.ContentTypes;
 
 namespace ToSic.Sxc.Cms.Users.Sys;
 
@@ -13,12 +12,12 @@ namespace ToSic.Sxc.Cms.Users.Sys;
 /// </summary>
 [PrivateApi("this is only internal - public access is always through interface")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-[ContentTypeSpecs(
+[ContentType(
     Guid = "612f9341-ff91-443d-be58-500e55bec2d8",
     Description = "User Information",
     Name = MyContentTypeName
 )]
-public record UserModel : IRawEntity, IHasIdentityNameId, IUserModel
+public record UserModel : IHasIdentityNameId, IUserModel, IRawEntityConvertible
 {
     #region Types and Names for Raw Entities
 
@@ -29,28 +28,28 @@ public record UserModel : IRawEntity, IHasIdentityNameId, IUserModel
         Type = typeof(UserModel)
     };
 
-    IDictionary<string, object?> IRawEntity.Attributes(RawConvertOptions options)
-    {
-        var data = new Dictionary<string, object?>
-        {
-            { nameof(Name), Name },
-            { nameof(NameId), NameId },
-            { nameof(IsSystemAdmin), IsSystemAdmin },
-            { nameof(IsSiteAdmin), IsSiteAdmin },
-            { nameof(IsContentAdmin), IsContentAdmin },
-            { nameof(IsAnonymous), IsAnonymous },
-            { nameof(Username), Username },
-            { nameof(Email), Email },
-        };
+    //IDictionary<string, object?> IRawEntity.Attributes(RawConvertOptions options)
+    //{
+    //    var data = new Dictionary<string, object?>
+    //    {
+    //        { nameof(Name), Name },
+    //        { nameof(NameId), NameId },
+    //        { nameof(IsSystemAdmin), IsSystemAdmin },
+    //        { nameof(IsSiteAdmin), IsSiteAdmin },
+    //        { nameof(IsContentAdmin), IsContentAdmin },
+    //        { nameof(IsAnonymous), IsAnonymous },
+    //        { nameof(Username), Username },
+    //        { nameof(Email), Email },
+    //    };
 
-        if (options.ShouldAddKey(nameof(IUserModel.Roles)))
-            data.Add(
-                nameof(IUserModel.Roles),
-                new RawRelationship(keys: Roles.Select(object (r) => $"{RoleRelationshipPrefix}{r.Id}").ToList() ?? [])
-            );
+    //    if (options.ShouldAddKey(nameof(IUserModel.Roles)))
+    //        data.Add(
+    //            nameof(IUserModel.Roles),
+    //            new RawRelationship(keys: Roles.Select(object (r) => $"{RoleRelationshipPrefix}{r.Id}").ToList() ?? [])
+    //        );
 
-        return data;
-    }
+    //    return data;
+    //}
 
     internal const string RoleRelationshipPrefix = "Role:";
 
@@ -89,9 +88,54 @@ public record UserModel : IRawEntity, IHasIdentityNameId, IUserModel
     public string? Username { get; init; }
     public string? Email { get; init; } // aka PreferredEmail
 
-    [ContentTypeAttributeSpecs(IsTitle = true)]
+    [ContentTypeField(IsTitle = true)]
     public string? Name { get; init; } // aka DisplayName
 
     public IEnumerable<IUserRoleModel> Roles { get; init; } = [];
+
+
+    /// <summary>
+    /// Use this converter when about to convert to IEntity
+    /// </summary>
+    /// <returns></returns>
+    IRawEntityConverter IRawEntityConvertible.GetConverter() => Converter;
+
+    /// <summary>
+    /// Prepare a reusable, factory-based converter for User Models to IRawEntity
+    /// </summary>
+    private static IRawEntityConverter Converter { get; } =
+        new RawEntityConverterFactory<UserModel>((source, options) =>
+        {
+            var data = new Dictionary<string, object?>
+            {
+                { nameof(Name), source.Name },
+                { nameof(NameId), source.NameId },
+                { nameof(IsSystemAdmin), source.IsSystemAdmin },
+                { nameof(IsSiteAdmin), source.IsSiteAdmin },
+                { nameof(IsContentAdmin), source.IsContentAdmin },
+                { nameof(IsAnonymous), source.IsAnonymous },
+                { nameof(Username), source.Username },
+                { nameof(Email), source.Email },
+            };
+
+            if (options.ShouldAddKey(nameof(IUserModel.Roles)))
+                data.Add(
+                    nameof(IUserModel.Roles),
+                    new RawRelationship
+                    {
+                        Keys = source.Roles
+                            .Select(object (r) => $"{RoleRelationshipPrefix}{r.Id}")
+                            .ToList() ?? []
+                    }
+                );
+            
+            return new RawEntity
+            {
+                Id = source.Id,
+                Guid = source.Guid,
+                Values = data,
+            };
+        });
+
 
 }
