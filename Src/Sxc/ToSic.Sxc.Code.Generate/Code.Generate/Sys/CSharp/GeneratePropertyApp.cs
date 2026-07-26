@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Data.ContentTypes.Fields.Sys;
 using ToSic.Eav.Data.Sys;
-using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Sxc.Code.Generate.Data;
 using ToSic.Sxc.Data;
 

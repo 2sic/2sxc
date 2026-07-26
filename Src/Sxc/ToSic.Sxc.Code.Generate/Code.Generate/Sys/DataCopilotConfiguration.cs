@@ -1,6 +1,5 @@
 using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw.Sys;
-using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Eav.Models;
 
 namespace ToSic.Sxc.Code.Generate.Sys;

@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.Data.ContentTypes.Fields.Sys;
-using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockEditor;
 using ToSic.Sxc.Blocks.Sys.Views;
