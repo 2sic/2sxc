@@ -1,3 +1,4 @@
+using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw.Sys;
 using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Eav.Models;
@@ -124,7 +125,7 @@ internal record DataCopilotConfiguration: IDataCopilotConfiguration, IRawEntity
 [ModelSpecs(ContentType = DataCopilotConfiguration.MyContentTypeName)] // so it knows the real name of the content-type for type checks
 internal record DataCopilotConfigurationFromEntity : ModelFromEntityBasic, IDataCopilotConfiguration
 {
-    [ContentTypeAttributeSpecs(IsTitle = true)]
+    [ContentTypeField(IsTitle = true)]
     public string CodeGenerator => GetThis("");
     
     public bool AutoGenerate => GetThis(false);

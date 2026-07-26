@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw.Sys;
 using ToSic.Eav.Data.Sys.ContentTypes;
 
@@ -88,7 +89,7 @@ public record UserModel : IHasIdentityNameId, IUserModel, IRawEntityConvertible
     public string? Username { get; init; }
     public string? Email { get; init; } // aka PreferredEmail
 
-    [ContentTypeAttributeSpecs(IsTitle = true)]
+    [ContentTypeField(IsTitle = true)]
     public string? Name { get; init; } // aka DisplayName
 
     public IEnumerable<IUserRoleModel> Roles { get; init; } = [];

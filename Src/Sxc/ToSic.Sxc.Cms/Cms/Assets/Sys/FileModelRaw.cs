@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Sys.ContentTypes;
 
 namespace ToSic.Sxc.Cms.Assets.Sys;
@@ -27,7 +28,7 @@ public record FileModelRaw: FileFolderBase, IFileModelSync
     internal const string TypeName = "File";
 
     /// <inheritdoc cref="IFileModelSync.Name"/>
-    [ContentTypeAttributeSpecs(Description = "The file name without extension, like my-image")]
+    [ContentTypeField(Description = "The file name without extension, like my-image")]
     public override string? Name { get; init; }
 
     /// <inheritdoc cref="IFileModelSync.Extension"/>

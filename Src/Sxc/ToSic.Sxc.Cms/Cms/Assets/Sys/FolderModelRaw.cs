@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Data.Raw.Sys;
+﻿using ToSic.Eav.Data.ContentTypes;
+using ToSic.Eav.Data.Raw.Sys;
 using ToSic.Eav.Data.Sys.ContentTypes;
 
 namespace ToSic.Sxc.Cms.Assets.Sys;
@@ -27,13 +28,13 @@ public record FolderModelRaw: FileFolderBase, IFolderModelSync
     internal const string TypeName = "Folder";
 
     /// <inheritdoc cref="IFolderModelSync.Name"/>
-    [ContentTypeAttributeSpecs(Description = "The folder name or blank when it's the root.")]
+    [ContentTypeField(Description = "The folder name or blank when it's the root.")]
     public override string? Name { get; init; }
 
-    [ContentTypeAttributeSpecs(Type = ValueTypes.Entity, Description = "Folders in this folder.")]
+    [ContentTypeField(Type = ValueTypes.Entity, Description = "Folders in this folder.")]
     public RawRelationship Folders => new() { Keys = [$"FolderIn:{Path}"] };
 
-    [ContentTypeAttributeSpecs(Type = ValueTypes.Entity, Description = "Files in this folder.")]
+    [ContentTypeField(Type = ValueTypes.Entity, Description = "Files in this folder.")]
     public RawRelationship Files => new() { Keys = [$"FileIn:{Path}"] };
 
     [PrivateApi]
