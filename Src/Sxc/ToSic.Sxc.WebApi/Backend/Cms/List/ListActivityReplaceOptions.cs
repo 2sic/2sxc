@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.State;
+using ToSic.Eav.Data.ContentTypes.Fields.Sys;
 using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Blocks.Sys.Views;
@@ -136,7 +137,7 @@ public class ListActivityReplaceOptions(
         var attribute = parent.Type[part];
         if (attribute == null)
             throw l.Done(new Exception($"Attribute definition for '{part}' not found on the item {guid}"));
-        var typeNameForField = new WorkAttributeEntityInspectType()
+        var typeNameForField = new WorkFieldEntityInspectType()
             .PrimaryTypeNames(attribute, modeCreate: true, tryOtherModes: true);
         return l.ReturnAsOk((itemList, typeNameForField));
     }

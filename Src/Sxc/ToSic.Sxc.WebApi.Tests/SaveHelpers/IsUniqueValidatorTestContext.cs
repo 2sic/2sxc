@@ -82,7 +82,7 @@ internal sealed class IsUniqueValidatorTestContext : IDisposable
         if (!string.IsNullOrWhiteSpace(inputType))
             (metadataItems ??= []).Add(CreateInputTypeMetadataEntity(inputType!));
 
-        return ContentTypeAssemblyKit.Attribute.Create(
+        return ContentTypeAssemblyKit.Field.Create(
             appId: AppId,
             name: name,
             type: type,
@@ -148,7 +148,7 @@ internal sealed class IsUniqueValidatorTestContext : IDisposable
 
     private IEntity CreateUniqueMetadataEntity(bool? isUnique)
     {
-        var metadataAttribute = ContentTypeAssemblyKit.Attribute.Create(
+        var metadataAttribute = ContentTypeAssemblyKit.Field.Create(
             appId: AppId,
             name: "IsUnique",
             type: ValueTypes.Boolean,
@@ -182,7 +182,7 @@ internal sealed class IsUniqueValidatorTestContext : IDisposable
 
     private IEntity CreateInputTypeMetadataEntity(string inputType)
     {
-        var metadataAttribute = ContentTypeAssemblyKit.Attribute.Create(
+        var metadataAttribute = ContentTypeAssemblyKit.Field.Create(
             appId: AppId,
             name: "InputType",
             type: ValueTypes.String,

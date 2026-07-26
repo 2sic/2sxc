@@ -86,7 +86,7 @@ internal sealed class CodeGeneratorTestContext
         var attributeId = 0;
         var entityId = 1000;
 
-        var title = ctAssemblyKit.Attribute.Create(
+        var title = ctAssemblyKit.Field.Create(
             appId: AppId,
             name: "Title",
             type: ValueTypes.String,
@@ -95,7 +95,7 @@ internal sealed class CodeGeneratorTestContext
             sortOrder: attributeId
         );
 
-        var hasData = ctAssemblyKit.Attribute.Create(
+        var hasData = ctAssemblyKit.Field.Create(
             appId: AppId,
             name: "HasData",
             type: ValueTypes.Boolean,
@@ -134,7 +134,7 @@ internal sealed class CodeGeneratorTestContext
         ref int attributeId,
         ref int entityId)
     {
-        var metadataAttribute = ctAssemblyKit.Attribute.Create(
+        var metadataAttribute = ctAssemblyKit.Field.Create(
             appId: AppId,
             name: AttributeMetadataConstants.MetadataFieldAllIsEphemeral,
             type: ValueTypes.Boolean,
