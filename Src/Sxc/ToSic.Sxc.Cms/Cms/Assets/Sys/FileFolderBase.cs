@@ -28,7 +28,7 @@ public abstract record FileFolderBase: IRawEntity, IRelationshipKeys
     /// <summary>
     /// This is just for internal lookup
     /// </summary>
-    [ContentTypeFieldIgnore]
+    [ContentTypeIgnore]
     public string? ParentFolderInternal { get; init; }
 
     /// <summary>
