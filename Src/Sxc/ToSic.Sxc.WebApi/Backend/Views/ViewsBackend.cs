@@ -25,7 +25,7 @@ public class ViewsBackend(
         var contentTypes = appViews.AppWorkCtx.AppReader.ContentTypes.OfScope(ScopeConstants.Default).ToList();
 
         var viewList = appViews.GetAll().ToList();
-        Log.A($"attribute list count:{contentTypes.Count}, template count:{viewList.Count}");
+        Log.A($"fieldDef list count:{contentTypes.Count}, template count:{viewList.Count}");
         var ser = convertToEavLight.Value as ConvertToEavLight;
 
         var views = viewList

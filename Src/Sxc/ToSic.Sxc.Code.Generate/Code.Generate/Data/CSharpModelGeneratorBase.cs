@@ -107,7 +107,7 @@ internal abstract class CSharpModelGeneratorBase(CSharpModelsGeneratorBase gener
         return l.Return(new($"{finalClassName}{Specs.FileGeneratedSuffix}", fileContents, GenerateFileIntroComment(UserName)), $"File size: {fileContents.Length}");
     }
 
-    private (bool HasProps, string? Code, List<string>? Usings, string? FirstProperty) ClassProperties(List<IContentTypeAttribute> attributes)
+    private (bool HasProps, string? Code, List<string>? Usings, string? FirstProperty) ClassProperties(List<IContentTypeField> attributes)
     {
         var l = Log.Fn<(bool, string?, List<string>?, string?)>($"{nameof(attributes)}: {attributes.Count}");
 

@@ -12,19 +12,19 @@ internal static class UniqueValueValidationRules
     internal const string DefaultLanguageWildcard = "*";
     private static readonly ValueAssembler ScalarValueAssembler = new();
 
-    internal static IContentTypeAttribute[] UniqueFields(IContentType contentType)
+    internal static IContentTypeField[] UniqueFields(IContentType contentType)
         // Url-path fields are unique by default unless metadata explicitly overrides that behavior.
         => contentType.Attributes
             .Where(IsUniqueField)
             .ToArray();
 
-    internal static bool IsUniqueField(IContentTypeAttribute attribute)
-        => UniqueValueLookup.IsSupported(attribute.Type)
-           && (attribute.Metadata.Get<bool?>(IsUniqueMetadataKey) ?? IsUrlPath(attribute));
+    internal static bool IsUniqueField(IContentTypeField fieldDef)
+        => UniqueValueLookup.IsSupported(fieldDef.Type)
+           && (fieldDef.Metadata.Get<bool?>(IsUniqueMetadataKey) ?? IsUrlPath(fieldDef));
 
-    internal static bool IsUrlPath(IContentTypeAttribute attribute)
-        => attribute.Type == ValueTypes.String
-           && attribute.InputType.Equals(StringUrlPathInputType, StringComparison.OrdinalIgnoreCase);
+    internal static bool IsUrlPath(IContentTypeField fieldDef)
+        => fieldDef.Type == ValueTypes.String
+           && fieldDef.InputType.Equals(StringUrlPathInputType, StringComparison.OrdinalIgnoreCase);
 
     internal static string? NormalizedValue(ValueTypes type, IValue raw)
     {

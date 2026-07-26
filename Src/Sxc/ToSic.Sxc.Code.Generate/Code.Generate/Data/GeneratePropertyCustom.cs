@@ -7,12 +7,12 @@ internal class GeneratePropertyCustom(CSharpGeneratorHelper helper) : GeneratePr
 {
     public override ValueTypes ForDataType => ValueTypes.Custom;
 
-    public override List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs)
+    public override List<CodeFragment> Generate(IContentTypeField fieldDef, int tabs)
     {
-        if (attribute.InputType != "custom-gps")
+        if (fieldDef.InputType != "custom-gps")
             return [];
 
-        var name = attribute.Name;
+        var name = fieldDef.Name;
 
         return
         [

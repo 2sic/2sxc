@@ -9,21 +9,21 @@ internal class GeneratePropertyEntity(CSharpGeneratorHelper helper) : GeneratePr
 {
     public override ValueTypes ForDataType => ValueTypes.Entity;
 
-    public override List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs)
+    public override List<CodeFragment> Generate(IContentTypeField fieldDef, int tabs)
     {
-        var name = attribute.Name;
+        var name = fieldDef.Name;
         var l = Log.Fn<List<CodeFragment>>($"name: {name}");
 
         var inspector = new WorkFieldEntityInspectType();
         this.ConnectLogs([inspector]);
-        var entityType = inspector.PrimaryTypeName(attribute, modeCreate: false, tryOtherModes: true);
+        var entityType = inspector.PrimaryTypeName(fieldDef, modeCreate: false, tryOtherModes: true);
         //if (entityType.IsEmpty())
         //{
-        //    entityType = inspector.PrimaryTypeName(attribute, modeCreate: true);
+        //    entityType = inspector.PrimaryTypeName(fieldDef, modeCreate: true);
         //    l.A($"Entity type was empty, will try for create resulting in: '{entityType}'");
         //}
-        //var entityType = attribute.Metadata.Get<string>(AttributeNames.EntityFieldType);
-        var allowMulti = attribute.Metadata.Get<bool>(AttributeNames.EntityFieldAllowMulti);
+        //var entityType = fieldDef.Metadata.Get<string>(AttributeNames.EntityFieldType);
+        var allowMulti = fieldDef.Metadata.Get<bool>(AttributeNames.EntityFieldAllowMulti);
 
         l.A($"entityType: {entityType}, allowMulti: {allowMulti}");
 

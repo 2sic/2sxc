@@ -86,12 +86,12 @@ public partial class SimpleDataEditService(
     /// </summary>
     /// <param name="contentTypeName">Content-type</param>
     /// <param name="multiValues">
-    ///     Values to be set collected in a dictionary. Each dictionary item is a pair of attribute 
-    ///     name and value. To set references to other entities, set the attribute value to a list of 
+    ///     Values to be set collected in a dictionary. Each dictionary item is a pair of fieldDef 
+    ///     name and value. To set references to other entities, set the fieldDef value to a list of 
     ///     entity ids. 
     /// </param>
     /// <param name="target"></param>
-    /// <exception cref="ArgumentException">Content-type does not exist, or an attribute in attributes</exception>
+    /// <exception cref="ArgumentException">Content-type does not exist, or an fieldDef in attributes</exception>
     public IEnumerable<int> Create(string contentTypeName, IEnumerable<Dictionary<string, object?>>? multiValues, ITarget? target = null) 
     {
         var list = multiValues?.ToListOpt();
@@ -191,11 +191,11 @@ public partial class SimpleDataEditService(
     /// </summary>
     /// <param name="entityId">Entity ID</param>
     /// <param name="values">
-    ///     Values to be set collected in a dictionary. Each dictionary item is a pair of attribute 
-    ///     name and value. To set references to other entities, set the attribute value to a list of 
+    ///     Values to be set collected in a dictionary. Each dictionary item is a pair of fieldDef 
+    ///     name and value. To set references to other entities, set the fieldDef value to a list of 
     ///     entity ids. 
     /// </param>
-    /// <exception cref="ArgumentException">Attribute in attributes does not exit</exception>
+    /// <exception cref="ArgumentException">Field in attributes does not exit</exception>
     /// <exception cref="ArgumentNullException">Entity does not exist</exception>
     public void Update(int entityId, Dictionary<string, object?> values)
     {
@@ -312,7 +312,7 @@ public partial class SimpleDataEditService(
                     type: ctAttr.Type,
                     valueToReplace: firstValue,
                     language: valuesLanguage);
-                l.A($"Attribute '{keyValuePair.Key}' will become '{keyValuePair.Value}' ({ctAttr.Type})");
+                l.A($"Field '{keyValuePair.Key}' will become '{keyValuePair.Value}' ({ctAttr.Type})");
                 return new
                 {
                     keyValuePair.Key,

@@ -24,7 +24,7 @@ internal partial class EditService(IJsonService jsonService)
         return this;
     }
 
-    #region Attribute-helper
+    #region Field-helper
 
     /// <inheritdoc/>
     public IRawHtmlString? Attribute(string name, string value)
@@ -34,6 +34,6 @@ internal partial class EditService(IJsonService jsonService)
     public IRawHtmlString? Attribute(string name, object value)
         => !Enabled ? null : HtmlAttribute.Create(name, jsonService.ToJson(value));
 
-    #endregion Attribute Helper
+    #endregion Field Helper
 
 }

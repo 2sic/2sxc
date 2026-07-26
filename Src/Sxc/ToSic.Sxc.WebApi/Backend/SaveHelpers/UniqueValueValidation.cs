@@ -134,7 +134,7 @@ public class UniqueValueValidation : CustomDataSource
             ? null
             : appReader.TryGetContentType(contentTypeName);
 
-    private static IContentTypeAttribute? ResolveField(IContentType contentType, string? fieldName)
+    private static IContentTypeField? ResolveField(IContentType contentType, string? fieldName)
         => string.IsNullOrWhiteSpace(fieldName)
             ? null
             : contentType.Attributes.FirstOrDefault(attribute => attribute.Name.Equals(fieldName, StringComparison.OrdinalIgnoreCase));

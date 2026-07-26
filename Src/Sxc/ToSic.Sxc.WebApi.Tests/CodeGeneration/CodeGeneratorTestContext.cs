@@ -112,7 +112,7 @@ internal sealed class CodeGeneratorTestContext
             id: 7,
             nameId: "Article",
             scope: ScopeConstants.Default,
-            attributes: new List<IContentTypeAttribute> { title, hasData }
+            attributes: new List<IContentTypeField> { title, hasData }
         );
     }
 
@@ -149,7 +149,7 @@ internal sealed class CodeGeneratorTestContext
             name: IFieldSettingsGeneral.Constants.ContentTypeName,
             nameId: IFieldSettingsGeneral.Constants.ContentTypeName,
             scope: "TestMetadata",
-            attributes: new List<IContentTypeAttribute> { metadataAttribute }
+            attributes: new List<IContentTypeField> { metadataAttribute }
         );
 
         return dataAssembler.CreateEntityTac(

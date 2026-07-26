@@ -27,7 +27,7 @@ partial class SimpleDataEditService
             return l.Return(new() { ShouldPublish = shouldPublish }, "no attributes to process");
 
         // Find publishing instructions
-        // Handle special "PublishState" attribute
+        // Handle special "PublishState" fieldDef
         var publishKvp = values.FirstOrDefault(pair => pair.Key.EqualsInsensitive(SaveApiAttributes.SavePublishingState));
 
         // did it exist? must check _key_, because key-value-pairs don't have a null-default

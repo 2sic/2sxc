@@ -6,9 +6,9 @@ internal class GeneratePropertyHyperlink(CSharpGeneratorHelper helper) : Generat
 {
     public override ValueTypes ForDataType => ValueTypes.Hyperlink;
 
-    public override List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs)
+    public override List<CodeFragment> Generate(IContentTypeField fieldDef, int tabs)
     {
-        var name = attribute.Name;
+        var name = fieldDef.Name;
 
         return
         [

@@ -70,10 +70,10 @@ internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
     private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
 
 
-    private IHtmlTag HtmlString(IContentType contentType, IContentTypeAttribute attribute, IField field, string? value, object? imageSettings, CmsServiceContainerHelper cntHelper, bool debug)
+    private IHtmlTag HtmlString(IContentType contentType, IContentTypeField fieldDef, IField field, string? value, object? imageSettings, CmsServiceContainerHelper cntHelper, bool debug)
     {
-        var l = Log.Fn<IHtmlTag>($"Attribute: {attribute.Name}");
-        var inputType = attribute.InputType;
+        var l = Log.Fn<IHtmlTag>($"Attribute: {fieldDef.Name}");
+        var inputType = fieldDef.InputType;
         if (debug) l.A($"Field type is: {ValueTypes.String}:{inputType}");
 
         // Not WYSIWYG = normal string, no toolbar by default
@@ -83,7 +83,7 @@ internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
         // WYSIWYG
         var fieldAdam = Cdf.Folder(field.Parent, field.Name, field);
         var htmlResult = StringWysiwygGen.New()
-            .Init(field, contentType, attribute, fieldAdam, debug, imageSettings)
+            .Init(field, contentType, fieldDef, fieldAdam, debug, imageSettings)
             .HtmlForStringAndWysiwyg(value);
 
         return htmlResult.IsProcessed

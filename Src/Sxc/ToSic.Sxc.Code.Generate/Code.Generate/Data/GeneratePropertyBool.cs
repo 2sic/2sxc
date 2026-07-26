@@ -6,9 +6,9 @@ internal class GeneratePropertyBool(CSharpGeneratorHelper helper) : GenerateProp
 {
     public override ValueTypes ForDataType => ValueTypes.Boolean;
 
-    public override List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs)
+    public override List<CodeFragment> Generate(IContentTypeField fieldDef, int tabs)
     {
-        var name = attribute.Name;
+        var name = fieldDef.Name;
 
         return [GenPropSnip(tabs, "bool", name, $"{Specs.ItemAccessor}.Bool", summary:
         [

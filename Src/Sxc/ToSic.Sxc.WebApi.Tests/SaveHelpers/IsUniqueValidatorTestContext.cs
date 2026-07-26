@@ -61,7 +61,7 @@ internal sealed class IsUniqueValidatorTestContext : IDisposable
         DataSourceBase.Dependencies dataSourceDependencies)
         => new(dataAssembler, ctAssemblyKit, dataSourcesService, dataSourceDependencies);
 
-    public IContentType CreateType(string name, params IContentTypeAttribute[] attributes)
+    public IContentType CreateType(string name, params IContentTypeField[] attributes)
         => ContentTypeAssemblyKit.Type.CreateContentTypeTac(
             appId: AppId,
             name: name,
@@ -70,10 +70,10 @@ internal sealed class IsUniqueValidatorTestContext : IDisposable
             attributes: attributes.ToList()
         );
 
-    public IContentTypeAttribute CreateField(string name, ValueTypes type, bool isUnique = false, bool isTitle = false, string? inputType = default)
+    public IContentTypeField CreateField(string name, ValueTypes type, bool isUnique = false, bool isTitle = false, string? inputType = default)
         => CreateField(name, type, uniqueSetting: isUnique ? true : null, isTitle: isTitle, inputType: inputType, includeUniqueMetadata: isUnique);
 
-    public IContentTypeAttribute CreateField(string name, ValueTypes type, bool? uniqueSetting, bool isTitle = false, string? inputType = default, bool includeUniqueMetadata = true)
+    public IContentTypeField CreateField(string name, ValueTypes type, bool? uniqueSetting, bool isTitle = false, string? inputType = default, bool includeUniqueMetadata = true)
     {
         List<IEntity>? metadataItems = null;
         if (includeUniqueMetadata)
@@ -162,7 +162,7 @@ internal sealed class IsUniqueValidatorTestContext : IDisposable
             name: "UniqueFieldMetadata",
             nameId: "UniqueFieldMetadata",
             scope: "TestMetadata",
-            attributes: new List<IContentTypeAttribute> { metadataAttribute }
+            attributes: new List<IContentTypeField> { metadataAttribute }
         );
 
         var values = new Dictionary<string, object>();
@@ -196,7 +196,7 @@ internal sealed class IsUniqueValidatorTestContext : IDisposable
             name: "@All",
             nameId: "@All",
             scope: "TestMetadata",
-            attributes: new List<IContentTypeAttribute> { metadataAttribute }
+            attributes: new List<IContentTypeField> { metadataAttribute }
         );
 
         return DataAssembler.CreateEntityTac(

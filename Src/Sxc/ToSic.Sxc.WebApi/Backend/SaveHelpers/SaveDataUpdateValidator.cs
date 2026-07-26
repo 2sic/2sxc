@@ -70,9 +70,9 @@ internal class SaveDataUpdateValidator(ILog parentLog) : ValidatorBase(parentLog
             {
                 var newAttr = ent.Attributes.FirstOrDefault(a => a.Key == origAttr.Key);
                 if (newAttr.Equals(default(KeyValuePair<string, IAttribute>)))
-                    Add($"attribute {origAttr.Key} not found in save");
+                    Add($"fieldDef {origAttr.Key} not found in save");
                 else if (origAttr.Value.Type != newAttr.Value.Type)
-                    Add($"found different type on attribute {origAttr.Key} " +
+                    Add($"found different type on fieldDef {origAttr.Key} " +
                         $"- '{origAttr.Value.Type}'/'{newAttr.Value.Type}'");
             }
 

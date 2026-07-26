@@ -3,7 +3,7 @@
 internal record ToolbarBuilderConfiguration
 {
     /// <summary>
-    /// How the HTML is created - for tag, attribute, etc.
+    /// How the HTML is created - for tag, fieldDef, etc.
     /// </summary>
     public string? HtmlMode { get; init; }
 

@@ -114,7 +114,7 @@ public class AdamContext(AdamContext.Dependencies services)
     /// </summary>
     public Guid ItemGuid;
 
-    internal IContentTypeAttribute? Attribute;
+    internal IContentTypeField? Attribute;
 
     public IContextOfApp Context { get; private set; } = null!;
 
@@ -126,9 +126,9 @@ public class AdamContext(AdamContext.Dependencies services)
 
 
     /// <summary>
-    /// try to find attribute definition - for later extra security checks
+    /// try to find fieldDef definition - for later extra security checks
     /// </summary>
-    private static IContentTypeAttribute? AttributeDefinition(IAppReadContentTypes appReadContentTypes, string contentType, string fieldName)
+    private static IContentTypeField? AttributeDefinition(IAppReadContentTypes appReadContentTypes, string contentType, string fieldName)
     {
         var type = appReadContentTypes.GetContentType(contentType);
         return type[fieldName];

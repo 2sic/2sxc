@@ -6,9 +6,9 @@ internal class GeneratePropertyDateTime(CSharpGeneratorHelper helper) : Generate
 {
     public override ValueTypes ForDataType => ValueTypes.DateTime;
 
-    public override List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs)
+    public override List<CodeFragment> Generate(IContentTypeField fieldDef, int tabs)
     {
-        var name = attribute.Name;
+        var name = fieldDef.Name;
 
         return
         [

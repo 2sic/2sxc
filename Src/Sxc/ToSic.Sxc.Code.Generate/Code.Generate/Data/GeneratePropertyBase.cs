@@ -9,7 +9,7 @@ internal abstract class GeneratePropertyBase(CSharpGeneratorHelper helper, strin
 
     public abstract ValueTypes ForDataType { get; }
 
-    public abstract List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs);
+    public abstract List<CodeFragment> Generate(IContentTypeField fieldDef, int tabs);
 
     protected CodeFragment GenPropSnip(int tabs, string returnType, string name, string method,
         NoParamOrder npo = default,
