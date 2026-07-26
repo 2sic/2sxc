@@ -49,7 +49,7 @@ public class ContentTypeDetails : CustomDataSource
         ProvideOutRaw(GetContentTypeDetails, options: () => new()
         {
             TitleField = nameof(ContentTypeDto.Name),
-            TypeName = ContentTypeConstants.ContentTypeName,
+            TypeName = IContentTypeDetails.Constants.ContentTypeName,
             AllowUnknownValueTypes = true,
         });
 

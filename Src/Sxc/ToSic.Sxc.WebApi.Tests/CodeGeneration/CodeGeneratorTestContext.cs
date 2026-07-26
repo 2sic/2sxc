@@ -3,6 +3,7 @@ using ToSic.Eav.Apps.Sys.State.AppStateBuilder;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Build.Sys;
+using ToSic.Eav.Data.ContentTypes.Fields;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.Attributes;
 using ToSic.Sxc.Code.Generate.Sys;
@@ -136,7 +137,7 @@ internal sealed class CodeGeneratorTestContext
     {
         var metadataAttribute = ctAssemblyKit.Field.Create(
             appId: AppId,
-            name: AttributeMetadataConstants.MetadataFieldAllIsEphemeral,
+            name: nameof(IFieldSettingsGeneral.IsEphemeral),
             type: ValueTypes.Boolean,
             isTitle: false,
             id: ++attributeId,
@@ -145,8 +146,8 @@ internal sealed class CodeGeneratorTestContext
 
         var metadataType = ctAssemblyKit.Type.CreateContentTypeTac(
             appId: AppId,
-            name: AttributeMetadataConstants.TypeGeneral,
-            nameId: AttributeMetadataConstants.TypeGeneral,
+            name: IFieldSettingsGeneral.Constants.ContentTypeName,
+            nameId: IFieldSettingsGeneral.Constants.ContentTypeName,
             scope: "TestMetadata",
             attributes: new List<IContentTypeAttribute> { metadataAttribute }
         );
@@ -154,9 +155,9 @@ internal sealed class CodeGeneratorTestContext
         return dataAssembler.CreateEntityTac(
             appId: AppId,
             contentType: metadataType,
-            values: new Dictionary<string, object>
+            values: new()
             {
-                { AttributeMetadataConstants.MetadataFieldAllIsEphemeral, true }
+                { nameof(IFieldSettingsGeneral.IsEphemeral), true }
             },
             entityId: ++entityId,
             repositoryId: entityId,
