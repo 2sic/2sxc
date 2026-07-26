@@ -77,9 +77,10 @@ public class AppEnhancements : CustomDataSource
     private IEnumerable<IRawEntity> GetMetadata()
     {
         var items = _metadataController.Value.Get(AppId, (int)TargetTypes.App, "number", AppId.ToString()).Items ?? [];
-        return items.Select(item => new RawEntity(item.ToDictionary(pair => pair.Key, pair => pair.Value))
+        return items.Select(item => new RawEntity
         {
             Id = item.TryGetValue("Id", out var id) ? Convert.ToInt32(id) : 0,
+            Values = item.ToDictionary(pair => pair.Key, pair => pair.Value),
         });
     }
 
