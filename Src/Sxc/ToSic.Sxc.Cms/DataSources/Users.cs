@@ -165,7 +165,7 @@ public class Users : CustomDataSourceAdvanced
 
         // Figure out options to be sure we have the roles/roleids
         var relationships = new LazyLookup<object, IEntity>();
-        var userFactory = DataFactory.SpawnNew(options: UserModel.Options with
+        var userFactory = DataFactory.SpawnNew(options: new()
         {
             // Option to tell the entity conversion to add the "Roles" to each user
             RawConvertOptions = new(addKeys: ["Roles"]),
@@ -185,7 +185,7 @@ public class Users : CustomDataSourceAdvanced
             // Get roles and extend with the property necessary for Users to map to the roles
             roles = GetRolesStream(usersRaw);
             var roleRels = roles
-                .Select(r => new KeyValuePair<object, IEntity>($"{UserModel.RoleRelationshipPrefix}{r.EntityId}", r));
+                .Select(r => new KeyValuePair<object, IEntity>($"{UserModelRaw.RoleRelationshipPrefix}{r.EntityId}", r));
             relationships.Add(roleRels);
             return l.Return((users, roles), $"users {users.Count}; roles {roles.Count}");
         }
@@ -199,9 +199,9 @@ public class Users : CustomDataSourceAdvanced
 
     }
 
-    private List<UserModel> GetUsersAndFilter()
+    private List<UserModelRaw> GetUsersAndFilter()
     {
-        var l = Log.Fn<List<UserModel>>();
+        var l = Log.Fn<List<UserModelRaw>>();
         var users = _provider.GetUsers(Specs)?.ToList();
         if (users == null || users.Count == 0)
             return l.Return([], "null/empty");
@@ -215,7 +215,7 @@ public class Users : CustomDataSourceAdvanced
     /// </summary>
     /// <param name="usersRaw"></param>
     /// <returns></returns>
-    private List<IEntity> GetRolesStream(List<UserModel> usersRaw)
+    private List<IEntity> GetRolesStream(List<UserModelRaw> usersRaw)
     {
         // Get list of all role IDs which are to be used
         var roleIds = usersRaw

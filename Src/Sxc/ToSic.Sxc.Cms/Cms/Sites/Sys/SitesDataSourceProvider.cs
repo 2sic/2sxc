@@ -19,7 +19,7 @@ public abstract class SitesDataSourceProvider(SitesDataSourceProvider.Dependenci
     /// So the core data source doesn't have settings to configure this
     /// </summary>
     /// <returns></returns>
-    public abstract List<SiteModel> GetSitesInternal();
+    public abstract List<SiteModelRaw> GetSitesInternal();
 
     public int GetZoneId(int siteId) => Services.ZoneMapperLazy.Value.GetZoneId(siteId);
 

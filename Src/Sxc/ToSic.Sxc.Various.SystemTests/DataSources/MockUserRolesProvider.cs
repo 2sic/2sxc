@@ -9,13 +9,13 @@ namespace ToSic.Sxc.Tests.DataSources;
 /// </summary>
 public class MockUserRolesProvider() : ServiceBase("DS.MockRoles"), IUserRolesProvider
 {
-    public IEnumerable<UserRoleModel> GetRoles()
+    public IEnumerable<UserRoleModelRaw> GetRoles()
     {
-        var l = Log.Fn<IEnumerable<UserRoleModel>>();
+        var l = Log.Fn<IEnumerable<UserRoleModelRaw>>();
         const int siteId = 0;
         l.A($"Mock Portal Id {siteId}");
 
-        var roles = new List<UserRoleModel>();
+        var roles = new List<UserRoleModelRaw>();
         for (var i = 1; i <= 10; i++)
         {
             roles.Add(new()

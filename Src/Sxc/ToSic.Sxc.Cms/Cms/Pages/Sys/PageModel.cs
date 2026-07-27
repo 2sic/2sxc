@@ -1,6 +1,7 @@
 ﻿namespace ToSic.Sxc.Cms.Pages.Sys;
 
-public record PageModelOfEntity: ModelFromEntity, IPageModel
+[PrivateApi]
+public record PageModel: ModelFromEntity, IPageModel
 {
     public int Id => Entity.EntityId;
     public int ParentId => GetThis(0);
@@ -19,6 +20,6 @@ public record PageModelOfEntity: ModelFromEntity, IPageModel
     public DateTime Modified => Entity.Modified;
     public bool IsDeleted => GetThis(false);
 
-    public IEnumerable<IPageModel> Children =>
-        Entity.Children(field: nameof(Children)).ToModels<PageModelOfEntity>();
+    public IEnumerable<IPageModel> Children => field
+        ??= Entity.Children(field: nameof(Children)).ToModels<PageModel>();
 }

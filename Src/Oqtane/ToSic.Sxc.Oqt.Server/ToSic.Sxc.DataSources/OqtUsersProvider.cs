@@ -35,9 +35,9 @@ internal class OqtUsersProvider(
             : oqtSecurity.Value.CmsUserBuilder(user);
     }
 
-    public IEnumerable<UserModel> GetUsers(UsersGetSpecs specs)
+    public IEnumerable<UserModelRaw> GetUsers(UsersGetSpecs specs)
     {
-        var l = Log.Fn<List<UserModel>>();
+        var l = Log.Fn<List<UserModelRaw>>();
         _specs = specs;
 
         l.A($"Portal Id {SiteId}");

@@ -13,16 +13,10 @@ namespace ToSic.Sxc.Cms.Pages.Sys;
 /// </summary>
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-[ContentType(
-    Guid = "c648a91d-b650-42bf-ad6a-9582015c165e",
-    Description = "Page in the site",
-    Name = TypeName
-)]
+[ContentTypeAssign(Type = typeof(IPageModel))]
 public record PageModelRaw: IRawEntity, IPageModel, IRelationshipKeys
 {
     #region IRawEntity
-
-    private const string TypeName = "Page";
 
     internal static DataFactoryOptions Option = new()
     {
@@ -116,7 +110,6 @@ public record PageModelRaw: IRawEntity, IPageModel, IRelationshipKeys
     public bool IsDeleted { get; init; }
 
     // Not implemented, and not sure if we should, since it would potentially introduce a lot of prefetch data
-    //[ContentTypeAttributeSpecs(Type = ValueTypes.Entity, Description = "Reference to the child pages.")]
-    //public IEnumerable<IPageModel> Children { get; init; }
+    IEnumerable<IPageModel> IPageModel.Children => throw new NotImplementedException();
 
 }

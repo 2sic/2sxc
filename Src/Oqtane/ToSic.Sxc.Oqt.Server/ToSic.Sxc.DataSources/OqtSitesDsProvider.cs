@@ -30,11 +30,11 @@ internal class OqtSitesDsProvider : SitesDataSourceProvider
 
     #endregion
 
-    public override List<SiteModel> GetSitesInternal()
+    public override List<SiteModelRaw> GetSitesInternal()
     {
-        var l = Log.Fn<List<SiteModel>>();
+        var l = Log.Fn<List<SiteModelRaw>>();
         var sites = _sites.GetSites().ToList();
-        return l.ReturnAsOk(sites.Select(s => new SiteModel
+        return l.ReturnAsOk(sites.Select(s => new SiteModelRaw
         {
             Id = s.SiteId,
             Guid = new(s.SiteGuid),

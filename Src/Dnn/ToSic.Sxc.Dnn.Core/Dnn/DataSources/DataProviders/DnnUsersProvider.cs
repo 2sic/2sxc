@@ -30,9 +30,9 @@ internal class DnnUsersProvider(LazySvc<DnnSecurity> dnnSecurity)
             : dnnSecurity.Value.CmsUserBuilder(user, siteId);
     }
 
-    public IEnumerable<UserModel> GetUsers(UsersGetSpecs specs)
+    public IEnumerable<UserModelRaw> GetUsers(UsersGetSpecs specs)
     {
-        var l = Log.Fn<IEnumerable<UserModel>>($"specs:{specs}");
+        var l = Log.Fn<IEnumerable<UserModelRaw>>($"specs:{specs}");
         _specs = specs;
         try
         {
@@ -41,13 +41,13 @@ internal class DnnUsersProvider(LazySvc<DnnSecurity> dnnSecurity)
         catch (Exception ex)
         {
             l.Ex(ex);
-            return l.Return(new List<UserModel>(), "error");
+            return l.Return(new List<UserModelRaw>(), "error");
         }
     }
 
-    private IEnumerable<UserModel> GetUsersInternal()
+    private IEnumerable<UserModelRaw> GetUsersInternal()
     {
-        var l = Log.Fn<List<UserModel>>();
+        var l = Log.Fn<List<UserModelRaw>>();
         var siteId = PortalSettings.Current?.PortalId ?? NullInteger;
         l.A($"Portal Id {siteId}");
         try

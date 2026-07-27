@@ -75,13 +75,13 @@ public class DnnSecurity(LazySvc<RoleController> roleController) : ServiceBase("
         return new(false);
     }
 
-    private List<UserRoleModel> UserRoles(UserInfo user, int? portalId = null)
+    private List<UserRoleModelRaw> UserRoles(UserInfo user, int? portalId = null)
         => IsNullOrAnonymous(user)
             ? []
             : user.Roles
                 .Select(r => RoleController.Instance.GetRoleByName(portalId ?? user.PortalID, r))
                 .Where(r => r != null)
-                .Select(r => new UserRoleModel
+                .Select(r => new UserRoleModelRaw
                 {
                     Id = r.RoleID,
                     Name = r.RoleName,
@@ -99,7 +99,7 @@ public class DnnSecurity(LazySvc<RoleController> roleController) : ServiceBase("
             ? SxcUserConstants.Anonymous
             : DnnConstants.UserTokenPrefix + user.UserID;
 
-    internal UserModel CmsUserBuilder(UserInfo user, int siteId)
+    internal UserModelRaw CmsUserBuilder(UserInfo user, int siteId)
     {
         var adminInfo = UserMayAdminThis(user);
         return new()

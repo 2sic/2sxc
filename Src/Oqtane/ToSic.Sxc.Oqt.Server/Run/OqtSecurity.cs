@@ -25,9 +25,9 @@ public class OqtSecurity(LazySvc<IUserRoleRepository> userRoleRepository, UserMa
     public string UserIdentityToken(User user) => $"{OqtConstants.UserTokenPrefix}{Id(user)}";
 
     public List<int> Roles(User user) => userRoleRepository.Value.GetUserRoles(Id(user), user.SiteId).Select(r => r.RoleId).ToList();
-    public List<UserRoleModel> Roles2(User user) => userRoleRepository.Value
+    public List<UserRoleModelRaw> Roles2(User user) => userRoleRepository.Value
         .GetUserRoles(Id(user), user.SiteId)
-        .Select(r => new UserRoleModel
+        .Select(r => new UserRoleModelRaw
         {
             Id = r.RoleId,
             Name = r.Role.Name,
@@ -42,7 +42,7 @@ public class OqtSecurity(LazySvc<IUserRoleRepository> userRoleRepository, UserMa
 
     public bool IsAnonymous(User user) => Id(user) == -1;
 
-    public UserModel CmsUserBuilder(User user)
+    public UserModelRaw CmsUserBuilder(User user)
     {
         var isSiteAdmin = IsSiteAdmin(user);
         return new()

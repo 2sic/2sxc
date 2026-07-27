@@ -10,9 +10,8 @@ namespace ToSic.Sxc.Cms.Notes;
 /// 
 /// * Introduced in v21.02
 /// </remarks>
-[ModelSpecs(Use = typeof(NoteModelOfEntity))]
 [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP v21.02")]
-public interface INoteModel : IModelFromEntity, IModelFromData
+public interface INoteModel : IModelFromEntity<NoteModel>, IModelFromData
 {
     /// <summary>
     /// The note ID.

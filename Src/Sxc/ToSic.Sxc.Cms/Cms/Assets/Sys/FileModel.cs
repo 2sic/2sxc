@@ -4,7 +4,7 @@ using ToSic.Eav.Apps.Assets.Sys;
 namespace ToSic.Sxc.Cms.Assets.Sys;
 
 [PrivateApi("Still tweaking details and naming v19.0x")]
-internal record FileModelOfEntity: ModelFromEntity, IFileModelSync, IFileModel
+public record FileModel: ModelFromEntity, IFileModelSync, IFileModel
 {
     ///// <summary>
     ///// The ID of this asset (file/folder).
@@ -29,7 +29,7 @@ internal record FileModelOfEntity: ModelFromEntity, IFileModelSync, IFileModel
 
     [field: AllowNull, MaybeNull]
     public IFolderModel Folder => field
-        ??= Entity.Children(field: nameof(Folder)).FirstOrDefault()?.ToModel<FolderModelOfEntity>(skipTypeCheck: true)!;
+        ??= Entity.Children(field: nameof(Folder)).FirstOrDefault()?.ToModel<FolderModel>(skipTypeCheck: true)!;
 
     public int Size => GetThis(0);
 

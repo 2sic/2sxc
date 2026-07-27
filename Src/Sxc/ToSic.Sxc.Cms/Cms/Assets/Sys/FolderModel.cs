@@ -1,7 +1,7 @@
 ﻿namespace ToSic.Sxc.Cms.Assets.Sys;
 
 [PrivateApi("Still tweaking details and naming v19.0x")]
-internal record FolderModelOfEntity: ModelFromEntity, IFolderModelSync, IFolderModel
+public record FolderModel: ModelFromEntity, IFolderModelSync, IFolderModel
 {
     ///// <inheritdoc cref="FileTyped.Id"/>
     //public int Id => ((ITypedItem)this).Id;
@@ -15,15 +15,15 @@ internal record FolderModelOfEntity: ModelFromEntity, IFolderModelSync, IFolderM
 
     [field: AllowNull, MaybeNull]
     public IFolderModel Folder => field
-        ??= Entity.Children(field: nameof(Folder)).FirstOrDefault()?.ToModel<FolderModelOfEntity>(skipTypeCheck: true)!;
+        ??= Entity.Children(field: nameof(Folder)).FirstOrDefault()?.ToModel<FolderModel>(skipTypeCheck: true)!;
 
     [field: AllowNull, MaybeNull]
     public IEnumerable<IFolderModel> Folders => field 
-        ??= Entity.Children(field: nameof(Folders)).ToModels<FolderModelOfEntity>();
+        ??= Entity.Children(field: nameof(Folders)).ToModels<FolderModel>();
 
     [field: AllowNull, MaybeNull]
     public IEnumerable<IFileModel> Files => field
-        ??= Entity.Children(field: nameof(Files)).ToModels<FileModelOfEntity>()!;
+        ??= Entity.Children(field: nameof(Files)).ToModels<FileModel>()!;
 
     public string? Url => GetThis<string>(null);
     public DateTime Created => Entity.Created;

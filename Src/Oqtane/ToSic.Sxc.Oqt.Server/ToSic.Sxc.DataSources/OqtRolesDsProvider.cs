@@ -13,19 +13,19 @@ internal class OqtRolesDsProvider(IRoleRepository roles, SiteState siteState)
         IUserRolesProvider
 {
     [PrivateApi]
-    public IEnumerable<UserRoleModel> GetRoles()
+    public IEnumerable<UserRoleModelRaw> GetRoles()
     {
-        var l = Log.Fn<IEnumerable<UserRoleModel>>();
+        var l = Log.Fn<IEnumerable<UserRoleModelRaw>>();
         var siteId = siteState.Alias.SiteId;
         l.A($"Portal Id {siteId}");
         try
         {
             var roles1 = roles.GetRoles(siteId, includeGlobalRoles: true).ToList();
             if (!roles1.Any())
-                return l.Return(new List<UserRoleModel>(), "null/empty");
+                return l.Return(new List<UserRoleModelRaw>(), "null/empty");
 
             var result = roles1
-                .Select(r => new UserRoleModel
+                .Select(r => new UserRoleModelRaw
                 {
                     Id = r.RoleId,
                     // Guid = r.
@@ -39,7 +39,7 @@ internal class OqtRolesDsProvider(IRoleRepository roles, SiteState siteState)
         catch (Exception ex)
         {
             l.Ex(ex);
-            return l.Return(new List<UserRoleModel>(), "error");
+            return l.Return(new List<UserRoleModelRaw>(), "error");
         }
     }
 }

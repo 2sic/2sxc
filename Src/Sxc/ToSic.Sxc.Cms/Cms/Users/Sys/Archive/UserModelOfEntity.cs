@@ -3,7 +3,7 @@
 //namespace ToSic.Sxc.Cms.Users.Sys;
 
 
-//internal class UserModelOfEntity : ModelFromEntity, IUserModel
+//internal class UserModelFromEntity : ModelFromEntity, IUserModel
 //{
 
 //    public string? Email => GetThis<string>(null);

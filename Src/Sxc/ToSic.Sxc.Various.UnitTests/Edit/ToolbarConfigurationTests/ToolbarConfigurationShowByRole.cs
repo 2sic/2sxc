@@ -44,10 +44,10 @@ public class ToolbarConfigurationShowByRole
             ShowDenyRoles = denyFor?.CsvToArrayWithoutEmpty().ToList(),
         };
 
-        var user = new UserModel
+        var user = new UserModelRaw
         {
             Roles = userRoles.CsvToArrayWithoutEmpty()
-                .Select(IUserRoleModel (ur) => new UserRoleModel { Name = ur })
+                .Select(IUserRoleModel (ur) => new UserRoleModelRaw { Name = ur })
         };
 
         var show = new ToolbarConfigurationShowHelper().OverrideShowBecauseOfRoles(config, user);

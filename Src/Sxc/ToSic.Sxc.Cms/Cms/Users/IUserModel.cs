@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Cms.Users.Sys;
+﻿using ToSic.Eav.Data.ContentTypes;
+using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Cms.Users;
@@ -17,10 +18,19 @@ namespace ToSic.Sxc.Cms.Users;
 /// 
 /// * Introduced in v19.01
 /// </remarks>
-[ModelSpecs(Use = typeof(UserModelOfEntity))]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
-public interface IUserModel : IModelFromData
+[ContentType(
+    Guid = "612f9341-ff91-443d-be58-500e55bec2d8",
+    Description = "User Information",
+    Name = Constants.ContentTypeName
+)]
+public interface IUserModel : IModelFromEntity<UserModel>
 {
+    private static class Constants
+    {
+        public const string ContentTypeName = "User";
+    }
+    
     /// <inheritdoc cref="IUser.Email"/>
     string? Email { get; }
 
@@ -78,6 +88,7 @@ public interface IUserModel : IModelFromData
     bool IsSiteDeveloper { get; }
 
     /// <inheritdoc cref="IUser.Name"/>
+    [ContentTypeField(IsTitle = true)]
     string? Name { get; }
 
     /// <inheritdoc cref="IUser.Username"/>

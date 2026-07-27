@@ -18,12 +18,12 @@ public class MockUsersProvider() : ServiceBase("DS.MockUsers"), IUsersProvider
 
     public IUserModel GetUser(int userId, int siteId) => throw new NotImplementedException();
 
-    public IEnumerable<UserModel> GetUsers(UsersGetSpecs specs)
+    public IEnumerable<UserModelRaw> GetUsers(UsersGetSpecs specs)
     {
-        var l = Log.Fn<IEnumerable<UserModel>>();
+        var l = Log.Fn<IEnumerable<UserModelRaw>>();
         var siteId = 0;
         l.A($"Portal Id {siteId}");
-        var users = new List<UserModel>();
+        var users = new List<UserModelRaw>();
 
         l.A($"mock {GenerateSuperUsers} super users and admins with one role [1-3]");
         for (var i = 1; i <= GenerateSuperUsers; i++)
@@ -33,7 +33,7 @@ public class MockUsersProvider() : ServiceBase("DS.MockUsers"), IUsersProvider
                 Id = i,
                 Guid = new($"00000000-0000-0000-0000-{i:d12}"),
                 NameId = $"mock:{i}",
-                Roles = [new UserRoleModel { Id = i, Name = $"Role{i}" }],
+                Roles = [new UserRoleModelRaw { Id = i, Name = $"Role{i}" }],
                 IsSystemAdmin = true,
                 IsSiteAdmin = true,
                 //IsDesigner = false,
@@ -59,9 +59,9 @@ public class MockUsersProvider() : ServiceBase("DS.MockUsers"), IUsersProvider
                 NameId = $"mock:{i}",
                 Roles =
                 [
-                    new UserRoleModel { Id = 2, Name = "Role2" },
-                    new UserRoleModel { Id = 3, Name = "Role3" },
-                    new UserRoleModel { Id = i, Name = $"Role{i}" }
+                    new UserRoleModelRaw { Id = 2, Name = "Role2" },
+                    new UserRoleModelRaw { Id = 3, Name = "Role3" },
+                    new UserRoleModelRaw { Id = i, Name = $"Role{i}" }
                 ],
                 IsSystemAdmin = false,
                 IsSiteAdmin = false,
@@ -87,8 +87,8 @@ public class MockUsersProvider() : ServiceBase("DS.MockUsers"), IUsersProvider
                 NameId = $"mock:{i}",
                 Roles =
                 [
-                    new UserRoleModel { Id = 9, Name = "Role9" },
-                    new UserRoleModel { Id = 10, Name = "Role10" }
+                    new UserRoleModelRaw { Id = 9, Name = "Role9" },
+                    new UserRoleModelRaw { Id = 10, Name = "Role10" }
                 ],
                 IsSystemAdmin = false,
                 IsSiteAdmin = false,

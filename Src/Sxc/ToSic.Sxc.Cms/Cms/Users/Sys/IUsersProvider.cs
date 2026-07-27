@@ -24,5 +24,5 @@ public interface IUsersProvider
     /// </summary>
     /// <param name="specs"></param>
     /// <returns></returns>
-    public IEnumerable<UserModel> GetUsers(UsersGetSpecs specs);
+    public IEnumerable<UserModelRaw> GetUsers(UsersGetSpecs specs);
 }

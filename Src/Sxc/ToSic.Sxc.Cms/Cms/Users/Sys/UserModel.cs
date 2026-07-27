@@ -1,141 +1,43 @@
-﻿using ToSic.Eav.Data.Build;
-using ToSic.Eav.Data.ContentTypes;
-using ToSic.Eav.Data.Raw.Sys;
+﻿namespace ToSic.Sxc.Cms.Users.Sys;
 
-namespace ToSic.Sxc.Cms.Users.Sys;
 
-/// <summary>
-/// Internal class to hold all the information about the user,
-/// until it's converted to an IEntity in the <see cref="Users"/> DataSource.
-///
-/// * TODO:
-/// </summary>
-[PrivateApi("this is only internal - public access is always through interface")]
-[ShowApiWhenReleased(ShowApiMode.Never)]
-[ContentType(
-    Guid = "612f9341-ff91-443d-be58-500e55bec2d8",
-    Description = "User Information",
-    Name = MyContentTypeName
-)]
-public record UserModel : IHasIdentityNameId, IUserModel, IRawEntityConvertible
+public record UserModel : ModelFromEntity, IUserModel
 {
-    #region Types and Names for Raw Entities
 
-    private const string MyContentTypeName = "User";
-    internal static DataFactoryOptions Options = new()
-    {
-        TitleField = nameof(Name),
-        Type = typeof(UserModel)
-    };
+    public string? Email => GetThis<string>(null);
 
-    //IDictionary<string, object?> IRawEntity.Attributes(RawConvertOptions options)
-    //{
-    //    var data = new Dictionary<string, object?>
-    //    {
-    //        { nameof(Name), Name },
-    //        { nameof(NameId), NameId },
-    //        { nameof(IsSystemAdmin), IsSystemAdmin },
-    //        { nameof(IsSiteAdmin), IsSiteAdmin },
-    //        { nameof(IsContentAdmin), IsContentAdmin },
-    //        { nameof(IsAnonymous), IsAnonymous },
-    //        { nameof(Username), Username },
-    //        { nameof(Email), Email },
-    //    };
+    public int Id => Entity.EntityId;
 
-    //    if (options.ShouldAddKey(nameof(IUserModel.Roles)))
-    //        data.Add(
-    //            nameof(IUserModel.Roles),
-    //            new RawRelationship(keys: Roles.Select(object (r) => $"{RoleRelationshipPrefix}{r.Id}").ToList() ?? [])
-    //        );
+    public Guid Guid => Entity.EntityGuid;
 
-    //    return data;
-    //}
+    public DateTime Created => Entity.Created;
 
-    internal const string RoleRelationshipPrefix = "Role:";
+    public DateTime Modified => Entity.Modified;
 
-    ///// <summary>
-    ///// Role ID List.
-    ///// Important: Internally we use a list to do checks etc.
-    ///// But for creating the entity we need the raw ID list.
-    ///// </summary>
-    //internal List<int> RolesRaw { get; init; }
+    public bool IsAnonymous => GetThis(false);
 
-    #endregion
+    public bool IsSiteAdmin => GetThis(false);
 
-    public int Id { get; init; }
-    public Guid Guid { get; init; }
-    public DateTime Created { get; init; } = DateTime.Now;
-    public DateTime Modified { get; init; } = DateTime.Now;
+    public bool IsContentAdmin => GetThis(false);
 
+    public bool IsContentEditor => GetThis(false);
 
-#pragma warning disable CS8766 // Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
-    public string? NameId { get; init; }
-#pragma warning restore CS8766 // Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
+    public string? NameId => GetThis<string>(null);
 
-    public bool IsSystemAdmin { get; init; }
-    public bool IsSiteAdmin { get; init; }
-    public bool IsContentAdmin { get; init; }
-    public bool IsContentEditor { get; init; }
-    public bool IsSiteDeveloper => IsSystemAdmin;
+    public bool IsSystemAdmin => GetThis(false);
 
-    public bool IsAnonymous { get; init; } = true;  // Default is true, everything else is default false.
+    public bool IsSiteDeveloper => GetThis(false);
 
-    ///// <summary>
-    ///// Ignore, just included for IUser compatibility
-    ///// </summary>
-    //string IUser.IdentityToken => null;
+    //IMetadata ICmsUser.Metadata => null;
 
-    public string? Username { get; init; }
-    public string? Email { get; init; } // aka PreferredEmail
+    public string? Name => GetThis<string>(null);
 
-    [ContentTypeField(IsTitle = true)]
-    public string? Name { get; init; } // aka DisplayName
+    public string? Username => GetThis<string>(null);
 
-    public IEnumerable<IUserRoleModel> Roles { get; init; } = [];
+    //IMetadataOf IHasMetadata.Metadata => null;
 
-
-    /// <summary>
-    /// Use this converter when about to convert to IEntity
-    /// </summary>
-    /// <returns></returns>
-    IRawEntityConverter IRawEntityConvertible.GetConverter() => Converter;
-
-    /// <summary>
-    /// Prepare a reusable, factory-based converter for User Models to IRawEntity
-    /// </summary>
-    private static IRawEntityConverter Converter { get; } =
-        new RawEntityConverterFactory<UserModel>((source, options) =>
-        {
-            var data = new Dictionary<string, object?>
-            {
-                { nameof(Name), source.Name },
-                { nameof(NameId), source.NameId },
-                { nameof(IsSystemAdmin), source.IsSystemAdmin },
-                { nameof(IsSiteAdmin), source.IsSiteAdmin },
-                { nameof(IsContentAdmin), source.IsContentAdmin },
-                { nameof(IsAnonymous), source.IsAnonymous },
-                { nameof(Username), source.Username },
-                { nameof(Email), source.Email },
-            };
-
-            if (options.ShouldAddKey(nameof(IUserModel.Roles)))
-                data.Add(
-                    nameof(IUserModel.Roles),
-                    new RawRelationship
-                    {
-                        Keys = source.Roles
-                            .Select(object (r) => $"{RoleRelationshipPrefix}{r.Id}")
-                            .ToList() ?? []
-                    }
-                );
-            
-            return new RawEntity
-            {
-                Id = source.Id,
-                Guid = source.Guid,
-                Values = data,
-            };
-        });
-
+    public IEnumerable<IUserRoleModel> Roles =>
+        Entity.Children(field: nameof(Roles)).ToModels<UserRoleModel>();
+        //AsList<UserRoleModelFromEntity>(Entity.Children(field: nameof(Roles)))!;
 
 }

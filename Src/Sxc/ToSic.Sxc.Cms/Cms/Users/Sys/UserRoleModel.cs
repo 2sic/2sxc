@@ -1,51 +1,12 @@
-﻿using ToSic.Eav.Data.Build;
-using ToSic.Eav.Data.ContentTypes;
-using ToSic.Eav.Data.Raw.Sys;
-using ToSic.Sxc.DataSources;
-using ToSic.Sys.Users;
+﻿namespace ToSic.Sxc.Cms.Users.Sys;
 
-namespace ToSic.Sxc.Cms.Users.Sys;
-
-/// <summary>
-/// Internal class to hold all the information about the role.
-/// until it's converted to an IEntity in the <see cref="UserRoles"/> DataSource.
-///
-/// TODO:
-/// </summary>
-[PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
-[ShowApiWhenReleased(ShowApiMode.Never)]
-[ContentType(
-    Guid = "dc104414-e61a-4a59-bda8-455772ceb0cc",
-    Description = "User-Role in the site",
-    Name = TypeName
-)]
-public record UserRoleModel: IRawEntity, IRole, IUserRoleModel
+public record UserRoleModel: ModelFromEntity, IUserRoleModel
 {
-    #region IRawEntity
+    public int Id => Entity.EntityId;
 
-    internal const string TypeName = "Role";
+    public string Name => Entity.Get<string>(nameof(Name), fallback: "unknown");
 
-    internal static DataFactoryOptions Options = new()
-    {
-        AutoId = false,
-        TitleField = nameof(Name),
-        Type = typeof(UserRoleModel)
-    };
+    public DateTime Created => Entity.Created;
 
-    IDictionary<string, object?> IRawEntity.Values
-        => new Dictionary<string, object?>
-        {
-            { nameof(Name), Name },
-        };
-
-    Guid IRawEntity.Guid => Guid.Empty;
-
-    #endregion
-
-    public int Id { get; init; }
-    public DateTime Created { get; init; } = DateTime.Now;
-    public DateTime Modified { get; init; } = DateTime.Now;
-
-    public string Name { get; init; } = "unknown";
-
+    public DateTime Modified => Entity.Modified;
 }

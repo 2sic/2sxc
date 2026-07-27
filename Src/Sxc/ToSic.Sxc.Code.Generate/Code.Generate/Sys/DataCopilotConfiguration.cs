@@ -8,9 +8,8 @@ namespace ToSic.Sxc.Code.Generate.Sys;
 /// The interface is the main thing we should use.
 /// It also tells ToModel{IDataCopilotConfiguration}() what to use when converting from entity to model.
 /// </summary>
-[ModelSpecs(Use = typeof(DataCopilotConfigurationFromEntity))]  // Needed so the model converter knows what to use when converting from entity to model
 [PrivateApi]
-internal interface IDataCopilotConfiguration: IModelFromEntity
+internal interface IDataCopilotConfiguration: IModelFromEntity<DataCopilotConfigurationFromEntity>
 {
     /// <summary>
     /// ID as stored in the entity.

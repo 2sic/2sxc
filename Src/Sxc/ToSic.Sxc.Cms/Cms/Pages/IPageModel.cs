@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Cms.Pages.Sys;
+﻿using ToSic.Eav.Data.ContentTypes;
+using ToSic.Sxc.Cms.Pages.Sys;
 
 namespace ToSic.Sxc.Cms.Pages;
 
@@ -18,10 +19,19 @@ namespace ToSic.Sxc.Cms.Pages;
 /// * the previous internal implementation had a property called `Visible` which we finalized to `IsNavigation` to better clarify it purpose.
 /// * the previous internal implementation had a property called `Clickable` which we finalized to `IsClickable` to better clarify it purpose.
 /// </remarks>
-[ModelSpecs(Use = typeof(PageModelOfEntity))]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
-public interface IPageModel : IModelFromData
+[ContentType(
+    Guid = "c648a91d-b650-42bf-ad6a-9582015c165e",
+    Description = "Page in the site",
+    Name = Constants.TypeName
+)]
+public interface IPageModel : IModelFromEntity<PageModel>
 {
+    private static class Constants
+    {
+        public const string TypeName = "Page";
+    }
+    
     /// <summary>
     /// The page ID.
     ///
@@ -173,5 +183,6 @@ public interface IPageModel : IModelFromData
     bool IsDeleted { get; }
 
     // Not implemented, and not sure if we should, since it would potentially introduce a lot of prefetch data
-    //IEnumerable<IPageModel> Children { get; }
+    [ContentTypeField(Type = ValueTypes.Entity, Description = "Reference to the child pages.")]
+    IEnumerable<IPageModel> Children { get; }
 }
