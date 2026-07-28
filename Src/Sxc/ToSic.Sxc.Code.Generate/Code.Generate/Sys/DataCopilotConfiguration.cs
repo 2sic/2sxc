@@ -16,7 +16,7 @@ internal interface IDataCopilotConfiguration: IModelFromEntity<DataCopilotConfig
     /// Not really relevant, but we want log it in certain cases, so we include it in the config.
     /// </summary>
     int Id { get; }
-    
+
     /// <summary>
     /// .net class Name (without namespace) of the code generator to use.
     /// </summary>
@@ -121,11 +121,13 @@ internal record DataCopilotConfiguration: IDataCopilotConfiguration, IRawEntity
 /// It will be used automatically when calling ToModel{IDataCopilotConfiguration}() on an entity of this type.
 /// </summary>
 [ModelSpecs(ContentType = DataCopilotConfiguration.MyContentTypeName)] // so it knows the real name of the content-type for type checks
-internal record DataCopilotConfigurationFromEntity : ModelFromEntityBasic, IDataCopilotConfiguration
+internal record DataCopilotConfigurationFromEntity : ModelFromEntity, IDataCopilotConfiguration
 {
     [ContentTypeField(IsTitle = true)]
     public string CodeGenerator => GetThis("");
     
+    public int Id => Entity?.EntityId ?? 0;
+
     public bool AutoGenerate => GetThis(false);
     public string Namespace => GetThis("");
     public string TargetFolder => GetThis("");

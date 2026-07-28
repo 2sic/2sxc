@@ -105,6 +105,11 @@ public class InheritableApps : CustomDataSource
         var lightSpeed = LightSpeedDecorator.GetFromAppStatePiggyBack(appReader);
         return (lightSpeed as ICanBeEntity)?.Entity == null
             ? null
-            : new() { Id = lightSpeed.Id, Title = lightSpeed.Title, IsEnabled = lightSpeed.IsEnabled };
+            : new()
+            {
+                Id = lightSpeed.Id,
+                Title = lightSpeed.Title,
+                IsEnabled = lightSpeed.IsEnabled
+            };
     }
 }
