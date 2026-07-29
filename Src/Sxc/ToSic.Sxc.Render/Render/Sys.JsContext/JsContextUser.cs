@@ -14,7 +14,13 @@ public class JsContextUser(IUser user, IEnumerable<IEntity>? dataList)
 
     [JsonPropertyName("canSwitchEdition")]
     public bool CanSwitchEdition { get; }
-        = dataList.FirstModel<PolymorphismConfiguration>(nullHandling: ModelNullHandling.PreferNull)
+        = dataList.FirstModel<PolymorphismConfiguration>(
+                  options: new()
+                  {
+                      NullHandling = ToModelOptions.DataNullHandling.AsNull
+                  }
+                  //nullHandling: ModelNullHandling.PreferNull
+                  )
               ?.UsersWhoMaySwitch.Contains(user.Id)
           ?? false;
 }

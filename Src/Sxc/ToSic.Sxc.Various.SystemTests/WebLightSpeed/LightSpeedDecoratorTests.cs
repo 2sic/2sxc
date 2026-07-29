@@ -13,7 +13,10 @@ public class LightSpeedDecoratorTests(DataAssembler dataAssembler, ContentTypeAs
     [Fact]
     public void DecoratorWithNullEntity()
     {
-        var lsDecorator = (null as IEntity).ToModel<LightSpeedDecorator>(nullHandling: ModelNullHandling.PreferModel);
+        var lsDecorator = (null as IEntity).ToModel<LightSpeedDecorator>(options: new()
+        {
+            NullHandling = ToModelOptions.DataNullHandling.ConvertTry
+        })!;
         TestEmptyDecorator(lsDecorator);
         True(lsDecorator.UrlParametersOthersDisableCache);
     }
