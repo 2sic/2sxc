@@ -13,7 +13,7 @@ public class LightSpeedTestData(DataAssembler dataAssembler, ContentTypeAssembly
 
     internal LightSpeedDecorator Decorator(bool? isEnabled = default, bool? byUrlParameters = null, bool? caseSensitive = null, string? names = default, bool? othersDisableCache = default)
         => LightSpeedTestEntity(isEnabled: isEnabled, byUrlParameters: byUrlParameters, caseSensitive: caseSensitive, names: names, othersDisableCache: othersDisableCache)
-            .ToModel<LightSpeedDecorator>(skipTypeCheck: true)!;
+            .ToModel<LightSpeedDecorator>(options: new() { TypeNameCheck = ToModelOptions.ModelTypeCheck.Skip })!;
 
     /// <summary>
     /// Basic LightSpeed Content Type with Url Fields only for testing

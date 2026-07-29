@@ -15,7 +15,7 @@ public record FolderModel: ModelFromEntity, IFolderModelSync, IFolderModel
 
     [field: AllowNull, MaybeNull]
     public IFolderModel Folder => field
-        ??= Entity.Children(field: nameof(Folder)).FirstOrDefault()?.ToModel<FolderModel>(skipTypeCheck: true)!;
+        ??= Entity.Children(field: nameof(Folder)).FirstOrDefault()?.ToModel<FolderModel>(options: new() { TypeNameCheck = ToModelOptions.ModelTypeCheck.Skip })!;
 
     [field: AllowNull, MaybeNull]
     public IEnumerable<IFolderModel> Folders => field 
