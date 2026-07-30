@@ -50,6 +50,8 @@ public class InstallControllerReal(
 
     public InstallAppsDto InstallSettings(bool isContentApp, IModule module)
     {
+        var l = Log.Fn<InstallAppsDto>();
+        
         // Get Remote Install URL
         var site = context.Value.Site;
         var url = platformAppInstaller.Value
@@ -74,21 +76,21 @@ public class InstallControllerReal(
         var rules = stack.InternalGetPath(new PropReqSpecs("SiteSetup.AutoInstallApps", PropReqSpecs.EmptyDimensions, true, Log), new());
         var ruleEntities = rules.Result as IEnumerable<IEntity>;    // note: Result is null if nothing found...
         var rulesFinal = ruleEntities?
-            .Select(e => e.ToModel<SiteSetupAutoInstallAppsRule>(options: new() { TypeNameCheck = ToModelOptions.ModelTypeCheck.Skip })!.GetRuleDto())
+            .Select(e => e.ToModel<SiteSetupAutoInstallAppsRule>(options: new() { TypeName = ToModelOptions.TypeNameAny })!.GetRuleDto())
             .ToListOpt();
 
         if (!featureService.Value.IsEnabled(BuiltInFeatures.AppAutoInstallerConfigurable.NameId))
         {
-            Log.A("will not add installer rules as the feature is not enabled");
+            l.A("will not add installer rules as the feature is not enabled");
             rulesFinal = [];
         }
 
-        return new()
+        return l.Return(new()
         {
             remoteUrl = url,
             installedApps = appsOfThisSite,
             rules = rulesFinal,
-        };
+        });
     }
 
     /// <summary>

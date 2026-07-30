@@ -98,7 +98,8 @@ partial class CodeDataFactory: IModelFactory
             return AsCustom<TCustom>(item);
 
         // Check all type names if they are `*` or match the data ContentType
-        DataModelAnalyzer.IsTypeNameAllowedOrThrow(typeof(TCustom), item, id, skipTypeCheck);
+        if (!skipTypeCheck)
+            DataModelAnalyzer.IsTypeNameAllowedOrThrow(typeof(TCustom), item, id);
         return AsCustom<TCustom>(item);
     }
 
