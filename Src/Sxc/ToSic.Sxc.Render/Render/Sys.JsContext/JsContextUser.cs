@@ -17,7 +17,7 @@ public class JsContextUser(IUser user, IEnumerable<IEntity>? dataList)
         = dataList.FirstModel<PolymorphismConfiguration>(
                   options: new()
                   {
-                      NullHandling = ToModelOptions.DataNullHandling.AsNull
+                      NullHandling = NullHandling.ReturnNull
                   }
                   //nullHandling: ModelNullHandling.PreferNull
                   )
