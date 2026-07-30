@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Sxc.Context;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Apps.Sys.EditAssets;
 
@@ -42,7 +43,7 @@ public class TemplateInfo(
     /// <summary>
     /// Returns an array of platforms this template supports so the UI can pick
     /// </summary>
-    public IEnumerable<string>? Platforms => PlatformTypes?.ToString().Split(',').Select(p => p.Trim());
+    public IEnumerable<string>? Platforms => PlatformTypes?.ToString().CsvToArrayWithoutEmpty();
 
     [JsonIgnore]
     public PlatformType? PlatformTypes { get; set; } = PlatformType.Hybrid | PlatformType.Dnn | PlatformType.Oqtane;

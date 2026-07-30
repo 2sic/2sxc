@@ -118,7 +118,7 @@ public class DnnUserProfile : CustomDataSourceAdvanced
         // read user Profiles of specified UserIds
         else
         {
-            var userIds = UserIds.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
+            var userIds = UserIds.CsvToArrayWithoutEmpty().Select(int.Parse).ToArray();
             users = [];
             foreach (var user in userIds.Select(userId => UserController.GetUserById(portalId, userId)))
                 users.Add(user);

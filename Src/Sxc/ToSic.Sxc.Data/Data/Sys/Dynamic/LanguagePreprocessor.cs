@@ -25,10 +25,7 @@ internal class LanguagePreprocessor
         if (language == null! /* paranoid */)
             return defaultDims;
 
-        var languages = language.ToLowerInvariant()
-            .Split(',')
-            .Select(s => s.Trim())
-            .ToArray();
+        var languages = language.ToLowerInvariant().CsvToArrayWithoutEmpty();
 
         // expand language codes, e.g.
         // - "en" should become "en-us" if available

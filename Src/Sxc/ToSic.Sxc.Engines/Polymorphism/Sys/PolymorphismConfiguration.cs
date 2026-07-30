@@ -15,8 +15,7 @@ public record PolymorphismConfiguration : ModelFromEntityFull
 
     [field: AllowNull, MaybeNull]
     public List<int> UsersWhoMaySwitch => field ??= new Func<List<int>>(() => UsersWhoMaySwitchEditions
-        .Split(',')
-        .Select(s => s.Trim())
+        .CsvToArrayWithoutEmpty()
         .Select(s => int.TryParse(s, out var result) ? result : -1)
         .Where(i => i > 0)
         .ToList()

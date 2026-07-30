@@ -279,10 +279,7 @@ internal class SearchController(
         var l = Log.Fn<KeyValuePair<string, IDataStream>[]>();
         // Check if we should filter the streams - new in 12.02
         var streamsToKeep = Block.View.SearchIndexingStreams
-            .Split(',')
-            .Select(s => s.Trim())
-            .Where(s => !string.IsNullOrEmpty(s))
-            .ToArray();
+            .CsvToArrayWithoutEmpty();
 
         // Decide what streams to keep - new in 12.02
         var streamsToIndex = Block.Data.Out
