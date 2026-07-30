@@ -29,7 +29,7 @@ public record FileModel: ModelFromEntity, IFileModelSync, IFileModel
 
     [field: AllowNull, MaybeNull]
     public IFolderModel Folder => field
-        ??= Entity.Children(field: nameof(Folder)).FirstOrDefault()?.ToModel<FolderModel>(options: new() { TypeName = ToModelOptions.TypeNameAny })!;
+        ??= Entity.Children(field: nameof(Folder)).FirstOrDefault()?.ToModel<FolderModel>(options: ToModelOptions.DisableTypeNameCheck)!;
 
     public int Size => GetThis(0);
 

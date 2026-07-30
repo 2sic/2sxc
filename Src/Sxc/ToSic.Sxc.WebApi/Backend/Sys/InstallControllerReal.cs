@@ -76,7 +76,7 @@ public class InstallControllerReal(
         var rules = stack.InternalGetPath(new PropReqSpecs("SiteSetup.AutoInstallApps", PropReqSpecs.EmptyDimensions, true, Log), new());
         var ruleEntities = rules.Result as IEnumerable<IEntity>;    // note: Result is null if nothing found...
         var rulesFinal = ruleEntities?
-            .Select(e => e.ToModel<SiteSetupAutoInstallAppsRule>(options: new() { TypeName = ToModelOptions.TypeNameAny })!.GetRuleDto())
+            .Select(e => e.ToModel<SiteSetupAutoInstallAppsRule>(options: ToModelOptions.DisableTypeNameCheck)!.GetRuleDto())
             .ToListOpt();
 
         if (!featureService.Value.IsEnabled(BuiltInFeatures.AppAutoInstallerConfigurable.NameId))
