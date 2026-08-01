@@ -93,13 +93,10 @@ partial class CodeDataFactory: IModelFactory
         if (item == null)
             return null;
 
-        // Skip Type-Name check
-        if (skipTypeCheck)
-            return AsCustom<TCustom>(item);
-
         // Check all type names if they are `*` or match the data ContentType
         if (!skipTypeCheck)
-            DataModelAnalyzer.IsTypeNameAllowedOrThrow(typeof(TCustom), item, id);
+            DataModelAnalyzer.IsTypeNameAllowedOrThrow(typeNames: null, type: typeof(TCustom), entity: item, idForErrors: id);
+        
         return AsCustom<TCustom>(item);
     }
 
