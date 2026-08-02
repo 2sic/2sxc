@@ -71,17 +71,12 @@ public record UserModelRaw : IHasIdentityNameId, IUserModel, IRawEntityConvertib
     private static IRawEntityConverter Converter { get; } =
         new RawEntityConverterFactory<UserModelRaw>((source, options) =>
         {
-            var data = new Dictionary<string, object?>
-            {
-                { nameof(Name), source.Name },
-                { nameof(NameId), source.NameId },
-                { nameof(IsSystemAdmin), source.IsSystemAdmin },
-                { nameof(IsSiteAdmin), source.IsSiteAdmin },
-                { nameof(IsContentAdmin), source.IsContentAdmin },
-                { nameof(IsAnonymous), source.IsAnonymous },
-                { nameof(Username), source.Username },
-                { nameof(Email), source.Email },
-            };
+            // New optimized way to get a dictionary with all properties, will reliably get all public properties
+            var data = source
+                .ObjectToDictionary()
+                .FilterOutKeys(RawEntityConstants.KeysToRemove
+                    .Concat([nameof(IUserModel.Roles)])
+                );
 
             if (options.ShouldAddKey(nameof(IUserModel.Roles)))
                 data.Add(
@@ -90,7 +85,7 @@ public record UserModelRaw : IHasIdentityNameId, IUserModel, IRawEntityConvertib
                     {
                         Keys = source.Roles
                             .Select(object (r) => $"{RoleRelationshipPrefix}{r.Id}")
-                            .ToList() ?? []
+                            .ToList()
                     }
                 );
             
