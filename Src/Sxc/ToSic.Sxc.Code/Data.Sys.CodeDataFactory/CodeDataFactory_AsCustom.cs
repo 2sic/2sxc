@@ -97,9 +97,9 @@ partial class CodeDataFactory: IModelFactory
         if (skipTypeCheck)
             return AsCustom<TCustom>(item);
         
-        var check = DataModelAnalyzer.IsTypeNameAllowed(null, typeof(TCustom), typeof(TCustom), item.Type);
-        return check.IsError
-            ? throw DataModelAnalyzer.KeyNotFoundMessage(check.Names, item.Type, id)
+        var check = ModelContentTypeNameAnalyzer.IsTypeNameAllowed(null, typeof(TCustom), typeof(TCustom), item.Type);
+        return !check.IsOk
+            ? throw ModelContentTypeNameAnalyzer.KeyNotFoundMessage(check.Names, item.Type, id)
             : AsCustom<TCustom>(item);
     }
 
