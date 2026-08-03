@@ -19,7 +19,7 @@ internal class LightSpeedConfigHelper(ILog? parentLog) : HelperBase(parentLog, "
         if (block?.ViewIsReady != true)
             return l.ReturnNull("view not ready");
             
-        var lsDec = block.View.Metadata.FirstModel<LightSpeedDecorator>();
+        var lsDec = block.View.GetMetadataModel<LightSpeedDecorator>();
 
         return lsDec == null
             ? l.ReturnNull($"no view metadata for LightSpeedDecorator; view: {block.View.Id}")
