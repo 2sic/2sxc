@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Cms.Pages.Sys;
 /// </summary>
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-[ContentTypeAssign(Type = typeof(IPageModel))]
+[ContentTypeUse(Type = typeof(IPageModel))]
 public record PageModelRaw: IRawEntity, IPageModel, IRelationshipKeys
 {
     #region IRawEntity
