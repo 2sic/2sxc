@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.DataSource;
+using ToSic.Eav.Data.ContentTypes;
+using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 
 namespace ToSic.Eav.WebApi.Sys.Admin;
@@ -73,25 +74,6 @@ public class ContentTypeDetails : CustomDataSource
         var entity = new ContentTypeDetailsModel(dto)
         {
             Id = dto.Id,
-            Values = new Dictionary<string, object?>
-            {
-                { nameof(ContentTypeDto.Id), dto.Id },
-                { nameof(ContentTypeDto.Name), dto.Name },
-                { nameof(ContentTypeDto.Label), dto.Label },
-                { nameof(ContentTypeDto.StaticName), dto.StaticName },
-                { nameof(ContentTypeDto.NameId), dto.NameId },
-                { nameof(ContentTypeDto.Scope), dto.Scope },
-                { nameof(ContentTypeDto.Description), dto.Description },
-                { nameof(ContentTypeDto.UsesSharedDef), dto.UsesSharedDef },
-                { nameof(ContentTypeDto.SharedDefId), dto.SharedDefId },
-                { nameof(ContentTypeDto.Items), dto.Items },
-                { nameof(ContentTypeDto.Fields), dto.Fields },
-                { nameof(ContentTypeDto.TitleField), dto.TitleField },
-                { nameof(ContentTypeDto.Metadata), dto.Metadata },
-                { nameof(ContentTypeDto.Properties), dto.Properties },
-                { nameof(ContentTypeDto.Permissions), dto.Permissions },
-                { nameof(ContentTypeDto.EditInfo), dto.EditInfo },
-            },
         };
 
         return l.Return([entity], "ok");

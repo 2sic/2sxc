@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.ContentTypes;
+using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw.Sys;
 using ToSic.Sxc.DataSources;
 using ToSic.Sys.Users;
@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Cms.Users.Sys;
 /// </summary>
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-[ContentTypeUse(Type = typeof(IUserRoleModel))]
+[ContentTypeAssign(Type = typeof(IUserRoleModel))]
 public record UserRoleModelRaw: IRawEntity, IRole, IUserRoleModel
 {
     #region IRawEntity

@@ -1,21 +1,18 @@
-﻿using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Data.Raw.Sys;
-using ToSic.Eav.Data.Sys.ContentTypes;
+using ToSic.Eav.Data.ContentTypes;
 
 namespace ToSic.Eav.WebApi.Sys.Admin;
 
-[ContentTypeSpecs(
+[ContentType(
     Name = "App",
     Guid = "53b3fe9b-d689-4b1f-bed1-503cbc898ffc",
     Description = "App information",
     Scope = "System"
 )]
-public class AppModel(AppDto app) : RawEntity
+public record AppModel(AppDto app) : RawEntity
 {
     public bool IsApp => app.IsApp;
-    public new string Guid => app.Guid;
-
-    [ContentTypeAttributeSpecs(IsTitle = true)]
+    [ContentTypeField(IsTitle = true)]
     public string Name => app.Name;
 
     public string Folder => app.Folder;
@@ -30,11 +27,11 @@ public class AppModel(AppDto app) : RawEntity
     public AppMetadataDto? Lightspeed => app.Lightspeed;
     public bool HasCodeWarnings => app.HasCodeWarnings;
 
-    public override IDictionary<string, object?> Attributes(RawConvertOptions options) =>
+    protected override IDictionary<string, object?> GetValues() =>
         new Dictionary<string, object?>
         {
             { nameof(IsApp), IsApp },
-            { nameof(Guid), Guid },
+            { nameof(AppDto.Guid), app.Guid },
             { nameof(Name), Name },
             { nameof(Folder), Folder },
             { nameof(AppRoot), AppRoot },

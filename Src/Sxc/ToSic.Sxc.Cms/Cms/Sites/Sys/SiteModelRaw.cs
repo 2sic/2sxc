@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.ContentTypes;
+using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw.Sys;
 
 namespace ToSic.Sxc.Cms.Sites.Sys;
@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Cms.Sites.Sys;
 /// </summary>
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-[ContentTypeUse(Type = typeof(ISiteModel))]
+[ContentTypeAssign(Type = typeof(ISiteModel))]
 public record SiteModelRaw: IRawEntity, ISiteModel
 {
     #region IRawEntity

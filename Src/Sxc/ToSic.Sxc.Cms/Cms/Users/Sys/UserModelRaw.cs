@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.ContentTypes;
+using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw.Sys;
 
 namespace ToSic.Sxc.Cms.Users.Sys;
@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Cms.Users.Sys;
 /// </summary>
 [PrivateApi("this is only internal - public access is always through interface")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-[ContentTypeUse(Type = typeof(IUserModel))]
+[ContentTypeAssign(Type = typeof(IUserModel))]
 public record UserModelRaw : IHasIdentityNameId, IUserModel, IRawEntityConvertible
 {
     #region Types and Names for Raw Entities
