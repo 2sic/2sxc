@@ -132,7 +132,7 @@ public class UniqueValueValidation : CustomDataSource
     private static IContentType? ResolveContentType(IAppReadContentTypes appReader, string? contentTypeName)
         => string.IsNullOrWhiteSpace(contentTypeName)
             ? null
-            : appReader.TryGetContentType(contentTypeName);
+            : appReader.TryGetContentType(contentTypeName!);
 
     private static IContentTypeField? ResolveField(IContentType contentType, string? fieldName)
         => string.IsNullOrWhiteSpace(fieldName)

@@ -140,7 +140,9 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getLookupsLazy) : 
     }
 
 
+#pragma warning disable CS9113 // Parameter is unread.
     private class ValueTemplateParser(ITemplateEngine? parser, ILookUp? overrides, bool allowHtml = false) : IValueOverrider
+#pragma warning restore CS9113 // Parameter is unread.
     {
         #region Experiment - but decided for now that it's too much compute for something which is extremely rarely used, and can be done with an if-statement in the code
         //public object? OverrideRaw(string name)

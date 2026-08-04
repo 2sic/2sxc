@@ -21,11 +21,11 @@ public class Folder<TFolderId, TFileId>(AdamManager adamManager)
     public ITypedMetadata Metadata => field
         ??= AdamManager.CreateMetadataTyped($"{CmsMetadata.FolderPrefix}{SysId}", Name);
 
-    IMetadata IHasMetadata.Metadata => (Metadata as IHasMetadata).Metadata;
+    IMetadata IHasMetadata.Metadata => (Metadata as IHasMetadata)!.Metadata;
 
     /// <inheritdoc />
     [JsonIgnore]
-    public bool HasMetadata => (Metadata as IHasMetadata).Metadata.Any();
+    public bool HasMetadata => (Metadata as IHasMetadata)!.Metadata.Any();
 
 
 

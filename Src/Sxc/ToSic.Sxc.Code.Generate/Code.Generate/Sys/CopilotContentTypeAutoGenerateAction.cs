@@ -27,6 +27,7 @@ internal class CopilotContentTypeAutoGenerateAction(
 
         var jobs = appReader.List
             .GetModels<IDataCopilotConfiguration>()
+            .OfType<IDataCopilotConfiguration>()
             .Where(configuration => configuration.AutoGenerate)
             .Select(configuration => BuildJob(configuration, changedType))
             .OfType<CopilotCodeGenerateService.Job>()

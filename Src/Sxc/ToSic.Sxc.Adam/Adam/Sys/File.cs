@@ -37,7 +37,7 @@ public class File<TFolderId, TFileId>(AdamManager adamManager)
             .GetImageRecommendations();
     }
 
-    IMetadata IHasMetadata.Metadata => (Metadata as IHasMetadata).Metadata;
+    IMetadata IHasMetadata.Metadata => (Metadata as IHasMetadata)!.Metadata;
 
     /// <inheritdoc />
     [JsonIgnore]

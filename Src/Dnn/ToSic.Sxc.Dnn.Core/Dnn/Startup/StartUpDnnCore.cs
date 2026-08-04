@@ -129,7 +129,9 @@ internal static class StartUpDnnCore
         services.AddTransient<IBootProcess, DnnBootFeaturesRegistration>();   // must be Add, not TryAdd
 
         // v14
+#pragma warning disable CS0618 // Type or member is obsolete
         services.TryAddTransient<IDynamicCodeService, DnnDynamicCodeService>();
+#pragma warning restore CS0618 // Type or member is obsolete
         services.TryAddTransient<DnnDynamicCodeService.MyScopedServices>();   // new v15
         services.TryAddTransient<IRenderService, DnnRenderService>();
 

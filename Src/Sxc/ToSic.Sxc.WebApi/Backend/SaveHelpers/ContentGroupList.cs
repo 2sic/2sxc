@@ -116,12 +116,12 @@ public class ContentGroupList(
     /// <summary>
     /// Get saved entity (to get its ID)
     /// </summary>
-    private static int GetIdFromGuidOrError(IReadOnlyDictionary<Guid, int> postSaveIds, Guid guid) =>
+    private static int GetIdFromGuidOrError(Dictionary<Guid, int> postSaveIds, Guid guid) =>
         postSaveIds.TryGetValue(guid, out var id)
             ? id
             : throw new("Saved entity not found - not able to update BlockConfiguration");
 
-    private int? FindPresentationItem(IReadOnlyDictionary<Guid, int> postSaveIds, IGrouping<string, BundleWithHeader<IEntity>> bundle)
+    private int? FindPresentationItem(Dictionary<Guid, int> postSaveIds, IGrouping<string, BundleWithHeader<IEntity>> bundle)
     {
         var l = Log.Fn<int?>();
         int? presentationId = null;
@@ -145,10 +145,11 @@ public class ContentGroupList(
     {
         var l = Log.Fn<List<ItemIdentifier>>();
         var result = identifiers
-            .Select(identifier => identifier == null
+            .Select(ItemIdentifier? (identifier) => identifier == null! /* paranoid */
                 ? null
                 : identifier with { IsContentBlockMode = DetectContentBlockMode(identifier) }
             )
+            .OfType<ItemIdentifier>()
             .ToList();
         //foreach (var identifier in identifiers.Where(identifier => identifier != null))
         //    identifier.IsContentBlockMode = DetectContentBlockMode(identifier);
@@ -249,8 +250,8 @@ public class ContentGroupList(
         if (!identifier.AddSafe) // not in add-mode
         {
             var idx = identifier.IndexSafeOrFallback(part.Count - 1);
-            if (idx >= 0 && part.Count > idx && // has as many items as desired
-                part[idx] != null) // and the slot has something
+            // has as many items as desired and the slot has something inside it
+            if (idx >= 0 && part.Count > idx && part[idx] != null!) // paranoid check
                 identifier = identifier with { EntityId = part[idx].EntityId };
         }
 

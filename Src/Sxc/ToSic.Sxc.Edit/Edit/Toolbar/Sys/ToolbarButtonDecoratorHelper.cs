@@ -33,6 +33,7 @@ public class ToolbarButtonDecoratorHelper(IAppReaderFactory appReaders, ScopedCa
 
         var result = type.Metadata
             .GetModels<ToolbarButtonDecorator>()
+            .OfType<ToolbarButtonDecorator>()
             .FirstOrDefault(d => d.Command.EqualsInsensitive(command));
 
         cache.Cache[cacheKey] = result;
