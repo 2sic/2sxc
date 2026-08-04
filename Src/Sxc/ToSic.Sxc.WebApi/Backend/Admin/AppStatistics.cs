@@ -1,5 +1,4 @@
-using ToSic.Eav.Data.Raw.Sys;
-using ToSic.Eav.DataSource;
+﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Sxc.Backend.ImportExport;
 
@@ -24,6 +23,6 @@ public class AppStatistics : CustomDataSource
     public AppStatistics(Dependencies services, ExportAppInfo exportAppLazy)
         : base(services, logName: "Sxc.AppStats", connect: [exportAppLazy])
     {
-        ProvideOutRaw(() => new IRawEntity[] { exportAppLazy.GetAppInfo(new AppIdentity(OfZoneId, AppId)) });
+        ProvideOutRaw(() => new[] { exportAppLazy.GetAppInfo(new AppIdentity(OfZoneId, AppId)) });
     }
 }

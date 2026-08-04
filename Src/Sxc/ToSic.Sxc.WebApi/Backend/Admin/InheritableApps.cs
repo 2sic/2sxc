@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Apps.Sys.State;
-using ToSic.Eav.Data.Raw.Sys;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Sxc.Apps.Sys.Assets;
@@ -56,47 +55,46 @@ public class InheritableApps : CustomDataSource
         });
     }
 
-    private IEnumerable<IRawEntity> GetApps()
+    private IEnumerable<AppModel> GetApps()
     {
-        var l = Log.Fn<IEnumerable<IRawEntity>>();
+        var l = Log.Fn<IEnumerable<AppModel>>();
 
         if (!_user.Value.IsSystemAdmin)
             throw HttpException.PermissionDenied("Listing inheritable apps requires SuperUser permissions.");
 
         var apps = _workApps.GetInheritableApps(_context.Site)
-            .Select(ToRawEntity);
+            .Select(ToModel);
 
         return l.Return(apps, "ok");
     }
 
-    private IRawEntity ToRawEntity(IAppReader appReader)
+    private AppModel ToModel(IAppReader appReader)
     {
         var specs = appReader.Specs;
         var paths = _appPathsGen.New().Get(appReader, _context.Site);
 
-        var isApp = specs.NameId != KnownAppsConstants.DefaultAppGuid &&
-                    specs.NameId != KnownAppsConstants.PrimaryAppGuid;
-
-        return new RawEntity
+        var app = new AppDto
         {
             Id = appReader.AppId,
-            Values = new Dictionary<string, object?>
-            {
-                { nameof(AppDto.IsApp), isApp },
-                { nameof(AppDto.Guid), specs.NameId },
-                { nameof(AppDto.Name), specs.Name },
-                { nameof(AppDto.Folder), specs.Folder },
-                { nameof(AppDto.AppRoot), paths.Path },
-                { nameof(AppDto.IsHidden), specs.Configuration.IsHidden },
-                { nameof(AppDto.ConfigurationId), specs.Configuration.Id },
-                { nameof(AppDto.Items), appReader.List.Count },
-                { nameof(AppDto.Thumbnail), AppAssetThumbnail.GetUrl(appReader, paths, _globalPaths) },
-                { nameof(AppDto.Version), specs.VersionSafe() },
-                { nameof(AppDto.IsGlobal), appReader.IsShared() },
-                { nameof(AppDto.IsInherited), appReader.IsInherited() },
-                { nameof(AppDto.Lightspeed), LightSpeed(appReader) },
-                { nameof(AppDto.HasCodeWarnings), _codeStats.AppHasWarnings(appReader.AppId) },
-            },
+            IsApp = specs.NameId != KnownAppsConstants.DefaultAppGuid && specs.NameId != KnownAppsConstants.PrimaryAppGuid,
+            Guid = specs.NameId,
+            Name = specs.Name,
+            Folder = specs.Folder,
+            AppRoot = paths.Path,
+            IsHidden = specs.Configuration.IsHidden,
+            ConfigurationId = specs.Configuration.Id,
+            Items = appReader.List.Count,
+            Thumbnail = AppAssetThumbnail.GetUrl(appReader, paths, _globalPaths),
+            Version = specs.VersionSafe(),
+            IsGlobal = appReader.IsShared(),
+            IsInherited = appReader.IsInherited(),
+            Lightspeed = LightSpeed(appReader),
+            HasCodeWarnings = _codeStats.AppHasWarnings(appReader.AppId),
+        };
+
+        return new AppModel(app)
+        {
+            Id = appReader.AppId,
         };
     }
 

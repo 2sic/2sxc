@@ -33,31 +33,14 @@ public class Apps : CustomDataSource
         });
     }
 
-    private IEnumerable<IRawEntity> GetApps()
+    private IEnumerable<AppModel> GetApps()
     {
-        var l = Log.Fn<IEnumerable<IRawEntity>>();
+        var l = Log.Fn<IEnumerable<AppModel>>();
 
         var entities = _appsBackend.Value.Apps()
-            .Select(app => new RawEntity
+            .Select(app => new AppModel(app)
             {
-                Id = app.Id,
-                Values = new Dictionary<string, object?>
-                {
-                    { nameof(AppDto.IsApp), app.IsApp },
-                    { nameof(AppDto.Guid), app.Guid },
-                    { nameof(AppDto.Name), app.Name },
-                    { nameof(AppDto.Folder), app.Folder },
-                    { nameof(AppDto.AppRoot), app.AppRoot },
-                    { nameof(AppDto.IsHidden), app.IsHidden },
-                    { nameof(AppDto.ConfigurationId), app.ConfigurationId },
-                    { nameof(AppDto.Items), app.Items },
-                    { nameof(AppDto.Thumbnail), app.Thumbnail },
-                    { nameof(AppDto.Version), app.Version },
-                    { nameof(AppDto.IsGlobal), app.IsGlobal },
-                    { nameof(AppDto.IsInherited), app.IsInherited },
-                    { nameof(AppDto.Lightspeed), app.Lightspeed },
-                    { nameof(AppDto.HasCodeWarnings), app.HasCodeWarnings },
-                },
+                Id = app.Id
             });
 
         return l.Return(entities, "ok");
