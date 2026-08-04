@@ -1,21 +1,20 @@
-﻿using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Data.Raw.Sys;
-using ToSic.Eav.Data.Sys.ContentTypes;
+using ToSic.Eav.Data.ContentTypes;
 
 namespace ToSic.Eav.WebApi.Sys.Admin;
 
-[ContentTypeSpecs(
-    Name = "ContentType", 
-    Guid = "c56b9706-c06a-4d48-a362-d0e0036733d4", 
-    Description = "Content type details", 
+[ContentType(
+    Name = "ContentType",
+    Guid = "c56b9706-c06a-4d48-a362-d0e0036733d4",
+    Description = "Content type details",
     Scope = "System"
-    )]
-public class ContentTypeDetailsModel(ContentTypeDto contentType) : RawEntity
+)]
+public record ContentTypeDetailsModel(ContentTypeDto contentType) : RawEntity
 {
-    [ContentTypeAttributeSpecs(IsTitle = true)]
+    [ContentTypeField(IsTitle = true)]
     public string Name => contentType.Name;
 
-    public override IDictionary<string, object?> Attributes(RawConvertOptions options) => new Dictionary<string, object?>
+    protected override IDictionary<string, object?> GetValues() => new Dictionary<string, object?>
     {
         { nameof(ContentTypeDto.Id), contentType.Id },
         { nameof(ContentTypeDto.Name), contentType.Name },
@@ -36,18 +35,18 @@ public class ContentTypeDetailsModel(ContentTypeDto contentType) : RawEntity
     };
 }
 
-[ContentTypeSpecs(
-    Name = "ContentTypeField", 
-    Guid = "eb891b1c-8505-465f-bc51-461cb47ed9c1", 
-    Description = "Content type field details", 
+[ContentType(
+    Name = "ContentTypeField",
+    Guid = "eb891b1c-8505-465f-bc51-461cb47ed9c1",
+    Description = "Content type field details",
     Scope = "System"
-    )]
-public class ContentTypeFieldModel(ContentTypeFieldDto contentTypeField) : RawEntity
+)]
+public record ContentTypeFieldModel(ContentTypeFieldDto contentTypeField) : RawEntity
 {
-    [ContentTypeAttributeSpecs(IsTitle = true)]
+    [ContentTypeField(IsTitle = true)]
     public string Name => contentTypeField.StaticName;
 
-    public override IDictionary<string, object?> Attributes(RawConvertOptions options) => new Dictionary<string, object?>
+    protected override IDictionary<string, object?> GetValues() => new Dictionary<string, object?>
     {
         { nameof(ContentTypeFieldDto.Id), contentTypeField.Id },
         { nameof(ContentTypeFieldDto.SortOrder), contentTypeField.SortOrder },
