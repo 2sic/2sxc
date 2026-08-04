@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Models;
 using ToSic.Eav.Models.Factory;
+using ToSic.Eav.Models.Factory.Sys;
 using ToSic.Eav.Models.Sys;
 using ToSic.Sxc.Data.Sys.Typed;
 
@@ -9,13 +10,10 @@ namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 
 partial class CodeDataFactory: IModelFactory
 {
-    public TModel? Create<TSource, TModel>(TSource? source)
-        where TModel : IModelFromEntity
-    {
-        var wrapper = serviceProvider.Build<TModel>();
-        var ok = (wrapper as IModelSetup<TSource>)?.SetupModel(source) ?? false;
-        return ok ? wrapper : default;
-    }
+    [return: NotNullIfNotNull(nameof(item))]
+    public TModel? Create<TSource, TModel>(TSource? item, ToModelOptions options)
+        where TModel : class, IModelFromEntity
+        => ModelFactoryShared.CreateStatic<TSource, TModel>(serviceProvider, item, options);
 
     /// <summary>
     /// Convert an object to a custom type, if possible.
@@ -97,7 +95,8 @@ partial class CodeDataFactory: IModelFactory
         if (skipTypeCheck)
             return AsCustom<TCustom>(item);
         
-        var check = ModelContentTypeNameAnalyzer.IsTypeNameAllowed(null, typeof(TCustom), typeof(TCustom), item.Type);
+        var specs = new ToModelSpecs(typeof(TCustom), typeof(TCustom), new(), null, nameof(GetOne));
+        var check = ModelContentTypeNameAnalyzer.IsTypeNameAllowed(specs, item.Type);
         return !check.IsOk
             ? throw ModelContentTypeNameAnalyzer.KeyNotFoundMessage(check.Names, item.Type, id)
             : AsCustom<TCustom>(item);
