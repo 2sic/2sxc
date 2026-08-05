@@ -1,7 +1,8 @@
-using System.Collections;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections;
 using ToSic.Eav.Models;
 using ToSic.Eav.Models.Factory;
+using ToSic.Eav.Models.Factory.Sys;
 using ToSic.Eav.Models.Sys;
 using ToSic.Sxc.Data.Sys.Typed;
 
@@ -9,14 +10,10 @@ namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 
 partial class CodeDataFactory: IModelFactory
 {
-    [return: NotNullIfNotNull(nameof(source))]
-    public TModel? Create<TSource, TModel>(TSource? source)
-        where TModel : IModelFromEntity
-    {
-        var model = serviceProvider.Build<TModel>();
-        var initialized = (model as IModelSetup<TSource>)?.SetupModel(source) ?? false;
-        return initialized ? model : default;
-    }
+    [return: NotNullIfNotNull(nameof(item))]
+    public TModel? Create<TSource, TModel>(TSource? item, ToModelOptions options)
+        where TModel : class, IModelFromEntity
+        => ModelFactoryShared.CreateStatic<TSource, TModel>(serviceProvider, item, options);
 
     /// <summary>
     /// Convert an object to a custom type, if possible.
@@ -46,7 +43,7 @@ partial class CodeDataFactory: IModelFactory
         if (item is TCustom t)
             return t;
 
-        var bestType = ModelAnalyseUse.GetTargetType<TCustom>();
+        var bestType = ModelFromEntityTypeManager.GetTargetType<TCustom>();
         var newT = ActivatorUtilities.CreateInstance(serviceProvider, bestType) as TCustom;
 
         switch (newT)
@@ -97,11 +94,11 @@ partial class CodeDataFactory: IModelFactory
         // Check all type names if they are `*` or match the data ContentType
         if (skipTypeCheck)
             return AsCustom<TCustom>(item);
-        
-        var concreteType = ModelAnalyseUse.GetTargetType<TCustom>();
-        var check = DataModelAnalyzer.IsTypeNameAllowed(null, typeof(TCustom), concreteType, item.Type);
-        return check.IsError
-            ? throw DataModelAnalyzer.KeyNotFoundMessage(check.Names, item.Type, id)
+
+        var specs = new ToModelSpecs(typeof(TCustom), typeof(TCustom), new(), null, nameof(GetOne));
+        var check = ModelContentTypeNameAnalyzer.IsTypeNameAllowed(specs, item.Type);
+        return !check.IsOk
+            ? throw ModelContentTypeNameAnalyzer.KeyNotFoundMessage(check.Names, item.Type, id)
             : AsCustom<TCustom>(item);
     }
 

@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Cms.Users.Sys;
 /// </summary>
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-[ContentTypeAssign(Type = typeof(IUserRoleModel))]
+[ContentTypeUse(Type = typeof(IUserRoleModel))]
 public record UserRoleModelRaw: IRawEntity, IRole, IUserRoleModel
 {
     #region IRawEntity
