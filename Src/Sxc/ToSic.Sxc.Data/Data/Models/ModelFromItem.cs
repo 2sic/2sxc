@@ -45,8 +45,10 @@ namespace ToSic.Sxc.Data.Models;
 /// History
 /// 
 /// - Released in v19.01 (BETA)
+/// - Stabilizing in v21 (now first class citizen, part of ToSic.Eav.Models)
 /// </remarks>
-[InternalApi_DoNotUse_MayChangeWithoutNotice("Still beta, name may change to DataModelWithItem or something")]
+[PrivateApi]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract partial class ModelFromItem : IModelSetupWithFactory<ITypedItem>, ICanBeItem, ICanBeEntity
 {
     #region Explicit Interfaces for internal use - Setup, etc.

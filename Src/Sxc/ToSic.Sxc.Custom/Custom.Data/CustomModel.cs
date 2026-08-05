@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Models;
-using ToSic.Sxc.Data.Models;
+﻿using ToSic.Sxc.Data.Models;
 
 namespace Custom.Data;
 
@@ -50,8 +49,11 @@ namespace Custom.Data;
 /// You can access the underlying (protected) `_item` property to get the raw data.
 /// And it also has the (protected) `As&lt;...&gt;()` conversion for typed sub-properties.
 ///
-/// History: New in 19.03
+/// History
+/// * New in 19.03 (experimental) - had Model Specs with ContentType "*"
+/// * v22 (Beta) dropped Model Specs "*" to prevent this from allowing any conversion without type checks
 /// </remarks>
 [PublicApi]
-[ModelSpecs(ContentType = "*")]
+// 2026-08-05 2dm disabled for now
+//[ModelSpecs(ContentType = "*")]
 public class CustomModel: ModelFromItem;
