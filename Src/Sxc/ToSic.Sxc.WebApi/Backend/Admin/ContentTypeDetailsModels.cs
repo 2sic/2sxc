@@ -3,6 +3,11 @@ using ToSic.Eav.Data.ContentTypes;
 
 namespace ToSic.Eav.WebApi.Sys.Admin;
 
+// TODO: @2rb
+// - Merge this with ContentTypeDto, doesn't make sense to have 2 identical objects
+// - the final object should be ContentTypeDetailsModel
+// - Should probably just implement IRawModelAutoConvert, not inherit from RawEntity
+
 [ContentType(
     Name = "ContentType",
     Guid = "c56b9706-c06a-4d48-a362-d0e0036733d4",
@@ -11,7 +16,7 @@ namespace ToSic.Eav.WebApi.Sys.Admin;
 )]
 public record ContentTypeDetailsModel(ContentTypeDto contentType) : RawEntity
 {
-    [ContentTypeField(IsTitle = true)]
+    [ContentTypeField(IsTitle = true)] // TODO: REMEMBER TO KEEP
     public string Name => contentType.Name;
 
     protected override IDictionary<string, object?> GetValues() => new Dictionary<string, object?>
@@ -35,6 +40,11 @@ public record ContentTypeDetailsModel(ContentTypeDto contentType) : RawEntity
     };
 }
 
+// TODO: @2rb
+// - Merge this with ContentTypeFieldDto, doesn't make sense to have 2 identical objects
+// - the final object should be ContentTypeFieldModel
+// - Should probably just implement IRawModelAutoConvert, not inherit from RawEntity
+
 [ContentType(
     Name = "ContentTypeField",
     Guid = "eb891b1c-8505-465f-bc51-461cb47ed9c1",
@@ -43,7 +53,7 @@ public record ContentTypeDetailsModel(ContentTypeDto contentType) : RawEntity
 )]
 public record ContentTypeFieldModel(ContentTypeFieldDto contentTypeField) : RawEntity
 {
-    [ContentTypeField(IsTitle = true)]
+    [ContentTypeField(IsTitle = true)]  // todo
     public string Name => contentTypeField.StaticName;
 
     protected override IDictionary<string, object?> GetValues() => new Dictionary<string, object?>

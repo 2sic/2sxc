@@ -3,16 +3,21 @@ using ToSic.Eav.Data.ContentTypes;
 
 namespace ToSic.Eav.WebApi.Sys.Admin;
 
+// TODO: @2rb
+// - Merge this with AppDto, doesn't make sense to have 2 identical objects
+// - the final object should be AppModel
+// - Should probably just implement IRawModelAutoConvert, not inherit from RawEntity
+
 [ContentType(
     Name = "App",
     Guid = "53b3fe9b-d689-4b1f-bed1-503cbc898ffc",
     Description = "App information",
     Scope = "System"
 )]
-public record AppModel(AppDto app) : RawEntity
+public record AppModel(AppDto  app) : RawEntity
 {
     public bool IsApp => app.IsApp;
-    [ContentTypeField(IsTitle = true)]
+    [ContentTypeField(IsTitle = true)]  // TODO: @2rb remember to move
     public string Name => app.Name;
 
     public string Folder => app.Folder;

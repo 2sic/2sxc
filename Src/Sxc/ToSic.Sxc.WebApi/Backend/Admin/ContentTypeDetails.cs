@@ -64,7 +64,7 @@ public class ContentTypeDetails : CustomDataSource
         var l = Log.Fn<IEnumerable<ContentTypeDetailsModel>>();
 
         var appCtxPlus = _workEntities.CtxSvc.ContextPlus(AppId);
-        var contentType = appCtxPlus.AppReader.GetContentType(ContentTypeId);
+        var contentType = appCtxPlus.AppReader.TryGetContentType(ContentTypeId);
 
         if (contentType == null)
             return l.Return([], "not found");
