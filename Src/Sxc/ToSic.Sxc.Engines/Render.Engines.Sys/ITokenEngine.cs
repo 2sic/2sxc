@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Render.Engines.Sys;
-
-namespace ToSic.Sxc.Render.Engines.Token;
+﻿namespace ToSic.Sxc.Render.Engines.Sys;
 
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 [ShowApiWhenReleased(ShowApiMode.Never)]

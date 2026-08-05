@@ -15,4 +15,9 @@
     <ProjectReference Include="..\ToSic.Sxc.Core\ToSic.Sxc.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Render.Engines.Razor\" />
+    <Folder Include="Render.Engines.Token\" />
+  </ItemGroup>
+
 </Project>
