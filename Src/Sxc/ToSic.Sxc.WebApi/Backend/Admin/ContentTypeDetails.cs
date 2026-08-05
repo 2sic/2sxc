@@ -1,4 +1,3 @@
-using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 
@@ -46,22 +45,18 @@ public class ContentTypeDetails : CustomDataSource
 
         ProvideOutRaw(GetContentTypeDetails, options: () => new()
         {
-            TitleField = nameof(ContentTypeDto.Name),
-            TypeName = IContentTypeDetails.Constants.ContentTypeName,
             AllowUnknownValueTypes = true,
         });
 
         ProvideOutRaw(GetFields, name: "Fields", options: () => new()
         {
-            TitleField = nameof(ContentTypeFieldDto.StaticName),
-            TypeName = "ContentTypeField",
             AllowUnknownValueTypes = true,
         });
     }
 
-    private IEnumerable<ContentTypeDetailsModel> GetContentTypeDetails()
+    private IEnumerable<ContentTypeDto> GetContentTypeDetails()
     {
-        var l = Log.Fn<IEnumerable<ContentTypeDetailsModel>>();
+        var l = Log.Fn<IEnumerable<ContentTypeDto>>();
 
         var appCtxPlus = _workEntities.CtxSvc.ContextPlus(AppId);
         var contentType = appCtxPlus.AppReader.TryGetContentType(ContentTypeId);
@@ -71,30 +66,21 @@ public class ContentTypeDetails : CustomDataSource
 
         var dto = _convTypeDto.Convert(contentType);
 
-        var entity = new ContentTypeDetailsModel(dto)
-        {
-            Id = dto.Id,
-        };
-
-        return l.Return([entity], "ok");
+        return l.Return([dto], "ok");
     }
 
-    private IEnumerable<ContentTypeFieldModel> GetFields()
+    private IEnumerable<ContentTypeFieldDto> GetFields()
     {
-        var l = Log.Fn<IEnumerable<ContentTypeFieldModel>>();
+        var l = Log.Fn<IEnumerable<ContentTypeFieldDto>>();
 
         var fields = _workAttributes.New(AppId).GetFields(ContentTypeId);
 
         var convertedFields = _convAttrDto.New()
             .Init(AppId, false)
-            .Convert(fields);
+            .Convert(fields)
+            .ToListOpt();
 
-        var entities = convertedFields.Select(field => new ContentTypeFieldModel(field)
-        {
-            Id = field.Id,
-        }).ToList();
-
-        return l.Return(entities, $"{entities.Count}");
+        return l.Return(convertedFields, $"{convertedFields.Count}");
     }
 
 }
