@@ -5,7 +5,7 @@ namespace ToSic.Eav.WebApi.Sys.Admin;
 
 // TODO: @2rb
 // - Merge this with AppDto, doesn't make sense to have 2 identical objects
-// - the final object should be AppModel
+// - the final object should be AppRaw (not Model)
 // - Should probably just implement IRawModelAutoConvert, not inherit from RawEntity
 
 [ContentType(

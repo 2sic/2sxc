@@ -5,7 +5,7 @@ namespace ToSic.Eav.WebApi.Sys.Admin;
 
 // TODO: @2rb
 // - Merge this with ContentTypeDto, doesn't make sense to have 2 identical objects
-// - the final object should be ContentTypeDetailsModel
+// - the final object should be ContentTypeDetailsRaw
 // - Should probably just implement IRawModelAutoConvert, not inherit from RawEntity
 
 [ContentType(
@@ -42,7 +42,7 @@ public record ContentTypeDetailsModel(ContentTypeDto contentType) : RawEntity
 
 // TODO: @2rb
 // - Merge this with ContentTypeFieldDto, doesn't make sense to have 2 identical objects
-// - the final object should be ContentTypeFieldModel
+// - the final object should be ContentTypeFieldRaw
 // - Should probably just implement IRawModelAutoConvert, not inherit from RawEntity
 
 [ContentType(
