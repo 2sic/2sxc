@@ -48,16 +48,17 @@ public class InheritableApps : CustomDataSource
         _globalPaths = globalPaths;
         _user = user;
 
-        ProvideOutRaw(GetApps, options: () => new()
-        {
-            TitleField = nameof(AppDto.Name),
-            TypeName = "App",
-        });
+        ProvideOutRaw(GetApps);
+        //    , options: () => new()
+        //{
+        //    TitleField = nameof(AppRaw.Name),
+        //    TypeName = "App",
+        //});
     }
 
-    private IEnumerable<AppModel> GetApps()
+    private IEnumerable<AppRaw> GetApps()
     {
-        var l = Log.Fn<IEnumerable<AppModel>>();
+        var l = Log.Fn<IEnumerable<AppRaw>>();
 
         if (!_user.Value.IsSystemAdmin)
             throw HttpException.PermissionDenied("Listing inheritable apps requires SuperUser permissions.");
@@ -68,12 +69,12 @@ public class InheritableApps : CustomDataSource
         return l.Return(apps, "ok");
     }
 
-    private AppModel ToModel(IAppReader appReader)
+    private AppRaw ToModel(IAppReader appReader)
     {
         var specs = appReader.Specs;
         var paths = _appPathsGen.New().Get(appReader, _context.Site);
 
-        var app = new AppDto
+        var app = new AppRaw
         {
             Id = appReader.AppId,
             IsApp = specs.NameId != KnownAppsConstants.DefaultAppGuid && specs.NameId != KnownAppsConstants.PrimaryAppGuid,
@@ -91,11 +92,11 @@ public class InheritableApps : CustomDataSource
             Lightspeed = LightSpeed(appReader),
             HasCodeWarnings = _codeStats.AppHasWarnings(appReader.AppId),
         };
-
-        return new AppModel(app)
-        {
-            Id = appReader.AppId,
-        };
+        return app;
+        //return new AppModel(app)
+        //{
+        //    Id = appReader.AppId,
+        //};
     }
 
     private static AppMetadataDto? LightSpeed(IAppReader appReader)

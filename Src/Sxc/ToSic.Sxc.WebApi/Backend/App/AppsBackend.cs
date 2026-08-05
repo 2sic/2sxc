@@ -18,7 +18,7 @@ public class AppsBackend(
     LazySvc<GlobalPaths> globalPaths)
     : ServiceBase("Bck.Apps", connect: [workApps, codeStats, context, appPathsGen, globalPaths])
 {
-    public ICollection<AppDto> Apps()
+    public ICollection<AppRaw> Apps()
     {
         var list = workApps.GetApps(context.Site);
         return list.Select(CreateAppDto).ToListOpt();
@@ -31,7 +31,7 @@ public class AppsBackend(
     //    return list.Select(CreateAppDto).ToListOpt();
     //}
 
-    private AppDto CreateAppDto(IAppReader appReader)
+    private AppRaw CreateAppDto(IAppReader appReader)
     {
         AppMetadataDto? lightspeed = null;
         var lightSpeedDeco = LightSpeedDecorator.GetFromAppStatePiggyBack(appReader/*, Log*/);
