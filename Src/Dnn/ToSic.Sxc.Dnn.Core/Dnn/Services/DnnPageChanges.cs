@@ -12,7 +12,7 @@ using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Sys.ClientAssets;
 using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
-using static ToSic.Sxc.Render.Sys.Output.ClientAssetConstants;
+using static ToSic.Sxc.Render.StaticAssets.Sys.ClientAssetConstants;
 
 namespace ToSic.Sxc.Dnn.Services;
 

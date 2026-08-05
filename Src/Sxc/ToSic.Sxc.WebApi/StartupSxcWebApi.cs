@@ -21,8 +21,8 @@ using ToSic.Sxc.Backend.SaveHelpers;
 using ToSic.Sxc.Backend.Sys;
 using ToSic.Sxc.Backend.Usage;
 using ToSic.Sxc.Backend.Views;
-using ToSic.Sxc.Render.Sys.Output;
-using ToSic.Sxc.Render.Sys.ResourceExtractor;
+using ToSic.Sxc.Render.Output.Sys;
+using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.WebApi.Sys;
 using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 
@@ -38,7 +38,7 @@ public static class StartupSxcWebApi
         services.TryAddTransient<ExternalLinksService>();
 
         // These are usually replaced by the target platform
-        services.TryAddTransient<IBlockResourceExtractor, BlockResourceExtractorUnknown>();
+        services.TryAddTransient<IAssetsExtractor, AssetsExtractorUnknown>();
             
         // Real Controllers
 

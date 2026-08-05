@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Models;
-using ToSic.Sxc.Polymorphism.Sys;
+using ToSic.Sxc.Render.Polymorphism.Sys;
 
 namespace ToSic.Sxc.Backend.Views;
 
@@ -29,14 +29,14 @@ public class AppPolymorphism : CustomDataSource
         var l = Log.Fn<IEnumerable<IEntity>>($"App: {AppId}");
 
         var poly = appReaders.Get(AppId).List
-            .FirstModel<PolymorphismConfiguration>(options: new() { NullHandling = NullHandling.ReturnModel })!;
+            .FirstModel<PolymorphismConfigurationModel>(options: new() { NullHandling = NullHandling.ReturnModel })!;
 
         var data = DataFactory
             .SpawnNew(new() { AutoId = false })
             .Create(new Dictionary<string, object?>
             {
                 { nameof(poly.Resolver), poly.Resolver },
-                { "TypeName", PolymorphismConfiguration.ContentTypeName },
+                { "TypeName", PolymorphismConfigurationModel.ContentTypeName },
             }, id: poly.Id);
 
         return l.Return([data], $"{poly}");

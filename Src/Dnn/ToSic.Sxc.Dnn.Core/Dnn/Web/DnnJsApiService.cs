@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Helpers;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Render.Sys.JsContext;
+using ToSic.Sxc.Render.JsContext.Sys;
 using ToSic.Sys.Security.Encryption;
 
 namespace ToSic.Sxc.Dnn.Web;

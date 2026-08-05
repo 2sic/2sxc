@@ -31,8 +31,9 @@ using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.StartUp;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Integration.Modules;
-using ToSic.Sxc.Render.Sys.JsContext;
-using ToSic.Sxc.Render.Sys.Output;
+using ToSic.Sxc.Render.JsContext.Sys;
+using ToSic.Sxc.Render.Output.Sys;
+using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Sys.Integration.Installation;
@@ -66,7 +67,7 @@ internal static class StartUpDnnCore
 
         services.TryAddTransient<IZoneMapper, DnnZoneMapper>();
 
-        services.TryAddTransient<IBlockResourceExtractor, DnnBlockResourceExtractor>();
+        services.TryAddTransient<IAssetsExtractor, DnnAssetsExtractor>();
         services.TryAddTransient<IEnvironmentPermission, DnnEnvironmentPermission>();
 
         services.TryAddTransient<IDnnContext, DnnContext>();

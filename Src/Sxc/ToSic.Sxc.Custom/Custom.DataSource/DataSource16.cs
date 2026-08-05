@@ -26,7 +26,7 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.Dependencie
     ///
     /// Note that this used to be called `MyServices` and that term will still work, but it's deprecated as of v20.
     ///
-    /// See [](xref:NetCode.Conventions.DependenciesClass).
+    /// See [](xref:NetCode.Conventions.Dependencies).
     /// </remarks>
     [PublicApi]
     [method: PrivateApi]

@@ -1,5 +1,4 @@
 ﻿using ToSic.Razor.Blade;
-using ToSic.Sxc.Engines;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Sys.ClientAssets;
 
@@ -8,7 +7,7 @@ namespace ToSic.Sxc.Sys.Render.PageContext;
 public interface IPageServiceShared: IChangeQueue
 {
     List<ClientAsset> GetAssetsAndFlush();
-    void AddAssets(RenderEngineResult result);
+    void AddAssets(IList<ClientAsset>? result);
     IPageFeatures PageFeatures { get; }
 
     string CspEphemeralMarker { get; }

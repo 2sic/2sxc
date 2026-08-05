@@ -25,8 +25,7 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
     private bool IsEnabled => _isEnabled ??= featureSvc.IsEnabled(SxcFeatures.LightSpeedOutputCachePartials.NameId);
     private bool? _isEnabled;
 
-    private string AppRuntimeKey => _appRuntimeKey ??= (exCtx.GetApp() as IAppWithInternal)?.AppReader.Specs.RuntimeKey ?? appId.ToString();
-    private string? _appRuntimeKey;
+    private string AppRuntimeKey => field ??= (exCtx.GetApp() as IAppWithInternal)?.AppReader.Specs.RuntimeKey ?? appId.ToString();
 
     /// <summary>
     /// Underlying cache service, taken from the execution context so it knows more about the current request.

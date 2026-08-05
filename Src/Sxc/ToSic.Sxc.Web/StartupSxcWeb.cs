@@ -6,8 +6,7 @@ using ToSic.Eav.LookUp;
 using ToSic.Sxc.Apps.Sys.Installation;
 using ToSic.Sxc.Data.Sys.Convert;
 using ToSic.Sxc.LookUp;
-using ToSic.Sxc.Polymorphism;
-using ToSic.Sxc.Polymorphism.Sys;
+using ToSic.Sxc.Render.Polymorphism.Sys;
 using ToSic.Sxc.Web.Sys.EditUi;
 using ToSic.Sxc.Web.Sys.Http;
 

@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Metadata.Requirements.Sys;
-using ToSic.Sxc.Engines;
+using ToSic.Sxc.Render.Engines.Sys;
+using ToSic.Sxc.Render.Output.Sys;
 using ToSic.Sys.Capabilities.SysFeatures;
 using ToSic.Sys.Requirements;
 
@@ -14,9 +15,9 @@ public class DnnRequirements(IRequirementsService requirements) : EngineRequirem
     private ICollection<RequirementStatus> RequirementsStatus()
         => requirements.UnfulfilledRequirements([SysFeatureSuggestions.CSharp08]);
 
-    internal RenderEngineResult GetMessageForRequirements()
+    internal OutputFragmentWithAssets GetMessageForRequirements()
     {
-        var l = Log.Fn<RenderEngineResult>();
+        var l = Log.Fn<OutputFragmentWithAssets>();
 
         if (RequirementsMet())
             return l.ReturnNull("all seems ok");

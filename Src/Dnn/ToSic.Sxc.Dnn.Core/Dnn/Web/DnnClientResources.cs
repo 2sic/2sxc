@@ -5,7 +5,7 @@ using DotNetNuke.Web.Client.Providers;
 using System.Web.UI;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Dnn.Features;
-using ToSic.Sxc.Render.Sys.RenderBlock;
+using ToSic.Sxc.Render.Block.Sys;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Sys.Url;
 
@@ -15,18 +15,18 @@ internal class DnnClientResources(DnnJsApiHeader dnnJsApiHeader, DnnRequirements
     : ServiceBase($"{DnnConstants.LogName}.JsCss", connect: [dnnJsApiHeader, dnnRequirements])
 {
     // #RemovedV20 #OldDnnAutoJQuery
-    public DnnClientResources Init(Page page, /*bool? forcePre1025Behavior,*/ IBlockBuilder blockBuilder)
+    public DnnClientResources Init(Page page, /*bool? forcePre1025Behavior,*/ IBlockRenderer blockRenderer)
     {
         //_forcePre1025Behavior = forcePre1025Behavior;
         _page = page;
-        _blockBuilder = blockBuilder;
+        _blockRenderer = blockRenderer;
         return this;
     }
-    private IBlockBuilder _blockBuilder;
+    private IBlockRenderer _blockRenderer;
     private Page _page;
     //private bool? _forcePre1025Behavior;
 
-    internal IList<IPageFeature> Features => field ??= _blockBuilder?.Run(true, specs: new())?.Features ?? new List<IPageFeature>();
+    internal IList<IPageFeature> Features => field ??= _blockRenderer?.Run(true, specs: new())?.Features ?? new List<IPageFeature>();
 
     public IList<IPageFeature> AddEverything(IList<IPageFeature> features = null)
     {

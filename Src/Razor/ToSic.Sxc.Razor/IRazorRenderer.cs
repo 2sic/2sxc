@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc.Razor;
-using ToSic.Sxc.Engines.Sys;
+using ToSic.Sxc.Render.Engines.Sys;
 
 namespace ToSic.Sxc.Razor;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IRazorRenderer
 {
-    Task<string> RenderToStringAsync<TModel>(EngineSpecs engineSpecs, /*string templatePath,*/ TModel model, Action<RazorView> configure/*, IApp app, HotBuildSpec hotBuildSpec*/);
+    Task<string> RenderToStringAsync<TModel>(EngineSpecs engineSpecs, TModel model, Action<RazorView> configure);
 }

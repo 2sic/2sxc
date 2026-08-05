@@ -4,7 +4,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Framework;
 using ToSic.Eav.ImportExport.Integration;
 using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Render.Sys.JsContext;
+using ToSic.Sxc.Render.JsContext.Sys;
 using ToSic.Sxc.Web.Sys.EditUi;
 using ToSic.Sys.Utils;
 using static System.StringComparison;

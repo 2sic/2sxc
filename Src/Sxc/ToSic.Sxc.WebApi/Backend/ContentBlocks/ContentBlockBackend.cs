@@ -5,9 +5,10 @@ using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockEditor;
 using ToSic.Sxc.Blocks.Sys.Work;
 using ToSic.Sxc.Cms.Publishing.Sys;
+using ToSic.Sxc.Render.Block.Sys;
+using ToSic.Sxc.Render.Output.Sys;
+using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.Render.Sys;
-using ToSic.Sxc.Render.Sys.Output;
-using ToSic.Sxc.Render.Sys.RenderBlock;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Security.Permissions;
@@ -22,11 +23,11 @@ public class ContentBlockBackend(
     IPagePublishing publishing,
     GenWorkDb<WorkBlocksMod> workBlocksMod,
     ISxcCurrentContextService ctxService,
-    LazySvc<IBlockResourceExtractor> optimizerLazy,
+    LazySvc<IAssetsExtractor> optimizerLazy,
     LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
     AppWorkContextService appWorkCtxService,
     Generator<BlockOfEntity> entityBlockGenerator,
-    Generator<IBlockBuilder> blockBuilderGenerator)
+    Generator<IBlockRenderer> blockBuilderGenerator)
     : ServiceBase("Bck.FldLst",
         connect: [workViews, multiPermissionsApp, publishing, workBlocksMod, ctxService, optimizerLazy, blockEditorSelectorLazy, appWorkCtxService, entityBlockGenerator, blockBuilderGenerator])
 {

@@ -7,8 +7,8 @@ using ToSic.Sxc.Dnn.Features;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Render.Block.Sys;
 using ToSic.Sxc.Render.Sys;
-using ToSic.Sxc.Render.Sys.RenderBlock;
 using ToSic.Sxc.Web.Sys.LightSpeed;
 
 namespace ToSic.Sxc.Dnn;
@@ -45,7 +45,7 @@ public partial class View : PortalModuleBase, IActionable
     private IBlock Block => _blockGetOnce.Get(Log, () => GetService<IModuleAndBlockBuilder>().BuildBlock(ModuleConfiguration, null), timer: true);
     private readonly GetOnce<IBlock> _blockGetOnce = new();
 
-    private IBlockBuilder BlockBuilder => field ??= GetService<IBlockBuilder>().Setup(Block);
+    private IBlockRenderer BlockRenderer => field ??= GetService<IBlockRenderer>().Setup(Block);
 
     #region Logging
 
@@ -228,8 +228,8 @@ public partial class View : PortalModuleBase, IActionable
         TryCatchAndLogToDnn(() =>
         {
             if (RenderNaked)
-                BlockBuilder.WrapInDiv = false;
-            result = (RenderResult)BlockBuilder.Run(
+                BlockRenderer.WrapInDiv = false;
+            result = (RenderResult)BlockRenderer.Run(
                 true,
                 specs: new()
                 {
@@ -241,7 +241,7 @@ public partial class View : PortalModuleBase, IActionable
             if (result.Errors?.Any() ?? false)
             {
                 var warnings = result.Errors
-                    .Select(e => BlockBuilder.RenderingHelper.DesignError(e));
+                    .Select(e => BlockRenderer.RenderingHelper.DesignError(e));
 
                 result = result with { Html = string.Join("", warnings) + result.Html };
             }

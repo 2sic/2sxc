@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Render.Sys.ResourceExtractor;
+﻿using ToSic.Sxc.Render.StaticAssets.Sys;
 
 namespace ToSic.Sxc.Tests.Blocks.Output;
 
@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Tests.Blocks.Output;
 public class BlockResourceExtractorGetHtmlAttributesTests
 {
  
-    private Dictionary<string, string> GetHtmlAttributes(string htmlTag) => BlockResourceExtractor.GetHtmlAttributes(htmlTag).Attributes as Dictionary<string, string>;
+    private Dictionary<string, string> GetHtmlAttributes(string htmlTag) => AssetsExtractor.GetHtmlAttributes(htmlTag).Attributes as Dictionary<string, string>;
 
 
     [Theory]

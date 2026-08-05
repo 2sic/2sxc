@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using ToSic.Sxc.Engines.Sys;
+using ToSic.Sxc.Render.Engines.Sys;
 using ToSic.Sxc.Sys;
 
 namespace ToSic.Sxc.Razor;
@@ -16,7 +16,7 @@ internal class RazorRenderer(
         connect: [tempDataProvider, appCodeRazorCompiler]), IRazorRenderer
 {
 
-    public async Task<string> RenderToStringAsync<TModel>(EngineSpecs engineSpecs, /*string templatePath,*/ TModel model, Action<RazorView> configure /*IApp app, HotBuildSpec hotBuildSpec*/)
+    public async Task<string> RenderToStringAsync<TModel>(EngineSpecs engineSpecs, TModel model, Action<RazorView> configure)
     {
         var templatePath = engineSpecs.TemplatePath;
         var app = engineSpecs.App;

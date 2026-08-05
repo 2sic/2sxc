@@ -46,7 +46,7 @@ partial class OqtPageOutput
             // process manual features to get assets
             if (manualFeature.Html == null)
                 continue; // skip if no HTML is defined
-            var result = blockResourceExtractor.Process(manualFeature.Html);
+            var result = assetsExtractor.Process(manualFeature.Html);
             assets.AddRange(result.Assets);
         }
         return assets;

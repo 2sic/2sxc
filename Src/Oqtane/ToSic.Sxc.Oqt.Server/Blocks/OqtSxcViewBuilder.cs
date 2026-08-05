@@ -5,8 +5,8 @@ using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
+using ToSic.Sxc.Render.Block.Sys;
 using ToSic.Sxc.Render.Sys;
-using ToSic.Sxc.Render.Sys.RenderBlock;
 using ToSic.Sxc.Web.Sys.LightSpeed;
 using ToSic.Sxc.Web.Sys.Url;
 using Page = Oqtane.Models.Page;
@@ -27,7 +27,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
         ILogStore logStore,
         GlobalTypesCheck globalTypesCheck,
         IOutputCache outputCache,
-        Generator<IBlockBuilder> blockBuilderGenerator) : base($"{OqtConstants.OqtLogPrefix}.Buildr", connect: [pageOutput, contextOfBlockEmpty, blockModuleEmpty, currentContextServiceForLookUps, globalTypesCheck, outputCache, pageOutput, blockBuilderGenerator])
+        Generator<IBlockRenderer> blockBuilderGenerator) : base($"{OqtConstants.OqtLogPrefix}.Buildr", connect: [pageOutput, contextOfBlockEmpty, blockModuleEmpty, currentContextServiceForLookUps, globalTypesCheck, outputCache, pageOutput, blockBuilderGenerator])
     {
         _contextOfBlockEmpty = contextOfBlockEmpty;
         _blockModuleEmpty = blockModuleEmpty;
@@ -44,7 +44,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
     private readonly BlockOfModule _blockModuleEmpty;
     private readonly ISxcCurrentContextService _currentContextServiceForLookUps;
     private readonly GlobalTypesCheck _globalTypesCheck;
-    private readonly Generator<IBlockBuilder> _blockBuilderGenerator;
+    private readonly Generator<IBlockRenderer> _blockBuilderGenerator;
 
     #endregion
 

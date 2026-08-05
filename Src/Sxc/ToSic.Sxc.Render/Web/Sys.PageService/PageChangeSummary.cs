@@ -1,6 +1,6 @@
-﻿using ToSic.Sxc.Render.Sys;
-using ToSic.Sxc.Render.Sys.ModuleHtml;
-using ToSic.Sxc.Render.Sys.Output;
+﻿using ToSic.Sxc.Render.Output.Sys;
+using ToSic.Sxc.Render.StaticAssets.Sys;
+using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Sys.Render.PageFeatures;
@@ -8,7 +8,7 @@ using ToSic.Sxc.Web.Sys.ClientAssets;
 using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Sys.PageServiceShared;
 using ToSic.Sys.Requirements;
-using static ToSic.Sxc.Render.Sys.Output.ClientAssetConstants;
+using static ToSic.Sxc.Render.StaticAssets.Sys.ClientAssetConstants;
 using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 
 namespace ToSic.Sxc.Web.Sys.PageService;
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Web.Sys.PageService;
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class PageChangeSummary(
-    LazySvc<IBlockResourceExtractor> resourceExtractor,
+    LazySvc<IAssetsExtractor> resourceExtractor,
     LazySvc<RequirementsService> requirements,
     IModuleHtmlService moduleHtmlService)
     : Services_ServiceBase(SxcLogName + "PgChSm", connect: [requirements, resourceExtractor, moduleHtmlService])

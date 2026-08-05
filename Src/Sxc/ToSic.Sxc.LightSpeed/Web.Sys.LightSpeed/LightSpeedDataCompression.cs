@@ -1,10 +1,11 @@
 using ToSic.Sxc.Render.Sys;
+using ToSic.Sxc.Web.Sys.HtmlParsing;
 
 namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
 internal static class LightSpeedDataCompression
 {
-    internal static IRenderResult OptimizeForCache(IRenderResult data, bool useCompression, int minBytes = RenderResultHtmlCompression.DefaultMinBytes)
+    internal static IRenderResult OptimizeForCache(IRenderResult data, bool useCompression, int minBytes = HtmlCompression.DefaultMinBytes)
     {
         if (!useCompression || data is not RenderResult renderResult)
             return data;
@@ -13,11 +14,11 @@ internal static class LightSpeedDataCompression
             return data;
 
         // Use UTF-8 byte count because compression operates on the encoded payload, not the .NET string length.
-        var originalHtmlUtf8Bytes = RenderResultHtmlCompression.GetUtf8ByteCount(html);
+        var originalHtmlUtf8Bytes = HtmlCompression.GetUtf8ByteCount(html);
         if (originalHtmlUtf8Bytes < minBytes)
             return data;
 
-        var compressedHtml = RenderResultHtmlCompression.Compress(html);
+        var compressedHtml = HtmlCompression.Compress(html);
         if (compressedHtml.Length >= originalHtmlUtf8Bytes)
             return data;
 

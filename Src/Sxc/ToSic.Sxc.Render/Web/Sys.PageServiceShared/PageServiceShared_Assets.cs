@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Engines;
+﻿using ToSic.Sxc.Render.Output.Sys;
 using ToSic.Sxc.Web.Sys.ClientAssets;
 
 namespace ToSic.Sxc.Web.Sys.PageServiceShared;
@@ -17,11 +17,11 @@ partial class PageServiceShared
         return assets;
     }
 
-    public void AddAssets(RenderEngineResult result)
+    public void AddAssets(IList<ClientAsset>? result)
     {
-        if (result?.Assets == null) return;
-        if (!result.Assets.Any()) return;
-        Assets.AddRange(result.Assets);
+        if (result.SafeNone())
+            return;
+        Assets.AddRange(result);
     }
 
 }

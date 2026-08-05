@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Sxc.Engines;
-using ToSic.Sxc.Engines.Sys;
-using ToSic.Sxc.Polymorphism.Sys;
+using ToSic.Sxc.Render.Engines.Sys;
+using ToSic.Sxc.Render.Polymorphism.Sys;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Run.Startup;
@@ -17,7 +16,7 @@ public static class StartupSxcEngines
 
         services.TryAddTransient<EngineCheckTemplate>();
         services.TryAddTransient<EnginePolymorphism>();
-        services.TryAddTransient<EngineAppRequirements>();
+        services.TryAddTransient<EngineRequirementsApp>();
 
         // Polymorphism
         services.TryAddTransient<PolymorphConfigReader>();

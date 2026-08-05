@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Engines;
+﻿using ToSic.Sxc.Render.Output.Sys;
 using ToSic.Sys.Data;
 
 namespace ToSic.Sxc.Render.Sys.Specs;
@@ -7,8 +7,6 @@ namespace ToSic.Sxc.Render.Sys.Specs;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public record RenderSpecs
 {
-    //public RenderSpecs() { }
-
     /// <summary>
     /// The data / view model to be used in the Razor file.
     /// </summary>
@@ -29,7 +27,7 @@ public record RenderSpecs
     /// <summary>
     /// Would contain errors from dnn requirements check (like c# 8.0)
     /// </summary>
-    public RenderEngineResult? RenderEngineResult { get; init; }
+    public OutputFragmentWithAssets? RenderEngineResult { get; init; }
 
     /// <summary>
     /// Override default behavior in Oqtane
