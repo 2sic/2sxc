@@ -201,7 +201,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     #region File Response / Download
 
     /// <inheritdoc cref="IDynamicWebApi.File"/>
-    public dynamic File(NoParamOrder npo = default,
+    public object File(NoParamOrder npo = default,
         bool? download = null,
         string virtualPath = null,
         string contentType = null,

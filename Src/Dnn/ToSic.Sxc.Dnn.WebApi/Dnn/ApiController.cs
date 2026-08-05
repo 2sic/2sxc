@@ -113,7 +113,7 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
     /// <inheritdoc cref="IDynamicCodeDocs.AsAdam" />
     public IFolder AsAdam(ICanBeEntity item, string fieldName) => CodeApi.AsAdam(item, fieldName);
 
-    public dynamic File(NoParamOrder npo = default, bool? download = null, string virtualPath = null,
+    public object File(NoParamOrder npo = default, bool? download = null, string virtualPath = null,
         string contentType = null, string fileDownloadName = null, object contents = null) =>
         throw new NotSupportedException("Not implemented. " + ErrRecommendedNamespaces);
 
