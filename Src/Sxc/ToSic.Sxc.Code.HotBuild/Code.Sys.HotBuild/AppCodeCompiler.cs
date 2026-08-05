@@ -204,12 +204,11 @@ public abstract class AppCodeCompiler(
 
     private static string ShorterAppKey(HotBuildSpec spec)
     {
-        var appKey = spec.RuntimeKey;
-        if (appKey == null)
+        if (spec.AppCacheKey == null)
             return $"{spec.AppId:D5}";
         
         // Expected format: t##-z###-a#####
-        var parts = appKey.Split('-');
+        var parts = spec.AppCacheKey.Split('-');
 
         // Rebuild without the "z###" part
         var shorterAppKey = string.Join("-", parts.Where(p => !p.StartsWith("z")));

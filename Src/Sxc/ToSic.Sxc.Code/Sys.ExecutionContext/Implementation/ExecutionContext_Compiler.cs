@@ -18,7 +18,7 @@ public partial class ExecutionContext
 
         // Compile
         var compiler = Services.CodeCompilerLazy.Value;
-        var runtimeKey = (App as IAppWithInternal)?.AppReader.Specs.RuntimeKey;
+        var runtimeKey = (App as IAppWithInternal)?.AppReader.Specs.CacheKey;
         var spec = new HotBuildSpec(App.AppId, _editionForHotBuild, App.Name, runtimeKey);
         var instance = compiler.InstantiateClass(virtualPath, spec, className: name, relativePath: relativePath, throwOnError: throwOnError);
 

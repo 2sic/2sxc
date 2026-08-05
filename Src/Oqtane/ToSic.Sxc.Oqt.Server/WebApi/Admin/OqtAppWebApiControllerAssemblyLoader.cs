@@ -39,11 +39,11 @@ internal class OqtAppWebApiControllerAssemblyLoader(
         var blockOrNull = ctxService.BlockOrNull();
         var edition = blockOrNull.NullOrGetWith(b => polymorphism.UseViewEditionOrGet(b));
 
-        var runtimeKey = blockOrNull?.Context.AppReaderRequired?.Specs.RuntimeKey;
+        var runtimeKey = blockOrNull?.Context.AppReaderRequired?.Specs.CacheKey;
         var spec = new HotBuildSpec(blockOrNull?.AppId ?? KnownAppsConstants.AppIdEmpty,
             edition: edition,
             appName: blockOrNull?.AppOrNull?.Name,
-            runtimeKey: runtimeKey);
+            appCacheKey: runtimeKey);
 
         Log.A($"Controller path from root: {pathFromRoot}");
 

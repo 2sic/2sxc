@@ -11,8 +11,8 @@ public class EngineSpecsService(
     IServerPaths serverPaths,
     EnginePolymorphism enginePolymorphism,
     EngineCheckTemplate engineCheckTemplate,
-    IRuntimeKeyService runtimeKeyService
-) : ServiceBase("Sxc.EgSpec", connect: [serverPaths, enginePolymorphism, engineCheckTemplate, runtimeKeyService])
+    IAppCacheKeyService appCacheKeyService
+) : ServiceBase("Sxc.EgSpec", connect: [serverPaths, enginePolymorphism, engineCheckTemplate, appCacheKeyService])
 {
     /// <summary>
     /// Do various preflight checks and create the Engine Specs according to the information in the BlockSpecs
@@ -50,7 +50,7 @@ public class EngineSpecsService(
         // check access permissions - before initializing or running data-code in the template
         engineCheckTemplate.ThrowIfViewPermissionsDenyAccess(view, block.Context);
 
-        var appRuntimeKey = runtimeKeyService.AppRuntimeKey(block.App);
+        var appCacheKey = appCacheKeyService.AppCacheKey(block.App);
 
         // All ok, set properties
         var engineSpecs = new EngineSpecs
@@ -61,7 +61,7 @@ public class EngineSpecsService(
             Edition = edition,
             TemplatePath = templatePath,
             View = view,
-            RuntimeKey = appRuntimeKey
+            AppCacheKey = appCacheKey
         };
 
         return l.Return(engineSpecs);

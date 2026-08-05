@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Code.Sys.HotBuild;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class HotBuildSpec(int appId, string? edition, string? appName, string? runtimeKey = null)
+public class HotBuildSpec(int appId, string? edition, string? appName, string? appCacheKey = null)
 {
     public int AppId => appId;
 
@@ -19,19 +19,19 @@ public class HotBuildSpec(int appId, string? edition, string? appName, string? r
     /// <summary>
     /// Runtime key to uniquely identify this app across tenants/platforms.
     /// </summary>
-    public string? RuntimeKey => runtimeKey;
+    public string? AppCacheKey => appCacheKey;
 
     /// <summary>
     /// App key for cache keys (runtime key when available, otherwise AppId).
     /// </summary>
-    public string AppKeyForCache => field ??= runtimeKey ?? AppId.ToString();
+    public string AppCacheKeyStable => field ??= appCacheKey ?? AppId.ToString();
 
     /// <summary>
     /// Override ToString for better debugging
     /// </summary>
     public override string ToString()
         => _toString ??= $"{nameof(HotBuildSpec)} - {nameof(AppId)}: {appId} {(appName.HasValue() ? $"({appName})" : "")}; {nameof(Edition)}: '{EditionToLog}'"
-                         + (runtimeKey.HasValue() ? $"; {nameof(RuntimeKey)}: '{runtimeKey}'" : "");
+                         + (appCacheKey.HasValue() ? $"; {nameof(AppCacheKey)}: '{appCacheKey}'" : "");
     private string? _toString;
 
     /// <summary>
@@ -42,7 +42,7 @@ public class HotBuildSpec(int appId, string? edition, string? appName, string? r
         { nameof(AppId), AppId.ToString() },
         { nameof(AppName), AppName ?? ""},
         { nameof(Edition), EditionToLog },
-        { nameof(RuntimeKey), RuntimeKey ?? "" },
+        { nameof(AppCacheKey), AppCacheKey ?? "" },
     };
 
     /// <summary>
@@ -51,14 +51,14 @@ public class HotBuildSpec(int appId, string? edition, string? appName, string? r
     /// <remarks>
     /// should not use optional parameters like: addSharedSuffixToAssemblyName or appName
     /// </remarks>
-    public string CacheKey() => _cacheKey ??= $"{nameof(HotBuildSpec)}.{nameof(AppId)}:{AppKeyForCache}.{nameof(Edition)}:{Edition}";
+    public string CacheKey() => _cacheKey ??= $"{nameof(HotBuildSpec)}.{nameof(AppId)}:{AppCacheKeyStable}.{nameof(Edition)}:{Edition}";
     private string? _cacheKey;
 
     /// <summary>
     /// Use when fallback from edition to root app
     /// </summary>
     /// <returns></returns>
-    public HotBuildSpec CloneWithoutEdition() => new(AppId, null, appName, runtimeKey);
+    public HotBuildSpec CloneWithoutEdition() => new(AppId, null, appName, appCacheKey);
 
     /// <summary>
     /// Use in very special case for AppCode in site local path
@@ -66,7 +66,7 @@ public class HotBuildSpec(int appId, string? edition, string? appName, string? r
     /// </summary>
     /// <returns></returns>
     public HotBuildSpecWithSharedSuffix WithoutSharedSuffix()
-        => new(AppId, edition, appName, false, runtimeKey);
+        => new(AppId, edition, appName, false, appCacheKey);
 
     /// <summary>
     /// Use in very special case for AppCode in shared (global) path
@@ -74,12 +74,12 @@ public class HotBuildSpec(int appId, string? edition, string? appName, string? r
     /// </summary>
     /// <returns></returns>
     public HotBuildSpecWithSharedSuffix WithSharedSuffix()
-        => new(AppId, edition, appName, true, runtimeKey);
+        => new(AppId, edition, appName, true, appCacheKey);
 }
 
 
-public class HotBuildSpecWithSharedSuffix(int appId, string? edition, string? appName, bool addSharedSuffixToAssemblyName, string? runtimeKey = null)
-    : HotBuildSpec(appId, edition, appName, runtimeKey)
+public class HotBuildSpecWithSharedSuffix(int appId, string? edition, string? appName, bool addSharedSuffixToAssemblyName, string? appCacheKey = null)
+    : HotBuildSpec(appId, edition, appName, appCacheKey)
 {
     /// <summary>
     /// "addSharedSuffixToAssemblyName" is optional parameter used just as info for AppCode assembly naming in very special case,

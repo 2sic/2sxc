@@ -14,7 +14,7 @@ public record CacheKeyParts
 
     public required int AppId { get; init; }
 
-    public string? RuntimeKey { get; init; }
+    public string? AppCacheKey { get; init; }
 
     public required string Main { get; init; }
 

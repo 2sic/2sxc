@@ -35,11 +35,11 @@ namespace ToSic.Sxc.Services.Cache.Sys;
 /// <param name="cache"></param>
 internal class CacheService(
     MemoryCacheService cache,
-    IRuntimeKeyService runtimeKeyService,
+    IAppCacheKeyService appCacheKeyService,
     LazySvc<IAppsCatalog> appsCatalog,
     Generator<IAppPathsMicroSvc> appPathsLazy,
     ISysFeaturesService features
-    ) : ServiceWithContext($"{SxcLogName}.CchSvc", connect: [cache, runtimeKeyService, appsCatalog]), ICacheService
+    ) : ServiceWithContext($"{SxcLogName}.CchSvc", connect: [cache, appCacheKeyService, appsCatalog]), ICacheService
 {
     /// <summary>
     /// AppId to use in key generation, so it won't collide with other apps.
@@ -47,8 +47,7 @@ internal class CacheService(
     private int AppId => _appId ??= ExCtxOrNull?.GetApp().AppId ?? -1;
     private int? _appId;
 
-    private string? AppRuntimeKey => _appRuntimeKey ??= ResolveAppRuntimeKey();
-    private string? _appRuntimeKey;
+    private string? AppCacheKey => field ??= GetAppCacheKey();
 
     private bool IsEnabled => _isEnabled ??= features.IsEnabled(SxcFeatures.SmartDataCache);
     private bool? _isEnabled;
@@ -59,7 +58,7 @@ internal class CacheService(
         var keySpecs = new CacheKeyParts
         {
             AppId = shared == true ? CacheKeyParts.NoApp : AppId,
-            RuntimeKey = shared == true ? null : AppRuntimeKey,
+            AppCacheKey = shared == true ? null : AppCacheKey,
             Main = key,
             RegionName = regionName,
         };
@@ -80,11 +79,11 @@ internal class CacheService(
         return l.Return(specs);
     }
 
-    private string? ResolveAppRuntimeKey()
+    private string? GetAppCacheKey()
     {
         var app = ExCtxOrNull?.GetApp();
         if (app is IAppWithInternal appWithInternal)
-            return appWithInternal.AppReader.Specs.RuntimeKey;
+            return appWithInternal.AppReader.Specs.CacheKey;
 
         if (AppId <= 0)
             return null;
@@ -92,7 +91,7 @@ internal class CacheService(
         try
         {
             var identity = appsCatalog.Value.AppIdentity(AppId);
-            return runtimeKeyService.AppRuntimeKey(identity);
+            return appCacheKeyService.AppCacheKey(identity);
         }
         catch
         {

@@ -36,7 +36,7 @@ partial class OqtRegisterServices
         services.TryAddScoped<IJsApiService, OqtJsApiService>();
 
         // must be Transient (scoped cause StackOverflowException infinite recursion)
-        services.TryAddTransient<IRuntimeKeyService, OqtRuntimeKeyService>();
+        services.TryAddTransient<IAppCacheKeyService, OqtAppCacheKeyService>();
 
         return services;
     }

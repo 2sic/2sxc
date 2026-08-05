@@ -5,9 +5,9 @@ using ToSic.Eav.Apps.Sys;
 
 namespace ToSic.Sxc.Oqt.Server.Context;
 
-internal sealed class OqtRuntimeKeyService(IHttpContextAccessor httpContextAccessor) : IRuntimeKeyService
+internal sealed class OqtAppCacheKeyService(IHttpContextAccessor httpContextAccessor) : IAppCacheKeyService
 {
-    public string AppRuntimeKey(IAppIdentity appIdentity)
+    public string AppCacheKey(IAppIdentity appIdentity)
     {
         if (appIdentity.AppId == KnownAppsConstants.PresetAppId
             || appIdentity.AppId == KnownAppsConstants.GlobalPresetAppId)
