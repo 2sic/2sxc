@@ -14,17 +14,21 @@ public partial class DynamicEntity: IEquatable<IEntityWrapper>
     #region Changing comparison operation to internally compare the entities, not this wrapper
 
     [PrivateApi]
-    public static bool operator ==(DynamicEntity d1, IEntityWrapper d2) => MultiWrapperEquality.IsEqual(d1, d2);
+    public static bool operator ==(DynamicEntity d1, IEntityWrapper d2)
+        => MultiWrapperEquality.IsEqual(d1, d2);
 
     [PrivateApi]
-    public static bool operator !=(DynamicEntity d1, IEntityWrapper d2) => !MultiWrapperEquality.IsEqual(d1, d2);
+    public static bool operator !=(DynamicEntity d1, IEntityWrapper d2)
+        => !MultiWrapperEquality.IsEqual(d1, d2);
 
     [PrivateApi]
-    public bool Equals(IEntityWrapper? other) => MultiWrapperEquality.EqualsWrapper(this, other);
+    public bool Equals(IEntityWrapper? other)
+        => MultiWrapperEquality.EqualsWrapper(this, other);
 
     /// <inheritdoc />
     [PrivateApi]
-    public override bool Equals(object? obj) => MultiWrapperEquality.EqualsObj(this, obj);
+    public override bool Equals(object? obj)
+        => MultiWrapperEquality.EqualsObj(this, obj);
 
     /// <summary>
     /// This is used by various equality comparison. 
@@ -32,13 +36,13 @@ public partial class DynamicEntity: IEquatable<IEntityWrapper>
     /// </summary>
     /// <returns></returns>
     [PrivateApi]
-#pragma warning disable RS1024 // Compare symbols correctly
-    public override int GetHashCode() => MultiWrapperEquality.GetWrappedHashCode(this);
-#pragma warning restore RS1024 // Compare symbols correctly
+    public override int GetHashCode()
+        => MultiWrapperEquality.GetWrappedHashCode(this);
 
     /// <inheritdoc />
     [PrivateApi]
-    public bool Equals(IDynamicEntity? dynObj) => MultiWrapperEquality.EqualsWrapper(this, dynObj);
+    public bool Equals(IDynamicEntity? dynObj)
+        => MultiWrapperEquality.EqualsWrapper(this, dynObj);
 
     #endregion
 }
