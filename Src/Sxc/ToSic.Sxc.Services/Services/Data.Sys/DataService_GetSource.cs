@@ -20,8 +20,10 @@ partial class DataService
         var l = Log.Fn<T>($"{nameof(attach)}: {attach}, {nameof(options)}: {options}");
 
         // If no in-source was provided, make sure that we create one from the current app
-        var fullOptions = DataSourceOptionsExtensions.WithAttach(OptionsMs.SafeOptions(parameters, options: options), attach);
-        var ds = dataSources.Value.Create<T>(/*attach: attach,*/ options: fullOptions);
+        var fullOptions = OptionsMs
+            .SafeOptions(parameters, options: options)
+            .WithAttach(attach);
+        var ds = dataSources.Value.Create<T>(options: fullOptions);
 
         return l.Return(ds);
     }
@@ -38,7 +40,9 @@ partial class DataService
         var l = Log.Fn<IDataSource>($"{nameof(name)}: {name}, {nameof(attach)}: {attach}, {nameof(options)}: {options}");
 
         // Do this first, to ensure AppIdentity is really known/set
-        var safeOptions = DataSourceOptionsExtensions.WithAttach(OptionsMs.SafeOptions(parameters, options: options), attach);
+        var safeOptions = OptionsMs
+            .SafeOptions(parameters, options: options)
+            .WithAttach(attach);
         var appId = safeOptions.AppIdentityOrReader!.AppId;
 
         var dsInfo = name.IsEmptyOrWs()
