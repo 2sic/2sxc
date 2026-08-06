@@ -1,11 +1,11 @@
 ﻿using System.Web;
+using System.Web.Hosting;
 using ToSic.Sxc.Code.Sys.CodeApi;
-using ToSic.Sxc.Code.Sys.CodeErrorHelp;
-using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Web.Sys.LightSpeed;
+using ToSic.Sys.Capabilities.Features;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Dnn.Razor;
@@ -14,24 +14,9 @@ namespace ToSic.Sxc.Dnn.Razor;
 /// Helper in Dnn to replace the HtmlHelper for the `@Html.Raw()` or `@Html.Partial()`
 /// </summary>
 [PrivateApi]
-internal class HtmlHelper(
-    LazySvc<CodeErrorHelpService> codeErrService,
-    LazySvc<IFeaturesService> featureSvc,
-    LazySvc<SourceAnalyzer> codeAnalysis,
-    Generator<IRenderingHelper> renderingHelperGenerator)
-    : ServiceBase("Dnn.HtmHlp", connect: [codeErrService, featureSvc, codeAnalysis, renderingHelperGenerator]), IHtmlHelper
+internal class HtmlHelper(LazySvc<IFeaturesService> featureSvc, Generator<HtmlHelperErrorHelper, HtmlHelperContextWithPaths> errHelperGenerator)
+    : ServiceWithSetup<HtmlHelperContext>("Dnn.HtmHlp", connect: [featureSvc]), IHtmlHelper
 {
-    public HtmlHelper Init(RazorComponentBase page, DnnRazorHelper helper, bool isSystemAdmin)
-    {
-        _page = page;
-        _helper = helper;
-        _errorHelper = new(page, isSystemAdmin, helper, featureSvc, codeAnalysis, codeErrService, renderingHelperGenerator);
-        return this;
-    }
-    private RazorComponentBase _page;
-    private DnnRazorHelper _helper;
-    private HtmlHelperErrorHelper _errorHelper;
-
     private HtmlHelperTimeKeeper TimeKeeper { get; } = new();
 
     /// <inheritdoc/>
@@ -41,7 +26,7 @@ internal class HtmlHelper(
             null => new HtmlString(""),
             string s => new HtmlString(s),
             IHtmlString h => h,
-            _ => throw _helper.Add(new ArgumentException($@"Html.Raw does not support type '{stringHtml.GetType().Name}'.", nameof(stringHtml)))
+            _ => throw MyOptions.Helper.Add(new ArgumentException($@"Html.Raw does not support type '{stringHtml.GetType().Name}'.", nameof(stringHtml)))
         };
 
     /// <summary>
@@ -54,35 +39,58 @@ internal class HtmlHelper(
     {
         // Figure out the real path, and make sure it's lower case
         // so the ID in a cache remains the same no matter how it was called
-        var normalizedPath = _page.NormalizePath(relativePath).ToLowerInvariant();
+        var fullOptions = new HtmlHelperContextWithPaths(MyOptions, relativePath);
 
-        var l = Log.Fn<IHtmlString>($"{nameof(relativePath)}: '{relativePath}', {nameof(normalizedPath)}: '{normalizedPath}', {nameof(data)}: {data != null}", timer: true);
-        var fullTime = TimeKeeper.Start(normalizedPath);
+        var l = Log.Fn<IHtmlString>($"{nameof(relativePath)}: '{relativePath}', {nameof(fullOptions.CacheKey)}: '{fullOptions.CacheKey}', {nameof(data)}: {data != null}", timer: true);
+        var fullTime = TimeKeeper.Start(fullOptions.Normalized);
 
         // Prepare RenderSpecs with data, since it may be needed to check if caching is relevant
         // Do it like this, to avoid multiple conversions of the same data
         var renderSpecs = new RenderSpecs { Data = data };
 
-        var cacheHelper = new RazorPartialCachingHelper(_page.ExCtx.GetAppId(), normalizedPath, renderSpecs.DataDic, _page.ExCtx, featureSvc.Value, Log);
+        var cacheHelper = new RazorPartialCachingHelper(MyOptions.ExCtx.GetAppId(), fullOptions.CacheKey, renderSpecs.DataDic, MyOptions.ExCtx, featureSvc.Value, Log);
 
         var cached = cacheHelper.TryGetFromCache();
         if (cached != null)
         {
+            // Make sure the effects on the page are repeated (like headers, scripts etc.)
             cacheHelper.PageService.ReplayCachedChanges((RenderResult)cached);
             return l.Return(new HtmlString(cached.Html), "Returning cached result");
         }
 
+        // Get the error helper to assist
+        var errHelper = errHelperGenerator.New(fullOptions);
+
+        // Try to render everything
         try
         {
             // Attach any specs which the cshtml may need and possibly modify to configure caching
             renderSpecs = renderSpecs with { PartialSpecs = cacheHelper.RenderPartialSpecsForRazor };
 
             // This will get a HelperResult object, which is often not executed yet
-            var result = RenderWithRoslynOrClassic(relativePath, normalizedPath, renderSpecs);
+            var result = RenderWithRoslynOrClassic(fullOptions, renderSpecs);
+            
+            // Optionally verify that the path was perfect, to indicate if it could work on Linux
+            // new v22
+            if (BuiltInFeatures.DevFeatures.FileNamesCrossPlatform)
+                try
+                {
+                    var fullPath = HostingEnvironment.MapPath(fullOptions.Normalized);
+                    var maxSegments = 3; // todo: calculate better
+                    var pathResult = PathCasingValidator.IsPathOkForLinux(fullOptions.Relative, fullPath, maxSegments);
+                    if (!pathResult.IsOk)
+                    {
+                        // TODO: MAKE SURE IT GETS REPORTED
+                    }
+                }
+                catch (Exception ex)
+                {
+                    l.Ex(ex);
+                }
 
             // In case we should throw a nice error, we must get the HTML now, to possibly cause the error and show an alternate message
             // This will also not allow partial caching
-            if (!_errorHelper.ThrowPartialError)
+            if (!errHelper.ThrowPartialError)
                 return l.Return(result);
 
             // We want to capture the rendering of the result, so we can show nice errors and cache the result if needed.
@@ -96,13 +104,13 @@ internal class HtmlHelper(
                     var asString = result.ToHtmlString();
                     writer.Write(asString); // Use Write instead of WriteLine, to not introduce any extra lines/whitespace
                     fullTime.Stop();
-                    l.A($"Done rendering {normalizedPath}; Length: {asString.Length}; accumulated time for this partial: {fullTime.ElapsedMilliseconds}ms");
+                    l.A($"Done rendering {fullOptions.Normalized}; Length: {asString.Length}; accumulated time for this partial: {fullTime.ElapsedMilliseconds}ms");
                     // Add to cache - should only run if no exceptions were thrown
                     cacheHelper.SaveToCacheIfEnabled(asString);
                 }
                 catch (Exception renderException)
                 {
-                    var nice = _errorHelper.TryToLogAndReWrapError(renderException, relativePath, true);
+                    var nice = errHelper.TryToLogAndReWrapError(renderException, relativePath, true);
                     writer.WriteLine(nice);
                 }
             });
@@ -113,11 +121,11 @@ internal class HtmlHelper(
         {
             // Ensure our error paths exist, to only report this in the system-logs once
             //_errorPaths ??= new(InvariantCultureIgnoreCase);
-            var isFirstOccurrence = !_errorHelper.ErrorPaths.Contains(relativePath);
-            _errorHelper.ErrorPaths.Add(relativePath);
+            var isFirstOccurrence = !errHelper.ErrorPaths.Contains(relativePath);
+            errHelper.ErrorPaths.Add(relativePath);
 
             // Report if first time
-            var nice = _errorHelper.TryToLogAndReWrapError(compileException, relativePath, isFirstOccurrence, "Special exception handling - only show message");
+            var nice = errHelper.TryToLogAndReWrapError(compileException, relativePath, isFirstOccurrence, "Special exception handling - only show message");
             var htmlError = new HtmlString(nice);
             return l.Return(htmlError, "compile error");
         }
@@ -126,38 +134,34 @@ internal class HtmlHelper(
     /// <summary>
     /// Determine if we should use Roslyn or the classic way of rendering and do it.
     /// </summary>
-    /// <param name="relativePath"></param>
-    /// <param name="normalizedPath"></param>
-    /// <param name="renderSpecs"></param>
     /// <returns></returns>
-    private HelperResult RenderWithRoslynOrClassic(string relativePath, string normalizedPath, RenderSpecs renderSpecs)
+    private HelperResult RenderWithRoslynOrClassic(HtmlHelperContextWithPaths fullOptions, RenderSpecs renderSpecs)
     {
-        var useRoslyn = _page is ICanUseRoslynCompiler;
+        var useRoslyn = MyOptions.Page is ICanUseRoslynCompiler;
         var l = Log.Fn<HelperResult>($"{nameof(useRoslyn)}: {useRoslyn}");
 
         // We can use Roslyn
         // Classic setup without Roslyn, use the built-in RenderPage
         if (!useRoslyn)
-            return l.Return(_page.BaseRenderPage(relativePath, renderSpecs), $"default render {(renderSpecs.Data == null ? "no" : "with")} data");
+            return l.Return(MyOptions.Page.BaseRenderPage(fullOptions.Relative, renderSpecs), $"default render {(renderSpecs.Data == null ? "no" : "with")} data");
 
         // Try to compile with Roslyn
         // Will exit if the child has an old base class which would expect PageData["..."] properties
         // Because that would be empty https://github.com/2sic/2sxc/issues/3260
-        var preparations = DnnRazorCompiler.PrepareForRoslyn(_page, normalizedPath, renderSpecs.Data);
+        var preparations = DnnRazorCompiler.PrepareForRoslyn(MyOptions.Page, fullOptions.Normalized, renderSpecs.Data);
 
         // Exit if we don't use HotBuild, because then we must revert back to classic render
         // Reason is that otherwise the PageData property - used on very old classes - would not be populated
         // Doing this from our compiler is super-hard, because it would use a lot of internal Microsoft APIs
         if (preparations.SubPage.UsesHotBuild)
         {
-            var probablyHotBuild = DnnRazorCompiler.ExecuteWithRoslyn(preparations, _page, renderSpecs);
-            
-            //if (probablyHotBuild.UsesHotBuild)
+            var probablyHotBuild = DnnRazorCompiler.ExecuteWithRoslyn(preparations, MyOptions.Page, renderSpecs);
             return l.Return(probablyHotBuild.Instance, "used HotBuild");
         }
 
         l.A("Tried to use Roslyn, but detected old base class so will use classic Razor Engine so PageData continues to work.");
-        return l.Return(_page.BaseRenderPage(relativePath, renderSpecs), $"default render {(renderSpecs.Data == null ? "no" : "with")} data");
+        return l.Return(MyOptions.Page.BaseRenderPage(fullOptions.Relative, renderSpecs), $"default render {(renderSpecs.Data == null ? "no" : "with")} data");
     }
 
 }
+

@@ -52,8 +52,8 @@ internal class DnnRazorCompiler(
 
 
     [PrivateApi]
-    private HttpContextBase HttpContextCurrent =>
-        _httpContext.Get(() => HttpContext.Current.NullOrGetWith(h => new HttpContextWrapper(h)));
+    private HttpContextBase HttpContextCurrent => _httpContext
+        .Get(() => HttpContext.Current.NullOrGetWith(h => new HttpContextWrapper(h)));
     private readonly GetOnce<HttpContextBase> _httpContext = new();
 
     [PrivateApi]
@@ -202,8 +202,7 @@ internal class DnnRazorCompiler(
 
     #region Helpers for Rendering Sub-Components
 
-    internal record PrepToExecute(
-        string BestPath,
+    internal record PrepToExecute(string BestPath,
         RazorBuildTempResult<RazorComponentBase> SubPage,
         DnnRazorCompiler Compiler);
 
@@ -225,7 +224,8 @@ internal class DnnRazorCompiler(
     {
         var l = (parent as IHasLog).Log.Fn<RazorBuildTempResult<HelperResult>>();
 
-        var (writer, exceptions) = preparations.Compiler.RenderImplementation(preparations.SubPage.Instance, renderSpecs);
+        var (writer, exceptions) = preparations.Compiler
+            .RenderImplementation(preparations.SubPage.Instance, renderSpecs);
 
         // Log any exceptions which may have occurred
         if (exceptions.SafeAny())
@@ -233,34 +233,37 @@ internal class DnnRazorCompiler(
 
         return l.ReturnAsOk(new(new(w => w.Write(writer)), true));
     }
-    internal static RazorBuildTempResult<HelperResult> RenderPartialWithRoslyn(RazorComponentBase parent, string templatePath, object data, RenderSpecs renderSpecs)
-    {
-        var l = (parent as IHasLog).Log.Fn<RazorBuildTempResult<HelperResult>>();
 
-        // Find the RazorEngine which MUST be on the CodeApiService PiggyBack, or throw an error
-        var razorCompiler = parent.ExCtx.PiggyBack.GetOrGenerate(nameof(DnnRazorCompiler), DnnRazorCompiler () => null)
-                          ?? throw l.Ex(new Exception($"Error finding {nameof(DnnRazorCompiler)}. This is very unexpected."));
+    // 2026-08-06 2dm - this code seems unused; commented out; delete soon
+    // I believe it was from previous experiments, where we tried to handle partials in a special way
+    //internal static RazorBuildTempResult<HelperResult> RenderPartialWithRoslyn(RazorComponentBase parent, string templatePath, object data, RenderSpecs renderSpecs)
+    //{
+    //    var l = (parent as IHasLog).Log.Fn<RazorBuildTempResult<HelperResult>>();
 
-        // Figure out the real path, and make sure it's lower case
-        // so the ID in a cache remains the same no matter how it was called
-        var path = parent.NormalizePath(templatePath).ToLowerInvariant();
+    //    // Find the RazorEngine which MUST be on the CodeApiService PiggyBack, or throw an error
+    //    var razorCompiler = parent.ExCtx.PiggyBack.GetOrGenerate(nameof(DnnRazorCompiler), DnnRazorCompiler () => null)
+    //                      ?? throw l.Ex(new Exception($"Error finding {nameof(DnnRazorCompiler)}. This is very unexpected."));
 
-        var subPage = razorCompiler.InitWebpage(path, true);
+    //    // Figure out the real path, and make sure it's lower case
+    //    // so the ID in a cache remains the same no matter how it was called
+    //    var path = parent.NormalizePath(templatePath).ToLowerInvariant();
 
-        // Exit if we don't use HotBuild, because then we must revert back to classic render
-        // Reason is that otherwise the PageData property - used on very old classes - would not be populated
-        // Doing this from our compiler is super-hard, because it would use a lot of internal Microsoft APIs
-        if (!subPage.UsesHotBuild)
-            return l.Return(new(null, false), "exit, not HotBuild");
+    //    var subPage = razorCompiler.InitWebpage(path, true);
 
-        var (writer, exceptions) = razorCompiler.RenderImplementation(subPage.Instance, renderSpecs);
+    //    // Exit if we don't use HotBuild, because then we must revert back to classic render
+    //    // Reason is that otherwise the PageData property - used on very old classes - would not be populated
+    //    // Doing this from our compiler is super-hard, because it would use a lot of internal Microsoft APIs
+    //    if (!subPage.UsesHotBuild)
+    //        return l.Return(new(null, false), "exit, not HotBuild");
 
-        // Log any exceptions which may have occurred
-        if (exceptions.SafeAny())
-            exceptions.ForEach(e => l.Ex(e));
+    //    var (writer, exceptions) = razorCompiler.RenderImplementation(subPage.Instance, renderSpecs);
 
-        return l.ReturnAsOk(new(new(w => w.Write(writer)), true));
-    }
+    //    // Log any exceptions which may have occurred
+    //    if (exceptions.SafeAny())
+    //        exceptions.ForEach(e => l.Ex(e));
+
+    //    return l.ReturnAsOk(new(new(w => w.Write(writer)), true));
+    //}
 
 
     #endregion
