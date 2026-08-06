@@ -76,8 +76,7 @@ public partial class DataService(
         return newDs;
     }
 
-    private DataSourceOptionsMs OptionsMs => _optionsHandler.Get(() => new(_appIdentity, _getLookup))!;
-    private readonly GetOnce<DataSourceOptionsMs> _optionsHandler = new();
+    private DataSourceOptionsMs OptionsMs => field ??= new(_appIdentity, _getLookup);
 
     private Func<ILookUpEngine?>? _getLookup;
 

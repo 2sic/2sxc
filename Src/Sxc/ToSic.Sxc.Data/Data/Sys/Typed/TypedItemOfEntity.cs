@@ -214,10 +214,8 @@ internal class TypedItemOfEntity(IEntity entity, ICodeDataFactory cdf, bool prop
 
     /// <inheritdoc />
     [JsonIgnore] // prevent serialization as it's not a normal property
-    ITypedMetadata ITypedItem.Metadata => _md.Get(() => ItemHelper.Helper.Cdf.MetadataTyped(Entity.Metadata))!;
-    private readonly GetOnce<ITypedMetadata?> _md = new();
-
-
+    ITypedMetadata ITypedItem.Metadata => field ??= ItemHelper.Helper.Cdf.MetadataTyped(Entity.Metadata);
+    
     ITypedItem? ITypedItem.Parent(NoParamOrder npo, bool? current, string? type, string? field, GetRelatedOptions? options)
     {
         if (current != true)
@@ -236,8 +234,7 @@ internal class TypedItemOfEntity(IEntity entity, ICodeDataFactory cdf, bool prop
 
     bool ITypedItem.IsPublished => Entity.IsPublished;
 
-    IPublishing ITypedItem.Publishing => _publishing.Get(() => new Publishing.Publishing(this, Cdf))!;
-    private readonly GetOnce<IPublishing> _publishing = new();
+    IPublishing ITypedItem.Publishing => field ??= new Publishing.Publishing(this, Cdf);
 
     
     IEnumerable<ITypedItem> ITypedItem.Children(string? field, NoParamOrder npo, string? type, bool? required, GetRelatedOptions? options)

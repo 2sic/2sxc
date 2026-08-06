@@ -58,9 +58,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.Dependencie
     public (List<FolderModelRaw> Folders, List<FileModelRaw> Files) GetAll()
         => Log.Quick(() => (Folders, Files));
 
-    public List<FileModelRaw> Files => _files.Get(GetFiles)!;
-
-    private readonly GetOnce<List<FileModelRaw>> _files = new();
+    public List<FileModelRaw> Files => field ??= GetFiles();
 
     public List<FileModelRaw> GetFiles()
     {
@@ -94,7 +92,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.Dependencie
         return l.Return(files, $"files:{files.Count}");
     }
 
-    public List<FolderModelRaw> Folders => _folders.Get(GetFolders)!;
+    public List<FolderModelRaw> Folders => field ??= GetFolders();
 
     private List<FolderModelRaw> GetFolders()
     {
@@ -138,9 +136,6 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.Dependencie
             Url = $"{_appPaths.Path}{fullNameFromAppRoot}",
         };
     }
-
-    private readonly GetOnce<List<FolderModelRaw>> _folders = new();
-
 
     /// <summary>
     /// </summary>

@@ -178,14 +178,11 @@ internal class LightSpeed(
     );
     private readonly GetOnce<(bool CachingAllowed, string Extension)> _urlParams = new();
 
-    private string CurrentCulture => _currentCulture.Get(() => site.Value.SafeCurrentCultureCode())!;
-    private readonly GetOnce<string> _currentCulture = new();
+    private string CurrentCulture => field ??= site.Value.SafeCurrentCultureCode();
 
 
-    private string CacheKey => _key.Get(() => Log.Quick(()
-        => OutputCacheKeys.ModuleKey(_pageId, _moduleId, UserIdOrAnon, ViewKey, UrlParams.Extension, CurrentCulture)
-    ))!;
-    private readonly GetOnce<string> _key = new();
+    private string CacheKey => field ??= Log.Quick(()
+        => OutputCacheKeys.ModuleKey(_pageId, _moduleId, UserIdOrAnon, ViewKey, UrlParams.Extension, CurrentCulture));
 
     private int? UserIdOrAnon => _userId.Get(() => _block?.Context.User.IsAnonymous == false ? _block.Context.User.Id : null);
     private readonly GetOnce<int?> _userId = new();
@@ -290,8 +287,7 @@ internal class LightSpeed(
     /// <summary>
     /// Lightspeed Configuration at App Level
     /// </summary>
-    private LightSpeedDecorator AppConfig => _lsd.Get(() => LsConfigHelper.GetLightSpeedConfigOfApp(AppReaderOrNull))!;
-    private readonly GetOnce<LightSpeedDecorator> _lsd = new();
+    private LightSpeedDecorator AppConfig => field ??= LsConfigHelper.GetLightSpeedConfigOfApp(AppReaderOrNull);
 
     /// <summary>
     /// Lightspeed Configuration at View Level

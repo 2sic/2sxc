@@ -98,8 +98,7 @@ internal class OqtUsersProvider(
 
     private int SiteId => siteState.Alias.SiteId;
 
-    private IEnumerable<UserRole> OqtAllUserRoles => _oqtAllUserRoles.Get(() => userRolesRepository.Value.GetUserRoles(SiteId));
-    private readonly GetOnce<IEnumerable<UserRole>> _oqtAllUserRoles = new();
+    private IEnumerable<UserRole> OqtAllUserRoles => field ??= userRolesRepository.Value.GetUserRoles(SiteId);
 
     private bool ExcludeUser(UserRole userRole)
     {

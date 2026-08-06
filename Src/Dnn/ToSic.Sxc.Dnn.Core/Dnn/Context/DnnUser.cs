@@ -23,8 +23,7 @@ internal class DnnUser(LazySvc<DnnSecurity> dnnSecurity)
 
     public string IdentityToken => GetUserIdentityToken();
 
-    public List<int> Roles => _roles.Get(BuildRoleList);
-    private readonly GetOnce<List<int>> _roles = new();
+    public List<int> Roles => field ??= BuildRoleList();
 
     public bool IsSystemAdmin => DnnUserInfo?.IsSuperUser ?? false;
 

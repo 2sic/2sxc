@@ -34,8 +34,7 @@ public class DnnBusinessController : ModuleSearchBase, IHasLog
     /// Get the service provider only once - ideally in Dnn9.4 we will get it from Dnn
     /// If we would get it multiple times, there are edge cases where it could be different each time! #2614
     /// </summary>
-    private IServiceProvider ServiceProvider => _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider);
-    private readonly GetOnce<IServiceProvider> _serviceProvider = new();
+    private IServiceProvider ServiceProvider => field ??= DnnStaticDi.GetPageScopedServiceProvider();
 
     #endregion
 

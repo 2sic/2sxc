@@ -39,7 +39,7 @@ public record ResponsivePicture: ResponsiveBase, IResponsivePicture
     /// </summary>
     public override string ToString() => ToHtmlString();
 
-    protected override IHtmlTag GetOutermostTag() => Picture;
+    public override IHtmlTag Tag => Picture;
 
     [field: AllowNull, MaybeNull]
     public TagList Sources => field ??= SourceTagsInternal(Target.Link.Url, Settings);

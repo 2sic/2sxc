@@ -45,27 +45,26 @@ public class Folder<TFolderId, TFileId>(AdamManager adamManager)
 
 
     /// <inheritdoc />
-    public IEnumerable<IFolder> Folders => _folders.Get(() =>
-    {
-        var folders = AdamFs.GetFolders(this);
-        foreach (var f in folders)
-            ((Folder<TFolderId, TFileId>)f).Field = Field;
-        return folders;
-    })!;
-    private readonly GetOnce<IEnumerable<IFolder>> _folders = new();
-
+    public IEnumerable<IFolder> Folders => field
+        ??= AdamFs
+            .GetFolders(this)
+            .Select(f =>
+            {
+                ((Folder<TFolderId, TFileId>)f).Field = Field;
+                return f;
+            })
+            .ToListOpt();
 
     /// <inheritdoc/>
-    public IEnumerable<IFile> Files => _files.Get(() =>
-    {
-        var files = AdamFs
+    public IEnumerable<IFile> Files => field
+        ??= AdamFs
             .GetFiles(this)
+            .Select(f =>
+            {
+                ((File<TFolderId, TFileId>)f).Field = Field;
+                return f;
+            })
             .ToListOpt();
-        foreach (var f in files)
-            ((File<TFolderId, TFileId>)f).Field = Field;
-        return files;
-    })!;
-    private readonly GetOnce<IEnumerable<IFile>> _files = new();
 
     [PrivateApi]
     public IField? Field { get; set; }

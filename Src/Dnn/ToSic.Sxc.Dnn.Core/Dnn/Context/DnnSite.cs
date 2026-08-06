@@ -127,7 +127,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
         var l = Log.Fn<string>();
         // First check if we know more about the site
         var portal = UnwrappedSite;
-        if (portal == null /* paranoid */)
+        if (portal == null! /* paranoid */)
             return l.ReturnNull("no portal");
         var aliasCulture = portal.PortalAlias?.CultureCode ?? "";
 
@@ -142,7 +142,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
         return l.Return(result, $"Portal.CultureCode: {result}");
     }
 
-    public List<string> CultureCodesWithFallbacks => _currentCodeFallbacks.Get(GetCultureCodesWithFallbacks);
+    public List<string> CultureCodesWithFallbacks => field ??= GetCultureCodesWithFallbacks();
     private readonly GetOnce<List<string>> _currentCodeFallbacks = new();
 
     private List<string> GetCultureCodesWithFallbacks()

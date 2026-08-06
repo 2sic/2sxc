@@ -29,12 +29,12 @@ public partial class ContextData(DataSourceBase.Dependencies services) : PassThr
     #region New v16
 
     // TODO: MAKE class INTERNAL AGAIN AFTER MOVING TO ToSic.Sxc.Custom
-    public IEnumerable<IEntity> MyItems => _myContent.Get(() => _blockSource.GetStream(emptyIfNotFound: true)!.List)!;
-    private readonly GetOnce<IEnumerable<IEntity>> _myContent = new();
+    public IEnumerable<IEntity> MyItems => field
+        ??= _blockSource.GetStream(emptyIfNotFound: true)!.List;
 
     // TODO: MAKE class INTERNAL AGAIN AFTER MOVING TO ToSic.Sxc.Custom
-    public IEnumerable<IEntity> MyHeaders => _header.Get(() => _blockSource.GetStream(ViewParts.StreamHeader, emptyIfNotFound: true)!.List)!;
-    private readonly GetOnce<IEnumerable<IEntity>> _header = new();
+    public IEnumerable<IEntity> MyHeaders => field
+        ??= _blockSource.GetStream(ViewParts.StreamHeader, emptyIfNotFound: true)!.List;
         
     #endregion
 

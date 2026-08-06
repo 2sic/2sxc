@@ -99,8 +99,7 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.Dependencie
     #region CodeLog
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
-    public new ICodeLog Log => _codeLog.Get(() => new CodeLog(_inner.Log))!;
-    private readonly GetOnce<ICodeLog> _codeLog = new();
+    public new ICodeLog Log => field ??= new CodeLog(_inner.Log);
 
     #endregion
 

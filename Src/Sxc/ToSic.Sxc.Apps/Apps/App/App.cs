@@ -28,12 +28,10 @@ public partial class App(
 
     IAppReader IAppWithInternal.AppReader => AppReaderInt;
 
-    private ICodeDataFactory Cdf => _cdf.Get(() => cdfLazy.SetInit(obj => obj.SetFallbacks(MySite)).Value)!;
-    private readonly GetOnce<ICodeDataFactory> _cdf = new();
+    private ICodeDataFactory Cdf => field ??= cdfLazy.SetInit(obj => obj.SetFallbacks(MySite)).Value;
 
 
-    private IAppPaths AppPaths => _appPaths.Get(() => pathFactoryTemp.Get(AppReaderInt, MySite))!;
-    private readonly GetOnce<IAppPaths> _appPaths = new();
+    private IAppPaths AppPaths => field ??= pathFactoryTemp.Get(AppReaderInt, MySite);
 
     #endregion
 
@@ -42,29 +40,25 @@ public partial class App(
 
 
     /// <inheritdoc cref="IApp.Path" />
-    public string Path => _path.Get(() => AppPaths.Path)!;
-    private readonly GetOnce<string> _path = new();
+    public string Path => field ??= AppPaths.Path;
+
 
     /// <inheritdoc cref="IApp.Thumbnail" />
     public string? Thumbnail => _thumbnail.Get(() => new AppAssetThumbnail(AppReaderInt, AppPaths, globalPaths).Url);
     private readonly GetOnce<string?> _thumbnail = new();
 
     /// <inheritdoc cref="IApp.PathShared" />
-    public string PathShared => _pathShared.Get(() => AppPaths.PathShared)!;
-    private readonly GetOnce<string> _pathShared = new();
+    public string PathShared => field ??= AppPaths.PathShared;
 
     /// <inheritdoc cref="IApp.PhysicalPathShared" />
-    public string PhysicalPathShared => _physicalPathGlobal.Get(() => AppPaths.PhysicalPathShared)!;
-    private readonly GetOnce<string> _physicalPathGlobal = new();
+    public string PhysicalPathShared => field ??= AppPaths.PhysicalPathShared;
 
     [PrivateApi("not public, not sure if we should surface this")]
-    public string RelativePath => _relativePath.Get(() => AppPaths.RelativePath)!;
-    private readonly GetOnce<string> _relativePath = new();
+    public string RelativePath => field ??= AppPaths.RelativePath;
 
 
     [PrivateApi("not public, not sure if we should surface this")]
-    public string RelativePathShared => _relativePathShared.Get(() => AppPaths.RelativePathShared)!;
-    private readonly GetOnce<string> _relativePathShared = new();
+    public string RelativePathShared => field ??= AppPaths.RelativePathShared;
 
 
     #endregion

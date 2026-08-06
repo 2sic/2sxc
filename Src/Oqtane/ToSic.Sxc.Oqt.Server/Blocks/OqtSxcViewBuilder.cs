@@ -150,8 +150,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
     }));
     private readonly GetOnce<IBlock> _blockGetOnce = new();
 
-    private ILogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"PreRender:{PreRender}, Page:{Page?.PageId} '{Page?.Name}', Module:{Module?.ModuleId} '{Module?.Title}'"));
-    private readonly GetOnce<ILogCall> _logTimer = new();
+    private ILogCall LogTimer => field ??= Log.Fn(message: $"PreRender:{PreRender}, Page:{Page?.PageId} '{Page?.Name}', Module:{Module?.ModuleId} '{Module?.Title}'");
 
 
     private IOutputCache OutputCache => _oc.Get(() => field.Init(Module.ModuleId, Page?.PageId ?? 0, Block));

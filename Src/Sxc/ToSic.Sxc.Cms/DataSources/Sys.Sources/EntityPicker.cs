@@ -88,7 +88,9 @@ public class EntityPicker : DataSourceBase
     /// <summary>
     /// Override Out to provide the Default stream as well as additional streams for each content-type
     /// </summary>
-    public override IReadOnlyDictionary<string, IDataStream> Out => _out.Get(() =>
+    public override IReadOnlyDictionary<string, IDataStream> Out => field ??= GenerateOut();
+
+    private IReadOnlyDictionary<string, IDataStream> GenerateOut()
     {
         // 0. If no names specified, then out is same as base out
         if (TypeNames.IsEmptyOrWs())
@@ -113,9 +115,7 @@ public class EntityPicker : DataSourceBase
         }
 
         return outList.AsReadOnly();
-    })!;
-
-    private readonly GetOnce<IReadOnlyDictionary<string, IDataStream>> _out = new();
+    }
 
     #endregion
 

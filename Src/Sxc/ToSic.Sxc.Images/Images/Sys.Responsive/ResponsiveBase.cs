@@ -41,15 +41,18 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     internal TweakMedia Tweaker => Specs.Tweaker;
     internal ResizeSettings Settings => Tweaker.ResizeSettings;
 
-    private OneResize ThisResize => _thisResize.Get(() => { 
-        var t = ImgService.ImgLinker.ImgResizeSettings(Target.Link.Url, Settings, Target.HasMdOrNull, overrideFramework: ImgService.OverrideCssFramework);
+    private OneResize ThisResize => field ??= new Func<OneResize>(() =>
+    {
+        var t = ImgService.ImgLinker.ImgResizeSettings(
+            Target.Link.Url,
+            Settings,
+            Target.HasMdOrNull,
+            overrideFramework: ImgService.OverrideCssFramework
+        );
         Log.A(ImgService.Debug, $"{nameof(ThisResize)}: " + t.Dump());
         return t;
-    })!;
-    private readonly GetOnce<OneResize> _thisResize = new();
-
-
-
+    })();
+    
 
     /// <summary>
     /// ToString must be specified by each implementation
@@ -172,12 +175,10 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         return l.Return(imgTag, "added");
     }
 
-
-    public IHtmlTag Tag => _tag.Get(GetOutermostTag)!;
-    private readonly GetOnce<IHtmlTag> _tag = new();
-
-    protected virtual IHtmlTag GetOutermostTag() => Img;
-
+    /// <summary>
+    /// The outermost tag to render
+    /// </summary>
+    public virtual IHtmlTag Tag => Img;
 
     /// <summary>
     /// Get the toolbar - or null, based on

@@ -27,10 +27,9 @@ public abstract partial class AssetsExtractor(IPageServiceShared pageServiceShar
 
     #region Settings
 
-    protected virtual ClientAssetsExtractSettings DefaultSettings => _settings.Get(() => new(
+    protected virtual ClientAssetsExtractSettings DefaultSettings => field ??=new(
         extractAll: false
-    ))!;
-    private readonly GetOnce<ClientAssetsExtractSettings> _settings = new();
+    );
 
     #endregion
 

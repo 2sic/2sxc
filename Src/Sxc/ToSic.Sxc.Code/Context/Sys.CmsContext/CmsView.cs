@@ -56,8 +56,7 @@ internal class CmsView(CmsContext cmsContext, IBlock block) : CmsContextPartBase
 
     /// <inheritdoc />
     [PrivateApi("Hidden in 16.04, because we want people to use the Folder. Can't remove it though, because there are many apps that already published this.")]
-    public string Path => _path.Get(() => FigureOutPath(block.App.Path))!;
-    private readonly GetOnce<string> _path = new();
+    public string Path => field ??= FigureOutPath(block.App.Path);
 
     /// <summary>
     /// Figure out the path to the view based on a root path.

@@ -9,12 +9,11 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 public partial class ExecutionContext
 {
     [PrivateApi]
-    internal ICodeDataFactory Cdf => _cdf.Get(() =>
+    internal ICodeDataFactory Cdf => field ??= new Func<ICodeDataFactory>(() =>
     {
         ((CodeDataFactory)Services.Cdf).ConnectToRoot(this);
         return Services.Cdf;
-    })!;
-    private readonly GetOnce<ICodeDataFactory> _cdf = new();
+    })();
 
     #region AsDynamic Implementations
 

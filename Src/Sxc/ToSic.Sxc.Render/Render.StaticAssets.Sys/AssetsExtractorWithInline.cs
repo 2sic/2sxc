@@ -9,8 +9,7 @@ namespace ToSic.Sxc.Render.StaticAssets.Sys;
 public class AssetsExtractorWithInline(IPageServiceShared pageServiceShared)
     : AssetsExtractor(pageServiceShared)
 {
-    protected override ClientAssetsExtractSettings DefaultSettings => _settings.Get(() => new(extractAll: true))!;
-    private readonly GetOnce<ClientAssetsExtractSettings> _settings = new();
+    protected override ClientAssetsExtractSettings DefaultSettings => field ??= new(extractAll: true);
 
     protected override (string Template, bool Include2sxcJs) ExtractFromHtml(string html, ClientAssetsExtractSettings settings)
     {
@@ -40,14 +39,11 @@ public class AssetsExtractorWithInline(IPageServiceShared pageServiceShared)
     {
         position = position.ToLowerInvariant();
 
-        switch (position)
+        return position switch
         {
-            case "body":
-            case "head":
-                return position;
-            default:
-                return "body";
-        }
+            "body" or "head" => position,
+            _ => "body"
+        };
     }
 
 }

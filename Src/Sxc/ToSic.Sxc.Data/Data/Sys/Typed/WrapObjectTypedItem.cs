@@ -141,8 +141,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
     bool ITypedItem.IsPublished => true;
 
-    IPublishing ITypedItem.Publishing => _publishing.Get(() => new PublishingUnsupported(this))!;
-    private readonly GetOnce<IPublishing> _publishing = new();
+    IPublishing ITypedItem.Publishing => field ??= new PublishingUnsupported(this);
 
     [JsonIgnore]
     public ITypedItem? Presentation => _presentation.Get(() => CreateItemFromProperty(nameof(Presentation)));

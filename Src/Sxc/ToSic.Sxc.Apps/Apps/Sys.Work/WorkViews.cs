@@ -33,13 +33,13 @@ public class WorkViews(
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public record ViewInfoForPathSelect(IView View, string Name, string UrlIdentifier, bool IsRegex, string MainKey);
 
-    private List<IEntity> ViewEntities => _viewDs.Get(() => AppWorkCtx.AppReader.GetPiggyBackPropExpiring(
-            () => appEntities.New(AppWorkCtx)
+    private List<IEntity> ViewEntities => field
+        ??= AppWorkCtx.AppReader
+            .GetPiggyBackPropExpiring(() => appEntities
+                .New(AppWorkCtx)
                 .Get(AppConstants.TemplateContentType)
                 .ToList()
-        ).Value
-    )!;
-    private readonly GetOnce<List<IEntity>> _viewDs = new();
+            ).Value;
 
     /// <summary>
     /// Get all the views.

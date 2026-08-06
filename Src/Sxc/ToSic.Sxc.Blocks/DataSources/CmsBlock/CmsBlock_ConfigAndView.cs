@@ -6,23 +6,22 @@ namespace ToSic.Sxc.DataSources;
 
 public sealed partial class CmsBlock
 {
-    private ResultOrError<(BlockConfiguration BlockConfiguration, IView View)> ConfigAndViewOrErrors => _everything.Get(() =>
-    {
-        var config = LoadBlockConfiguration();
-        if (!config.IsOk)
-            return new ResultOrError<(BlockConfiguration BlockConfiguration, IView view)>(false, default,
-                config.ErrorsSafe());
+    private ResultOrError<(BlockConfiguration BlockConfiguration, IView View)> ConfigAndViewOrErrors
+        => field ??= new Func<ResultOrError<(BlockConfiguration BlockConfiguration, IView View)>>(() =>
+        {
+            var config = LoadBlockConfiguration();
+            if (!config.IsOk)
+                return new ResultOrError<(BlockConfiguration BlockConfiguration, IView view)>(false, default,
+                    config.ErrorsSafe());
 
-        var view = OverrideView ?? config.Result.View;
-        if (view == null)
-            return new ResultOrError<(BlockConfiguration BlockConfiguration, IView view)>(false, default,
-                Error.Create(title: "CmsBlock View Missing",
-                    message: "Cannot find View configuration of current CmsBlock"));
-        // all ok 
-        return new ResultOrError<(BlockConfiguration BlockConfiguration, IView view)>(true, (config.Result, view));
-    })!;
-
-    private readonly GetOnce<ResultOrError<(BlockConfiguration blockConfiguration, IView view)>> _everything = new();
+            var view = OverrideView ?? config.Result.View;
+            if (view == null)
+                return new ResultOrError<(BlockConfiguration BlockConfiguration, IView view)>(false, default,
+                    Error.Create(title: "CmsBlock View Missing",
+                        message: "Cannot find View configuration of current CmsBlock"));
+            // all ok 
+            return new ResultOrError<(BlockConfiguration BlockConfiguration, IView view)>(true, (config.Result, view));
+        })();
 
     private ResultOrError<BlockConfiguration> LoadBlockConfiguration()
     {

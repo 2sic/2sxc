@@ -1,5 +1,4 @@
 ﻿using DotNetNuke.Web.Client;
-using ToSic.Sxc.Render.Output.Sys;
 using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.Sys.Render.PageContext;
 
@@ -10,11 +9,12 @@ internal class DnnAssetsExtractor(IPageServiceShared pageServiceShared)
 {
     private const bool DebugDetails = true;
 
-    protected override ClientAssetsExtractSettings DefaultSettings => _settings.Get(() => new(
-        extractAll: false,
-        cssPriority: (int)FileOrder.Css.DefaultPriority,
-        jsPriority: (int)FileOrder.Js.DefaultPriority));
-    private readonly GetOnce<ClientAssetsExtractSettings> _settings = new();
+    protected override ClientAssetsExtractSettings DefaultSettings => field
+        ??= new(
+            extractAll: false,
+            cssPriority: (int)FileOrder.Css.DefaultPriority,
+            jsPriority: (int)FileOrder.Js.DefaultPriority
+        );
 
 
     protected override (string Template, bool Include2sxcJs) ExtractFromHtml(string html, ClientAssetsExtractSettings settings)

@@ -10,32 +10,23 @@ public partial class ExecutionContext
 {
     /// <inheritdoc />
     [PublicApi]
-    public IDynamicStack Resources => _resources.Get(() => Cdf.AsDynStack(RootNameResources, ResSrc))!;
-    private readonly GetOnce<IDynamicStack> _resources = new();
+    public IDynamicStack Resources => field ??= Cdf.AsDynStack(RootNameResources, ResSrc);
 
     [PrivateApi]
-    public ITypedStack AllResources => _allRes.Get(() => Cdf.AsTypedStack(RootNameResources, ResSrc))!;
-    private readonly GetOnce<ITypedStack> _allRes= new();
+    public ITypedStack AllResources => field ??= Cdf.AsTypedStack(RootNameResources, ResSrc);
 
     [field: AllowNull, MaybeNull]
     private AppDataStackService AppDss => field ??= Services.DataStackService.Init(((IAppWithInternal)App).AppReader);
 
-    private SettingsSources ResSrc => _resSrc.Get(() => AppDss.GetStack(AppStackConstants.Resources, Block?.View?.Resources))!;
-    private readonly GetOnce<SettingsSources> _resSrc = new();
+    private SettingsSources ResSrc => field ??= AppDss.GetStack(AppStackConstants.Resources, Block?.View?.Resources);
 
 
-    private SettingsSources SetSrc => _setSrc.Get(() => AppDss.GetStack(AppStackConstants.Settings, Block?.View?.Settings))!;
-    private readonly GetOnce<SettingsSources> _setSrc = new();
+    private SettingsSources SetSrc => field ??= AppDss.GetStack(AppStackConstants.Settings, Block?.View?.Settings);
 
     /// <inheritdoc />
     [PublicApi]
-    public IDynamicStack Settings => _settings.Get(() => Cdf.AsDynStack(RootNameSettings, SetSrc))!;
-    private readonly GetOnce<IDynamicStack> _settings = new();
+    public IDynamicStack Settings => field ??= Cdf.AsDynStack(RootNameSettings, SetSrc);
 
-    public ITypedStack AllSettings => _allSettings.Get(() => Cdf.AsTypedStack(RootNameSettings, SetSrc))!;
-    private readonly GetOnce<ITypedStack> _allSettings = new();
+    public ITypedStack AllSettings => field ??= Cdf.AsTypedStack(RootNameSettings, SetSrc);
 
-    // TODO: 2025-05-11 2dm WIP
-    //dynamic IDynamicCode12.Resources => Resources;
-    //dynamic IDynamicCode12.Settings => Settings;
 }

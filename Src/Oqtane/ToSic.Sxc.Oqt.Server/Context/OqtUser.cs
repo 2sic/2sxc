@@ -17,8 +17,8 @@ internal class OqtUser(
     : ServiceBase($"{OqtConstants.OqtLogPrefix}.User",
         connect: [userRepository, oqtSecurity, httpContextAccessor, siteState]), IUser<User>
 {
-    protected User UnwrappedUser => _unwrappedUser.Get(GetUser);
-    private readonly GetOnce<User> _unwrappedUser = new();
+    protected User UnwrappedUser => field ??= GetUser();
+    
     public User GetContents() => UnwrappedUser;
 
     private User GetUser()
@@ -44,8 +44,7 @@ internal class OqtUser(
 
     public Guid Guid { get; private set; }
 
-    public List<int> Roles => _roles.Get(() => oqtSecurity.Value.Roles(UnwrappedUser));
-    private readonly GetOnce<List<int>> _roles = new();
+    public List<int> Roles => field ??= oqtSecurity.Value.Roles(UnwrappedUser);
 
     public bool IsSystemAdmin => _isSystemAdmin.Get(() => oqtSecurity.Value.IsSystemAdmin(UnwrappedUser));
     private readonly GetOnce<bool> _isSystemAdmin = new();

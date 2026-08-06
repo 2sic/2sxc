@@ -11,17 +11,15 @@ public partial class ExecutionContext: IExCtxLookUpEngine
     #region DataSource and ConfigurationProvider (for DS) section
 
     [PrivateApi]
-    public ILookUpEngine LookUpForDataSources => _lookupEngine.Get(() =>
-        // check if we have a block-context, in which case the lookups also know about the module
+    public ILookUpEngine LookUpForDataSources => field ??=
+        // 1. check if we have a block-context, in which case the lookups also know about the module
         Block?.Data?.Configuration?.LookUpEngine
-        // otherwise try to fall back to the App configuration provider, which has a lot, but not the module-context
+        // 2. otherwise try to fall back to the App configuration provider, which has a lot, but not the module-context
 #pragma warning disable CS0618 // Type or member is obsolete
         ?? App.TryGetAppLookUpEngineOrNull()
 #pragma warning restore CS0618 // Type or member is obsolete
-        // show explanation what went wrong
-        ?? throw new("Tried to get Lookups for creating data-sources; neither module-context nor app is known.")
-    )!;
-    private readonly GetOnce<ILookUpEngine> _lookupEngine = new();
+        // 3. show explanation what went wrong
+        ?? throw new("Tried to get Lookups for creating data-sources; neither module-context nor app is known.");
 
     [PrivateApi]
     [field: AllowNull, MaybeNull]
