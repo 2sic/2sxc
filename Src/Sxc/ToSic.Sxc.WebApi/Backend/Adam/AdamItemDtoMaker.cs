@@ -101,18 +101,17 @@ public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TF
         return item;
     }
 
-    private IEnumerable<MetadataOfDto>? GetMetadataOf(ITypedMetadata? md)
+    private IEnumerable<AdamMetadataOfDto>? GetMetadataOf(ITypedMetadata? md)
     {
         if (md == null)
             return null;
 
         var result = ((IHasMetadata)md).Metadata
-            .Select(m => new MetadataOfDto
-            {
-                Id = m.EntityId,
-                Guid = m.EntityGuid,
-                Type = new(m)
-            })
+            .Select(m => new AdamMetadataOfDto(
+                Id: m.EntityId,
+                Guid: m.EntityGuid,
+                Type: new(m)
+            ))
             .ToArray();
         return result.Any()
             ? result
