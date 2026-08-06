@@ -23,7 +23,7 @@ public class Field(ITypedItem parent, string name, ICodeDataFactory cdf) : IFiel
         // the string before using it for Cms.Html(...)
         set => _raw.Reset(value);
     }
-    private readonly GetOnce<object?> _raw = new();
+    private readonly LazyGetAndReset<object?> _raw = new();
 
 
     /// <inheritdoc />
@@ -33,7 +33,7 @@ public class Field(ITypedItem parent, string name, ICodeDataFactory cdf) : IFiel
         get => _value.Get(() => Url ?? Raw)!;
         set => _value.Reset(value);
     }
-    private readonly GetOnce<object?> _value = new();
+    private readonly LazyGetAndReset<object?> _value = new();
 
     /// <inheritdoc />
     public string? Url
@@ -41,7 +41,7 @@ public class Field(ITypedItem parent, string name, ICodeDataFactory cdf) : IFiel
         get => _url.Get(() => Parent.Url(Name))!;
         set => _url.Reset(value);
     }
-    private readonly GetOnce<string?> _url = new();
+    private readonly LazyGetAndReset<string?> _url = new();
 
 
     protected IMetadata? MetadataOfValue => _itemMd.Get(() =>

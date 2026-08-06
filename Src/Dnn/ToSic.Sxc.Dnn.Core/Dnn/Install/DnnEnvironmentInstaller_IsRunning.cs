@@ -22,7 +22,7 @@ partial class DnnEnvironmentInstaller
 
     private bool UpgradeComplete(bool alwaysLogToFile)
         => UpgradeCompleteCache.Get(() => IsUpgradeComplete(LastVersionWithServerChanges, alwaysLogToFile, "- first check"));
-    private static readonly GetOnce<bool> UpgradeCompleteCache = new();
+    private static readonly LazyGetAndReset<bool> UpgradeCompleteCache = new();
 
     private bool IsUpgradeComplete(string version, bool alwaysLogToFile, string note = "")
     {
