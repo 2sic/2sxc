@@ -1,6 +1,6 @@
-﻿using System.Reflection;
+using System.Reflection;
 using ToSic.Eav.Sys;
-using ToSic.Eav.WebApi.Sys.ApiExplorer;
+using ToSic.Eav.WebApi.Sys.Dto;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sys.Utils;
 
@@ -14,9 +14,9 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
     /// <param name="appId"></param>
     /// <returns>used by ApiExplorerControllerReal.AppApiFiles</returns>
     [PrivateApi]
-    public ICollection<AllApiFileDto> AllApiFilesInAppCodeForAllEditions(int appId)
+    public ICollection<AppWebApiFileRaw> AllApiFilesInAppCodeForAllEditions(int appId)
     {
-        var l = Log.Fn<List<AllApiFileDto>>($"list all in AppCode a#{appId}");
+        var l = Log.Fn<List<AppWebApiFileRaw>>($"list all in AppCode a#{appId}");
 
         const string mask = $"*{EavConstants.ApiControllerSuffix}.cs";
 
@@ -25,7 +25,7 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
         var editions = AvailableEditionNames(appId);
         l.A($"{nameof(app.Folder)}:'{app.Folder}', appPath:'{appPath}', editions:{editions.Count}");
 
-        List<AllApiFileDto> appCodeApiControllerFiles = [];
+        List<AppWebApiFileRaw> appCodeApiControllerFiles = [];
         foreach (var edition in editions)
         {
             l.A($"collect ApiController files in AppCode for edition:'{edition}'");
@@ -55,11 +55,10 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
             l.A($"ApiController files in AppCode for edition:'{edition}': {codeApiControllerFiles.Count}");
 
             var apiFiles = codeApiControllerFiles
-                .Select(f => new AllApiFileDto
+                .Select(f => new AppWebApiFileRaw
                 {
                     Path = f,
                     EndpointPath = AppCodeEndpointPath(edition, Path.GetFileNameWithoutExtension(f)),
-                    IsCompiled = true,
                     Edition = edition
                 });
             appCodeApiControllerFiles.AddRange(apiFiles);
