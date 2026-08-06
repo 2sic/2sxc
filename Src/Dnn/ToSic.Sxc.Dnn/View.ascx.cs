@@ -43,7 +43,7 @@ public partial class View : PortalModuleBase, IActionable
     /// which runs before page-load
     /// </summary>
     private IBlock Block => _blockGetOnce.Get(Log, () => GetService<IModuleAndBlockBuilder>().BuildBlock(ModuleConfiguration, null), timer: true);
-    private readonly GetOnce<IBlock> _blockGetOnce = new();
+    private readonly LazyGetAndLog<IBlock> _blockGetOnce = new();
 
     private IBlockRenderer BlockRenderer => field ??= GetService<IBlockRenderer>().Setup(Block);
 

@@ -42,7 +42,7 @@ internal class CspSettingsReader(ICanGetByName? settingsStackOrNull, IUser user,
         return cLog.ReturnNull("not found");
     }
 
-    private (string Name, /*DynamicEntity Setting,*/ IEntity? Entity) SettingPreferred => _preferred.Get(Log, () =>
+    private (string Name, IEntity? Entity) SettingPreferred => _preferred.Get(Log, () =>
     {
         Log.A($"Dev: {devMode}; Super: {user.IsSystemAdmin}; Admin: {user.IsSiteAdmin}; Anon: {user.IsAnonymous}");
 
@@ -54,24 +54,23 @@ internal class CspSettingsReader(ICanGetByName? settingsStackOrNull, IUser user,
             return GetName("SiteAdmin");
         if (user.IsAnonymous)
             return GetName("Anonymous");
-        return ("none", /*null,*/ null);
+        return ("none", null);
 
-        (string Name, /*DynamicEntity Setting,*/ IEntity? Entity) GetName(string theName)
-            => (theName, (SettingsRoot?.Get(theName) as ICanBeEntity /*DynamicEntity*/)?.Entity);
+        (string Name, IEntity? Entity) GetName(string theName)
+            => (theName, (SettingsRoot?.Get(theName) as ICanBeEntity)?.Entity);
     });
-    private readonly GetOnce<(string Name, /*DynamicEntity Setting,*/ IEntity? Entity)> _preferred = new();
+    private readonly LazyGetAndLog<(string Name, IEntity? Entity)> _preferred = new();
 
     /// <summary>
     /// The fallback settings, which will be null if in devMode, because then we shouldn't do a fallback
     /// </summary>
     private ICanGetByName? SettingsDefault => devMode
         ? null
-        : _default.Get(() => SettingsRoot?.Get("Default") as ICanGetByName /*DynamicEntity*/);
+        : _default.Get(() => SettingsRoot?.Get("Default") as ICanGetByName);
     private readonly GetOnce<ICanGetByName?> _default = new();
 
     private ICanGetByName? SettingsRoot => _settingsRoot.Get(Log,
-        () => settingsStackOrNull?.Get(FieldContentSecurityPolicies) as ICanGetByName /*DynamicEntity*/
-    );
-    private readonly GetOnce<ICanGetByName?> _settingsRoot = new();
+        () => settingsStackOrNull?.Get(FieldContentSecurityPolicies) as ICanGetByName);
+    private readonly LazyGetAndLog<ICanGetByName?> _settingsRoot = new();
 
 }
