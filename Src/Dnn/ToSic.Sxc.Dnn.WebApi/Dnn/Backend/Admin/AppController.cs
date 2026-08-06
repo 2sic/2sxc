@@ -122,6 +122,9 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
         return Real.Import(new(Request, HttpContext.Current.Request), zoneId, HttpContext.Current.Request["Name"]);
     }
 
+    // TODO: @2rb #SysData
+    // GetPendingApps should become System.AppsPendingInitialization
+    
     /// <inheritdoc />
     [HttpGet]
     [ValidateAntiForgeryToken]

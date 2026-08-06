@@ -13,6 +13,13 @@ public class MetadataController() : DnnSxcControllerBase(RealController.LogSuffi
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
+    // TODO: @2rb #SysData
+    // probably "System.ItemMetadata"
+    // probably 3 streams
+    // - Recommendations
+    // - Items (containing the entities)
+    // - For (what the metadata is for)
+
     [HttpGet]
     public MetadataListDto Get(int appId, int targetType, string keyType, string key, string contentType = null)
         => Real.Get(appId, targetType, keyType, key, contentType);

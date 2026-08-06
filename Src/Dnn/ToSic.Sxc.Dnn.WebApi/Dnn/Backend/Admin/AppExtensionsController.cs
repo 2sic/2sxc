@@ -14,6 +14,9 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
+    // TODO: @2rb #SysData
+    // GET extensions should become "System.AppExtensions"
+    
     /// <inheritdoc />
     [HttpGet]
     [ValidateAntiForgeryToken]
@@ -60,6 +63,9 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
         SysHlp.PreventServerTimeout600();
         return Real.InstallFrom(urls, zoneId, appId, editions, overwrite);
     }
+
+    // TODO: @2rb #SysData
+    // Should become "System.AppExtension.Inspect"
 
     /// <inheritdoc />
     [HttpGet]

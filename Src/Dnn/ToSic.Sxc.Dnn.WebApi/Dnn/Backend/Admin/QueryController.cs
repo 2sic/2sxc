@@ -19,10 +19,17 @@ public class QueryController() : DnnSxcControllerBase(RealController.LogSuffix, 
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
+    // TODO: @2rb #SysData
+    // probably "System.QueryDefinition"
+    // Probably 2 streams
+
     [HttpGet]
     public QueryDefinitionDto Get(int appId, int? id = null) =>
         Real.Get(appId, id);
 
+    // TODO: @2rb #SysData
+    // probably "System.DataSources"
+    
     [HttpGet]
     public IEnumerable<DataSourceDto> DataSources(int zoneId, int appId) =>
         Real.DataSources(new(zoneId, appId));

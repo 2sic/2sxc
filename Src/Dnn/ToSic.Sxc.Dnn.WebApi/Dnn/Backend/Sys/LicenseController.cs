@@ -17,6 +17,12 @@ public class LicenseController() : DnnSxcControllerRoot("License"), ILicenseCont
     /// </summary>
     protected override string HistoryLogGroup => "web-api.license";
 
+    // TODO: @2rb #SysData
+    // probably "System.Licenses"
+    // Probably 2 streams
+    // - Licenses
+    // - FeatureStates
+
     /// <inheritdoc />
     [HttpGet]
     public IEnumerable<LicenseDto> Summary()

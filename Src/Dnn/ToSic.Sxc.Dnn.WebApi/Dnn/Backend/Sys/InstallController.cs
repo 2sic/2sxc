@@ -25,6 +25,10 @@ public class InstallController()
     public bool Resume()
         => Real.Resume();
 
+    // TODO: @2rb #SysData
+    // Probably "System.AppInstallation"
+    // Probably 3 streams
+
     /// <inheritdoc />
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]

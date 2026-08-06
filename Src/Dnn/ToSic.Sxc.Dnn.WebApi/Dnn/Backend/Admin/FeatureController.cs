@@ -19,6 +19,9 @@ public class FeatureController() : DnnSxcControllerRoot(RealController.LogSuffix
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
+    // TODO: @2rb #SysData
+    // Should become "System.FeatureStates"
+    
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     public FeatureStateDto Details(string nameId)
