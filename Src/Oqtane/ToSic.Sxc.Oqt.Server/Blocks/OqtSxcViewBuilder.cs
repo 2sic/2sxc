@@ -27,7 +27,8 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
         ILogStore logStore,
         GlobalTypesCheck globalTypesCheck,
         IOutputCache outputCache,
-        Generator<IBlockRenderer> blockBuilderGenerator) : base($"{OqtConstants.OqtLogPrefix}.Buildr", connect: [pageOutput, contextOfBlockEmpty, blockModuleEmpty, currentContextServiceForLookUps, globalTypesCheck, outputCache, pageOutput, blockBuilderGenerator])
+        Generator<IBlockRenderer> blockBuilderGenerator)
+        : base($"{OqtConstants.OqtLogPrefix}.Buildr", connect: [pageOutput, contextOfBlockEmpty, blockModuleEmpty, currentContextServiceForLookUps, globalTypesCheck, outputCache, pageOutput, blockBuilderGenerator])
     {
         _contextOfBlockEmpty = contextOfBlockEmpty;
         _blockModuleEmpty = blockModuleEmpty;
@@ -62,7 +63,8 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
         PreRender = preRender;
 
         // Check for installation errors before even trying to build a view, and otherwise return this object if Refs are missing.
-        if (RefsInstalledCheck.WarnIfRefsAreNotInstalled(out var oqtViewResultsDtoWarning)) return oqtViewResultsDtoWarning;
+        if (RefsInstalledCheck.WarnIfRefsAreNotInstalled(out var oqtViewResultsDtoWarning))
+            return oqtViewResultsDtoWarning;
 
         OqtViewResultsDto ret = null;
         IRenderResult renderResult = null;
@@ -70,8 +72,9 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
         LogTimer.DoInTimer(() => Log.Do(timer: true, action: () =>
         {
             #region Lightspeed output caching
-            var useLightspeed = OutputCache?.IsEnabled ?? false;
-            var cachedResult = OutputCache?.Existing?.Data;
+
+            var useLightspeed = OutputCache.IsEnabled;
+            var cachedResult = OutputCache.Existing?.Data;
             var cacheHit = cachedResult != null;
             if (cacheHit) Log.A("Lightspeed hit - will use cached");
             renderResult = cachedResult
@@ -86,7 +89,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
             // Do not save cache hits again. Cached entries may already carry compressed HTML,
             // so saving them again would just trigger another decompress/recompress cycle.
             if (!cacheHit)
-                OutputCache?.Save(renderResult);
+                OutputCache.Save(renderResult);
 
             #endregion
 
