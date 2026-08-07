@@ -14,8 +14,7 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
-    // TODO: @2rb #SysData
-    // GET extensions should become "System.AppExtensions"
+    // Implemented by DataSource System.AppExtensions through query System.SysData.
     
     /// <inheritdoc />
     [HttpGet]
@@ -64,8 +63,7 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
         return Real.InstallFrom(urls, zoneId, appId, editions, overwrite);
     }
 
-    // TODO: @2rb #SysData
-    // Should become "System.AppExtension.Inspect"
+    // Implemented by DataSource System.AppExtensionInspect through query System.SysData.
 
     /// <inheritdoc />
     [HttpGet]
