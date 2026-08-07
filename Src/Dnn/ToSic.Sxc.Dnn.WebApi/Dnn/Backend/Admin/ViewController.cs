@@ -16,8 +16,7 @@ public class ViewController() : DnnSxcControllerBase(RealController.LogSuffix), 
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
-    // TODO: @2rb #SysData
-    // probably "System.Views"
+    // Implemented by DataSource System.Views through query System.SysData.
     // for now quite complex, but that's ok.
 
     /// <inheritdoc />
@@ -57,8 +56,7 @@ public class ViewController() : DnnSxcControllerBase(RealController.LogSuffix), 
         return Real.Import(new(Request, HttpContext.Current.Request), zoneId, appId);
     }
 
-    // TODO: @2rb #SysData
-    // Probably "System.ViewUsage"
+    // Implemented by DataSource System.ViewUsage through query System.SysData.
     // Parameter probably "ViewGuid" (not just Guid)
     // Probably just one stream containing all modules/blocks using it
     // So probably a bit simpler in the response than now
