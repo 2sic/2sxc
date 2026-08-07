@@ -10,7 +10,7 @@ public class HistoryControllerReal(GenWorkDb<WorkEntityVersioning> versioning)
 {
     public const string LogSuffix = "Hist";
 
-    public List<ItemHistory> Get(int appId, ItemIdentifier item)
+    public List<ToSic.Eav.Persistence.Versions.ItemHistory> Get(int appId, ItemIdentifier item)
         => versioning.New(appId: appId).VersionHistory(item.EntityId);
 
 

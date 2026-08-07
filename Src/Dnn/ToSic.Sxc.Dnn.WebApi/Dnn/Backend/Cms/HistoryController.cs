@@ -17,8 +17,7 @@ public class HistoryController() : DnnSxcControllerBase(RealController.LogSuffix
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
-    // TODO: @2rb #SysData
-    // Probably "System.ItemHistory"
+    // Implemented by DataSource System.ItemHistory through query System.SysData.
 
     /// <inheritdoc />
     [HttpPost]
