@@ -1,13 +1,14 @@
-﻿using System.Web.Hosting;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Web.Hosting;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn.Razor;
 
 internal record HtmlHelperContext
 {
-    public RazorComponentBase Page { get; init; }
-    public DnnRazorHelper Helper { get; init; }
-    public bool IsSystemAdmin { get; init; }
+    public required RazorComponentBase Page { get; init; }
+    public required DnnRazorHelper Helper { get; init; }
+    public required bool IsSystemAdmin { get; init; }
     public IExecutionContext ExCtx => Page.ExCtx;
 }
 
@@ -15,14 +16,15 @@ internal record HtmlHelperContext
 
 internal record HtmlHelperContextWithPaths : HtmlHelperContext
 {
-    public HtmlHelperContextWithPaths() { }
 
-    public HtmlHelperContextWithPaths(HtmlHelperContext context, string relative) : base(context)
+    [SetsRequiredMembers]
+    public HtmlHelperContextWithPaths(HtmlHelperContext context, string relative)
+        : base(context)
     {
         Relative = relative;
     }
 
-    public string Relative { get; init; }
+    public required string Relative { get; init; }
 
     public string Normalized => field ??= Page.NormalizePath(Relative);
     

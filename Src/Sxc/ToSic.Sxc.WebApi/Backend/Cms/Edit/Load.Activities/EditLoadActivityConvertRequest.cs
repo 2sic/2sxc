@@ -8,8 +8,8 @@ using ToSic.Eav.WebApi.Sys.Entities;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
-public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerializerGenerator, EntityAssembler entityAssembler)
-    : ServiceBase("UoW.AddCtx", connect: [jsonSerializerGenerator, entityAssembler]),
+public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerializerGenerator, DataAssembler entityAssemblerKit)
+    : ServiceBase("UoW.AddCtx", connect: [jsonSerializerGenerator, entityAssemblerKit]),
         ILowCodeAction<List<BundleWithHeaderOptional<IEntity>>, EditLoadDto>
 {
     // Note: reworked this 2026-05-15 2dm to make the objects immutable, hope no side effects #ImmutableIsTheNewBlack
@@ -107,7 +107,7 @@ public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerial
     {
         var l = Log.Fn<IEntity>();
         var type = appSysCtx.AppReader.GetContentType(header.ContentTypeName!);
-        var ent = entityAssembler.EmptyOfType(appId, header.Guid, header.EntityId, type);
+        var ent = entityAssemblerKit.EmptyOfType(appId, header.Guid, header.EntityId, type);
         return l.Return(ent);
     }
 

@@ -11,6 +11,11 @@ public class AdamPrefetchHelper(Generator<AdamWorkGet, AdamWorkOptions> adamGet,
     : ServiceWithSetup<AdamWorkOptions>("Adm.TrnItm"),
         IAdamPrefetchHelper
 {
+    /// <summary>
+    /// This service must work without options, as it usually uses default options.
+    /// </summary>
+    protected override AdamWorkOptions GetDefaultOptions() => new();
+
     public ICollection<AdamItemDto> GetAdamItemsForPrefetch(string subFolderName, bool autoCreate = true)
     {
         var l = Log.Fn<ICollection<AdamItemDto>>($"subFolderName:{subFolderName}, autoCreate:{autoCreate}");
@@ -25,4 +30,5 @@ public class AdamPrefetchHelper(Generator<AdamWorkGet, AdamWorkOptions> adamGet,
             .ToListOpt();
         return l.ReturnAsOk(result);
     }
+
 }

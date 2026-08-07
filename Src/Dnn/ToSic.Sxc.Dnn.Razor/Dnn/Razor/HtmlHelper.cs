@@ -162,6 +162,5 @@ internal class HtmlHelper(LazySvc<IFeaturesService> featureSvc, Generator<HtmlHe
         l.A("Tried to use Roslyn, but detected old base class so will use classic Razor Engine so PageData continues to work.");
         return l.Return(MyOptions.Page.BaseRenderPage(fullOptions.Relative, renderSpecs), $"default render {(renderSpecs.Data == null ? "no" : "with")} data");
     }
-
 }
 

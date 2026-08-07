@@ -1,5 +1,4 @@
 using ToSic.Eav.Data.Raw;
-using ToSic.Eav.Data.Raw.Sys;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Services;
@@ -49,7 +48,7 @@ public class UniqueValueValidation : CustomDataSource
         ProvideOutRaw(GetValidationResult, options: () => new()
         {
             AutoId = false,
-            TitleField = nameof(ValidationResultRaw.Reason),
+            TitleField = nameof(UniqueValueValidationResult.Reason),
             TypeName = "UniqueValueValidation",
         });
     }
@@ -58,9 +57,9 @@ public class UniqueValueValidation : CustomDataSource
     private readonly IDataSourcesService _dataSources;
     private readonly UniqueValueLookup _lookup;
 
-    private IEnumerable<IRawEntity> GetValidationResult()
+    private IEnumerable<IRawData> GetValidationResult()
     {
-        var l = Log.Fn<IEnumerable<IRawEntity>>($"{ContentTypeName}.{FieldName}");
+        var l = Log.Fn<IEnumerable<IRawData>>($"{ContentTypeName}.{FieldName}");
 
         var appReader = _appReaders.Get(this);
         var currentEntity = ResolveCurrentEntity(appReader);
@@ -82,7 +81,7 @@ public class UniqueValueValidation : CustomDataSource
             )
         );
 
-        return l.Return([Result(result)], result.IsValid ? "unique" : $"conflict:{result.ConflictEntityId}");
+        return l.Return([result], result.IsValid ? "unique" : $"conflict:{result.ConflictEntityId}");
     }
 
     private IEntity? ResolveCurrentEntity(IAppReader appReader)
@@ -99,7 +98,7 @@ public class UniqueValueValidation : CustomDataSource
     {
         var contentType = ResolveContentType(appReader, request.ContentTypeName);
         if (contentType == null)
-            return new(true, "type-not-found");
+            return new(true, "type-not-found", request.ContentTypeName);
 
         var field = ResolveField(contentType, request.FieldName);
         if (field == null)
@@ -140,37 +139,6 @@ public class UniqueValueValidation : CustomDataSource
             ? null
             : contentType.Attributes.FirstOrDefault(attribute => attribute.Name.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
 
-    private IRawEntity Result(UniqueValueValidationResult result)
-        => new RawEntity
-        {
-            Id = result.ConflictEntityId ?? 0,
-            Guid = result.ConflictGuid ?? Guid.Empty,
-            Values = new Dictionary<string, object?>
-            {
-                { nameof(ValidationResultRaw.IsValid), result.IsValid },
-                { nameof(ValidationResultRaw.Reason), result.Reason },
-                { nameof(ValidationResultRaw.ContentTypeName), result.ContentTypeName ?? ContentTypeName },
-                { nameof(ValidationResultRaw.FieldName), result.FieldName ?? FieldName },
-                { nameof(ValidationResultRaw.Value), result.Value ?? Value },
-                { nameof(ValidationResultRaw.Language), result.Language ?? Language },
-                { nameof(ValidationResultRaw.ConflictEntityId), result.ConflictEntityId },
-                { nameof(ValidationResultRaw.ConflictGuid), result.ConflictGuid },
-                { nameof(ValidationResultRaw.ConflictTitle), result.ConflictTitle },
-            },
-        };
-
-    private sealed class ValidationResultRaw
-    {
-        public bool IsValid { get; init; }
-        public string? Reason { get; init; }
-        public string? ContentTypeName { get; init; }
-        public string? FieldName { get; init; }
-        public string? Value { get; init; }
-        public string? Language { get; init; }
-        public int? ConflictEntityId { get; init; }
-        public Guid? ConflictGuid { get; init; }
-        public string? ConflictTitle { get; init; }
-    }
 }
 
 internal sealed record UniqueValueValidationRequest(
@@ -184,11 +152,15 @@ internal sealed record UniqueValueValidationRequest(
 internal sealed record UniqueValueValidationResult(
     bool IsValid,
     string Reason,
-    string? ContentTypeName = default,
+    string? ContentTypeName,
     string? FieldName = default,
     string? Value = default,
     string? Language = default,
     int? ConflictEntityId = default,
     Guid? ConflictGuid = default,
     string? ConflictTitle = default
-);
+): IRawEntityAutoConvert
+{
+    public int Id => ConflictEntityId ?? 0;
+    public Guid Guid => ConflictGuid ?? Guid.Empty;
+}

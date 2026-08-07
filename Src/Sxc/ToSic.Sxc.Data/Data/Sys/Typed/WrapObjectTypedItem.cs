@@ -232,7 +232,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
                 : [raw]
             : [];
 
-        var df = Cdf.Services.DataFactory.Value.SpawnNew(options: new()
+        var df = Cdf.Services.DataFactory.New(options: new()
         {
             AppId = ((ICodeDataFactoryDeepWip)Cdf).AppIdOrZero,
             AutoId = false,

@@ -10,7 +10,9 @@ internal static class UniqueValueValidationRules
     internal const string StringUrlPathInputType = "string-url-path";
     internal const string InvariantLanguage = "";
     internal const string DefaultLanguageWildcard = "*";
-    private static readonly ValueAssembler ScalarValueAssembler = new();
+    
+    // 2026-08-07 2dm TODO: @STV - THIS IS NOT MEANT FOR static use
+    //private static readonly ValueAssembler ScalarValueAssembler = new();
 
     internal static IContentTypeField[] UniqueFields(IContentType contentType)
         // Url-path fields are unique by default unless metadata explicitly overrides that behavior.
@@ -39,26 +41,27 @@ internal static class UniqueValueValidationRules
 
     internal static string? NormalizedValue(ValueTypes type, string? value)
     {
-        var normalizedValue = value ?? string.Empty;
-
-        if (string.IsNullOrWhiteSpace(normalizedValue))
-            return null;
-
-        return type switch
-        {
-            ValueTypes.DateTime => NormalizeDateTimeValue(normalizedValue),
-            _ => normalizedValue,
-        };
+        return string.IsNullOrWhiteSpace(value)
+            ? null
+            : type switch
+            {
+                ValueTypes.DateTime => NormalizeDateTimeValue(value!),
+                _ => value,
+            };
     }
 
     private static string NormalizeDateTimeValue(string value)
     {
-        // Edit UI sends ISO UTC strings like 2026-05-21T00:00:00.000Z, but uniqueness lookup must compare
-        // against EAV's short DateTime serialization without shifting the wall-clock value through local time.
-        if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var dto))
-            return ScalarValueAssembler.DateTime(dto.DateTime, DataConstants.NoLanguages).Serialized ?? value;
+        // 2026-08-07 2dm TODO: @STV - THIS IS NOT MEANT FOR static use
+        // TODO: pls recheck, and make something simpler, this feels like overkill
+        return value;
+        
+        //// Edit UI sends ISO UTC strings like 2026-05-21T00:00:00.000Z, but uniqueness lookup must compare
+        //// against EAV's short DateTime serialization without shifting the wall-clock value through local time.
+        //if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var dto))
+        //    return ScalarValueAssembler.DateTime(dto.DateTime, DataConstants.NoLanguages).Serialized ?? value;
 
-        return ScalarValueAssembler.Create(ValueTypes.DateTime, value).Serialized ?? value;
+        //return ScalarValueAssembler.Create(ValueTypes.DateTime, value).Serialized ?? value;
     }
 
     internal static string LanguageKey(IValue raw)
