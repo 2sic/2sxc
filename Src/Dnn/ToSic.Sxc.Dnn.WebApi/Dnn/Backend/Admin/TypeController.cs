@@ -24,8 +24,7 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
-    // TODO: @2rb #SysData
-    // I believe we already created a "System.ContentType"
+    // Implemented by the existing DataSource System.ContentTypes through query System.SysData.
     // and we have "ContentTypes" - look for "d5372be5-3b29-45dd-9b74-97408bba2d42"
     // find out what we can use, or create a "System.ContentTypes"
     // Make sure you don't generate duplicate code...
