@@ -13,8 +13,7 @@ public class MetadataController() : DnnSxcControllerBase(RealController.LogSuffi
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
-    // TODO: @2rb #SysData
-    // probably "System.ItemMetadata"
+    // Implemented by DataSource System.ItemMetadata through query System.SysData.
     // probably 3 streams
     // - Recommendations
     // - Items (containing the entities)
