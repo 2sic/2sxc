@@ -19,8 +19,7 @@ public class FeatureController() : DnnSxcControllerRoot(RealController.LogSuffix
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
-    // TODO: @2rb #SysData
-    // Should become "System.FeatureStates"
+    // Implemented by the existing DataSource System.FeatureStates through query System.SysData.
     
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
