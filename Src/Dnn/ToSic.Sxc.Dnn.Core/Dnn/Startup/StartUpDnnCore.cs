@@ -127,7 +127,7 @@ internal static class StartUpDnnCore
         services.TryAddTransient<IModuleAndBlockBuilder, DnnModuleAndBlockBuilder>();
 
         // v13.12
-        services.AddTransient<IBootProcess, DnnBootFeaturesRegistration>();   // must be Add, not TryAdd
+        services.AddTransient<IBootProcess, BootRegisterDnnFeatures>();   // must be Add, not TryAdd
 
         // v14
 #pragma warning disable CS0618 // Type or member is obsolete

@@ -4,12 +4,16 @@ using ToSic.Sys.Capabilities.Features;
 
 namespace ToSic.Sxc.Dnn.StartUp;
 
-internal class DnnBootFeaturesRegistration(FeaturesCatalog featuresCatalog)
+internal class BootRegisterDnnFeatures(FeaturesCatalog featuresCatalog)
     : BootProcessBase("DnnFts", bootPhase: BootPhase.Registrations, connect: [featuresCatalog]), IBootProcess
 {
     /// <summary>
     /// Register Dnn features before loading
     /// </summary>
-    public override void Run() => DnnBuiltInFeatures.Register(featuresCatalog);
+    public override void Run() => featuresCatalog.Register(DnnFeatures);
 
+    public static readonly Feature[] DnnFeatures =
+    [
+        DnnBuiltInFeatures.DnnPageWorkflow,
+    ];
 }

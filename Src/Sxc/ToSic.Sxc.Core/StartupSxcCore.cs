@@ -22,7 +22,7 @@ public static class StartupSxcCore
 
         // Sxc StartUp Routines - MUST be AddTransient, not TryAddTransient so many start-ups can be registered
         // Add StartUp Registration of FeaturesCatalog
-        services.AddTransient<IBootProcess, SxcBootFeaturesRegistrations>();
+        services.AddTransient<IBootProcess, BootRegisterSxcFeatures>();
 
         // v13 Provide page scoped services
         // This is important, as most services are module scoped, but very few are actually scoped one level higher
