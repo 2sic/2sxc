@@ -57,9 +57,11 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
             var apiFiles = codeApiControllerFiles
                 .Select(f => new AppWebApiFileRaw
                 {
-                    Path = f,
-                    EndpointPath = AppCodeEndpointPath(edition, Path.GetFileNameWithoutExtension(f)),
-                    Edition = edition
+                    id = 0,
+                    path = f,
+                    endpointPath = AppCodeEndpointPath(edition, Path.GetFileNameWithoutExtension(f)),
+                    edition = edition,
+                    shared = false,
                 });
             appCodeApiControllerFiles.AddRange(apiFiles);
         }
