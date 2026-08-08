@@ -88,7 +88,7 @@ public interface IUserModel : IModelFromEntity<UserModel>
     bool IsSiteDeveloper { get; }
 
     /// <inheritdoc cref="IUser.Name"/>
-    [ContentTypeField(IsTitle = true)]
+    [ContentTypeTitle]
     string? Name { get; }
 
     /// <inheritdoc cref="IUser.Username"/>

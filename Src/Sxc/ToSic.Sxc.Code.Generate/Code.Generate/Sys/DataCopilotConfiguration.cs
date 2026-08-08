@@ -124,7 +124,7 @@ internal record DataCopilotConfiguration: IDataCopilotConfiguration, IRawEntity
 [ModelSpecs(ContentType = DataCopilotConfiguration.MyContentTypeName)] // so it knows the real name of the content-type for type checks
 internal record DataCopilotConfigurationFromEntity : ModelFromEntity, IDataCopilotConfiguration
 {
-    [ContentTypeField(IsTitle = true)]
+    [ContentTypeTitle]
     public string CodeGenerator => GetThis("");
     
     public int Id => Entity?.EntityId ?? 0;

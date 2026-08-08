@@ -37,7 +37,7 @@ public interface IUserRoleModel : IModelFromEntity<UserRoleModel>
     /// <summary>
     /// The Role Name as it is displayed everywhere.
     /// </summary>
-    [ContentTypeField(IsTitle = true)]
+    [ContentTypeTitle]
     string Name { get; }
 
     /// <summary>

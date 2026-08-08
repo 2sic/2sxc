@@ -17,7 +17,7 @@
 //)]
 //public record ContentTypeSpecsRaw(ContentTypeDto contentType) : RawEntity
 //{
-//    [ContentTypeField(IsTitle = true)] // TODO: REMEMBER TO KEEP
+//    [ContentTypeTitle] // TODO: REMEMBER TO KEEP
 //    public string Name => contentType.Name;
 
 //    protected override IDictionary<string, object?> GetValues() => new Dictionary<string, object?>
@@ -54,7 +54,7 @@
 //)]
 //public record ContentTypeFieldModel(ContentTypeFieldSpecsRaw contentTypeField) : RawEntity
 //{
-//    [ContentTypeField(IsTitle = true)]  // todo
+//    [ContentTypeTitle]  // todo
 //    public string Name => contentTypeField.StaticName;
 
 //    protected override IDictionary<string, object?> GetValues() => new Dictionary<string, object?>

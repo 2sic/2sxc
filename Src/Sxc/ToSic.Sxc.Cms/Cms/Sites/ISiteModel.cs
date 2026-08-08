@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using ToSic.Eav.Data.ContentTypes;
+﻿using ToSic.Eav.Data.ContentTypes;
 using ToSic.Sxc.Cms.Sites.Sys;
 
 namespace ToSic.Sxc.Cms.Sites;
@@ -69,7 +68,7 @@ public interface ISiteModel : IModelFromEntity<SiteModel>
     /// * In Dnn it's from `PageInfo.PortalName`
     /// * in Oqtane it's from `Site.Name`
     /// </summary>
-    [ContentTypeField(IsTitle = true)]
+    [ContentTypeTitle]
     string? Name { get; }
 
     /// <summary>

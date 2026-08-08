@@ -54,7 +54,7 @@ public record UserModelRaw : IHasIdentityNameId, IUserModel, IRawEntityConvertib
     public string? Username { get; init; }
     public string? Email { get; init; } // aka PreferredEmail
 
-    [ContentTypeField(IsTitle = true)]
+    [ContentTypeTitle]
     public string? Name { get; init; } // aka DisplayName
 
     public IEnumerable<IUserRoleModel> Roles { get; init; } = [];
