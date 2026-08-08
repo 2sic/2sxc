@@ -28,13 +28,22 @@ public class PathCasingValidatorTests
         => True(PathCasingValidator.IsPathCasingExactReversed(path).IsOk);
     
     [Theory]
-    [InlineData("C:/Projects\\2sxc", "incorrect slashes")]
+    //[InlineData("C:/Projects\\2sxc", "incorrect slashes")]
     [InlineData("C:/projects/2sxc", "lower case p")]
     [InlineData("C:/Projects/2sxc/bad.file", "doesn't exist")]
     [InlineData("C:/Projects/2sxc/2sxc-build.config.JSON", "UPPER CASE")]
     [InlineData("C:/Projects/2sxc/2sxc-build.config.Json", "Upper case Json")]
     public void PathsReversed_NotValid(string path, string _)
         => False(PathCasingValidator.IsPathCasingExactReversed(path).IsOk);
+    
+    [Theory]
+    [InlineData("C:/Projects\\2sxc", "incorrect slashes")]
+    [InlineData("C:/projects/2sxc", "lower case p")]
+    [InlineData("C:/Projects/2sxc/bad.file", "doesn't exist")]
+    [InlineData("C:/Projects/2sxc/2sxc-build.config.JSON", "UPPER CASE")]
+    [InlineData("C:/Projects/2sxc/2sxc-build.config.Json", "Upper case Json")]
+    public void IsPathOkForLinux_NotValid(string path, string _)
+        => False(PathCasingValidator.IsPathOkForLinux(path, path).IsOk);
     
     [Theory]
     [InlineData("C:/PROJECTS/2sxc", 0, true, PathCasingValidator.OkMaxSegmentsReached + ": 0", "0 is skip check")]
