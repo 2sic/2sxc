@@ -22,6 +22,7 @@ public class AppExtensions : CustomDataSource
 [VisualQuery(NiceName = "App Extension Inspect", NameId = "641ec34d-4e04-4682-812a-0dda1e65f905", NameIds = ["System.AppExtensionInspect"], Type = DataSourceType.System, Audience = Audience.System, DataConfidentiality = DataConfidentiality.Confidential, UiHint = "Inspect an app extension and its files")]
 public class AppExtensionInspect : CustomDataSource
 {
+    private ExtensionInspectResultDto? _result;
     [Configuration(Field = "Name", Fallback = "")]
     public string ExtensionName => Configuration.GetThis<string>("");
 
@@ -31,12 +32,14 @@ public class AppExtensionInspect : CustomDataSource
     public AppExtensionInspect(Dependencies services, LazySvc<ExtensionInspectBackend> inspect)
         : base(services, "Sxc.ExtInspect", connect: [inspect])
     {
+        ProvideOutRaw(() => State(inspect), name: "State", options: Options);
         ProvideOutRaw(() => Files(inspect), name: "Files", options: Options);
         ProvideOutRaw(() => Summary(inspect), name: "Summary", options: Options);
         ProvideOutRaw(() => ContentTypes(inspect), name: "ContentTypes", options: Options);
     }
 
-    private ExtensionInspectResultDto Result(LazySvc<ExtensionInspectBackend> inspect) => inspect.Value.Inspect(AppId, ExtensionName, Edition);
+    private ExtensionInspectResultDto Result(LazySvc<ExtensionInspectBackend> inspect) => _result ??= inspect.Value.Inspect(AppId, ExtensionName, Edition);
+    private IEnumerable<IRawEntity> State(LazySvc<ExtensionInspectBackend> inspect) => [SysDataRaw.One(new { Result(inspect).FoundLock })];
     private IEnumerable<IRawEntity> Files(LazySvc<ExtensionInspectBackend> inspect) => SysDataRaw.Many(Result(inspect).Files);
     private IEnumerable<IRawEntity> Summary(LazySvc<ExtensionInspectBackend> inspect) => Result(inspect).Summary is { } x ? [SysDataRaw.One(x)] : [];
     private IEnumerable<IRawEntity> ContentTypes(LazySvc<ExtensionInspectBackend> inspect) => SysDataRaw.Many(Result(inspect).Data?.ContentTypes);
