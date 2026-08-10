@@ -53,8 +53,10 @@ XCOPY "..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\%PackageName%\*" "%BuildTarget%\"
 
 ECHO(
 ECHO nuget dependencies - oqt-imageflow
-XCOPY "..\..\packages\tosic.imageflow.oqtane\1.12.0\lib\net9.0\*" "%OqtaneBin%\" /Y
-XCOPY "..\..\packages\tosic.imageflow.oqtane\1.12.0\runtimes\*" "%OqtaneBin%\runtimes\" /S /C /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\%ModuleTargetFramework%\Imageflow.*" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\%ModuleTargetFramework%\Imazen.*" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\%ModuleTargetFramework%\Microsoft.IO.*" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\%ModuleTargetFramework%\runtimes\*" "%OqtaneBin%\runtimes\" /S /C /Y
 
 ECHO(
 ECHO Copy Koi DLLs
