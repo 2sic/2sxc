@@ -1,14 +1,13 @@
 ﻿using System.Web;
 using System.Web.Hosting;
 using ToSic.Sxc.Code.Sys.CodeApi;
-using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Web.Sys.LightSpeed;
 using ToSic.Sys.Capabilities.Features;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
-namespace ToSic.Sxc.Dnn.Razor;
+namespace ToSic.Sxc.Dnn.Razor.Sys;
 
 /// <summary>
 /// Helper in Dnn to replace the HtmlHelper for the `@Html.Raw()` or `@Html.Partial()`

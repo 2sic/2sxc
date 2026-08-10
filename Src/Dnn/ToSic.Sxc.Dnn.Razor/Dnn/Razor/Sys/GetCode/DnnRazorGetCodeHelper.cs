@@ -5,14 +5,15 @@ using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.Help;
 using ToSic.Sys.Exceptions;
 
-namespace ToSic.Sxc.Dnn.Razor;
+namespace ToSic.Sxc.Dnn.Razor.Sys;
 
 /// <summary>
 /// Helper to isolate GetCode / CreateInstance for DNN Razor.
 /// This is old functionality, so it's separated out.
 /// </summary>
 [PrivateApi]
-internal class DnnRazorGetCodeHelper(RazorComponentBase page, IExecutionContext exCtx) :HelperBase((page as IHasLog)?.Log, "Sxc.RzrHlp")
+internal class DnnRazorGetCodeHelper(RazorComponentBase page, IExecutionContext exCtx)
+    : HelperBase((page as IHasLog)?.Log, "Sxc.RzrHlp")
 {
     #region Create Instance
 

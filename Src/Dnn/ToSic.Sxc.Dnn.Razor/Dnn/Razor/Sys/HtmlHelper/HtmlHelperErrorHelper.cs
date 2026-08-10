@@ -4,7 +4,7 @@ using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Dnn.Razor;
+namespace ToSic.Sxc.Dnn.Razor.Sys;
 internal class HtmlHelperErrorHelper(
     LazySvc<IFeaturesService> featureSvc,
     LazySvc<SourceAnalyzer> codeAnalysis,

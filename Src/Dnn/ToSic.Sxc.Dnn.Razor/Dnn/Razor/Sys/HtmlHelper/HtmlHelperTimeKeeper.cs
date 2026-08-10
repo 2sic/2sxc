@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace ToSic.Sxc.Dnn.Razor;
+namespace ToSic.Sxc.Dnn.Razor.Sys;
 
 /// <summary>
 /// Helper to track the total time spent on each partial, especially when a partial is used many, many times (like in lists).

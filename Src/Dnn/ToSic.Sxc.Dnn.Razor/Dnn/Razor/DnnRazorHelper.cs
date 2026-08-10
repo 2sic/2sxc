@@ -1,13 +1,14 @@
 ﻿using Custom.Razor.Sys;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Data.Sys.Wrappers;
+using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn.Razor;
 
 [PrivateApi]
-internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
+internal class DnnRazorHelper() : CodeHelperBase("Sxc.RzrHlp")
 {
     #region Constructor / Init
 
@@ -56,18 +57,29 @@ internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
 
     #region DynamicModel and Factory
 
-    private ICodeDataPoCoWrapperService CodeDataWrapper => _dynJacketFactory.Get(() => ExCtx.GetService<ICodeDataPoCoWrapperService>());
-    private readonly GetOnce<ICodeDataPoCoWrapperService> _dynJacketFactory = new();
+    private ICodeDataPoCoWrapperService CodeDataWrapper => field ??= ExCtx.GetService<ICodeDataPoCoWrapperService>();
 
     /// <inheritdoc cref="IRazor14{TModel,TServiceKit}.DynamicModel"/>
-    public dynamic DynamicModel => _dynamicModel ??= CodeDataWrapper.FromDictionary(Page.PageData);
-    private dynamic _dynamicModel;
+    public object DynamicModel => _dynamicModel ??= CodeDataWrapper.FromDictionary(Page.PageData);
+    private object _dynamicModel;
 
     internal void SetDynamicModel(RenderSpecs viewData)
     {
         var l = Log.Fn();
         _dynamicModel = CodeDataWrapper.DynamicFromObject(viewData.Data, WrapperSettings.Dyn(children: false, realObjectsToo: false));
         l.Done();
+    }
+
+    #endregion
+
+    #region Exception Forwarding (moved here from RazorHelperBase 2026-08-10 2dm
+
+    public List<Exception>? ExceptionsOrNull { get; private set; }
+
+    public Exception Add(Exception ex)
+    {
+        (ExceptionsOrNull ??= []).Add(ex);
+        return ex;
     }
 
     #endregion

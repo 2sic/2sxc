@@ -2,7 +2,7 @@
 using System.Web.Hosting;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Dnn.Razor;
+namespace ToSic.Sxc.Dnn.Razor.Sys;
 
 internal record HtmlHelperContext
 {
