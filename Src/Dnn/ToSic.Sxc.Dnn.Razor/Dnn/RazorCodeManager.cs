@@ -1,10 +1,16 @@
 ﻿using System.Web;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Dnn.Razor;
 
 #pragma warning disable CS0618
 
 namespace ToSic.Sxc.Dnn;
 
+/// <summary>
+/// Helper to support the old (now deprecated) Code property, which was like a code-behind feature.
+/// </summary>
+/// <param name="parent"></param>
+/// <param name="parentLog"></param>
 internal class RazorCodeManager(RazorComponentBase parent, ILog parentLog) : HelperBase(parentLog, "Rzr.Code")
 {
     public RazorComponentBase Parent = parent;
@@ -27,40 +33,41 @@ internal class RazorCodeManager(RazorComponentBase parent, ILog parentLog) : Hel
     /// <summary>
     ///  This tries to get the code and will show an exception if not ready. 
     /// </summary>
-    public dynamic CodeOrException
+    /// <param name="rzrGetCodeHlp"></param>
+    public dynamic GetCodeOrException(DnnRazorGetCodeHelper rzrGetCodeHlp)
     {
-        get
-        {
-            TryToBuildCode();
-            if (BuildException == null) return _code;
-            throw ImproveExceptionMessage(BuildException);
-        }
+        TryToBuildCode(rzrGetCodeHlp);
+        return BuildException == null
+            ? _code
+            : throw ImproveExceptionMessage(BuildException);
     }
 
-    /// <summary>
-    /// Internal accessor for the code, which does not throw exceptions but returns a null if not available
-    /// </summary>
-    internal dynamic CodeOrNull
-    {
-        get
-        {
-            TryToBuildCode();
-            return _code;
-        }
-    }
+    ///// <summary>
+    ///// Internal accessor for the code, which does not throw exceptions but returns a null if not available
+    ///// </summary>
+    //internal dynamic CodeOrNull
+    //{
+    //    get
+    //    {
+    //        TryToBuildCode();
+    //        return _code;
+    //    }
+    //}
 
     /// <summary>
     /// Try to build the code. If something fails, remember the exception in case we need it later.
     /// </summary>
-    private bool TryToBuildCode()
+    /// <param name="rzrGetCodeHlp"></param>
+    private bool TryToBuildCode(DnnRazorGetCodeHelper rzrGetCodeHlp)
     {
         var l = Log.Fn<bool>();
-        if (BuildComplete) return l.Return(true);
+        if (BuildComplete)
+            return l.Return(true);
         var codeFile = Parent.VirtualPath.Replace(".cshtml", ".code.cshtml").Backslash().AfterLast("\\");
         l.A($"Will try to load code from '{codeFile}");
         try
         {
-            var compiled = Parent.RzrHlp.CreateInstance(codeFile);
+            var compiled = rzrGetCodeHlp.CreateInstance(codeFile);
             if (compiled != null && compiled is not RazorComponentCode)
                 throw new(
                     $"Tried to compile the .Code file, but the type is '{compiled.GetType().Name}'. " +
@@ -79,15 +86,11 @@ internal class RazorCodeManager(RazorComponentBase parent, ILog parentLog) : Hel
     }
 
     private static Exception ImproveExceptionMessage(Exception innerException)
-    {
-        switch (innerException)
+        => innerException switch
         {
-            case FileNotFoundException _:
-                return new("Tried to compile matching .Code file - but couldn't find it. \n", innerException);
-            case HttpCompileException _:
-                return new("Error compiling .Code file. \n", innerException);
-            default:
-                return innerException;
-        }
-    }
+            FileNotFoundException _ => new("Tried to compile matching .Code file - but couldn't find it. \n",
+                innerException),
+            HttpCompileException _ => new("Error compiling .Code file. \n", innerException),
+            _ => innerException
+        };
 }

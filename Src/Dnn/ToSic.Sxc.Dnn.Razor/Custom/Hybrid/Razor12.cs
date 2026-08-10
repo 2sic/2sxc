@@ -3,6 +3,7 @@ using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
+using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.Help;
@@ -155,12 +156,15 @@ public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHe
 
     #region CreateInstance
 
+    private DnnRazorGetCodeHelper RzrGetCodeHlp => field ??= new(this, ExCtx);
+    
     /// <inheritdoc cref="ICreateInstance.CreateInstancePath"/>
-    [PrivateApi] string IGetCodePath.CreateInstancePath { get; set; }
+    [PrivateApi]
+    string IGetCodePath.CreateInstancePath { get; set; }
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
     public virtual dynamic CreateInstance(string virtualPath, NoParamOrder npo = default, string name = null, string relativePath = null, bool throwOnError = true)
-        => RzrHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
+        => RzrGetCodeHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
 
     #endregion
 

@@ -4,6 +4,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Dnn.Code;
+using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.Help;
@@ -139,11 +140,14 @@ public abstract partial class RazorComponent : RazorComponentBase,
 
     #region CreateInstance
 
-    [PrivateApi] string IGetCodePath.CreateInstancePath { get; set; }
+    private DnnRazorGetCodeHelper RzrGetCodeHlp => field ??= new(this, ExCtx);
+    
+    [PrivateApi]
+    string IGetCodePath.CreateInstancePath { get; set; }
 
     /// <inheritdoc />
     public virtual dynamic CreateInstance(string virtualPath, NoParamOrder npo = default, string name = null, string relativePath = null, bool throwOnError = true)
-        => RzrHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
+        => RzrGetCodeHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
 
     #endregion
 
