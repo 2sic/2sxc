@@ -14,8 +14,8 @@ public class Views : CustomDataSource
 {
     public Views(Dependencies services, LazySvc<ViewsBackend> views)
         : base(services, "Sxc.Views", connect: [views])
-        => ProvideOutRaw(() => SysDataRaw.Many(views.Value.GetAll(AppId)), options: Options);
-    private static DataFactoryOptions Options() => new() { AutoId = false, TitleField = "Name", TypeName = "View", AllowUnknownValueTypes = true };
+        => ProvideOutRaw(() => views.Value.GetAll(AppId), options: Options);
+    private static DataFactoryOptions Options() => new() { AutoId = false, TypeName = "View", AllowUnknownValueTypes = true };
 }
 
 [PrivateApi]

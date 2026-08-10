@@ -1,4 +1,6 @@
 using System.Text.Json.Serialization;
+using ToSic.Eav.Data.ContentTypes;
+using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 
 namespace ToSic.Sxc.Backend.Admin;
@@ -11,8 +13,9 @@ public class ExtensionsResultDto
 }
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionDto
+public class ExtensionDto : IRawEntityAutoConvert
 {
+    [ContentTypeTitle]
     [JsonPropertyName("folder")]
     public required string Folder { get; init; }
 

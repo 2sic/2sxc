@@ -1,9 +1,7 @@
 using ToSic.Eav.Data.Build;
-using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.WebApi.Sys.ImportExport;
-using ToSic.Sxc.Backend.SysData;
 
 namespace ToSic.Sxc.Backend.Admin;
 
@@ -18,8 +16,8 @@ public class AppsPendingInitialization : CustomDataSource
         : base(services, "Sxc.PendingApps", connect: [importApp])
         => ProvideOutRaw(() => Get(importApp), options: Options);
 
-    private IEnumerable<IRawEntity> Get(LazySvc<ImportApp> importApp)
-        => SysDataRaw.Many(importApp.Value.GetPendingApps(OfZoneId));
+    private IEnumerable<PendingAppDto> Get(LazySvc<ImportApp> importApp)
+        => importApp.Value.GetPendingApps(OfZoneId);
 
-    private static DataFactoryOptions Options() => new() { AutoId = true, TitleField = "Name", TypeName = "PendingApp", AllowUnknownValueTypes = true };
+    private static DataFactoryOptions Options() => new() { AutoId = true, TypeName = "PendingApp", AllowUnknownValueTypes = true };
 }

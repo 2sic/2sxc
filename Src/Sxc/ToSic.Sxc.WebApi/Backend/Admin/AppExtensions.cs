@@ -13,9 +13,9 @@ public class AppExtensions : CustomDataSource
 {
     public AppExtensions(Dependencies services, LazySvc<ExtensionReaderBackend> reader)
         : base(services, "Sxc.AppExts", connect: [reader])
-        => ProvideOutRaw(() => SysDataRaw.Many(reader.Value.GetExtensions(AppId).Extensions), options: Options);
+        => ProvideOutRaw(() => reader.Value.GetExtensions(AppId).Extensions, options: Options);
 
-    private static DataFactoryOptions Options() => new() { AutoId = true, TitleField = "Folder", TypeName = "AppExtension", AllowUnknownValueTypes = true };
+    private static DataFactoryOptions Options() => new() { AutoId = true, TypeName = "AppExtension", AllowUnknownValueTypes = true };
 }
 
 [PrivateApi]

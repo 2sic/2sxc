@@ -37,7 +37,7 @@ public class DataSources : CustomDataSource
 
     public DataSources(Dependencies services, LazySvc<QueryControllerReal> query)
         : base(services, "Sxc.DataSources", connect: [query])
-        => ProvideOutRaw(() => SysDataRaw.Many(query.Value.DataSources(new AppIdentity(OfZoneId, AppId))), options: Options);
+        => ProvideOutRaw(() => query.Value.DataSources(new AppIdentity(OfZoneId, AppId)), options: Options);
 
-    private static DataFactoryOptions Options() => new() { AutoId = true, TitleField = "Name", TypeName = "DataSource", AllowUnknownValueTypes = true };
+    private static DataFactoryOptions Options() => new() { AutoId = true, TypeName = "DataSource", AllowUnknownValueTypes = true };
 }
