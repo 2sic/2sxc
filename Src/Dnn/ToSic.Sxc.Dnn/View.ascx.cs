@@ -10,6 +10,8 @@ using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Render.Block.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Web.Sys.LightSpeed;
+using ToSic.Sys.Users;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Dnn;
 
@@ -222,12 +224,22 @@ public partial class View : PortalModuleBase, IActionable
                 }
             );
 
-            if (result.Errors?.Any() ?? false)
+            if (result.Errors.SafeAny())
             {
                 var warnings = result.Errors
                     .Select(e => BlockRenderer.RenderingHelper.DesignError(e));
 
                 result = result with { Html = string.Join("", warnings) + result.Html };
+            }
+
+            if (result.Hints.SafeAny())
+            {
+                var userElevation = Block.Context.User.GetElevation();
+                var hints = result.Hints
+                    .Where(hint => userElevation.IsAtLeast(hint.ForUserElevation))
+                    .Select(hint => $"<div class='alert alert-info'>{hint.Message}</div>");
+
+                result = result with { Html = string.Join("\n", hints) + result.Html };
             }
 
             result = result with { Html = result.Html + GetOptionalDetailedLogToAttach() };

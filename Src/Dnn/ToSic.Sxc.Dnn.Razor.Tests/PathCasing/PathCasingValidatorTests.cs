@@ -58,6 +58,6 @@ public class PathCasingValidatorTests
     {
         var test = PathCasingValidator.IsPathCasingExactReversed(path, segments);
         Equal(expected, test.IsOk);
-        Equal(message, test.Name);
+        Equal(message, test.Message);
     }
 }

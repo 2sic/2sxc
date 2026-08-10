@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys;
 internal record HtmlHelperContext
 {
     public required RazorComponentBase Page { get; init; }
-    public required DnnRazorHelper Helper { get; init; }
+    public required DnnRazorHelper RazorHelper { get; init; }
     public required bool IsSystemAdmin { get; init; }
     public IExecutionContext ExCtx => Page.ExCtx;
 }

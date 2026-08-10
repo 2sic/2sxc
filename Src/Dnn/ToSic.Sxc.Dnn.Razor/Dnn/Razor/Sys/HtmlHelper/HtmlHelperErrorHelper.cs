@@ -43,7 +43,7 @@ internal class HtmlHelperErrorHelper(
         var block = MyOptions.ExCtx.GetBlock();
         var renderHelper = renderingHelperGenerator.New().Init(block);
         var nice = renderHelper.DesignErrorMessage([exWithHelp], true);
-        MyOptions.Helper.Add(exWithHelp);
+        MyOptions.RazorHelper.Add(exWithHelp);
         return nice;
     }
 

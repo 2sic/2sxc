@@ -1,4 +1,5 @@
-﻿using ToSic.Sys.Performance;
+﻿using ToSic.Sxc.Dnn.Razor.Sys;
+using ToSic.Sys.Performance;
 
 namespace ToSic.Sxc.Dnn.Razor;
 
@@ -47,6 +48,13 @@ public static class PathCasingValidator
         return true;
     }
 
+    internal static PathCaseCheckResult IsPathOkForLinux(HtmlHelperContextWithPaths fullOptions)
+    {
+        // Only check the segments passed in, + 1 (otherwise a `File.cshtml` would have 0 segments)
+        var slashCount = fullOptions.Relative.Count(c => c == '/');
+        return IsPathOkForLinux(fullOptions.Relative, fullOptions.FullPath, slashCount + 1);
+    }
+
     public static PathCaseCheckResult IsPathOkForLinux(string original, string path, int segments = 50)
     {
         // First check for incompatible slashes
@@ -81,7 +89,7 @@ public static class PathCasingValidator
 
             // Get actual on-disk entry casing within the parent folder
             var match = Directory
-                .GetFileSystemEntries(parent, expectedSegment)
+                .GetFileSystemEntries(parent!, expectedSegment)
                 .FirstOrDefault();
 
             // Fail immediately if the file or subfolder casing doesn't match
@@ -99,5 +107,5 @@ public static class PathCasingValidator
     public const string ErrPathDoesNotExist = "path does not exist";
     public const string OkMaxSegmentsReached = "max segments reached";
     public const string OkTopReached = "top reached";
-    public record PathCaseCheckResult(bool IsOk, int Segment, string Name);
+    public record PathCaseCheckResult(bool IsOk, int Segment, string Message);
 }

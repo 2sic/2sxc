@@ -1,10 +1,12 @@
 ﻿using System.Web;
-using System.Web.Hosting;
 using ToSic.Sxc.Code.Sys.CodeApi;
+using ToSic.Sxc.Render.Output.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Sys.LightSpeed;
 using ToSic.Sys.Capabilities.Features;
+using ToSic.Sys.Users;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Dnn.Razor.Sys;
@@ -13,8 +15,8 @@ namespace ToSic.Sxc.Dnn.Razor.Sys;
 /// Helper in Dnn to replace the HtmlHelper for the `@Html.Raw()` or `@Html.Partial()`
 /// </summary>
 [PrivateApi]
-internal class HtmlHelper(LazySvc<IFeaturesService> featureSvc, Generator<HtmlHelperErrorHelper, HtmlHelperContextWithPaths> errHelperGenerator)
-    : ServiceWithSetup<HtmlHelperContext>("Dnn.HtmHlp", connect: [featureSvc]), IHtmlHelper
+internal class HtmlHelper(LazySvc<IFeaturesService> featureSvc, IModulesOutputService modulesOutputService, Generator<HtmlHelperErrorHelper, HtmlHelperContextWithPaths> errHelperGenerator)
+    : ServiceWithSetup<HtmlHelperContext>("Dnn.HtmHlp", connect: [featureSvc, modulesOutputService, errHelperGenerator]), IHtmlHelper
 {
     private HtmlHelperTimeKeeper TimeKeeper { get; } = new();
 
@@ -25,7 +27,7 @@ internal class HtmlHelper(LazySvc<IFeaturesService> featureSvc, Generator<HtmlHe
             null => new HtmlString(""),
             string s => new HtmlString(s),
             IHtmlString h => h,
-            _ => throw MyOptions.Helper.Add(new ArgumentException($@"Html.Raw does not support type '{stringHtml.GetType().Name}'.", nameof(stringHtml)))
+            _ => throw MyOptions.RazorHelper.Add(new ArgumentException($@"Html.Raw does not support type '{stringHtml.GetType().Name}'.", nameof(stringHtml)))
         };
 
     /// <summary>
@@ -69,23 +71,9 @@ internal class HtmlHelper(LazySvc<IFeaturesService> featureSvc, Generator<HtmlHe
             // This will get a HelperResult object, which is often not executed yet
             var result = RenderWithRoslynOrClassic(fullOptions, renderSpecs);
             
-            // Optionally verify that the path was perfect, to indicate if it could work on Linux
-            // new v22
+            // Optionally verify that the path was perfect, to indicate if it could work on Linux (new v22)
             if (BuiltInFeatures.DevFeatures.FileNamesCrossPlatform)
-                try
-                {
-                    var fullPath = HostingEnvironment.MapPath(fullOptions.Normalized);
-                    var maxSegments = 3; // todo: calculate better
-                    var pathResult = PathCasingValidator.IsPathOkForLinux(fullOptions.Relative, fullPath, maxSegments);
-                    if (!pathResult.IsOk)
-                    {
-                        // TODO: MAKE SURE IT GETS REPORTED
-                    }
-                }
-                catch (Exception ex)
-                {
-                    l.Ex(ex);
-                }
+                CheckFileNameCompatibleWithLinux(fullOptions);
 
             // In case we should throw a nice error, we must get the HTML now, to possibly cause the error and show an alternate message
             // This will also not allow partial caching
@@ -160,6 +148,31 @@ internal class HtmlHelper(LazySvc<IFeaturesService> featureSvc, Generator<HtmlHe
 
         l.A("Tried to use Roslyn, but detected old base class so will use classic Razor Engine so PageData continues to work.");
         return l.Return(MyOptions.Page.BaseRenderPage(fullOptions.Relative, renderSpecs), $"default render {(renderSpecs.Data == null ? "no" : "with")} data");
+    }
+
+    private bool CheckFileNameCompatibleWithLinux(HtmlHelperContextWithPaths fullOptions)
+    {
+        var l = Log.Fn<bool>();
+        try
+        {
+            var pathResult = PathCasingValidator.IsPathOkForLinux(fullOptions);
+            if (!pathResult.IsOk)
+            {
+                var modId = MyOptions.ExCtx.GetCmsContext().Module.Id;
+                modulesOutputService.AddHint(modId, new()
+                {
+                    ForUserElevation = UserElevation.ContentAdmin,
+                    Message = $"Path casing issue detected: {fullOptions.Relative}; {pathResult.Message}"
+                });
+            }
+            return l.Return(pathResult.IsOk, $"path check result: {pathResult.Message}");
+        }
+        catch (Exception ex)
+        {
+            l.Ex(ex);
+            return l.ReturnFalse($"exception: {ex.Message}");
+        }
+
     }
 }
 
