@@ -27,11 +27,11 @@ public partial class BlockRenderer(BlockRenderer.Dependencies services)
         Generator<IRenderingHelper> RenderHelpGen,
         LazySvc<PageChangeSummary> PageChangeSummary,
         LazySvc<ILicenseService> LicenseService,
-        IModuleHtmlService ModuleHtmlService,
+        IModulesOutputService ModulesOutputService,
         CodeInfosInScope CodeInfos,
         BlockCachingHelper BlockCachingHelper)
         : DependenciesRecord(connect:
-            [EngineFactory, EnvInstGen, RenderHelpGen, PageChangeSummary, LicenseService, ModuleHtmlService, CodeInfos, BlockCachingHelper]);
+            [EngineFactory, EnvInstGen, RenderHelpGen, PageChangeSummary, LicenseService, ModulesOutputService, CodeInfos, BlockCachingHelper]);
 
     #region Constructor
 

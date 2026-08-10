@@ -7,8 +7,8 @@ namespace ToSic.Sxc.Services.OutputCache;
 // Note 2dm 2025-06 - this doesn't seem to be in use anywhere!
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class ModuleOutputCacheService(IModuleHtmlService moduleHtmlService)
-    : ServiceWithContext("Sxc.OutCac", connect: [moduleHtmlService]), IModuleOutputCacheService
+internal class ModuleOutputCacheService(IModulesOutputService modulesOutputService)
+    : ServiceWithContext("Sxc.OutCac", connect: [modulesOutputService]), IModuleOutputCacheService
 {
     [PrivateApi("internal use only, external API should not know about this.")]
     public int ModuleId
@@ -29,13 +29,13 @@ internal class ModuleOutputCacheService(IModuleHtmlService moduleHtmlService)
         if (string.IsNullOrWhiteSpace(key))
             throw new ArgumentException("Dependency key must not be empty.", nameof(key));
 
-        ((ModuleHtmlService)moduleHtmlService).AddOutputCacheDependency(ModuleId, key);
+        modulesOutputService.AddOutputCacheDependency(ModuleId, key);
         return "";
     }
 
     public string Configure(OutputCacheSettings settings)
     {
-        ((ModuleHtmlService)moduleHtmlService).ConfigureOutputCache(ModuleId, settings);
+        modulesOutputService.ConfigureOutputCache(ModuleId, settings);
         return "";
     }
 }

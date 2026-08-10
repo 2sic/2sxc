@@ -46,7 +46,7 @@ public static class StartupSxcServices
         services.TryAddTransient<IFeaturesService, FeaturesService>();  // New 13.01
 
         // V15
-        services.TryAddScoped<IModuleHtmlService, ModuleHtmlService>(); // Must be scoped & shared on the module
+        services.TryAddScoped<IModulesOutputService, ModulesOutputService>(); // Must be scoped & shared on the module
         services.TryAddTransient<ITurnOnService, TurnOnService>();
         services.TryAddTransient<ICmsService, CmsService>();
         services.TryAddTransient<CmsServiceStringWysiwyg>();

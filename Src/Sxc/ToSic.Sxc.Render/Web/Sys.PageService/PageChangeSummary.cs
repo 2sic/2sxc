@@ -21,8 +21,8 @@ namespace ToSic.Sxc.Web.Sys.PageService;
 public class PageChangeSummary(
     LazySvc<IAssetsExtractor> resourceExtractor,
     LazySvc<RequirementsService> requirements,
-    IModuleHtmlService moduleHtmlService)
-    : Services_ServiceBase(SxcLogName + "PgChSm", connect: [requirements, resourceExtractor, moduleHtmlService])
+    IModulesOutputService modulesOutputService)
+    : Services_ServiceBase(SxcLogName + "PgChSm", connect: [requirements, resourceExtractor, modulesOutputService])
 {
     /// <summary>
     /// Finalize the page and get all changes such as header modifications etc.
@@ -58,7 +58,7 @@ public class PageChangeSummary(
 
         // New beta 2025-03-18 v19.03.03
         var cacheSettings = moduleId != 0
-            ? ((ModuleHtmlService)moduleHtmlService).GetOutputCache(moduleId)
+            ? modulesOutputService.GetOutputCache(moduleId)
             : null;
 
         var csp = ((IPageServiceSharedInternal)pss).Csp;

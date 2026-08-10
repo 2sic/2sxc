@@ -35,7 +35,7 @@ partial class PageService
         // As a result, scoped services have the same instance for all 2sxc module instances across all pages during a user's browser session.
         // To prevent conflicts, we need to add the ModuleId to the ModuleService to scope its functionality to each module rendering.
         // Note: in DNN, the ModuleId will be ignored.
-        var added = moduleService.Value.AddTag(tag, moduleId: ModuleId, noDuplicates: reallyNoDuplicates);
+        var added = moduleService.Value.AddTag(moduleId: ModuleId, tag: tag, noDuplicates: reallyNoDuplicates);
 
         if (added != null)
             Listeners.AddPartialModuleTag(added, reallyNoDuplicates);
