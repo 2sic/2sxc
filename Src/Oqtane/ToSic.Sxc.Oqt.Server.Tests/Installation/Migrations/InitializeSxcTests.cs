@@ -86,23 +86,7 @@ public class InitializeSxcTests
         try
         {
             var connectionString = $"Data Source={databaseFile}";
-            var tenant = new Tenant
-            {
-                TenantId = 1,
-                DBConnectionString = "Test",
-                DBType = database.GetType().AssemblyQualifiedName
-            };
-            var configurationRoot = new ConfigurationBuilder()
-                .AddInMemoryCollection(new Dictionary<string, string?>
-                {
-                    ["ConnectionStrings:Test"] = connectionString
-                })
-                .Build();
-            var dependencies = new DBContextDependencies(
-                new TestTenantManager(tenant),
-                new HttpContextAccessor(),
-                configurationRoot);
-            using var migrationContext = new SxcDbContext(dependencies);
+            using var migrationContext = MigrationContext(connectionString);
             migrationContext.Database.Migrate();
 
             var configuration = new GlobalConfiguration();
@@ -127,20 +111,61 @@ public class InitializeSxcTests
     [InlineData("Sqlite")]
     [InlineData("PostgreSQL")]
     [InlineData("MySQL")]
-    public void Up_GeneratesSql_ForEveryOqtaneDatabase(string databaseName)
+    public void Migrations_GenerateSql_ForEveryOqtaneDatabase(string databaseName)
     {
         var (database, connectionString) = Database(databaseName);
-        var migration = new InitializeSxc(database);
+        Migration[] migrations =
+        [
+            new InitializeSxc(database),
+            //new CreateMigrationTestTable(database),
+            //new ReplaceMigrationTestTable(database),
+            //new ReplaceMigrationTest2Table(database),
+            //new DropMigrationTest3Table(database)
+        ];
         var options = new DbContextOptionsBuilder()
             .UseOqtaneDatabase(database, connectionString)
             .Options;
         using var context = new DbContext(options);
 
         var commands = context.GetService<IMigrationsSqlGenerator>()
-            .Generate(migration.UpOperations);
+            .Generate(migrations.SelectMany(migration => migration.UpOperations).ToArray());
 
         Assert.NotEmpty(commands);
     }
+
+    //[Fact]
+    //public void MigrationOperations_ReplaceTestTables_WhenAppliedIncrementally()
+    //{
+    //    var databaseFile = Path.Combine(Path.GetTempPath(), $"2sxc-{Guid.NewGuid():N}.db");
+    //    try
+    //    {
+    //        var connectionString = $"Data Source={databaseFile}";
+    //        using var context = MigrationContext(connectionString);
+    //        Assert.Equal(
+    //            [SxcMigrationIds.Initial, /*SxcMigrationIds.V21_08_01, SxcMigrationIds.V21_08_02, SxcMigrationIds.V21_08_03, SxcMigrationIds.V21_08_04*/],
+    //            context.Database.GetMigrations().ToArray());
+    //        var generator = context.GetService<IMigrationsSqlGenerator>();
+    //        using var connection = new SqliteConnection(connectionString);
+    //        connection.Open();
+
+    //        ApplyMigration(generator, new CreateMigrationTestTable(new SqliteDatabase()), connection);
+    //        Assert.Equal([MigrationTestTable.First], MigrationTestTables(connection));
+
+    //        ApplyMigration(generator, new ReplaceMigrationTestTable(new SqliteDatabase()), connection);
+    //        Assert.Equal([MigrationTestTable.Second], MigrationTestTables(connection));
+
+    //        ApplyMigration(generator, new ReplaceMigrationTest2Table(new SqliteDatabase()), connection);
+    //        Assert.Equal([MigrationTestTable.Third], MigrationTestTables(connection));
+
+    //        ApplyMigration(generator, new DropMigrationTest3Table(new SqliteDatabase()), connection);
+    //        Assert.Empty(MigrationTestTables(connection));
+    //    }
+    //    finally
+    //    {
+    //        SqliteConnection.ClearAllPools();
+    //        System.IO.File.Delete(databaseFile);
+    //    }
+    //}
 
     private static (IDatabase Database, string ConnectionString) Database(string databaseName)
         => databaseName switch
@@ -161,6 +186,49 @@ public class InitializeSxcTests
             configuration,
             new LogStoreLive(),
             new TestEavDbContextConfigurator(database));
+    }
+
+    private static SxcDbContext MigrationContext(string connectionString)
+    {
+        var database = new SqliteDatabase();
+        var tenant = new Tenant
+        {
+            TenantId = 1,
+            DBConnectionString = "Test",
+            DBType = database.GetType().AssemblyQualifiedName
+        };
+        var configurationRoot = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["ConnectionStrings:Test"] = connectionString
+            })
+            .Build();
+        var dependencies = new DBContextDependencies(
+            new TestTenantManager(tenant),
+            new HttpContextAccessor(),
+            configurationRoot);
+        return new(dependencies);
+    }
+
+    private static void ApplyMigration(IMigrationsSqlGenerator generator, Migration migration, SqliteConnection connection)
+    {
+        foreach (var migrationCommand in generator.Generate(migration.UpOperations))
+        {
+            using var command = connection.CreateCommand();
+            command.CommandText = migrationCommand.CommandText;
+            command.ExecuteNonQuery();
+        }
+    }
+
+    private static string[] MigrationTestTables(SqliteConnection connection)
+    {
+        using var command = connection.CreateCommand();
+        command.CommandText = "SELECT name FROM sqlite_master WHERE type = 'table' AND name LIKE 'TsDynDataMigrationTest%' ORDER BY name";
+        using var reader = command.ExecuteReader();
+        var tables = new List<string>();
+        while (reader.Read())
+            tables.Add(reader.GetString(0));
+        return tables.ToArray();
     }
 
     private sealed class TestEavDbContextConfigurator(IDatabase database) : IEavDbContextConfigurator
