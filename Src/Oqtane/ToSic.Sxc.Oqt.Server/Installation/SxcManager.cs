@@ -1,14 +1,18 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Oqtane.Enums;
 using Oqtane.Infrastructure;
 using Oqtane.Models;
+using Oqtane.Modules;
 using Oqtane.Repository;
 using Oqtane.Shared;
 using System.Reflection;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
+using ToSic.Sxc.Oqt.Server.Installation.Migrations;
 using File = System.IO.File;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
@@ -23,14 +27,15 @@ namespace ToSic.Sxc.Oqt.Server.Installation;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class SxcManager(
     ISqlRepository sql,
+    IDBContextDependencies dbContextDependencies,
     IServiceScopeFactory serviceScopeFactory,
     IWebHostEnvironment environment,
     //IConfigManager configManager,
-    ILogger<SxcManager> logger) : IInstallable
+    ILogger<SxcManager> logger) : MigratableModuleBase, IInstallable
 {
-    private const string CleanInstallMigrationId = "ToSic.Sxc.Install";
     private const string MigrationPrefix = "ToSic.Sxc.";
     private const string MigrationTable = "__EFMigrationsHistory";
+    private const string SqlServerProvider = "Microsoft.EntityFrameworkCore.SqlServer";
     private sealed record AssemblyCleanupRule(string AssemblyName, int? MinRuntimeMajor = null, int? MaxRuntimeMajor = null);
 
     /// <summary>
@@ -45,24 +50,23 @@ public class SxcManager(
     {
         LogInfo($"2sxc {EavSystemInfo.VersionString} install: Starting installation for version {version} on tenant '{tenant.Name}'");
 
-        // 1) Clean install
-        if (IsCleanInstall(tenant))
-        {
-            LogInfo($"2sxc {EavSystemInfo.VersionString} install: Clean install detected for tenant '{tenant.Name}'. Running '{CleanInstallMigrationId}.sql'.");
-            if (!RunCleanInstall(tenant))
-            {
-                LogError($"2sxc {EavSystemInfo.VersionString} install ERROR: Clean install script '{CleanInstallMigrationId}.sql' failed for tenant '{tenant.Name}'.");
-                return false;
-            }
-
-            LogInfo($"2sxc {EavSystemInfo.VersionString} install: Clean install completed successfully for tenant '{tenant.Name}'.");
-            return true;
-        }
-
-        // 2) Version-specific upgrade hooks (non-SQL changes)
+        // 1) Version-specific upgrade hooks (non-SQL changes)
         ApplyVersionUpgrade(tenant, version);
 
-        // 3) SQL migration per version (.sql embedded resource)
+        // 2) Oqtane's provider-aware EF migration handles every new installation and future migrations.
+        using var dbContext = CreateMigrationContext();
+        var initialMigrationApplied = dbContext.Database
+            .GetAppliedMigrations()
+            .Contains(SxcMigrationIds.Initial);
+        if (initialMigrationApplied
+            || dbContext.ActiveDatabase.Provider != SqlServerProvider
+            || !HasLegacySxcDb(tenant))
+        {
+            LogInfo($"2sxc {EavSystemInfo.VersionString} install: Running provider-aware migrations on '{dbContext.ActiveDatabase.FriendlyName}'.");
+            return Migrate(CreateMigrationContext(), tenant, MigrationType.Up);
+        }
+
+        // 3) Existing SQL Server installations retain their immutable legacy upgrade scripts.
         var migrationId = BuildMigrationId(version);
         return ApplyMigrationIfNeeded(tenant, migrationId);
     }
@@ -73,7 +77,18 @@ public class SxcManager(
     /// <param name="tenant">The tenant to uninstall 2sxc from.</param>
     /// <returns><c>true</c> when the uninstall script succeeds; otherwise <c>false</c>.</returns>
     public bool Uninstall(Tenant tenant)
-        => sql.ExecuteScript(tenant, GetType().Assembly, "ToSic.Sxc.Uninstall.sql");
+    {
+        using var dbContext = CreateMigrationContext();
+        var providerAwareInstall = dbContext.Database
+            .GetAppliedMigrations()
+            .Contains(SxcMigrationIds.Initial);
+        if (providerAwareInstall)
+            return Migrate(CreateMigrationContext(), tenant, MigrationType.Down);
+
+        return dbContext.ActiveDatabase.Provider == SqlServerProvider
+            ? sql.ExecuteScript(tenant, GetType().Assembly, "ToSic.Sxc.Uninstall.sql")
+            : true;
+    }
 
     /// <summary>
     /// Applies non-SQL upgrade logic for known versions.
@@ -521,20 +536,14 @@ public class SxcManager(
     /// </summary>
     /// <param name="tenant">The tenant to inspect.</param>
     /// <returns><c>true</c> if 2sxc data exists; otherwise <c>false</c>.</returns>
-    private bool IsCleanInstall(Tenant tenant)
+    private bool HasLegacySxcDb(Tenant tenant)
     {
         var exists = Exists(sql, tenant, HasSxcDb);
-        LogInfo($"2sxc {EavSystemInfo.VersionString} install: Clean install status: {!exists}");
-        return !exists;
+        LogInfo($"2sxc {EavSystemInfo.VersionString} install: Legacy SQL Server database detected: {exists}");
+        return exists;
     }
 
-    /// <summary>
-    /// Runs the clean-install SQL script for the tenant.
-    /// </summary>
-    /// <param name="tenant">The tenant to initialize.</param>
-    /// <returns><c>true</c> when the clean install script succeeds; otherwise <c>false</c>.</returns>
-    private bool RunCleanInstall(Tenant tenant)
-        => sql.ExecuteScript(tenant, GetType().Assembly, $"{CleanInstallMigrationId}.sql");
+    private SxcDbContext CreateMigrationContext() => new(dbContextDependencies);
 
     /// <summary>
     /// Executes a select query and returns whether at least one row exists.

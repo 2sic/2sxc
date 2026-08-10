@@ -242,9 +242,9 @@ public class AppCodeLoader(
         //l.A($"{nameof(physicalPath)}: '{physicalPath}'");
         var relativePath = Path.Combine(appPaths.RelativePath, folderWithEdition);
         //l.A($"{nameof(relativePath)}: '{relativePath}'");
-        var physicalPathShared = Path.Combine(appPaths.PhysicalPathShared.Backslash(), folderWithEdition);
+        var physicalPathShared = Path.Combine(appPaths.PhysicalPathShared, folderWithEdition);
         //l.A($"{nameof(physicalPath)}: '{physicalPath}'");
-        var relativePathShared = Path.Combine(appPaths.RelativePathShared.Backslash(), folderWithEdition);
+        var relativePathShared = Path.Combine(appPaths.RelativePathShared, folderWithEdition);
         return l.ReturnAsOk((physicalPath, relativePath, physicalPathShared, relativePathShared));
     }
 

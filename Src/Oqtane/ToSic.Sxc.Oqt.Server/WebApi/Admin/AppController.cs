@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Eav.DataSources.Sys;
+using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
@@ -80,6 +82,13 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
     public IActionResult Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite, bool assetAdamDeleted = true) 
         => Real.Export(new(zoneId, appId, includeContentGroups, resetAppGuid, assetsAdam, assetsSite, assetAdamDeleted))
             .ToHttpResponse();
+
+    /// <inheritdoc />
+    [HttpGet]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = RoleNames.Admin)]
+    public PathCasePreflightResult PathCasePreflight(int zoneId, int appId)
+        => Real.PathCasePreflight(zoneId, appId);
 
 
     /// <inheritdoc />

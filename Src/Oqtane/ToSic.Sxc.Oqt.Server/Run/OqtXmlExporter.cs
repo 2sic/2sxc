@@ -94,7 +94,7 @@ internal class OqtXmlExporter(
             Path = null
         };
 
-        var relativePath = Path.Combine(file?.Folder.Path.Backslash(), file?.Name);
+        var relativePath = Path.Combine(file?.Folder.Path, file?.Name);
         var alias = oqtTenantResolverLazy.Value.GetAlias();
         var path = fileHelper.Value.GetFilePath(hostingEnvironment.ContentRootPath, alias, relativePath);
 

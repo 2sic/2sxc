@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using ToSic.Eav.DataSources.Sys;
+using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Eav.WebApi.Sys.Dto;
 using ToSic.Eav.WebApi.Sys.ImportExport;
@@ -85,6 +86,14 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     public HttpResponseMessage Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite, bool assetAdamDeleted = true)
         => Real.Export(new(zoneId, appId, includeContentGroups, resetAppGuid, assetsAdam, assetsSite, assetAdamDeleted))
             .ToHttpResponse();
+
+    /// <inheritdoc />
+    [HttpGet]
+    [ValidateAntiForgeryToken]
+    [SupportedModules(DnnSupportedModuleNames)]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    public PathCasePreflightResult PathCasePreflight(int zoneId, int appId)
+        => Real.PathCasePreflight(zoneId, appId);
 
 
     /// <inheritdoc />

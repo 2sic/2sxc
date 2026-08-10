@@ -81,8 +81,8 @@ internal class ExtensionInstallHelper(ReadOnlyFileHelper readOnlyHelper, ILog? p
     {
         var l = Log.Fn<ValidationResult>($"copy:'{folderName}'");
 
-        var sourceRootFull = EnsureTrailingBackslash(Path.GetFullPath(sourceRoot));
-        var targetRootFull = EnsureTrailingBackslash(Path.GetFullPath(targetRoot));
+        var sourceRootFull = EnsureTrailingSeparator(Path.GetFullPath(sourceRoot));
+        var targetRootFull = EnsureTrailingSeparator(Path.GetFullPath(targetRoot));
 
         var sources = new[]
         {
@@ -104,8 +104,8 @@ internal class ExtensionInstallHelper(ReadOnlyFileHelper readOnlyHelper, ILog? p
                 if (!isLockFile && !allowedFiles.Contains(rel))
                     continue;
 
-                var destinationPath = Path.GetFullPath(Path.Combine(targetRoot, rel.Backslash()));
-                if (!destinationPath.StartsWith(targetRootFull, StringComparison.OrdinalIgnoreCase))
+                var destinationPath = Path.GetFullPath(Path.Combine(targetRoot, rel.ToSystemPath()));
+                if (!destinationPath.StartsWith(targetRootFull, FileSystemPathComparison))
                     return l.ReturnAsError(new(false, $"illegal destination path:'{rel}'"));
 
                 // Preserve exact package paths when possible, but reject impossible Windows paths

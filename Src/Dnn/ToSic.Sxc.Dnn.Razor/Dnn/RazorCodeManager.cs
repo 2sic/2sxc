@@ -61,9 +61,8 @@ internal class RazorCodeManager(RazorComponentBase parent, ILog parentLog) : Hel
     private bool TryToBuildCode(DnnRazorGetCodeHelper rzrGetCodeHlp)
     {
         var l = Log.Fn<bool>();
-        if (BuildComplete)
-            return l.Return(true);
-        var codeFile = Parent.VirtualPath.Replace(".cshtml", ".code.cshtml").Backslash().AfterLast("\\");
+        if (BuildComplete) return l.Return(true);
+        var codeFile = Parent.VirtualPath.Replace(".cshtml", ".code.cshtml").ToSystemPath().AfterLast(Path.DirectorySeparatorChar.ToString());
         l.A($"Will try to load code from '{codeFile}");
         try
         {

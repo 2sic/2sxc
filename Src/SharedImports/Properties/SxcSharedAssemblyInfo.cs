@@ -28,5 +28,5 @@ internal static class SxcSharedAssemblyInfo
     public const string AssemblyVersion = "21.08.00";
     public const string Company = "2sic internet solutions GmbH, Switzerland";
     public const string SxcProduct = "2sxc CMS- and Meta-Module for Dnn and Oqtane";
-    public const string SxcCopyright = "Copyright MIT © 2sic 2025";
+    public const string SxcCopyright = "Copyright MIT © 2sic 2026";
 }

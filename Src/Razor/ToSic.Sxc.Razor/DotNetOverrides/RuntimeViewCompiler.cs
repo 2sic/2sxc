@@ -366,7 +366,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
         if (!_sourceAnalyzer.TypeOfVirtualPath(relativePath).IsHotBuildSupported()) return;
 
         // if AppCode folder exists, related to relativePath, watch it
-        var appCodeRelativePath = AppCodeRelativePathIfExists(relativePath.Backslash());
+        var appCodeRelativePath = AppCodeRelativePathIfExists(relativePath.ToSystemPath());
         if (appCodeRelativePath != null)
             expirationTokens.Add(_fileProvider.Watch($"{appCodeRelativePath.ForwardSlash().PrefixSlash().SuffixSlash()}**/*.cs"));
     }
@@ -381,11 +381,12 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
         if (!appRelativePath.HasValue())
             return l.Return("", $"{nameof(appRelativePath)} is empty");
 
-        if (edition.HasValue() && Directory.Exists(Path.Combine(_env.ContentRootPath, appRelativePath.Backslash(), edition, FolderConstants.AppCodeFolder)))
-            return l.ReturnAndLog(Path.Combine(appRelativePath.Backslash(), edition, FolderConstants.AppCodeFolder));
+        var physicalAppPath = appRelativePath.ToSystemPath();
+        if (edition.HasValue() && Directory.Exists(Path.Combine(_env.ContentRootPath, physicalAppPath, edition, FolderConstants.AppCodeFolder)))
+            return l.ReturnAndLog(Path.Combine(physicalAppPath, edition, FolderConstants.AppCodeFolder));
 
-        return l.ReturnAndLog((Directory.Exists(Path.Combine(_env.ContentRootPath, appRelativePath.Backslash(), FolderConstants.AppCodeFolder))
-            ? Path.Combine(appRelativePath.Backslash(), FolderConstants.AppCodeFolder)
+        return l.ReturnAndLog((Directory.Exists(Path.Combine(_env.ContentRootPath, physicalAppPath, FolderConstants.AppCodeFolder))
+            ? Path.Combine(physicalAppPath, FolderConstants.AppCodeFolder)
             : ""));
     }
 
@@ -633,7 +634,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
             ? Path.Combine(appPath.AppRelativePath, appPath.Edition)
             : appPath.AppRelativePath;
 
-        return resolverKey.Backslash();
+        return resolverKey.ToSystemPath();
     }
 
     private static string Describe(CodeFileInfo codeFileInfo)

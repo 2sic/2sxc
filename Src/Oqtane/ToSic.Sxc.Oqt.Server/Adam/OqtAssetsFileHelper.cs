@@ -4,6 +4,7 @@ using Oqtane.Shared;
 using System.Text.RegularExpressions;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sys.Utils;
 using File = System.IO.File;
 
 namespace ToSic.Sxc.Oqt.Server.Adam;
@@ -80,11 +81,11 @@ public class OqtAssetsFileHelper(OqtSiteGroup siteGroup = null) : ServiceBase(Oq
         return !string.IsNullOrEmpty(extension) && RiskyDetector.IsMatch(extension);
     }
 
-    // Path.GetDirectoryName gives the parent path; split it to catch nested
-    // protected folders such as .data regardless of slash direction.
+    // Split explicitly to catch protected folders such as .data regardless of slash direction or host OS.
     private static bool HasHiddenFolderSegment(string filePath)
-        => (Path.GetDirectoryName(filePath) ?? string.Empty)
-            .Split([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries)
+        => filePath
+            .Split(['/', '\\'], StringSplitOptions.RemoveEmptyEntries)
+            .SkipLast(1)
             .Any(StartsWithDot);
 
     private static bool StartsWithDot(string value)
@@ -106,6 +107,6 @@ public class OqtAssetsFileHelper(OqtSiteGroup siteGroup = null) : ServiceBase(Oq
         => BuildPhysicalPath(contentRootPath, string.Format(OqtConstants.AppRootTenantSiteBase, alias.TenantId, OqtConstants.SharedAppFolder), appName, filePath);
 
     private static string BuildPhysicalPath(params string[] segments)
-        => Path.GetFullPath(Path.Combine(segments));
+        => Path.GetFullPath(Path.Combine(segments).ToSystemPath());
 
 }

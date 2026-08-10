@@ -104,5 +104,5 @@ public class AssemblyResolver : ServiceBase, ILogShouldNeverConnect
     }
 
     private static string NormalizeAppRelativePath(string appRelativePath)
-        => appRelativePath.Backslash().Trim().TrimStart('\\');
+        => appRelativePath.ToSystemPath().Trim().TrimStart(Path.DirectorySeparatorChar);
 }

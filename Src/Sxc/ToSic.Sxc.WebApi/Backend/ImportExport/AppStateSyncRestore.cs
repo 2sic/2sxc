@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Data.Processing;
 using ToSic.Eav.ImportExport.Integration;
+using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys.ImportHelpers;
 using ToSic.Eav.ImportExport.Sys.XmlImport;
 using ToSic.Eav.ImportExport.Sys.Zip;
@@ -68,6 +69,24 @@ public class AppStateSyncRestore(
             return new(result);
         }
 
+        var allowSystemChanges = user.IsSystemAdmin;
+        var xmlImport = xmlImportWithFilesLazy.Value.Init(parameters.DefaultLanguage, allowSystemChanges);
+        var imp = new ImportXmlReader(filePath, xmlImport, l);
+
+        // Informational only: a failed audit must never prevent resetting from the source-control export.
+        try
+        {
+            var validator = new PathCasePreflightValidator(l);
+            // Reset uses the pending-app layout: app files at the root and saved shared/site files under App_Data.
+            var preflight = validator.ValidateImportPackage(appPaths.PhysicalPath, imp.XmlDoc, pendingApp: true);
+            _ = validator.LogResult(preflight);
+        }
+        catch (Exception e)
+        {
+            l.W("Path case preflight failed; reset will continue");
+            l.Ex(e);
+        }
+
         // 2. Now we can delete the app before we prepare the import
         var zoneId = parameters.ZoneId;
         var appId = parameters.AppId;
@@ -92,9 +111,6 @@ public class AppStateSyncRestore(
         }
 
         // 4. Now import the App.xml
-        var allowSystemChanges = user.IsSystemAdmin;
-        var xmlImport = xmlImportWithFilesLazy.Value.Init(parameters.DefaultLanguage, allowSystemChanges);
-        var imp = new ImportXmlReader(filePath, xmlImport, Log);
         result.Success = xmlImport.ImportXml(zoneId, appId, parentAppId: null /* not sure if we never have a parent here */, imp.XmlDoc);
         result.Messages.AddRange(xmlImport.Messages);
         return new(l.Return(result));

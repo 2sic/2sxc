@@ -149,7 +149,7 @@ public class AssetEditor(
     // check if the folder already exists, or create it...
     private static void EnsureFolders(string absolutePath)
     {
-        var foundFolder = absolutePath.LastIndexOf("\\", StringComparison.InvariantCulture);
+        var foundFolder = absolutePath.LastIndexOf(Path.DirectorySeparatorChar.ToString(), StringComparison.InvariantCulture);
         if (foundFolder > -1)
         {
             var folderPath = absolutePath.Substring(0, foundFolder);

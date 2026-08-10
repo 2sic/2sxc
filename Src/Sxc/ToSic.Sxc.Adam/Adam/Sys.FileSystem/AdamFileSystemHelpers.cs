@@ -8,7 +8,7 @@ public class AdamFileSystemHelpers(IAdamPaths adamPaths) : ServiceBase("Sxc.AdmF
 {
     public string EnsurePhysicalPath(string path)
     {
-        path = path.Backslash();
+        path = path.ToSystemPath();
         return path.StartsWith("adam", StringComparison.CurrentCultureIgnoreCase)
             ? adamPaths.PhysicalPath(path)
             : path;
@@ -56,9 +56,8 @@ public class AdamFileSystemHelpers(IAdamPaths adamPaths) : ServiceBase("Sxc.AdmF
 
     private static string FindParentPath(string path)
     {
-        var cleanedPath = path.Backslash().TrimEnd('\\');
-        var lastSlash = cleanedPath.LastIndexOf('\\');
-        return lastSlash == -1 ? "" : cleanedPath.Substring(0, lastSlash);
+        var cleanedPath = path.ToSystemPath().TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        return Path.GetDirectoryName(cleanedPath) ?? string.Empty;
     }
 
 }

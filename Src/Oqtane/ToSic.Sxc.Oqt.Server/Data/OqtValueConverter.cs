@@ -69,8 +69,9 @@ internal class OqtValueConverter(
     /// <returns></returns>
     private string TryToResolveOneLinkToInternalOqtCode(string potentialFilePath)
     {
-        // Try to find the Folder
-        var pathAsFolder = potentialFilePath.Backslash();
+        // Try to find the Folder,
+        // It won’t break. On Windows, / is Path.AltDirectorySeparatorChar; on Linux/macOS, / is native.
+        var pathAsFolder = potentialFilePath.ForwardSlash();
         var folderPath = Path.GetDirectoryName(pathAsFolder);
         var folder = FolderRepository.Value.GetFolder(Alias.SiteId, folderPath.EnsureOqtaneFolderFormat());
         if (folder != null)

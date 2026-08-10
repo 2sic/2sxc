@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Microsoft.EntityFrameworkCore;
 using Oqtane.Models;
 using Oqtane.Repository;
 using ToSic.Eav.Environment.Sys.ServerPaths;
@@ -238,12 +238,9 @@ internal class OqtImportExportEnvironment(
             var newFolder = CreateVirtualFolder(parentFolder, path, subfolder);
             return l.ReturnAsOk(newFolder);
         }
-        catch (SqlException)
+        catch (DbUpdateException)
         {
-            // don't do anything - this happens when multiple processes try to add the folder at the same time
-            // like when two fields in a dialog cause the web-api to create the folders in parallel calls
-            // see also https://github.com/2sic/2sxc/issues/811
-            Log.A("error in SQL, probably folder already exists");
+            Log.A("error in EF, probably folder already exists");
         }
         catch (NullReferenceException)
         {

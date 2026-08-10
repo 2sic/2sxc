@@ -57,6 +57,17 @@ public class OqtAssetsFileHelperTests : IDisposable
         Equal(primaryFilePath, result);
     }
 
+    [Fact]
+    public void GetFilePath_RejectsHiddenFolder_WithMixedSeparators()
+    {
+        var sut = new OqtAssetsFileHelper();
+        var alias = new OqtAlias { TenantId = 1, SiteId = 2 };
+
+        var result = sut.GetFilePath(_contentRoot, alias, OqtAssetsFileHelper.RouteAssets, "Blog", @"images\.private/logo.png");
+
+        Empty(result);
+    }
+
     public void Dispose()
     {
         if (Directory.Exists(_contentRoot))
