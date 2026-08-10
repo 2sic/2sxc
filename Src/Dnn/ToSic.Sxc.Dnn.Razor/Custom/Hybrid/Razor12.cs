@@ -3,7 +3,7 @@ using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
-using ToSic.Sxc.Dnn.Razor;
+using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.Help;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -21,11 +21,11 @@ public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHe
 {
     internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
 
-    /// <inheritdoc cref="DnnRazorHelper.RenderPageNotSupported"/>
+    /// <inheritdoc cref="DnnRazorDisabledHelper.RenderPageNotSupported"/>
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public override HelperResult RenderPage(string path, params object[] data) 
-        => RzrHlp.RenderPageNotSupported();
+        => DnnRazorDisabledHelper.RenderPageNotSupported();
 
     #region Core Properties which should appear in docs
 

@@ -41,9 +41,11 @@ public abstract class Razor12<TModel>() : OqtRazorBase<TModel>(CompatibilityLeve
         set;
     }
 
+    // #DropOqtaneGetCodeV22
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
     public dynamic? CreateInstance(string virtualPath, NoParamOrder npo = default, string? name = null, string? relativePath = null, bool throwOnError = true)
-        => RzrHlp.CreateInstance(virtualPath, npo, name, relativePath, throwOnError);
+        //=> RzrHlp.CreateInstance(virtualPath, npo, name, relativePath, throwOnError);
+        => throw new NotSupportedException("CreateInstance() is not supported any more in Oqtane. Use AppCode instead.");
 
     #endregion
 

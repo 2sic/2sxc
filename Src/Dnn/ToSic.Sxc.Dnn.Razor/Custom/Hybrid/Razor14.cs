@@ -2,7 +2,7 @@
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
-using ToSic.Sxc.Dnn.Razor;
+using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.Help;
 
@@ -22,11 +22,11 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
 {
     internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
 
-    /// <inheritdoc cref="DnnRazorHelper.RenderPageNotSupported"/>
+    /// <inheritdoc cref="DnnRazorDisabledHelper.RenderPageNotSupported"/>
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public override HelperResult RenderPage(string path, params object[] data)
-        => RzrHlp.RenderPageNotSupported();
+        => DnnRazorDisabledHelper.RenderPageNotSupported();
 
 
     [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;

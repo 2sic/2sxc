@@ -99,31 +99,33 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
 
     #endregion
 
-    #region GetCode / Create Instance
+    // #DropOqtaneGetCodeV22
+    
+    //#region GetCode / Create Instance
 
-    protected override string GetCodeNormalizePath(string virtualPath)
-    {
-        var directory = Path.GetDirectoryName(owner.Path)
-                        ?? throw new("Current directory seems to be null");
-        return Path.Combine(directory, virtualPath);
-    }
+    //protected override string GetCodeNormalizePath(string virtualPath)
+    //{
+    //    var directory = Path.GetDirectoryName(owner.Path)
+    //                    ?? throw new("Current directory seems to be null");
+    //    return Path.Combine(directory, virtualPath);
+    //}
 
-    /// <summary>
-    /// Cshtml CreateInstance - just throw error, as not supported in Oqtane
-    /// </summary>
-    /// <exception cref="NotSupportedException"></exception>
-    protected override object GetCodeCshtml(string path) =>
-        throw new NotSupportedException(
-            "CreateInstance with .cshtml files is not supported in Oqtane. Use a .cs file instead.");
+    ///// <summary>
+    ///// Cshtml CreateInstance - just throw error, as not supported in Oqtane
+    ///// </summary>
+    ///// <exception cref="NotSupportedException"></exception>
+    //protected override object GetCodeCshtml(string path) =>
+    //    throw new NotSupportedException(
+    //        "CreateInstance with .cshtml files is not supported in Oqtane. Use a .cs file instead.");
 
 
-    protected override string GetCodeFullPathForExistsCheck(string path)
-    {
-        var l = Log.Fn<string>(path);
-        var pathFinder = ExCtx.GetService<IServerPaths>();
-        var fullPath = pathFinder.FullAppPath(path);
-        return l.ReturnAndLog(fullPath);
-    }
+    //protected override string GetCodeFullPathForExistsCheck(string path)
+    //{
+    //    var l = Log.Fn<string>(path);
+    //    var pathFinder = ExCtx.GetService<IServerPaths>();
+    //    var fullPath = pathFinder.FullAppPath(path);
+    //    return l.ReturnAndLog(fullPath);
+    //}
 
-    #endregion
+    //#endregion
 }
