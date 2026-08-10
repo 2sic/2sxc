@@ -14,17 +14,14 @@ namespace ToSic.Sxc.Dnn.Web;
 internal class DnnClientResources(DnnJsApiHeader dnnJsApiHeader, DnnRequirements dnnRequirements)
     : ServiceBase($"{DnnConstants.LogName}.JsCss", connect: [dnnJsApiHeader, dnnRequirements])
 {
-    // #RemovedV20 #OldDnnAutoJQuery
-    public DnnClientResources Init(Page page, /*bool? forcePre1025Behavior,*/ IBlockRenderer blockRenderer)
+    public DnnClientResources Init(Page page, IBlockRenderer blockRenderer)
     {
-        //_forcePre1025Behavior = forcePre1025Behavior;
         _page = page;
         _blockRenderer = blockRenderer;
         return this;
     }
     private IBlockRenderer _blockRenderer;
     private Page _page;
-    //private bool? _forcePre1025Behavior;
 
     internal IList<IPageFeature> Features => field ??= _blockRenderer?.Run(true, specs: new())?.Features ?? new List<IPageFeature>();
 
@@ -57,32 +54,6 @@ internal class DnnClientResources(DnnJsApiHeader dnnJsApiHeader, DnnRequirements
 
         return l.ReturnAsOk(features);
     }
-
-
-    // #RemovedV20 #OldDnnAutoJQuery
-    ///// <summary>
-    ///// new in 10.25 - by default jQuery isn't loaded any more
-    ///// but older razor templates might still expect it
-    ///// and any other old behaviour, incl. no-view defined, etc. should activate compatibility
-    ///// </summary>
-    //public void EnforcePre1025Behavior()
-    //{
-    //    var l = Log.Fn("Activate Anti-Forgery for compatibility with old behavior");
-    //    ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
-    //    MustAddHeaders = true;
-    //    l.Done();
-    //}
-
-    // #RemovedV20 #OldDnnAutoJQuery
-    ///// <summary>
-    ///// new in 10.25 - by default now jQuery isn't loaded!
-    ///// but any old behaviour, incl. no-view defined, etc. should activate compatibility
-    ///// </summary>
-    ///// <returns></returns>
-    //public bool NeedsPre1025Behavior() => _forcePre1025Behavior
-    //                                      ?? (dnnRequirements.RequirementsMet() ? (_blockBuilder?.GetEngine() as IEngineDnnOldCompatibility)?.OldAutoLoadJQueryAndRvt : null)
-    //                                      ?? true;
-
 
     public void RegisterClientDependencies(Page page, bool readJs, bool editJs, bool editCss, IList<IPageFeature> overrideFeatures = null)
     {

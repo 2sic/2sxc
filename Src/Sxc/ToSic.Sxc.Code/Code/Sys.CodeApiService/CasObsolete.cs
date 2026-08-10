@@ -32,7 +32,7 @@ public class CodeApiServiceObsolete(IExecutionContext dynCode)
                 Attach = links,
             };
             if (links != null)
-                return dataSources.DataSources.Value.Create(type: type!, /*attach: links,*/ options: cnf2Wip);
+                return dataSources.DataSources.Value.Create(type: type!, options: cnf2Wip);
 
             var initialSource = dataSources.DataSources.Value.CreateDefault(new DataSourceOptions
             {
@@ -40,7 +40,7 @@ public class CodeApiServiceObsolete(IExecutionContext dynCode)
                 LookUp = dataSources.LookUpEngine,
             });
             return typeName != ""
-                ? dataSources.DataSources.Value.Create(type: type!, /*attach: initialSource,*/ options: cnf2Wip with { Attach = initialSource })
+                ? dataSources.DataSources.Value.Create(type: type!, options: cnf2Wip with { Attach = initialSource })
                 : initialSource;
         }
         catch (Exception ex)
@@ -54,58 +54,6 @@ public class CodeApiServiceObsolete(IExecutionContext dynCode)
         }
     }
 
-
-    // #RemovedV20 #Element
-    //#pragma warning disable 618
-    //[PrivateApi]
-    //[Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in 2sxc v10")]
-    //[field: AllowNull, MaybeNull]
-    //public List<Element> ElementList => field ??= TryToBuildElementList();
-
-    //[field: AllowNull, MaybeNull]
-    //private ICodeDataFactory Cdf => field ??= dynCode.GetCdf();
-
-    // #RemovedV20 #Element
-    ///// <remarks>
-    ///// This must be lazy-loaded, otherwise initializing the AppAndDataHelper will break when the Data-object fails 
-    ///// - this would break API even though the List etc. are never accessed
-    ///// </remarks>
-    //private List<Element> TryToBuildElementList()
-    //{
-    //    dynCode.Log.A("try to build old List");
-
-    //    var block = dynCode.GetBlock();
-    //    if (!block.DataIsReady || !block.ViewIsReady)
-    //        return [];
-
-    //    var data = dynCode.GetState<IDataSource>();
-    //    if (data == null! /* paranoid */ || !data.Out.ContainsKey(DataSourceConstants.StreamDefaultName))
-    //        return [];
-
-    //    var entities = data.List.ToList();
-
-    //    return entities.Select(GetElementFromEntity).ToList();
-
-    //    Element GetElementFromEntity(IEntity e)
-    //    {
-    //        var el = new Element
-    //        {
-    //            EntityId = e.EntityId,
-    //            Content = Cdf.CodeAsDyn(e)
-    //        };
-
-    //        var editDecorator = e.GetDecorator<EntityInBlockDecorator>();
-
-    //        if (editDecorator != null)
-    //        {
-    //            el.Presentation = editDecorator.Presentation == null ? null : Cdf.CodeAsDyn(editDecorator.Presentation);
-    //            el.SortOrder = editDecorator.SortOrder;
-    //        }
-
-    //        return el;
-    //    }
-    //}
-    //#pragma warning restore 618
 
 }
 

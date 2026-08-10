@@ -86,9 +86,6 @@ public partial class View : PortalModuleBase, IActionable
             // todo: this should be dynamic at some future time, because normally once it's been checked, it wouldn't need checking again
             var checkPortalIsReady = true;
 
-            // #RemovedV20 #OldDnnAutoJQuery
-            //bool? requiresPre1025Behavior = null; // null = auto-detect, true/false
-
             // get the block early, to see any errors separately - before accessing cache (which also uses the block)
             var block = TryCatchAndLogToDnn(() => Block);
 
@@ -97,11 +94,7 @@ public partial class View : PortalModuleBase, IActionable
             try
             {
                 if (OutputCache.Existing != null)
-                {
                     checkPortalIsReady = false;
-                    // #RemovedV20 #OldDnnAutoJQuery
-                    //requiresPre1025Behavior = OutputCache.Existing.EnforcePre1025;
-                }
             }
             catch
             {
@@ -122,14 +115,8 @@ public partial class View : PortalModuleBase, IActionable
                     if (!DnnReadyCheckTurbo.QuickCheckSiteAndAppFoldersAreReady(this, Log))
                         GetService<DnnReadyCheckTurbo>().EnsureSiteAndAppFoldersAreReady(this, block);
 
-                // #RemovedV20 #OldDnnAutoJQuery
-                // var blockBuilder = requiresPre1025Behavior == false ? null : BlockBuilder;
-                _dnnClientResources = GetService<DnnClientResources>().Init(Page, /*null,*/ null /*blockBuilder*/);
+                _dnnClientResources = GetService<DnnClientResources>().Init(Page, null);
 
-                // #RemovedV20 #OldDnnAutoJQuery
-                //_enforcePre1025JQueryLoading = requiresPre1025Behavior ?? _dnnClientResources.NeedsPre1025Behavior();
-                //if (_enforcePre1025JQueryLoading)
-                //    _dnnClientResources.EnforcePre1025Behavior();
                 return true;
             });
             l.Done();
@@ -137,9 +124,7 @@ public partial class View : PortalModuleBase, IActionable
     }
 
     private DnnClientResources _dnnClientResources;
-    //private bool _enforcePre1025JQueryLoading;
-
-
+    
     /// <summary>
     /// Process View if a Template has been set
     /// </summary>
@@ -167,7 +152,7 @@ public partial class View : PortalModuleBase, IActionable
                     // Try to build the html and everything
                     renderResult = cachedResult;
 
-                    var useLightspeed = OutputCache.IsEnabled; // ?? false;
+                    var useLightspeed = OutputCache.IsEnabled;
                     finalMessage = !useLightspeed ? "" : cacheHit ? "⚡⚡" : "⚡⏳";
 
                     // Generate Render Result if not already provided by cache
@@ -202,8 +187,7 @@ public partial class View : PortalModuleBase, IActionable
                     // Do not save cache hits again. Cached entries may already carry compressed HTML,
                     // so saving them again would just trigger another decompress/recompress cycle.
                     if (!cacheHit)
-                        // #RemovedV20 #OldDnnAutoJQuery
-                        OutputCache.Save(renderResult/*, _enforcePre1025JQueryLoading*/);
+                        OutputCache.Save(renderResult);
                     lLightSpeed.Done();
 
                     return true; // dummy result for TryCatchAndLogToDnn

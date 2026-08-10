@@ -13,9 +13,4 @@ public interface IOutputCache: IHasLog
     OutputCacheItem? Existing { get; }
 
     bool Save(IRenderResult data);
-
-    // #RemovedV20 #OldDnnAutoJQuery
-    //#if NETFRAMEWORK
-    //    bool Save(IRenderResult data, bool enforcePre1025);
-    //#endif
 }

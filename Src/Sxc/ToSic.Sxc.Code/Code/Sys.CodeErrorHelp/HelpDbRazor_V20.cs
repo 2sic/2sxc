@@ -12,7 +12,7 @@ partial class HelpDbRazor
     [
 
         // New v20 - detect usage of `PrimaryValue(name, languages, resolveHyperlinks: bool)` which does not exist anymore
-        new CodeHelp
+        new()
         {
             Name = "Detect use of old PrimaryValue / PrimaryValue<T>",
             // Full error is something like: "error CS1061: 'IEntity' does not contain a definition for 'PrimaryValue' and no accessible extension method 'PrimaryValue' accepting a first argument of type 'IEntity' could be found (are you missing a using directive or an assembly reference?) at System.Web.Compilation.AssemblyBuilder.Compile()"
@@ -22,7 +22,7 @@ partial class HelpDbRazor
                 "Your code seems to use an old 'PrimaryValue(...) method to get values. This has is removed in v20. Please use 'Get(...)' instead.",
         },
 
-        new CodeHelp
+        new()
         {
             Name = "Detect use of old Value / Value<T>",
             // Full error is something like: Error: Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 'ToSic.Eav.Data.EntityDecorators.Sys.EntityWithDecorator<ToSic.Sxc.Data.Internal.Decorators.EntityInBlockDecorator>' does not contain a definition for 'Value' at CallSite.Target(Closure , CallSite , Object , String ) at
@@ -32,7 +32,7 @@ partial class HelpDbRazor
                 "Your code seems to use an old 'Value(...) method to get values. This has is removed in v20. Please use 'Get(...)' instead.",
         },
 
-        new CodeHelp
+        new()
         {
             Name = "Detect use of old GetBestValue - any which stopped existing",
             // Full error is something like: "ToSic.Eav.Data.EntityDecorators.Sys.EntityWithDecorator<ToSic.Sxc.Data.Sys.Decorators.CmsEditDecorator>' does not contain a definition for 'GetBestValue' at CallSite"
@@ -43,7 +43,7 @@ partial class HelpDbRazor
         },
 
         // New v20 - detect use of using ToSic.Eav.Interfaces
-        new CodeHelp
+        new()
         {
             Name = "Using-ToSic.Eav.Interfaces",
             Detect =
@@ -52,7 +52,7 @@ partial class HelpDbRazor
                 "You are probably using the old namespace ToSic.Eav.Interfaces, which is not supported since v20. Replace \"ToSic.Eav.Interfaces\" with \"ToSic.Eav.Data\" in your code.",
             LinkCode = "ErrIEntity",
         },
-        new CodeHelp
+        new()
         {
             Name = "Using-ToSic.SexyContent.Interfaces",
             Detect =
@@ -62,7 +62,7 @@ partial class HelpDbRazor
         },
 
         // New v20 - detect usage of `IEntity` without the namespace 
-        new CodeHelp
+        new()
         {
             Name = "IEntity-Without-Namespace",
             Detect =
@@ -71,7 +71,7 @@ partial class HelpDbRazor
         },
 
         // New v20 - detect usage of `IEntityLight` - but not clear why it could think it exists, since it shouldn't - but in my tests it tried...
-        new CodeHelp
+        new()
         {
             Name = "Detect Convert to IEntityLight",
             // Full error is something like "Unable to cast object of type 'ToSic.Eav.Data.Entity' to type 'ToSic.Eav.Data.IEntityLight'."
@@ -81,7 +81,7 @@ partial class HelpDbRazor
         },
 
         // New v20 - detect usage of `IEntityLight` which should not exist in any DLLs any more
-        new CodeHelp
+        new()
         {
             Name = "Detect missing IEntityLight",
             // Full error is something like: "error CS0246: The type or namespace name 'IEntityLight' could not be found (are you missing a using directive or an assembly reference?)"
@@ -91,7 +91,7 @@ partial class HelpDbRazor
         },
 
         // New v20 - detect usage of `GetBestValue(name, languages, bool)` which does not exist anymore
-        new CodeHelp
+        new()
         {
             Name = "Detect use of old GetBestValue - without the parameter name",
             // Full error is something like: "error CS1501: No overload for method 'GetBestValue' takes 3 arguments at System.Web.Compilation.AssemblyBuilder.Compile()"
@@ -101,7 +101,7 @@ partial class HelpDbRazor
         },
 
         // New v20 - detect usage of `GetBestValue(name, languages, resolveHyperlinks: bool)` which does not exist anymore
-        new CodeHelp
+        new()
         {
             Name = "Detect use of old GetBestValue - with the parameter name",
             // Full error is something like: "error CS1739: The best overload for 'GetBestValue' does not have a parameter named 'resolveHyperlinks' at System.Web.Compilation.AssemblyBuilder.Compile()"
@@ -112,7 +112,7 @@ partial class HelpDbRazor
         },
 
 
-        new CodeHelp
+        new()
         {
             Name = "Detect use of Get<T> without using",
             // Full error is something like: "error CS0308: The non-generic method 'IEntity.Get(string)' cannot be used with type arguments"
@@ -122,7 +122,7 @@ partial class HelpDbRazor
         },
 
         // Added in v20, but for everything - detect calls to APIs without using parameter names
-        new CodeHelp
+        new()
         {
             Name = "Detect missing parameter names",
             // Full error is something like: "error CS1503: Argument 2: cannot convert from 'string' to 'ToSic.Lib.Coding.NoParamOrder' at System.Web.Compilation.AssemblyBuilder.Compile()"
@@ -145,7 +145,7 @@ partial class HelpDbRazor
         },
 
         // New v21 - removal of the mock: parameter
-        new CodeHelp
+        new()
         {
             Name = "Detect use of old GetBestValue - with the parameter name",
             // Full error is something like: "error CS1739: The best overload for 'GetBestValue' does not have a parameter named 'resolveHyperlinks' at System.Web.Compilation.AssemblyBuilder.Compile()"

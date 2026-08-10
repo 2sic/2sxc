@@ -43,11 +43,6 @@ public abstract partial class SxcApiController() :
     IHasDnn,
     ICreateInstance,
     IDynamicWebApi,
-    // #RemovedV20 #IAppAndDataHelpers
-    //IDynamicCodeBeforeV10
-    //#pragma warning disable 618
-    //    IAppAndDataHelpers,
-    //#pragma warning restore 618
     IHasCodeLog
 {
     internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
@@ -164,10 +159,6 @@ public abstract partial class SxcApiController() :
     /// </summary>
     [Obsolete("please use Header.Presentation instead")]
     public dynamic ListPresentation => CodeApi.Header?.Presentation;
-
-    // #RemovedV20 #Element
-    //[Obsolete("This is an old way used to loop things. Use Data[\"Default\"] instead. Will be removed in 2sxc v10")]
-    //public List<Element> List => new CodeApiServiceObsolete(ExCtx).ElementList;
 
     #endregion
 

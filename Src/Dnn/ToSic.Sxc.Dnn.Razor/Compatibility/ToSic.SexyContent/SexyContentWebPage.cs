@@ -208,18 +208,11 @@ public abstract class SexyContentWebPage :
                                        "To use it, change your template type to inherit from " +
                                        nameof(RazorComponent) + " see https://go.2sxc.org/RazorComponent");
 
-#pragma warning disable 618
     [Obsolete("Use Header instead")]
     public dynamic ListContent => CodeApi.Header;
 
     [Obsolete("Use Header.Presentation instead")]
     public dynamic ListPresentation => CodeApi.Header?.Presentation;
-
-    // #RemovedV20 #Element
-    //[Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in a future version")]
-    //[field: Obsolete("don't use any more")]
-    //public List<Element> List => field ??= new CodeApiServiceObsolete(ExCtx).ElementList;
-#pragma warning restore 618
 
     /// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(string, string)" />
     public dynamic AsDynamic(string json, string fallback = WrapperConstants.EmptyJson)

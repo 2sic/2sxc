@@ -47,14 +47,7 @@ internal class LightSpeed(
 
     public bool Save(IRenderResult data) => AddToLightSpeed(data);
 
-    // #RemovedV20 #OldDnnAutoJQuery
-    //#if NETFRAMEWORK
-    //    public bool Save(IRenderResult data, bool enforcePre1025)
-    //        => AddToLightSpeed(data, cacheData => cacheData.EnforcePre1025 = enforcePre1025);
-    //#endif
-
-    // #RemovedV20 #OldDnnAutoJQuery
-    public bool AddToLightSpeed(IRenderResult? data/*, Action<OutputCacheItem>? doOtherStuff = null*/)
+    public bool AddToLightSpeed(IRenderResult? data)
     {
         var l = Log.Fn<bool>(timer: true);
 
@@ -106,8 +99,6 @@ internal class LightSpeed(
                 data,
                 useCompression: features.IsEnabled(LightSpeedOutputCacheCompression.NameId)
             ));
-            // #RemovedV20 #OldDnnAutoJQuery
-            //doOtherStuff?.Invoke(cacheItem);
 
             var duration = Duration;
             // only add if we really have a duration; -1 is disabled, 0 is not set...
