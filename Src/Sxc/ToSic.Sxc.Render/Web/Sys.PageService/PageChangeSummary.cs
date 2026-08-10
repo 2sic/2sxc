@@ -68,6 +68,7 @@ public class PageChangeSummary(
             FeaturesFromResources = rest,
             Features = features,
             HeadChanges = pss.GetHeadChangesAndFlush(Log),
+            Hints = modulesOutputService.GetHintsAndFlush(moduleId),
             PageChanges = pss.GetPropertyChangesAndFlush(Log),
 
             HttpStatusCode = pss.HttpStatusCode,

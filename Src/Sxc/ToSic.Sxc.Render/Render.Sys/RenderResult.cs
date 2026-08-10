@@ -1,5 +1,6 @@
 ﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Render.Output.Sys;
 using ToSic.Sxc.Services.OutputCache;
 using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Sys.Render.PageFeatures;
@@ -105,6 +106,8 @@ public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize, 
     public List<CspParameters>? CspParameters { get; init; }
 
     public List<string>? Errors { get; init; }
+    
+    public IList<ModuleHint>? Hints { get; init; }
 
     /// <inheritdoc />
     public int AppId { get; init; }
@@ -127,6 +130,10 @@ public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize, 
                 known += new SizeEstimate(_html.Length);
             if (Errors != null)
                 known += estimator.Estimate(Errors);
+            
+            if (Hints != null)
+                known += estimator.Estimate(Hints);
+            
             return l.Return(known);
         }
         catch

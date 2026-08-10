@@ -64,4 +64,18 @@ public interface IModulesOutputService: IHasLog
     /// <param name="moduleId">The ID of the module.</param>
     /// <returns>The output cache settings, or null if none are configured.</returns>
     OutputCacheSettings? GetOutputCache(int moduleId);
+
+    /// <summary>
+    /// Add a hint to show to superusers only; in future possibly also other users.
+    /// </summary>
+    /// <param name="moduleId">The ID of the module to add the hint for.</param>
+    /// <param name="hint">The hint to add.</param>
+    void AddHint(int moduleId, ModuleHint hint);
+
+    /// <summary>
+    /// Get all hints for a module and flush them, so they won't be returned again.
+    /// </summary>
+    /// <param name="moduleId">The ID of the module to get the hints for.</param>
+    /// <returns>A read-only collection of module hints.</returns>
+    IList<ModuleHint> GetHintsAndFlush(int moduleId = default);
 }
