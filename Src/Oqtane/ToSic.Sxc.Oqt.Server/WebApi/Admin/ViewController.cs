@@ -28,12 +28,6 @@ public class ViewController : OqtStatefulControllerBase, IViewController
 
     private RealController Real => GetService<RealController>();
 
-    /// <inheritdoc />
-    [HttpGet]
-    //[SupportedModules("2sxc,2sxc-app")]
-    [ValidateAntiForgeryToken]
-    [Authorize(Roles = RoleNames.Admin)]
-    public IEnumerable<ViewDetailsDto> All(int appId) => Real.All(appId);
 
     /// <inheritdoc />
     [HttpGet, HttpDelete]
@@ -58,19 +52,6 @@ public class ViewController : OqtStatefulControllerBase, IViewController
     [Authorize(Roles = RoleNames.Admin)]
     public ImportResultDto Import(int zoneId, int appId) => Real.Import(new(Request), zoneId, appId);
 
-    /// <inheritdoc />
-    [HttpGet]
-    //[SupportedModules("2sxc,2sxc-app")]
-    [ValidateAntiForgeryToken]
-    [Authorize(Roles = RoleNames.Admin)]
-    public IEnumerable<ViewDto> Usage(int appId, Guid guid) => Real.UsagePreparations((views, blocks) =>
-    {
-        // create list with all 2sxc modules in this site
-        var allMods = _pages.Value.AllModulesWithContent(Real.SiteId);
-        Log.A($"Found {allMods.Count} modules");
-
-        return views.Select(vwb => _pages.Value.ViewDtoBuilder(vwb, blocks, allMods));
-    }).Usage(appId, guid);
 
 
 }

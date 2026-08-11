@@ -19,8 +19,5 @@ public class MetadataController() : DnnSxcControllerBase(RealController.LogSuffi
     // - Items (containing the entities)
     // - For (what the metadata is for)
 
-    [HttpGet]
-    public MetadataListDto Get(int appId, int targetType, string keyType, string key, string contentType = null)
-        => Real.Get(appId, targetType, keyType, key, contentType);
 
 }

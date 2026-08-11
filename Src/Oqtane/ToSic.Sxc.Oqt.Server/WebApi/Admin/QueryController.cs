@@ -23,13 +23,6 @@ public class QueryController() : OqtStatefulControllerBase(RealController.LogSuf
 {
     private RealController Real => GetService<RealController>();
 
-    [HttpGet]
-    public QueryDefinitionDto Get(int appId, int? id = null) =>
-        Real.Get(appId, id);
-
-    [HttpGet]
-    public IEnumerable<DataSourceDto> DataSources(int zoneId, int appId) =>
-        Real.DataSources(new(zoneId, appId));
 
     [HttpPost]
     public QueryDefinitionDto Save([FromBody] QueryDefinitionDto data, int appId, int id) =>

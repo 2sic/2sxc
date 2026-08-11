@@ -128,15 +128,6 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
         return Real.Import(new(Request, HttpContext.Current.Request), zoneId, HttpContext.Current.Request["Name"]);
     }
 
-    // Implemented by DataSource System.AppsPendingInitialization through query System.SysData.
-    
-    /// <inheritdoc />
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [SupportedModules(DnnSupportedModuleNames)]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public IEnumerable<PendingAppDto> GetPendingApps(int zoneId)
-        => Real.GetPendingApps(zoneId);
 
     /// <inheritdoc />
     [HttpPost]

@@ -34,12 +34,6 @@ public class InstallController()
     public bool Resume() => Real.Resume();
 
 
-    /// <inheritdoc />
-    [HttpGet]
-    [Authorize(Roles = RoleNames.Admin)]
-    // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public InstallAppsDto InstallSettings(bool isContentApp)
-        => Real.InstallSettings(isContentApp, CtxHlp.BlockOptional.Context.Module);
 
 
     /// <inheritdoc />

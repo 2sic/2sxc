@@ -125,12 +125,6 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
         return Real.Import(new(Request), zoneId, Request.Form["Name"]);
     }
 
-    /// <inheritdoc />
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [Authorize(Roles = RoleNames.Admin)]
-    public IEnumerable<PendingAppDto> GetPendingApps(int zoneId)
-        => Real.GetPendingApps(zoneId);
 
     /// <inheritdoc />
     [HttpPost]

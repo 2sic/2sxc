@@ -18,13 +18,6 @@ namespace ToSic.Sxc.Backend.Admin;
 public interface IViewController
 {
     /// <summary>
-    /// Get the views of this App
-    /// </summary>
-    /// <param name="appId"></param>
-    /// <returns></returns>
-    IEnumerable<ViewDetailsDto> All(int appId);
-
-    /// <summary>
     /// Delete a View
     /// </summary>
     /// <param name="appId"></param>
@@ -52,15 +45,4 @@ public interface IViewController
     /// <returns></returns>
     ImportResultDto Import(int zoneId, int appId);
 
-    /// <summary>
-    /// Get usage statistics for entities so the UI can guide the user
-    /// to find out if data is being used or if it can be safely deleted.
-    /// </summary>
-    /// <param name="appId">App ID</param>
-    /// <param name="guid">Guid of the Entity</param>
-    /// <returns></returns>
-    /// <remarks>
-    /// New in 2sxc 11.11
-    /// </remarks>
-    IEnumerable<ViewDto> Usage(int appId, Guid guid);
 }

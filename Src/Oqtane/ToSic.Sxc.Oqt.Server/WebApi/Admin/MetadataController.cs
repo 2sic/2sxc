@@ -22,8 +22,5 @@ public class MetadataController() : OqtStatefulControllerBase(RealController.Log
     private RealController Real => GetService<RealController>();
 
 
-    [HttpGet]
-    public MetadataListDto Get(int appId, int targetType, string keyType, string key, string contentType = null)
-        => Real.Get(appId, targetType, keyType, key, contentType);
 
 }

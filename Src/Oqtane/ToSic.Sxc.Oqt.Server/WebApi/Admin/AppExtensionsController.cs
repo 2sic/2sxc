@@ -21,12 +21,6 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
 {
     private RealController Real => GetService<RealController>();
 
-    /// <inheritdoc />
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [Authorize(Roles = RoleNames.Admin)]
-    public ExtensionsResultDto Extensions(int appId)
-        => Real.Extensions(appId);
 
     /// <inheritdoc />
     [HttpPost]
@@ -67,11 +61,6 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
         return Real.InstallFrom(urls, zoneId, appId, editions, overwrite);
     }
 
-    /// <inheritdoc />
-    [HttpGet]
-    [Authorize(Roles = RoleNames.Admin)]
-    public ExtensionInspectResultDto Inspect(int appId, string name, string edition = null)
-        => Real.Inspect(appId, name, edition);
 
     /// <inheritdoc />
     //[HttpPut("{name}")]

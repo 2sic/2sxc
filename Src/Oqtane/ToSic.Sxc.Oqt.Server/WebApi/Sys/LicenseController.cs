@@ -27,11 +27,6 @@ public class LicenseController() : OqtStatefulControllerBase("License"), ILicens
 
     #region License
 
-    /// <inheritdoc />
-    [HttpGet]
-    // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    [Authorize(Roles = RoleNames.Host)]
-    public IEnumerable<LicenseDto> Summary() => Real.Summary();
 
 
     /// <inheritdoc />

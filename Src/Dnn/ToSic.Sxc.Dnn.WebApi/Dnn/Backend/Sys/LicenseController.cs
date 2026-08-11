@@ -17,15 +17,6 @@ public class LicenseController() : DnnSxcControllerRoot("License"), ILicenseCont
     /// </summary>
     protected override string HistoryLogGroup => "web-api.license";
 
-    // Implemented by DataSources System.Licenses and System.FeatureStates through query System.SysData.
-    // Probably 2 streams
-    // - Licenses
-    // - FeatureStates
-
-    /// <inheritdoc />
-    [HttpGet]
-    public IEnumerable<LicenseDto> Summary()
-        => Real.Summary();
 
     /// <inheritdoc />
     [HttpPost]

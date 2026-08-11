@@ -17,13 +17,6 @@ public class HistoryController() : DnnSxcControllerBase(RealController.LogSuffix
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
-    // Implemented by DataSource System.ItemHistory through query System.SysData.
-
-    /// <inheritdoc />
-    [HttpPost]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public List<ItemHistory> Get(int appId, [FromBody] ItemIdentifier item)
-        => Real.Get(appId, item);
 
     /// <inheritdoc />
     [HttpPost]

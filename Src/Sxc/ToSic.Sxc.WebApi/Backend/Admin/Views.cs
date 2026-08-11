@@ -3,8 +3,8 @@ using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Sxc.Backend.SysData;
+using ToSic.Sxc.Backend.Usage;
 using ToSic.Sxc.Backend.Views;
-using ToSic.Sxc.Blocks.Sys.Work;
 
 namespace ToSic.Sxc.Backend.Admin;
 
@@ -25,11 +25,15 @@ public class ViewUsage : CustomDataSource
     [Configuration]
     public Guid ViewGuid => Configuration.GetThis(Guid.Empty);
 
-    public ViewUsage(Dependencies services, GenWorkPlus<WorkBlocks> blocks)
-        : base(services, "Sxc.ViewUsage", connect: [blocks])
-        => ProvideOutRaw(() => Get(blocks), options: Options);
+    public ViewUsage(Dependencies services, LazySvc<UsageBackend> usage, IViewUsageDataProvider provider, ISxcCurrentContextService context)
+        : base(services, "Sxc.ViewUsage", connect: [usage, provider, context])
+        => ProvideOutRaw(() => Get(usage, provider, context), options: Options);
 
-    private IEnumerable<IRawEntity> Get(GenWorkPlus<WorkBlocks> blocks)
-        => SysDataRaw.Many(blocks.New(blocks.CtxSvc.ContextPlus(AppId)).AllWithView().Where(b => b.View?.Guid == ViewGuid));
+    private IEnumerable<IRawEntity> Get(LazySvc<UsageBackend> usage, IViewUsageDataProvider provider, ISxcCurrentContextService context)
+        => SysDataRaw.Many(usage.Value.ViewUsage(
+            AppId,
+            ViewGuid,
+            (views, blocks) => provider.Build(views, blocks, context.GetExistingAppOrSet(AppId).Site.Id)));
+
     private static DataFactoryOptions Options() => new() { AutoId = true, TypeName = "ViewUsage", AllowUnknownValueTypes = true };
 }
