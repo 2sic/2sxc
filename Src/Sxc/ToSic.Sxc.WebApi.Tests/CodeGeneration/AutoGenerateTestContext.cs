@@ -5,7 +5,6 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Build.Sys;
 using ToSic.Eav.Data.Processing;
 using ToSic.Sxc.Code.Generate.Sys;
-using ToSic.Sxc.WebApi.Tests;
 
 namespace ToSic.Sxc.WebApi.Tests.CodeGeneration;
 

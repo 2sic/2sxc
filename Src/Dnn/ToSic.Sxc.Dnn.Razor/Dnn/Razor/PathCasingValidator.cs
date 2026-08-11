@@ -1,5 +1,4 @@
 ﻿using ToSic.Sxc.Dnn.Razor.Sys;
-using ToSic.Sys.Performance;
 
 namespace ToSic.Sxc.Dnn.Razor;
 

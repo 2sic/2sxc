@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.Render.Output.Sys;
-using ToSic.Sxc.Web.Sys.ClientAssets;
+﻿using ToSic.Sxc.Web.Sys.ClientAssets;
 
 namespace ToSic.Sxc.Web.Sys.PageServiceShared;
 

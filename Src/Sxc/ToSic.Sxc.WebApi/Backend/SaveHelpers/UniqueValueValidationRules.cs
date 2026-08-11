@@ -1,7 +1,3 @@
-using System.Globalization;
-using ToSic.Eav.Data.Build.Sys;
-using ToSic.Eav.Data.Sys;
-
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
 internal static class UniqueValueValidationRules
