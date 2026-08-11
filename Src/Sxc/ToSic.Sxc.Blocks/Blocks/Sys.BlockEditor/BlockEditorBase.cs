@@ -14,7 +14,7 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.Depe
         GenWorkPlus<WorkBlocks> AppBlocks,
         GenWorkDb<WorkBlocksMod> WorkBlocksMod,
         GenWorkDb<WorkEntityPublish> Publisher)
-        : DependenciesRecord(connect: [WorkBlocksMod, AppBlocks, Publisher]);
+        : DependenciesBase(connect: [WorkBlocksMod, AppBlocks, Publisher]);
 
     internal BlockEditorBase(Dependencies services, object[] connect) : base(services, "CG.RefMan", connect: connect)
     { }

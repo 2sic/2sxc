@@ -42,7 +42,7 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
         LazySvc<CodeCreateDataSourceSvc> DataSources,
         ICodeDataFactory Cdf,
         PolymorphConfigReader Polymorphism)
-        : DependenciesRecord(connect:
+        : DependenciesBase(connect:
             [/* never! serviceProvider */ CodeCompilerLazy, DataStackService, ConvertService, DataSources, Cdf, Polymorphism]);
 
     [PrivateApi]

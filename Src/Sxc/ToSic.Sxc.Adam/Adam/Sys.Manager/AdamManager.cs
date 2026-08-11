@@ -29,7 +29,7 @@ public class AdamManager(AdamManager.Dependencies services)
         LazySvc<IAdamFileSystem> AdamFsLazy,
         Generator<AdamStorageOfField> FieldStorageGenerator,
         AdamGenericHelper AdamGenericHelper)
-        : DependenciesRecord(connect: [CdfIfNotProvided, AdamConfiguration, AdamFsLazy, FieldStorageGenerator]);
+        : DependenciesBase(connect: [CdfIfNotProvided, AdamConfiguration, AdamFsLazy, FieldStorageGenerator]);
 
     #endregion
 

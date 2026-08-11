@@ -85,7 +85,7 @@ public class DnnUserProfile : CustomDataSourceAdvanced
     #region Constructor / DI
 
     public new record Dependencies(CustomDataSourceAdvanced.Dependencies ParentServices, ISite Site, IZoneMapper ZoneMapper, LazySvc<DnnSecurity> DnnSecurity)
-        : DependenciesRecord(connect: [Site, ZoneMapper, DnnSecurity]);
+        : DependenciesBase(connect: [Site, ZoneMapper, DnnSecurity]);
 
     public DnnUserProfile(Dependencies services) : base(services.ParentServices, "Dnn.Profile", connect: [services])
     {

@@ -40,7 +40,7 @@ public abstract partial class SxcAppBase(SxcAppBase.Dependencies services, strin
         IDataSourcesService DataSourceFactory,
         LazySvc<QueryManager> QueryManager,
         IAppDataConfigProvider DataConfigProvider)
-        : DependenciesRecord(connect: [ZoneMapper, Site, AppReaders, DataSourceFactory, QueryManager, DataConfigProvider]);
+        : DependenciesBase(connect: [ZoneMapper, Site, AppReaders, DataSourceFactory, QueryManager, DataConfigProvider]);
 
     #endregion
 

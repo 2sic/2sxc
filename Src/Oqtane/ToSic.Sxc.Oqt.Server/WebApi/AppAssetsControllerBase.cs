@@ -19,7 +19,7 @@ public abstract class AppAssetsControllerBase : OqtControllerBase
         LazySvc<AppFolderLookupForWebApi> AppFolder,
         SiteState SiteState,
         LazySvc<OqtAssetsFileHelper> FileHelper)
-        : DependenciesRecord(connect: [HostingEnvironment, AppFolder, SiteState, FileHelper]);
+        : DependenciesBase(connect: [HostingEnvironment, AppFolder, SiteState, FileHelper]);
 
     #endregion
 

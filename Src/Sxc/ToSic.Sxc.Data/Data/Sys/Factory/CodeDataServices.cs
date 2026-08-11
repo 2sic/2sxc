@@ -18,4 +18,4 @@ public record CodeDataServices(
     Generator<IDataFactory, DataFactoryOptions> DataFactory,
     LazySvc<IUser> User
 )
-    : DependenciesRecord(connect: [ValueConverter, Scrub, ForCode, DataFactory]);
+    : DependenciesBase(connect: [ValueConverter, Scrub, ForCode, DataFactory]);

@@ -21,7 +21,7 @@ internal class DnnDynamicCodeService: DynamicCodeService
         LazySvc<PageChangeSummary> PageChangeSummary,
         LazySvc<DnnPageChanges> DnnPageChanges,
         LazySvc<DnnClientResources> DnnClientResources)
-        : DependenciesRecord(connect: [PageServiceShared, PageChangeSummary, DnnPageChanges, DnnClientResources]);
+        : DependenciesBase(connect: [PageServiceShared, PageChangeSummary, DnnPageChanges, DnnClientResources]);
 
     public DnnDynamicCodeService(Dependencies services) : base(services, $"{DnnConstants.LogName}.DynCdS")
     {

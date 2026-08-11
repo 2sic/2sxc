@@ -30,7 +30,7 @@ public partial class BlockRenderer(BlockRenderer.Dependencies services)
         IModulesOutputService ModulesOutputService,
         CodeInfosInScope CodeInfos,
         BlockCachingHelper BlockCachingHelper)
-        : DependenciesRecord(connect:
+        : DependenciesBase(connect:
             [EngineFactory, EnvInstGen, RenderHelpGen, PageChangeSummary, LicenseService, ModulesOutputService, CodeInfos, BlockCachingHelper]);
 
     #region Constructor

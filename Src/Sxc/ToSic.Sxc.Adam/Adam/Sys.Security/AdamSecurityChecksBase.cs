@@ -14,7 +14,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.Dependencies
     #region DI / Constructor
 
     public record Dependencies(Generator<AppPermissionCheck> AppPermissionChecks)
-        : DependenciesRecord(connect: [AppPermissionChecks]);
+        : DependenciesBase(connect: [AppPermissionChecks]);
 
     public IAdamSecurityCheckService Init(AdamContext adamContext, bool usePortalRoot)
     {

@@ -32,7 +32,7 @@ public class AdamContext(AdamContext.Dependencies services)
         LazySvc<AdamManager> AdamManagerLazy,
         Generator<AdamStorageOfSite> SiteStorageGen,
         Generator<AdamStorageOfField> FieldStorageGen)
-        : DependenciesRecord(connect: [TypesPermissions, AdamSecurityGenerator, FeaturesSvc, AdamManagerLazy, SiteStorageGen, FieldStorageGen]);
+        : DependenciesBase(connect: [TypesPermissions, AdamSecurityGenerator, FeaturesSvc, AdamManagerLazy, SiteStorageGen, FieldStorageGen]);
 
     public IAdamSecurityCheckService Security { get; private set; } = null!;
     public MultiPermissionsTypes Permissions { get; private set; } = null!;

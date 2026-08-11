@@ -29,7 +29,7 @@ public class RenderService(RenderService.Dependencies services) : ServiceWithCon
         Generator<InTextContentBlockRenderer> InTextRenderer,
         Generator<IBlockRenderer> BlockBuilderGenerator,
         LazySvc<ILogStore> LogStore)
-        : DependenciesRecord(connect: [EditGenerator, Builder, SimpleRenderer, InTextRenderer, LogStore, BlockBuilderGenerator]);
+        : DependenciesBase(connect: [EditGenerator, Builder, SimpleRenderer, InTextRenderer, LogStore, BlockBuilderGenerator]);
 
     // ReSharper disable once InconsistentNaming
 

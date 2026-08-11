@@ -21,7 +21,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.Dependencie
         IAppPathsMicroSvc AppPathMicroSvc,
         // Note that we will use Generators for safety, because in rare cases the dependencies could be re-used to create a sub-data-source
         Generator<AppFileManager> FileManagerGenerator)
-        : DependenciesRecord(connect: [AppReaders, AppPathMicroSvc, FileManagerGenerator]);
+        : DependenciesBase(connect: [AppReaders, AppPathMicroSvc, FileManagerGenerator]);
 
     public AppAssetsDataSourceProvider Configure(
         AppAssetsGetSpecs specs,
