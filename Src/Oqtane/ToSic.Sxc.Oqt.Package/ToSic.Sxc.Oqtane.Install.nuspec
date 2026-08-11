@@ -63,6 +63,7 @@
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\Imageflow.*" target="lib\$targetframework$" />
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\Imazen.*" target="lib\$targetframework$" />
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\Microsoft.IO.*" target="lib\$targetframework$" />
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\runtimes\win-x64*\**\*imageflow.*" target="runtimes" />
+    <!-- include all platform native libs; once the marketplace can better differentiate, we should split -->
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\runtimes\**\**\*imageflow.*" target="runtimes" />
   </files>
 </package>
