@@ -3,7 +3,6 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Localization;
 using System.Web;
 using System.Web.Hosting;
-using Microsoft.EntityFrameworkCore.Internal;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context.Sys.Site;
 using ToSic.Eav.Context.Sys.ZoneCulture;

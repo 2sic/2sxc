@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Code.Sys.CodeRunHelpers;
+﻿using ToSic.Sys;
+
+namespace ToSic.Sxc.Code.Sys.CodeRunHelpers;
 
 /// <summary>
 /// Code Helper for typed code v16+

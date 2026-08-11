@@ -189,7 +189,7 @@ internal class TypedItemOfEntity(IEntity entity, ICodeDataFactory cdf, bool prop
             ? throw ErrStrictForTyped(this, name)
             : _adamCache.Get(name, () => Cdf.Folder(Entity, name, ((ITypedItem)this).Field(name, required: false)));
 
-    private readonly GetOnceNamed<IFolder> _adamCache = new();
+    private readonly LazyGetByName<IFolder> _adamCache = new();
 
     IFile? ITypedItem.File(string name, NoParamOrder npo, bool? required)
     {
