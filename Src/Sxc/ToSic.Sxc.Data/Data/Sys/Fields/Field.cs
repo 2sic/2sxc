@@ -21,7 +21,8 @@ public class Field(ITypedItem parent, string name, ICodeDataFactory cdf) : IFiel
         get => _raw.Get(() => Parent.Get(Name, required: false));
         // Reason is for special edge cases like in School-Sys where we must process
         // the string before using it for Cms.Html(...)
-        set => _raw.Set(value);
+        // Removed v22 2026-08-11 2dm - monitor; #CleanupV23
+        //set => _raw.Set(value);
     }
     private readonly LazyGetAndReset<object?> _raw = new();
 
@@ -30,16 +31,18 @@ public class Field(ITypedItem parent, string name, ICodeDataFactory cdf) : IFiel
     [PrivateApi("Was public till 16.03, but don't think it should be surfaced...")]
     public object? Value
     {
-        get => _value.Get(() => Url ?? Raw)!;
-        set => _value.Set(value);
+        get => _value.Get(() => Url ?? Raw);
+        // Removed v22 2026-08-11 2dm - monitor; #CleanupV23
+        //set => _value.Set(value);
     }
     private readonly LazyGetAndReset<object?> _value = new();
 
     /// <inheritdoc />
     public string? Url
     {
-        get => _url.Get(() => Parent.Url(Name))!;
-        set => _url.Set(value);
+        get => _url.Get(() => Parent.Url(Name));
+        // Removed v22 2026-08-11 2dm - monitor; #CleanupV23
+        //set => _url.Set(value);
     }
     private readonly LazyGetAndReset<string?> _url = new();
 
