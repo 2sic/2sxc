@@ -29,23 +29,21 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.Dependencie
     /// </remarks>
     [PublicApi]
     [method: PrivateApi]
-    public class Dependencies(CustomDataSource.Dependencies parentServices, ServiceKitLight16 kit)
-        : DependenciesBase(connect: [kit])
+    public record Dependencies(CustomDataSource.Dependencies ParentServices, ServiceKitLight16 Kit)
+        : DependenciesRecord(connect: [Kit])
     {
         [PrivateApi]
-        public CustomDataSource.Dependencies ParentServices { get; } = parentServices;
+        public CustomDataSource.Dependencies ParentServices { get; } = ParentServices;
         [PrivateApi]
-        public ServiceKitLight16 Kit { get; } = kit;
+        public ServiceKitLight16 Kit { get; } = Kit;
     }
 
     /// <summary>
     /// This is just for compatibility for any custom data sources which may have used the term `MyServices` since v16.
     /// </summary>
-    /// <param name="parentServices"></param>
-    /// <param name="kit"></param>
     [PrivateApi]
-    public class MyServices(CustomDataSource.Dependencies parentServices, ServiceKitLight16 kit)
-        : Dependencies(parentServices, kit);
+    public record MyServices(CustomDataSource.Dependencies ParentServices, ServiceKitLight16 Kit)
+        : Dependencies(ParentServices, Kit);
 
     /// <summary>
     /// Constructor with the option to provide a log name.
