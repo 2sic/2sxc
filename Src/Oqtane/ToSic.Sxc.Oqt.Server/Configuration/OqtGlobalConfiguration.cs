@@ -40,10 +40,8 @@ internal class OqtGlobalConfiguration(IHttpContextAccessor httpContextAccessor) 
     }
 
     public new string GetThisErrorOnNull(string key)
-    {
-        var value = GetThis(key);
-        return value ?? throw new ArgumentNullException(ErrorMessageNullNotAllowed(nameof(key)));
-    }
+        => GetThis(key)
+           ?? throw new ArgumentNullException(ErrorMessageNullNotAllowed(key!));
 
     public new string SetThis(string value, string key)
         // For ConnectionString we still allow setting a default/fallback value (eg. during boot),
