@@ -272,7 +272,7 @@ public partial class BlockRenderer
     /// license ok state
     /// </summary>
     protected bool AnyLicenseOk => _licenseOk.Get(() => Services.LicenseService.Value.HaveValidLicense);
-    private readonly GetOnce<bool> _licenseOk = new();
+    private readonly LazyGet<bool> _licenseOk = new();
 
     private string? GenerateWarningMsgIfLicenseNotOk()
     {

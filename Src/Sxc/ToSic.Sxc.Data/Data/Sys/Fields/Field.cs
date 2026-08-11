@@ -21,7 +21,7 @@ public class Field(ITypedItem parent, string name, ICodeDataFactory cdf) : IFiel
         get => _raw.Get(() => Parent.Get(Name, required: false));
         // Reason is for special edge cases like in School-Sys where we must process
         // the string before using it for Cms.Html(...)
-        set => _raw.Reset(value);
+        set => _raw.Set(value);
     }
     private readonly LazyGetAndReset<object?> _raw = new();
 
@@ -31,7 +31,7 @@ public class Field(ITypedItem parent, string name, ICodeDataFactory cdf) : IFiel
     public object? Value
     {
         get => _value.Get(() => Url ?? Raw)!;
-        set => _value.Reset(value);
+        set => _value.Set(value);
     }
     private readonly LazyGetAndReset<object?> _value = new();
 
@@ -39,7 +39,7 @@ public class Field(ITypedItem parent, string name, ICodeDataFactory cdf) : IFiel
     public string? Url
     {
         get => _url.Get(() => Parent.Url(Name))!;
-        set => _url.Reset(value);
+        set => _url.Set(value);
     }
     private readonly LazyGetAndReset<string?> _url = new();
 
@@ -61,12 +61,12 @@ public class Field(ITypedItem parent, string name, ICodeDataFactory cdf) : IFiel
             .SetImageRecommendations(mdOf, Url); // needs the url so it can check if we use image recommendations
         return mdOf;
     });
-    private readonly GetOnce<IMetadata?> _itemMd = new();
+    private readonly LazyGet<IMetadata?> _itemMd = new();
 
     [PrivateApi("Internal use only, may change at any time")]
     public ImageDecorator? ImageDecoratorOrNull =>
         _imgDec.Get(() => ImageDecorator.GetOrNull(this, cdf.Dimensions));
-    private readonly GetOnce<ImageDecorator?> _imgDec = new();
+    private readonly LazyGet<ImageDecorator?> _imgDec = new();
 
     IMetadata IHasMetadata.Metadata => MetadataOfValue!;
 }

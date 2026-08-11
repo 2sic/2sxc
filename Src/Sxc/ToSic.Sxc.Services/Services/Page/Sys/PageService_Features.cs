@@ -106,7 +106,7 @@ partial class PageService
 
 
     private string? CdnSource => _cdnSource.Get(() => WebResources.Get<string>(CdnSourcePublicField));
-    private readonly GetOnce<string?> _cdnSource = new();
+    private readonly LazyGet<string?> _cdnSource = new();
 
     private DynamicEntity WebResources => field
         ??= (DynamicEntity)ExCtx.GetDataStack<IDynamicStack>(ExecutionContextStateNames.Settings).Get(WebResourcesNode)!;

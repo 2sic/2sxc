@@ -54,7 +54,7 @@ internal abstract class ToolbarRuleTargeted: ToolbarRule
             ? DecoHelper.GetDecorator(Context, DecoratorTypeName, Command)
             : null
     );
-    private readonly GetOnce<ToolbarButtonDecorator?> _decorator = new();
+    private readonly LazyGet<ToolbarButtonDecorator?> _decorator = new();
 
     private string UiParamsFromDecorator => field ??= Decorator?.AllRules() ?? "";
 

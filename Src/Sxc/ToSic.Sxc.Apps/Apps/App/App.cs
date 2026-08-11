@@ -45,7 +45,7 @@ public partial class App(
 
     /// <inheritdoc cref="IApp.Thumbnail" />
     public string? Thumbnail => _thumbnail.Get(() => new AppAssetThumbnail(AppReaderInt, AppPaths, globalPaths).Url);
-    private readonly GetOnce<string?> _thumbnail = new();
+    private readonly LazyGet<string?> _thumbnail = new();
 
     /// <inheritdoc cref="IApp.PathShared" />
     public string PathShared => field ??= AppPaths.PathShared;

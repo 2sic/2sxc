@@ -65,5 +65,5 @@ public class ServiceKitLight16(IServiceProvider serviceProvider) : ServiceBase("
 
     //[PrivateApi("Experimental in v15.03")]
     //public IUsersService Users => _users.Get(GetService<IUsersService>);
-    //private readonly GetOnce<IUsersService> _users = new GetOnce<IUsersService>();
+    //private readonly LazyGet<IUsersService> _users = new LazyGet<IUsersService>();
 }

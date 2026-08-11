@@ -38,7 +38,7 @@ internal class DnnUser(LazySvc<DnnSecurity> dnnSecurity)
 
 
     private UserInfo DnnUserInfo => _user.Get(() => PortalSettings.Current?.UserInfo);
-    private readonly GetOnce<UserInfo> _user = new();
+    private readonly LazyGet<UserInfo> _user = new();
 
     public UserInfo GetContents() => DnnUserInfo;
 

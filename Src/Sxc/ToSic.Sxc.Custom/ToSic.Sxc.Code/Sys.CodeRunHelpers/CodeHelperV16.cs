@@ -13,7 +13,7 @@ public class TypedCode16Helper(CompileCodeHelperSpecs helperSpecs, Func<object?>
     // Note: we're passing in factory methods so they don't get processed unless needed
     // Reason is that we have 2 scenarios, which can throw errors if processed in the wrong scenario
     public object? RazorModel => _razorModel.Get(getRazorModel);
-    private readonly GetOnce<object?> _razorModel = new();
+    private readonly LazyGet<object?> _razorModel = new();
 
     public TModel GetModel<TModel>()
     {

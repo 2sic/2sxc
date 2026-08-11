@@ -131,7 +131,7 @@ public class AppAssets: CustomDataSourceAdvanced
             { StreamFiles, () => files }
         };
     })!;
-    private readonly GetOnce<Dictionary<string, Func<IImmutableList<IEntity>>>> _all = new();
+    private readonly LazyGet<Dictionary<string, Func<IImmutableList<IEntity>>>> _all = new();
 
     /// <summary>
     /// Get both the files and folders stream

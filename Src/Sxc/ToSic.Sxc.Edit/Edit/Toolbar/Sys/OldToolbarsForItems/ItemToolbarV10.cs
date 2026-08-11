@@ -25,7 +25,7 @@ internal class ItemToolbarV10(
             ToolbarConstants.ToolbarTagTemplate.Replace(ToolbarConstants.ToolbarTagPlaceholder, ToolbarAttributes(ToolbarConstants.JsonToolbarNodeName));
 
     protected string? ToolbarJson => _toolbarJson.Get(ToolbarV10Json);
-    private readonly GetOnce<string> _toolbarJson = new();
+    private readonly LazyGet<string> _toolbarJson = new();
 
     public override string ToolbarAsAttributes() => ToolbarAttributes(ToolbarConstants.ToolbarAttributeName);
 

@@ -39,7 +39,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
     #region Url Parameters to Detect Dev / True
 
     public bool UrlIsDevMode => _urlDevMode.Get(() => CspUrlParam.EqualsInsensitive(CspConstants.CspUrlDev));
-    private readonly GetOnce<bool> _urlDevMode = new();
+    private readonly LazyGet<bool> _urlDevMode = new();
 
     private string? CspUrlParam => _cspUrlParam.Get(Log, () =>
     {

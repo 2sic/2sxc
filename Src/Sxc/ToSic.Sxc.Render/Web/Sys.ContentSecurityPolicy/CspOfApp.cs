@@ -47,7 +47,7 @@ public class CspOfApp : ServiceWithContext
     #region Read Settings
 
     public string? AppPolicies => _appPolicies.Get(GetAppPolicies);
-    private readonly GetOnce<string?> _appPolicies = new();
+    private readonly LazyGet<string?> _appPolicies = new();
 
     private string? GetAppPolicies()
     {

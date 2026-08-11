@@ -17,7 +17,7 @@ public record RenderSpecs
     /// This is done here / early to avoid having to convert it in every place where it's used.
     /// </summary>
     public IDictionary<string, object?>? DataDic => _dataDic.Get(() => Data?.ToDicInvariantInsensitive());
-    private readonly GetOnce<IDictionary<string, object?>?> _dataDic = new();
+    private readonly LazyGet<IDictionary<string, object?>?> _dataDic = new();
 
     /// <summary>
     /// Info if LightSpeed should be used for rendering - ATM just used for the statistics in the UI.

@@ -8,7 +8,7 @@ internal class DataSourceOptionsMs(IAppIdentity? identity, Func<ILookUpEngine?>?
     : ServiceBase(SxcLogName + "DtOptH")
 {
     private ILookUpEngine? LookUpEngine => _lookupEngine.Get(() => getLookup?.Invoke());
-    private readonly GetOnce<ILookUpEngine?> _lookupEngine = new();
+    private readonly LazyGet<ILookUpEngine?> _lookupEngine = new();
 
     public IDataSourceOptions SafeOptions(object? dsParams, object? options, bool identityRequired = false)
     {

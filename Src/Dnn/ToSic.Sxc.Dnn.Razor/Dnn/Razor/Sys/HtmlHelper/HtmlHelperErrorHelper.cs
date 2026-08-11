@@ -51,5 +51,5 @@ internal class HtmlHelperErrorHelper(
     internal bool ThrowPartialError => _throwPartialError.Get(()
         => featureSvc.Value.IsEnabled(SxcFeatures.RazorThrowPartial.NameId) ||
            MyOptions.IsSystemAdmin && featureSvc.Value.IsEnabled(SxcFeatures.RenderThrowPartialSystemAdmin.NameId));
-    private readonly GetOnce<bool> _throwPartialError = new();
+    private readonly LazyGet<bool> _throwPartialError = new();
 }

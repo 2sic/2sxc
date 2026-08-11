@@ -77,7 +77,7 @@ public sealed class OqtSiteGroup(
     }
 
     //private Dictionary<int, Site> SitesById => _sitesById.Get(BuildSitesById);
-    //private readonly GetOnce<Dictionary<int, Site>> _sitesById = new();
+    //private readonly LazyGet<Dictionary<int, Site>> _sitesById = new();
 
     private Dictionary<int, Site> SitesById()
         => siteRepository

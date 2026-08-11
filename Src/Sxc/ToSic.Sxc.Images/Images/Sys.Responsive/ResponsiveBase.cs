@@ -209,18 +209,18 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     // still implemented as a method, so we could add future parameters if necessary
     public IToolbarBuilder? Toolbar() => _toolbar.Get(() => new ResponsiveToolbarBuilder(Log).Toolbar(ImgService, Target, Tweaker, Settings, Src));
 
-    private readonly GetOnce<IToolbarBuilder?> _toolbar = new();
+    private readonly LazyGet<IToolbarBuilder?> _toolbar = new();
 
     #endregion
 
 
     /// <inheritdoc />
     public string? Description => _description.Get(() => Target.ImgDecoratorOrNull?.Description);
-    private readonly GetOnce<string?> _description = new();
+    private readonly LazyGet<string?> _description = new();
 
     /// <inheritdoc />
     public string? DescriptionExtended => _descriptionDet.Get(() => Target.ImgDecoratorOrNull?.DescriptionExtended);
-    private readonly GetOnce<string?> _descriptionDet = new();
+    private readonly LazyGet<string?> _descriptionDet = new();
 
     /// <inheritdoc />
     public string? Alt => _alt.Get(() =>
@@ -231,12 +231,12 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         // If all else fails, take the fallback specified in the call - IF it's allowed
         ?? (Target.ImgDecoratorOrNull?.SkipFallbackTitle ?? false ? null : Tweaker.Img.AltFallback)
     );
-    private readonly GetOnce<string?> _alt = new();
+    private readonly LazyGet<string?> _alt = new();
 
 
     /// <inheritdoc />
     public string? Class => _imgClass.Get(() => StyleOrClassGenerator(Tweaker.Img.Class, Recipe.SpecialPropertyClass));
-    private readonly GetOnce<string?> _imgClass = new();
+    private readonly LazyGet<string?> _imgClass = new();
 
     private string? StyleOrClassGenerator(string? codePart, string key)
     {
@@ -273,7 +273,7 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
 
     /// <inheritdoc />
     public string? SrcSet => _srcSet.Get(SrcSetGenerator);
-    private readonly GetOnce<string?> _srcSet = new();
+    private readonly LazyGet<string?> _srcSet = new();
     private string? SrcSetGenerator()
     {
         var isEnabled = ImgService.Features.IsEnabled(SxcFeatures.ImageServiceMultipleSizes.NameId);
@@ -289,15 +289,15 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
 
     /// <inheritdoc />
     public string? Width => _width.Get(() => UseIfActive(ThisResize.Recipe?.SetWidth, ThisResize.Width));
-    private readonly GetOnce<string?> _width = new();
+    private readonly LazyGet<string?> _width = new();
 
     /// <inheritdoc />
     public string? Height => _height.Get(() => UseIfActive(ThisResize.Recipe?.SetHeight, ThisResize.Height));
-    private readonly GetOnce<string?> _height = new();
+    private readonly LazyGet<string?> _height = new();
 
     /// <inheritdoc />
     public string? Sizes => _sizes.Get(() => UseIfActive(ImgService.Features.IsEnabled(SxcFeatures.ImageServiceSetSizes.NameId), ThisResize.Recipe?.Sizes));
-    private readonly GetOnce<string?> _sizes = new();
+    private readonly LazyGet<string?> _sizes = new();
 
     private string? UseIfActive<T>(bool? active, T value, [CallerMemberName] string? name = default)
     {

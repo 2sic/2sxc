@@ -54,7 +54,7 @@ internal class DnnRazorCompiler(
     [PrivateApi]
     private HttpContextBase HttpContextCurrent => _httpContext
         .Get(() => HttpContext.Current.NullOrGetWith(h => new HttpContextWrapper(h)));
-    private readonly GetOnce<HttpContextBase> _httpContext = new();
+    private readonly LazyGet<HttpContextBase> _httpContext = new();
 
     [PrivateApi]
     internal (TextWriter writer, List<Exception> exceptions) Render(RazorComponentBase page, TextWriter writer, RenderSpecs renderSpecs)

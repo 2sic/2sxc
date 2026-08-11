@@ -69,11 +69,11 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager<T
 
     /// <inheritdoc />
     ITypedItem IAppTyped.Settings => _settings.Get(() => App.AppSettings.NullOrGetWith(appS => MakeTyped(appS, propsRequired: true))!)!;
-    private readonly GetOnce<ITypedItem> _settings = new();
+    private readonly LazyGet<ITypedItem> _settings = new();
 
     /// <inheritdoc />
     ITypedItem IAppTyped.Resources => _resources.Get(() => App.AppResources.NullOrGetWith(appR => MakeTyped(appR, propsRequired: true))!)!;
-    private readonly GetOnce<ITypedItem> _resources = new();
+    private readonly LazyGet<ITypedItem> _resources = new();
     
     private ITypedItem MakeTyped(ICanBeEntity contents, bool propsRequired)
     {

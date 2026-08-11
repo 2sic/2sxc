@@ -13,12 +13,12 @@ internal class CodeDynHelper(IEntity entity, SubDataFactory subDataFactory)
     public SubDataFactory SubDataFactory { get; } = subDataFactory;
 
     public IDynamicEntity? Presentation => _prs.Get(() => SubDataFactory.SubDynEntityOrNull(Entity.GetDecorator<EntityInBlockDecorator>()?.Presentation));
-    private readonly GetOnce<IDynamicEntity?> _prs = new();
+    private readonly LazyGet<IDynamicEntity?> _prs = new();
 
     public object Metadata => field ??= SubDataFactory.Cdf.MetadataDynamic(Entity.Metadata);
 
     public IDynamicEntity? Parent => _dp.Get(() => SubDataFactory.SubDynEntityOrNull(Entity.GetDecorator<EntityInBlockDecorator>()?.Parent));
-    private readonly GetOnce<IDynamicEntity?> _dp = new();
+    private readonly LazyGet<IDynamicEntity?> _dp = new();
 
 
 

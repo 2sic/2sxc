@@ -22,7 +22,7 @@ public class ContextResolverBase(
 {
    
     public IContextOfSite Site() => _site.Get(siteCtxGenerator.New)!;
-    private readonly GetOnce<IContextOfSite> _site = new();
+    private readonly LazyGet<IContextOfSite> _site = new();
 
 
     public IContextOfApp SetApp(IAppIdentity appIdentity)

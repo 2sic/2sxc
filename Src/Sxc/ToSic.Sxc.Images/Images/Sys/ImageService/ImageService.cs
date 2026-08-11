@@ -15,7 +15,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
     internal IEditService? EditOrNull => ExCtx.GetService<IEditService>(reuse: true);
 
     internal IToolbarService? ToolbarOrNull => _toolbarSvc.Get(() => ExCtx.GetService<IToolbarService>(reuse: true));
-    private readonly GetOnce<IToolbarService?> _toolbarSvc = new();
+    private readonly LazyGet<IToolbarService?> _toolbarSvc = new();
 
     [field: AllowNull, MaybeNull]
     private IPageService PageService => field ??= ExCtx.GetService<IPageService>(reuse: true);

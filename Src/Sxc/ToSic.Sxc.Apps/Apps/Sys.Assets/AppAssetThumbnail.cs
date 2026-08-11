@@ -10,7 +10,7 @@ internal class AppAssetThumbnail(IAppReader appReader, IAppPaths appPaths, LazyS
     : AppAssetFile
 {
     public override string? Url => _url.Get(() => GetUrl(appReader, appPaths, globalPaths));
-    private readonly GetOnce<string?> _url = new();
+    private readonly LazyGet<string?> _url = new();
 
     public static string? GetUrl(IAppReader appReader, IAppPaths appPaths, LazySvc<GlobalPaths> globalPaths)
     {

@@ -56,7 +56,7 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
         ??= CacheSvc.CreateSpecs(CacheSpecConstants.PrefixForDontPrefix + OutputCacheKeys.PartialSettingsKey(AppCacheKey, normalizedPath));
 
     private CacheKeyConfig? CacheSpecsConfig => _cacheSpecsConfig.Get(() => CacheSvc.Get<CacheKeyConfig>(CacheSpecsForSettings));
-    private readonly GetOnce<CacheKeyConfig?> _cacheSpecsConfig = new();
+    private readonly LazyGet<CacheKeyConfig?> _cacheSpecsConfig = new();
 
     private ICacheSpecs? GetSpecsBasedOnSettings()
     {

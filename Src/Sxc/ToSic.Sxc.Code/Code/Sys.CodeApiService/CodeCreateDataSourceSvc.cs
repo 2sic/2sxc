@@ -23,7 +23,7 @@ public class CodeCreateDataSourceSvc(LazySvc<IDataSourcesService> dataSources, L
     public IAppIdentity AppIdentity { get; private set; } = null!;
 
     public ILookUpEngine? LookUpEngine => _lookupEngine.Get(() => _getLookup?.Invoke());
-    private readonly GetOnce<ILookUpEngine?> _lookupEngine = new();
+    private readonly LazyGet<ILookUpEngine?> _lookupEngine = new();
     private Func<ILookUpEngine>? _getLookup;
 
     // note: this code is almost identical to the IDataService code, except that `immutable` is a parameter

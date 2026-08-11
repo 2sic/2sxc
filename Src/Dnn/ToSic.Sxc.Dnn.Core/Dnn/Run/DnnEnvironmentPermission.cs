@@ -19,7 +19,7 @@ internal class DnnEnvironmentPermission() : EnvironmentPermission(DnnConstants.L
     /// </remarks>
     protected ModuleInfo Module => _module.Get(
         () => ((Context as IContextOfBlock)?.Module as Module<ModuleInfo>)?.GetContents());
-    private readonly GetOnce<ModuleInfo> _module = new();
+    private readonly LazyGet<ModuleInfo> _module = new();
 
     public override bool VerifyConditionOfEnvironment(string condition)
     {

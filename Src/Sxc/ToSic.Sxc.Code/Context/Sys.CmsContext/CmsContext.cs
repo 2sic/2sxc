@@ -33,7 +33,7 @@ internal class CmsContext(
     internal IBlock BlockInternal => field ??= ExCtx.GetBlock();
 
     internal IContextOfBlock? CtxBlockOrNull => _ctxBlock.Get(() => BlockInternal?.Context);
-    private readonly GetOnce<IContextOfBlock?> _ctxBlock = new();
+    private readonly LazyGet<IContextOfBlock?> _ctxBlock = new();
 
     internal IContextOfSite CtxSite => CtxBlockOrNull ?? siteCtxFallback;
 

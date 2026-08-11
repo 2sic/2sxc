@@ -67,7 +67,7 @@ internal class CspSettingsReader(ICanGetByName? settingsStackOrNull, IUser user,
     private ICanGetByName? SettingsDefault => devMode
         ? null
         : _default.Get(() => SettingsRoot?.Get("Default") as ICanGetByName);
-    private readonly GetOnce<ICanGetByName?> _default = new();
+    private readonly LazyGet<ICanGetByName?> _default = new();
 
     private ICanGetByName? SettingsRoot => _settingsRoot.Get(Log,
         () => settingsStackOrNull?.Get(FieldContentSecurityPolicies) as ICanGetByName);

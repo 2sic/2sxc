@@ -105,6 +105,6 @@ public class AdamFiles : CustomDataSourceAdvanced
         return l.Return(entities, "ok");
     })!;
     
-    private readonly GetOnce<IImmutableList<IEntity>> _getInternal = new();
+    private readonly LazyGet<IImmutableList<IEntity>> _getInternal = new();
 
 }

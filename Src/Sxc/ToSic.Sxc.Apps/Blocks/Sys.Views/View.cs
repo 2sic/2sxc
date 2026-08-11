@@ -72,7 +72,7 @@ public record View : ViewConfiguration, IView
         return (queryRaw, query);
     });
 
-    private readonly GetOnce<(IEntity? QueryEntity, QueryDefinition? Definition)> _queryInfo = new();
+    private readonly LazyGet<(IEntity? QueryEntity, QueryDefinition? Definition)> _queryInfo = new();
     private readonly Generator<QueryDefinitionFactory>? _qDefBuilder;
 
 

@@ -47,10 +47,10 @@ internal class OqtUser(
     public List<int> Roles => field ??= oqtSecurity.Value.Roles(UnwrappedUser);
 
     public bool IsSystemAdmin => _isSystemAdmin.Get(() => oqtSecurity.Value.IsSystemAdmin(UnwrappedUser));
-    private readonly GetOnce<bool> _isSystemAdmin = new();
+    private readonly LazyGet<bool> _isSystemAdmin = new();
 
     public bool IsSiteAdmin => _isSiteAdmin.Get(() => oqtSecurity.Value.IsSiteAdmin(UnwrappedUser));
-    private readonly GetOnce<bool> _isSiteAdmin = new();
+    private readonly LazyGet<bool> _isSiteAdmin = new();
 
     public bool IsContentAdmin => IsSiteAdmin;
 

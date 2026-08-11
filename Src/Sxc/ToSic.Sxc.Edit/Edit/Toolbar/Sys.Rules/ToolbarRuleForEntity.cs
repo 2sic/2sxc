@@ -45,7 +45,7 @@ internal class ToolbarRuleForEntity: ToolbarRuleTargeted
 
 
     protected IEntity? TargetEntity => _entity.Get(() => Target as IEntity ?? (Target as ICanBeEntity)?.Entity);
-    private readonly GetOnce<IEntity?> _entity = new();
+    private readonly LazyGet<IEntity?> _entity = new();
 
     [field: AllowNull, MaybeNull]
     internal EntityEditInfo EditInfo => field ??= new(TargetEntity);
