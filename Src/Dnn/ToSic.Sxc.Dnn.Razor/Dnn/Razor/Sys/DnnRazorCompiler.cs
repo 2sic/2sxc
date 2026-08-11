@@ -188,7 +188,7 @@ internal class DnnRazorCompiler(
             });
 
             // Since we just created a new CodeApiService, we must add this razor engine to it's piggyback
-            _sharedCodeApiService.GetPiggyBack(nameof(DnnRazorCompiler), () => this);
+            _sharedCodeApiService.PiggyBackGet(nameof(DnnRazorCompiler), () => this);
         }
 
         webPage.ConnectToRoot(_sharedCodeApiService);
@@ -211,7 +211,7 @@ internal class DnnRazorCompiler(
         var l = (parent as IHasLog).Log.Fn<PrepToExecute>();
 
         // Find the RazorEngine which MUST be on the CodeApiService PiggyBack, or throw an error
-        var razorCompiler = parent.ExCtx.PiggyBack.GetOrGenerate(nameof(DnnRazorCompiler), DnnRazorCompiler () => null)
+        var razorCompiler = parent.ExCtx.PiggyBackGet(nameof(DnnRazorCompiler), DnnRazorCompiler () => null)
                             ?? throw l.Ex(new Exception($"Error finding {nameof(DnnRazorCompiler)}. This is very unexpected."));
 
         var subPage = razorCompiler.InitWebpage(templatePath, true);
@@ -241,7 +241,7 @@ internal class DnnRazorCompiler(
     //    var l = (parent as IHasLog).Log.Fn<RazorBuildTempResult<HelperResult>>();
 
     //    // Find the RazorEngine which MUST be on the CodeApiService PiggyBack, or throw an error
-    //    var razorCompiler = parent.ExCtx.PiggyBack.GetOrGenerate(nameof(DnnRazorCompiler), DnnRazorCompiler () => null)
+    //    var razorCompiler = parent.ExCtx.PiggyBack.GetOrAdd(nameof(DnnRazorCompiler), DnnRazorCompiler () => null)
     //                      ?? throw l.Ex(new Exception($"Error finding {nameof(DnnRazorCompiler)}. This is very unexpected."));
 
     //    // Figure out the real path, and make sure it's lower case

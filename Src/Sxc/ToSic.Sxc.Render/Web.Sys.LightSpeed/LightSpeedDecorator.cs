@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.Models;
 using ToSic.Sxc.Services.OutputCache;
+using ToSic.Sys.Caching.PiggyBack;
 
 namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
@@ -42,8 +43,10 @@ public record LightSpeedDecorator : ModelFromEntityFull, IOutputCacheSettings
     public static LightSpeedDecorator GetFromAppStatePiggyBack(IAppReader? appReader)
     {
         var appState = appReader?.GetCache();
-        var decoFromPiggyBack = appState?.PiggyBack
-            .GetOrGenerate(appState, $"decorator-{ContentTypeNameId}", () => appState.Metadata.FirstModel<LightSpeedDecorator>())
+        var decoFromPiggyBack = appState
+            ?.PiggyBackGetExpiring($"decorator-{ContentTypeNameId}",
+                () => appState.Metadata.FirstModel<LightSpeedDecorator>()
+            )
             .Value;
         return decoFromPiggyBack ?? new LightSpeedDecorator();
     }

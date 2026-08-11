@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.Sys;
+﻿using ToSic.Eav.Apps.AppReader.Sys;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context.Sys.ZoneCulture;
 using ToSic.Eav.Data.ContentTypes.Sys;
 using ToSic.Eav.Data.Sys;
@@ -8,6 +9,7 @@ using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Eav.Metadata.Sys;
 using ToSic.Sxc.Apps.Sys.Ui;
 using ToSic.Sxc.Blocks.Sys.Views;
+using ToSic.Sys.Caching.PiggyBack;
 
 // note: not sure if the final namespace should be Sxc.Apps or Sxc.Views
 namespace ToSic.Sxc.Apps.Sys.Work;
@@ -35,7 +37,8 @@ public class WorkViews(
 
     private List<IEntity> ViewEntities => field
         ??= AppWorkCtx.AppReader
-            .GetPiggyBackPropExpiring(() => appEntities
+            .GetCache()
+            .PiggyBackGetExpiring(() => appEntities
                 .New(AppWorkCtx)
                 .Get(AppConstants.TemplateContentType)
                 .ToList()
@@ -67,29 +70,31 @@ public class WorkViews(
         var l = Log.Fn<List<ViewInfoForPathSelect>>();
 
         // get from cache if available or generate
-        var views = AppWorkCtx.AppReader.GetPiggyBackPropExpiring(() => GetAll()
-            .Where(t => !string.IsNullOrEmpty(t.UrlIdentifier))
-            .Select(v =>
-            {
-                var urlIdentifier = v.UrlIdentifier.ToLowerInvariant();
-                var isRegex = urlIdentifier.EndsWith("/.*");
-                var mainParam = isRegex
-                    ? urlIdentifier.Substring(0, urlIdentifier.Length - 3)
-                    : urlIdentifier;
-
-                // Only save the necessary information in the PiggyBack
-                // Never save the View or the ViewInfoForPathSelect, as that would also preserve an old Service used in the View
-                return new
+        var views = AppWorkCtx.AppReader
+            .GetCache()
+            .PiggyBackGetExpiring(() => GetAll()
+                .Where(t => !string.IsNullOrEmpty(t.UrlIdentifier))
+                .Select(v =>
                 {
-                    v.Entity,
-                    v.Name,
-                    urlIdentifier,
-                    isRegex,
-                    MainParam = mainParam.ToLowerInvariant()
-                };
-            })
-            .ToList()
-        );
+                    var urlIdentifier = v.UrlIdentifier.ToLowerInvariant();
+                    var isRegex = urlIdentifier.EndsWith("/.*");
+                    var mainParam = isRegex
+                        ? urlIdentifier.Substring(0, urlIdentifier.Length - 3)
+                        : urlIdentifier;
+
+                    // Only save the necessary information in the PiggyBack
+                    // Never save the View or the ViewInfoForPathSelect, as that would also preserve an old Service used in the View
+                    return new
+                    {
+                        v.Entity,
+                        v.Name,
+                        urlIdentifier,
+                        isRegex,
+                        MainParam = mainParam.ToLowerInvariant()
+                    };
+                })
+                .ToList()
+            );
 
         var final = views.Value
             .Select(v => new ViewInfoForPathSelect(

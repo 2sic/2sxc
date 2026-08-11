@@ -1,7 +1,9 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Metadata.Requirements.Sys;
 using ToSic.Sxc.Render.Output.Sys;
+using ToSic.Sys.Caching.PiggyBack;
 using ToSic.Sys.Requirements;
 
 namespace ToSic.Sxc.Render.Engines.Sys;
@@ -37,7 +39,7 @@ public class EngineRequirementsApp(IRequirementsService requirementsService)
     }
 
     private List<RequirementStatus> RequirementsStatus(IAppReader appReader)
-        => appReader.GetPiggyBackExpiring(
+        => appReader.GetCache().PiggyBackGetExpiring(
                 "AppRequirementsStatus",
                 // take the requirements reported by the app
                 () => requirementsService.UnfulfilledRequirements(appReader.Specs.Metadata).ToList()
