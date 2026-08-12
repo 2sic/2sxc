@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Collections.Concurrent;
+using System.Text.Json.Serialization;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.Data.Sys.PropertyLookup;
@@ -187,9 +188,11 @@ internal class TypedItemOfEntity(IEntity entity, ICodeDataFactory cdf, bool prop
     IFolder ITypedItem.Folder(string name, NoParamOrder npo, bool? required)
         => IsErrStrictNameRequired(this, name, required, GetHelper.PropsRequired)
             ? throw ErrStrictForTyped(this, name)
-            : _adamCache.Get(name, () => Cdf.Folder(Entity, name, ((ITypedItem)this).Field(name, required: false)));
+            : _adamCache.GetOrAdd(name, _ => Cdf.Folder(Entity, name, ((ITypedItem)this).Field(name, required: false)));
 
-    private readonly LazyGetByName<IFolder> _adamCache = new();
+    // Note 2026-08-12 2dm - was `LazyGetByName` but I realized I'm reinventing the wheel
+    // Monitor, if all is ok for sure, remove Q3 or EOY #ToRemoveV23
+    private readonly ConcurrentDictionary<string, IFolder> _adamCache = new();
 
     IFile? ITypedItem.File(string name, NoParamOrder npo, bool? required)
     {
