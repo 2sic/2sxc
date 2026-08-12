@@ -191,7 +191,7 @@ internal class TypedItemOfEntity(IEntity entity, ICodeDataFactory cdf, bool prop
             : _adamCache.GetOrAdd(name, _ => Cdf.Folder(Entity, name, ((ITypedItem)this).Field(name, required: false)));
 
     // Note 2026-08-12 2dm - was `LazyGetByName` but I realized I'm reinventing the wheel
-    // Monitor, if all is ok for sure, remove Q3 or EOY #ToRemoveV23
+    // Monitor, if all is ok for sure, remove Q3 or EOY #RemoveV23
     private readonly ConcurrentDictionary<string, IFolder> _adamCache = new();
 
     IFile? ITypedItem.File(string name, NoParamOrder npo, bool? required)
