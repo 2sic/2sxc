@@ -18,7 +18,7 @@ internal class CompilationReferencesProvider(Assembly assembly) : AssemblyPart(a
 
         // 1. Ensure we don't run into null problems
         var loadContext = AssemblyLoadContext.GetLoadContext(_assembly);
-        if (loadContext == null) return Enumerable.Empty<string>();
+        if (loadContext == null) return [];
 
         var nonDynamicAssemblies = loadContext.Assemblies
             .Where(_ => !_.IsDynamic)

@@ -111,7 +111,7 @@ internal sealed class IsUniqueValidatorTestContext : IDisposable
     }
 
     public IAttribute InvariantAttribute(string name, ValueTypes type, object? value)
-        => BuildAttribute(name, type, (value, Array.Empty<string>()));
+        => BuildAttribute(name, type, (value, []));
 
     public IAttribute InvariantAttributeValues(string name, ValueTypes type, params object?[] values)
         => BuildAttribute(name, type, values.Select(value => (Value: value, Languages: Array.Empty<string>())).ToArray());

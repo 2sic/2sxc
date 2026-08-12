@@ -131,7 +131,7 @@ public static class LightSpeedOutputCacheCompressionTestData
       => $"{index:x4}{random.Next(0, 1 << 16):x4}{random.Next(0, 1 << 16):x4}";
 
     private static string ToSlug(string value, int index, int suffix)
-      => string.Join("-", value.ToLowerInvariant().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)) + $"-{index}-{suffix}";
+      => string.Join("-", value.ToLowerInvariant().Split([' '], StringSplitOptions.RemoveEmptyEntries)) + $"-{index}-{suffix}";
 
     public static byte[] Compress(string html, TestCompressionProfile profile)
     {

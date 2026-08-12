@@ -21,7 +21,7 @@ public class RazorReferencePathOptimizerTests
         var result = RazorReferencePathOptimizer.PreferCompileReferences([rootPath, refsPath], getAssemblyName);
 
         // Assert
-        Equal(new[] { refsPath }, result);
+        Equal([refsPath], result);
     }
 
     [Fact]
@@ -38,7 +38,7 @@ public class RazorReferencePathOptimizerTests
         var result = RazorReferencePathOptimizer.PreferCompileReferences([rootPath, refsPath], getAssemblyName);
 
         // Assert
-        Equal(new[] { refsPath }, result);
+        Equal([refsPath], result);
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class RazorReferencePathOptimizerTests
         var result = RazorReferencePathOptimizer.PreferCompileReferences([firstPath, secondPath], _ => null);
 
         // Assert
-        Equal(new[] { firstPath, secondPath }, result);
+        Equal([firstPath, secondPath], result);
     }
 
     [Fact]
@@ -72,7 +72,7 @@ public class RazorReferencePathOptimizerTests
             getAssemblyName);
 
         // Assert
-        Equal(new[] { refsPath }, result);
+        Equal([refsPath], result);
     }
 
     [Fact]
@@ -96,7 +96,7 @@ public class RazorReferencePathOptimizerTests
             getAssemblyName);
 
         // Assert
-        Equal(new[] { systemRuntimeRefPath, xmlReaderWriterRefPath }, result);
+        Equal([systemRuntimeRefPath, xmlReaderWriterRefPath], result);
     }
 
     private static Func<string, AssemblyName?> AssemblyNames(params (string Path, AssemblyName AssemblyName)[] assemblies)

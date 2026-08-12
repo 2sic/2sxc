@@ -12,7 +12,7 @@ namespace IntegrationSamples.BasicEav01.Context
         public int Id => 0;
         public string IdentityToken => "impl-user:0";
         public Guid? Guid => System.Guid.Empty;
-        public List<int> Roles => new List<int>();
+        public List<int> Roles => [];
         public bool IsSystemAdmin => true;
 
         public bool IsSiteAdmin => true;

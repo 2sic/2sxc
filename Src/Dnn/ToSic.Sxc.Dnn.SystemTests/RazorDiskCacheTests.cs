@@ -178,7 +178,7 @@ public class RazorDiskCacheTests
             var appEditionDir = Path.Combine(tempCacheDir, CacheKeyTestAccessors.GetAppFolderTac(TestAppId, TestEdition));
             var filesToDelete = Directory.Exists(appEditionDir)
                 ? Directory.GetFiles(appEditionDir, "*.dll", SearchOption.AllDirectories)
-                : Array.Empty<string>();
+                : [];
 
             foreach (var file in filesToDelete)
                 File.Delete(file);
