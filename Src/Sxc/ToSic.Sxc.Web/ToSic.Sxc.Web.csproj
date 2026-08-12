@@ -20,7 +20,7 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Http">
       <!--<HintPath>..\..\..\Dependencies\System.Web\System.Web.Http.dll</HintPath>

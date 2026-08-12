@@ -101,6 +101,15 @@ Resources.zip.manifest
 !razorblade-old/bin/
 !Extensions/ImageResizer/bin/
 
+# Build config tasks are loaded directly by MSBuild, so keep the full-framework output in Git.
+!/Build/
+!/Build/ToSic.Sxc.BuildTasks/
+!/Build/ToSic.Sxc.BuildTasks/bin/
+!/Build/ToSic.Sxc.BuildTasks/bin/Debug/
+!/Build/ToSic.Sxc.BuildTasks/bin/Debug/net48/
+!/Build/ToSic.Sxc.BuildTasks/bin/Debug/net48/*.dll
+!/Build/ToSic.Sxc.BuildTasks/bin/Debug/net48/*.pdb
+
 # Test data
 \.data-custom/configurations/features.json
 .data-custom/contenttypes 2/

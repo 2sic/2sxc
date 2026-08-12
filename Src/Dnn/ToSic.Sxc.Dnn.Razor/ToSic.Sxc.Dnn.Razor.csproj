@@ -21,8 +21,6 @@
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <!-- ignore warning that Dnn was loaded 2x - ATM necessary for MS build? @STV -->
     <NoWarn>$(NoWarn);MSB4011</NoWarn>
-    <!-- ignore warning that it's using a dangerous version of Dnn (v9.6.1) @2dm -->
-    <NoWarn>$(NoWarn);NU1902</NoWarn>
 
   </PropertyGroup>
 
@@ -34,10 +32,10 @@
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DotNetNuke.Core" Version="9.11.0">
+    <PackageReference Include="DotNetNuke.Core" Version="10.1.0">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.AspNet.Razor" Version="3.2.9" />
+    <PackageReference Include="Microsoft.AspNet.Razor" Version="3.3.0" />
     <PackageReference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform" Version="3.6.0" />
   </ItemGroup>
   <ItemGroup>
