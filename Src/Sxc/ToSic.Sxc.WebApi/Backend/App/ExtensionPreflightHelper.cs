@@ -38,7 +38,7 @@ internal class ExtensionPreflightHelper(
         var inspectEdition = inspectorLazy.Value.Inspect(appId, extensionName, edition.HasValue() ? edition : null);
         var hasFileChanges = inspectEdition.FoundLock && inspectEdition.Summary != null
             && (inspectEdition.Summary.Changed > 0 || inspectEdition.Summary.Added > 0 || inspectEdition.Summary.Missing > 0);
-        var hasData = inspectEdition.Data?.ContentTypes.Any(ct => ct.LocalEntities > 0) == true;
+        var hasData = inspectEdition.ContentTypes.Any(ct => ct.LocalEntities > 0) == true;
         var breakingChanges = HasBreakingChanges(incomingManifest, currentVersion);
 
         l.A($"state installed:{isInstalled}, ver:'{currentVersion}', changes:{hasFileChanges}, data:{hasData}, breaking:{breakingChanges}");

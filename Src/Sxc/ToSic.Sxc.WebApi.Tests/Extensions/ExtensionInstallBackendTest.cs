@@ -93,8 +93,8 @@ public class ExtensionInstallBackendTest(
         Assert.True(ok);
 
         var result = ctx.Reader.GetExtensionsTac(TestAppId);
-        Assert.Contains(result.Extensions, e => e.Folder == extensionName);
-        var cfg = result.Extensions.First(e => e.Folder == extensionName).Configuration;
+        Assert.Contains(result, e => e.Folder == extensionName);
+        var cfg = result.First(e => e.Folder == extensionName).Configuration;
         Assert.NotNull(cfg);
     }
 
@@ -500,7 +500,7 @@ public class ExtensionInstallBackendTest(
         var ok = ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: "with-appcode.zip");
         Assert.True(ok);
         var result = ctx.Reader.GetExtensionsTac(TestAppId);
-        Assert.Contains(result.Extensions, e => e.Folder == folder);
+        Assert.Contains(result, e => e.Folder == folder);
     }
 
     [Fact]
@@ -553,8 +553,8 @@ public class ExtensionInstallBackendTest(
         Assert.True(ok);
 
         var result = ctx.Reader.GetExtensionsTac(TestAppId);
-        Assert.Contains(result.Extensions, e => e.Folder == a);
-        Assert.Contains(result.Extensions, e => e.Folder == b);
+        Assert.Contains(result, e => e.Folder == a);
+        Assert.Contains(result, e => e.Folder == b);
     }
 
     [Fact]
@@ -602,8 +602,8 @@ public class ExtensionInstallBackendTest(
             ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: "multi-invalid.zip"));
 
         var result = ctx.Reader.GetExtensionsTac(TestAppId);
-        Assert.DoesNotContain(result.Extensions, e => e.Folder == good);
-        Assert.DoesNotContain(result.Extensions, e => e.Folder == bad);
+        Assert.DoesNotContain(result, e => e.Folder == good);
+        Assert.DoesNotContain(result, e => e.Folder == bad);
     }
 
     [Fact]

@@ -21,8 +21,8 @@ public class AppExtensionsControllerReal(
     /// Get all App Extensions and their configuration (if any).
     /// </summary>
     /// <param name="appId">App identifier</param>
-    /// <returns>Object with property "extensions" containing an array of extensions</returns>
-    public ExtensionsResultDto Extensions(int appId)
+    /// <returns>Installed extensions</returns>
+    public ICollection<ExtensionDto> Extensions(int appId)
         => readerLazy.Value.GetExtensions(appId);
 
     /// <summary>

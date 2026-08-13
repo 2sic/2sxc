@@ -64,9 +64,9 @@ public class ExtensionsBackendTests(
 
         var result = ctx.Reader.GetExtensionsTac(TestAppId);
         Assert.NotNull(result);
-        Assert.NotNull(result.Extensions);
+        Assert.NotNull(result);
 
-        var foo = result.Extensions.FirstOrDefault(e => e.Folder == extensionName);
+        var foo = result.FirstOrDefault(e => e.Folder == extensionName);
         Assert.NotNull(foo);
         Assert.NotNull(foo.Configuration);
         Assert.Empty(foo.Icon);
@@ -75,7 +75,7 @@ public class ExtensionsBackendTests(
         var actualJson = ctx.JsonSvc.ToJson(foo.Configuration);
         Assert.Equal(expectedJson, actualJson);
 
-        var bar = result.Extensions.FirstOrDefault(e => e.Folder == "bar");
+        var bar = result.FirstOrDefault(e => e.Folder == "bar");
         Assert.NotNull(bar);
         Assert.NotNull(bar.Configuration);
         Assert.Empty(bar.Icon);
@@ -103,7 +103,7 @@ public class ExtensionsBackendTests(
 
         var result = ctx.Reader.GetExtensionsTac(TestAppId);
         Assert.NotNull(result);
-        var item = result.Extensions.FirstOrDefault(e => e.Folder == folder);
+        var item = result.FirstOrDefault(e => e.Folder == folder);
         Assert.NotNull(item);
         Assert.NotNull(item.Configuration);
         Assert.Empty(item.Icon);

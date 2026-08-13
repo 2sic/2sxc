@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Backend.Admin;
 public interface IAppExtensionsController
 {
     // Replaced by DataSource System.AppExtensions through query System.SysData.
-    //ExtensionsResultDto Extensions(int appId);
+    //ICollection<ExtensionDto> Extensions(int appId);
 
     /// <summary>
     /// Preflight installation of an extension zip to report current state and options.
@@ -47,7 +47,7 @@ public interface IAppExtensionsController
     /// <returns>true if installation succeeded</returns>
     bool InstallFrom(int zoneId, int appId, string[] urls, string editions = "", bool overwrite = false);
 
-    // Replaced by DataSource System.AppExtensionInspect through query System.SysData.
+    // Replaced by DataSource System.AppExtensionDetails through query System.SysData.
     //ExtensionInspectResultDto Inspect(int appId, string name, string? edition = null);
 
     /// <summary>

@@ -17,9 +17,8 @@ public class ExtensionInspectResultDto
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public ExtensionInspectSummaryDto? Summary { get; init; }
 
-    [JsonPropertyName("data")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public ExtensionInspectDataDto? Data { get; init; }
+    [JsonPropertyName("contentTypes")]
+    public List<ExtensionInspectContentTypeDto> ContentTypes { get; init; } = [];
 }
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -49,12 +48,6 @@ public class ExtensionInspectSummaryDto : IRawEntityAutoConvert
     public int Missing { get; init; }
 }
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionInspectDataDto
-{
-    [JsonPropertyName("contentTypes")]
-    public List<ExtensionInspectContentTypeDto> ContentTypes { get; init; } = [];
-}
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ExtensionInspectContentTypeDto : IRawEntityAutoConvert

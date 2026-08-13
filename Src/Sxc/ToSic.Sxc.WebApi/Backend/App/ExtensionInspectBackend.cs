@@ -85,7 +85,7 @@ public class ExtensionInspectBackend(
                 Added = added,
                 Missing = missing
             },
-            Data = BuildData(appId, name)
+            ContentTypes = BuildContentTypes(appId, name)
         };
         return l.Return(result, $"files:{statuses.Count}, changed:{changed}, added:{added}, missing:{missing}");
     }
@@ -132,9 +132,9 @@ public class ExtensionInspectBackend(
         return added;
     }
 
-    private ExtensionInspectDataDto? BuildData(int appId, string extensionName)
+    private List<ExtensionInspectContentTypeDto> BuildContentTypes(int appId, string extensionName)
     {
-        var l = Log.Fn<ExtensionInspectDataDto?>($"app:{appId}, ext:{extensionName}");
+        var l = Log.Fn<List<ExtensionInspectContentTypeDto>>($"app:{appId}, ext:{extensionName}");
 
         try
         {
@@ -161,12 +161,12 @@ public class ExtensionInspectBackend(
                 })
                 .ToList();
 
-            return l.Return(new () { ContentTypes = contentTypes }, $"types:{contentTypes.Count}");
+            return l.Return(contentTypes, $"types:{contentTypes.Count}");
         }
         catch (Exception ex)
         {
             l.Ex(ex);
-            return l.ReturnNull("error");
+            return l.Return([], "error");
         }
     }
 

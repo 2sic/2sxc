@@ -6,13 +6,6 @@ using ToSic.Eav.Apps.Sys.FileSystemState;
 namespace ToSic.Sxc.Backend.Admin;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionsResultDto
-{
-    [JsonPropertyName("extensions")]
-    public ICollection<ExtensionDto> Extensions { get; init; } = [];
-}
-
-[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ExtensionDto : IRawEntityAutoConvert
 {
     [ContentTypeTitle]
