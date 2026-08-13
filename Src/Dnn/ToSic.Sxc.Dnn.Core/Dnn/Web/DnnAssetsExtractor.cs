@@ -7,6 +7,9 @@ namespace ToSic.Sxc.Dnn.Web;
 internal class DnnAssetsExtractor(IPageServiceShared pageServiceShared)
     : AssetsExtractor(pageServiceShared)
 {
+    // 2025-09-04 2dm having some difficulties, want to log details
+    // 2026-08-13 2dm disabled again, clogs up logs and memory
+    // if we think this should be used from time to time, we should create an option
     private const bool DebugDetails = true;
 
     protected override ClientAssetsExtractSettings DefaultSettings => field
@@ -23,7 +26,7 @@ internal class DnnAssetsExtractor(IPageServiceShared pageServiceShared)
         var include2SxcJs = false;
             
         // Handle Client Dependency injection
-        html = ExtractExternalScripts(html, ref include2SxcJs, settings, logDetails: DebugDetails); // 2025-09-04 2dm having some difficulties, want to log details
+        html = ExtractExternalScripts(html, ref include2SxcJs, settings, logDetails: DebugDetails);
 
         // Handle Scripts
         html = ExtractStyles(html, settings);
