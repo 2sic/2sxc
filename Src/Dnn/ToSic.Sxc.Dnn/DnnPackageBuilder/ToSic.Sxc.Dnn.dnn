@@ -910,7 +910,7 @@
     <!-- Keep the 4th version number part as it is needed to prevent "repair install" message that DNN
       shows when upgrading 2sxc: https://github.com/2sic/2sxc/issues/1555
       -->
-    <package name="Connect.Dnn.Koi" type="Library" version="03.00.00.01">
+    <package name="Connect.Dnn.Koi" type="Library" version="03.01.00.01">
       <friendlyName>Connect Koi</friendlyName>
       <description>Koi</description>
       <iconFile>icon.png</iconFile>
@@ -924,7 +924,7 @@
       <releaseNotes src="koi\ReleaseNotes.txt"></releaseNotes>
       <azureCompatible>true</azureCompatible>
       <dependencies>
-        <dependency type="CoreVersion">09.06.01</dependency>
+        <dependency type="CoreVersion">10.01.00</dependency>
       </dependencies>
 
       <components>
@@ -971,7 +971,7 @@
     <!-- Keep the 4th version number part as it is needed to prevent "repair install" message that DNN
       shows when upgrading 2sxc: https://github.com/2sic/2sxc/issues/1555
       -->
-    <package name="ToSic.RazorBlade" type="Library" version="04.04.01.01">
+    <package name="ToSic.RazorBlade" type="Library" version="04.05.00.01">
       <friendlyName>2sic RazorBlade</friendlyName>
       <description>2sic RazorBlade</description>
       <iconFile>icon.png</iconFile>
@@ -985,7 +985,7 @@
       <releaseNotes src="razorblade\ReleaseNotes.txt"></releaseNotes>
       <azureCompatible>true</azureCompatible>
       <dependencies>
-        <dependency type="CoreVersion">09.06.01</dependency>
+        <dependency type="CoreVersion">10.01.00</dependency>
       </dependencies>
 
       <components>
