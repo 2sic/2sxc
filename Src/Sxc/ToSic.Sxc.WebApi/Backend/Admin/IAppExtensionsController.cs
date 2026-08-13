@@ -8,6 +8,9 @@ namespace ToSic.Sxc.Backend.Admin;
 /// </summary>
 public interface IAppExtensionsController
 {
+    // Replaced by DataSource System.AppExtensions through query System.SysData.
+    //ExtensionsResultDto Extensions(int appId);
+
     /// <summary>
     /// Preflight installation of an extension zip to report current state and options.
     /// </summary>
@@ -43,6 +46,9 @@ public interface IAppExtensionsController
     /// <param name="overwrite">Overwrite existing files if true</param>
     /// <returns>true if installation succeeded</returns>
     bool InstallFrom(int zoneId, int appId, string[] urls, string editions = "", bool overwrite = false);
+
+    // Replaced by DataSource System.AppExtensionInspect through query System.SysData.
+    //ExtensionInspectResultDto Inspect(int appId, string name, string? edition = null);
 
     /// <summary>
     /// Create or replace the configuration of a specific App Extension.

@@ -17,6 +17,9 @@ namespace ToSic.Sxc.Backend.Admin;
 /// </remarks>
 public interface IViewController
 {
+    // Replaced by DataSource System.Views through query System.SysData.
+    //IEnumerable<ViewDetailsDto> All(int appId);
+
     /// <summary>
     /// Delete a View
     /// </summary>
@@ -44,5 +47,8 @@ public interface IViewController
     /// </remarks>
     /// <returns></returns>
     ImportResultDto Import(int zoneId, int appId);
+
+    // Replaced by DataSource System.ViewUsage through query System.SysData.
+    //IEnumerable<ViewDto> Usage(int appId, Guid guid);
 
 }

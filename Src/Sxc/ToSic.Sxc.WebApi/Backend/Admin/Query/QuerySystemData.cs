@@ -3,7 +3,6 @@ using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Data.Raw.Sys;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Sxc.Backend.SysData;
 
 namespace ToSic.Sxc.Backend.Admin.Query;
 
@@ -25,7 +24,7 @@ public class QueryDefinition : CustomDataSource
         => [new RawEntity { Values = query.Value.Get(AppId, QueryId).Pipeline.ToDictionary(p => p.Key, p => (object?)p.Value) }];
     private IEnumerable<IRawEntity> Parts(LazySvc<QueryControllerReal> query)
         => query.Value.Get(AppId, QueryId).DataSources.Select(x => (IRawEntity)new RawEntity { Values = x.ToDictionary(p => p.Key, p => (object?)p.Value) });
-    private static DataFactoryOptions Options() => new() { AutoId = true, AllowUnknownValueTypes = true };
+    private static DataFactoryOptions Options() => new() { AllowUnknownValueTypes = true };
 }
 
 [PrivateApi]
@@ -39,5 +38,5 @@ public class DataSources : CustomDataSource
         : base(services, "Sxc.DataSources", connect: [query])
         => ProvideOutRaw(() => query.Value.DataSources(new AppIdentity(OfZoneId, AppId)), options: Options);
 
-    private static DataFactoryOptions Options() => new() { AutoId = true, TypeName = "DataSource", AllowUnknownValueTypes = true };
+    private static DataFactoryOptions Options() => new() { TypeName = "DataSource", AllowUnknownValueTypes = true };
 }

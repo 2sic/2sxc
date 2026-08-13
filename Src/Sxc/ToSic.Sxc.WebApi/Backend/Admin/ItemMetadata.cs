@@ -1,14 +1,15 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Data.Raw.Sys;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.ImportExport.Json.V1;
+using ToSic.Eav.Metadata.Recommendations.Sys;
 using ToSic.Eav.Metadata.Sys;
 using ToSic.Eav.WebApi.Sys.Admin.Metadata;
-using ToSic.Sxc.Backend.SysData;
 
 namespace ToSic.Sxc.Backend.Admin;
 
@@ -45,23 +46,8 @@ public class ItemMetadata : CustomDataSource
             Recommendations = result.Recommendations?.ToList(),
         };
     }
-    private IEnumerable<IRawEntity> Recommendations(LazySvc<MetadataControllerReal> metadata)
-        => Result(metadata).Recommendations?.Select(x => (IRawEntity)new RawEntity
-        {
-            Values = new Dictionary<string, object?>
-            {
-                ["ContentTypeId"] = x.Id,
-                [nameof(x.Title)] = x.Title,
-                [nameof(x.Name)] = x.Name,
-                [nameof(x.Count)] = x.Count,
-                [nameof(x.DeleteWarning)] = x.DeleteWarning,
-                [nameof(x.Icon)] = x.Icon,
-                [nameof(x.CreateEmpty)] = x.CreateEmpty,
-                [nameof(x.Debug)] = x.Debug,
-                [nameof(x.Enabled)] = x.Enabled,
-                [nameof(x.MissingFeature)] = x.MissingFeature,
-            },
-        }) ?? [];
+    private IEnumerable<MetadataRecommendationRaw> Recommendations(LazySvc<MetadataControllerReal> metadata)
+        => Result(metadata).Recommendations?.Select(recommendation => new MetadataRecommendationRaw(recommendation)) ?? [];
     private IEnumerable<IRawEntity> Items(IAppReaderFactory appReaders, Generator<IConvertToEavLight> converters)
     {
         var metadata = appReaders.Get(AppId).Metadata;
@@ -98,6 +84,37 @@ public class ItemMetadata : CustomDataSource
             };
         }).ToList();
     }
-    private IEnumerable<IRawEntity> Target(LazySvc<MetadataControllerReal> metadata) => [SysDataRaw.One(Result(metadata).For)];
-    private static DataFactoryOptions Options() => new() { AutoId = true, AllowUnknownValueTypes = true };
+    private IEnumerable<MetadataForRaw> Target(LazySvc<MetadataControllerReal> metadata)
+        => [new(Result(metadata).For)];
+    private static DataFactoryOptions Options() => new() { AllowUnknownValueTypes = true };
+
+    private sealed class MetadataRecommendationRaw(MetadataRecommendation recommendation) : IRawEntityAutoConvert
+    {
+        public string ContentTypeId => recommendation.Id;
+
+        [ContentTypeTitle]
+        public string Title => recommendation.Title;
+
+        public string Name => recommendation.Name;
+        public int Count => recommendation.Count;
+        public string? DeleteWarning => recommendation.DeleteWarning;
+        public string? Icon => recommendation.Icon;
+        public bool? CreateEmpty => recommendation.CreateEmpty;
+        public string Debug => recommendation.Debug;
+        public bool Enabled => recommendation.Enabled;
+        public string? MissingFeature => recommendation.MissingFeature;
+    }
+
+    private sealed class MetadataForRaw(JsonMetadataFor target) : IRawEntityAutoConvert
+    {
+        public string? Target => target.Target;
+        public int TargetType => target.TargetType;
+        public string? String => target.String;
+        public Guid? Guid => target.Guid;
+        public int? Number => target.Number;
+        public bool? Singleton => target.Singleton;
+
+        [ContentTypeTitle]
+        public string? Title => target.Title;
+    }
 }

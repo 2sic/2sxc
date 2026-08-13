@@ -1,9 +1,9 @@
 using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.WebApi.Sys.Install;
-using ToSic.Sxc.Backend.SysData;
 
 namespace ToSic.Sxc.Backend.Sys;
 
@@ -25,11 +25,31 @@ public class AppInstallation : CustomDataSource
     private InstallAppsDto Result(LazySvc<InstallControllerReal> install, ISxcCurrentContextService context)
         => install.Value.InstallSettings(IsContentApp, context.BlockRequired().Context.Module);
 
-    private IEnumerable<IRawEntity> Settings(LazySvc<InstallControllerReal> install, ISxcCurrentContextService context)
-        => [new RawEntity { Values = new Dictionary<string, object?> { ["RemoteUrl"] = Result(install, context).remoteUrl } }];
-    private IEnumerable<IRawEntity> InstalledApps(LazySvc<InstallControllerReal> install, ISxcCurrentContextService context)
-        => SysDataRaw.Many(Result(install, context).installedApps);
-    private IEnumerable<IRawEntity> Rules(LazySvc<InstallControllerReal> install, ISxcCurrentContextService context)
-        => SysDataRaw.Many(Result(install, context).rules);
-    private static DataFactoryOptions Options() => new() { AutoId = true, AllowUnknownValueTypes = true };
+    private IEnumerable<InstallationSettingsRaw> Settings(LazySvc<InstallControllerReal> install, ISxcCurrentContextService context)
+        => [new(Result(install, context).remoteUrl)];
+    private IEnumerable<InstalledAppRaw> InstalledApps(LazySvc<InstallControllerReal> install, ISxcCurrentContextService context)
+        => Result(install, context).installedApps.Select(app => new InstalledAppRaw(app));
+    private IEnumerable<InstallRuleRaw> Rules(LazySvc<InstallControllerReal> install, ISxcCurrentContextService context)
+        => Result(install, context).rules?.Select(rule => new InstallRuleRaw(rule)) ?? [];
+    private static DataFactoryOptions Options() => new();
+
+    private sealed record InstallationSettingsRaw(string RemoteUrl) : IRawEntityAutoConvert;
+
+    private sealed class InstalledAppRaw(AppDtoLight app) : IRawEntityAutoConvert
+    {
+        [ContentTypeTitle]
+        public string Name => app.name;
+        public string Guid => app.guid;
+        public string Version => app.version;
+    }
+
+    private sealed class InstallRuleRaw(AppInstallRuleDto rule) : IRawEntityAutoConvert
+    {
+        [ContentTypeTitle]
+        public string Name => rule.name;
+        public string AppGuid => rule.appGuid;
+        public string Mode => rule.mode;
+        public string Target => rule.target;
+        public string Url => rule.url;
+    }
 }

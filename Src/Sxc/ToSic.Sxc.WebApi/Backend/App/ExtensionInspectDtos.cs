@@ -1,4 +1,6 @@
 using System.Text.Json.Serialization;
+using ToSic.Eav.Data.ContentTypes;
+using ToSic.Eav.Data.Raw;
 
 namespace ToSic.Sxc.Backend.App;
 
@@ -21,8 +23,9 @@ public class ExtensionInspectResultDto
 }
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionFileStatusDto
+public class ExtensionFileStatusDto : IRawEntityAutoConvert
 {
+    [ContentTypeTitle]
     [JsonPropertyName("path")]
     public required string Path { get; init; }
 
@@ -31,7 +34,7 @@ public class ExtensionFileStatusDto
 }
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionInspectSummaryDto
+public class ExtensionInspectSummaryDto : IRawEntityAutoConvert
 {
     [JsonPropertyName("total")]
     public int Total { get; init; }
@@ -54,8 +57,9 @@ public class ExtensionInspectDataDto
 }
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionInspectContentTypeDto
+public class ExtensionInspectContentTypeDto : IRawEntityAutoConvert
 {
+    [ContentTypeTitle]
     [JsonPropertyName("name")]
     public required string Name { get; init; }
 

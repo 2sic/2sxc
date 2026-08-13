@@ -1,8 +1,8 @@
 using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Sxc.Backend.SysData;
 
 namespace ToSic.Sxc.Backend.Cms;
 
@@ -17,8 +17,21 @@ public class ItemHistory : CustomDataSource
         : base(services, "Sxc.ItemHist", connect: [versioning])
         => ProvideOutRaw(() => Get(versioning), options: Options);
 
-    private IEnumerable<IRawEntity> Get(GenWorkDb<WorkEntityVersioning> versioning)
-        => SysDataRaw.Many(versioning.New(appId: AppId).VersionHistory(EntityId));
+    private IEnumerable<ItemHistoryRaw> Get(GenWorkDb<WorkEntityVersioning> versioning)
+        => versioning.New(appId: AppId).VersionHistory(EntityId).Select(history => new ItemHistoryRaw(history));
 
-    private static DataFactoryOptions Options() => new() { AutoId = true, TypeName = "ItemHistory", AllowUnknownValueTypes = true };
+    private static DataFactoryOptions Options() => new() { TypeName = "ItemHistory" };
+
+    private sealed class ItemHistoryRaw(ToSic.Eav.Persistence.Versions.ItemHistory history) : IRawEntityAutoConvert
+    {
+        public DateTime TimeStamp => history.TimeStamp;
+        public string? User => history.User;
+        public int ChangeSetId => history.ChangeSetId;
+        public int HistoryId => history.HistoryId;
+
+        [ContentTypeTitle]
+        public int VersionNumber => history.VersionNumber;
+
+        public string? Json => history.Json;
+    }
 }

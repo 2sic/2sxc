@@ -3,7 +3,6 @@ using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Sxc.Backend.App;
-using ToSic.Sxc.Backend.SysData;
 
 namespace ToSic.Sxc.Backend.Admin;
 
@@ -15,7 +14,7 @@ public class AppExtensions : CustomDataSource
         : base(services, "Sxc.AppExts", connect: [reader])
         => ProvideOutRaw(() => reader.Value.GetExtensions(AppId).Extensions, options: Options);
 
-    private static DataFactoryOptions Options() => new() { AutoId = true, TypeName = "AppExtension", AllowUnknownValueTypes = true };
+    private static DataFactoryOptions Options() => new() { TypeName = "AppExtension", AllowUnknownValueTypes = true };
 }
 
 [PrivateApi]
@@ -39,9 +38,15 @@ public class AppExtensionInspect : CustomDataSource
     }
 
     private ExtensionInspectResultDto Result(LazySvc<ExtensionInspectBackend> inspect) => _result ??= inspect.Value.Inspect(AppId, ExtensionName, Edition);
-    private IEnumerable<IRawEntity> State(LazySvc<ExtensionInspectBackend> inspect) => [SysDataRaw.One(new { Result(inspect).FoundLock })];
-    private IEnumerable<IRawEntity> Files(LazySvc<ExtensionInspectBackend> inspect) => SysDataRaw.Many(Result(inspect).Files);
-    private IEnumerable<IRawEntity> Summary(LazySvc<ExtensionInspectBackend> inspect) => Result(inspect).Summary is { } x ? [SysDataRaw.One(x)] : [];
-    private IEnumerable<IRawEntity> ContentTypes(LazySvc<ExtensionInspectBackend> inspect) => SysDataRaw.Many(Result(inspect).Data?.ContentTypes);
-    private static DataFactoryOptions Options() => new() { AutoId = true, AllowUnknownValueTypes = true };
+    private IEnumerable<ExtensionInspectStateRaw> State(LazySvc<ExtensionInspectBackend> inspect)
+        => [new(Result(inspect).FoundLock)];
+    private IEnumerable<ExtensionFileStatusDto> Files(LazySvc<ExtensionInspectBackend> inspect)
+        => Result(inspect).Files ?? [];
+    private IEnumerable<ExtensionInspectSummaryDto> Summary(LazySvc<ExtensionInspectBackend> inspect)
+        => Result(inspect).Summary is { } summary ? [summary] : [];
+    private IEnumerable<ExtensionInspectContentTypeDto> ContentTypes(LazySvc<ExtensionInspectBackend> inspect)
+        => Result(inspect).Data?.ContentTypes ?? [];
+    private static DataFactoryOptions Options() => new() { AllowUnknownValueTypes = true };
+
+    private sealed record ExtensionInspectStateRaw(bool FoundLock) : IRawEntityAutoConvert;
 }

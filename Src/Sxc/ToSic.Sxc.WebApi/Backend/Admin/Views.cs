@@ -1,8 +1,9 @@
 using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Sxc.Backend.SysData;
+using ToSic.Eav.WebApi.Sys.Context;
 using ToSic.Sxc.Backend.Usage;
 using ToSic.Sxc.Backend.Views;
 
@@ -29,11 +30,24 @@ public class ViewUsage : CustomDataSource
         : base(services, "Sxc.ViewUsage", connect: [usage, provider, context])
         => ProvideOutRaw(() => Get(usage, provider, context), options: Options);
 
-    private IEnumerable<IRawEntity> Get(LazySvc<UsageBackend> usage, IViewUsageDataProvider provider, ISxcCurrentContextService context)
-        => SysDataRaw.Many(usage.Value.ViewUsage(
-            AppId,
-            ViewGuid,
-            (views, blocks) => provider.Build(views, blocks, context.GetExistingAppOrSet(AppId).Site.Id)));
+    private IEnumerable<ViewUsageRaw> Get(LazySvc<UsageBackend> usage, IViewUsageDataProvider provider, ISxcCurrentContextService context)
+        => usage.Value.ViewUsage(
+                AppId,
+                ViewGuid,
+                (views, blocks) => provider.Build(views, blocks, context.GetExistingAppOrSet(AppId).Site.Id))
+            .Select(view => new ViewUsageRaw(view));
 
-    private static DataFactoryOptions Options() => new() { AutoId = true, TypeName = "ViewUsage", AllowUnknownValueTypes = true };
+    private static DataFactoryOptions Options() => new() { TypeName = "ViewUsage", AllowUnknownValueTypes = true };
+
+    private sealed class ViewUsageRaw(ViewDto view) : IRawEntityAutoConvert
+    {
+        public int Id => view.Id;
+        public Guid Guid => view.Guid;
+
+        [ContentTypeTitle]
+        public string Name => view.Name;
+
+        public string? Path => view.Path;
+        public IEnumerable<ContentBlockDto> Blocks => view.Blocks;
+    }
 }

@@ -19,5 +19,5 @@ public class AppsPendingInitialization : CustomDataSource
     private IEnumerable<PendingAppDto> Get(LazySvc<ImportApp> importApp)
         => importApp.Value.GetPendingApps(OfZoneId);
 
-    private static DataFactoryOptions Options() => new() { AutoId = true, TypeName = "PendingApp", AllowUnknownValueTypes = true };
+    private static DataFactoryOptions Options() => new() { TypeName = "PendingApp", AllowUnknownValueTypes = true };
 }
