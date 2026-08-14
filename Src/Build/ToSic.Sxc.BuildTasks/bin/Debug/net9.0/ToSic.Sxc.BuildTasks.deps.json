@@ -8,8 +8,7 @@
     ".NETCoreApp,Version=v9.0": {
       "ToSic.Sxc.BuildTasks/1.0.0": {
         "dependencies": {
-          "Microsoft.Build.Tasks.Core": "17.14.8",
-          "System.Text.Json": "9.0.5"
+          "Microsoft.Build.Tasks.Core": "17.14.8"
         },
         "runtime": {
           "ToSic.Sxc.BuildTasks.dll": {}
@@ -29,7 +28,6 @@
           "Microsoft.Build.Utilities.Core": "17.14.8",
           "Microsoft.NET.StringTools": "17.14.8",
           "System.CodeDom": "9.0.0",
-          "System.Collections.Immutable": "9.0.0",
           "System.Configuration.ConfigurationManager": "9.0.0",
           "System.Diagnostics.EventLog": "9.0.0",
           "System.Formats.Nrbf": "9.0.0",
@@ -49,7 +47,6 @@
         "dependencies": {
           "Microsoft.Build.Framework": "17.14.8",
           "Microsoft.NET.StringTools": "17.14.8",
-          "System.Collections.Immutable": "9.0.0",
           "System.Configuration.ConfigurationManager": "9.0.0",
           "System.Diagnostics.EventLog": "9.0.0",
           "System.Security.Cryptography.ProtectedData": "9.0.0"
@@ -77,7 +74,6 @@
           }
         }
       },
-      "System.Collections.Immutable/9.0.0": {},
       "System.Configuration.ConfigurationManager/9.0.0": {
         "dependencies": {
           "System.Diagnostics.EventLog": "9.0.0",
@@ -165,8 +161,7 @@
             "fileVersion": "9.0.24.52809"
           }
         }
-      },
-      "System.Text.Json/9.0.5": {}
+      }
     }
   },
   "libraries": {
@@ -209,13 +204,6 @@
       "sha512": "sha512-oTE5IfuMoET8yaZP/vdvy9xO47guAv/rOhe4DODuFBN3ySprcQOlXqO3j+e/H/YpKKR5sglrxRaZ2HYOhNJrqA==",
       "path": "system.codedom/9.0.0",
       "hashPath": "system.codedom.9.0.0.nupkg.sha512"
-    },
-    "System.Collections.Immutable/9.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-QhkXUl2gNrQtvPmtBTQHb0YsUrDiDQ2QS09YbtTTiSjGcf7NBqtYbrG/BE06zcBPCKEwQGzIv13IVdXNOSub2w==",
-      "path": "system.collections.immutable/9.0.0",
-      "hashPath": "system.collections.immutable.9.0.0.nupkg.sha512"
     },
     "System.Configuration.ConfigurationManager/9.0.0": {
       "type": "package",
@@ -265,13 +253,6 @@
       "sha512": "sha512-GQZn5wFd+pyOfwWaCbqxG7trQ5ox01oR8kYgWflgtux4HiUNihGEgG2TktRWyH+9bw7NoEju1D41H/upwQeFQw==",
       "path": "system.security.cryptography.xml/9.0.0",
       "hashPath": "system.security.cryptography.xml.9.0.0.nupkg.sha512"
-    },
-    "System.Text.Json/9.0.5": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-rnP61ZfloTgPQPe7ecr36loNiGX3g1PocxlKHdY/FUpDSsExKkTxpMAlB4X35wNEPr1X7mkYZuQvW3Lhxmu7KA==",
-      "path": "system.text.json/9.0.5",
-      "hashPath": "system.text.json.9.0.5.nupkg.sha512"
     }
   }
 }
