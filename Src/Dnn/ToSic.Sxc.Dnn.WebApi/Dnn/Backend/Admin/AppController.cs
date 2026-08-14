@@ -66,7 +66,6 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     //public ICollection<SiteLanguageDto> Languages(int appId) => Real.Languages(appId);
 
     // Replaced by DataSource System.AppStatistics through query System.SysData.
-    // Use app/auto/query/System.SysData/Default with SysDataSource=System.AppStatistics.
     ///// <inheritdoc />
     //[HttpGet]
     //[ValidateAntiForgeryToken]
@@ -112,7 +111,6 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     }
 
     // Replaced by DataSource System.SystemStack through query System.SysData.
-    // Use app/auto/query/System.SysData/Default with SysDataSource=System.SystemStack.
     ///// <inheritdoc />
     //[HttpGet]
     //[ValidateAntiForgeryToken]
@@ -130,16 +128,14 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
         return Real.Import(new(Request, HttpContext.Current.Request), zoneId, HttpContext.Current.Request["Name"]);
     }
 
-    // TODO: @2rb #SysData
-    // GetPendingApps should become System.AppsPendingInitialization
-    
-    /// <inheritdoc />
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [SupportedModules(DnnSupportedModuleNames)]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public IEnumerable<PendingAppDto> GetPendingApps(int zoneId)
-        => Real.GetPendingApps(zoneId);
+    // Replaced by DataSource System.AppsPendingInitialization through query System.SysData.
+    ///// <inheritdoc />
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[SupportedModules(DnnSupportedModuleNames)]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //public IEnumerable<PendingAppDto> GetPendingApps(int zoneId)
+    //    => Real.GetPendingApps(zoneId);
 
     /// <inheritdoc />
     [HttpPost]

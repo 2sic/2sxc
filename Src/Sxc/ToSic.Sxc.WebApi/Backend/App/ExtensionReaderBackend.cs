@@ -23,9 +23,9 @@ public class ExtensionReaderBackend(
 {
     private const string IconFileName = "icon.png";
 
-    public ExtensionsResultDto GetExtensions(int appId)
+    public List<ExtensionDto> GetExtensions(int appId)
     {
-        var l = Log.Fn<ExtensionsResultDto>($"a#{appId}");
+        var l = Log.Fn<List<ExtensionDto>>($"a#{appId}");
         var appReader = appReadersLazy.Value.Get(appId);
         var appPaths = appPathSvc.Get(appReader, site);
         var editionNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
@@ -128,7 +128,7 @@ public class ExtensionReaderBackend(
             }
         }
         Log.A($"extensions discovered: {list.Count}");
-        return l.ReturnAsOk(new ExtensionsResultDto { Extensions = list });
+        return l.ReturnAsOk(list);
 
         string EditionLabel(string editionName) => editionName.IsEmpty() ? "(primary)" : editionName;
     }

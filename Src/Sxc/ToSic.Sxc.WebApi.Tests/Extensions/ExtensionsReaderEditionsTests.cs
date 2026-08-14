@@ -37,7 +37,7 @@ public class ExtensionsReaderEditionsTests(
         var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
         
         Assert.NotNull(result);
-        var extensions = result.Extensions.Where(e => e.Folder == extName).ToList();
+        var extensions = result.Where(e => e.Folder == extName).ToList();
         Assert.Single(extensions);
         var ext = extensions.First();
         Assert.Equal(extName, ext.Folder);
@@ -58,7 +58,7 @@ public class ExtensionsReaderEditionsTests(
         
         var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
         
-        var extensions = result.Extensions.Where(e => e.Folder == extName).ToList();
+        var extensions = result.Where(e => e.Folder == extName).ToList();
         Assert.Single(extensions);
         Assert.Equal(string.Empty, extensions[0].Edition);
     }
@@ -89,7 +89,7 @@ public class ExtensionsReaderEditionsTests(
         
         var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
         
-        var extensions = result.Extensions.Where(e => e.Folder == extName).ToList();
+        var extensions = result.Where(e => e.Folder == extName).ToList();
         Assert.Equal(2, extensions.Count);
 
         var root = extensions.Single(e => e.Edition == string.Empty);
@@ -135,7 +135,7 @@ public class ExtensionsReaderEditionsTests(
         
         var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
         
-        var extensions = result.Extensions.Where(e => e.Folder == extName).ToList();
+        var extensions = result.Where(e => e.Folder == extName).ToList();
         Assert.Equal(4, extensions.Count);
 
         Assert.Contains(extensions, e => e.Edition == string.Empty);
@@ -173,10 +173,10 @@ public class ExtensionsReaderEditionsTests(
 
         var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
 
-        var primary = result.Extensions.Single(e => e.Folder == extName && e.Edition == string.Empty);
+        var primary = result.Single(e => e.Folder == extName && e.Edition == string.Empty);
         Assert.Equal("/extensions/icon-ext/icon.png", primary.Icon.ToLowerInvariant());
 
-        var staging = result.Extensions.Single(e => e.Folder == extName && e.Edition == "staging");
+        var staging = result.Single(e => e.Folder == extName && e.Edition == "staging");
         Assert.Equal("/staging/extensions/icon-ext/icon.png", staging.Icon.ToLowerInvariant());
     }
 
@@ -207,7 +207,7 @@ public class ExtensionsReaderEditionsTests(
         
     //    var result = ctx.ReaderBackend.GetExtensions(appId: 42);
         
-    //    var extensions = result.Extensions.Where(e => e.Folder == extName).ToList();
+    //    var extensions = result.Where(e => e.Folder == extName).ToList();
     //    Assert.Single(extensions);
     //    Assert.Equal(string.Empty, extensions[0].Edition);
     //}
@@ -231,7 +231,7 @@ public class ExtensionsReaderEditionsTests(
         
     //    var result = ctx.ReaderBackend.GetExtensions(appId: 42);
         
-    //    var extensions = result.Extensions.Where(e => e.Folder == extName).ToList();
+    //    var extensions = result.Where(e => e.Folder == extName).ToList();
     //    Assert.Single(extensions);
     //    Assert.Equal(string.Empty, extensions[0].Edition);
     //}
@@ -259,7 +259,7 @@ public class ExtensionsReaderEditionsTests(
         
     //    var result = ctx.ReaderBackend.GetExtensions(appId: 42);
         
-    //    var extensions = result.Extensions.Where(e => e.Folder == extName).ToList();
+    //    var extensions = result.Where(e => e.Folder == extName).ToList();
     //    Assert.Single(extensions);
     //    Assert.Equal(string.Empty, extensions[0].Edition);
     //}
@@ -288,7 +288,7 @@ public class ExtensionsReaderEditionsTests(
             nestedObj = new { key = "value" }
         });
         var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
-        var extensions = result.Extensions.Where(e => e.Folder == extName).ToList();
+        var extensions = result.Where(e => e.Folder == extName).ToList();
         var stagingEdition = extensions.Single(e => e.Edition == "staging");
         var config = stagingEdition.Configuration;
         Assert.NotNull(config);
@@ -320,7 +320,7 @@ public class ExtensionsReaderEditionsTests(
         
         var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
         
-        var extensions = result.Extensions.Where(e => e.Folder == extName).ToList();
+        var extensions = result.Where(e => e.Folder == extName).ToList();
         Assert.Single(extensions);
 
         // Should not have an entry treating the extensions folder as an edition
@@ -359,14 +359,14 @@ public class ExtensionsReaderEditionsTests(
         
         var result = ctx.ReaderBackend.GetExtensionsTac(appId: 42);
         
-        Assert.Equal(3, result.Extensions.Count);
+        Assert.Equal(3, result.Count);
 
-        var extWithEditions = result.Extensions.Where(e => e.Folder == "ext-with-editions").ToList();
+        var extWithEditions = result.Where(e => e.Folder == "ext-with-editions").ToList();
         Assert.Equal(2, extWithEditions.Count);
         Assert.Contains(extWithEditions, e => e.Edition == string.Empty);
         Assert.Contains(extWithEditions, e => e.Edition == "staging");
         
-        var extWithoutEditions = result.Extensions.Where(e => e.Folder == "ext-without-editions").ToList();
+        var extWithoutEditions = result.Where(e => e.Folder == "ext-without-editions").ToList();
         Assert.Single(extWithoutEditions);
         Assert.Equal(string.Empty, extWithoutEditions[0].Edition);
     }

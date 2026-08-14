@@ -14,17 +14,15 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
-    // TODO: @2rb #SysData
-    // GET extensions should become "System.AppExtensions"
-    
-    /// <inheritdoc />
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [SupportedModules(DnnSupportedModuleNames)]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    [JsonFormatter(Casing = Casing.Camel)]
-    public ExtensionsResultDto Extensions(int appId)
-        => Real.Extensions(appId);
+    // Replaced by DataSource System.AppExtensions through query System.SysData.
+    ///// <inheritdoc />
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[SupportedModules(DnnSupportedModuleNames)]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //[JsonFormatter(Casing = Casing.Camel)]
+    //public ExtensionsResultDto Extensions(int appId)
+    //    => Real.Extensions(appId);
 
     /// <inheritdoc />
     [HttpPost]
@@ -64,15 +62,6 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
         return Real.InstallFrom(urls, zoneId, appId, editions, overwrite);
     }
 
-    // TODO: @2rb #SysData
-    // Should become "System.AppExtension.Inspect"
-
-    /// <inheritdoc />
-    [HttpGet]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    [JsonFormatter(Casing = Casing.Camel)]
-    public ExtensionInspectResultDto Inspect(int appId, string name, string edition = null)
-        => Real.Inspect(appId, name, edition);
 
     /// <inheritdoc />
     /// Update/create endpoint using PUT with name as route segment.
@@ -85,6 +74,13 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
     public new bool Configuration(int appId, [FromUri] string name, [FromBody] ExtensionManifest configuration)
         => Real.Configuration(appId, name, configuration);
 
+    // Replaced by DataSource System.AppExtensionDetails through query System.SysData.
+    ///// <inheritdoc />
+    //[HttpGet]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //[JsonFormatter(Casing = Casing.Camel)]
+    //public ExtensionInspectResultDto Inspect(int appId, string name, string edition = null)
+    //    => Real.Inspect(appId, name, edition);
     ///// <summary>
     ///// Alias POST endpoint for front-ends posting to /appExtensions/extensions with query parameters.
     ///// Matches plural POST behavior to avoid 405 errors if client uses POST.

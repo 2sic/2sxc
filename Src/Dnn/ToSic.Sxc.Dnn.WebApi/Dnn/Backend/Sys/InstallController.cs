@@ -25,15 +25,12 @@ public class InstallController()
     public bool Resume()
         => Real.Resume();
 
-    // TODO: @2rb #SysData
-    // Probably "System.AppInstallation"
-    // Probably 3 streams
-
-    /// <inheritdoc />
-    [HttpGet]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public InstallAppsDto InstallSettings(bool isContentApp) 
-        => Real.InstallSettings(isContentApp, ((DnnModule)SysHlp.GetService<IModule>()).Init(Request.FindModuleInfo()));
+    // Replaced by DataSource System.AppInstallation through query System.SysData.
+    ///// <inheritdoc />
+    //[HttpGet]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //public InstallAppsDto InstallSettings(bool isContentApp)
+    //    => Real.InstallSettings(isContentApp, ((DnnModule)SysHlp.GetService<IModule>()).Init(Request.FindModuleInfo()));
 
 
     /// <inheritdoc />

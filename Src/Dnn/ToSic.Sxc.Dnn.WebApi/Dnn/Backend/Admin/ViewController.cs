@@ -16,17 +16,14 @@ public class ViewController() : DnnSxcControllerBase(RealController.LogSuffix), 
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
-    // TODO: @2rb #SysData
-    // probably "System.Views"
-    // for now quite complex, but that's ok.
-
-    /// <inheritdoc />
-    [HttpGet]
-    [SupportedModules(DnnSupportedModuleNames)]
-    [ValidateAntiForgeryToken]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public IEnumerable<ViewDetailsDto> All(int appId)
-        => Real.All(appId);
+    // Replaced by DataSource System.Views through query System.SysData.
+    ///// <inheritdoc />
+    //[HttpGet]
+    //[SupportedModules(DnnSupportedModuleNames)]
+    //[ValidateAntiForgeryToken]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //public IEnumerable<ViewDetailsDto> All(int appId)
+    //    => Real.All(appId);
 
     /// <inheritdoc />
     [HttpGet, HttpDelete]
@@ -57,25 +54,18 @@ public class ViewController() : DnnSxcControllerBase(RealController.LogSuffix), 
         return Real.Import(new(Request, HttpContext.Current.Request), zoneId, appId);
     }
 
-    // TODO: @2rb #SysData
-    // Probably "System.ViewUsage"
-    // Parameter probably "ViewGuid" (not just Guid)
-    // Probably just one stream containing all modules/blocks using it
-    // So probably a bit simpler in the response than now
-
-    /// <inheritdoc />
-    [HttpGet]
-    [SupportedModules(DnnSupportedModuleNames)]
-    [ValidateAntiForgeryToken]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public IEnumerable<ViewDto> Usage(int appId, Guid guid)
-        => Real.UsagePreparations((views, blocks) =>
-            {
-                // create array with all 2sxc modules in this portal
-                var allMods = new DnnPages(Log).AllModulesWithContent(PortalSettings.PortalId);
-                Log.A($"Found {allMods.Count} modules");
-
-                return views.Select(vwb => vwb.Init(blocks, allMods));
-            })
-            .Usage(appId, guid);
+    // Replaced by DataSource System.ViewUsage through query System.SysData.
+    ///// <inheritdoc />
+    //[HttpGet]
+    //[SupportedModules(DnnSupportedModuleNames)]
+    //[ValidateAntiForgeryToken]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //public IEnumerable<ViewDto> Usage(int appId, Guid guid)
+    //    => Real.UsagePreparations((views, blocks) =>
+    //        {
+    //            var allMods = new DnnPages(Log).AllModulesWithContent(PortalSettings.PortalId);
+    //            Log.A($"Found {allMods.Count} modules");
+    //            return views.Select(vwb => vwb.Init(blocks, allMods));
+    //        })
+    //        .Usage(appId, guid);
 }

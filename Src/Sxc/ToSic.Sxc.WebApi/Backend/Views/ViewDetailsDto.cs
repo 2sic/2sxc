@@ -1,12 +1,15 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
+using ToSic.Eav.Data.ContentTypes;
+using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.WebApi.Sys.Security;
 
 namespace ToSic.Sxc.Backend.Views;
 
-public class ViewDetailsDto
+public class ViewDetailsDto : IRawEntityAutoConvert
 {
     public required int Id { get; init; }
+    [ContentTypeTitle]
     public required string Name { get; init; }
     public required ViewContentTypeDto ContentType { get; init; }
     public required ViewContentTypeDto PresentationType { get; init; }

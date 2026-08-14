@@ -55,7 +55,7 @@ public class ExtensionDeleteBackend(
         if (hasFileChanges && !force)
             throw l.Ex(new InvalidOperationException("Extension has file changes; use force to delete."));
 
-        var contentTypesWithData = inspect.Data?.ContentTypes ?? [];
+        var contentTypesWithData = inspect.ContentTypes;
         var hasData = contentTypesWithData.Any(ct => ct.LocalEntities > 0);
         if (hasData && !force)
             throw l.Ex(new InvalidOperationException("Extension has data; use force to delete."));

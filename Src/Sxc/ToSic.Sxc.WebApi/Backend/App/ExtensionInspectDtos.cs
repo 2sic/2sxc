@@ -1,4 +1,6 @@
 using System.Text.Json.Serialization;
+using ToSic.Eav.Data.ContentTypes;
+using ToSic.Eav.Data.Raw;
 
 namespace ToSic.Sxc.Backend.App;
 
@@ -15,14 +17,14 @@ public class ExtensionInspectResultDto
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public ExtensionInspectSummaryDto? Summary { get; init; }
 
-    [JsonPropertyName("data")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public ExtensionInspectDataDto? Data { get; init; }
+    [JsonPropertyName("contentTypes")]
+    public List<ExtensionInspectContentTypeDto> ContentTypes { get; init; } = [];
 }
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionFileStatusDto
+public class ExtensionFileStatusDto : IRawEntityAutoConvert
 {
+    [ContentTypeTitle]
     [JsonPropertyName("path")]
     public required string Path { get; init; }
 
@@ -31,7 +33,7 @@ public class ExtensionFileStatusDto
 }
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionInspectSummaryDto
+public class ExtensionInspectSummaryDto : IRawEntityAutoConvert
 {
     [JsonPropertyName("total")]
     public int Total { get; init; }
@@ -46,16 +48,11 @@ public class ExtensionInspectSummaryDto
     public int Missing { get; init; }
 }
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionInspectDataDto
-{
-    [JsonPropertyName("contentTypes")]
-    public List<ExtensionInspectContentTypeDto> ContentTypes { get; init; } = [];
-}
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionInspectContentTypeDto
+public class ExtensionInspectContentTypeDto : IRawEntityAutoConvert
 {
+    [ContentTypeTitle]
     [JsonPropertyName("name")]
     public required string Name { get; init; }
 

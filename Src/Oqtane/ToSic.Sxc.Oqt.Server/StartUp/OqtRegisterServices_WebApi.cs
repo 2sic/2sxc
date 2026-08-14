@@ -1,6 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.WebApi.Sys.ApiExplorer;
+using ToSic.Sxc.Backend.Usage;
+using ToSic.Sxc.Oqt.Server.Pages;
 using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Server.WebApi.Admin;
 using ToSic.Sxc.WebApi.Sys.ActionFilters;
@@ -17,6 +19,7 @@ partial class OqtRegisterServices
         // ApiExplorer helper - inspects a custom WebApi class to figure out what it provides
         services.TryAddTransient<IApiInspector, OqtApiInspector>();
         services.TryAddTransient<IAppWebApiControllerAssemblyLoader, OqtAppWebApiControllerAssemblyLoader>();
+        services.TryAddTransient<IViewUsageDataProvider, OqtViewUsageDataProvider>();
 
         return services;
     }

@@ -8,12 +8,8 @@ namespace ToSic.Sxc.Backend.Admin;
 /// </summary>
 public interface IAppExtensionsController
 {
-    /// <summary>
-    /// Get all App Extensions and their configuration (if any).
-    /// </summary>
-    /// <param name="appId">App identifier</param>
-    /// <returns>Object with property "extensions" containing an array of extensions</returns>
-    ExtensionsResultDto Extensions(int appId);
+    // Replaced by DataSource System.AppExtensions through query System.SysData.
+    //ICollection<ExtensionDto> Extensions(int appId);
 
     /// <summary>
     /// Preflight installation of an extension zip to report current state and options.
@@ -51,13 +47,8 @@ public interface IAppExtensionsController
     /// <returns>true if installation succeeded</returns>
     bool InstallFrom(int zoneId, int appId, string[] urls, string editions = "", bool overwrite = false);
 
-    /// <summary>
-    /// Inspect endpoint.
-    /// </summary>
-    /// <param name="appId">App identifier</param>
-    /// <param name="name">Extension folder name</param>
-    /// <param name="edition">Optional edition name</param>
-    ExtensionInspectResultDto Inspect(int appId, string name, string? edition = null);
+    // Replaced by DataSource System.AppExtensionDetails through query System.SysData.
+    //ExtensionInspectResultDto Inspect(int appId, string name, string? edition = null);
 
     /// <summary>
     /// Create or replace the configuration of a specific App Extension.

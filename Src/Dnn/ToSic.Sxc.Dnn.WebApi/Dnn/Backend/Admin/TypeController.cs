@@ -24,25 +24,13 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
-    // TODO: @2rb #SysData
-    // I believe we already created a "System.ContentType"
-    // and we have "ContentTypes" - look for "d5372be5-3b29-45dd-9b74-97408bba2d42"
-    // find out what we can use, or create a "System.ContentTypes"
-    // Make sure you don't generate duplicate code...
-
-    /// <summary>
-    /// Get a list of all content-types.
-    /// See https://docs.2sxc.org/basics/data/content-types/index.html
-    /// </summary>
-    /// <param name="appId"></param>
-    /// <param name="scope"></param>
-    /// <param name="withStatistics"></param>
-    /// <returns></returns>
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
-        => Real.List(appId, scope, withStatistics);
+    // Replaced by DataSource System.ContentTypes through query System.SysData.
+    ///// <summary>Get a list of all content-types.</summary>
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
+    //    => Real.List(appId, scope, withStatistics);
 
     /// <summary>
     /// Delete a Content-Type

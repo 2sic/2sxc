@@ -25,11 +25,13 @@ public class TypeController() : OqtStatefulControllerBase(RealController.LogSuff
 {
     private RealController Real => GetService<RealController>();
 
+    // Replaced by DataSource System.ContentTypes through query System.SysData.
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[Authorize(Roles = RoleNames.Admin)]
+    //public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
+    //    => Real.List(appId, scope, withStatistics);
 
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [Authorize(Roles = RoleNames.Admin)]
-    public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false) => Real.List(appId, scope, withStatistics);
 
     
     [HttpDelete]
