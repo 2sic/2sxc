@@ -20,6 +20,10 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 public class MetadataController() : OqtStatefulControllerBase(RealController.LogSuffix), IMetadataController
 {
     private RealController Real => GetService<RealController>();
+    // Replaced by DataSource System.ItemMetadata through query System.SysData.
+    //[HttpGet]
+    //public MetadataListDto Get(int appId, int targetType, string keyType, string key, string contentType = null)
+    //    => Real.Get(appId, targetType, keyType, key, contentType);
 
 
 

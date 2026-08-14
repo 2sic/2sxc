@@ -14,6 +14,15 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
+    // Replaced by DataSource System.AppExtensions through query System.SysData.
+    ///// <inheritdoc />
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[SupportedModules(DnnSupportedModuleNames)]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //[JsonFormatter(Casing = Casing.Camel)]
+    //public ExtensionsResultDto Extensions(int appId)
+    //    => Real.Extensions(appId);
 
     /// <inheritdoc />
     [HttpPost]
@@ -65,6 +74,13 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
     public new bool Configuration(int appId, [FromUri] string name, [FromBody] ExtensionManifest configuration)
         => Real.Configuration(appId, name, configuration);
 
+    // Replaced by DataSource System.AppExtensionDetails through query System.SysData.
+    ///// <inheritdoc />
+    //[HttpGet]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //[JsonFormatter(Casing = Casing.Camel)]
+    //public ExtensionInspectResultDto Inspect(int appId, string name, string edition = null)
+    //    => Real.Inspect(appId, name, edition);
     ///// <summary>
     ///// Alias POST endpoint for front-ends posting to /appExtensions/extensions with query parameters.
     ///// Matches plural POST behavior to avoid 405 errors if client uses POST.

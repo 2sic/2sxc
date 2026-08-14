@@ -28,6 +28,13 @@ public class ViewController : OqtStatefulControllerBase, IViewController
 
     private RealController Real => GetService<RealController>();
 
+    // Replaced by DataSource System.Views through query System.SysData.
+    ///// <inheritdoc />
+    //[HttpGet]
+    ////[SupportedModules("2sxc,2sxc-app")]
+    //[ValidateAntiForgeryToken]
+    //[Authorize(Roles = RoleNames.Admin)]
+    //public IEnumerable<ViewDetailsDto> All(int appId) => Real.All(appId);
 
     /// <inheritdoc />
     [HttpGet, HttpDelete]
@@ -52,6 +59,18 @@ public class ViewController : OqtStatefulControllerBase, IViewController
     [Authorize(Roles = RoleNames.Admin)]
     public ImportResultDto Import(int zoneId, int appId) => Real.Import(new(Request), zoneId, appId);
 
+    // Replaced by DataSource System.ViewUsage through query System.SysData.
+    ///// <inheritdoc />
+    //[HttpGet]
+    ////[SupportedModules("2sxc,2sxc-app")]
+    //[ValidateAntiForgeryToken]
+    //[Authorize(Roles = RoleNames.Admin)]
+    //public IEnumerable<ViewDto> Usage(int appId, Guid guid) => Real.UsagePreparations((views, blocks) =>
+    //{
+    //    var allMods = _pages.Value.AllModulesWithContent(Real.SiteId);
+    //    Log.A($"Found {allMods.Count} modules");
+    //    return views.Select(vwb => _pages.Value.ViewDtoBuilder(vwb, blocks, allMods));
+    //}).Usage(appId, guid);
 
 
 }

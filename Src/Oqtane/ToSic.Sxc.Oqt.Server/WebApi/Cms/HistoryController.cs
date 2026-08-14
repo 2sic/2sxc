@@ -22,6 +22,13 @@ public class HistoryController() : OqtStatefulControllerBase(RealController.LogS
 {
     private RealController Real => GetService<RealController>();
 
+    // Replaced by DataSource System.ItemHistory through query System.SysData.
+    ///// <inheritdoc />
+    //[HttpPost]
+    ////[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    //[Authorize(Roles = RoleNames.Admin)]
+    //public List<ItemHistory> Get(int appId, [FromBody] ItemIdentifier item)
+    //    => Real.Get(appId, item);
 
 
     /// <inheritdoc />

@@ -27,6 +27,12 @@ public class LicenseController() : OqtStatefulControllerBase("License"), ILicens
 
     #region License
 
+    // Replaced by DataSources System.Licenses and System.FeatureStates through query System.SysData.
+    ///// <inheritdoc />
+    //[HttpGet]
+    ////[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+    //[Authorize(Roles = RoleNames.Host)]
+    //public IEnumerable<LicenseDto> Summary() => Real.Summary();
 
 
     /// <inheritdoc />

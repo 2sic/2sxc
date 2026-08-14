@@ -33,6 +33,13 @@ public class InstallController()
     [Authorize(Roles = RoleNames.Host)]
     public bool Resume() => Real.Resume();
 
+    // Replaced by DataSource System.AppInstallation through query System.SysData.
+    ///// <inheritdoc />
+    //[HttpGet]
+    //[Authorize(Roles = RoleNames.Admin)]
+    ////[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //public InstallAppsDto InstallSettings(bool isContentApp)
+    //    => Real.InstallSettings(isContentApp, CtxHlp.BlockOptional.Context.Module);
 
 
 

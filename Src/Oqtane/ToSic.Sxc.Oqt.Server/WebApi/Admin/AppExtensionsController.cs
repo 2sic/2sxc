@@ -21,6 +21,13 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
 {
     private RealController Real => GetService<RealController>();
 
+    // Replaced by DataSource System.AppExtensions through query System.SysData.
+    ///// <inheritdoc />
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[Authorize(Roles = RoleNames.Admin)]
+    //public ExtensionsResultDto Extensions(int appId)
+    //    => Real.Extensions(appId);
 
     /// <inheritdoc />
     [HttpPost]
@@ -71,6 +78,12 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
     public bool Configuration(int appId, string name, [FromBody] ExtensionManifest configuration)
         => Real.Configuration(appId, name, configuration);
 
+    // Replaced by DataSource System.AppExtensionDetails through query System.SysData.
+    ///// <inheritdoc />
+    //[HttpGet]
+    //[Authorize(Roles = RoleNames.Admin)]
+    //public ExtensionInspectResultDto Inspect(int appId, string name, string edition = null)
+    //    => Real.Inspect(appId, name, edition);
     ///// <summary>
     ///// Alias POST endpoint for front-ends posting to /appExtensions/extensions with query parameters.
     ///// Matches DNN plural POST behavior to avoid 405 errors if client uses POST instead of PUT.

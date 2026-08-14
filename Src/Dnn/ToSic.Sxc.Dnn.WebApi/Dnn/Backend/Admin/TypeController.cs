@@ -24,6 +24,13 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
+    // Replaced by DataSource System.ContentTypes through query System.SysData.
+    ///// <summary>Get a list of all content-types.</summary>
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
+    //    => Real.List(appId, scope, withStatistics);
 
     /// <summary>
     /// Delete a Content-Type
