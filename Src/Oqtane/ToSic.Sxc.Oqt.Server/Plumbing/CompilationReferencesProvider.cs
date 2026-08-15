@@ -11,6 +11,11 @@ internal class CompilationReferencesProvider(Assembly assembly) : AssemblyPart(a
 {
     private readonly Assembly _assembly = assembly;
 
+    /// <summary>
+    /// IMPORTANT: this looks unused, but it's almost certainly called by the ApplicationPartFactory
+    /// So don't remove it, even if it looks like it's not used anywhere. It's used by the Razor compiler to get the references for compilation.
+    /// </summary>
+    /// <returns></returns>
     public IEnumerable<string> GetReferencePaths()
     {
         // your `LoadPrivateBinAssemblies()` method needs to be called before the next line executes!
@@ -21,13 +26,13 @@ internal class CompilationReferencesProvider(Assembly assembly) : AssemblyPart(a
         if (loadContext == null) return [];
 
         var nonDynamicAssemblies = loadContext.Assemblies
-            .Where(_ => !_.IsDynamic)
+            .Where(a => !a.IsDynamic)
             .ToList();
 
         // 2. use new code with location. has some duplicates and many "" empty strings
         // which seem to be merged dynamic libraries - usually the CodeBase called them "System.Private.CoreLib.dll"
         // But that one is already included
-        var newer = nonDynamicAssemblies.Select(_ => _.Location).ToList();
+        var newer = nonDynamicAssemblies.Select(a => a.Location).ToList();
         var newerDistinct = newer.Distinct().Where(path => !path.IsNullOrEmpty()).ToList();
 
         return newerDistinct;
