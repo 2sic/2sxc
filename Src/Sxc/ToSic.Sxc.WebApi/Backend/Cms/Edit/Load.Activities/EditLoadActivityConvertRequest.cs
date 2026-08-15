@@ -5,15 +5,16 @@ using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.WebApi.Sys.Entities;
+using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
 public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerializerGenerator, DataAssembler entityAssemblerKit)
     : ServiceBase("UoW.AddCtx", connect: [jsonSerializerGenerator, entityAssemblerKit]),
-        ILowCodeAction<List<BundleWithHeaderOptional<IEntity>>, EditLoadDto>
+        IWork<List<BundleWithHeaderOptional<IEntity>>, EditLoadDto>
 {
     // Note: reworked this 2026-05-15 2dm to make the objects immutable, hope no side effects #ImmutableIsTheNewBlack
-    public async Task<ActionData<EditLoadDto>> Run(LowCodeActionContext actionCtx, ActionData<List<BundleWithHeaderOptional<IEntity>>> data)
+    public async Task<Package<EditLoadDto>> Handle(WorkContext actionCtx, Package<List<BundleWithHeaderOptional<IEntity>>> package)
     {
         var l = Log.Fn<EditLoadDto>();
 
@@ -22,18 +23,18 @@ public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerial
         var jsonSerializer = jsonSerializerGenerator.New().SetApp(appReader);
 
         // Exit early if no data
-        if (!data.Data.Any())
-            return ActionData.Create(l.Return(new() { Items = [] }));
+        if (!package.Data.Any())
+            return l.Return(new() { Items = [] }).ToPackage();
         
         // set published if some data already exists
-        var entity = data.Data.First().Entity;
+        var entity = package.Data.First().Entity;
         var isPublished = entity?.IsPublished ?? true; // Entity could be null (new), then true
         // only set draft-should-branch if this draft already has a published item
         var draftShouldBranch = !isPublished && appReader.GetPublished(entity) != null;
 
         var result = new EditLoadDto
         {
-            Items = data.Data
+            Items = package.Data
                 .Select(bundle => new BundleWithHeaderOptional<JsonEntity>
                 {
                     // new UI doesn't use the 'For' anymore, so make sure we reset it, to protect from follow-up problems
@@ -49,7 +50,7 @@ public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerial
             DraftShouldBranch = draftShouldBranch,
         };
 
-        return ActionData.Create(l.Return(result));
+        return l.Return(result).ToPackage();
     }
 
     /// <summary>

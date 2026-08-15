@@ -82,16 +82,16 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBas
 
         // Check if the type is ok, before instantiating it, to avoid security issues with instantiating random types.
         // It must be a data processor, otherwise it is not valid for this purpose.
-        if (!typeof(IDataProcessor).IsAssignableFrom(dataProcessingType))
-            return l.Return(AsError("is not a valid data processor"), $"not assignable from {nameof(IDataProcessor)}");
+        if (!typeof(IWorkEntityAction).IsAssignableFrom(dataProcessingType))
+            return l.Return(AsError("is not a valid data processor"), $"not assignable from {nameof(IWorkEntityAction)}");
 
         // Re-verify it's a dataProcessor and not null
         var probablyProcessor = sp.GetService(dataProcessingType);
-        if (probablyProcessor is not IDataProcessor dataProcessor)
+        if (probablyProcessor is not IWorkEntityAction dataProcessor)
             return l.Return(AsError("could not be instantiated"), "Instantiated type null or wrong type");
 
         // Preprocessor exists, and supports pre-save and post-save, so execute it
-        var result = await dataProcessor.Process(action, new() { Data = ent });
+        var result = await dataProcessor.Handle(new(), new((action, ent)));
         var exception = HttpExceptionAbstraction.FromPossibleException(result.Exceptions.FirstOrDefault(), HttpStatusCode.Forbidden);
         return l.Return(new(result.Data, decorator, exception, dataProcessor), $"action: {action}, {(exception != null ? "with exception" : "")}");
 
@@ -105,6 +105,6 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBas
         IEntity? Entity,
         DataStorageDecorator? Decorator,
         HttpExceptionAbstraction? Exception = null,
-        IDataProcessor? Processor = null
+        IWorkEntityAction? Processor = null
     );
 }
