@@ -2,6 +2,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data.Processing;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Models;
+using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Code.Generate.Sys;
 
@@ -14,14 +15,14 @@ internal class CopilotContentTypeAutoGenerateAction(
     CopilotCodeGenerateService codeGenerate,
     IAppReaderFactory appReaders)
     : ServiceBase(SxcLogName + ".AutoGen.CT", connect: [codeGenerate, appReaders]),
-        ILowCodeAction<ContentTypeChange, ContentTypeChange>
+        IWork<ContentTypeChange, ContentTypeChange>
 {
-    public Task<ActionData<ContentTypeChange>> Run(LowCodeActionContext mainCtx, ActionData<ContentTypeChange> data)
+    public Task<Package<ContentTypeChange>> Handle(WorkContext mainCtx, Package<ContentTypeChange> package)
     {
-        var change = data.Data;
-        var l = Log.Fn<ActionData<ContentTypeChange>>($"change:{change}");
+        var change = package.Data;
+        var l = Log.Fn<Package<ContentTypeChange>>($"change:{change}");
 
-        var errors = data.Exceptions.ToList();
+        var errors = package.Exceptions.ToList();
         var appReader = appReaders.Get(change.AppId);
         var changedType = appReader.GetContentType(change.ContentTypeNameId);
 
@@ -36,13 +37,13 @@ internal class CopilotContentTypeAutoGenerateAction(
         if (jobs.Count == 0)
         {
             l.A($"Copilot auto-generate: no matching configurations for content-type '{changedType.NameId}' ({change.Source}).");
-            return Task.FromResult(l.Return(data with { Exceptions = errors }, "no matching auto-generate configurations"));
+            return Task.FromResult(l.Return(package with { Exceptions = errors }, "no matching auto-generate configurations"));
         }
 
         foreach (var job in jobs)
             errors.AddRange(codeGenerate.AutoGenerate(job));
 
-        return Task.FromResult(l.Return(data with { Exceptions = errors }, $"processed {jobs.Count} configuration(s); errors:{errors.Count}"));
+        return Task.FromResult(l.Return(package with { Exceptions = errors }, $"processed {jobs.Count} configuration(s); errors:{errors.Count}"));
     }
 
     private static CopilotCodeGenerateService.Job? BuildJob(IDataCopilotConfiguration configuration, IContentType changedType)

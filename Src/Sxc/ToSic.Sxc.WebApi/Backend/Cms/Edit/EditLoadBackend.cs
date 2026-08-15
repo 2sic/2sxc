@@ -3,6 +3,7 @@ using ToSic.Eav.Data.Processing;
 using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sxc.Backend.Cms.Load.Activities;
 using ToSic.Sxc.Backend.SaveHelpers;
+using ToSic.Sys.HookUp;
 using ToSic.Sys.Security.Permissions;
 
 
@@ -45,17 +46,15 @@ public class EditLoadBackend(
 
         // Note 2026-02-26 2dm - changed this to use from context, should be identical, but maybe it's not? keep an eye on this till 2026-Q2
         var appReader = appContext.AppReaderRequired;
-        var actContext = new LowCodeActionContext
-        {
-            Context = new(StringComparer.OrdinalIgnoreCase)
+        var actContext = new WorkContext().With(new()
             {
                 [EditLoadContextConstants.AppId] = appId,
                 [EditLoadContextConstants.AppReader] = appReader,
                 [EditLoadContextConstants.AppContext] = appContext,
             }
-        };
+        );
 
-        var itemsData = await actCleanupRequest.Run(actContext, ActionData.Create(items));
+        var itemsData = await actCleanupRequest.Handle(actContext, items.ToPackage());
 
         // Security check
         // do early permission check - but at this time it may be that we don't have the types yet
@@ -96,7 +95,7 @@ public class EditLoadBackend(
                 throw preEdit.Exception;
         }
 
-        var result = await actConvertRequest.Run(actContext, ActionData.Create(list));
+        var result = await actConvertRequest.Handle(actContext, list.ToPackage());
 
         // since we're retrieving data - make sure we're allowed to
         // this is to ensure that if public forms only have "create" permissions, they can't access existing data
@@ -109,7 +108,7 @@ public class EditLoadBackend(
         var usedTypes = UsedTypes(actContext, list);
         actContext = actContext.With(EditLoadContextConstants.UsedTypes, usedTypes);
 
-        var actions = new List<ILowCodeAction<EditLoadDto, EditLoadDto>>
+        var actions = new List<IWork<EditLoadDto, EditLoadDto>>
         {
             actAddContentTypes,         // Add Content Types information
             actAddNecessaryInputTypes,  // load input-field configurations
@@ -121,7 +120,7 @@ public class EditLoadBackend(
 
         // Loop through the actions and run each one
         foreach (var lowCodeAction in actions)
-            result = await lowCodeAction.Run(actContext, result);
+            result = await lowCodeAction.Handle(actContext, result);
 
         // done
         var final = result.Data;
@@ -131,7 +130,7 @@ public class EditLoadBackend(
         
 
 
-    private List<IContentType> UsedTypes(LowCodeActionContext context, List<BundleWithHeaderOptional<IEntity>> list)
+    private List<IContentType> UsedTypes(WorkContext context, List<BundleWithHeaderOptional<IEntity>> list)
         => list.Select(i
                 // try to get the entity type, but if there is none (new), look it up according to the header
                 => i.Entity?.Type

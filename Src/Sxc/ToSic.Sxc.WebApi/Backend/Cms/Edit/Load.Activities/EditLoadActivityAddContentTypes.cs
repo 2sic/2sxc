@@ -3,13 +3,14 @@ using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sxc.Data.Sys;
+using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
 public class EditLoadActivityAddContentTypes(Generator<JsonSerializer> jsonSerializerGenerator)
-    : ILowCodeAction<EditLoadDto, EditLoadDto>
+    : IWork<EditLoadDto, EditLoadDto>
 {
-    public async Task<ActionData<EditLoadDto>> Run(LowCodeActionContext mainCtx, ActionData<EditLoadDto> result)
+    public async Task<Package<EditLoadDto>> Handle(WorkContext mainCtx, Package<EditLoadDto> package)
     {
         var serSettings = new JsonSerializationSettings
         {
@@ -47,9 +48,9 @@ public class EditLoadActivityAddContentTypes(Generator<JsonSerializer> jsonSeria
             })
             .ToListOpt();
 
-        result = result with
+        package = package with
         {
-            Data = result.Data with
+            Data = package.Data with
             {
                 ContentTypes = jsonTypes
                     .Select(t => t.ContentType!)
@@ -62,6 +63,6 @@ public class EditLoadActivityAddContentTypes(Generator<JsonSerializer> jsonSeria
             },
         };
 
-        return result;
+        return package;
     }
 }

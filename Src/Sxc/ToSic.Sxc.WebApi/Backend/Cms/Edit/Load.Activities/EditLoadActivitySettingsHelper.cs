@@ -6,6 +6,7 @@ using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sxc.Backend.Cms.Load.Settings;
+using ToSic.Sys.HookUp;
 using ToSic.Sys.Utils;
 using static System.StringComparer;
 
@@ -19,18 +20,18 @@ public class EditLoadActivitySettingsHelper(
     GenWorkPlus<WorkEntities> appEntities)
     : ServiceBase(SxcLogName + ".LodSet",
         connect: [jsonSerializerGenerator, loadSettingsProviders, appEntities]),
-        ILowCodeAction<EditLoadDto, EditLoadDto>
+        IWork<EditLoadDto, EditLoadDto>
 {
     public record ActionContext(List<IContentType> UsedTypes);
 
-    public async Task<ActionData<EditLoadDto>> Run(LowCodeActionContext actionCtx, ActionData<EditLoadDto> result) =>
-        result with
+    public async Task<Package<EditLoadDto>> Handle(WorkContext actionCtx, Package<EditLoadDto> package) =>
+        package with
         {
-            Data = result.Data with
+            Data = package.Data with
             {
                 Settings = GetSettings(actionCtx.Get<IContextOfApp>(EditLoadContextConstants.AppContext),
                     actionCtx.Get<List<IContentType>>(EditLoadContextConstants.UsedTypes),
-                    result.Data.ContentTypes,
+                    package.Data.ContentTypes,
                     actionCtx.Get<IAppWorkCtxPlus>(EditLoadContextConstants.AppCtxWork)),
             },
         };

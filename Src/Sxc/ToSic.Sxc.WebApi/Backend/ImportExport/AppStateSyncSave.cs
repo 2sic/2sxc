@@ -4,6 +4,7 @@ using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys.Zip;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sys.Capabilities.Features;
+using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Backend.ImportExport;
 
@@ -14,12 +15,12 @@ public class AppStateSyncSave(
     Generator<ImpExpHelpers> impExpHelpers,
     ISysFeaturesService features)
     : ServiceBase("Bck.Export", connect: [exportGenerator, site, features, impExpHelpers]),
-        ILowCodeAction<AppExportSpecs, bool>
+        IWork<AppExportSpecs, bool>
 {
 
-    public async Task<ActionData<bool>> Run(LowCodeActionContext context, ActionData<AppExportSpecs> data)
+    public async Task<Package<bool>> Handle(WorkContext context, Package<AppExportSpecs> package)
     {
-        var specs = data.Data;
+        var specs = package.Data;
         var l = Log.Fn<bool>(specs.Dump());
 
         if (features.IsEnabled(BuiltInFeatures.AppStateSyncSaveDisabled))

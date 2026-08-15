@@ -2,18 +2,19 @@
 using ToSic.Eav.Data.Processing;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.WebApi.Sys.Entities;
+using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
 public class EditLoadActivityAddNecessaryInputTypes(GenWorkPlus<WorkInputTypes> inputTypes) : ServiceBase("UoW.InpTyp"),
-    ILowCodeAction<EditLoadDto, EditLoadDto>
+    IWork<EditLoadDto, EditLoadDto>
 {
-    public async Task<ActionData<EditLoadDto>> Run(LowCodeActionContext mainCtx, ActionData<EditLoadDto> result) =>
-        result with
+    public async Task<Package<EditLoadDto>> Handle(WorkContext mainCtx, Package<EditLoadDto> package) =>
+        package with
         {
-            Data = result.Data with
+            Data = package.Data with
             {
-                InputTypes = GetNecessaryInputTypes(result.Data.ContentTypes, mainCtx.Get<IAppWorkCtxPlus>(EditLoadContextConstants.AppCtxWork)),
+                InputTypes = GetNecessaryInputTypes(package.Data.ContentTypes, mainCtx.Get<IAppWorkCtxPlus>(EditLoadContextConstants.AppCtxWork)),
             },
         };
 

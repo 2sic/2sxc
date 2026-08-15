@@ -9,6 +9,7 @@ using ToSic.Eav.Persistence.Sys.Logging;
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sys.Capabilities.Features;
+using ToSic.Sys.HookUp;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Backend.ImportExport;
@@ -28,13 +29,13 @@ public class AppStateSyncRestore(
     ISysFeaturesService features)
     : ServiceBase("Bck.Export",
         connect: [xmlImportWithFilesLazy, impExpHelpers, workAppsRemove, site, user, env, zipImport, features]),
-        ILowCodeAction<AppStateSyncRestore.Parameters, ImportResultDto>
+        IWork<AppStateSyncRestore.Parameters, ImportResultDto>
 {
     public record Parameters(int ZoneId, int AppId, string DefaultLanguage, bool WithSiteFiles): IAppIdentity;
 
-    public async Task<ActionData<ImportResultDto>> Run(LowCodeActionContext context, ActionData<Parameters> ad)
+    public async Task<Package<ImportResultDto>> Handle(WorkContext context, Package<Parameters> package)
     {
-        var parameters = ad.Data;
+        var parameters = package.Data;
         var l = Log.Fn<ImportResultDto>($"Reset App {parameters.Show()}");
         var result = new ImportResultDto();
 

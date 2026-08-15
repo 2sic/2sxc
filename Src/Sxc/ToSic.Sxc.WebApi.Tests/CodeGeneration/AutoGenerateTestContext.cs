@@ -5,6 +5,7 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Build.Sys;
 using ToSic.Eav.Data.Processing;
 using ToSic.Sxc.Code.Generate.Sys;
+using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.WebApi.Tests.CodeGeneration;
 
@@ -64,8 +65,8 @@ internal sealed class AutoGenerateTestContext : IDisposable
             Path.Combine(appRoot, "AppCode", "Data", TestAutoGenerateFileGenerator.FileName));
     }
 
-    public Task<ActionData<ContentTypeChange>> RunAsync()
-        => _action.Run(new LowCodeActionContext(), ActionData.Create(_change));
+    public Task<Package<ContentTypeChange>> RunAsync()
+        => _action.Handle(new(), _change.ToPackage());
 
     public void Dispose()
     {

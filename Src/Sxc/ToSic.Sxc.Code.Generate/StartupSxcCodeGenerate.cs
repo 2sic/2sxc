@@ -4,6 +4,7 @@ using ToSic.Eav.Data.Processing;
 using ToSic.Sxc.Code.Generate.Data;
 using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sxc.Code.Generate.Sys.CSharpBaseClasses;
+using ToSic.Sys.HookUp;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Run.Startup;
@@ -27,7 +28,7 @@ public static class StartupSxcCodeGenerate
 
         // v21.04 Copilot auto-generate on schema changes.
         services.TryAddTransient<CopilotCodeGenerateService>();
-        services.AddTransient<ILowCodeAction<ContentTypeChange, ContentTypeChange>, CopilotContentTypeAutoGenerateAction>();
+        services.AddTransient<IWork<ContentTypeChange, ContentTypeChange>, CopilotContentTypeAutoGenerateAction>();
 
         return services;
     }

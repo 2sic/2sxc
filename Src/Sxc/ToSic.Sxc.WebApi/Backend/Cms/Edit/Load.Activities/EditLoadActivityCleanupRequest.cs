@@ -1,23 +1,23 @@
 ﻿using ToSic.Eav.Apps.Sys;
-using ToSic.Eav.Data.Processing;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Metadata.Targets;
 using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sxc.Backend.SaveHelpers;
+using ToSic.Sys.HookUp;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
 public class EditLoadActivityCleanupRequest(ContentGroupList contentGroupList, ITargetTypeService mdTargetTypes)
     : ServiceBase("UoW.AddCtx", connect: [contentGroupList, mdTargetTypes]),
-        ILowCodeAction<List<ItemIdentifier>, List<ItemIdentifier>>
+        IWork<List<ItemIdentifier>, List<ItemIdentifier>>
 {
     // Note: reworked this 2026-05-15 2dm to make the objects immutable, hope no side effects #ImmutableIsTheNewBlack
-    public async Task<ActionData<List<ItemIdentifier>>> Run(LowCodeActionContext actionCtx, ActionData<List<ItemIdentifier>> data)
+    public async Task<Package<List<ItemIdentifier>>> Handle(WorkContext actionCtx, Package<List<ItemIdentifier>> package)
     {
         var l = Log.Fn<List<ItemIdentifier>>();
 
-        var items = data.Data;
+        var items = package.Data;
         var appReader = actionCtx.Get<IAppReader>(EditLoadContextConstants.AppReader);
         var cglHelper = contentGroupList.Init(appReader.PureIdentity());
         items = cglHelper.ConvertGroup(items);
@@ -25,7 +25,7 @@ public class EditLoadActivityCleanupRequest(ContentGroupList contentGroupList, I
         var final = TryToAutoFindMetadataSingleton(items, appReader.Metadata);
 
 
-        return ActionData.Create(l.Return(final));
+        return l.Return(final).ToPackage();
     }
 
 

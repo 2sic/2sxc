@@ -3,6 +3,7 @@ using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sxc.Adam.Sys.Work;
 using ToSic.Sxc.Backend.Adam;
+using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
@@ -12,26 +13,26 @@ public partial class EditLoadActivityAddPrefetch(
     Generator<IAdamPrefetchHelper, AdamWorkOptions> adamTransGetItems,
     EntityPickerApi entityPickerBackend)
     : ServiceBase(SxcLogName + ".Prefetch", connect: [adamTransGetItems, hyperlinkBackend, entityPickerBackend]),
-        ILowCodeAction<EditLoadDto, EditLoadDto>
+        IWork<EditLoadDto, EditLoadDto>
 {
-    public async Task<ActionData<EditLoadDto>> Run(LowCodeActionContext actionCtx, ActionData<EditLoadDto> result)
+    public async Task<Package<EditLoadDto>> Handle(WorkContext actionCtx, Package<EditLoadDto> package)
     {
-        var l = Log.Fn<ActionData<EditLoadDto>>();
+        var l = Log.Fn<Package<EditLoadDto>>();
         try
         {
-            result = result with
+            package = package with
             {
-                Data = result.Data with
+                Data = package.Data with
                 {
-                    Prefetch = TryToPrefectAdditionalData(actionCtx.Get<int>(EditLoadContextConstants.AppId), result.Data)
+                    Prefetch = TryToPrefectAdditionalData(actionCtx.Get<int>(EditLoadContextConstants.AppId), package.Data)
                 }
             };
-            return l.Return(result, "prefetched");
+            return l.Return(package, "prefetched");
         }
         catch (Exception ex)
         {
             l.Ex(ex);
-            return l.Return(result, "error prefetching");
+            return l.Return(package, "error prefetching");
         }
     }
 

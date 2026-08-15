@@ -145,8 +145,12 @@ public class EditSaveBackend(
                 appEntities.AppWorkCtx.Data,
                 Log
             );
-        
-        var isUniqueValidationException = isUniqueValidator.UniqueValuesOnly(itemsWithoutProcessor.Select(i => i.Entity).ToList());
+
+        var isUniqueValidationException = isUniqueValidator
+            .UniqueValuesOnly(itemsWithoutProcessor
+                .Select(i => i.Entity)
+                .ToList()
+            );
         if (isUniqueValidationException != null)
             throw isUniqueValidationException;
 
@@ -172,7 +176,7 @@ public class EditSaveBackend(
         {
             try
             {
-                var post = await item.Processor!.Process(DataProcessingEvents.PostSave, new() { Data = item.Bundle.Entity });
+                var post = await item.Processor!.Handle(new(), new((DataProcessingEvents.PostSave, item.Bundle.Entity)));
             }
             catch (Exception ex)
             {
