@@ -5,6 +5,7 @@ using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.Services;
 using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Backend.SaveHelpers;
+using ToSic.Sys.HookUp;
 using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Utils;
 
@@ -176,7 +177,7 @@ public class EditSaveBackend(
         {
             try
             {
-                var post = await item.Processor!.Handle(new(), new((DataProcessingEvents.PostSave, item.Bundle.Entity)));
+                var post = await item.Processor!.Handle(new(), new(new(DataProcessingEvents.PostSave, item.Bundle.Entity)));
             }
             catch (Exception ex)
             {

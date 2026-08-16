@@ -91,7 +91,7 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBas
             return l.Return(AsError("could not be instantiated"), "Instantiated type null or wrong type");
 
         // Preprocessor exists, and supports pre-save and post-save, so execute it
-        var result = await dataProcessor.Handle(new(), new((action, ent)));
+        var result = await dataProcessor.Handle(new(), new(new(action, ent)));
         var exception = HttpExceptionAbstraction.FromPossibleException(result.Exceptions.FirstOrDefault(), HttpStatusCode.Forbidden);
         return l.Return(new(result.Data, decorator, exception, dataProcessor), $"action: {action}, {(exception != null ? "with exception" : "")}");
 
