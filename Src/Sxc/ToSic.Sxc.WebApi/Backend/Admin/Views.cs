@@ -10,7 +10,14 @@ using ToSic.Sxc.Backend.Views;
 namespace ToSic.Sxc.Backend.Admin;
 
 [PrivateApi]
-[VisualQuery(NiceName = "Views", NameId = "708afea8-33d6-48c0-a629-31a052663bc1", NameIds = ["System.Views"], Type = DataSourceType.System, Audience = Audience.System, DataConfidentiality = DataConfidentiality.Confidential, UiHint = "Views of the current app")]
+[VisualQuery(
+    NiceName = "Views",
+    NameId = "708afea8-33d6-48c0-a629-31a052663bc1",
+    NameIds = ["System.Views"],
+    Type = DataSourceType.System,
+    Audience = Audience.System,
+    DataConfidentiality = DataConfidentiality.Confidential,
+    UiHint = "Views of the current app")]
 public class Views : CustomDataSource
 {
     public Views(Dependencies services, LazySvc<ViewsBackend> views)
@@ -20,7 +27,14 @@ public class Views : CustomDataSource
 }
 
 [PrivateApi]
-[VisualQuery(NiceName = "View Usage", NameId = "0a095e44-7f00-4d36-8425-274c7ee7277a", NameIds = ["System.ViewUsage"], Type = DataSourceType.System, Audience = Audience.System, DataConfidentiality = DataConfidentiality.Confidential, UiHint = "Blocks which use a view")]
+[VisualQuery(
+    NiceName = "View Usage",
+    NameId = "0a095e44-7f00-4d36-8425-274c7ee7277a",
+    NameIds = ["System.ViewUsage"],
+    Type = DataSourceType.System,
+    Audience = Audience.System,
+    DataConfidentiality = DataConfidentiality.Confidential,
+    UiHint = "Blocks which use a view")]
 public class ViewUsage : CustomDataSource
 {
     [Configuration]

@@ -7,7 +7,14 @@ using ToSic.Sxc.Backend.App;
 namespace ToSic.Sxc.Backend.Admin;
 
 [PrivateApi]
-[VisualQuery(NiceName = "App Extensions", NameId = "94687214-88ea-48f7-9153-186c5c885227", NameIds = ["System.AppExtensions"], Type = DataSourceType.System, Audience = Audience.System, DataConfidentiality = DataConfidentiality.Confidential, UiHint = "Extensions installed in the current app")]
+[VisualQuery(
+    NiceName = "App Extensions",
+    NameId = "94687214-88ea-48f7-9153-186c5c885227",
+    NameIds = ["System.AppExtensions"],
+    Type = DataSourceType.System,
+    Audience = Audience.System,
+    DataConfidentiality = DataConfidentiality.Confidential,
+    UiHint = "Extensions installed in the current app")]
 public class AppExtensions : CustomDataSource
 {
     public AppExtensions(Dependencies services, LazySvc<ExtensionReaderBackend> reader)
@@ -18,7 +25,14 @@ public class AppExtensions : CustomDataSource
 }
 
 [PrivateApi]
-[VisualQuery(NiceName = "App Extension Details", NameId = "641ec34d-4e04-4682-812a-0dda1e65f905", NameIds = ["System.AppExtensionDetails", "System.AppExtensionInspect"], Type = DataSourceType.System, Audience = Audience.System, DataConfidentiality = DataConfidentiality.Confidential, UiHint = "Details, files and content types of an app extension")]
+[VisualQuery(
+    NiceName = "App Extension Details",
+    NameId = "641ec34d-4e04-4682-812a-0dda1e65f905",
+    NameIds = ["System.AppExtensionDetails", "System.AppExtensionInspect"],
+    Type = DataSourceType.System,
+    Audience = Audience.System,
+    DataConfidentiality = DataConfidentiality.Confidential,
+    UiHint = "Details, files and content types of an app extension")]
 public class AppExtensionDetails : CustomDataSource
 {
     private ExtensionInspectResultDto? _result;

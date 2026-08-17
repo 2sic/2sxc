@@ -14,7 +14,14 @@ using ToSic.Eav.WebApi.Sys.Admin.Metadata;
 namespace ToSic.Sxc.Backend.Admin;
 
 [PrivateApi]
-[VisualQuery(NiceName = "Item Metadata", NameId = "0c40297c-249b-44d8-b473-7ee5b182b5e2", NameIds = ["System.ItemMetadata"], Type = DataSourceType.System, Audience = Audience.System, DataConfidentiality = DataConfidentiality.Confidential, UiHint = "Metadata items and recommendations for a target")]
+[VisualQuery(
+    NiceName = "Item Metadata",
+    NameId = "0c40297c-249b-44d8-b473-7ee5b182b5e2",
+    NameIds = ["System.ItemMetadata"],
+    Type = DataSourceType.System,
+    Audience = Audience.System,
+    DataConfidentiality = DataConfidentiality.Confidential,
+    UiHint = "Metadata items and recommendations for a target")]
 public class ItemMetadata : CustomDataSource
 {
     private MetadataListDto? _result;
@@ -24,7 +31,11 @@ public class ItemMetadata : CustomDataSource
     [Configuration(Fallback = "")] public string ContentType => Configuration.GetThis<string>("");
     [Configuration(Fallback = "")] public string Refresh => Configuration.GetThis<string>("");
 
-    public ItemMetadata(Dependencies services, LazySvc<MetadataControllerReal> metadata, IAppReaderFactory appReaders, Generator<IConvertToEavLight> converters)
+    public ItemMetadata(
+        Dependencies services,
+        LazySvc<MetadataControllerReal> metadata,
+        IAppReaderFactory appReaders,
+        Generator<IConvertToEavLight> converters)
         : base(services, "Sxc.ItemMd", connect: [metadata, appReaders, converters])
     {
         ProvideOutRaw(() => Recommendations(metadata), name: "Recommendations", options: Options);

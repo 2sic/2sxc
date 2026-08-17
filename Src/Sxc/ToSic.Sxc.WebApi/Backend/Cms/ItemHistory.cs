@@ -7,7 +7,14 @@ using ToSic.Eav.DataSource.VisualQuery;
 namespace ToSic.Sxc.Backend.Cms;
 
 [PrivateApi]
-[VisualQuery(NiceName = "Item History", NameId = "43f0261c-7400-4edb-b622-2606db9eebda", NameIds = ["System.ItemHistory"], Type = DataSourceType.System, Audience = Audience.System, DataConfidentiality = DataConfidentiality.Confidential, UiHint = "Version history of an item")]
+[VisualQuery(
+    NiceName = "Item History",
+    NameId = "43f0261c-7400-4edb-b622-2606db9eebda",
+    NameIds = ["System.ItemHistory"],
+    Type = DataSourceType.System,
+    Audience = Audience.System,
+    DataConfidentiality = DataConfidentiality.Confidential,
+    UiHint = "Version history of an item")]
 public class ItemHistory : CustomDataSource
 {
     [Configuration]

@@ -6,7 +6,14 @@ using ToSic.Eav.WebApi.Sys.ImportExport;
 namespace ToSic.Sxc.Backend.Admin;
 
 [PrivateApi]
-[VisualQuery(NiceName = "Apps Pending Initialization", NameId = "746f371d-6fd4-4834-a559-cb4a1ae2ec9e", NameIds = ["System.AppsPendingInitialization"], Type = DataSourceType.System, Audience = Audience.System, DataConfidentiality = DataConfidentiality.System, UiHint = "App packages waiting to be initialized")]
+[VisualQuery(
+    NiceName = "Apps Pending Initialization",
+    NameId = "746f371d-6fd4-4834-a559-cb4a1ae2ec9e",
+    NameIds = ["System.AppsPendingInitialization"],
+    Type = DataSourceType.System,
+    Audience = Audience.System,
+    DataConfidentiality = DataConfidentiality.System,
+    UiHint = "App packages waiting to be initialized")]
 public class AppsPendingInitialization : CustomDataSource
 {
     [Configuration(Field = "ZoneId")]

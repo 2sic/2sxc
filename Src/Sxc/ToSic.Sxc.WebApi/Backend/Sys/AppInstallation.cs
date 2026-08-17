@@ -8,7 +8,14 @@ using ToSic.Eav.WebApi.Sys.Install;
 namespace ToSic.Sxc.Backend.Sys;
 
 [PrivateApi]
-[VisualQuery(NiceName = "App Installation", NameId = "187dfef4-13a5-4aed-a806-f5756f424176", NameIds = ["System.AppInstallation"], Type = DataSourceType.System, Audience = Audience.System, DataConfidentiality = DataConfidentiality.System, UiHint = "Settings and state used by the app installer")]
+[VisualQuery(
+    NiceName = "App Installation",
+    NameId = "187dfef4-13a5-4aed-a806-f5756f424176",
+    NameIds = ["System.AppInstallation"],
+    Type = DataSourceType.System,
+    Audience = Audience.System,
+    DataConfidentiality = DataConfidentiality.System,
+    UiHint = "Settings and state used by the app installer")]
 public class AppInstallation : CustomDataSource
 {
     [Configuration]
