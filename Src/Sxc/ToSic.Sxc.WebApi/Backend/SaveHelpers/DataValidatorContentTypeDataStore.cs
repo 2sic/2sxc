@@ -1,14 +1,17 @@
 ﻿using System.Net;
 using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Processing;
+using ToSic.Eav.Metadata.Sys;
 using ToSic.Eav.Models;
+using ToSic.Sys.HookUp;
+using ToSic.Sys.Users;
 using ToSic.Sys.Utils.Types;
 using static ToSic.Eav.WebApi.Sys.Helpers.Validation.ValidatorBase;
 
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
 [PrivateApi]
-public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBase("Val.DtStor")
+public class DataValidatorContentTypeDataStore(IServiceProvider sp, RemoteWork<WorkEntityBlockUsers, PermissionCheckPayload, IEntity?> blockUser) : ServiceBase("Val.DtStor")
 {
 
     /// <summary>
@@ -43,7 +46,12 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBas
         // If we have a decorator, check if it forbids saving.
         // For example for Debug-Settings which should never hit the backend
         if (result.Decorator?.SaveIsDisabled == true)
-            return l.Return(new(result.Entity, result.Decorator, BuildExceptionIfHasIssues($"Save is disabled for content-type {ent.Type.Name} (index: {index})", l)), "save disabled!");
+            return l.Return(new(
+                    result.Entity,
+                    result.Decorator,
+                    BuildExceptionIfHasIssues($"Save is disabled for content-type {ent.Type.Name} (index: {index})", l)),
+                "save disabled!"
+            );
 
         return l.Return(result);
 
@@ -77,7 +85,7 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBas
             return l.Return(AsError(message), message);
 
         // Preprocessor exists, and supports pre-save and post-save, so execute it
-        var result = await dataProcessor.Handle(new(), new(new(action, ent)));
+        var result = await dataProcessor.Handle(new(), new(new PermissionCheckPayload(action, ent, UserElevation.SiteAdmin)));
         var exception = HttpExceptionAbstraction.FromPossibleException(result.Exceptions.FirstOrDefault(), HttpStatusCode.Forbidden);
         return l.Return(new(result.Data, decorator, exception, dataProcessor), $"action: {action}, {(exception != null ? "with exception" : "")}");
 
