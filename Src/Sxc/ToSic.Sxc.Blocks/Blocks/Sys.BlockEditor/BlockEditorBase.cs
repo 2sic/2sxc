@@ -11,10 +11,11 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.Depe
     #region DI and Construction
 
     public record Dependencies(
+        LazySvc<AppWorkContextService> AppWorkCtxSvc,
         GenWorkPlus<WorkBlocks> AppBlocks,
         GenWorkDb<WorkBlocksMod> WorkBlocksMod,
-        GenWorkDb<WorkEntityPublish> Publisher)
-        : DependenciesBase(connect: [WorkBlocksMod, AppBlocks, Publisher]);
+        LazySvc<WorkEntityPublish> Publisher
+    ) : DependenciesBase(connect: [AppWorkCtxSvc, WorkBlocksMod, AppBlocks, Publisher]);
 
     internal BlockEditorBase(Dependencies services, object[] connect) : base(services, "CG.RefMan", connect: connect)
     { }
@@ -42,7 +43,8 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.Depe
                 .New(Block.Context.AppReaderRequired)
                 .UpdateOrCreateContentGroup(BlockConfiguration, templateId);
 
-            if (!existedBeforeSettingTemplate) EnsureLinkToContentGroup(contentGroupGuid);
+            if (!existedBeforeSettingTemplate)
+                EnsureLinkToContentGroup(contentGroupGuid);
 
             return l.ReturnAndLog(contentGroupGuid);
         }
@@ -63,26 +65,17 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.Depe
             : ViewParts.ListPresentationLower;
         var presEntity = contentGroup[presKey][index];
 
-
-        // make sure we really have the draft item an not the live one
         var appReader = Block.Context.AppReaderRequired;
-        var publisher = Services.Publisher.New(appReader: appReader);
-        var contDraft = contEntity.IsPublished
-            ? appReader.GetDraft(contEntity)
-            : contEntity;
+        var publishIds = new[] { contEntity, presEntity }
+            // make sure we really have the draft item and not the live one
+            .Select(e => e?.IsPublished == true ? appReader.GetDraft(e) : e)
+            .OfType<IEntity>()
+            .Select(e => e.RepositoryId)
+            .ToArray();
 
-        if (contDraft != null)
-            publisher.Publish(contDraft.RepositoryId);
-
-        // if has presentation entity, publish that too
-        if (presEntity != null)
-        {
-            var presDraft = presEntity.IsPublished
-                ? appReader.GetDraft(presEntity)
-                : presEntity;
-            if (presDraft != null)
-                publisher.Publish(presDraft.RepositoryId);
-        }
+        // This must happen within the using context, otherwise the appReader will not be able to find the draft entity
+        using (Services.AppWorkCtxSvc.Value.WithContext(Block.Context.AppReaderRequired))
+            Services.Publisher.Value.Publish(publishIds);
 
         return l.ReturnTrue();
     }

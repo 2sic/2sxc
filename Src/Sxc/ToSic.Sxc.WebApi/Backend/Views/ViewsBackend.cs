@@ -83,7 +83,13 @@ public class ViewsBackend(
             DemoTitle = maybeEntity?.GetBestTitle() ?? ""
         };
     }
-
+    
+    /// <summary>
+    /// Delete a view
+    /// </summary>
+    /// <param name="appId"></param>
+    /// <param name="id">View id</param>
+    /// <returns></returns>
     public bool Delete(int appId, int id)
     {
         // todo: extra security to only allow zone change if host user

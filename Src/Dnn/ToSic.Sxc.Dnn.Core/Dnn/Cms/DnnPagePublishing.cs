@@ -19,9 +19,10 @@ using ServiceBase = ToSic.Sys.Services.ServiceBase;
 namespace ToSic.Sxc.Dnn.Cms;
 
 internal partial class DnnPagePublishing(
+    LazySvc<AppWorkContextService> appWorkCtxSvc,
     LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder,
-    GenWorkDb<WorkEntityPublish> entPublish)
-    : ServiceBase("Dnn.Publsh", connect: [moduleAndBlockBuilder, entPublish]), IPagePublishing
+    LazySvc<WorkEntityPublish> entPublish)
+    : ServiceBase("Dnn.Publsh", connect: [appWorkCtxSvc, moduleAndBlockBuilder, entPublish]), IPagePublishing
 {
 
     public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
@@ -100,7 +101,10 @@ internal partial class DnnPagePublishing(
                 list = list.Concat(attachedPresItems);
                 // ReSharper restore PossibleMultipleEnumeration
 
-                var ids = list.Where(e => !e.IsPublished).Select(e => e.EntityId).ToList();
+                var ids = list
+                    .Where(e => !e.IsPublished)
+                    .Select(e => e.EntityId)
+                    .ToList();
 
                 // publish BlockConfiguration as well - if there already is one
                 if (cb.ConfigurationIsReady)
@@ -112,7 +116,12 @@ internal partial class DnnPagePublishing(
                 l.A(Log.Try(() => $"will publish id⋮{ids.Count} ids:[{ string.Join(",", ids.Select(i => i.ToString()).ToArray()) }]"));
 
                 if (ids.Any())
-                    entPublish.New(cb.Context.AppReaderRequired).Publish(ids.ToArray());
+                {
+                    using (appWorkCtxSvc.Value.WithContext(cb.Context.AppReaderRequired))
+                    {
+                        entPublish.Value.Publish(ids.ToArray());
+                    }
+                }
                 else
                     l.A("no ids found, won\'t publish items");
             }

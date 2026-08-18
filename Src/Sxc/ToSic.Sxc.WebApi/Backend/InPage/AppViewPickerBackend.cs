@@ -14,7 +14,7 @@ public class AppViewPickerBackend(
     GenWorkPlus<WorkViews> workViews,
     GenWorkPlus<WorkBlockViewsGet> workBlockViews,
     AppWorkContextService appWorkCtxService,
-    GenWorkDb<WorkEntityPublish> workPublish)
+    LazySvc<WorkEntityPublish> workPublish)
     : ServiceBase("Bck.ViwApp", connect: [multiPermissionsApp, ctxService, blockEditorSelectorLazy, workViews, workBlockViews, appWorkCtxService, workPublish])
 {
     public void SetAppId(int? appId)
@@ -25,18 +25,14 @@ public class AppViewPickerBackend(
     public IEnumerable<TemplateUiInfo> Templates()
     {
         var block = ctxService.BlockRequired();
-        return block?.AppOrNull == null
-            ? []
-            : workBlockViews.New(appWorkCtxService.ContextPlus(block.Context.AppReaderRequired))
+        return workBlockViews.New(appWorkCtxService.ContextPlus(block.Context.AppReaderRequired))
                 .GetCompatibleViews(block);
     }
 
     public IEnumerable<ContentTypeUiInfo> ContentTypes()
     {
         var block = ctxService.BlockRequired();
-        return block?.AppOrNull == null
-            ? []
-            : workViews.New(appWorkCtxService.ContextPlus(block.Context.AppReaderRequired))
+        return workViews.New(appWorkCtxService.ContextPlus(block.Context.AppReaderRequired))
                 .GetContentTypesWithStatus(block.App.Path ?? "", block.App.PathShared ?? "");
     }
 
@@ -54,8 +50,9 @@ public class AppViewPickerBackend(
     {
         var l = Log.Fn<bool>($"{id}");
         var block = ctxService.BlockRequired();
-        ApiForBlockHelpers.ThrowIfNotAllowedInApp(multiPermissionsApp, block.Context, GrantSets.WritePublished);
-        workPublish.New(appWorkCtxService.Context(block.Context.AppReaderRequired)).Publish(id);
+        multiPermissionsApp.ThrowIfNotAllowedInApp(block.Context, GrantSets.WritePublished);
+        using (appWorkCtxService.WithContext(block.Context.AppReaderRequired))
+            workPublish.Value.Publish([id]);
         return l.ReturnTrue("ok");
     }
 }
