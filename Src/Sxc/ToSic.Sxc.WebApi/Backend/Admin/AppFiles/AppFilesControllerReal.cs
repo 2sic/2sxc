@@ -13,7 +13,8 @@ namespace ToSic.Sxc.Backend.Admin.AppFiles;
 public partial class AppFilesControllerReal(
     ISite site,
     IUser user,
-    Generator<AssetEditor> assetEditorGenerator,
+    AppWorkContextService appCtxSvc,
+    Generator<AssetEditor, IAppWorkCtxForDiWip> assetEditorGenerator,
     IAppReaderFactory appReaders,
     IDataSourceGenerator<AppEditionsDataSource> appEditions,
     LazySvc<AppCodeLoader> appCodeLoader,
@@ -22,7 +23,7 @@ public partial class AppFilesControllerReal(
     : ServiceBase("Bck.Assets",
         connect:
         [
-            assetEditorGenerator, assetTemplates, appReaders, appEditions, appCodeLoader, appPathsFactoryTemp
+            appCtxSvc, assetEditorGenerator, assetTemplates, appReaders, appEditions, appCodeLoader, appPathsFactoryTemp
         ]), IAppFilesController
 {
     public const string LogSuffix = "AppAss";
@@ -136,10 +137,10 @@ public partial class AppFilesControllerReal(
     private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(int appId, int templateId, bool global, string? path)
     {
         var l = Log.Fn<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
-        var app = appReaders.Get(appId);
-        var assetEditor = assetEditorGenerator.New();
+        var ctx = appCtxSvc.ContextNew(appId);
+        var assetEditor = assetEditorGenerator.New(ctx);
 
-        assetEditor.Init(app, path! /* not sure about this, but ignore for now 2026-06-23 2dm */, global, templateId);
+        assetEditor.Init(path! /* not sure about this, but ignore for now 2026-06-23 2dm */, global, templateId);
         assetEditor.EnsureUserMayEditAssetOrThrow();
         return l.Return(assetEditor);
     }
@@ -147,8 +148,8 @@ public partial class AppFilesControllerReal(
     private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(AppFileDto assetFromTemplateDto)
     {
         var l = Log.Fn<AssetEditor>($"a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
-        var app = appReaders.Get(assetFromTemplateDto.AppId);
-        var assetEditor = assetEditorGenerator.New().Init(app, assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0);
+        var ctx = appCtxSvc.ContextNew(assetFromTemplateDto.AppId);
+        var assetEditor = assetEditorGenerator.New(ctx).Init(assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0);
         assetEditor.EnsureUserMayEditAssetOrThrow(assetEditor.InternalPath);
         return l.Return(assetEditor);
     }

@@ -8,16 +8,16 @@ namespace ToSic.Sxc.Blocks.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDefinitionFactory> qDefBuilder, GenWorkPlus<WorkEntities> workEntities)
-    : WorkUnitBase<IAppWorkCtxPlus>("SxS.Blocks", connect: [cultureResolver, qDefBuilder, workEntities])
+    : ServiceWithSetup<IAppWorkCtxForDiWip>("SxS.Blocks", connect: [cultureResolver, qDefBuilder, workEntities])
 {
     public const string BlockTypeName = "2SexyContent-ContentGroup";
 
     private IImmutableList<IEntity> GetContentGroups()
-        => workEntities.New(AppWorkCtx).Get(BlockTypeName).ToImmutableOpt();
+        => workEntities.New(MyOptions).Get(BlockTypeName).ToImmutableOpt();
 
     public ICollection<BlockConfiguration> AllWithView()
     {
-        var appIdentity = AppWorkCtx.PureIdentity();
+        var appIdentity = MyOptions.PureIdentity();
         return GetContentGroups()
             .Select(b =>
             {
@@ -43,9 +43,9 @@ public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDef
         var groupEntity = GetContentGroups().GetOne(contentGroupGuid);
         var found = groupEntity != null;
         return l.Return(found
-                ? new BlockConfiguration(groupEntity, AppWorkCtx, null, qDefBuilder, cultureResolver.CurrentCultureCode, Log)
+                ? new BlockConfiguration(groupEntity, MyOptions, null, qDefBuilder, cultureResolver.CurrentCultureCode, Log)
                     .WarnIfMissingData()
-                : new(null, AppWorkCtx, null, qDefBuilder, cultureResolver.CurrentCultureCode, Log)
+                : new(null, MyOptions, null, qDefBuilder, cultureResolver.CurrentCultureCode, Log)
                 {
                     DataIsMissing = true
                 },
@@ -61,8 +61,8 @@ public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDef
         l.A($"{nameof(createTempBlockForPreview)}:{createTempBlockForPreview}");
         var result = createTempBlockForPreview
             ? new(null,
-                AppWorkCtx,
-                AppWorkCtx.Data.List.GetOne(blockId.PreviewView),
+                MyOptions,
+                MyOptions.Data.List.GetOne(blockId.PreviewView),
                 qDefBuilder,
                 cultureResolver.CurrentCultureCode,
                 Log

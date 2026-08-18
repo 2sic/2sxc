@@ -46,11 +46,13 @@ public class EditLoadBackend(
 
         // Note 2026-02-26 2dm - changed this to use from context, should be identical, but maybe it's not? keep an eye on this till 2026-Q2
         var appReader = appContext.AppReaderRequired;
+        var appWorkCtxNew = workCtxSvc.ContextNew(appId);
         var actContext = new WorkContext().With(new()
             {
                 [EditLoadContextConstants.AppId] = appId,
                 [EditLoadContextConstants.AppReader] = appReader,
                 [EditLoadContextConstants.AppContext] = appContext,
+                [EditLoadContextConstants.AppWorkContextNEW] = appWorkCtxNew,
             }
         );
 

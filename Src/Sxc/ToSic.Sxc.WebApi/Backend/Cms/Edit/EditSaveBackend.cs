@@ -13,7 +13,8 @@ namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class EditSaveBackend(
-    SxcPagePublishing pagePublishing,
+    AppWorkContextService appCtxSvc,
+    Generator<SxcPagePublishing, IAppWorkCtxForDiWip> pagePublishing,
     GenWorkPlus<WorkEntities> workEntities,
     ISxcCurrentContextService ctxService,
     JsonSerializer jsonSerializer,
@@ -22,7 +23,7 @@ public class EditSaveBackend(
     IDataSourcesService dataSourcesService,
     LazySvc<DataValidatorContentTypeDataStore> valContentTypeDataStore,
     DataAssembler dataAssembler)
-    : ServiceBase("Cms.SaveBk", connect: [pagePublishing, workEntities, ctxService, jsonSerializer, saveSecurity, saveBackendHelper, dataSourcesService, dataAssembler, valContentTypeDataStore])
+    : ServiceBase("Cms.SaveBk", connect: [appCtxSvc, pagePublishing, workEntities, ctxService, jsonSerializer, saveSecurity, saveBackendHelper, dataSourcesService, dataAssembler, valContentTypeDataStore])
 {
     public async Task<Dictionary<Guid, int>> Save(int appId, EditSaveDto package, bool partOfPage)
     {
@@ -48,6 +49,7 @@ public class EditSaveBackend(
         //}
 
         // new API WIP
+        var appCtxNew = appCtxSvc.ContextNew(appId);
         var appEntities = workEntities.New(appId);
         var appCtx = appEntities.AppWorkCtx;
 
@@ -155,15 +157,16 @@ public class EditSaveBackend(
         if (isUniqueValidationException != null)
             throw isUniqueValidationException;
 
-        var result = pagePublishing.SaveInPagePublishing(
-            context,
-            ctxService.BlockOrNull(),
-            appId,
-            itemsWithoutProcessor,
-            partOfPage,
-            forceSaveAsDraft => DoSave(appEntities, itemsWithoutProcessor, package.DraftShouldBranch || forceSaveAsDraft),
-            permCheck
-        );
+        var result = pagePublishing.New(appCtxNew)
+            .SaveInPagePublishing(
+                context,
+                ctxService.BlockOrNull(),
+                appId,
+                itemsWithoutProcessor,
+                partOfPage,
+                forceSaveAsDraft => DoSave(appEntities, itemsWithoutProcessor, package.DraftShouldBranch || forceSaveAsDraft),
+                permCheck
+            );
 
         var itemsWithProcessor = items
             .Where(i => i.Processor != null)

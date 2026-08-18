@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.DataSource.Sys.Errors;
+﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.DataSource.Sys.Errors;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
 
@@ -39,7 +40,8 @@ public sealed partial class CmsBlock
 
         var container = _services.ModuleLazy.Value.Init(ModuleId.Value);
         var blockId = container.BlockIdentifier;
-        var blockConfig = _services.AppBlocks.New(this).GetOrGeneratePreviewConfig(blockId);
+        var ctx = _services.AppCtxSvc.Value.ContextNew(this.PureIdentity());
+        var blockConfig = _services.AppBlocks.New(ctx).GetOrGeneratePreviewConfig(blockId);
         return l.Return(new(true, blockConfig), "ok");
     }
 

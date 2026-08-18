@@ -9,12 +9,15 @@ using ToSic.Sxc.LookUp.Sys;
 
 namespace ToSic.Sxc.Blocks.Sys;
 
-public class BlockGeneratorHelpers(GenWorkPlus<WorkViews> workViews, GenWorkPlus<WorkBlocks> appBlocks, LazySvc<BlockDataSourceFactory> bdsFactoryLazy, LazySvc<App> appLazy)
+public class BlockGeneratorHelpers(AppWorkContextService appCtxSvc, 
+    Generator<WorkViews, IAppWorkCtxForDiWip> workViews,
+    Generator<WorkBlocks, IAppWorkCtxForDiWip> appBlocks,
+    LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
+    LazySvc<App> appLazy
+)
     : ServiceBase("Eav.BlGenH", connect: [bdsFactoryLazy, appLazy, workViews, appBlocks])
 {
     internal LazySvc<App> AppLazy { get; } = appLazy;
-    public GenWorkPlus<WorkViews> WorkViews { get; } = workViews;
-    public GenWorkPlus<WorkBlocks> AppBlocks { get; } = appBlocks;
 
     public BlockSpecs CompleteInit(BlockSpecs currentSpecs, IBlock? parentOrNull, IBlockIdentifier blockIdentifier, int blockId)
     {
@@ -45,9 +48,10 @@ public class BlockGeneratorHelpers(GenWorkPlus<WorkViews> workViews, GenWorkPlus
 
         // note: requires EditAllowed, which isn't ready till App is created
         // 2dm #???
-        var appWorkCtxPlus = WorkViews.CtxSvc.ContextPlus(specs.PureIdentity());
-        var config = AppBlocks
-            .New(appWorkCtxPlus)
+        var appCtx = appCtxSvc.ContextNew(specs.PureIdentity());
+        //var appWorkCtxPlus = WorkViews.CtxSvc.ContextPlus(specs.PureIdentity());
+        var config = appBlocks
+            .New(appCtx)
             .GetOrGeneratePreviewConfig(blockIdentifier);
 
         specs = specs with
@@ -70,7 +74,7 @@ public class BlockGeneratorHelpers(GenWorkPlus<WorkViews> workViews, GenWorkPlus
 
         // use the content-group template, which already covers stored data + module-level stored settings
         var view = new BlockViewLoader(Log)
-            .PickView(specs, config.View, WorkViews.New(appWorkCtxPlus));
+            .PickView(specs, config.View, workViews.New(appCtx));
 
         if (view == null)
             return l.Return(specs, $"no view; a:{specs.AppId}, container:{specs.ParentId}, content-group:{config.Id}");

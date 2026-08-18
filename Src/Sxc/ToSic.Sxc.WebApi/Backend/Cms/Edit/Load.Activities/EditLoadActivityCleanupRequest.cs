@@ -8,7 +8,7 @@ using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
-public class EditLoadActivityCleanupRequest(ContentGroupList contentGroupList, ITargetTypeService mdTargetTypes)
+public class EditLoadActivityCleanupRequest(Generator<ContentGroupList, IAppWorkCtxForDiWip> contentGroupList, ITargetTypeService mdTargetTypes)
     : ServiceBase("UoW.AddCtx", connect: [contentGroupList, mdTargetTypes]),
         IWork<List<ItemIdentifier>, List<ItemIdentifier>>
 {
@@ -19,7 +19,8 @@ public class EditLoadActivityCleanupRequest(ContentGroupList contentGroupList, I
 
         var items = package.Data;
         var appReader = actionCtx.Get<IAppReader>(EditLoadContextConstants.AppReader);
-        var cglHelper = contentGroupList.Init(appReader.PureIdentity());
+        var appCtx = actionCtx.Get<IAppWorkCtxForDiWip>(EditLoadContextConstants.AppWorkContextNEW);
+        var cglHelper = contentGroupList.New(appCtx); // .Init(appReader.PureIdentity());
         items = cglHelper.ConvertGroup(items);
         items = cglHelper.ConvertListIndexToId(items);
         var final = TryToAutoFindMetadataSingleton(items, appReader.Metadata);

@@ -22,20 +22,24 @@ namespace ToSic.Eav.WebApi.Sys.Admin;
 )]
 public class AppEnhancements : CustomDataSource
 {
-    private readonly GenWorkPlus<WorkEntities> _workEntities;
+    private readonly LazySvc<IAppReaderFactory> _appReaders;
     private readonly GenWorkBasic<WorkAttributes> _workAttributes;
     private readonly Generator<ConvertAttributeToDto> _convertAttribute;
     private readonly IAppsCatalog _appsCatalog;
     private readonly LazySvc<MetadataControllerReal> _metadataController;
 
-    public AppEnhancements(Dependencies services, GenWorkPlus<WorkEntities> workEntities,
-        GenWorkBasic<WorkAttributes> workAttributes, Generator<ConvertAttributeToDto> convertAttribute,
-        IAppsCatalog appsCatalog, LazySvc<MetadataControllerReal> metadataController)
-        : base(services, logName: "Sxc.AppEnh", connect: [workEntities, workAttributes, convertAttribute, appsCatalog, metadataController])
+    public AppEnhancements(
+        Dependencies services,
+        LazySvc<IAppReaderFactory> appReaders,
+        GenWorkBasic<WorkAttributes> workAttributes,
+        Generator<ConvertAttributeToDto> convertAttribute,
+        IAppsCatalog appsCatalog,
+        LazySvc<MetadataControllerReal> metadataController)
+        : base(services, logName: "Sxc.AppEnh", connect: [appReaders, workAttributes, convertAttribute, appsCatalog, metadataController])
     {
-        _workEntities = workEntities;
         _workAttributes = workAttributes;
         _convertAttribute = convertAttribute;
+        _appReaders = appReaders;
         _appsCatalog = appsCatalog;
         _metadataController = metadataController;
 
@@ -55,28 +59,35 @@ public class AppEnhancements : CustomDataSource
         ProvideOutRaw(GetMetadata, name: "Metadata", options: () => new() { AllowUnknownValueTypes = true });
     }
 
-    private IEnumerable<IEntity> GetAppSettings() => GetEntities(GetTypes().Settings);
-    private IEnumerable<IEntity> GetAppResources() => GetEntities(GetTypes().Resources);
+    private IEnumerable<IEntity> GetAppSettings() => GetEntities(Types.Settings);
+    private IEnumerable<IEntity> GetAppResources() => GetEntities(Types.Resources);
 
     private IEnumerable<IEntity> GetEntities(string? typeName)
     {
         if (typeName == null) return [];
-        var appReader = _workEntities.CtxSvc.ContextPlus(AppId).AppReader;
+        var appReader = _appReaders.Value.Get(AppId);
         return appReader.List.Where(entity => entity.AppId == AppId && entity.Type.Name == typeName);
     }
 
     private IEnumerable<IRawEntity> GetFields(bool settings)
     {
-        var typeName = settings ? GetTypes().Settings : GetTypes().Resources;
-        if (typeName == null) return [];
-        return _convertAttribute.New().Init(AppId, false)
-            .Convert(_workAttributes.New(AppId).GetFields(typeName))
+        var typeName = settings
+            ? Types.Settings
+            : Types.Resources;
+        if (typeName == null)
+            return [];
+        var fields = _workAttributes.New(AppId).GetFields(typeName);
+        return _convertAttribute.New()
+            .Init(AppId, false)
+            .Convert(fields)
             .Select(field => field.ToRawEntity());
     }
 
     private IEnumerable<IRawEntity> GetMetadata()
     {
-        var items = _metadataController.Value.Get(AppId, (int)TargetTypes.App, "number", AppId.ToString()).Items ?? [];
+        var items = _metadataController.Value
+            .Get(AppId, (int)TargetTypes.App, "number", AppId.ToString()).Items
+                    ?? [];
         return items.Select(item => new RawEntity
         {
             Id = item.TryGetValue("Id", out var id) ? Convert.ToInt32(id) : 0,
@@ -84,16 +95,29 @@ public class AppEnhancements : CustomDataSource
         });
     }
 
+    private (string? Settings, string? Resources) Types => _types ??= GetTypes();
+    private (string? Settings, string? Resources)? _types;
     private (string? Settings, string? Resources) GetTypes()
     {
-        var appReader = _workEntities.CtxSvc.ContextPlus(AppId).AppReader;
-        var hasSettingsCustom = appReader.ContentTypes.Any(type => type.Scope == ScopeConstants.SystemConfiguration && type.Name == "SettingsCustom");
-        var hasResourcesCustom = appReader.ContentTypes.Any(type => type.Scope == ScopeConstants.SystemConfiguration && type.Name == "ResourcesCustom");
+        if (_types != null)
+            return _types.Value;
+        
+        var appReader = _appReaders.Value.Get(AppId);
+        var hasSettingsCustom = appReader.ContentTypes
+            .Any(type => type.Scope == ScopeConstants.SystemConfiguration && type.Name == AppStackConstants.Settings.CustomType);
+        var hasResourcesCustom = appReader.ContentTypes
+            .Any(type => type.Scope == ScopeConstants.SystemConfiguration && type.Name == AppStackConstants.Resources.CustomType);
         var app = _appsCatalog.AppIdentity(AppId);
         var isGlobalOrPrimary = app.IsGlobalSettingsApp() || app.AppId == _appsCatalog.PrimaryAppIdentity(app.ZoneId).AppId;
         return isGlobalOrPrimary
-            ? (hasSettingsCustom ? "SettingsCustom" : null, hasResourcesCustom ? "ResourcesCustom" : null)
-            : (AppLoadConstants.TypeAppSettings, AppLoadConstants.TypeAppResources);
+            ? (
+                hasSettingsCustom ? AppStackConstants.Settings.CustomType : null,
+                hasResourcesCustom ? AppStackConstants.Resources.CustomType : null
+            )
+            : (
+                AppLoadConstants.TypeAppSettings,
+                AppLoadConstants.TypeAppResources
+            );
     }
 
 }

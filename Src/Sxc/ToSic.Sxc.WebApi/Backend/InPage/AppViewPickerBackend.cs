@@ -11,7 +11,7 @@ public class AppViewPickerBackend(
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> multiPermissionsApp,
     ISxcCurrentContextService ctxService,
     LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
-    GenWorkPlus<WorkBlockViewsGet> workBlockViews,
+    Generator<WorkBlockViewsGet, IAppWorkCtxForDiWip> workBlockViews,
     AppWorkContextService appWorkCtxService,
     LazySvc<WorkEntityPublish> workPublish,
     LazySvc<WorkViewsContentTypes> workViewsContentTypes)
@@ -25,18 +25,20 @@ public class AppViewPickerBackend(
     public IEnumerable<TemplateUiInfo> Templates()
     {
         var block = ctxService.BlockRequired();
-        return workBlockViews.New(appWorkCtxService.ContextPlus(block.Context.AppReaderRequired))
+        var ctx = appWorkCtxService.ContextNew(block.Context.AppReaderRequired);
+        return workBlockViews.New(ctx)
                 .GetCompatibleViews(block);
     }
 
     public IEnumerable<ContentTypeUiInfo> ContentTypes()
     {
         var block = ctxService.BlockRequired();
-        using (appWorkCtxService.WithContext(block.Context.AppReaderRequired))
-            return workViewsContentTypes.Value.GetContentTypesWithStatus(
-                block.App.Path ?? "",
-                block.App.PathShared ?? ""
-            );
+        var ctx = appWorkCtxService.ContextNew(block.Context.AppReaderRequired);
+        return workViewsContentTypes.Value.GetContentTypesWithStatus(
+            ctx,
+            block.App.Path ?? "",
+            block.App.PathShared ?? ""
+        );
         //return workViews.New(appWorkCtxService.ContextPlus(block.Context.AppReaderRequired))
         //        .GetContentTypesWithStatus(block.App.Path ?? "", block.App.PathShared ?? "");
     }
@@ -56,8 +58,8 @@ public class AppViewPickerBackend(
         var l = Log.Fn<bool>($"{id}");
         var block = ctxService.BlockRequired();
         multiPermissionsApp.ThrowIfNotAllowedInApp(block.Context, GrantSets.WritePublished);
-        using (appWorkCtxService.WithContext(block.Context.AppReaderRequired))
-            workPublish.Value.Publish([id]);
+        var ctx = appWorkCtxService.ContextNew(block.Context.AppReaderRequired);
+        workPublish.Value.Publish(ctx, [id]);
         return l.ReturnTrue("ok");
     }
 }

@@ -12,7 +12,7 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.Depe
 
     public record Dependencies(
         LazySvc<AppWorkContextService> AppWorkCtxSvc,
-        GenWorkPlus<WorkBlocks> AppBlocks,
+        Generator<WorkBlocks, IAppWorkCtxForDiWip> AppBlocks,
         GenWorkDb<WorkBlocksMod> WorkBlocksMod,
         LazySvc<WorkEntityPublish> Publisher
     ) : DependenciesBase(connect: [AppWorkCtxSvc, WorkBlocksMod, AppBlocks, Publisher]);
@@ -74,8 +74,8 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.Depe
             .ToArray();
 
         // This must happen within the using context, otherwise the appReader will not be able to find the draft entity
-        using (Services.AppWorkCtxSvc.Value.WithContext(Block.Context.AppReaderRequired))
-            Services.Publisher.Value.Publish(publishIds);
+        var ctx = Services.AppWorkCtxSvc.Value.ContextNew(Block.Context.AppReaderRequired);
+        Services.Publisher.Value.Publish(ctx, publishIds);
 
         return l.ReturnTrue();
     }

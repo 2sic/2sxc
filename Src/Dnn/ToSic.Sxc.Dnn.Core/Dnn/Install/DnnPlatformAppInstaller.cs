@@ -11,9 +11,10 @@ namespace ToSic.Sxc.Dnn.Install;
 
 internal class DnnPlatformAppInstaller(
     LazySvc<IAppsCatalog> appsCatalog,
-    GenWorkPlus<WorkViews> workViews,
+    AppWorkContextService appCtxSvc,
+    Generator<WorkViews, IAppWorkCtxForDiWip> workViews,
     LazySvc<ExternalLinksService> remoteRouterLazy)
-    : ServiceBase("Dnn.AppIns", connect: [workViews, appsCatalog, remoteRouterLazy]), IPlatformAppInstaller
+    : ServiceBase("Dnn.AppIns", connect: [workViews, appCtxSvc, appsCatalog, remoteRouterLazy]), IPlatformAppInstaller
 {
     public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp)
     {
@@ -32,7 +33,7 @@ internal class DnnPlatformAppInstaller(
             {
                 var primaryAppId = appsCatalog.Value.DefaultAppIdentity(site.ZoneId);
                 // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
-                var contentViews = workViews.New(primaryAppId).GetAll();
+                var contentViews = workViews.New(appCtxSvc.ContextNew(primaryAppId)).GetAll();
                 if (contentViews.Any())
                     return null;
             }

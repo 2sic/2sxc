@@ -10,23 +10,26 @@ namespace ToSic.Sxc.Backend.Cms;
 public class ListControllerReal(
     GenWorkDb<WorkFieldList> workFieldList,
     ISxcCurrentContextService ctxService,
+    LazySvc<AppWorkContextService> appCtxSvc,
     Generator<IPagePublishing> publishing,
     LazySvc<ListActivityReplace> actReplace,
-    LazySvc<ListActivityReplaceOptions> actReplaceOptions,
+    Generator<ListActivityReplaceOptions, IAppWorkCtxForDiWip> actReplaceOptions,
     LazySvc<ListActivityGetItems> actGetItems,
     LazySvc<ListActivitySave> actSave,
-    LazySvc<ListActivityGetBlockHeader> actGetBlockHeader
+    Generator<ListActivityGetBlockHeader, IAppWorkCtxForDiWip> actGetBlockHeader
         )
-    : ServiceBase("Api.LstRl", connect: [workFieldList, publishing, ctxService, actReplace, actReplaceOptions, actGetItems, actSave, actGetBlockHeader]),
+    : ServiceBase("Api.LstRl", connect: [workFieldList, publishing, ctxService, appCtxSvc, actReplace, actReplaceOptions, actGetItems, actSave, actGetBlockHeader]),
         IListController
 {
     public const string LogSuffix = "Lst";
+
+    private IAppWorkCtxForDiWip GetCtx() => appCtxSvc.Value.ContextNew(ctxService.BlockContextRequired().AppReaderRequired);
 
     public void Replace(Guid parent, string part, int index, int entityId, bool add = false)
         => actReplace.Value.Replace(new(parent, part, index, entityId, add));
 
     public ReplacementListDto ReplaceOptions(Guid parent, string part, int index, string? contentType = null)
-        => actReplaceOptions.Value.ReplaceOptions(new(parent, part, index, contentType));
+        => actReplaceOptions.New(GetCtx()).ReplaceOptions(new(parent, part, index, contentType));
 
     public List<EntityInListDto> Items(Guid parent, string part)
         => actGetItems.Value.ItemList(parent, part);
@@ -35,7 +38,7 @@ public class ListControllerReal(
         => actSave.Value.ItemList(parent, list, part);
 
     public List<EntityInListDto> ContentBlockHeader(Guid parent)
-        => actGetBlockHeader.Value.ContentBlockHeader(parent);
+        => actGetBlockHeader.New(GetCtx()).ContentBlockHeader(parent);
 
 
     public void Move(Guid? parent, string fields, int index, int toIndex) 

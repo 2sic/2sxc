@@ -17,14 +17,17 @@ public class WorkBlocksMod(
         if (!blockConfiguration.Exists)
         {
             l.A($"doesn't exist, will create new CG with template#{templateId}");
-            var guid = workEntCreate.New(AppWorkCtx).Create(WorkBlocks.BlockTypeName, new()
-            {
-                { ViewParts.TemplateContentType, new List<int> { templateId } },
-                { ViewParts.Content, new List<int>() },
-                { ViewParts.Presentation, new List<int>() },
-                { ViewParts.FieldHeader, new List<int>() },
-                { ViewParts.FieldHeaderPresentation, new List<int>() }
-            }).EntityGuid; // new guid
+            var guid = workEntCreate
+                .New(AppWorkCtx)
+                .Create(WorkBlocks.BlockTypeName, new()
+                {
+                    { ViewParts.TemplateContentType, new List<int> { templateId } },
+                    { ViewParts.Content, new List<int>() },
+                    { ViewParts.Presentation, new List<int>() },
+                    { ViewParts.FieldHeader, new List<int>() },
+                    { ViewParts.FieldHeaderPresentation, new List<int>() }
+                })
+                .EntityGuid; // new guid
             return l.ReturnAndLog(guid, "created");
         }
 

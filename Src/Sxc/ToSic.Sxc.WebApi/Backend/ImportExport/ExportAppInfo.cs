@@ -11,21 +11,22 @@ namespace ToSic.Sxc.Backend.ImportExport;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ExportAppInfo(
     IZoneMapper zoneMapper,
-    AppWorkContextService appWorkCtxSvc,
-    GenWorkPlus<WorkViews> workViews,
+    AppWorkContextService appCtxSvc,
+    Generator<WorkViews, IAppWorkCtxForDiWip> workViews,
     GenWorkPlus<WorkEntities> workEntities,
     ExportHelper exportHelper,
     ISite site
-) : ServiceBase("Bck.Export", connect: [workEntities, appWorkCtxSvc, workViews, zoneMapper, site, exportHelper])
+) : ServiceBase("Bck.Export", connect: [workEntities, appCtxSvc, workViews, zoneMapper, site, exportHelper])
 {
     public AppExportInfoModel GetAppInfo(IAppIdentity appIdentity)
     {
         var l = Log.Fn<AppExportInfoModel>($"get app info for app: {appIdentity.Show()}");
         var (appReader, zipExport) = exportHelper.GetZipExportAndCheckZoneSwitchPermissions(appIdentity);
     
-        var appCtx = appWorkCtxSvc.ContextPlus(appReader);
+        var appCtx = appCtxSvc.ContextPlus(appReader);
+        var ctxNew = appCtxSvc.ContextNew(appReader);
         var appEntities = workEntities.New(appCtx);
-        var appViews = workViews.New(appCtx);
+        var appViews = workViews.New(ctxNew);
 
         var appHasCustomParent = appReader.HasCustomParentApp();
 
@@ -44,7 +45,7 @@ public class ExportAppInfo(
             Version = appSpecs.VersionSafe(),
             EntitiesCount = appEntities.All().Count(e => !e.HasAncestor()),
             LanguagesCount = zoneMapper.CulturesEnabledWithState(site).Count,
-            TemplatesCount = allViews.Count(),
+            TemplatesCount = allViews.Count,
             HasRazorTemplates = allViews.Any(t => t.IsRazor),
             HasTokenTemplates = allViews.Any(t => !t.IsRazor),
             FilesCount = filesCount,

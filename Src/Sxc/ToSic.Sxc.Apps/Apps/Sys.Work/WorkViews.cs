@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Apps.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class WorkViews(GenWorkPlus<WorkEntities> appEntities, IZoneCultureResolver cultureResolver, Generator<QueryDefinitionFactory> qDefBuilder)
-    : WorkUnitBase<IAppWorkCtxPlus>("Cms.ViewRd",
+    : ServiceWithSetup<IAppWorkCtxForDiWip>("Cms.ViewRd",
         connect: [appEntities, cultureResolver, qDefBuilder])
 {
     /// <summary>
@@ -25,10 +25,10 @@ public class WorkViews(GenWorkPlus<WorkEntities> appEntities, IZoneCultureResolv
     public record ViewInfoForPathSelect(IView View, string Name, string UrlIdentifier, bool IsRegex, string MainKey);
 
     private List<IEntity> ViewEntities => field
-        ??= AppWorkCtx.AppReader
+        ??= MyOptions.AppReader
             .GetCache()
             .PiggyBackGetExpiring(() => appEntities
-                .New(AppWorkCtx)
+                .New(MyOptions)
                 .Get(AppConstants.TemplateContentType)
                 .ToList()
             ).Value;
@@ -56,7 +56,7 @@ public class WorkViews(GenWorkPlus<WorkEntities> appEntities, IZoneCultureResolv
         var l = Log.Fn<List<ViewInfoForPathSelect>>();
 
         // get from cache if available or generate
-        var views = AppWorkCtx.AppReader
+        var views = MyOptions.AppReader
             .GetCache()
             .PiggyBackGetExpiring(() => GetAll()
                 .Where(t => !string.IsNullOrEmpty(t.UrlIdentifier))

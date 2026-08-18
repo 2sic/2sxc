@@ -8,16 +8,14 @@ namespace ToSic.Sxc.Backend.Cms;
 /// This is unusual, because if it's empty, we must retrieve the definition of the expected content-type from the view definition.
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ListActivityGetBlockHeader(
-    GenWorkPlus<WorkBlocks> appBlocks,
-    ISxcCurrentContextService ctxService
-) : ServiceBase("Api.CntGrpRl", connect: [appBlocks, ctxService])
+public class ListActivityGetBlockHeader(Generator<WorkBlocks, IAppWorkCtxForDiWip> appBlocks)
+    : ServiceWithSetup<IAppWorkCtxForDiWip>("Api.CntGrpRl", connect: [appBlocks])
 {
     public List<EntityInListDto> ContentBlockHeader(Guid parent)
     {
         var l = Log.Fn<List<EntityInListDto>>($"header for:{parent}");
-        var appCtx = appBlocks.CtxSvc.ContextPlus(ctxService.BlockContextRequired().AppReaderRequired);
-        var cg = appBlocks.New(appCtx).GetBlockConfig(parent);
+        //var appCtx = appBlocks.CtxSvc.ContextPlus(ctxService.BlockContextRequired().AppReaderRequired);
+        var cg = appBlocks.New(MyOptions).GetBlockConfig(parent);
 
         // new in v11 - this call might be run on a non-content-block, in which case we return null
         var ent = (cg as ICanBeEntity)?.Entity;

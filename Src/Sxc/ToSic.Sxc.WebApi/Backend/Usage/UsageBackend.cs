@@ -8,11 +8,12 @@ namespace ToSic.Sxc.Backend.Usage;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class UsageBackend(
-    GenWorkPlus<WorkBlocks> appBlocks,
-    GenWorkPlus<WorkViews> workViews,
+    AppWorkContextService appCtxSvc,
+    Generator<WorkBlocks, IAppWorkCtxForDiWip> appBlocks,
+    Generator<WorkViews, IAppWorkCtxForDiWip> workViews,
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions,
     ISxcCurrentContextService ctxService)
-    : ServiceBase("Bck.Usage", connect: [appPermissions, ctxService, workViews, appBlocks])
+    : ServiceBase("Bck.Usage", connect: [appCtxSvc, appPermissions, ctxService, workViews, appBlocks])
 {
     public IEnumerable<ViewDto> ViewUsage(int appId, Guid guid, Func<ICollection<IView>, ICollection<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
     {
@@ -24,7 +25,7 @@ public class UsageBackend(
         if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
             throw HttpException.PermissionDenied(error);
 
-        var appWorkCtxPlus = appBlocks.CtxSvc.ContextPlus(appId);
+        var appWorkCtxPlus = appCtxSvc.ContextNew(appId);
         var appViews = workViews.New(appWorkCtxPlus);
         // treat view as a list - in case future code will want to analyze many views together
         var views = new List<IView> { appViews.Get(guid) };

@@ -10,10 +10,9 @@ namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ListActivityReplaceOptions(
-    GenWorkPlus<WorkBlocks> appBlocks,
-    GenWorkPlus<WorkEntities> workEntities,
-    ISxcCurrentContextService ctxService
-) : ServiceBase("Act.LstRep", connect: [appBlocks, workEntities, ctxService])
+    Generator<WorkBlocks, IAppWorkCtxForDiWip> appBlocks,
+    GenWorkPlus<WorkEntities> workEntities
+) : ServiceWithSetup<IAppWorkCtxForDiWip>("Act.LstRep", connect: [appBlocks, workEntities])
 {
     public record Options(
         Guid Parent,
@@ -28,13 +27,12 @@ public class ListActivityReplaceOptions(
     public ReplacementListDto ReplaceOptions(Options options)
     {
         var l = Log.Fn<ReplacementListDto>($"{options}");
-        var appReader = ctxService.BlockContextRequired().AppReaderRequired;
         options = options with
         {
-            TypeNames = options.TypeNames ?? FindTypeNameOnContentGroup(appReader, options)
+            TypeNames = options.TypeNames ?? FindTypeNameOnContentGroup(options)
         };
         //var typeNameOfField = FindTypeNameOnContentGroup(appReader, options);
-        var result = GetOptions(appReader, options);
+        var result = GetOptions(options);
         return l.Return(result);
     }
 
@@ -44,12 +42,11 @@ public class ListActivityReplaceOptions(
     /// This affects what content-types must be retrieved.
     /// </summary>
     /// <returns></returns>
-    private string? FindTypeNameOnContentGroup(IAppReader appReader, Options options)
+    private string? FindTypeNameOnContentGroup(Options options)
     {
         var l = Log.Fn<string>($"{options}");
 
-        var appCtx = appBlocks.CtxSvc.ContextPlus(appReader);
-        var contentGroup = appBlocks.New(appCtx).GetBlockConfig(options.Parent);
+        var contentGroup = appBlocks.New(MyOptions).GetBlockConfig(options.Parent);
         if ((contentGroup as ICanBeEntity)?.Entity == null || contentGroup.View == null)
             return l.ReturnNull("Doesn't seem to be a content-group. Cancel.");
 
@@ -60,11 +57,11 @@ public class ListActivityReplaceOptions(
         return l.Return(typeNameForField);
     }
 
-    private ReplacementListDto GetOptions(IAppReader appReader, Options options)
+    private ReplacementListDto GetOptions(Options options)
     {
         var l = Log.Fn<ReplacementListDto>($"{options}");
 
-        var (existingItemsInField, typeNameOfField) = FindItemAndFieldTypeName(appReader, options);
+        var (existingItemsInField, typeNameOfField) = FindItemAndFieldTypeName(MyOptions.AppReader, options);
 
         var typeNameList = options.TypeNames.CsvToArrayWithoutEmpty().ToListOpt();
         if (!typeNameList.Any())
@@ -75,16 +72,17 @@ public class ListActivityReplaceOptions(
             return l.Return(new() { SelectedId = 0, Items = [] }, "no type name, so no data");
 
         var contentTypes = typeNameList
-            .Select(appReader.GetContentType)
+            .Select(MyOptions.AppReader.GetContentType)
             .ToList();
 
-        var entitiesHelper = workEntities.New(appReader);
+        var entitiesHelper = workEntities
+            .New(MyOptions);
         var listTemp = typeNameList
             .SelectMany(t => entitiesHelper.Get(t))
             .ToList();
 
         var preferDraft = listTemp
-            .Select(appReader.GetDraftOrKeep)
+            .Select(MyOptions.AppReader.GetDraftOrKeep)
             .Cast<IEntity>()
             // 2026-06-22 2dm - this seems like old code, where we ended up with both the draft and published.
             // disabled for now

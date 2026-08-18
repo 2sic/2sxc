@@ -11,19 +11,20 @@ namespace ToSic.Sxc.Backend.Views;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ViewsBackend(
-    LazySvc<AppWorkContextService> appWorkCtxService,
+    LazySvc<AppWorkContextService> appCtxSvc,
     LazySvc<WorkViewDelete> workViewDelete,
-    GenWorkPlus<WorkViews> workViews,
+    Generator<WorkViews, IAppWorkCtxForDiWip> workViews,
     LazySvc<IConvertToEavLight> convertToEavLight,
     Generator<ImpExpHelpers> impExpHelpers)
-    : ServiceBase("Bck.Views", connect: [appWorkCtxService, workViewDelete, convertToEavLight, impExpHelpers, workViews])
+    : ServiceBase("Bck.Views", connect: [appCtxSvc, workViewDelete, convertToEavLight, impExpHelpers, workViews])
 {
     public IEnumerable<ViewDetailsDto> GetAll(int appId)
     {
         var l = Log.Fn<IEnumerable<ViewDetailsDto>>($"get all a#{appId}");
 
-        var appViews = workViews.New(appId);
-        var contentTypes = appViews.AppWorkCtx.AppReader.ContentTypes.OfScope(ScopeConstants.Default).ToList();
+        var appCtx = appCtxSvc.Value.ContextNew(appId);
+        var appViews = workViews.New(appCtx);
+        var contentTypes = appCtx.AppReader.ContentTypes.OfScope(ScopeConstants.Default).ToList();
 
         var viewList = appViews.GetAll().ToList();
         Log.A($"fieldDef list count:{contentTypes.Count}, template count:{viewList.Count}");
@@ -98,8 +99,8 @@ public class ViewsBackend(
         // extra security to only allow zone change if host user
         var appReader = impExpHelpers.New().GetReaderAfterZoneSwitchPermissionCheck(appId);
         
-        using (appWorkCtxService.Value.WithContext(appReader))
-            workViewDelete.Value.DeleteView(id);
+        var ctx = appCtxSvc.Value.ContextNew(appReader);
+        workViewDelete.Value.DeleteView(ctx, id);
         
         return l.ReturnTrue();
     }

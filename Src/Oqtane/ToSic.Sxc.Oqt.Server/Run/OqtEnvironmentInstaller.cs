@@ -11,10 +11,11 @@ using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 namespace ToSic.Sxc.Oqt.Server.Run;
 
 internal class OqtEnvironmentInstaller(
-    GenWorkPlus<WorkViews> workViews,
+    AppWorkContextService appCtxSvc,
+    Generator<WorkViews, IAppWorkCtxForDiWip> workViews,
     ExternalLinksService externalLinksService,
     IAppsCatalog appsCatalog)
-    : ServiceBase($"{OqtConstants.OqtLogPrefix}.Instll", connect: [externalLinksService, workViews, appsCatalog]),
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.Instll", connect: [appCtxSvc, externalLinksService, workViews, appsCatalog]),
         IEnvironmentInstaller, IPlatformAppInstaller
 {
     public string UpgradeMessages()
@@ -23,7 +24,7 @@ internal class OqtEnvironmentInstaller(
         return null;
     }
 
-    private bool IsUpgradeRunning => false;
+    //private bool IsUpgradeRunning => false;
 
     public bool ResumeAbortedUpgrade()
     {
@@ -43,8 +44,9 @@ internal class OqtEnvironmentInstaller(
             {
                 var contentAppId = appsCatalog.DefaultAppIdentity(site.ZoneId);
                 // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
-                var contentViews = workViews.New(contentAppId).GetAll();
-                if (contentViews.Any()) return null;
+                var contentViews = workViews.New(appCtxSvc.ContextNew(contentAppId)).GetAll();
+                if (contentViews.Any())
+                    return null;
             }
             catch { /* ignore */ }
 

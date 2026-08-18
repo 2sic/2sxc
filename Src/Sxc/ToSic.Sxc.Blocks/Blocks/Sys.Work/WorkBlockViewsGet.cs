@@ -9,12 +9,12 @@ using ToSic.Sxc.Blocks.Sys.Views;
 namespace ToSic.Sxc.Blocks.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class WorkBlockViewsGet(GenWorkPlus<WorkViews> workViews, LazySvc<AppIconHelpers> appIconHelpers)
-    : WorkUnitBase<IAppWorkCtxPlus>("Cms.ViewRd", connect: [workViews, appIconHelpers])
+public class WorkBlockViewsGet(Generator<WorkViews, IAppWorkCtxForDiWip> workViews, LazySvc<AppIconHelpers> appIconHelpers)
+    : ServiceWithSetup<IAppWorkCtxForDiWip>("Cms.ViewRd", connect: [workViews, appIconHelpers])
 {
     [field: AllowNull, MaybeNull]
     public List<IView> GetAll => field
-        ??= workViews.New(AppWorkCtx)
+        ??= workViews.New(MyOptions)
             .GetAll()
             .ToList();
 

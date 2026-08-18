@@ -6,5 +6,5 @@ namespace ToSic.Sxc.Apps.Sys.Installation;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IPlatformAppInstaller : IHasLog
 {
-    string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp);
+    string? GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp);
 }

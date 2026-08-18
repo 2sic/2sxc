@@ -8,11 +8,12 @@ namespace ToSic.Sxc.Backend.Admin.Query;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class QueryControllerReal(
+    AppWorkContextService appCtxSvc,
     QueryControllerBase.Dependencies services,
-    GenWorkPlus<WorkViews> workViews,
+    Generator<WorkViews, IAppWorkCtxForDiWip> workViews,
     ISxcCurrentContextService currentContextService,
     Generator<IAppDataConfigProvider> tokenEngineWithContext)
-    : QueryControllerBase(services, "Api." + LogSuffix, connect: [workViews, currentContextService, tokenEngineWithContext])
+    : QueryControllerBase(services, "Api." + LogSuffix, connect: [appCtxSvc, workViews, currentContextService, tokenEngineWithContext])
 {
     public const string LogSuffix = "Query";
     public const string LogGroup = EavWebApiConstants.HistoryNameWebApi + "-query";
@@ -26,7 +27,8 @@ public class QueryControllerReal(
         var l = Log.Fn<bool>($"{nameof(appId)}: {appId}; {nameof(id)}: {id}");
 
         // Stop if views still use this Query
-        var viewUsingQuery = workViews.New(appId)
+        var ctx = appCtxSvc.ContextNew(appId);
+        var viewUsingQuery = workViews.New(ctx)
             .GetAll()
             .Where(t => t.Query?.Id == id)
             .Select(t => t.Id)

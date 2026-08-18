@@ -117,10 +117,8 @@ internal partial class DnnPagePublishing(
 
                 if (ids.Any())
                 {
-                    using (appWorkCtxSvc.Value.WithContext(cb.Context.AppReaderRequired))
-                    {
-                        entPublish.Value.Publish(ids.ToArray());
-                    }
+                    var ctx = appWorkCtxSvc.Value.ContextNew(cb.Context.AppReaderRequired);
+                    entPublish.Value.Publish(ctx, ids.ToArray());
                 }
                 else
                     l.A("no ids found, won\'t publish items");

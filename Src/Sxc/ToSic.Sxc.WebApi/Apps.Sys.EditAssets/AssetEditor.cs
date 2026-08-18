@@ -7,12 +7,12 @@ namespace ToSic.Sxc.Apps.Sys.EditAssets;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AssetEditor(
-    GenWorkPlus<WorkViews> workViews,
+    Generator<WorkViews, IAppWorkCtxForDiWip> workViews,
     IUser user,
     LazySvc<AppFolderInitializer> appFolderInitializer,
     ISite site,
     IAppPathsMicroSvc appPaths)
-    : ServiceBase("Sxc.AstEdt", connect: [user, appFolderInitializer, workViews, site, appPaths])
+    : ServiceWithSetup<IAppWorkCtxForDiWip>("Sxc.AstEdt", connect: [user, appFolderInitializer, workViews, site, appPaths])
 {
 
     #region Constructor / DI
@@ -24,15 +24,15 @@ public class AssetEditor(
     private IAppPaths _appPaths = null!;
 
 
-    public AssetEditor Init(IAppReader appReader, string fileName, bool global, int viewId)
+    public AssetEditor Init(string fileName, bool global, int viewId)
     {
-        _appSpecs = appReader.Specs;
-        _appPaths = appPaths.Get(appReader, site);
+        _appSpecs = MyOptions.AppReader.Specs;
+        _appPaths = appPaths.Get(MyOptions.AppReader, site);
         EditInfo = new(_appSpecs.AppId, _appSpecs.Name, fileName, global);
         if (viewId == 0)
             return this;
 
-        var view = workViews.New(appReader).Get(viewId);
+        var view = workViews.New(MyOptions).Get(viewId);
         AddViewDetailsAndTypes(EditInfo, view);
         return this;
     }
@@ -53,20 +53,20 @@ public class AssetEditor(
     /// </summary>
     public void EnsureUserMayEditAssetOrThrow(string? fullPath = null)
     {
-        // check super user permissions - then all is allowed
+        // check superuser permissions - then all is allowed
         if (user.IsSystemAdmin) return;
 
-        // ensure current user is admin - this is the minimum of not super-user
+        // ensure current user is admin - this is the minimum of not superuser
         if (!user.IsSiteAdmin) throw new AccessViolationException("current user may not edit templates, requires admin rights");
 
-        // if not super user, check if razor (not allowed; super user only)
+        // if not superuser, check if razor (not allowed; superuser only)
         if (!EditInfo.IsSafe)
-            throw new AccessViolationException("current user may not edit razor templates - requires super user");
+            throw new AccessViolationException("current user may not edit razor templates - requires superuser");
 
-        // if not super user, check if cross-portal storage (not allowed; super user only)
+        // if not superuser, check if cross-portal storage (not allowed; superuser only)
         if (EditInfo.IsShared)
             throw new AccessViolationException(
-                "current user may not edit templates in central storage - requires super user");
+                "current user may not edit templates in central storage - requires superuser");
 
         // optionally check if the file is really in the portal
         if (fullPath == null) return;

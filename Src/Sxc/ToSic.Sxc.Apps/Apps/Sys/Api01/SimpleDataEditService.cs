@@ -36,7 +36,8 @@ public partial class SimpleDataEditService(
     GenWorkDb<WorkEntityUpdate> entUpdate,
     GenWorkDb<WorkEntityDelete> entDelete,
     LazySvc<IValueConverter> valueConverter,
-    Generator<AppPermissionCheck> appPermissionCheckGenerator) : ServiceBase("Dta.Simple", connect: [entSave, entUpdate, entDelete, zoneMapper, dataAssembler, ctx, appPermissionCheckGenerator, valueConverter])
+    Generator<AppPermissionCheck> appPermissionCheckGenerator
+) : ServiceBase("Dta.Simple", connect: [entSave, entUpdate, entDelete, zoneMapper, dataAssembler, ctx, appPermissionCheckGenerator, valueConverter])
 {
 
     #region Constructor / DI

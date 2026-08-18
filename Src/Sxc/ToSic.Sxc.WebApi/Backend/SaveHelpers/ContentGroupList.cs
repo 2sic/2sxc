@@ -10,22 +10,22 @@ namespace ToSic.Sxc.Backend.SaveHelpers;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentGroupList(
-    GenWorkPlus<WorkBlocks> blocks,
+    Generator<WorkBlocks, IAppWorkCtxForDiWip> blocks,
     LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
     GenWorkDb<WorkFieldList> workFieldList)
-    : ServiceBase("Api.GrpPrc", connect: [blocks, workFieldList, blockEditorSelectorLazy])
+    : ServiceWithSetup<IAppWorkCtxForDiWip>("Api.GrpPrc", connect: [blocks, workFieldList, blockEditorSelectorLazy])
 {
     #region Constructor / DI
 
-    public ContentGroupList Init(IAppIdentity appIdentity)
-    {
-        _appIdentity = appIdentity;
-        AppCtx = blocks.CtxSvc.Context(appIdentity);
-        return this;
-    }
+    //public ContentGroupList Init(IAppIdentity appIdentity)
+    //{
+    //    _appIdentity = appIdentity;
+    //    MyOptions = blocks.CtxSvc.Context(appIdentity);
+    //    return this;
+    //}
 
-    private IAppIdentity _appIdentity = null!;
-    private IAppWorkCtx AppCtx { get; set; } = null!;
+    //private IAppIdentity _appIdentity = null!;
+    //private IAppWorkCtx MyOptions { get; set; } = null!;
     #endregion
 
     internal bool IfChangesAffectListUpdateIt(IBlock? block, List<BundleWithHeader<IEntity>> items, Dictionary<Guid, int> ids)
@@ -45,7 +45,7 @@ public class ContentGroupList(
 
     private bool PostSaveUpdateIdsInParent(IBlock? block, Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, BundleWithHeader<IEntity>>> pairsOrSingleItems)
     {
-        var l = Log.Fn<bool>($"{_appIdentity.AppId}");
+        var l = Log.Fn<bool>($"{MyOptions.AppReader.AppId}");
 
         // If no content block given, skip all this
         if (block == null)
@@ -59,7 +59,7 @@ public class ContentGroupList(
             if (bundle.First().Header.Parent == null)
                 continue;
 
-            var parent = AppCtx.AppReader.GetDraftOrPublished(bundle.First().Header.GetParentEntityOrError())!;
+            var parent = MyOptions.AppReader.GetDraftOrPublished(bundle.First().Header.GetParentEntityOrError())!;
             var targetIsContentBlock = parent.Type.Name == WorkBlocks.BlockTypeName;
                 
             var primaryItem = targetIsContentBlock
@@ -83,7 +83,7 @@ public class ContentGroupList(
                 ? ViewParts.PickFieldPair(primaryItem.Header.Field!)
                 : [primaryItem.Header.Field!];
 
-            var fieldList = workFieldList.New(AppCtx.AppReader);
+            var fieldList = workFieldList.New(MyOptions.AppReader);
             if (willAdd) // this cannot be auto-detected, it must be specified
             {
 
@@ -160,7 +160,7 @@ public class ContentGroupList(
     {
         var lOuter = Log.Fn<List<ItemIdentifier>>();
          //new List<ItemIdentifier>();
-        var appBlocks = blocks.New(AppCtx);
+        var appBlocks = blocks.New(MyOptions);
         var corrected = identifiers
             .Select((identifier, index) =>
             {
@@ -198,7 +198,7 @@ public class ContentGroupList(
                         return l.Return(identifier, $"using identifier with existing type {identifier.ContentTypeName}");
                     
                     // look up type
-                    var target = AppCtx.AppReader.List.GetOne(identifier.Parent.Value)!;
+                    var target = MyOptions.AppReader.List.GetOne(identifier.Parent.Value)!;
                     var field = target.Type[identifier.Field]!;
                     identifier = identifier with
                     {
@@ -211,7 +211,7 @@ public class ContentGroupList(
                 // Otherwise it's an edit operation, and it could be a different content-type than is configured for the field
                 // because the field may be configured for multiple types
                 lOuter.A("identifier is edit");
-                var realEntity = AppCtx.AppReader.List.GetOne(identifier.EntityId);
+                var realEntity = MyOptions.AppReader.List.GetOne(identifier.EntityId);
                 if (realEntity == null)
                     return l.ReturnNull("identifier is edit, but couldn't find real entity.");
                 identifier = identifier with { ContentTypeName = realEntity.Type.NameId };
@@ -238,7 +238,7 @@ public class ContentGroupList(
             return l.ReturnFalse("no parent");
 
         // get the entity and determine if it's a content-block. If yes, that should affect the differences in load/save
-        var entity = AppCtx.AppReader.List.GetOne(identifier.Parent.Value)!;
+        var entity = MyOptions.AppReader.List.GetOne(identifier.Parent.Value)!;
         return l.Return(entity.Type.Name == WorkBlocks.BlockTypeName, "type name should match");
     }
 
