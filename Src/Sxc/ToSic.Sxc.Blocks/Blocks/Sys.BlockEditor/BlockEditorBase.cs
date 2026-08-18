@@ -12,8 +12,8 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.Depe
 
     public record Dependencies(
         LazySvc<AppWorkContextService> AppWorkCtxSvc,
-        Generator<WorkBlocks, IAppWorkCtxForDiWip> AppBlocks,
-        GenWorkDb<WorkBlocksMod> WorkBlocksMod,
+        AppWorkChain<WorkBlocks> AppBlocks,
+        AppWorkChain<WorkBlocksMod> WorkBlocksMod,
         LazySvc<WorkEntityPublish> Publisher
     ) : DependenciesBase(connect: [AppWorkCtxSvc, WorkBlocksMod, AppBlocks, Publisher]);
 
@@ -40,7 +40,7 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.Depe
         {
             var existedBeforeSettingTemplate = BlockConfiguration.Exists;
             var contentGroupGuid = Services.WorkBlocksMod
-                .New(Block.Context.AppReaderRequired)
+                .New(Services.AppWorkCtxSvc.Value.ContextNew(Block.Context.AppReaderRequired))
                 .UpdateOrCreateContentGroup(BlockConfiguration, templateId);
 
             if (!existedBeforeSettingTemplate)

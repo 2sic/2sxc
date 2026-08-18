@@ -9,9 +9,10 @@ using ToSic.Sxc.LookUp.Sys;
 
 namespace ToSic.Sxc.Blocks.Sys;
 
-public class BlockGeneratorHelpers(AppWorkContextService appCtxSvc, 
-    Generator<WorkViews, IAppWorkCtxForDiWip> workViews,
-    Generator<WorkBlocks, IAppWorkCtxForDiWip> appBlocks,
+public class BlockGeneratorHelpers(
+    AppWorkContextService appCtxSvc, 
+    AppWorkChain<WorkViews> workViews,
+    AppWorkChain<WorkBlocks> appBlocks,
     LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
     LazySvc<App> appLazy
 )

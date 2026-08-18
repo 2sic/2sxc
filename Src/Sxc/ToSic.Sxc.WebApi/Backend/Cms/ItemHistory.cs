@@ -20,11 +20,11 @@ public class ItemHistory : CustomDataSource
     [Configuration]
     public int EntityId => Configuration.GetThis(0);
 
-    public ItemHistory(Dependencies services, GenWorkDb<WorkEntityVersioning> versioning)
+    public ItemHistory(Dependencies services, AppWorkQuick<WorkEntityVersioning> versioning)
         : base(services, "Sxc.ItemHist", connect: [versioning])
         => ProvideOutRaw(() => Get(versioning), options: Options);
 
-    private IEnumerable<ItemHistoryRaw> Get(GenWorkDb<WorkEntityVersioning> versioning)
+    private IEnumerable<ItemHistoryRaw> Get(AppWorkQuick<WorkEntityVersioning> versioning)
         => versioning.New(appId: AppId).VersionHistory(EntityId).Select(history => new ItemHistoryRaw(history));
 
     private static DataFactoryOptions Options() => new() { TypeName = "ItemHistory" };

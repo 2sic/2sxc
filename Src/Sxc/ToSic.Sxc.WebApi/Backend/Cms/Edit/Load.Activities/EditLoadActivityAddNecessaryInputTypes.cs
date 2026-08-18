@@ -5,7 +5,7 @@ using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
-public class EditLoadActivityAddNecessaryInputTypes(GenWorkPlus<WorkInputTypes> inputTypes) : ServiceBase("UoW.InpTyp"),
+public class EditLoadActivityAddNecessaryInputTypes(AppWorkChain<WorkInputTypes> inputTypes) : ServiceBase("UoW.InpTyp"),
     IWork<EditLoadDto, EditLoadDto>
 {
     public async Task<Package<EditLoadDto>> Handle(WorkContext mainCtx, Package<EditLoadDto> package) =>
@@ -13,11 +13,11 @@ public class EditLoadActivityAddNecessaryInputTypes(GenWorkPlus<WorkInputTypes> 
         {
             Data = package.Data with
             {
-                InputTypes = GetNecessaryInputTypes(package.Data.ContentTypes, mainCtx.Get<IAppWorkCtxPlus>(EditLoadContextConstants.AppCtxWork)),
+                InputTypes = GetNecessaryInputTypes(package.Data.ContentTypes, mainCtx.Get<IAppWorkContext>(EditLoadContextConstants.AppWorkCtx)),
             },
         };
 
-    private List<InputTypeInfo> GetNecessaryInputTypes(List<JsonContentType> contentTypes, IAppWorkCtxPlus appCtx)
+    private List<InputTypeInfo> GetNecessaryInputTypes(List<JsonContentType> contentTypes, IAppWorkContext appCtx)
     {
         var l = Log.Fn<List<InputTypeInfo>>($"{nameof(contentTypes)}: {contentTypes.Count}");
         var fields = contentTypes

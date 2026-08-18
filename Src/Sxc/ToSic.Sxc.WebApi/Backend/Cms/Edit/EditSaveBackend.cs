@@ -14,8 +14,8 @@ namespace ToSic.Sxc.Backend.Cms;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class EditSaveBackend(
     AppWorkContextService appCtxSvc,
-    Generator<SxcPagePublishing, IAppWorkCtxForDiWip> pagePublishing,
-    GenWorkPlus<WorkEntities> workEntities,
+    AppWorkChain<SxcPagePublishing> pagePublishing,
+    AppWorkChain<WorkEntities> workEntities,
     ISxcCurrentContextService ctxService,
     JsonSerializer jsonSerializer,
     SaveSecurity saveSecurity,
@@ -50,10 +50,10 @@ public class EditSaveBackend(
 
         // new API WIP
         var appCtxNew = appCtxSvc.ContextNew(appId);
-        var appEntities = workEntities.New(appId);
-        var appCtx = appEntities.AppWorkCtx;
+        var appEntities = workEntities.New(appCtxNew);
+        //var appCtx = appEntities.AppWorkCtx;
 
-        var ser = jsonSerializer.SetApp(appCtx.AppReader);
+        var ser = jsonSerializer.SetApp(appCtxNew.AppReader);
         // Since we're importing directly into this app, we would prefer local content-types
         ser.PreferLocalAppTypes = true;
 
@@ -145,7 +145,7 @@ public class EditSaveBackend(
 
         var isUniqueValidator = new IsUniqueValidator(
                 new UniqueValueLookup(dataSourcesService, Log),
-                appEntities.AppWorkCtx.Data,
+                appEntities.MyOptions.Data,
                 Log
             );
 
@@ -201,7 +201,7 @@ public class EditSaveBackend(
             .Where(e => !e.Header.IsContentBlockMode || !e.Header.IsEmpty)
             .ToList();
 
-        saveBackendHelper.UpdateGuidAndPublishedAndSaveMany(workAppEntities.AppWorkCtx, entitiesToSave, forceSaveAsDraft);
+        saveBackendHelper.UpdateGuidAndPublishedAndSaveMany(workAppEntities.MyOptions, entitiesToSave, forceSaveAsDraft);
         return saveBackendHelper.GenerateIdList(workAppEntities, items);
     }
 }

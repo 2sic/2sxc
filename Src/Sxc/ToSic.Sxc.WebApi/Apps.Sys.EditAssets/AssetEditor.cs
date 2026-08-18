@@ -7,12 +7,12 @@ namespace ToSic.Sxc.Apps.Sys.EditAssets;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AssetEditor(
-    Generator<WorkViews, IAppWorkCtxForDiWip> workViews,
+    AppWorkChain<WorkViews> workViews,
     IUser user,
     LazySvc<AppFolderInitializer> appFolderInitializer,
     ISite site,
     IAppPathsMicroSvc appPaths)
-    : ServiceWithSetup<IAppWorkCtxForDiWip>("Sxc.AstEdt", connect: [user, appFolderInitializer, workViews, site, appPaths])
+    : ServiceWithSetup<IAppWorkContext>("Sxc.AstEdt", connect: [user, appFolderInitializer, workViews, site, appPaths])
 {
 
     #region Constructor / DI

@@ -41,7 +41,7 @@ public class AdamContext(AdamContext.Dependencies services)
 
     public AdamStorage AdamRoot { get; private set; } = null!;
 
-    public IAppWorkCtx AppWorkCtx => AdamManager.AppWorkCtx;
+    public IAppReader AppReader => AdamManager.AppReader;
 
     #endregion
 

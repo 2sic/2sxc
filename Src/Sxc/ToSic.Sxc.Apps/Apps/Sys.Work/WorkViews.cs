@@ -9,8 +9,8 @@ using ToSic.Sys.Caching.PiggyBack;
 namespace ToSic.Sxc.Apps.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class WorkViews(GenWorkPlus<WorkEntities> appEntities, IZoneCultureResolver cultureResolver, Generator<QueryDefinitionFactory> qDefBuilder)
-    : ServiceWithSetup<IAppWorkCtxForDiWip>("Cms.ViewRd",
+public class WorkViews(AppWorkChain<WorkEntities> appEntities, IZoneCultureResolver cultureResolver, Generator<QueryDefinitionFactory> qDefBuilder)
+    : ServiceWithSetup<IAppWorkContext>("Cms.ViewRd",
         connect: [appEntities, cultureResolver, qDefBuilder])
 {
     /// <summary>

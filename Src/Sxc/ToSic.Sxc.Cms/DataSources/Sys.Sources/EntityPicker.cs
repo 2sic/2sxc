@@ -58,7 +58,7 @@ public class EntityPicker : DataSourceBase
     /// </summary>
     [PrivateApi]
     public EntityPicker(
-        GenWorkPlus<WorkEntities> workEntities,
+        AppWorkQuick<WorkEntities> workEntities,
         ICurrentContextService ctxService,
         Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions,
         Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> typePermissions,
@@ -76,7 +76,7 @@ public class EntityPicker : DataSourceBase
         ProvideOut(GetList);
     }
 
-    private readonly GenWorkPlus<WorkEntities> _workEntities;
+    private readonly AppWorkQuick<WorkEntities> _workEntities;
     private readonly ICurrentContextService _ctxService;
     private readonly IUser _user;
     private readonly IAppReaderFactory _appReaders;
@@ -172,7 +172,7 @@ public class EntityPicker : DataSourceBase
                 {
                     var withDrafts = permCheckType.EnsureAny(GrantSets.ReadDraft);
                     var entitiesSvc = _workEntities.New(this, showDrafts: withDrafts);
-                    var ofType = entitiesSvc.AppWorkCtx.Data.List.GetAll(type).ToList();
+                    var ofType = entitiesSvc.MyOptions.Data.List.GetAll(type).ToList();
                     result.AddRange(ofType);
                     lType.Done($"{ofType.Count}");
                 }

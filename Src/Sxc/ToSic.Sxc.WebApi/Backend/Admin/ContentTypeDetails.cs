@@ -15,11 +15,6 @@ namespace ToSic.Eav.WebApi.Sys.Admin;
 )]
 public class ContentTypeDetails : CustomDataSource
 {
-    private readonly GenWorkPlus<WorkEntities> _workEntities;
-    private readonly ConvertContentTypeToDto _convTypeDto;
-    private readonly GenWorkBasic<WorkAttributes> _workAttributes;
-    private readonly Generator<ConvertAttributeToDto> _convAttrDto;
-
     #region Configuration Properties
 
     /// <summary>
@@ -32,50 +27,47 @@ public class ContentTypeDetails : CustomDataSource
 
     public ContentTypeDetails(
         Dependencies services,
-        GenWorkPlus<WorkEntities> workEntities,
+        AppWorkQuick<WorkEntities> workEntities,
         ConvertContentTypeToDto convTypeDto,
-        GenWorkBasic<WorkAttributes> workAttributes,
+        AppWorkQuick<WorkAttributes> workAttributes,
         Generator<ConvertAttributeToDto> convAttrDto)
         : base(services, logName: "Eav.CtDetails", connect: [workEntities, convTypeDto, workAttributes, convAttrDto])
     {
-        _workEntities = workEntities;
-        _convTypeDto = convTypeDto;
-        _workAttributes = workAttributes;
-        _convAttrDto = convAttrDto;
 
-        ProvideOutRaw(GetContentTypeDetails, options: () => new()
+        ProvideOutRaw(() => GetContentTypeDetails(workEntities.New(AppId), convTypeDto), options: () => new()
         {
             AllowUnknownValueTypes = true,
         });
 
-        ProvideOutRaw(GetFields, name: "Fields", options: () => new()
+        ProvideOutRaw(() => GetFields(workAttributes.New(AppId), convAttrDto), name: "Fields", options: () => new()
         {
             AllowUnknownValueTypes = true,
         });
     }
 
-    private IEnumerable<ContentTypeDto> GetContentTypeDetails()
+    private IEnumerable<ContentTypeDto> GetContentTypeDetails(WorkEntities workEntities,
+        ConvertContentTypeToDto convTypeDto)
     {
         var l = Log.Fn<IEnumerable<ContentTypeDto>>();
 
-        var appCtxPlus = _workEntities.CtxSvc.ContextPlus(AppId);
-        var contentType = appCtxPlus.AppReader.TryGetContentType(ContentTypeId);
+        var contentType = workEntities.MyOptions.AppReader.TryGetContentType(ContentTypeId);
 
         if (contentType == null)
             return l.Return([], "not found");
 
-        var dto = _convTypeDto.Convert(contentType);
+        var dto = convTypeDto.Convert(contentType);
 
         return l.Return([dto], "ok");
     }
 
-    private IEnumerable<ContentTypeFieldDto> GetFields()
+    private IEnumerable<ContentTypeFieldDto> GetFields(WorkAttributes workAttributes,
+        Generator<ConvertAttributeToDto> convAttrDto)
     {
         var l = Log.Fn<IEnumerable<ContentTypeFieldDto>>();
 
-        var fields = _workAttributes.New(AppId).GetFields(ContentTypeId);
+        var fields = workAttributes.GetFields(ContentTypeId);
 
-        var convertedFields = _convAttrDto.New()
+        var convertedFields = convAttrDto.New()
             .Init(AppId, false)
             .Convert(fields)
             .ToListOpt();

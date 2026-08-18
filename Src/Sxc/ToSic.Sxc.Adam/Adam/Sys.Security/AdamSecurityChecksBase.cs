@@ -113,7 +113,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.Dependencies
             return l.ReturnFalse("user not restricted / has grants");
 
         // check if the data is public
-        var itm = AdamContext.AppWorkCtx.AppReader.List.GetOne(guid);
+        var itm = AdamContext.AppReader.List.GetOne(guid);
         if (!(itm?.IsPublished ?? false))
             return l.ReturnFalse("not draft");
 

@@ -18,12 +18,11 @@ namespace ToSic.Sxc.Dnn.Cms;
 // TODO: @STV - this looks very similar to the Oqtane implementation
 // Probably best to make a base class and de-duplicate.
 internal class DnnModuleUpdater(
-    AppWorkContextService appCtxSvc,
-    Generator<WorkViews, IAppWorkCtxForDiWip> workViews,
+    AppWorkQuick<WorkViews> workViews,
     IZoneMapper zoneMapper,
     IAppsCatalog appsCatalog,
     ISite site)
-    : ServiceBase("Dnn.MapA2I", connect: [appCtxSvc, workViews, appsCatalog, site, zoneMapper]), IPlatformModuleUpdater
+    : ServiceBase("Dnn.MapA2I", connect: [workViews, appsCatalog, site, zoneMapper]), IPlatformModuleUpdater
 {
     public void SetAppId(IModule instance, int? appId)
     {
@@ -52,7 +51,7 @@ internal class DnnModuleUpdater(
 
         var appIdentity = new AppIdentity(zoneId, appId.Value);
 
-        var templateGuid = workViews.New(appCtxSvc.ContextNew(appIdentity)).GetAll()
+        var templateGuid = workViews.New(appIdentity).GetAll()
             .OrderByDescending(v =>
                 v.Metadata.HasType(KnownDecorators.IsDefaultDecorator)) // first sort by IsDefaultDecorator DESC
             .ThenBy(v => v.Name) // than by Name ASC

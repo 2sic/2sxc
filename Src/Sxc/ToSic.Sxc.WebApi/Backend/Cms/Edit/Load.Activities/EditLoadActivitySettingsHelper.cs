@@ -16,7 +16,7 @@ public class EditLoadActivitySettingsHelper(
     Generator<JsonSerializer> jsonSerializerGenerator,
     IEnumerable<ILoadSettingsProvider> loadSettingsProviders,
     IEnumerable<ILoadSettingsContentTypesProvider> loadSettingsTypesProviders,
-    GenWorkPlus<WorkEntities> appEntities)
+    AppWorkChain<WorkEntities> appEntities)
     : ServiceBase(SxcLogName + ".LodSet",
         connect: [jsonSerializerGenerator, loadSettingsProviders, appEntities]),
         IWork<EditLoadDto, EditLoadDto>
@@ -31,7 +31,7 @@ public class EditLoadActivitySettingsHelper(
                 Settings = GetSettings(actionCtx.Get<IContextOfApp>(EditLoadContextConstants.AppContext),
                     actionCtx.Get<List<IContentType>>(EditLoadContextConstants.UsedTypes),
                     package.Data.ContentTypes,
-                    actionCtx.Get<IAppWorkCtxPlus>(EditLoadContextConstants.AppCtxWork)),
+                    actionCtx.Get<IAppWorkContext>(EditLoadContextConstants.AppWorkCtx)),
             },
         };
 
@@ -42,7 +42,7 @@ public class EditLoadActivitySettingsHelper(
     /// - later get from settings
     /// </summary>
     /// <returns></returns>
-    private EditSettingsDto GetSettings(IContextOfApp contextOfApp, List<IContentType> contentTypes, List<JsonContentType> jsonTypes, IAppWorkCtxPlus appWorkCtx)
+    private EditSettingsDto GetSettings(IContextOfApp contextOfApp, List<IContentType> contentTypes, List<JsonContentType> jsonTypes, IAppWorkContext appWorkCtx)
     {
         var l = Log.Fn<EditSettingsDto>();
         var allInputTypes = jsonTypes
@@ -148,7 +148,7 @@ public class EditLoadActivitySettingsHelper(
 
 
 
-    private List<JsonEntity> GetSettingsEntities(IAppWorkCtxPlus appWorkCtx, IEnumerable<string> allInputTypes)
+    private List<JsonEntity> GetSettingsEntities(IAppWorkContext appWorkCtx, IEnumerable<string> allInputTypes)
     {
         var l = Log.Fn<List<JsonEntity>>();
         try

@@ -10,10 +10,10 @@ namespace ToSic.Sxc.Backend.SaveHelpers;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentGroupList(
-    Generator<WorkBlocks, IAppWorkCtxForDiWip> blocks,
+    AppWorkChain<WorkBlocks> blocks,
     LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
-    GenWorkDb<WorkFieldList> workFieldList)
-    : ServiceWithSetup<IAppWorkCtxForDiWip>("Api.GrpPrc", connect: [blocks, workFieldList, blockEditorSelectorLazy])
+    AppWorkChain<WorkFieldList> workFieldList)
+    : ServiceWithSetup<IAppWorkContext>("Api.GrpPrc", connect: [blocks, workFieldList, blockEditorSelectorLazy])
 {
     #region Constructor / DI
 
@@ -83,7 +83,7 @@ public class ContentGroupList(
                 ? ViewParts.PickFieldPair(primaryItem.Header.Field!)
                 : [primaryItem.Header.Field!];
 
-            var fieldList = workFieldList.New(MyOptions.AppReader);
+            var fieldList = workFieldList.New(MyOptions);
             if (willAdd) // this cannot be auto-detected, it must be specified
             {
 

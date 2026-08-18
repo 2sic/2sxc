@@ -8,8 +8,8 @@ namespace ToSic.Sxc.Backend.Cms;
 /// This is unusual, because if it's empty, we must retrieve the definition of the expected content-type from the view definition.
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ListActivityGetBlockHeader(Generator<WorkBlocks, IAppWorkCtxForDiWip> appBlocks)
-    : ServiceWithSetup<IAppWorkCtxForDiWip>("Api.CntGrpRl", connect: [appBlocks])
+public class ListActivityGetBlockHeader(AppWorkChain<WorkBlocks> appBlocks)
+    : ServiceWithSetup<IAppWorkContext>("Api.CntGrpRl", connect: [appBlocks])
 {
     public List<EntityInListDto> ContentBlockHeader(Guid parent)
     {

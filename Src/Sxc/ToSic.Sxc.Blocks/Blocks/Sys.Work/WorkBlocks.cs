@@ -7,8 +7,8 @@ using ToSic.Sxc.Blocks.Sys.Views;
 namespace ToSic.Sxc.Blocks.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDefinitionFactory> qDefBuilder, GenWorkPlus<WorkEntities> workEntities)
-    : ServiceWithSetup<IAppWorkCtxForDiWip>("SxS.Blocks", connect: [cultureResolver, qDefBuilder, workEntities])
+public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDefinitionFactory> qDefBuilder, AppWorkChain<WorkEntities> workEntities)
+    : ServiceWithSetup<IAppWorkContext>("SxS.Blocks", connect: [cultureResolver, qDefBuilder, workEntities])
 {
     public const string BlockTypeName = "2SexyContent-ContentGroup";
 

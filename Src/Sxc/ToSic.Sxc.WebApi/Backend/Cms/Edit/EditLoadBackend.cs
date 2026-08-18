@@ -52,7 +52,7 @@ public class EditLoadBackend(
                 [EditLoadContextConstants.AppId] = appId,
                 [EditLoadContextConstants.AppReader] = appReader,
                 [EditLoadContextConstants.AppContext] = appContext,
-                [EditLoadContextConstants.AppWorkContextNEW] = appWorkCtxNew,
+                [EditLoadContextConstants.AppWorkCtx] = appWorkCtxNew,
             }
         );
 
@@ -80,9 +80,9 @@ public class EditLoadBackend(
 
         // load items - similar
         var showDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
-        var appWorkCtx = workCtxSvc.ContextPlus(appId, showDrafts: showDrafts);
+        var appWorkCtx = workCtxSvc.ContextNew(appId, showDrafts: showDrafts);
 
-        actContext = actContext.With(EditLoadContextConstants.AppCtxWork, appWorkCtx);
+        actContext = actContext.With(EditLoadContextConstants.AppWorkCtx, appWorkCtx);
 
         var list = actGetForEditing.Run(actContext, itemsData.Data);
 

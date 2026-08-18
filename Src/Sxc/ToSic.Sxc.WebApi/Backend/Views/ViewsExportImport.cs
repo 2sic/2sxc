@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Backend.Views;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ViewsExportImport(
-    GenWorkDb<WorkEntitySave> workEntSave,
+    AppWorkQuick<WorkEntitySave> workEntSave,
     IServerPaths serverPaths,
     IEnvironmentLogger envLogger,
     LazySvc<JsonSerializer> jsonSerializerLazy,

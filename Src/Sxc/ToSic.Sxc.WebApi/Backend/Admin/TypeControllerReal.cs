@@ -11,9 +11,9 @@ namespace ToSic.Sxc.Backend.Admin;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class TypeControllerReal(
     LazySvc<IContextOfSite> context,
-    LazySvc<ContentTypeDtoService> ctApiLazy,
+    AppWorkQuick<ContentTypeDtoService> ctApiLazy,
     LazySvc<ContentExportApi> contentExportLazy,
-    GenWorkDb<WorkContentTypesMod> typeMod,
+    AppWorkQuick<WorkContentTypesMod> typeMod,
     LazySvc<IUser> userLazy,
     IAppReaderFactory appReaders,
     Generator<ImportContent> importContent)
@@ -26,7 +26,7 @@ public class TypeControllerReal(
     public IEnumerable<ContentTypeDto> List(int appId, string? scope = null, bool withStatistics = false)
     {
         var l = Log.Fn<IEnumerable<ContentTypeDto>>($"{appId}, scope:{scope}, stats:{withStatistics}");
-        var list = ctApiLazy.Value.List(appId, scope, withStatistics);
+        var list = ctApiLazy.New(appId).List(appId, scope, withStatistics);
         return l.Return(list);
     }
     

@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ListActivityReplace(
-    GenWorkDb<WorkFieldList> workFieldList,
+    AppWorkQuick<WorkFieldList> workFieldList,
     Generator<IPagePublishing> publishing,
     ISxcCurrentContextService ctxService
 ) : ServiceBase("Act.LsRpOp", connect: [workFieldList, ctxService, publishing])

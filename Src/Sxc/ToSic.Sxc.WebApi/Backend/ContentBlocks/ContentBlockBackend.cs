@@ -17,10 +17,10 @@ namespace ToSic.Sxc.Backend.ContentBlocks;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentBlockBackend(
-    Generator<WorkViews, IAppWorkCtxForDiWip> workViews,
+    AppWorkChain<WorkViews> workViews,
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> multiPermissionsApp,
     IPagePublishing publishing,
-    GenWorkDb<WorkBlocksMod> workBlocksMod,
+    AppWorkChain<WorkBlocksMod> workBlocksMod,
     ISxcCurrentContextService ctxService,
     LazySvc<IAssetsExtractor> optimizerLazy,
     LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
@@ -36,7 +36,7 @@ public class ContentBlockBackend(
     public IRenderResult NewBlockAndRender(int parentId, string field, int index, string app = "", Guid? guid = null)
     {
         var block = ctxService.BlockRequired();
-        var appWorkCtxDb = appCtxSvc.CtxWithDb(block.App);
+        var appWorkCtxDb = appCtxSvc.ContextNew(block.App);
         var entityId = workBlocksMod.New(appWorkCtxDb).NewBlockReference(parentId, field, index, app, guid);
 
         // now return a rendered instance
@@ -50,7 +50,7 @@ public class ContentBlockBackend(
         Log.A($"add order:{index}");
 
         var block = ctxService.BlockRequired();
-        var appWorCtxDb = appCtxSvc.CtxWithDb(block.App);
+        var appWorCtxDb = appCtxSvc.ContextNew(block.App);
 
         // use dnn versioning - this is always part of page
         publishing.DoInsidePublishing(block.Context, _ 

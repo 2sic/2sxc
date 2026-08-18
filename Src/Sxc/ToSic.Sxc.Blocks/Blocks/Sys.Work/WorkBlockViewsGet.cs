@@ -9,8 +9,8 @@ using ToSic.Sxc.Blocks.Sys.Views;
 namespace ToSic.Sxc.Blocks.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class WorkBlockViewsGet(Generator<WorkViews, IAppWorkCtxForDiWip> workViews, LazySvc<AppIconHelpers> appIconHelpers)
-    : ServiceWithSetup<IAppWorkCtxForDiWip>("Cms.ViewRd", connect: [workViews, appIconHelpers])
+public class WorkBlockViewsGet(AppWorkChain<WorkViews> workViews, LazySvc<AppIconHelpers> appIconHelpers)
+    : ServiceWithSetup<IAppWorkContext>("Cms.ViewRd", connect: [workViews, appIconHelpers])
 {
     [field: AllowNull, MaybeNull]
     public List<IView> GetAll => field

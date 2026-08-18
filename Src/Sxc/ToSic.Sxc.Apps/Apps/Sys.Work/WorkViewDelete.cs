@@ -1,11 +1,11 @@
 ﻿namespace ToSic.Sxc.Apps.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class WorkViewDelete(Generator<WorkViews, IAppWorkCtxForDiWip> appViews, GenWorkDb<WorkEntityDelete> entityDelete)
+public class WorkViewDelete(AppWorkChain<WorkViews> appViews, AppWorkChain<WorkEntityDelete> entityDelete)
     : ServiceBase("AWk.EntCre", connect: [appViews, entityDelete])
 {
 
-    public bool DeleteView(IAppWorkCtxForDiWip appWorkCtx, int viewId)
+    public bool DeleteView(IAppWorkContext appWorkCtx, int viewId)
     {
         // really get template first, to be sure it is a template
         var template = appViews.New(appWorkCtx).Get(viewId);

@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Backend.Admin.Query;
 public class QueryControllerReal(
     AppWorkContextService appCtxSvc,
     QueryControllerBase.Dependencies services,
-    Generator<WorkViews, IAppWorkCtxForDiWip> workViews,
+    Generator<WorkViews, IAppWorkContext> workViews,
     ISxcCurrentContextService currentContextService,
     Generator<IAppDataConfigProvider> tokenEngineWithContext)
     : QueryControllerBase(services, "Api." + LogSuffix, connect: [appCtxSvc, workViews, currentContextService, tokenEngineWithContext])

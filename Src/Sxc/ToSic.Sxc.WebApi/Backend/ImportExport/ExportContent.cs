@@ -11,8 +11,8 @@ namespace ToSic.Sxc.Backend.ImportExport;
 public class ExportContent(
     XmlExporter xmlExporter,
     AppWorkContextService appCtxSvc,
-    Generator<WorkViews, IAppWorkCtxForDiWip> workViews,
-    GenWorkPlus<WorkEntities> workEntities,
+    AppWorkChain<WorkViews> workViews,
+    AppWorkChain<WorkEntities> workEntities,
     Generator<ImpExpHelpers> impExpHelpers,
     IResponseMaker responseMaker)
     : ServiceBase("Bck.Export",
@@ -25,10 +25,10 @@ public class ExportContent(
         var l = Log.Fn<ExportPartsOverviewDto>($"get content info for {appIdentity.Show()} scope:{scope}");
         var currentApp = impExpHelpers.New().GetReaderAfterZoneSwitchPermissionCheck(appIdentity);
 
-        var appCtx = appCtxSvc.ContextPlus(currentApp);
+        var appCtx = appCtxSvc.ContextNew(currentApp);
         var contentTypes = currentApp.ContentTypes.OfScope(scope);
         var entities = workEntities.New(appCtx).All();
-        var templates = workViews.New(appCtxSvc.ContextNew(appCtx.AppReader)).GetAll();
+        var templates = workViews.New(appCtx).GetAll();
 
         return l.Return(new()
         {

@@ -12,8 +12,8 @@ namespace ToSic.Sxc.Backend.ImportExport;
 public class ExportAppInfo(
     IZoneMapper zoneMapper,
     AppWorkContextService appCtxSvc,
-    Generator<WorkViews, IAppWorkCtxForDiWip> workViews,
-    GenWorkPlus<WorkEntities> workEntities,
+    AppWorkChain<WorkViews> workViews,
+    AppWorkChain<WorkEntities> workEntities,
     ExportHelper exportHelper,
     ISite site
 ) : ServiceBase("Bck.Export", connect: [workEntities, appCtxSvc, workViews, zoneMapper, site, exportHelper])
@@ -23,9 +23,8 @@ public class ExportAppInfo(
         var l = Log.Fn<AppExportInfoModel>($"get app info for app: {appIdentity.Show()}");
         var (appReader, zipExport) = exportHelper.GetZipExportAndCheckZoneSwitchPermissions(appIdentity);
     
-        var appCtx = appCtxSvc.ContextPlus(appReader);
         var ctxNew = appCtxSvc.ContextNew(appReader);
-        var appEntities = workEntities.New(appCtx);
+        var appEntities = workEntities.New(ctxNew);
         var appViews = workViews.New(ctxNew);
 
         var appHasCustomParent = appReader.HasCustomParentApp();

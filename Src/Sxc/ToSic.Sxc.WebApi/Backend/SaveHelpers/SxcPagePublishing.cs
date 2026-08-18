@@ -5,8 +5,8 @@ using ToSic.Sys.Security.Permissions;
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class SxcPagePublishing(Generator<ContentGroupList, IAppWorkCtxForDiWip> contentGroupList, IPagePublishing pagePublishing, IAppsCatalog appsCatalog)
-    : ServiceWithSetup<IAppWorkCtxForDiWip>("Sxc.PgPubl", connect: [contentGroupList, pagePublishing, appsCatalog])
+public class SxcPagePublishing(AppWorkChain<ContentGroupList> contentGroupList, IPagePublishing pagePublishing, IAppsCatalog appsCatalog)
+    : ServiceWithSetup<IAppWorkContext>("Sxc.PgPubl", connect: [contentGroupList, pagePublishing, appsCatalog])
 {
 
     internal Dictionary<Guid, int> SaveInPagePublishing(

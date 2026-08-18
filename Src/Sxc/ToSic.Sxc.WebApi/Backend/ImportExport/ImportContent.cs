@@ -29,7 +29,7 @@ public class ImportContent(
     LazySvc<IUser> userLazy,
     AppCachePurger appCachePurger,
     LazySvc<ISysFeaturesService> features,
-    GenWorkDb<WorkEntitySave> workEntSave)
+    AppWorkQuick<WorkEntitySave> workEntSave)
     : ServiceBase("Bck.Export",
         connect:
         [

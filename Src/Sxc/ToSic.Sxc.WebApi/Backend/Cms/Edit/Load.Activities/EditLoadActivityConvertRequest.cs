@@ -18,7 +18,6 @@ public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerial
         var l = Log.Fn<EditLoadDto>();
 
         var appReader = actionCtx.Get<IAppReader>(EditLoadContextConstants.AppReader);
-        var appWorkCtxPlus = actionCtx.Get<IAppWorkCtxPlus>(EditLoadContextConstants.AppCtxWork);
         var jsonSerializer = jsonSerializerGenerator.New().SetApp(appReader);
 
         // Exit early if no data
@@ -41,7 +40,7 @@ public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerial
                         ? bundle.Header
                         : bundle.Header with { For = null },
                     Entity = GetSerializeAndMdAssignJsonEntity(actionCtx.Get<int>("AppId"), bundle, jsonSerializer,
-                        appReader, appWorkCtxPlus)
+                        appReader)
                 })
                 .ToList(),
 
@@ -58,7 +57,7 @@ public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerial
     /// </summary>
     /// <returns></returns>
     private JsonEntity GetSerializeAndMdAssignJsonEntity(int appId, BundleWithHeaderOptional<IEntity> bundle,
-        JsonSerializer jsonSerializer, IAppReader appReader, IAppWorkCtx appSysCtx)
+        JsonSerializer jsonSerializer, IAppReader appReader)
     {
         var l = Log.Fn<JsonEntity>();
         // attach original metadata assignment when creating a new one
@@ -93,7 +92,7 @@ public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerial
             if (bundle.Entity != null)
                 return jsonSerializer.ToJson(bundle.Entity, 1);
 
-            var emptyEntity = ConstructEmptyEntity(appId, bundle.Header!, appSysCtx);
+            var emptyEntity = ConstructEmptyEntity(appId, bundle.Header!, appReader);
             var jsonEntity = jsonSerializer.ToJson(emptyEntity, metadataDepth: 0);
 
             // only attach metadata, if no metadata already exists
@@ -103,10 +102,10 @@ public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerial
         }
     }
     
-    private IEntity ConstructEmptyEntity(int appId, ItemIdentifier header, IAppWorkCtx appSysCtx)
+    private IEntity ConstructEmptyEntity(int appId, ItemIdentifier header, IAppReader appReader)
     {
         var l = Log.Fn<IEntity>();
-        var type = appSysCtx.AppReader.GetContentType(header.ContentTypeName!);
+        var type = appReader.GetContentType(header.ContentTypeName!);
         var ent = entityAssemblerKit.EmptyOfType(appId, header.Guid, header.EntityId, type);
         return l.Return(ent);
     }

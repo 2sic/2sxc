@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Sxc.Apps.Sys.Ui;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockEditor;
 using ToSic.Sxc.Blocks.Sys.Work;
 using ToSic.Sys.Security.Permissions;
@@ -11,7 +12,7 @@ public class AppViewPickerBackend(
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> multiPermissionsApp,
     ISxcCurrentContextService ctxService,
     LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
-    Generator<WorkBlockViewsGet, IAppWorkCtxForDiWip> workBlockViews,
+    AppWorkChain<WorkBlockViewsGet> workBlockViews,
     AppWorkContextService appWorkCtxService,
     LazySvc<WorkEntityPublish> workPublish,
     LazySvc<WorkViewsContentTypes> workViewsContentTypes)
@@ -21,34 +22,30 @@ public class AppViewPickerBackend(
         => blockEditorSelectorLazy.Value
             .GetEditor(ctxService.BlockRequired())
             .SetAppId(appId);
+    
+    private IBlock Block => ctxService.BlockRequired();
+    private IAppWorkContext AppCtx => field ??= appWorkCtxService.ContextNew(Block.Context.AppReaderRequired);
 
     public IEnumerable<TemplateUiInfo> Templates()
     {
-        var block = ctxService.BlockRequired();
-        var ctx = appWorkCtxService.ContextNew(block.Context.AppReaderRequired);
-        return workBlockViews.New(ctx)
-                .GetCompatibleViews(block);
+        return workBlockViews.New(AppCtx)
+                .GetCompatibleViews(Block);
     }
 
     public IEnumerable<ContentTypeUiInfo> ContentTypes()
     {
-        var block = ctxService.BlockRequired();
-        var ctx = appWorkCtxService.ContextNew(block.Context.AppReaderRequired);
         return workViewsContentTypes.Value.GetContentTypesWithStatus(
-            ctx,
-            block.App.Path ?? "",
-            block.App.PathShared ?? ""
+            AppCtx,
+            Block.App.Path ?? "",
+            Block.App.PathShared ?? ""
         );
-        //return workViews.New(appWorkCtxService.ContextPlus(block.Context.AppReaderRequired))
-        //        .GetContentTypesWithStatus(block.App.Path ?? "", block.App.PathShared ?? "");
     }
 
     public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
     {
         var l = Log.Fn<Guid?>($"{templateId}, {forceCreateContentGroup}");
-        var block = ctxService.BlockRequired();
-        multiPermissionsApp.ThrowIfNotAllowedInApp(block.Context, GrantSets.WriteSomething);
-        var result = blockEditorSelectorLazy.Value.GetEditor(block)
+        multiPermissionsApp.ThrowIfNotAllowedInApp(Block.Context, GrantSets.WriteSomething);
+        var result = blockEditorSelectorLazy.Value.GetEditor(Block)
             .SaveTemplateId(templateId, forceCreateContentGroup);
         return l.ReturnAsOk(result);
     }
@@ -56,10 +53,8 @@ public class AppViewPickerBackend(
     public bool Publish(int id)
     {
         var l = Log.Fn<bool>($"{id}");
-        var block = ctxService.BlockRequired();
-        multiPermissionsApp.ThrowIfNotAllowedInApp(block.Context, GrantSets.WritePublished);
-        var ctx = appWorkCtxService.ContextNew(block.Context.AppReaderRequired);
-        workPublish.Value.Publish(ctx, [id]);
+        multiPermissionsApp.ThrowIfNotAllowedInApp(Block.Context, GrantSets.WritePublished);
+        workPublish.Value.Publish(AppCtx, [id]);
         return l.ReturnTrue("ok");
     }
 }

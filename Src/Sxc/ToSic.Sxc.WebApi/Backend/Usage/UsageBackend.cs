@@ -9,8 +9,8 @@ namespace ToSic.Sxc.Backend.Usage;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class UsageBackend(
     AppWorkContextService appCtxSvc,
-    Generator<WorkBlocks, IAppWorkCtxForDiWip> appBlocks,
-    Generator<WorkViews, IAppWorkCtxForDiWip> workViews,
+    AppWorkChain<WorkBlocks> appBlocks,
+    AppWorkChain<WorkViews> workViews,
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions,
     ISxcCurrentContextService ctxService)
     : ServiceBase("Bck.Usage", connect: [appCtxSvc, appPermissions, ctxService, workViews, appBlocks])

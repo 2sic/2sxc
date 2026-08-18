@@ -22,24 +22,25 @@ namespace ToSic.Eav.WebApi.Sys.Admin;
 )]
 public class AppEnhancements : CustomDataSource
 {
-    private readonly LazySvc<IAppReaderFactory> _appReaders;
-    private readonly GenWorkBasic<WorkAttributes> _workAttributes;
-    private readonly Generator<ConvertAttributeToDto> _convertAttribute;
     private readonly IAppsCatalog _appsCatalog;
     private readonly LazySvc<MetadataControllerReal> _metadataController;
 
+    private readonly Lazy<IAppWorkContext> _workContext;
+    private readonly Lazy<WorkAttributes> _workAttributes;
+    private readonly Lazy<ConvertAttributeToDto> _convertAttributeToDto;
+
     public AppEnhancements(
         Dependencies services,
-        LazySvc<IAppReaderFactory> appReaders,
-        GenWorkBasic<WorkAttributes> workAttributes,
+        AppWorkContextService appWorkCtxSvc,
+        AppWorkChain<WorkAttributes> workAttributes,
         Generator<ConvertAttributeToDto> convertAttribute,
         IAppsCatalog appsCatalog,
         LazySvc<MetadataControllerReal> metadataController)
-        : base(services, logName: "Sxc.AppEnh", connect: [appReaders, workAttributes, convertAttribute, appsCatalog, metadataController])
+        : base(services, logName: "Sxc.AppEnh", connect: [appWorkCtxSvc, workAttributes, convertAttribute, appsCatalog, metadataController])
     {
-        _workAttributes = workAttributes;
-        _convertAttribute = convertAttribute;
-        _appReaders = appReaders;
+        _workContext = new(() => appWorkCtxSvc.ContextNew(AppId));
+        _workAttributes = new(() => workAttributes.New(_workContext.Value));
+        _convertAttributeToDto = new(() => convertAttribute.New().Init(AppId, false));
         _appsCatalog = appsCatalog;
         _metadataController = metadataController;
 
@@ -65,7 +66,7 @@ public class AppEnhancements : CustomDataSource
     private IEnumerable<IEntity> GetEntities(string? typeName)
     {
         if (typeName == null) return [];
-        var appReader = _appReaders.Value.Get(AppId);
+        var appReader = _workContext.Value.AppReader;
         return appReader.List.Where(entity => entity.AppId == AppId && entity.Type.Name == typeName);
     }
 
@@ -76,9 +77,8 @@ public class AppEnhancements : CustomDataSource
             : Types.Resources;
         if (typeName == null)
             return [];
-        var fields = _workAttributes.New(AppId).GetFields(typeName);
-        return _convertAttribute.New()
-            .Init(AppId, false)
+        var fields = _workAttributes.Value.GetFields(typeName);
+        return _convertAttributeToDto.Value
             .Convert(fields)
             .Select(field => field.ToRawEntity());
     }
@@ -101,8 +101,8 @@ public class AppEnhancements : CustomDataSource
     {
         if (_types != null)
             return _types.Value;
-        
-        var appReader = _appReaders.Value.Get(AppId);
+
+        var appReader = _workContext.Value.AppReader;
         var hasSettingsCustom = appReader.ContentTypes
             .Any(type => type.Scope == ScopeConstants.SystemConfiguration && type.Name == AppStackConstants.Settings.CustomType);
         var hasResourcesCustom = appReader.ContentTypes

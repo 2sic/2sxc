@@ -32,12 +32,13 @@ public partial class SimpleDataEditService(
     DataAssembler dataAssembler,
     IZoneMapper zoneMapper,
     IContextOfSite ctx,
-    GenWorkDb<WorkEntitySave> entSave,
-    GenWorkDb<WorkEntityUpdate> entUpdate,
-    GenWorkDb<WorkEntityDelete> entDelete,
+    AppWorkContextService appWorkCtxSvc,
+    AppWorkChain<WorkEntitySave> entSave,
+    AppWorkChain<WorkEntityUpdate> entUpdate,
+    AppWorkChain<WorkEntityDelete> entDelete,
     LazySvc<IValueConverter> valueConverter,
     Generator<AppPermissionCheck> appPermissionCheckGenerator
-) : ServiceBase("Dta.Simple", connect: [entSave, entUpdate, entDelete, zoneMapper, dataAssembler, ctx, appPermissionCheckGenerator, valueConverter])
+) : ServiceBase("Dta.Simple", connect: [appWorkCtxSvc, entSave, entUpdate, entDelete, zoneMapper, dataAssembler, ctx, appPermissionCheckGenerator, valueConverter])
 {
 
     #region Constructor / DI
@@ -47,7 +48,7 @@ public partial class SimpleDataEditService(
 
     private int _appId;
     private bool _checkWritePermissions = true; // default behavior is to check write publish/draft permissions (that should happen for REST, but not for c# API)
-    private IAppWorkCtxWithDb _ctxWithDb = null!;
+    private IAppWorkContext _ctxWithDb = null!;
 
     /// <param name="zoneId">Zone ID</param>
     /// <param name="appId">App ID</param>
@@ -63,7 +64,7 @@ public partial class SimpleDataEditService(
 
         _defaultLanguageCode = GetDefaultLanguage(zoneId);
         var appIdentity = new AppIdentity(zoneId, appId);
-        _ctxWithDb = entSave.CtxSvc.CtxWithDb(appIdentity);
+        _ctxWithDb = appWorkCtxSvc.ContextNew(appIdentity);
         _checkWritePermissions = checkWritePermissions;
         l.A($"Default language:{_defaultLanguageCode}");
         return l.Return(this);
@@ -105,7 +106,7 @@ public partial class SimpleDataEditService(
 
         l.A($"Type {contentTypeName} found. Will build entities to save...");
 
-        var entSaver = entSave.New(_ctxWithDb.AppReader);
+        var entSaver = entSave.New(_ctxWithDb);
         var saveOptions = entSaver.SaveOptions();
 
         var importEntity = list
@@ -204,7 +205,7 @@ public partial class SimpleDataEditService(
         var original = _ctxWithDb.AppReader.List.FindRepoId(entityId)
             ?? throw new NullReferenceException($"Can't Update, original not found with ID {entityId}");
         var (entity, publishing) = BuildNewEntity(original.Type, values, null, original.IsPublished);
-        entUpdate.New(_ctxWithDb.AppReader)
+        entUpdate.New(_ctxWithDb)
             .UpdateParts(id: entityId, partialEntity: entity, publishing: publishing);
         l.Done();
     }
@@ -215,14 +216,14 @@ public partial class SimpleDataEditService(
     /// </summary>
     /// <param name="entityId">Entity ID</param>
     /// <exception cref="InvalidOperationException">Entity cannot be deleted for example when it is referenced by another object</exception>
-    public void Delete(int entityId) => entDelete.New(_ctxWithDb.AppReader).Delete(entityId);
+    public void Delete(int entityId) => entDelete.New(_ctxWithDb).Delete(entityId);
 
 
     /// <summary>
     /// Delete the entity specified by GUID.
     /// </summary>
     /// <param name="entityGuid">Entity GUID</param>
-    public void Delete(Guid entityGuid) => entDelete.New(_ctxWithDb.AppReader).Delete(entityGuid);
+    public void Delete(Guid entityGuid) => entDelete.New(_ctxWithDb).Delete(entityGuid);
 
 
     private IDictionary<string, object?> ConvertRelationsToNullArray(IContentType contentType, IDictionary<string, object?> values)

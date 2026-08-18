@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Backend.Views;
 public class ViewsBackend(
     LazySvc<AppWorkContextService> appCtxSvc,
     LazySvc<WorkViewDelete> workViewDelete,
-    Generator<WorkViews, IAppWorkCtxForDiWip> workViews,
+    AppWorkChain<WorkViews> workViews,
     LazySvc<IConvertToEavLight> convertToEavLight,
     Generator<ImpExpHelpers> impExpHelpers)
     : ServiceBase("Bck.Views", connect: [appCtxSvc, workViewDelete, convertToEavLight, impExpHelpers, workViews])

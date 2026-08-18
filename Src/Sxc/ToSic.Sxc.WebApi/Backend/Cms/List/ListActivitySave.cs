@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ListActivitySave(
-    GenWorkDb<WorkFieldList> workFieldList,
+    AppWorkQuick<WorkFieldList> workFieldList,
     LazySvc<IPagePublishing> publishing,
     ISxcCurrentContextService ctxService
     ) : ServiceBase("Api.CntGrpRl", connect: [workFieldList, ctxService, publishing])

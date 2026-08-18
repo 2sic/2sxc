@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.Sys.Work;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Metadata;
 using ToSic.Sxc.Adam.Sys.FileSystem;
@@ -52,7 +53,7 @@ public class AdamManager(AdamManager.Dependencies services)
     public IAdamFileSystem AdamFs => field ??= Services.AdamFsLazy.SetInit(f => f.Init(this)).Value;
 
     [field: AllowNull, MaybeNull]
-    public IAppWorkCtx AppWorkCtx => field ??= new AppWorkCtx(AppContext.AppReaderRequired);
+    public IAppReader AppReader => field ??= AppContext.AppReaderRequired;
 
     private IContextOfApp AppContext { get; set; } = null!;
 
@@ -131,7 +132,7 @@ public class AdamManager(AdamManager.Dependencies services)
 
     private IMetadata PrepareUnderlyingMetadata(string key, string title, Action<IMetadata>? mdInit)
     {
-        var mdOf = AppWorkCtx.AppReader.Metadata.GetMetadataOf(TargetTypes.CmsItem, key, title: title);
+        var mdOf = AppReader.Metadata.GetMetadataOf(TargetTypes.CmsItem, key, title: title);
         mdInit?.Invoke(mdOf);
         return mdOf;
     }

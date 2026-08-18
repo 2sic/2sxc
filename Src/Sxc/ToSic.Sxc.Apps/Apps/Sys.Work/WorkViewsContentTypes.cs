@@ -7,10 +7,10 @@ using ToSic.Sxc.Apps.Sys.Ui;
 
 namespace ToSic.Sxc.Apps.Sys.Work;
 
-public class WorkViewsContentTypes(Generator<WorkViews, IAppWorkCtxForDiWip> workViews, IConvertToEavLight dataToFormatLight, LazySvc<IValueConverter> valConverterLazy, IAppWorkCtxForDiWip appWorkCtx)
+public class WorkViewsContentTypes(AppWorkChain<WorkViews> workViews, IConvertToEavLight dataToFormatLight, LazySvc<IValueConverter> valConverterLazy, IAppWorkContext appWorkCtx)
     : ServiceBase("Viw.Cts", connect: [workViews, dataToFormatLight, valConverterLazy, appWorkCtx])
 {
-    public IList<ContentTypeUiInfo> GetContentTypesWithStatus(IAppWorkCtxForDiWip appWorkCtx, string appPath, string appPathShared)
+    public IList<ContentTypeUiInfo> GetContentTypesWithStatus(IAppWorkContext appWorkCtx, string appPath, string appPathShared)
     {
         var templates = workViews.New(appWorkCtx).GetAll().ToList();
         var visible = templates.Where(t => !t.IsHidden).ToList();

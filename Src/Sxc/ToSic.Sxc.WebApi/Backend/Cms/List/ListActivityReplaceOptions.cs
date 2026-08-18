@@ -10,9 +10,9 @@ namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ListActivityReplaceOptions(
-    Generator<WorkBlocks, IAppWorkCtxForDiWip> appBlocks,
-    GenWorkPlus<WorkEntities> workEntities
-) : ServiceWithSetup<IAppWorkCtxForDiWip>("Act.LstRep", connect: [appBlocks, workEntities])
+    AppWorkChain<WorkBlocks> appBlocks,
+    AppWorkChain<WorkEntities> workEntities
+) : ServiceWithSetup<IAppWorkContext>("Act.LstRep", connect: [appBlocks, workEntities])
 {
     public record Options(
         Guid Parent,

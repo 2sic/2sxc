@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Blocks.Sys.BlockEditor;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockEditorForEntity(
     BlockEditorBase.Dependencies services,
-    GenWorkDb<WorkEntityUpdate> entityUpdate,
+    AppWorkQuick<WorkEntityUpdate> entityUpdate,
     IAppsCatalog appsCatalog)
     : BlockEditorBase(services, connect: [entityUpdate, appsCatalog])
 {
