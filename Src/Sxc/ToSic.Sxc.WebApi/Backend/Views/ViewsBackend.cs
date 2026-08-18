@@ -11,11 +11,12 @@ namespace ToSic.Sxc.Backend.Views;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ViewsBackend(
-    GenWorkBasic<WorkViewsMod> workViewsMod,
+    LazySvc<AppWorkContextService> appWorkCtxService,
+    LazySvc<WorkViewDelete> workViewDelete,
     GenWorkPlus<WorkViews> workViews,
     LazySvc<IConvertToEavLight> convertToEavLight,
     Generator<ImpExpHelpers> impExpHelpers)
-    : ServiceBase("Bck.Views", connect: [workViewsMod, convertToEavLight, impExpHelpers, workViews])
+    : ServiceBase("Bck.Views", connect: [appWorkCtxService, workViewDelete, convertToEavLight, impExpHelpers, workViews])
 {
     public IEnumerable<ViewDetailsDto> GetAll(int appId)
     {
@@ -92,10 +93,14 @@ public class ViewsBackend(
     /// <returns></returns>
     public bool Delete(int appId, int id)
     {
-        // todo: extra security to only allow zone change if host user
         var l = Log.Fn<bool>($"delete a{appId}, t:{id}");
-        var app = impExpHelpers.New().GetReaderAfterZoneSwitchPermissionCheck(appId);
-        workViewsMod.New(app).DeleteView(id);
+        
+        // extra security to only allow zone change if host user
+        var appReader = impExpHelpers.New().GetReaderAfterZoneSwitchPermissionCheck(appId);
+        
+        using (appWorkCtxService.Value.WithContext(appReader))
+            workViewDelete.Value.DeleteView(id);
+        
         return l.ReturnTrue();
     }
 }
