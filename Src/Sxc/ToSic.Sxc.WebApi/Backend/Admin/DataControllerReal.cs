@@ -22,7 +22,7 @@ public class DataControllerReal(
     LazySvc<IUser> userLazy,
     GenWorkDb<WorkEntityRecycle> recycle)
     : Services_ServiceBase("Api.DtaCtlRl",
-        connect: [site, appPathSvc, appWorkCtxSvc, context, contentExportLazy, importContent, userLazy, recycle])/*, IAdminDataController*/
+        connect: [site, appPathSvc, appWorkCtxSvc, context, contentExportLazy, importContent, userLazy, recycle])
 {
     public const string LogSuffix = "DataCtrl";
 

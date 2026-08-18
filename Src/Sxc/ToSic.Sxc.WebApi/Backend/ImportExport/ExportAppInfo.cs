@@ -35,6 +35,7 @@ public class ExportAppInfo(
             zipExport.CountFiles(!appHasCustomParent, fm => fm.GetAllTransferableFiles()); // TransferablePortalFilesCount + TransferableGlobalFilesCount
 
         var appSpecs = appReader.Specs;
+        var allViews = appViews.GetAll();
         return l.Return(new()
         {
             Id = appIdentity.AppId,
@@ -43,9 +44,9 @@ public class ExportAppInfo(
             Version = appSpecs.VersionSafe(),
             EntitiesCount = appEntities.All().Count(e => !e.HasAncestor()),
             LanguagesCount = zoneMapper.CulturesEnabledWithState(site).Count,
-            TemplatesCount = appViews.GetAll().Count(),
-            HasRazorTemplates = appViews.GetRazor().Any(),
-            HasTokenTemplates = appViews.GetToken().Any(),
+            TemplatesCount = allViews.Count(),
+            HasRazorTemplates = allViews.Any(t => t.IsRazor),
+            HasTokenTemplates = allViews.Any(t => !t.IsRazor),
             FilesCount = filesCount,
             TransferableFilesCount = transferableFilesCount,
         });

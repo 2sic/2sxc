@@ -39,6 +39,8 @@ public static class StartupSxcApps
         services.TryAddTransient<WorkApps>();
         services.TryAddTransient<WorkAppsRemove>();
 
+        services.TryAddTransient<WorkViewsContentTypes>(); // new v22
+        
         // Simple DataController - registration was missing
         services.TryAddTransient<SimpleDataEditService>();
 

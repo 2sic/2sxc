@@ -1,13 +1,7 @@
 ﻿using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context.Sys.ZoneCulture;
-using ToSic.Eav.Data.ContentTypes.Sys;
-using ToSic.Eav.Data.Sys;
-using ToSic.Eav.Data.Sys.ValueConverter;
-using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource.Query.Sys;
-using ToSic.Eav.Metadata.Sys;
-using ToSic.Sxc.Apps.Sys.Ui;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sys.Caching.PiggyBack;
 
@@ -15,14 +9,9 @@ using ToSic.Sys.Caching.PiggyBack;
 namespace ToSic.Sxc.Apps.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class WorkViews(
-    GenWorkPlus<WorkEntities> appEntities,
-    LazySvc<IValueConverter> valConverterLazy,
-    IZoneCultureResolver cultureResolver,
-    IConvertToEavLight dataToFormatLight,
-    Generator<QueryDefinitionFactory> qDefBuilder)
+public class WorkViews(GenWorkPlus<WorkEntities> appEntities, IZoneCultureResolver cultureResolver, Generator<QueryDefinitionFactory> qDefBuilder)
     : WorkUnitBase<IAppWorkCtxPlus>("Cms.ViewRd",
-        connect: [appEntities, valConverterLazy, cultureResolver, dataToFormatLight, qDefBuilder])
+        connect: [appEntities, cultureResolver, qDefBuilder])
 {
     /// <summary>
     /// Helper class to get information about views, especially for selecting them based on the url identifier
@@ -57,9 +46,6 @@ public class WorkViews(
             .OrderBy(e => e.Name)];
 
     private List<IView>? _all;
-
-    public IEnumerable<IView> GetRazor() => GetAll().Where(t => t.IsRazor);
-    public IEnumerable<IView> GetToken() => GetAll().Where(t => !t.IsRazor);
 
     /// <summary>
     /// Get all views which have a url identifier, to be used for view-switching
@@ -121,35 +107,4 @@ public class WorkViews(
             ? throw new("The template with id '" + templateId + "' does not exist.")
             : new View(templateEntity, [cultureResolver.CurrentCultureCode], withServices ? qDefBuilder : null, isReplaced: isReplacement);
 
-
-    // todo: check if this call could be replaced with the normal ContentTypeController.Get to prevent redundant code
-    public IList<ContentTypeUiInfo> GetContentTypesWithStatus(string appPath, string appPathShared)
-    {
-        var templates = GetAll().ToList();
-        var visible = templates.Where(t => !t.IsHidden).ToList();
-
-        var valConverter = valConverterLazy.Value;
-
-        var result = AppWorkCtx.AppReader.ContentTypes
-            .OfScope(ScopeConstants.Default) 
-            .Where(ct => templates.Any(t => t.ContentType == ct.NameId)) // must exist in at least 1 template
-            .OrderBy(ct => ct.Name)
-            .Select(ct =>
-            {
-                var details = ct.DetailsOrNull();
-                var thumbnail = valConverter.ToValue(details?.Icon);
-                if (AppIconHelpers.HasAppPathToken(thumbnail))
-                    thumbnail = AppIconHelpers.AppPathTokenReplace(thumbnail, appPath, appPathShared);
-                return new ContentTypeUiInfo {
-                    StaticName = ct.NameId,
-                    Name = ct.Name,
-                    IsHidden = visible.All(t => t.ContentType != ct.NameId),   // must check if *any* template is visible, otherwise tell the UI that it's hidden
-                    Thumbnail = thumbnail,
-                    Properties = ((details as ICanBeEntity)?.Entity).NullOrGetWith(dataToFormatLight.Convert),
-                    IsDefault = ct.Metadata.HasType(KnownDecorators.IsDefaultDecorator),
-                };
-            })
-            .ToList();
-        return result;
-    }
 }

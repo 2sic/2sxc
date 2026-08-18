@@ -11,11 +11,11 @@ public class AppViewPickerBackend(
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> multiPermissionsApp,
     ISxcCurrentContextService ctxService,
     LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
-    GenWorkPlus<WorkViews> workViews,
     GenWorkPlus<WorkBlockViewsGet> workBlockViews,
     AppWorkContextService appWorkCtxService,
-    LazySvc<WorkEntityPublish> workPublish)
-    : ServiceBase("Bck.ViwApp", connect: [multiPermissionsApp, ctxService, blockEditorSelectorLazy, workViews, workBlockViews, appWorkCtxService, workPublish])
+    LazySvc<WorkEntityPublish> workPublish,
+    LazySvc<WorkViewsContentTypes> workViewsContentTypes)
+    : ServiceBase("Bck.ViwApp", connect: [multiPermissionsApp, ctxService, blockEditorSelectorLazy, workBlockViews, appWorkCtxService, workPublish, workViewsContentTypes])
 {
     public void SetAppId(int? appId)
         => blockEditorSelectorLazy.Value
@@ -32,8 +32,13 @@ public class AppViewPickerBackend(
     public IEnumerable<ContentTypeUiInfo> ContentTypes()
     {
         var block = ctxService.BlockRequired();
-        return workViews.New(appWorkCtxService.ContextPlus(block.Context.AppReaderRequired))
-                .GetContentTypesWithStatus(block.App.Path ?? "", block.App.PathShared ?? "");
+        using (appWorkCtxService.WithContext(block.Context.AppReaderRequired))
+            return workViewsContentTypes.Value.GetContentTypesWithStatus(
+                block.App.Path ?? "",
+                block.App.PathShared ?? ""
+            );
+        //return workViews.New(appWorkCtxService.ContextPlus(block.Context.AppReaderRequired))
+        //        .GetContentTypesWithStatus(block.App.Path ?? "", block.App.PathShared ?? "");
     }
 
     public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
