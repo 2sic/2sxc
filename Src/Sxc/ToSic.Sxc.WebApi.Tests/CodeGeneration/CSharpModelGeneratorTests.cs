@@ -74,6 +74,43 @@ public class CSharpModelGeneratorTests(
         Assert.Equal([context.ContentType.NameId], specs.ContentTypes);
     }
 
+    /// <summary>
+    /// Regression: the auto-generate job used to narrow the generator's type universe to the changed
+    /// content type, so every entity-field on it degraded to ITypedItem - see the ITypedItem fallback test below.
+    /// </summary>
+    [Fact]
+    public async Task AutoGenerate_EntityField_KeepsTypedChildReference()
+    {
+        // Configuration with no explicit content types = the default set, which is the common setup
+        using var context = AutoGenerateTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder, generators, configuredContentTypes: "");
+
+        await context.RunAsync();
+
+        var specs = Assert.Single(context.Generator.ReceivedSpecs);
+        var body = GenerateBody(new CSharpTypedDataModelsGenerator(context.CodeContext.User, context.CodeContext.AppReaders), specs, context.ContentType.Name);
+
+        Assert.Contains($"public {CodeGeneratorTestContext.EntityFieldAndTypeName} {CodeGeneratorTestContext.EntityFieldAndTypeName} =>", body);
+        Assert.Contains($"_item.Child<{CodeGeneratorTestContext.EntityFieldAndTypeName}>(\"{CodeGeneratorTestContext.EntityFieldAndTypeName}\")", body);
+    }
+
+    /// <summary>
+    /// Documents the coupling: a type universe narrowed to the one type being written cannot resolve
+    /// cross-type references, so the entity-field falls back to ITypedItem.
+    /// </summary>
+    [Fact]
+    public void Generate_EntityField_NarrowedToSingleType_FallsBackToITypedItem()
+    {
+        var context = CodeGeneratorTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder);
+
+        var body = GenerateBody(
+            new CSharpTypedDataModelsGenerator(context.User, context.AppReaders),
+            new TestFileGeneratorSpecs { AppId = CodeGeneratorTestContext.AppId, ContentTypes = [context.ContentType.NameId] },
+            context.ContentType.Name);
+
+        Assert.Contains($"public ITypedItem {CodeGeneratorTestContext.EntityFieldAndTypeName} =>", body);
+        Assert.Contains($"_item.Child(\"{CodeGeneratorTestContext.EntityFieldAndTypeName}\")", body);
+    }
+
     [Fact]
     public async Task AutoGenerate_MatchingConfiguration_WritesGeneratedFile()
     {
@@ -104,6 +141,17 @@ public class CSharpModelGeneratorTests(
         Assert.Contains("Title =>", body);
         Assert.DoesNotContain("HasData =>", body);
     }
+
+    /// <summary>
+    /// Generate everything the specs ask for, then pick the file of one content type.
+    /// </summary>
+    private static string GenerateBody(IFileGenerator generator, IFileGeneratorSpecs specs, string typeName)
+        => generator
+            .Generate(specs)
+            .Single()
+            .Files
+            .Single(f => f.FileName == $"{typeName}.Generated.cs")
+            .Body;
 
     #endregion
 }

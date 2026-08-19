@@ -14,6 +14,11 @@ internal sealed class CodeGeneratorTestContext
 {
     internal const int AppId = 42;
 
+    /// <summary>
+    /// Name of the entity-field on <see cref="ContentType"/> and of the content-type it points to.
+    /// </summary>
+    internal const string EntityFieldAndTypeName = "Author";
+
     public IContentType ContentType { get; }
     public IUser User { get; } = new UserMock
     {
@@ -41,13 +46,18 @@ internal sealed class CodeGeneratorTestContext
         IAppStateBuilder appStateBuilder)
         => Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder, false);
 
+    /// <param name="configuredContentTypes">
+    /// What the configuration should list in its ContentTypes field.
+    /// `null` means "just the main type", `""` means "all types in the default scope".
+    /// </param>
     public static CodeGeneratorTestContext CreateWithAutoGenerateConfiguration(
         ContentTypeAssemblyKit ctAssemblyKit,
         DataAssembler dataAssembler,
         ContentTypesFromCodeManager ctsFromCodeManager,
         IDataFactory dataFactory,
-        IAppStateBuilder appStateBuilder)
-        => Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder, true);
+        IAppStateBuilder appStateBuilder,
+        string? configuredContentTypes = null)
+        => Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder, true, configuredContentTypes);
 
     private static CodeGeneratorTestContext Create(
         ContentTypeAssemblyKit ctAssemblyKit,
@@ -55,17 +65,18 @@ internal sealed class CodeGeneratorTestContext
         ContentTypesFromCodeManager ctsFromCodeManager,
         IDataFactory dataFactory,
         IAppStateBuilder appStateBuilder,
-        bool includeAutoGenerateConfiguration)
+        bool includeAutoGenerateConfiguration,
+        string? configuredContentTypes = null)
     {
         var contentType = CreateContentType(ctAssemblyKit, dataAssembler);
-        var contentTypes = new List<IContentType> { contentType };
+        var contentTypes = new List<IContentType> { contentType, CreateEntityFieldTargetType(ctAssemblyKit) };
         IEntity? autoGenerateConfiguration = null;
 
         if (includeAutoGenerateConfiguration)
         {
             var configurationType = ctsFromCodeManager.Get<DataCopilotConfiguration>();
             contentTypes.Add(configurationType);
-            autoGenerateConfiguration = CreateAutoGenerateConfiguration(dataFactory, contentType.NameId);
+            autoGenerateConfiguration = CreateAutoGenerateConfiguration(dataFactory, configuredContentTypes ?? contentType.NameId);
         }
 
         var appBuilder = appStateBuilder.InitForPreset();
@@ -105,13 +116,48 @@ internal sealed class CodeGeneratorTestContext
             metadataItems: [CreateEphemeralMetadataEntity(ctAssemblyKit, dataAssembler, ref attributeId, ref entityId)]
         );
 
+        // Entity-field pointing at the other content type, as configured in the field settings.
+        var author = ctAssemblyKit.Field.Create(
+            appId: AppId,
+            name: EntityFieldAndTypeName,
+            type: ValueTypes.Entity,
+            isTitle: false,
+            id: ++attributeId,
+            sortOrder: attributeId,
+            metadataItems: [CreateEntityTypeMetadataEntity(ctAssemblyKit, dataAssembler, ref attributeId, ref entityId)]
+        );
+
         return ctAssemblyKit.Type.CreateContentTypeTac(
             appId: AppId,
             name: "Article",
             id: 7,
             nameId: "Article",
             scope: ScopeConstants.Default,
-            attributes: new List<IContentTypeField> { title, hasData }
+            attributes: new List<IContentTypeField> { title, hasData, author }
+        );
+    }
+
+    /// <summary>
+    /// The type the entity-field points to - must be in the generator's type universe for a typed Child&lt;T&gt;.
+    /// </summary>
+    private static IContentType CreateEntityFieldTargetType(ContentTypeAssemblyKit ctAssemblyKit)
+    {
+        var title = ctAssemblyKit.Field.Create(
+            appId: AppId,
+            name: "Title",
+            type: ValueTypes.String,
+            isTitle: true,
+            id: 100,
+            sortOrder: 1
+        );
+
+        return ctAssemblyKit.Type.CreateContentTypeTac(
+            appId: AppId,
+            name: EntityFieldAndTypeName,
+            id: 8,
+            nameId: EntityFieldAndTypeName,
+            scope: ScopeConstants.Default,
+            attributes: new List<IContentTypeField> { title }
         );
     }
 
@@ -157,6 +203,46 @@ internal sealed class CodeGeneratorTestContext
             values: new()
             {
                 { nameof(IFieldSettingsGeneral.IsEphemeral), true }
+            },
+            entityId: ++entityId,
+            repositoryId: entityId,
+            guid: Guid.NewGuid(),
+            owner: "test:metadata"
+        );
+    }
+
+    /// <summary>
+    /// Field-settings metadata as the editor saves it for an entity-field: which type the field points to.
+    /// </summary>
+    private static IEntity CreateEntityTypeMetadataEntity(
+        ContentTypeAssemblyKit ctAssemblyKit,
+        DataAssembler dataAssembler,
+        ref int attributeId,
+        ref int entityId)
+    {
+        var metadataAttribute = ctAssemblyKit.Field.Create(
+            appId: AppId,
+            name: AttributeNames.EntityFieldType,
+            type: ValueTypes.String,
+            isTitle: false,
+            id: ++attributeId,
+            sortOrder: attributeId
+        );
+
+        var metadataType = ctAssemblyKit.Type.CreateContentTypeTac(
+            appId: AppId,
+            name: "@entity-default",
+            nameId: "@entity-default",
+            scope: "TestMetadata",
+            attributes: new List<IContentTypeField> { metadataAttribute }
+        );
+
+        return dataAssembler.CreateEntityTac(
+            appId: AppId,
+            contentType: metadataType,
+            values: new()
+            {
+                { AttributeNames.EntityFieldType, EntityFieldAndTypeName }
             },
             entityId: ++entityId,
             repositoryId: entityId,

@@ -42,14 +42,16 @@ internal sealed class AutoGenerateTestContext : IDisposable
         ContentTypesFromCodeManager ctsFromCodeManager,
         IDataFactory dataFactory,
         IAppStateBuilder appStateBuilder,
-        LazySvc<IEnumerable<IFileGenerator>> generators)
+        LazySvc<IEnumerable<IFileGenerator>> generators,
+        string? configuredContentTypes = null)
     {
         var codeContext = CodeGeneratorTestContext.CreateWithAutoGenerateConfiguration(
             ctAssemblyKit,
             dataAssembler,
             ctsFromCodeManager,
             dataFactory,
-            appStateBuilder);
+            appStateBuilder,
+            configuredContentTypes);
 
         var appRoot = Path.Combine(Path.GetTempPath(), $"{nameof(CSharpModelGeneratorTests)}-{Guid.NewGuid():N}");
         Directory.CreateDirectory(appRoot);
