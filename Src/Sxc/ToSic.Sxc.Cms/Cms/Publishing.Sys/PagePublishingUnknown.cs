@@ -2,10 +2,8 @@
 
 namespace ToSic.Sxc.Cms.Publishing.Sys;
 
-internal class BasicPagePublishing : ServiceBase, IPagePublishing
+internal class PagePublishingUnknown(WarnUseOfUnknown<PagePublishingUnknown> _) : ServiceBase($"{LogScopes.NotImplemented}.Publsh"), IPagePublishing
 {
-    public BasicPagePublishing(WarnUseOfUnknown<BasicPagePublishing> _) : base($"{LogScopes.NotImplemented}.Publsh") { }
-
     public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
     {
         var l = Log.Fn();
@@ -13,8 +11,6 @@ internal class BasicPagePublishing : ServiceBase, IPagePublishing
         action.Invoke(versioningActionInfo);
         l.Done();
     }
-
-
 
     public int GetLatestVersion(int instanceId) => 0;
 

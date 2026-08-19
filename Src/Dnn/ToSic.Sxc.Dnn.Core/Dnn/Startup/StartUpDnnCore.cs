@@ -100,7 +100,7 @@ internal static class StartUpDnnCore
         services.TryAddTransient<IPagePublishing, DnnPagePublishing>();
 
         // v13 option to not use page publishing... #SwitchServicePagePublishingResolver #2749
-        services.AddTransient<IPagePublishingGetSettings, DnnPagePublishingGetSettings>();
+        services.AddTransient<IWorkBlockPublishingLookup, DnnWorkPublishingLookup>();
 
         // new in v12 - .net specific code compiler
         services.TryAddTransient<CodeCompiler, CodeCompilerNetFull>();

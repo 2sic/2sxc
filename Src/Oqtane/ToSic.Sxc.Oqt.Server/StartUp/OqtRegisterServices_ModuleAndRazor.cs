@@ -39,7 +39,7 @@ partial class OqtRegisterServices
             
         // Page publishing - ATM neutral objects which don't do much
         services.TryAddTransient<IPagePublishing, OqtPagePublishing>();
-        services.AddTransient<IPagePublishingGetSettings, OqtPagePublishingGetGetSettings>(); // #SwitchServicePagePublishingResolver #2749
+        services.AddTransient<IWorkBlockPublishingLookup, OqtWorkPublishingLookup>();
 
         services.TryAddTransient<OqtModuleHelper>();
 
