@@ -28,8 +28,17 @@ public record PolymorphismConfigurationModel : ModelFromEntityFull
         .ToList()
     )();
 
+    /// <summary>
+    /// Name of the resolver to use, like `koi` or `permissions`.
+    /// </summary>
+    /// <remarks>
+    /// It could be any value, if the DI has such as named service registered.
+    /// </remarks>
     public string? Resolver => SplitMode().Resolver;
 
+    /// <summary>
+    /// Additional parameter behind the resolver type, like `cssFramework` for the Koi resolver.
+    /// </summary>
     public string? Parameters => SplitMode().Parameters;
 
     private (string? Resolver, string? Parameters) SplitMode()

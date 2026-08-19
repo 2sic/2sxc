@@ -23,9 +23,9 @@ internal class OqtAppWebApiControllerAssemblyLoader(
     AliasResolver aliasResolver,
     AppFolderLookupForWebApi appFolderLookup,
     ISxcCurrentContextService ctxService,
-    PolymorphConfigReader polymorphism,
+    IEditionService editionSvc,
     IServerPaths serverPaths)
-    : ServiceBase($"{OqtConstants.OqtLogPrefix}.ApiCtlAsm", connect: [compiler, siteState, aliasResolver, appFolderLookup, ctxService, polymorphism, serverPaths]),
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.ApiCtlAsm", connect: [compiler, siteState, aliasResolver, appFolderLookup, ctxService, editionSvc, serverPaths]),
         IAppWebApiControllerAssemblyLoader
 {
     public Assembly GetAssembly(string path)
@@ -37,7 +37,7 @@ internal class OqtAppWebApiControllerAssemblyLoader(
         var pathFromRoot = OqtServerPaths.GetAppApiPath(tenantId, siteId, appFolder, path);
 
         var blockOrNull = ctxService.BlockOrNull();
-        var edition = blockOrNull.NullOrGetWith(b => polymorphism.UseViewEditionOrGet(b));
+        var edition = blockOrNull.NullOrGetWith(editionSvc.Edition);
 
         var runtimeKey = blockOrNull?.Context.AppReaderRequired?.Specs.CacheKey;
         var spec = new HotBuildSpec(blockOrNull?.AppId ?? KnownAppsConstants.AppIdEmpty,

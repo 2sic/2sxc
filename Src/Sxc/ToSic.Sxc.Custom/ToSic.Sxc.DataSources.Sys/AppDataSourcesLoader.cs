@@ -25,12 +25,12 @@ internal class AppDataSourcesLoader(
     LazySvc<CodeCompiler> codeCompilerLazy,
     LazySvc<AppCodeLoader> appCodeLoaderLazy,
     ISxcCurrentContextService ctxService,
-    PolymorphConfigReader polymorphism,
+    IEditionService editionSvc,
     MemoryCacheService memoryCacheService)
     : ServiceBase("Eav.AppDtaSrcLoad",
         connect:
         [
-            logStore, site, appReaders, appPathsLazy, codeCompilerLazy, appCodeLoaderLazy, ctxService, polymorphism,
+            logStore, site, appReaders, appPathsLazy, codeCompilerLazy, appCodeLoaderLazy, ctxService, editionSvc,
             memoryCacheService
         ]), IAppDataSourcesLoader
 {
@@ -116,7 +116,7 @@ internal class AppDataSourcesLoader(
         var l = Log.Fn<string?>(timer: true);
 
         var block = ctxService.BlockOrNull();
-        var edition = block.NullOrGetWith(polymorphism.UseViewEditionOrGet);
+        var edition = block.NullOrGetWith(editionSvc.Edition);
 
         return l.Return(edition);
     }

@@ -41,9 +41,9 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
         LazySvc<IConvertService> ConvertService,
         LazySvc<CodeCreateDataSourceSvc> DataSources,
         ICodeDataFactory Cdf,
-        PolymorphConfigReader Polymorphism)
+        IEditionService EditionSvc)
         : DependenciesBase(connect:
-            [/* never! serviceProvider */ CodeCompilerLazy, DataStackService, ConvertService, DataSources, Cdf, Polymorphism]);
+            [/* never! serviceProvider */ CodeCompilerLazy, DataStackService, ConvertService, DataSources, Cdf, EditionSvc]);
 
     [PrivateApi]
     protected internal ExecutionContext(Dependencies services, string logPrefix) : base(services, logPrefix + ".DynCdR")

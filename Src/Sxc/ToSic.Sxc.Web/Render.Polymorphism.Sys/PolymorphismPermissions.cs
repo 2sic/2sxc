@@ -1,6 +1,5 @@
 ﻿using ToSic.Sys.Users;
 using ToSic.Sys.Utils;
-using static System.StringComparison;
 
 namespace ToSic.Sxc.Render.Polymorphism.Sys;
 
@@ -11,31 +10,29 @@ namespace ToSic.Sxc.Render.Polymorphism.Sys;
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 public class PolymorphismPermissions(IUser user) : IPolymorphismResolver
 {
-    public string NameId => "Permissions";
+    public static string ResolverNameId = "permissions";
 
     /// <summary>
     /// BTW: when this is configured, the entire config string is "Permissions?IsSuperUser"
     /// so the parameters are "IsSuperUser"
     /// </summary>
-    public const string ModeIsSuperUser = "IsSuperUser";
+    private const string ModeIsSuperUser = "IsSuperUser";
 
     public string? Edition(PolymorphismConfigurationModel config, string? overrule, ILog log)
     {
         var l = log.Fn<string>();
-        if (!string.Equals(config.Parameters, ModeIsSuperUser, InvariantCultureIgnoreCase))
+        
+        // Verify that it's the mode we plan to process
+        if (!config.Parameters.EqualsInsensitive(ModeIsSuperUser))
             return l.ReturnNull("unknown param");
+        
+        // Overrules should only be applied if it's a superuser or the user is whitelisted.
         var isSuper = user.IsSystemAdmin;
-
-        // TEMP: for now, site admins can overrule this
-        // They won't see the button, but if the button is added on purpose using .Button("edition") it will work.
         if (overrule.HasValue() && (isSuper || config.UsersWhoMaySwitch.Contains(user.Id))) 
             return l.Return(overrule, $"overruled as: '{overrule}'");
 
+        // Super users should default to `staging`, normal users to `live`.
         var result = isSuper ? "staging" : "live";
-        return l.ReturnAndLog(result);
+        return l.Return(result, $"defaulted as: '{result}'; {(isSuper ? "superuser" : "normal user")}");
     }
-
-    public bool IsViable() => true;
-
-    public int Priority => 0;
 }

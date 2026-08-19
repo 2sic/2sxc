@@ -16,7 +16,7 @@ public static class StartupSxcEngines
         services.TryAddTransient<EngineRequirementsApp>();
 
         // Polymorphism
-        services.TryAddTransient<PolymorphConfigReader>();
+        services.TryAddTransient<IEditionService, EditionService>();
 
         // New v21
         services.TryAddTransient<EngineSpecsService>();

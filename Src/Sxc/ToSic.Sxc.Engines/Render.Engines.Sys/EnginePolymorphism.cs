@@ -7,8 +7,8 @@ using ToSic.Sxc.Render.Polymorphism.Sys;
 namespace ToSic.Sxc.Render.Engines.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class EnginePolymorphism(PolymorphConfigReader polymorphism, IServerPaths serverPaths)
-    : ServiceBase("Sxc.EngPly", connect: [polymorphism, serverPaths])
+public class EnginePolymorphism(IEditionService editionSvc, IServerPaths serverPaths)
+    : ServiceBase("Sxc.EngPly", connect: [editionSvc, serverPaths])
 {
     internal (string? NewPath, string? Edition) PolymorphTryToSwitchPath(string root, IView view, IAppReader appReader)
     {
@@ -19,8 +19,8 @@ public class EnginePolymorphism(PolymorphConfigReader polymorphism, IServerPaths
         subPath = view.EditionPath.TrimPrefixSlash();
 
         // Figure out the current edition - if none, stop here
-        // New 2023-03-20 - if the view comes with a preset edition, it's an ajax-preview which should be respected
-        var edition = polymorphism.UseViewEditionOrGet(view, appReader);
+        // If the view comes with a preset edition, it's an ajax-preview which should be respected
+        var edition = editionSvc.Edition(view, appReader);
         
         if (edition == null)
             return l.Return((null, null), "no edition detected");
@@ -43,9 +43,7 @@ public class EnginePolymorphism(PolymorphConfigReader polymorphism, IServerPaths
 
         (newPath, view) = PolymorphTestPathAndSetIfFound(view, root, edition, pathWithoutFirstFolder);
         if (newPath != null)
-        {
             return l.Return((newPath, edition), $"edition {edition} up one path");
-        }
 
         // Since obviously something tried to get/set an edition
         // we'll still register it on the view so the UI knows about it.

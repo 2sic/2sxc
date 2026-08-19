@@ -23,8 +23,8 @@ internal class DnnAppWebApiControllerAssemblyLoader(
     IAppJsonConfigurationService appJson,
     SourceAnalyzer sourceAnalyzer,
     IRoslynBuildManager roslynBuildManager,
-    PolymorphConfigReader polymorphism)
-    : ServiceBase($"{DnnConstants.LogName}.ApiCtlAsm", connect: [appFolderLookup, site, ctxService, appJson, sourceAnalyzer, roslynBuildManager, polymorphism]),
+    IEditionService editionSvc)
+    : ServiceBase($"{DnnConstants.LogName}.ApiCtlAsm", connect: [appFolderLookup, site, ctxService, appJson, sourceAnalyzer, roslynBuildManager, editionSvc]),
         IAppWebApiControllerAssemblyLoader
 {
     public Assembly GetAssembly(string path)
@@ -48,7 +48,7 @@ internal class DnnAppWebApiControllerAssemblyLoader(
         {
             Log.A("has AppCode");
             var edition = block != null
-                ? polymorphism.UseViewEditionOrGet(block)
+                ? editionSvc.Edition(block)
                 : GetEdition(path);
             var spec = appSpecs == null
                 ? null

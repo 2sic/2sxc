@@ -43,9 +43,9 @@ internal class SearchController(
     LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder,
     LazySvc<ILookUpEngineResolver> dnnLookUpEngineResolver,
     LazySvc<ILogStore> logStore,
-    PolymorphConfigReader polymorphism)
+    IEditionService editionSvc)
     : ServiceBase("DNN.Search",
-        connect: [appsCache, codeCompiler, exCtxFactory, siteGenerator, dnnLookUpEngineResolver, moduleAndBlockBuilder, logStore, polymorphism])
+        connect: [appsCache, codeCompiler, exCtxFactory, siteGenerator, dnnLookUpEngineResolver, moduleAndBlockBuilder, logStore, editionSvc])
 {
     /// <summary>
     /// Initialize all values which are needed - or return a text with the info why we must stop.
@@ -92,7 +92,7 @@ internal class SearchController(
 
         // Figure out the current edition - if none, stop here
         // New 2023-03-20 - if the view comes with a preset edition, it's an ajax-preview which should be respected
-        _edition = polymorphism.UseViewEditionOrGet(Block);
+        _edition = editionSvc.Edition(Block);
 
         // Convert DNN SearchDocuments from 2sxc SearchInfos
         SearchItems = BuildInitialSearchInfos(streamsToIndex, DnnModule);

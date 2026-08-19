@@ -25,7 +25,7 @@ public partial class ExecutionContext
 
         _editionForHotBuild = Block == null
             ? null
-            : Services.Polymorphism.UseViewEditionOrGet(Block.View, ((IAppWithInternal)App).AppReader);
+            : Services.EditionSvc.Edition(Block.View, ((IAppWithInternal)App).AppReader);
     }
 
     private string? _editionForHotBuild;

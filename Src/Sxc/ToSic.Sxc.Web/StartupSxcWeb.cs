@@ -35,9 +35,9 @@ public static class StartupSxcWeb
         services.TryAddTransient<ConvertToEavLightWithCmsInfo>(); // WIP, not public, should use interface instead
         services.TryAddTransient<IConvertToEavLight, ConvertToEavLightWithCmsInfo>();
 
-        // Polymorphism - moved here v17.08
-        services.AddTransient<IPolymorphismResolver, PolymorphismKoi>();
-        services.AddTransient<IPolymorphismResolver, PolymorphismPermissions>();
+        // Polymorphism - changed to keyed in v22
+        services.AddKeyedTransient<IPolymorphismResolver, PolymorphismKoi>(PolymorphismKoi.ResolverNameId);
+        services.AddKeyedTransient<IPolymorphismResolver, PolymorphismPermissions>(PolymorphismPermissions.ResolverNameId);
 
         // Koi, mainly so tests don't fail
         services.TryAddTransient<ICssFrameworkDetector, CssFrameworkDetectorUnknown>();

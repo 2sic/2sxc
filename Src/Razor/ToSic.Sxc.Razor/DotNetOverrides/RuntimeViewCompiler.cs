@@ -486,7 +486,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
         }
 
         // Standard case (appRelativePath and edition from block)
-        var edition = sp.GetService<PolymorphConfigReader>()!.UseViewEditionOrGet(block);
+        var edition = sp.Build<IEditionService>().Edition(block);
         return new(appRelativePath, edition, "block-context");
     }
 
