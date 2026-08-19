@@ -61,10 +61,13 @@ internal class CopilotContentTypeAutoGenerateAction(
                 return null;
         }
 
+        // Don't restrict to the changed type. Narrowing it to the changed type would make every
+        // entity-field on that type fall back to ITypedItem, because required content types wouldn't
+        // be in the set. Leaving it null gives the configuration's own set - exactly what a manual
+        // "generate data models" run uses.
         var specs = CopilotCodeGenerateService.BuildFileGeneratorSpecs(configuration, new()
         {
             AppId = changedType.AppId,
-            ContentTypes = [changedType.NameId],
         });
 
         return new(configuration.Id, generatorName, specs);
