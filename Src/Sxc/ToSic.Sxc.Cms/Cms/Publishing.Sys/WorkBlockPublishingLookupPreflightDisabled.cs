@@ -25,7 +25,7 @@ public class WorkBlockPublishingLookupPreflightDisabled(IFeaturesService feature
     {
         var forbidden = featuresService.IsEnabled(BuiltInFeatures.EditUiDisableDraft.NameId);
         var result = forbidden
-            ? BlockPublishingSettingsService.Stop(package, PublishingMode.DraftForbidden)
+            ? BlockPublishingSettingsService.Stop(package, PublishingModes.DraftForbidden)
             : package with { Decision = ResultState.Skip };
         
         return Task.FromResult(result);

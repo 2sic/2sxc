@@ -21,7 +21,7 @@ public class BlockPublishingSettingsService(IWorkSequence<IWorkBlockPublishingLo
         
         // If no ID, exit early
         if (instanceId < 0)
-            return l.Return(Stop(package, PublishingMode.DraftOptional), "no instance");
+            return l.Return(Stop(package, PublishingModes.DraftOptional), "no instance");
         
         // Check if cached
         if (Cache.TryGetValue(instanceId, out var value))
@@ -41,27 +41,15 @@ public class BlockPublishingSettingsService(IWorkSequence<IWorkBlockPublishingLo
     /// <summary>
     /// Cache
     /// </summary>
-    protected static readonly ConcurrentDictionary<int, PublishingMode> Cache = new();
+    protected static readonly ConcurrentDictionary<int, PublishingModes> Cache = new();
 
     /// <summary>
     /// Helper to repackage the result.
     /// </summary>
-    public static Package<BlockPublishingSettings> Stop(Package<BlockPublishingSettings> package, PublishingMode mode)
+    public static Package<BlockPublishingSettings> Stop(Package<BlockPublishingSettings> package, PublishingModes mode)
         => package with
         {
-            Data = WithNewMode(package.Data, mode),
+            Data = BlockPublishingSettings.Update(package.Data, mode),
             Decision = ResultState.StopSequence,
         };
-
-    /// <summary>
-    /// Helper to repackage the result.
-    /// </summary>
-    public static BlockPublishingSettings WithNewMode(BlockPublishingSettings options, PublishingMode mode)
-        => options with
-        {
-            AllowDraft = mode != PublishingMode.DraftForbidden,
-            ForceDraft = mode == PublishingMode.DraftRequired,
-            Mode = mode
-        };
-
 }

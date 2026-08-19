@@ -26,17 +26,17 @@ internal class DnnWorkPublishingLookup(IFeaturesService featuresService)
     }
 
 
-    protected PublishingMode LookupRequirements(int moduleId)
+    protected PublishingModes LookupRequirements(int moduleId)
     {
-        var l = Log.Fn<PublishingMode>($"Requirements(mod:{moduleId}) - checking first time (others will be cached)");
+        var l = Log.Fn<PublishingModes>($"Requirements(mod:{moduleId}) - checking first time (others will be cached)");
         try
         {
             // TODO V14 - probably we can set ignoreCache to false then, as it's probably just a workaround for an old bug
             var mod = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, true);
             var versioningEnabled = TabChangeSettings.Instance.IsChangeControlEnabled(mod.PortalID, mod.TabID);
             var mode = !versioningEnabled
-                ? PublishingMode.DraftOptional
-                : PublishingMode.DraftRequired;
+                ? PublishingModes.DraftOptional
+                : PublishingModes.DraftRequired;
             return l.Return(mode);
         }
         catch (Exception ex)

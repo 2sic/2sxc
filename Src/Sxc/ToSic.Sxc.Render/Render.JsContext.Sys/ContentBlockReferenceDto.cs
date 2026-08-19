@@ -47,7 +47,7 @@ public class ContentBlockReferenceDto
     [JsonPropertyName("partOfPage")]
     public bool PartOfPage { get; }
 
-    internal ContentBlockReferenceDto(IBlock contentBlock, PublishingMode publishingMode)
+    internal ContentBlockReferenceDto(IBlock contentBlock, PublishingModes publishingMode)
     {
         Id = contentBlock.ContentBlockId;
             

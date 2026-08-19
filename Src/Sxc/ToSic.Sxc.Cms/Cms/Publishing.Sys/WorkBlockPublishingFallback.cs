@@ -11,7 +11,7 @@ public class WorkBlockPublishingFallback() : ServiceBase("Pub.Opt"), IWorkBlockP
 {
     public Task<Package<BlockPublishingSettings>> Handle(WorkContext _, Package<BlockPublishingSettings> package)
     {
-        return Task.FromResult(BlockPublishingSettingsService.Stop(package, PublishingMode.DraftOptional));
+        return Task.FromResult(BlockPublishingSettingsService.Stop(package, PublishingModes.DraftOptional));
     }
 
     public int WorkSequenceOrder => (int)BlockPublishingLookupSequence.Fallback;

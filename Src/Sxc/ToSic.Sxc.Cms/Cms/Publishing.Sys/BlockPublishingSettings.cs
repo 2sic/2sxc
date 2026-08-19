@@ -16,5 +16,16 @@ public record BlockPublishingSettings
 
     public bool ForceDraft = false;
 
-    public PublishingMode Mode = PublishingMode.DraftOptional;
+    public PublishingModes Mode = PublishingModes.DraftOptional;
+
+    /// <summary>
+    /// Helper to repackage the result.
+    /// </summary>
+    public static BlockPublishingSettings Update(BlockPublishingSettings options, PublishingModes mode)
+        => options with
+        {
+            AllowDraft = mode != PublishingModes.DraftForbidden,
+            ForceDraft = mode == PublishingModes.DraftRequired,
+            Mode = mode
+        };
 }
