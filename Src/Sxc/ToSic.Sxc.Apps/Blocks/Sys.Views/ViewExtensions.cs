@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Blocks.Sys.Views;
 
-internal static class ViewExtensions
+public static class ViewExtensions
 {
     [PrivateApi]
     internal static string GetTypeStaticName(this IView view, string groupPart)
@@ -13,4 +13,11 @@ internal static class ViewExtensions
             _ => throw new NotSupportedException("Unknown group part: " + groupPart)
         };
 
+    /// <summary>
+    /// Get the engine name for DI injection
+    /// </summary>
+    public static string GetEngineName(this IView view)
+        => view.Type == ViewConstants.TypeRazorValue
+            ? "razor"
+            : "token";
 }

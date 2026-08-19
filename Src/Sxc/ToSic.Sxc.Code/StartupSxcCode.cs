@@ -57,8 +57,8 @@ public static class StartupSxcCode
         services.TryAddTransient<ICodeDataFactory, CodeDataFactory>();
         services.TryAddTransient<CodeDataServices>();
 
-        // Temporary solution for the TokenEngine
-        services.TryAddTransient<ITokenEngine, TokenEngine>();
+        // Register TokenEngine
+        services.TryAddKeyedTransient<IEngine, TokenEngine>("token");
 
         // CmsContext / MyContext
         services.TryAddTransient<ICmsContext, CmsContext>();

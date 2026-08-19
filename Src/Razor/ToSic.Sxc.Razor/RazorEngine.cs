@@ -26,7 +26,7 @@ internal class RazorEngine(
     LazySvc<CodeErrorHelpService> errorHelp,
     LazySvc<IRenderingHelper> renderingHelper)
     : ServiceBase("Sxc.RzrEng", connect: [engineSpecsService, assetsExtractor, engineRequirementsApp, exCtxFactory, errorHelp, renderingHelper, razorRenderer]),
-        IRazorEngine
+        IEngine // IRazorEngine
 {
     /// <inheritdoc />
     public OutputFragmentWithAssets Render(IBlock block, RenderSpecs specs)

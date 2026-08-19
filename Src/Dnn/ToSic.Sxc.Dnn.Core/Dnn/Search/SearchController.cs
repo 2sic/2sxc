@@ -19,7 +19,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys.Module;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.LookUp;
-using ToSic.Sxc.Render.Engines.Sys;
 using ToSic.Sxc.Render.Polymorphism.Sys;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -43,15 +42,10 @@ internal class SearchController(
     Generator<ISite> siteGenerator,
     LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder,
     LazySvc<ILookUpEngineResolver> dnnLookUpEngineResolver,
-    EngineFactory engineFactory,
     LazySvc<ILogStore> logStore,
     PolymorphConfigReader polymorphism)
     : ServiceBase("DNN.Search",
-        connect:
-        [
-            appsCache, codeCompiler, exCtxFactory, siteGenerator, engineFactory, dnnLookUpEngineResolver,
-            moduleAndBlockBuilder, logStore, polymorphism
-        ])
+        connect: [appsCache, codeCompiler, exCtxFactory, siteGenerator, dnnLookUpEngineResolver, moduleAndBlockBuilder, logStore, polymorphism])
 {
     /// <summary>
     /// Initialize all values which are needed - or return a text with the info why we must stop.

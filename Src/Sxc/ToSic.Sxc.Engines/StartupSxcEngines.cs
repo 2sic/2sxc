@@ -11,9 +11,6 @@ public static class StartupSxcEngines
 {
     public static IServiceCollection AddSxcEngines(this IServiceCollection services)
     {
-        services.TryAddTransient<EngineFactory>();
-        services.TryAddTransient<IEngineFactory, EngineFactory>();
-
         services.TryAddTransient<EngineCheckTemplate>();
         services.TryAddTransient<EnginePolymorphism>();
         services.TryAddTransient<EngineRequirementsApp>();

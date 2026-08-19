@@ -11,7 +11,7 @@ public static class StartUpDnnRazor
 {
     public static IServiceCollection AddDnnRazor(this IServiceCollection services)
     {
-        services.TryAddTransient<IRazorEngine, DnnRazorEngine>();
+        services.TryAddKeyedTransient<IEngine, DnnRazorEngine>("razor");
         services.TryAddTransient<DnnRazorCompiler>();
 
         services.TryAddTransient<HtmlHelper>();

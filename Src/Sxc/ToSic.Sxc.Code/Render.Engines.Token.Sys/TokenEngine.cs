@@ -35,7 +35,7 @@ public class TokenEngine(
     LazySvc<IExecutionContextFactory> exCtxFactory,
     Generator<IAppDataConfigProvider> tokenEngineWithContext)
     : ServiceBase("Sxc.TokEng", connect: [engineSpecsService, assetsExtractor, engineRequirementsApp, exCtxFactory, tokenEngineWithContext]),
-        ITokenEngine
+        IEngine // ITokenEngine
 {
     #region Replacement List to still support old Tokens
 

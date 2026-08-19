@@ -27,7 +27,7 @@ internal class DnnRazorEngine(
     EngineRequirementsApp engineRequirementsApp,
     DnnRazorCompiler razorCompiler)
     : ServiceBase("Dnn.RzEng", connect: [engineSpecsService, assetsExtractor, engineRequirementsApp, razorCompiler]),
-        IRazorEngine
+        IEngine // IRazorEngine
 {
     /// <inheritdoc />
     public OutputFragmentWithAssets Render(IBlock block, RenderSpecs specs)

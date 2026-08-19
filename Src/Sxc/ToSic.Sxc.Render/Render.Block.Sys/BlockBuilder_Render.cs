@@ -1,5 +1,6 @@
 ﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Render.Engines.Sys;
 using ToSic.Sxc.Render.Sys;
@@ -303,8 +304,10 @@ public partial class BlockRenderer
         // edge case: view hasn't been built/configured yet, so no engine to find/attach
         if (!Block.ViewIsReady)
             return l.ReturnNull("no data / view");
-        _engine = Services.EngineFactory.CreateEngine(Block.View);
-        //_engine.Init(Block);
+
+        // Get engine service, using the view's engine name, and initialize it with the block
+        // Note: uses .net 8 dependency injection "keyed" feature (new 2026-08-19)
+        _engine = Services.EngineFactory.New(Block.View.GetEngineName());
         return l.Return(_engine, "created");
     }
     private IEngine? _engine;

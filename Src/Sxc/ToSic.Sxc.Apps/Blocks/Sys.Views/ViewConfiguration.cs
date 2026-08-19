@@ -58,21 +58,8 @@ public record ViewConfiguration : ModelFromEntityFull // , IView
 
     public bool UseForList => GetThis(false);
 
-    // Publishing was removed a long time ago, commented out v21
-    //public bool PublishData => GetThis(false);
-    //public string StreamsToPublish => GetThis("");
-
 
     public string UrlIdentifier => Get(FieldNameInUrl, "");
-
-    ///// <summary>
-    ///// Returns true if the current template uses Razor
-    ///// </summary>
-    //public bool IsRazor => Type == TypeRazorValue;
-
-    //public string? Edition { get; set; }
-
-    //public string? EditionPath { get; set; }
 
     public IEntity? Resources => Child(FieldResources);
 

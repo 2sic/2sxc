@@ -17,7 +17,7 @@ public static class StartupRazor
         // 2sxc Razor Parts
         services.TryAddTransient<IRazorCompiler, RazorCompiler>();
         services.TryAddTransient<IRazorRenderer, RazorRenderer>();
-        services.TryAddTransient<IRazorEngine, RazorEngine>();
+        services.TryAddKeyedTransient<IEngine, RazorEngine>("razor");
 
         // debugging
         services.Replace(ServiceDescriptor.Singleton<IViewCompilerProvider, RuntimeViewCompilerProvider>());

@@ -22,7 +22,7 @@ public partial class BlockRenderer(BlockRenderer.Dependencies services)
     : ServiceBase<BlockRenderer.Dependencies>(services, "Sxc.BlkBld"), IBlockRenderer
 {
     public record Dependencies(
-        IEngineFactory EngineFactory,
+        Generator<IEngine> EngineFactory,
         Generator<IEnvironmentInstaller> EnvInstGen,
         Generator<IRenderingHelper> RenderHelpGen,
         LazySvc<PageChangeSummary> PageChangeSummary,
