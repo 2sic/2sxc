@@ -58,7 +58,7 @@ public class ExtensionExportService(
             throw l.Ex(new DirectoryNotFoundException($"Extension folder not found: {name}"));
         l.A($"extension '{name}' folder found: '{extensionPath}'");
 
-        var extensionManifestFile = manifestService.GetManifestFile(new(extensionPath));
+        var extensionManifestFile = ExtensionManifestService.GetManifestFileInfo(extensionPath);
 
         if (!extensionManifestFile.Exists)
             throw l.Ex(new FileNotFoundException($"{FolderConstants.AppExtensionJsonFile} not found in extension: {name}"));
@@ -88,24 +88,6 @@ public class ExtensionExportService(
             .Concat(bundled)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
-
-        // Old, less functional way:
-        //var allExtensions = new List<string> { name };
-        //foreach (var bundledName in bundled)
-        //{
-        //    if (string.IsNullOrWhiteSpace(bundledName))
-        //        continue;
-
-        //    var cleaned = bundledName.Trim();
-        //    if (cleaned.Equals(name, StringComparison.OrdinalIgnoreCase))
-        //        continue;
-        //    if (!ExtensionFolderNameValidator.IsValid(cleaned))
-        //        throw l.Ex(new ArgumentException($@"Invalid bundled extension name: {cleaned}", nameof(name)));
-        //    if (allExtensions.Any(e => e.Equals(cleaned, StringComparison.OrdinalIgnoreCase)))
-        //        continue;
-
-        //    allExtensions.Add(cleaned);
-        //}
 
         // 4. Build export specs for each extension
         // Primary extension must exist; bundled extensions are best-effort (skip missing)
@@ -171,20 +153,7 @@ public class ExtensionExportService(
         using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
         {
             var zipping = new Zipping(l);
-
-            // Add collected files using helper (deduplicate zip paths)
-            //var allFiles = new List<(string sourcePath, string zipPath)>();
-            //var addedZipPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            //foreach (var export in exports)
-            //{
-            //    foreach (var file in export.FilesToInclude)
-            //    {
-            //        if (!addedZipPaths.Add(file.zipPath))
-            //            continue;
-            //        allFiles.Add(file);
-            //    }
-            //}
-
+            
             // 2026-02-09 2dm - simpler and functional
             var allFiles = exports
                 .SelectMany(export => export.FilesToInclude)
@@ -231,7 +200,7 @@ public class ExtensionExportService(
         extensionPath = extensionDirectory.FullName;
         var extensionFolderName = extensionDirectory.Name;
 
-        var extensionManifestFile = manifestService.GetManifestFile(new(extensionPath));
+        var extensionManifestFile = ExtensionManifestService.GetManifestFileInfo(extensionPath);
         if (!extensionManifestFile.Exists)
             throw l.Ex(new FileNotFoundException($"{FolderConstants.AppExtensionJsonFile} not found in extension: {extensionName}"));
 
@@ -425,16 +394,6 @@ public class ExtensionExportService(
 
                 guidList = guidList.Concat(dataToUse).ToList();
 
-                // old, less functional way:
-                //foreach (var bundleRef in bundles.EnumerateArray())
-                //{
-                //    if (bundleRef.ValueKind == JsonValueKind.String)
-                //    {
-                //        var guidString = bundleRef.GetString();
-                //        if (!string.IsNullOrEmpty(guidString) && Guid.TryParse(guidString, out var guid))
-                //            guidList.Add(guid);
-                //    }
-                //}
                 l.A($"Found {guidList.Count} bundle references");
                 break;
             default:
@@ -473,28 +432,6 @@ public class ExtensionExportService(
                 }
             })
             .ToList();
-
-        // Old, non functional way:
-        //foreach (var guid in guidList)
-        //{
-        //    try
-        //    {
-        //        // Export bundle entity as JSON
-        //        var (export, fileContent) = bundlesExport.CreateBundleExport(guid, 2);
-        //        var bundlePath = Path.Combine(bundlesDir, export.FileName);
-        //        var zipPath =
-        //            $"{FolderConstants.AppExtensionsFolder}/{extensionName}/{FolderConstants.DataFolderProtected}/{FolderConstants.DataSubFolderSystem}/{AppDataFoldersConstants.BundlesFolder}/{export.FileName}";
-        //        files.Add((bundlePath, zipPath, fileContent));
-        //    }
-        //    catch (KeyNotFoundException ex)
-        //    {
-        //        var wrapped = new KeyNotFoundException(
-        //            $"Data bundle '{guid}' referenced by extension '{extensionName}' was not found in app {appId}. " +
-        //            $"Update or remove the entry in extension.json:dataBundles. Details: {ex.Message}", ex);
-        //        l.Ex(wrapped);
-        //        throw wrapped;
-        //    }
-        //}
 
         return l.ReturnAsOk(files);
     }
@@ -550,43 +487,6 @@ public class ExtensionExportService(
         return l.Return(filePathList!, $"Added {filePathList.Count} files to collection");
         
     }
-
-    // Old, less functional way:
-    //private void AddDirectoryFiles(string sourcePath, string baseSourcePath, string baseZipPath,
-    //    List<(string, string)> files, string[]? exclude = null)
-    //{
-    //    var l = Log.Fn($"source:{sourcePath}, base:{baseSourcePath}, zipBase:{baseZipPath}");
-
-    //    if (!Directory.Exists(sourcePath))
-    //    {
-    //        l.Done("Directory doesn't exist, returning");
-    //        return;
-    //    }
-
-    //    var allFiles = Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories);
-    //    l.A($"Found {allFiles.Length} files");
-
-    //    foreach (var file in allFiles)
-    //    {
-    //        // Use string manipulation instead of Path.GetRelativePath for .NET Framework compatibility
-    //        var relativePath = file.StartsWith(baseSourcePath)
-    //            ? file.Substring(baseSourcePath.Length).TrimStart('\\', '/')
-    //            : file;
-
-    //        // Check exclusions
-    //        if (exclude != null && exclude.Any(f => relativePath.StartsWith(f, StringComparison.OrdinalIgnoreCase)))
-    //        {
-    //            l.A($"Excluding: {relativePath}");
-    //            continue;
-    //        }
-
-    //        var zipPath = Path.Combine(baseZipPath, relativePath).Replace("\\", "/");
-    //        files.Add((file, zipPath));
-    //        l.A($"Add file '{file}' to ZIP as '{zipPath}'");
-    //    }
-
-    //    l.Done($"Added {files.Count} files to collection");
-    //}
 
     private PackageIndexFile CreatePackageIndexFile(
         List<(string sourcePath, string zipPath)> files,

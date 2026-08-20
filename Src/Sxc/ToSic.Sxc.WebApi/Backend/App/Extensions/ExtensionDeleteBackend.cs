@@ -36,7 +36,7 @@ public class ExtensionDeleteBackend(
         if (!Directory.Exists(extensionPath))
             throw l.Ex(new DirectoryNotFoundException($"Extension folder not found: {name}"));
 
-        var manifestFile = manifestService.GetManifestFile(new DirectoryInfo(extensionPath));
+        var manifestFile = ExtensionManifestService.GetManifestFileInfo(extensionPath);
         if (!manifestFile.Exists)
             throw l.Ex(new FileNotFoundException($"{FolderConstants.AppExtensionJsonFile} not found in extension '{name}'"));
 

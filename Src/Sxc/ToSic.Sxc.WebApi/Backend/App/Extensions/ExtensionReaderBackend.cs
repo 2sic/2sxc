@@ -62,7 +62,7 @@ public class ExtensionReaderBackend(
             foreach (var dir in Directory.GetDirectories(editionExtensionsDir))
             {
                 var folderName = Path.GetFileName(dir);
-                var manifestFile = manifestService.GetManifestFile(new(dir));
+                var manifestFile = ExtensionManifestService.GetManifestFileInfo(dir);
                 //if (!manifestFile.Exists)
                 //{
                 //    Log.A($"skip extension '{folderName}' in {EditionLabel(editionName)} because manifest file missing");

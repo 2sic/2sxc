@@ -19,6 +19,6 @@ internal static class ExtensionManifestServiceTestAccessors
     /// <summary>
     /// Test accessor for GetManifestFile method.
     /// </summary>
-    public static FileInfo GetManifestFileTac(this ExtensionManifestService service, DirectoryInfo extensionFolder)
-        => service.GetManifestFile(extensionFolder: extensionFolder);
+    public static FileInfo GetManifestFileTac(this ExtensionManifestService service, string extensionFolder)
+        => ExtensionManifestService.GetManifestFileInfo(extensionFolder);
 }
