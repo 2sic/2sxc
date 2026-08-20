@@ -3,7 +3,7 @@ using System.Text.Json;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using Xunit.DependencyInjection;
-using static ToSic.Eav.Sys.FolderConstants;
+using static Tests.ToSic.ToSxc.WebApi.Extensions.FolderConstantsTac;
 using static ToSic.Sxc.ImportExport.Package.Sys.PackageIndexFile;
 using static ToSic.Sxc.ImportExport.Package.Sys.PackageInstallFile;
 using static ToSic.Sxc.WebApi.Tests.Extensions.ExportExtensionTestHelpers;

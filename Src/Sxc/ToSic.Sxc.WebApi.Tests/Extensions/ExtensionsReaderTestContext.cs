@@ -3,10 +3,10 @@ using System.Text.Json;
 using ToSic.Eav.Apps.Mocks;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Services;
-using ToSic.Eav.Sys;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
+using static Tests.ToSic.ToSxc.WebApi.Extensions.FolderConstantsTac;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
@@ -70,11 +70,11 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
     {
         _appJsonService.EnsureEdition(string.Empty);
 
-        var extDir = Path.Combine(TempRoot, FolderConstants.AppExtensionsFolder, name);
-        var dataDir = Path.Combine(extDir, FolderConstants.DataFolderProtected);
+        var extDir = Path.Combine(TempRoot, AppExtensionsFolder, name);
+        var dataDir = Path.Combine(extDir, DataFolderProtected);
         Directory.CreateDirectory(dataDir);
             
-        var jsonPath = Path.Combine(dataDir, FolderConstants.AppExtensionJsonFile);
+        var jsonPath = Path.Combine(dataDir, AppExtensionJsonFile);
         var json = config is ExtensionManifest manifest 
             ? ExtensionManifestSerializer.Serialize(manifest, new JsonSerializerOptions { WriteIndented = true })
             : JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
@@ -88,11 +88,11 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
     {
         _appJsonService.EnsureEdition(editionName);
 
-        var editionExtDir = Path.Combine(TempRoot, editionName, FolderConstants.AppExtensionsFolder, extensionName);
-        var dataDir = Path.Combine(editionExtDir, FolderConstants.DataFolderProtected);
+        var editionExtDir = Path.Combine(TempRoot, editionName, AppExtensionsFolder, extensionName);
+        var dataDir = Path.Combine(editionExtDir, DataFolderProtected);
         Directory.CreateDirectory(dataDir);
             
-        var jsonPath = Path.Combine(dataDir, FolderConstants.AppExtensionJsonFile);
+        var jsonPath = Path.Combine(dataDir, AppExtensionJsonFile);
         var json = config is ExtensionManifest manifest 
             ? ExtensionManifestSerializer.Serialize(manifest, new JsonSerializerOptions { WriteIndented = true })
             : JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
@@ -106,7 +106,7 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
     {
         _appJsonService.EnsureEdition(editionName);
 
-        var editionExtDir = Path.Combine(TempRoot, editionName, FolderConstants.AppExtensionsFolder, extensionName);
+        var editionExtDir = Path.Combine(TempRoot, editionName, AppExtensionsFolder, extensionName);
         Directory.CreateDirectory(editionExtDir);
     }
 

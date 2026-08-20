@@ -1,8 +1,8 @@
 using System.Text;
 using System.Text.Json;
+using Tests.ToSic.ToSxc.WebApi.Extensions;
 using ToSic.Eav.Apps.Mocks;
 using ToSic.Eav.Apps.Sys.FileSystemState;
-using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.App;
 using static ToSic.Sxc.ImportExport.Package.Sys.PackageIndexFile;
@@ -60,11 +60,11 @@ internal sealed class ExportExtensionTestContext : IDisposable
     /// </summary>
     public void SetupExtension(string name, ExtensionManifest manifest)
     {
-        var extDir = Path.Combine(TempRoot, FolderConstants.AppExtensionsFolder, name);
-        var dataDir = Path.Combine(extDir, FolderConstants.DataFolderProtected);
+        var extDir = Path.Combine(TempRoot, FolderConstantsTac.AppExtensionsFolder, name);
+        var dataDir = Path.Combine(extDir, FolderConstantsTac.DataFolderProtected);
         Directory.CreateDirectory(dataDir);
 
-        var jsonPath = Path.Combine(dataDir, FolderConstants.AppExtensionJsonFile);
+        var jsonPath = Path.Combine(dataDir, FolderConstantsTac.AppExtensionJsonFile);
 
         // Sanitize JsonElements (Undefined -> null) then serialize directly
         var sanitized = manifest with
@@ -81,8 +81,8 @@ internal sealed class ExportExtensionTestContext : IDisposable
 
     public void SetExtensionsBundled(string name, string bundledCommaSeparated)
     {
-        var jsonPath = Path.Combine(TempRoot, FolderConstants.AppExtensionsFolder, name,
-            FolderConstants.DataFolderProtected, FolderConstants.AppExtensionJsonFile);
+        var jsonPath = Path.Combine(TempRoot, FolderConstantsTac.AppExtensionsFolder, name,
+            FolderConstantsTac.DataFolderProtected, FolderConstantsTac.AppExtensionJsonFile);
         var json = File.ReadAllText(jsonPath);
 
         using var doc = JsonDocument.Parse(json);
@@ -107,8 +107,8 @@ internal sealed class ExportExtensionTestContext : IDisposable
 
     public void WriteInstalledLockFile(string name, string lockJson)
     {
-        var lockPath = Path.Combine(TempRoot, FolderConstants.AppExtensionsFolder, name,
-            FolderConstants.DataFolderProtected, LockFileName);
+        var lockPath = Path.Combine(TempRoot, FolderConstantsTac.AppExtensionsFolder, name,
+            FolderConstantsTac.DataFolderProtected, LockFileName);
         Directory.CreateDirectory(Path.GetDirectoryName(lockPath)!);
         File.WriteAllText(lockPath, lockJson, new UTF8Encoding(false));
     }
@@ -121,7 +121,7 @@ internal sealed class ExportExtensionTestContext : IDisposable
     /// </summary>
     public void CreateExtensionFiles(string name, params (string fileName, string content)[] files)
     {
-        var extDir = Path.Combine(TempRoot, FolderConstants.AppExtensionsFolder, name);
+        var extDir = Path.Combine(TempRoot, FolderConstantsTac.AppExtensionsFolder, name);
         var distDir = Path.Combine(extDir, "dist");
         Directory.CreateDirectory(distDir);
 
@@ -136,7 +136,7 @@ internal sealed class ExportExtensionTestContext : IDisposable
         // Test setup must be able to create the same long physical paths that production export is
         // expected to read. Use the Windows extended path only for disk writes; returned paths stay in
         // normal form because that is what production code receives from app path services.
-        var filePath = Path.Combine(TempRoot, FolderConstants.AppExtensionsFolder, name, relativePath);
+        var filePath = Path.Combine(TempRoot, FolderConstantsTac.AppExtensionsFolder, name, relativePath);
         Directory.CreateDirectory(PathForDiskAccess(Path.GetDirectoryName(filePath)!));
         File.WriteAllText(PathForDiskAccess(filePath), content);
         return filePath;
@@ -147,7 +147,7 @@ internal sealed class ExportExtensionTestContext : IDisposable
     /// </summary>
     public void CreateAppCodeFiles(string name, params (string fileName, string content)[] files)
     {
-        var appCodePath = Path.Combine(TempRoot, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, name);
+        var appCodePath = Path.Combine(TempRoot, FolderConstantsTac.AppCodeFolder, FolderConstantsTac.AppExtensionsFolder, name);
         Directory.CreateDirectory(appCodePath);
 
         foreach (var (fileName, content) in files)
