@@ -44,8 +44,9 @@ public class ExtensionReaderBackend(
         Log.A($"available editions: {string.Join(", ", availableEditions.Select(EditionLabel))}");
 
         var list = new List<ExtensionDto>();
-        var primaryManifests = new Dictionary<string, ExtensionManifest>(StringComparer.OrdinalIgnoreCase);
-        var primaryInputTypes = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
+        // 2026-08-20 2dm - seems unused, commented out; #ToRemoveV24
+        //var primaryManifests = new Dictionary<string, ExtensionManifest>(StringComparer.OrdinalIgnoreCase);
+        //var primaryInputTypes = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var editionName in availableEditions)
         {
@@ -75,7 +76,8 @@ public class ExtensionReaderBackend(
                 //    continue;
                 //}
 
-                var inputTypeInside = ReadInputType(manifestFile);
+                // 2026-08-20 2dm - seems unused, commented out; #ToRemoveV24
+                //var inputTypeInside = ReadInputType(manifestFile);
 
                 if (editionName.IsEmpty())
                 {
@@ -87,8 +89,9 @@ public class ExtensionReaderBackend(
                         Icon = GetIconUrl(appPaths, editionName, dir)
                     });
 
-                    primaryManifests[folderName] = configuration;
-                    primaryInputTypes[folderName] = inputTypeInside;
+                    // 2026-08-20 2dm - seems unused, commented out; #ToRemoveV24
+                    //primaryManifests[folderName] = configuration;
+                    //primaryInputTypes[folderName] = inputTypeInside;
                     Log.A($"registered primary extension '{folderName}', supports editions: {configuration?.EditionsSupported}");
                     continue;
                 }
@@ -142,79 +145,81 @@ public class ExtensionReaderBackend(
             .Select(name => name!)
             .ToListOpt();
 
-    // TODO: @STV - WARNING - THIS CODE LOOKS EXTREMELY SIMILAR TO AppFileSystemInputTypesLoader.BuildUiAssets
-    // PLS CHECK AGAIN TO AVOID DUPLICATE CODE
+    // 2026-08-20 2dm - seems unused, commented out; #ToRemoveV24
+    //// TODO: @STV - WARNING - THIS CODE LOOKS EXTREMELY SIMILAR TO AppFileSystemInputTypesLoader.BuildUiAssets
+    //// PLS CHECK AGAIN TO AVOID DUPLICATE CODE
 
-    /// <summary>
-    /// Detect and build edition information for an extension.
-    /// </summary>
-    private List<ExtensionDto> DetectEditions(string appRootPath, string extensionFolderName, ExtensionManifest primaryManifest)
-    {
-        var l = Log.Fn<List<ExtensionDto>>($"extension:'{extensionFolderName}'");
-        
-        var appRoot = new DirectoryInfo(appRootPath);
-        var editions = new List<ExtensionDto>();
+    ///// <summary>
+    ///// Detect and build edition information for an extension.
+    ///// </summary>
+    //private List<ExtensionDto> DetectEditions(string appRootPath, string extensionFolderName, ExtensionManifest primaryManifest)
+    //{
+    //    var l = Log.Fn<List<ExtensionDto>>($"extension:'{extensionFolderName}'");
 
-        // Look for edition folders at the app root level (e.g., /staging, /live, /dev)
-        foreach (var editionFolder in appRoot.GetDirectories())
-        {
-            // Skip the primary extensions folder
-            if (editionFolder.Name.Equals(FolderConstants.AppExtensionsFolder, StringComparison.OrdinalIgnoreCase))
-                continue;
+    //    var appRoot = new DirectoryInfo(appRootPath);
+    //    var editions = new List<ExtensionDto>();
 
-            // Check if this edition folder has a matching extensions subfolder
-            var editionExtensionsPath = Path.Combine(editionFolder.FullName, FolderConstants.AppExtensionsFolder);
-            if (!Directory.Exists(editionExtensionsPath))
-                continue;
+    //    // Look for edition folders at the app root level (e.g., /staging, /live, /dev)
+    //    foreach (var editionFolder in appRoot.GetDirectories())
+    //    {
+    //        // Skip the primary extensions folder
+    //        if (editionFolder.Name.Equals(FolderConstants.AppExtensionsFolder, StringComparison.OrdinalIgnoreCase))
+    //            continue;
 
-            // Check if the specific extension exists in this edition
-            var editionExtensionPath = Path.Combine(editionExtensionsPath, extensionFolderName);
-            if (!Directory.Exists(editionExtensionPath))
-                continue;
+    //        // Check if this edition folder has a matching extensions subfolder
+    //        var editionExtensionsPath = Path.Combine(editionFolder.FullName, FolderConstants.AppExtensionsFolder);
+    //        if (!Directory.Exists(editionExtensionsPath))
+    //            continue;
 
-            // Load the edition manifest
-            var editionManifestFile = manifestService.GetManifestFile(new DirectoryInfo(editionExtensionPath));
-            if (!editionManifestFile.Exists)
-                continue;
+    //        // Check if the specific extension exists in this edition
+    //        var editionExtensionPath = Path.Combine(editionExtensionsPath, extensionFolderName);
+    //        if (!Directory.Exists(editionExtensionPath))
+    //            continue;
 
-            var editionManifest = manifestService.LoadManifest(editionManifestFile);
-            //if (editionManifest?.InputTypeInside.IsEmpty() ?? true)
-            if (editionManifest?.InputFieldInside ?? true)
-                continue;
+    //        // Load the edition manifest
+    //        var editionManifestFile = manifestService.GetManifestFile(new DirectoryInfo(editionExtensionPath));
+    //        if (!editionManifestFile.Exists)
+    //            continue;
 
-            // Ensure the edition manifest references the same input type
-            //if (!editionManifest.InputTypeInside.Equals(primaryManifest.InputTypeInside, StringComparison.OrdinalIgnoreCase))
-            if (editionManifest.InputFieldInside != primaryManifest.InputFieldInside)
-            {
-                //l.A($"Edition {editionFolder.Name} has mismatched inputTypeInside: {editionManifest.InputTypeInside} != {primaryManifest.InputTypeInside}");
-                l.A($"Edition {editionFolder.Name} has mismatched inputTypeInside: {editionManifest.InputFieldInside} != {primaryManifest.InputFieldInside}");
-                continue;
-            }
+    //        var editionManifest = manifestService.LoadManifest(editionManifestFile);
+    //        //if (editionManifest?.InputTypeInside.IsEmpty() ?? true)
+    //        if (editionManifest?.InputFieldInside ?? true)
+    //            continue;
 
-            editions.Add(new()
-            {
-                Folder = extensionFolderName,
-                Edition = editionFolder.Name,
-                Configuration = editionManifest
-            });
-        }
+    //        // Ensure the edition manifest references the same input type
+    //        //if (!editionManifest.InputTypeInside.Equals(primaryManifest.InputTypeInside, StringComparison.OrdinalIgnoreCase))
+    //        if (editionManifest.InputFieldInside != primaryManifest.InputFieldInside)
+    //        {
+    //            //l.A($"Edition {editionFolder.Name} has mismatched inputTypeInside: {editionManifest.InputTypeInside} != {primaryManifest.InputTypeInside}");
+    //            l.A($"Edition {editionFolder.Name} has mismatched inputTypeInside: {editionManifest.InputFieldInside} != {primaryManifest.InputFieldInside}");
+    //            continue;
+    //        }
 
-        return l.Return(editions, $"found:{editions.Count}");
-    }
+    //        editions.Add(new()
+    //        {
+    //            Folder = extensionFolderName,
+    //            Edition = editionFolder.Name,
+    //            Configuration = editionManifest
+    //        });
+    //    }
 
-    private static string? ReadInputType(FileInfo manifestFile)
-    {
-        if (!manifestFile.Exists)
-            return null;
+    //    return l.Return(editions, $"found:{editions.Count}");
+    //}
 
-        using var json = JsonDocument.Parse(File.ReadAllText(manifestFile.FullName));
-        return json.RootElement.TryGetProperty("inputTypeInside", out var inputType)
-            && inputType.ValueKind == JsonValueKind.String
-            ? inputType.GetString()
-            : null;
-    }
+    // 2026-08-20 2dm - seems unused, commented out; #ToRemoveV24
+    //private static string? ReadInputType(FileInfo manifestFile)
+    //{
+    //    if (!manifestFile.Exists)
+    //        return null;
 
-    private string GetIconUrl(IAppPaths appPaths, string editionName, string extensionDir)
+    //    using var json = JsonDocument.Parse(File.ReadAllText(manifestFile.FullName));
+    //    return json.RootElement.TryGetProperty("inputTypeInside", out var inputType)
+    //        && inputType.ValueKind == JsonValueKind.String
+    //        ? inputType.GetString()
+    //        : null;
+    //}
+
+    private static string GetIconUrl(IAppPaths appPaths, string editionName, string extensionDir)
     {
         var iconPath = Path.Combine(extensionDir, IconFileName);
         if (!File.Exists(iconPath))
