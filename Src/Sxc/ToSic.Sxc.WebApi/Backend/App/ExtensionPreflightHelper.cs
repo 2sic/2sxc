@@ -18,7 +18,7 @@ internal class ExtensionPreflightHelper(
     {
         var l = Log.Fn<ExtensionEditionDto>();
 
-        var editionRoot = ExtensionEditionHelper.GetEditionRoot(appRoot, edition);
+        var editionRoot = AppEditionPathsHelpers.GetEditionRoot(appRoot, edition);
 
         l.A($"prep edition:'{edition}', root:'{editionRoot}', ext:'{extensionName}'");
 

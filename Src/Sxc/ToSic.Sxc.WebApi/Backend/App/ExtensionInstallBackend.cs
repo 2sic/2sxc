@@ -7,7 +7,6 @@ using ToSic.Eav.Services;
 using ToSic.Eav.Sys;
 using ToSic.Sys.Configuration;
 using ToSic.Sys.Utils;
-using AppEditionsDataSource = ToSic.Sxc.DataSources.AppEditions;
 
 namespace ToSic.Sxc.Backend.App;
 
@@ -19,7 +18,7 @@ public class ExtensionInstallBackend(
     IGlobalConfiguration globalConfiguration,
     ExtensionManifestService manifestService,
     LazySvc<ExtensionInspectBackend> inspectorLazy,
-    IDataSourceGenerator<AppEditionsDataSource> appEditions,
+    IDataSourceGenerator<DataSources.AppEditions> appEditions,
     LazySvc<AppCachePurger> appCachePurgerLazy)
     : ServiceBase("Bck.ExtZip", connect: [appReadersLazy, site, appPathSvc, globalConfiguration, manifestService, inspectorLazy, appEditions, appCachePurgerLazy])
 {
@@ -65,7 +64,7 @@ public class ExtensionInstallBackend(
 
                 foreach (var edition in editionList)
                 {
-                    var editionRoot = ExtensionEditionHelper.GetEditionRoot(appRoot, edition);
+                    var editionRoot = AppEditionPathsHelpers.GetEditionRoot(appRoot, edition);
 
                     var editionExtensionsRoot = Path.Combine(editionRoot, FolderConstants.AppExtensionsFolder);
                     Directory.CreateDirectory(editionExtensionsRoot);
@@ -134,8 +133,17 @@ public class ExtensionInstallBackend(
                 if (editionSupportError != null)
                     throw new InvalidOperationException(editionSupportError);
 
-                var editionTargets = ExtensionEditionHelper.MergeEditions(requestedEditions.ToList(), ExtensionEditionHelper.DetectInstalledEditions(appRoot, availableEditions, folderName));
-                var allEditionTargets = ExtensionEditionHelper.MergeEditions(editionTargets, availableEditions);
+                //var editionTargets = ExtensionEditionHelper.MergeEditions(
+                //    requestedEditions.ToList(),
+                //    AppExtensionPathHelpers.EditionsContainingExtension(appRoot, availableEditions, folderName)
+                //);
+                //var allEditionTargets = ExtensionEditionHelper.MergeEditions(editionTargets, availableEditions);
+                var allEditionTargets = requestedEditions
+                    .Concat(AppExtensionPathHelpers.EditionsContainingExtension(appRoot, availableEditions, folderName))
+                    .Concat(availableEditions)
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+
                 var extDto = new PreflightExtensionDto
                 {
                     Name = folderName,
@@ -154,12 +162,12 @@ public class ExtensionInstallBackend(
                         continue;
                     }
 
-                    var editionRoot = ExtensionEditionHelper.GetEditionRoot(appRoot, edition);
+                    var editionRoot = AppEditionPathsHelpers.GetEditionRoot(appRoot, edition);
                     var extensionExists = Directory.Exists(Path.Combine(editionRoot, FolderConstants.AppExtensionsFolder, folderName));
                     if (extensionExists)
                         continue;
 
-                    extDto.Editions.Add(new ExtensionEditionDto
+                    extDto.Editions.Add(new()
                     {
                         Edition = edition,
                         IsInstalled = false
@@ -188,12 +196,12 @@ public class ExtensionInstallBackend(
             ? "extension does not support editions"
             : null;
 
+    // TODO: @STV - this looks wrong, complex redirection; probably should use IAppJsonConfigurationService
     private List<string> AvailableEditionNames(int appId)
         => appEditions
             .New(new DataSourceOptions { AppIdentityOrReader = appReadersLazy.Value.AppIdentity(appId) })
             .List
             .Select(edition => edition.Get<string>("Name"))
-            .Where(name => name != null)
-            .Select(name => name!)
+            .OfType<string>()
             .ToList();
 }

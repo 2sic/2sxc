@@ -20,13 +20,13 @@ public class ExtensionInspectBackend(
         if (!ExtensionFolderNameValidator.IsValid(name))
             throw l.Ex(new ArgumentException("invalid extension name", nameof(name)));
 
-        var editionSegment = ExtensionEditionHelper.NormalizeEdition(edition);
+        var editionSegment = AppEditionPathsHelpers.NormalizeEditionNameOrThrow(edition);
         var appReader = appReadersLazy.Value.Get(appId);
         var appPaths = appPathSvc.Get(appReader, site);
         var appRoot = appPaths.PhysicalPath;
-        var editionRoot = ExtensionEditionHelper.GetEditionRoot(appPaths, editionSegment);
+        var editionRoot = appPaths.GetEditionRoot(editionSegment);
 
-        var extensionRoot = ExtensionEditionHelper.GetExtensionRoot(appPaths, name, editionSegment);
+        var extensionRoot = AppExtensionPathHelpers.GetExtensionRoot(appPaths, name, editionSegment);
         var lockPath = Path.Combine(extensionRoot, FolderConstants.DataFolderProtected, PackageIndexFile.LockFileName);
         var foundLock = File.Exists(lockPath);
 
@@ -98,8 +98,8 @@ public class ExtensionInspectBackend(
         
         var ownRoots = new[]
         {
-            ExtensionEditionHelper.GetExtensionRoot(appRoot, extensionName, edition),
-            ExtensionEditionHelper.GetExtensionAppCodePath(appRoot, extensionName, edition),
+            AppExtensionPathHelpers.GetExtensionRoot(appRoot, extensionName, edition),
+            AppExtensionPathHelpers.GetExtensionAppCodePath(appRoot, extensionName, edition),
         };
 
         foreach (var ownRoot in ownRoots)

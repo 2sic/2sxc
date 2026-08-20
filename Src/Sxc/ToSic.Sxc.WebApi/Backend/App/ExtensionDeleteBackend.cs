@@ -28,10 +28,10 @@ public class ExtensionDeleteBackend(
         if (string.IsNullOrWhiteSpace(name) || !ExtensionFolderNameValidator.IsValid(name))
             throw l.Ex(new ArgumentException("invalid extension name", nameof(name)));
 
-        var editionSegment = ExtensionEditionHelper.NormalizeEdition(edition);
+        var editionSegment = AppEditionPathsHelpers.NormalizeEditionNameOrThrow(edition);
         var appReader = appReadersLazy.Value.Get(appId);
         var appPaths = appPathSvc.Get(appReader, site);
-        var extensionPath = ExtensionEditionHelper.GetExtensionRoot(appPaths, name, editionSegment);
+        var extensionPath = AppExtensionPathHelpers.GetExtensionRoot(appPaths, name, editionSegment);
 
         if (!Directory.Exists(extensionPath))
             throw l.Ex(new DirectoryNotFoundException($"Extension folder not found: {name}"));
@@ -103,14 +103,14 @@ public class ExtensionDeleteBackend(
     {
         var l = Log.Fn($"del files ext:{extensionName}, edition:{edition}");
 
-        var extensionPath = ExtensionEditionHelper.GetExtensionRoot(appRoot, extensionName, edition);
+        var extensionPath = AppExtensionPathHelpers.GetExtensionRoot(appRoot, extensionName, edition);
         DeleteDirectorySafe(extensionPath);
 
-        var appCodePath = ExtensionEditionHelper.GetExtensionAppCodePath(appRoot, extensionName, edition);
+        var appCodePath = AppExtensionPathHelpers.GetExtensionAppCodePath(appRoot, extensionName, edition);
         if (appCodePath.HasValue())
             DeleteDirectorySafe(appCodePath);
 
-        var appCodeExtensionFolderNamePath = ExtensionEditionHelper.GetExtensionAppCodePath(appRoot, ExtensionValidationHelper.AppCodeExtensionFolderName(extensionName), edition);
+        var appCodeExtensionFolderNamePath = AppExtensionPathHelpers.GetExtensionAppCodePath(appRoot, ExtensionValidationHelper.AppCodeExtensionFolderName(extensionName), edition);
         if (appCodeExtensionFolderNamePath.HasValue())
             DeleteDirectorySafe(appCodeExtensionFolderNamePath);
 

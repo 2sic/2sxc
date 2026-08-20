@@ -24,7 +24,7 @@ internal class ExtensionExtractionHelper(
         var appReader = appReadersLazy.Value.Get(appId);
         var appPaths = appPathSvc.Get(appReader, site);
         var appRoot = appPaths.PhysicalPath;
-        var editionList = ExtensionEditionHelper.NormalizeEditions(editions).ToArray();
+        var editionList = AppEditionPathsHelpers.NormalizeEditionsCsvOrThrow(editions).ToArray();
 
         var tempDir = Path.Combine(globalConfiguration.TemporaryFolder(), Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(tempDir);
