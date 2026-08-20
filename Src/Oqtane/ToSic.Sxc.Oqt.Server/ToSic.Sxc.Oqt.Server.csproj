@@ -11,6 +11,10 @@
     <RootNamespace>ToSic.Sxc.Oqt.Server</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="ToSic.Sxc.Oqt.Server.Tests" />
+  </ItemGroup>
+
   <PropertyGroup>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <AssemblyName>ToSic.Sxc.Oqtane.Server</AssemblyName>
