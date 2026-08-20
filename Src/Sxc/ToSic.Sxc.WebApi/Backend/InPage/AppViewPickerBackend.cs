@@ -28,17 +28,23 @@ public class AppViewPickerBackend(
 
     public IEnumerable<TemplateUiInfo> Templates()
     {
-        return workBlockViews.New(AppCtx)
-                .GetCompatibleViews(Block);
+        var block = Block;
+        return block.AppOrNull == null
+            ? []
+            : workBlockViews.New(AppCtx)
+                .GetCompatibleViews(block);
     }
 
     public IEnumerable<ContentTypeUiInfo> ContentTypes()
     {
-        return workViewsContentTypes.Value.GetContentTypesWithStatus(
-            AppCtx,
-            Block.App.Path ?? "",
-            Block.App.PathShared ?? ""
-        );
+        var block = Block;
+        return block.AppOrNull == null
+            ? []
+            : workViewsContentTypes.Value.GetContentTypesWithStatus(
+                AppCtx,
+                block.App.Path ?? "",
+                block.App.PathShared ?? ""
+            );
     }
 
     public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
