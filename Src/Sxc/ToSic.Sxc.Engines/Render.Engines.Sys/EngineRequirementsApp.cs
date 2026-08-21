@@ -1,10 +1,9 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.AppReader.Sys;
-using ToSic.Eav.Apps.Sys;
-using ToSic.Eav.Metadata.Requirements.Sys;
 using ToSic.Sxc.Render.Output.Sys;
 using ToSic.Sys.Caching.PiggyBack;
 using ToSic.Sys.Requirements;
+using IRequirementsService = ToSic.Eav.Metadata.Requirements.Sys.IRequirementsService;
 
 namespace ToSic.Sxc.Render.Engines.Sys;
 

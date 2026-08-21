@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Web.Sys.PageService;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class PageChangeSummary(
     LazySvc<IAssetsExtractor> resourceExtractor,
-    LazySvc<RequirementsService> requirements,
+    LazySvc<IRequirementsService> requirements,
     IModulesOutputService modulesOutputService)
     : Services_ServiceBase(SxcLogName + "PgChSm", connect: [requirements, resourceExtractor, modulesOutputService])
 {

@@ -1,8 +1,8 @@
-﻿using ToSic.Eav.Metadata.Requirements.Sys;
-using ToSic.Sxc.Render.Engines.Sys;
+﻿using ToSic.Sxc.Render.Engines.Sys;
 using ToSic.Sxc.Render.Output.Sys;
 using ToSic.Sys.Capabilities.SysFeatures;
 using ToSic.Sys.Requirements;
+using IRequirementsService = ToSic.Eav.Metadata.Requirements.Sys.IRequirementsService;
 
 namespace ToSic.Sxc.Dnn.Features;
 
@@ -10,10 +10,10 @@ namespace ToSic.Sxc.Dnn.Features;
 public class DnnRequirements(IRequirementsService requirements) : EngineRequirementsBase("Eng.DnnReq", connect: [requirements])
 {
     internal bool RequirementsMet() 
-        => !RequirementsStatus().SafeAny();
+        => !RequirementsStatus.SafeAny();
 
-    private ICollection<RequirementStatus> RequirementsStatus()
-        => requirements.UnfulfilledRequirements([SysFeatureSuggestions.CSharp08]);
+    private ICollection<RequirementStatus> RequirementsStatus => field
+        ??= requirements.UnfulfilledRequirements([SysFeatureSuggestions.CSharp08]);
 
     internal OutputFragmentWithAssets GetMessageForRequirements()
     {
@@ -22,7 +22,7 @@ public class DnnRequirements(IRequirementsService requirements) : EngineRequirem
         if (RequirementsMet())
             return l.ReturnNull("all seems ok");
 
-        var result = BuildRenderEngineResult(RequirementsStatus());
+        var result = BuildRenderEngineResult(RequirementsStatus);
         return l.Return(result, "error");
     }
 }
