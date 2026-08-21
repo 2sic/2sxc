@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Render.Engines.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class EngineRequirementsApp(IRequirementsService requirementsService)
-    : EngineRequirementsBase("Eng.AppReq", connect: [requirementsService])
+    : ServiceBase("Eng.AppReq", connect: [requirementsService])
 {
     public OutputFragmentWithAssets? CheckExpectedNoRenderConditions(EngineSpecs engineSpecs)
     {
@@ -57,7 +57,7 @@ public class EngineRequirementsApp(IRequirementsService requirementsService)
         if (RequirementsStatus(appReader).SafeNone())
             return l.ReturnNull("all seems ok");
 
-        var result = BuildRenderEngineResult(RequirementsStatus(appReader));
+        var result = EngineRequirementsHelpers.BuildRenderEngineResult(RequirementsStatus(appReader));
 
         return l.Return(result, "error");
     }

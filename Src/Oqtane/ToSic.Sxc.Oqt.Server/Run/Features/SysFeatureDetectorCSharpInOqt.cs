@@ -10,4 +10,8 @@ public class SysFeatureDetectorCSharp8() : SysFeatureDetector(CSharp08, true);
 public class SysFeatureDetectorCSharp9() : SysFeatureDetector(CSharp09, true);
 public class SysFeatureDetectorCSharp10() : SysFeatureDetector(CSharp10, true);
 public class SysFeatureDetectorCSharp11() : SysFeatureDetector(CSharp11, true);
-public class SysFeatureDetectorCSharp12() : SysFeatureDetector(CSharp12, false);
+public class SysFeatureDetectorCSharp12() : SysFeatureDetector(CSharp12, true);
+public class SysFeatureDetectorCSharp13() : SysFeatureDetector(CSharp13, true);
+public class SysFeatureDetectorCSharp14() : SysFeatureDetector(CSharp14, true); // new in .net 10
+public class SysFeatureDetectorCSharp15() : SysFeatureDetector(CSharp15, false);
+public class SysFeatureDetectorCSharp16() : SysFeatureDetector(CSharp16, false);

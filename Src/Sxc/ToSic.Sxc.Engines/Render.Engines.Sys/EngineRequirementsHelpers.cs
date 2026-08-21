@@ -7,11 +7,11 @@ using ToSic.Sys.Requirements;
 
 namespace ToSic.Sxc.Render.Engines.Sys;
 
+[PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class EngineRequirementsBase(string logName, object[]? connect = default)
-    : ServiceBase(logName, connect: connect)
+public static class EngineRequirementsHelpers
 {
-    protected static OutputFragmentWithAssets BuildRenderEngineResult(ICollection<RequirementStatus> reqStatus)
+    public static OutputFragmentWithAssets BuildRenderEngineResult(ICollection<RequirementStatus> reqStatus)
     {
         var exList2 = reqStatus
             .Select(r => new RenderingException(ErrHelpRequirementsNotMet with
@@ -62,5 +62,5 @@ public abstract class EngineRequirementsBase(string logName, object[]? connect =
         Detect = "",
         LinkCode = "err-view-config-missing",
         UiMessage = "Important Requirements not Met"
-    };
+    };    
 }
