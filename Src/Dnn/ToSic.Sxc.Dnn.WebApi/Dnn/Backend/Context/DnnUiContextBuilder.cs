@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using DotNetNuke.Abstractions.Portals;
 using System.Web;
 using ToSic.Eav.WebApi.Sys.Context;
 using ToSic.Eav.WebApi.Sys.Dto;
@@ -35,7 +36,7 @@ internal sealed class DnnUiContextBuilder(
     {
         var result = base.GetSite(flags);
         result.Id = _portal.PortalId;
-        result.Url = "//" + _portal.PortalAlias.HTTPAlias + "/";
+        result.Url = "//" + (_portal.PortalAlias as IPortalAliasInfo)?.HttpAlias + "/";
         return result;
     }
 

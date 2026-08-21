@@ -2,6 +2,7 @@
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
+using DotNetNuke.Security.Roles;
 using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sys.Users;
@@ -9,7 +10,7 @@ using ToSic.Sys.Users.Permissions;
 
 namespace ToSic.Sxc.Dnn.Context;
 
-internal class DnnUser(LazySvc<DnnSecurity> dnnSecurity)
+internal class DnnUser(LazySvc<DnnSecurity> dnnSecurity, IRoleController roleController)
     : ServiceBase("dnnUsr", connect: [dnnSecurity]), IUser<UserInfo>
 {
     private string GetUserIdentityToken ()
@@ -42,7 +43,7 @@ internal class DnnUser(LazySvc<DnnSecurity> dnnSecurity)
 
     public UserInfo GetContents() => DnnUserInfo;
 
-    private static List<int> BuildRoleList()
+    private List<int> BuildRoleList()
     {
         var psCurrent = PortalSettings.Current;
         if (psCurrent == null)
@@ -53,9 +54,8 @@ internal class DnnUser(LazySvc<DnnSecurity> dnnSecurity)
         if (user == null)
             return [];
 
-        var rc = new DotNetNuke.Security.Roles.RoleController();
         return user.Roles
-            .Select(r => rc.GetRoleByName(portalId, r))
+            .Select(r => roleController.GetRoleByName(portalId, r))
             .Where(r => r != null)
             .Select(r => r.RoleID)
             .ToList();

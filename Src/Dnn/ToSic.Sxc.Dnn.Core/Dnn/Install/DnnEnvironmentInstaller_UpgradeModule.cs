@@ -1,6 +1,5 @@
 ﻿using DotNetNuke.Collections;
 using DotNetNuke.Common.Utilities;
-using DotNetNuke.Entities.Controllers;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Web.Hosting;
@@ -451,7 +450,7 @@ partial class DnnEnvironmentInstaller
     {
         logger.LogAuto("ClientResourceManager- seems to be last item in version-list, will clear");
 
-        HostController.Instance.IncrementCrmVersion(true);
+        _hostSettingsService.IncrementCrmVersion(true);
         DataCache.ClearCache();
 
         logger.LogAuto("ClientResourceManager- done clearing");

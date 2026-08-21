@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using DotNetNuke.Abstractions.Portals;
 using DotNetNuke.Services.Localization;
 using System.Web;
 using System.Web.Hosting;
@@ -248,8 +249,8 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     /// but the current one. Just keep this in mind in case anything ever breaks.
     /// </remarks>
     public override string UrlRoot
-        => _urlRoot ??= UnwrappedSite?.PortalAlias?.HTTPAlias
-                        ?? PortalSettings.Current?.PortalAlias?.HTTPAlias
+        => _urlRoot ??= (UnwrappedSite?.PortalAlias as IPortalAliasInfo)?.HttpAlias
+                        ?? (PortalSettings.Current?.PortalAlias as IPortalAliasInfo)?.HttpAlias
                         ?? "err-portal-alias-not-loaded";
     private string _urlRoot;
 

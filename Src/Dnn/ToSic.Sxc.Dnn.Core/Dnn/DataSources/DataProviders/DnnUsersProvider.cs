@@ -2,6 +2,7 @@
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Security.Membership;
 using DotNetNuke.Security.Roles;
+using DotNetNuke.Abstractions.Application;
 using System.Collections;
 using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Cms.Users.Sys;
@@ -12,7 +13,11 @@ using static DotNetNuke.Common.Utilities.Null;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources;
 
-internal class DnnUsersProvider(LazySvc<DnnSecurity> dnnSecurity)
+internal class DnnUsersProvider(
+    LazySvc<DnnSecurity> dnnSecurity,
+    IPortalController portalController,
+    IApplicationStatusInfo appStatus,
+    IPortalGroupController portalGroupController)
     : ServiceBase("Dnn.Users", connect: [dnnSecurity]), IUsersProvider
 {
     #region Configuration
@@ -132,9 +137,9 @@ internal class DnnUsersProvider(LazySvc<DnnSecurity> dnnSecurity)
             )
             .ToList();
 
-    private static UserInfo GetUserByMembershipUserKey(int portalId, Guid membershipUserKey)
+    private UserInfo GetUserByMembershipUserKey(int portalId, Guid membershipUserKey)
     {
-        var masterPortalId = PortalController.GetEffectivePortalId(portalId);
+        var masterPortalId = PortalController.GetEffectivePortalId(portalController, appStatus, portalGroupController, portalId);
         var user = MembershipProvider.Instance().GetUserByProviderUserKey(masterPortalId, membershipUserKey.ToString());
         if (user != null)
             user.PortalID = portalId;

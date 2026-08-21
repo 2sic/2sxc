@@ -14,7 +14,11 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.Dnn.dist;
 
-public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to preserve correct language cookie
+public class CachedPageBase(
+    IPortalController portalController,
+    IApplicationStatusInfo applicationStatusInfo,
+    IHostSettings hostSettings)
+    : CDefault(portalController, applicationStatusInfo, hostSettings) // HACK: inherits dnn default.aspx to preserve correct language cookie
 {
     private const int UnknownSiteId = -1;
     private const int UnknownPageId = -1;
@@ -93,7 +97,8 @@ public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to pre
     {
         var l = Log.Fn<string>($"{nameof(virtualPath)}: {virtualPath}");
         var path = Server.MapPath(virtualPath);
-        if (!File.Exists(path)) throw l.Ex(new Exception("File not found: " + path));
+        if (!File.Exists(path))
+            throw l.Ex(new Exception("File not found: " + path));
         return l.ReturnAsOk(path);
     }
 
