@@ -45,6 +45,8 @@ public class OqtStartup : IServerStartup
                 var dllPath = Path.GetDirectoryName(dllLocation);
                 foreach (var dllFile in Directory.GetFiles(dllPath, "*.dll"))
                     options.AdditionalReferencePaths.Add(dllFile);
+
+                CaseInsensitiveSxcFileProvider.Wrap(options.FileProviders);
             });
 
         // TODO: STV - MAKE SURE OUR CONTROLLERS RULES ONLY APPLY TO OURS, NOT TO override rules on normal Oqtane controllers
