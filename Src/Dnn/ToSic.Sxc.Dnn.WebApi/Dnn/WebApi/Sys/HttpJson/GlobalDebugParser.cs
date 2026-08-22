@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using System.Web;
+using DotNetNuke.Abstractions.Application;
 using DotNetNuke.Entities.Controllers;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 
@@ -108,7 +110,9 @@ internal class GlobalDebugParser(ILog parentLog) : HelperBase(parentLog, "Dnn.Db
 
             try
             {
-                var raw = HostController.Instance.GetString(HostSettingForceDebugKey, null);
+                var raw = DnnStaticDi.GetPageScopedServiceProvider()
+                    .GetRequiredService<IHostSettingsService>()
+                    .GetString(HostSettingForceDebugKey, null);
                 if (raw == null)
                 {
                     _globalDebug = null; // unset
@@ -149,7 +153,9 @@ internal class GlobalDebugParser(ILog parentLog) : HelperBase(parentLog, "Dnn.Db
         try
         {
             var value = enable ? "true" : "false";
-            HostController.Instance.Update(HostSettingForceDebugKey, value, clearCache: true);
+            DnnStaticDi.GetPageScopedServiceProvider()
+                .GetRequiredService<IHostSettingsService>()
+                .Update(HostSettingForceDebugKey, value, clearCache: true);
             return true;
         }
         catch

@@ -1,17 +1,24 @@
 ﻿using System.Configuration;
 using System.Net;
 using System.Net.Mail;
-using DotNetNuke.Entities.Host;
+using DotNetNuke.Abstractions.Application;
+using DotNetNuke.Common.Utilities;
+using DotNetNuke.Entities.Portals;
 using ToSic.Sxc.Services.Mail.Sys;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Dnn.Services;
 
-internal class DnnMailService(LazySvc<IUser> userLazy) : MailServiceBase(userLazy)
+internal class DnnMailService(
+    LazySvc<IUser> userLazy,
+    IMailSettings mailSettings,
+    IHostSettingsService hostSettingsService,
+    IPortalController portalController) : MailServiceBase(userLazy)
 {
     protected override SmtpClient SmtpClient()
     {
-        var smtpServer = Host.SMTPServer;
+        var portalId = PortalSettings.Current?.PortalId ?? Null.NullInteger;
+        var smtpServer = mailSettings.GetServer(portalId);
         if (string.IsNullOrEmpty(smtpServer)) 
             throw new ConfigurationErrorsException(DotNetNuke.Services.Localization.Localization.GetString("SMTPConfigurationProblem"));
 
@@ -22,12 +29,12 @@ internal class DnnMailService(LazySvc<IUser> userLazy) : MailServiceBase(userLaz
             var strArray = smtpServer.Split(':');
             client.Host = strArray[0];
             client.Port = strArray.Length > 1 ? Convert.ToInt32(strArray[1]) : 25;
-            client.ServicePoint.MaxIdleTime = Host.SMTPMaxIdleTime;
-            client.ServicePoint.ConnectionLimit = Host.SMTPConnectionLimit;
+            client.ServicePoint.MaxIdleTime = checked((int)mailSettings.GetMaxIdleTime(portalId).TotalMilliseconds);
+            client.ServicePoint.ConnectionLimit = mailSettings.GetConnectionLimit(portalId);
 
-            var smtpAuthentication = Host.SMTPAuthentication;
-            var smtpUsername = Host.SMTPUsername;
-            var smtpPassword = Host.SMTPPassword;
+            var smtpAuthentication = mailSettings.GetAuthentication(portalId);
+            var smtpUsername = mailSettings.GetUsername(portalId);
+            var smtpPassword = mailSettings.GetPassword(portalId);
 
             switch (smtpAuthentication)
             {
@@ -44,7 +51,10 @@ internal class DnnMailService(LazySvc<IUser> userLazy) : MailServiceBase(userLaz
                     break;
             }
 
-            client.EnableSsl = Host.EnableSMTPSSL;
+            // DNN 10.1's IMailSettings implementation does not implement GetSecureConnectionEnabled.
+            client.EnableSsl = mailSettings.IsPortalEnabled(portalId)
+                ? PortalController.GetPortalSettingAsBoolean(portalController, "SMTPEnableSSL", portalId, false)
+                : hostSettingsService.GetBoolean("SMTPEnableSSL", false);
 
             return client;
         }

@@ -1,4 +1,4 @@
-﻿using DotNetNuke.Entities.Host;
+﻿using DotNetNuke.Abstractions.Application;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Sxc.Adam.Sys.Security;
@@ -8,7 +8,7 @@ using IFolder = ToSic.Eav.Apps.Assets.IFolder;
 
 namespace ToSic.Sxc.Dnn.Backend;
 
-internal class DnnAdamSecurityChecks(AdamSecurityChecksBase.Dependencies services)
+internal class DnnAdamSecurityChecks(AdamSecurityChecksBase.Dependencies services, IHostSettings hostSettings)
     : AdamSecurityChecksBase(services, DnnConstants.LogName)
 {
     /// <summary>
@@ -23,7 +23,7 @@ internal class DnnAdamSecurityChecks(AdamSecurityChecksBase.Dependencies service
     {
         var extension = Path.GetExtension(fileName);
         return !string.IsNullOrEmpty(extension)
-               && Host.AllowedExtensionWhitelist.IsAllowedExtension(extension.ToLowerInvariant());
+               && hostSettings.AllowedExtensionAllowList.IsAllowedExtension(extension.ToLowerInvariant());
     }
 
     public override bool CanEditFolder(IAsset item)

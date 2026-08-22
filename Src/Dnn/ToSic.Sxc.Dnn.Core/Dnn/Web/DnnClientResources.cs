@@ -1,5 +1,8 @@
 ﻿using DotNetNuke.Framework.JavaScriptLibraries;
 using DotNetNuke.Web.Client;
+using DotNetNuke.Abstractions.Application;
+using DotNetNuke.Abstractions.Logging;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using DotNetNuke.Web.Client.Providers;
 using System.Web.UI;
@@ -11,7 +14,12 @@ using ToSic.Sxc.Web.Sys.Url;
 
 namespace ToSic.Sxc.Dnn.Web;
 
-internal class DnnClientResources(DnnJsApiHeader dnnJsApiHeader, DnnRequirements dnnRequirements)
+internal class DnnClientResources(
+    DnnJsApiHeader dnnJsApiHeader,
+    DnnRequirements dnnRequirements,
+    IApplicationStatusInfo appStatus,
+    IEventLogger eventLogger,
+    IPortalController portalController)
     : ServiceBase($"{DnnConstants.LogName}.JsCss", connect: [dnnJsApiHeader, dnnRequirements])
 {
     public DnnClientResources Init(Page page, IBlockRenderer blockRenderer)
@@ -86,7 +94,7 @@ internal class DnnClientResources(DnnJsApiHeader dnnJsApiHeader, DnnRequirements
         }
 
         if (features.Contains(SxcPageFeatures.JQuery))
-            JavaScript.RequestRegistration(CommonJs.jQuery);
+            JavaScript.RequestRegistration(appStatus, eventLogger, portalController.GetCurrentSettings(), CommonJs.jQuery);
 
         if (features.Contains(SxcPageFeatures.TurnOn))
             RegisterJs(page, ver, $"{root}{SxcPageFeatures.TurnOn.UrlInDist}", true, priority + 10);

@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Localization;
+using DotNetNuke.Abstractions.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.Context;
@@ -77,7 +78,7 @@ internal class DnnZoneMapper(Generator<ISite> site, LazySvc<ZoneCreator> zoneCre
             .Cast<PortalInfo>()
             .Select(p =>
             {
-                var pSettings = portalController.GetPortalSettings(p.PortalID);
+                var pSettings = portalController.GetPortalSettings(((IPortalInfo)p).PortalId);
                 if (!pSettings.TryGetValue(SiteSettingNames.SiteKeyForZoneId, out var portalZoneId)) return null;
                 if (!int.TryParse(portalZoneId, out var zid)) return null;
                 return zid == zoneId ? new PortalSettings(p) : null;
