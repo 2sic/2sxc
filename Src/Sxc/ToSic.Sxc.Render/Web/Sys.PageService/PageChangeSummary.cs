@@ -52,7 +52,7 @@ public class PageChangeSummary(
         var features = pss.PageFeatures.GetFeaturesWithDependentsAndFlush(Log);
 
         var errors = requirements.Value
-            .Check(features)
+            .Issues(features)
             .Select(f => f.Message)
             .ToList();
 
