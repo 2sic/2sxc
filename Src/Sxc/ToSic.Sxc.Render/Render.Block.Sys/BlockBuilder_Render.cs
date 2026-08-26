@@ -269,15 +269,13 @@ public partial class BlockRenderer
         return (null, false);
     }
 
-    /// <summary>
-    /// license ok state
-    /// </summary>
-    protected bool AnyLicenseOk => _licenseOk.Get(() => Services.LicenseService.Value.HaveValidLicense);
-    private readonly LazyGet<bool> _licenseOk = new();
-
     private string? GenerateWarningMsgIfLicenseNotOk()
     {
-        if (AnyLicenseOk)
+        // Check if all registered licenses are invalid
+        // This would be the case after a typical update,
+        // where the fingerprint changes and the license needs to be re-registered.
+        // If any are valid, then it's ok (there may be multiple licenses registered, and some may be valid, some not)
+        if (!Services.LicenseService.Value.AllRegisteredLicensesAreInvalid)
             return null;
 
         Log.A("none of the licenses are valid");
