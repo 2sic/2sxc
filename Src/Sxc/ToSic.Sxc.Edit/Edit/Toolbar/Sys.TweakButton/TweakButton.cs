@@ -50,7 +50,8 @@ internal class TweakButton: ITweakButton
     }
 
     private static readonly IImmutableList<object?> EmptyUiOrParams = ImmutableList.Create<object?>();
-    private static readonly IImmutableDictionary<string, Func<ITweakButton, ITweakButton>> EmptyNamed = new Dictionary<string, Func<ITweakButton, ITweakButton>>().ToImmutableDictionary();
+    private static readonly IImmutableDictionary<string, Func<ITweakButton, ITweakButton>> EmptyNamed
+        = ImmutableDictionary<string, Func<ITweakButton, ITweakButton>>.Empty;
 
     ///// <summary>
     ///// Helper to create an empty TweakButton function as fallback when not provided.
