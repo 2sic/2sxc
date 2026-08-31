@@ -46,7 +46,7 @@ public class AppInstallation : CustomDataSource
     {
         [ContentTypeTitle]
         public string Name => app.name;
-        public string Guid => app.guid;
+        public string AppGuid => app.guid;
         public string Version => app.version;
     }
 
