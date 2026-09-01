@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Persistence.Sys.Logging;
-using ToSic.Eav.WebApi.Sys;
 using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.ImportExport;
@@ -11,24 +10,22 @@ namespace ToSic.Sxc.Backend.Admin;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class TypeControllerReal(
     LazySvc<IContextOfSite> context,
-    AppWorkQuick<ContentTypeDtoService> ctApiLazy,
     LazySvc<ContentExportApi> contentExportLazy,
     AppWorkQuick<WorkContentTypesMod> typeMod,
     LazySvc<IUser> userLazy,
-    IAppReaderFactory appReaders,
     Generator<ImportContent> importContent)
     : Services_ServiceBase("Api.TypesRl",
-        connect: [appReaders, context, ctApiLazy, contentExportLazy, userLazy, typeMod, importContent]), ITypeController
+        connect: [context, contentExportLazy, userLazy, typeMod, importContent]), ITypeController
 {
     public const string LogSuffix = "Types";
 
-
-    public IEnumerable<ContentTypeDto> List(int appId, string? scope = null, bool withStatistics = false)
-    {
-        var l = Log.Fn<IEnumerable<ContentTypeDto>>($"{appId}, scope:{scope}, stats:{withStatistics}");
-        var list = ctApiLazy.New(appId).List(appId, scope, withStatistics);
-        return l.Return(list);
-    }
+    // 2026-09-01 unused, probably moved to #SysData
+    //public IEnumerable<ContentTypeDto> List(int appId, string? scope = null, bool withStatistics = false)
+    //{
+    //    var l = Log.Fn<IEnumerable<ContentTypeDto>>($"{appId}, scope:{scope}, stats:{withStatistics}");
+    //    var list = ctApiLazy.New(appId).List(appId, scope, withStatistics);
+    //    return l.Return(list);
+    //}
     
     public bool Delete(int appId, string staticName)
         => typeMod.New(appId).Delete(staticName);
@@ -37,7 +34,7 @@ public class TypeControllerReal(
     // 2019-11-15 2dm special change: item to be Dictionary<string, object> because in DNN 9.4
     // it causes problems when a content-type has additional metadata, where a value then is a deeper object
     // in the future, the JS front-end should send something clearer and not the whole object
-    public bool Save(int appId, Dictionary<string, object>? item)
+    public bool Save(int appId, Dictionary<string, object?>? item)
     {
         var l = Log.Fn<bool>();
             
@@ -48,7 +45,8 @@ public class TypeControllerReal(
             i => i.Key,
             i => i.Value?.ToString()
         );
-        var result = typeMod.New(appId).AddOrUpdate(dic["StaticName"]!, dic["Scope"]!, dic["Name"]!, null, false);
+        var result = typeMod.New(appId)
+            .AddOrUpdate(dic["StaticName"]!, dic["Scope"]!, dic["Name"]!, null, false);
             
         return l.ReturnAndLog(result);
     }
@@ -80,7 +78,7 @@ public class TypeControllerReal(
     /// <returns></returns>
     /// <exception cref="NotSupportedException"></exception>
     public ImportResultDto Import(int zoneId, int appId)
-        => throw new NotSupportedException("This is not supported on ControllerReal, use overload.");
+        => throw new NotSupportedException("This is not supported on ControllerReal, you must call the overload.");
 
     /// <summary>
     /// This implementation is special ControllerReal, instead of ImportResultDto Import(int zoneId, int appId) that is not implemented.

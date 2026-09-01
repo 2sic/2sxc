@@ -29,7 +29,6 @@
     <!-- XML documentation is generated in Release only -->
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.*.xml" />
-      <!--<DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Dnn.xml" />-->
     </ItemGroup>
     
     <ItemGroup>
