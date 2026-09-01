@@ -106,7 +106,7 @@ public partial class SimpleDataEditService(
 
         l.A($"Type {contentTypeName} found. Will build entities to save...");
 
-        var entSaver = entSave.New(_ctxWithDb);
+        var entSaver = entSave.New(NewAppWorkContextWithDbForOperation());
         var saveOptions = entSaver.SaveOptions();
 
         var importEntity = list
@@ -205,7 +205,7 @@ public partial class SimpleDataEditService(
         var original = _ctxWithDb.AppReader.List.FindRepoId(entityId)
             ?? throw new NullReferenceException($"Can't Update, original not found with ID {entityId}");
         var (entity, publishing) = BuildNewEntity(original.Type, values, null, original.IsPublished);
-        entUpdate.New(_ctxWithDb)
+        entUpdate.New(NewAppWorkContextWithDbForOperation())
             .UpdateParts(id: entityId, partialEntity: entity, publishing: publishing);
         l.Done();
     }
@@ -216,14 +216,32 @@ public partial class SimpleDataEditService(
     /// </summary>
     /// <param name="entityId">Entity ID</param>
     /// <exception cref="InvalidOperationException">Entity cannot be deleted for example when it is referenced by another object</exception>
-    public void Delete(int entityId) => entDelete.New(_ctxWithDb).Delete(entityId);
+    public void Delete(int entityId) => entDelete.New(NewAppWorkContextWithDbForOperation()).Delete(entityId);
 
 
     /// <summary>
     /// Delete the entity specified by GUID.
     /// </summary>
     /// <param name="entityGuid">Entity GUID</param>
-    public void Delete(Guid entityGuid) => entDelete.New(_ctxWithDb).Delete(entityGuid);
+    public void Delete(Guid entityGuid) => entDelete.New(NewAppWorkContextWithDbForOperation()).Delete(entityGuid);
+
+
+    /// <summary>
+    /// Each public CRUD operation must receive a fresh app work context with database.
+    /// Do not "optimize" this by passing _ctxWithDb directly or by caching the result of this method.
+    /// AppWorkContext lazily caches DbStorage, which owns the EF DbContext and its ChangeTracker.
+    /// 
+    /// A single API request can perform multiple operations with this service; for example, Mobius
+    /// FormController.ProcessForm creates an entity and immediately updates that same entity.
+    /// Reusing one work context leaves the graph inserted by Create tracked. Update then loads another
+    /// instance of that graph and UpdateRange/RemoveRange fails because EF is already tracking the same keys.
+    /// 
+    /// Before the AppCtxNew refactor, GenWorkDb.New(AppReader) implicitly created a new context per operation.
+    /// This method deliberately preserves that unit-of-work boundary: reuse the AppReader/cache, but never
+    /// reuse DbStorage/DbContext between separate Create, Update, or Delete calls.
+    /// </summary>
+    private IAppWorkContext NewAppWorkContextWithDbForOperation()
+        => appWorkCtxSvc.ContextNew(_ctxWithDb.AppReader);
 
 
     private IDictionary<string, object?> ConvertRelationsToNullArray(IContentType contentType, IDictionary<string, object?> values)
