@@ -1,4 +1,3 @@
-using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource;
@@ -15,6 +14,7 @@ namespace ToSic.Sxc.Backend.Cms;
     Audience = Audience.System,
     DataConfidentiality = DataConfidentiality.Confidential,
     UiHint = "Version history of an item")]
+// ReSharper disable once UnusedMember.Global
 public class ItemHistory : CustomDataSource
 {
     [Configuration]
@@ -22,13 +22,14 @@ public class ItemHistory : CustomDataSource
 
     public ItemHistory(Dependencies services, AppWorkQuick<WorkEntityVersioning> versioning)
         : base(services, "Sxc.ItemHist", connect: [versioning])
-        => ProvideOutRaw(() => Get(versioning), options: Options);
+    {
+        ProvideOutRaw(() => versioning.New(appId: AppId)
+            .VersionHistory(EntityId)
+            .Select(history => new ItemHistoryRaw(history))
+        );
+    }
 
-    private IEnumerable<ItemHistoryRaw> Get(AppWorkQuick<WorkEntityVersioning> versioning)
-        => versioning.New(appId: AppId).VersionHistory(EntityId).Select(history => new ItemHistoryRaw(history));
-
-    private static DataFactoryOptions Options() => new() { TypeName = "ItemHistory" };
-
+    [ContentType(Name = "ItemHistory", Guid = "3c5b1980-b1f6-4913-bdef-36113f5da2da")]
     private sealed class ItemHistoryRaw(ToSic.Eav.Persistence.Versions.ItemHistory history) : IRawEntityAutoConvert
     {
         public DateTime TimeStamp => history.TimeStamp;

@@ -223,7 +223,7 @@ public partial class SimpleDataEditService(
     /// Delete the entity specified by GUID.
     /// </summary>
     /// <param name="entityGuid">Entity GUID</param>
-    public void Delete(Guid entityGuid) => entDelete.New(NewAppWorkContextWithDbForOperation()).Delete(entityGuid);
+    public void Delete(Guid entityGuid) => entDelete.New(NewAppWorkContextWithDbForOperation()).Delete([entityGuid]);
 
 
     /// <summary>

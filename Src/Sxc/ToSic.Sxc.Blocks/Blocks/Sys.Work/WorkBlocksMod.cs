@@ -88,8 +88,8 @@ public class WorkBlocksMod(
         var blockList = cbEnt.Children(field);
 
         var intList = blockList
-            .Where(b => b != null)
-            .Select(b => b!.EntityId)
+            .OfType<IEntity>()
+            .Select(b => b.EntityId)
             .ToList(); // must be list, as it will be modified
 
         // add only if it's not already in the list (could happen if http requests are run again)
