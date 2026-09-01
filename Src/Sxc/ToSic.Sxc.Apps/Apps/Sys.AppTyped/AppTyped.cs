@@ -69,12 +69,12 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager<T
 
     /// <inheritdoc />
     ITypedItem IAppTyped.Settings => _settings.Get(() => App.AppSettings.NullOrGetWith(appS => MakeTyped(appS, propsRequired: true))!)!;
-    private readonly GetOnce<ITypedItem> _settings = new();
+    private readonly LazyGet<ITypedItem> _settings = new();
 
     /// <inheritdoc />
     ITypedItem IAppTyped.Resources => _resources.Get(() => App.AppResources.NullOrGetWith(appR => MakeTyped(appR, propsRequired: true))!)!;
-    private readonly GetOnce<ITypedItem> _resources = new();
-
+    private readonly LazyGet<ITypedItem> _resources = new();
+    
     private ITypedItem MakeTyped(ICanBeEntity contents, bool propsRequired)
     {
         var wrapped = CmsEditDecorator.Wrap(contents.Entity, false);
@@ -90,8 +90,6 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager<T
         => new AppAssetFolderMain(App.AppPathsForTyped, App.Folder, AppAssetsHelpers.DetermineShared(location) ?? App.AppReaderForTyped.IsShared());
 
     /// <inheritdoc />
-    public IFile Thumbnail => _thumbnailFile.Get(() => new AppAssetThumbnail(App.AppReaderForTyped, App.AppPathsForTyped, globalPaths))!;
-    private readonly GetOnce<IFile> _thumbnailFile = new();
-
-
+    public IFile Thumbnail => field
+        ??= new AppAssetThumbnail(App.AppReaderForTyped, App.AppPathsForTyped, globalPaths);
 }

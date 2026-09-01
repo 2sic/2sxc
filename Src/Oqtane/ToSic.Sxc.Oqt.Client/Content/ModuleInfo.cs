@@ -29,10 +29,10 @@ public class ModuleInfo : IModule
      */
     
     /// <summary>
-    /// The SQL versions must use a "-" to avoid being replaced on search/replace when releasing a new version.
-    /// When SQL script is added in new version, include new version explicitly in this array.
+    /// Versions with SQL scripts, EF migrations, or other upgrade hooks.
+    /// They must use a "-" to avoid being replaced on search/replace when releasing a new version.
     /// </summary>
-    internal static string[] SqlScriptVersions =
+    internal static string[] UpgradeVersions =
     [
         "12-00-00",
         "12-05-00",
@@ -51,10 +51,10 @@ public class ModuleInfo : IModule
     /// Merge versions for use in Oqtane version list
     /// </summary>
     /// <returns></returns>
-    internal static string GetSqlAndLatestVersions(string name)
+    internal static string GetUpgradeAndLatestVersions(string name)
     {
         if (name != Content) return "";
-        var versionsWithDot = SqlScriptVersions
+        var versionsWithDot = UpgradeVersions
             .Select(v => v.Replace('-', '.'))
             .Append(EavSystemInfo.VersionString)
             .ToList();
@@ -77,9 +77,8 @@ public class ModuleInfo : IModule
         // PermissionNames = "",
         ServerManagerType = "ToSic.Sxc.Oqt.Server.Installation.SxcManager, ToSic.Sxc.Oqtane.Server",
         // ControlTypeRoutes = "",
-        // This must contain all versions with a SQL script and current/latest version
-        // list versions with sql scripts in \ToSic.Sxc.Oqt.Server\Scripts\
-        ReleaseVersions = GetSqlAndLatestVersions(name),
+        // This must contain every SQL, EF migration, or version-hook release plus the current/latest version.
+        ReleaseVersions = GetUpgradeAndLatestVersions(name),
         // DefaultAction = "",
         // SettingsType = "",
         PackageName = OqtConstants.PackageName, // "ToSic.Sxc.Oqtane"

@@ -16,20 +16,21 @@ public class CodeHelperTypedData(CompileCodeHelperSpecs helperSpecs, string? log
 {
     public bool DefaultStrict = true;
 
-    [field: AllowNull, MaybeNull] internal ContextData Data => field ??= ExCtx.GetContextData();
+    [field: AllowNull, MaybeNull]
+    internal ContextData Data => field ??= ExCtx.GetContextData();
 
     [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
 
     public ITypedItem MyItem => _myItem.Get(() => Cdf.AsItem(Data.MyItems.FirstOrDefault(), new() { ItemIsStrict = DefaultStrict })!)!;
-    private readonly GetOnce<ITypedItem> _myItem = new();
+    private readonly LazyGet<ITypedItem> _myItem = new();
 
     public IEnumerable<ITypedItem> MyItems => _myItems.Get(() =>
         Cdf.EntitiesToItems(Data.MyItems, new() { ItemIsStrict = DefaultStrict, DropNullItems = true }))!;
-    private readonly GetOnce<IEnumerable<ITypedItem>> _myItems = new();
+    private readonly LazyGet<IEnumerable<ITypedItem>> _myItems = new();
 
     public ITypedItem MyHeader => _myHeader.Get(() => Cdf.AsItem(Data.MyHeaders.FirstOrDefault(), new() { ItemIsStrict = DefaultStrict })!)!;
-    private readonly GetOnce<ITypedItem> _myHeader = new();
+    private readonly LazyGet<ITypedItem> _myHeader = new();
 
     [field: AllowNull, MaybeNull]
     private ICodeTypedApiHelper TypedApiHelper => field ??= ExCtx.GetTypedApi();

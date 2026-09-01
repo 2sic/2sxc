@@ -8,7 +8,7 @@ using ExecutionContext = ToSic.Sxc.Sys.ExecutionContext.ExecutionContext;
 
 namespace ToSic.Sxc.ServicesTests.CmsService;
 
-public class CmsServiceTests(ICodeDataFactory cdf, ExecutionContext exCtx, /*ICmsService cmsService,*/ DataForCmsServiceTests dataForCmsTests, CodeContentTypesManager ctDefFactory)
+public class CmsServiceTests(ICodeDataFactory cdf, ExecutionContext exCtx, /*ICmsService cmsService,*/ DataForCmsServiceTests dataForCmsTests, ContentTypesFromCodeManager ctDefFactory)
     : IClassFixture<DoFixtureStartup<ScenarioFullPatronsWithDb>>
 {
 #if NETCOREAPP

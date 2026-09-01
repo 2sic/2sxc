@@ -1,32 +1,37 @@
 ﻿using DotNetNuke.Framework.JavaScriptLibraries;
 using DotNetNuke.Web.Client;
+using DotNetNuke.Abstractions.Application;
+using DotNetNuke.Abstractions.Logging;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using DotNetNuke.Web.Client.Providers;
 using System.Web.UI;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Dnn.Features;
-using ToSic.Sxc.Render.Sys.RenderBlock;
+using ToSic.Sxc.Render.Block.Sys;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Sys.Url;
 
 namespace ToSic.Sxc.Dnn.Web;
 
-internal class DnnClientResources(DnnJsApiHeader dnnJsApiHeader, DnnRequirements dnnRequirements)
+internal class DnnClientResources(
+    DnnJsApiHeader dnnJsApiHeader,
+    DnnRequirements dnnRequirements,
+    IApplicationStatusInfo appStatus,
+    IEventLogger eventLogger,
+    IPortalController portalController)
     : ServiceBase($"{DnnConstants.LogName}.JsCss", connect: [dnnJsApiHeader, dnnRequirements])
 {
-    // #RemovedV20 #OldDnnAutoJQuery
-    public DnnClientResources Init(Page page, /*bool? forcePre1025Behavior,*/ IBlockBuilder blockBuilder)
+    public DnnClientResources Init(Page page, IBlockRenderer blockRenderer)
     {
-        //_forcePre1025Behavior = forcePre1025Behavior;
         _page = page;
-        _blockBuilder = blockBuilder;
+        _blockRenderer = blockRenderer;
         return this;
     }
-    private IBlockBuilder _blockBuilder;
+    private IBlockRenderer _blockRenderer;
     private Page _page;
-    //private bool? _forcePre1025Behavior;
 
-    internal IList<IPageFeature> Features => field ??= _blockBuilder?.Run(true, specs: new())?.Features ?? new List<IPageFeature>();
+    internal IList<IPageFeature> Features => field ??= _blockRenderer?.Run(true, specs: new())?.Features ?? new List<IPageFeature>();
 
     public IList<IPageFeature> AddEverything(IList<IPageFeature> features = null)
     {
@@ -57,32 +62,6 @@ internal class DnnClientResources(DnnJsApiHeader dnnJsApiHeader, DnnRequirements
 
         return l.ReturnAsOk(features);
     }
-
-
-    // #RemovedV20 #OldDnnAutoJQuery
-    ///// <summary>
-    ///// new in 10.25 - by default jQuery isn't loaded any more
-    ///// but older razor templates might still expect it
-    ///// and any other old behaviour, incl. no-view defined, etc. should activate compatibility
-    ///// </summary>
-    //public void EnforcePre1025Behavior()
-    //{
-    //    var l = Log.Fn("Activate Anti-Forgery for compatibility with old behavior");
-    //    ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
-    //    MustAddHeaders = true;
-    //    l.Done();
-    //}
-
-    // #RemovedV20 #OldDnnAutoJQuery
-    ///// <summary>
-    ///// new in 10.25 - by default now jQuery isn't loaded!
-    ///// but any old behaviour, incl. no-view defined, etc. should activate compatibility
-    ///// </summary>
-    ///// <returns></returns>
-    //public bool NeedsPre1025Behavior() => _forcePre1025Behavior
-    //                                      ?? (dnnRequirements.RequirementsMet() ? (_blockBuilder?.GetEngine() as IEngineDnnOldCompatibility)?.OldAutoLoadJQueryAndRvt : null)
-    //                                      ?? true;
-
 
     public void RegisterClientDependencies(Page page, bool readJs, bool editJs, bool editCss, IList<IPageFeature> overrideFeatures = null)
     {
@@ -115,7 +94,7 @@ internal class DnnClientResources(DnnJsApiHeader dnnJsApiHeader, DnnRequirements
         }
 
         if (features.Contains(SxcPageFeatures.JQuery))
-            JavaScript.RequestRegistration(CommonJs.jQuery);
+            JavaScript.RequestRegistration(appStatus, eventLogger, portalController.GetCurrentSettings(), CommonJs.jQuery);
 
         if (features.Contains(SxcPageFeatures.TurnOn))
             RegisterJs(page, ver, $"{root}{SxcPageFeatures.TurnOn.UrlInDist}", true, priority + 10);

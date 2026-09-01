@@ -15,15 +15,15 @@ public static class OqtConstants
 
     public const string SitesFolderName = "Sites";
 
-    public const string AppRootPublicBase = $"{AppRoot}\\{{0}}";
+    public const string AppRootPublicBase = $"{AppRoot}/{{0}}";
 
-    public const string AppRootTenantSiteBase = AppRoot + "\\" + TenantsFolderName + "\\{0}\\" + SitesFolderName + "\\{1}";
+    public const string AppRootTenantSiteBase = AppRoot + "/" + TenantsFolderName + "/{0}/" + SitesFolderName + "/{1}";
 
     public const string SharedAppFolder =  "Shared";
 
     public const string ContentSubfolder = "Content";
 
-    public const string ContentRootPublicBase = $"{ContentSubfolder}\\{TenantsFolderName}\\{{0}}\\{SitesFolderName}\\{{1}}";
+    public const string ContentRootPublicBase = $"{ContentSubfolder}/{TenantsFolderName}/{{0}}/{SitesFolderName}/{{1}}";
 
     public const string ApiAppLinkPart = "api/sxc/app";
 

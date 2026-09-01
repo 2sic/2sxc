@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Services;
@@ -16,11 +17,12 @@ public class AppCodeLoader(
     ISite site,
     IAppReaderFactory appReadFac,
     LazySvc<IAppPathsMicroSvc> appPathsLazy,
+    LazySvc<IZoneMapper> zoneMapper,
     LazySvc<AppCodeCompiler> appCompilerLazy,
     AssemblyCacheManager assemblyCacheManager,
     LazySvc<IFeaturesService> features)
     : ServiceBase("Sys.AppCodeLoad",
-        connect: [logStore, site, appReadFac, appPathsLazy, appCompilerLazy, assemblyCacheManager, features])
+        connect: [logStore, site, appReadFac, appPathsLazy, zoneMapper, appCompilerLazy, assemblyCacheManager, features])
 {
     /// <summary>
     /// Try to get the app code - first of the edition, then of the root.
@@ -110,7 +112,7 @@ public class AppCodeLoader(
             if (result != null)
                 return l.Return(result, "inside lock, start");
 
-            // Get paths
+            // Get paths and add to specs
             var (physicalPath, relativePath, physicalPathShared, relativePathShared) = GetAppPaths(FolderConstants.AppCodeFolder, spec);
             logSummary.AddSpec("PhysicalPath", physicalPath);
             logSummary.AddSpec("RelativePath", relativePath);
@@ -229,8 +231,10 @@ public class AppCodeLoader(
     private (string physicalPath, string relativePath, string physicalPathShared, string relativePathShared) GetAppPaths(string folder, HotBuildSpec spec)
     {
         var l = Log.Fn<(string physicalPath, string relativePath, string physicalPathShared, string relativePathShared)>($"{nameof(folder)}: '{folder}'; {spec}");
-        l.A($"site id: {site.Id}, ...: {site.AppsRootPhysicalFull}");
-        var appPaths = appPathsLazy.Value.Get(appReadFac.Get(spec.AppId), site);
+        var appReader = appReadFac.Get(spec.AppId);
+        var resolvedSite = HotBuildSiteResolver.ResolveForApp(site, appReader, zoneMapper.Value);
+        l.A($"site id: {site.Id}, resolved: {resolvedSite.Id}, ...: {resolvedSite.AppsRootPhysicalFull}");
+        var appPaths = appPathsLazy.Value.Get(appReader, resolvedSite);
         var folderWithEdition = folder.HasValue()
             ? spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder
             : spec.Edition!;
@@ -238,9 +242,9 @@ public class AppCodeLoader(
         //l.A($"{nameof(physicalPath)}: '{physicalPath}'");
         var relativePath = Path.Combine(appPaths.RelativePath, folderWithEdition);
         //l.A($"{nameof(relativePath)}: '{relativePath}'");
-        var physicalPathShared = Path.Combine(appPaths.PhysicalPathShared.Backslash(), folderWithEdition);
+        var physicalPathShared = Path.Combine(appPaths.PhysicalPathShared, folderWithEdition);
         //l.A($"{nameof(physicalPath)}: '{physicalPath}'");
-        var relativePathShared = Path.Combine(appPaths.RelativePathShared.Backslash(), folderWithEdition);
+        var relativePathShared = Path.Combine(appPaths.RelativePathShared, folderWithEdition);
         return l.ReturnAsOk((physicalPath, relativePath, physicalPathShared, relativePathShared));
     }
 

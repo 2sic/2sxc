@@ -2,11 +2,12 @@
 
 internal class ToolbarRuleForParams(
     object? target,
+    ToolbarButtonDecoratorHelper decoHelper,
     string? ui = null,
     string? parameters = null,
-    ToolbarContext? context = null,
-    ToolbarButtonDecoratorHelper? decoHelper = null)
-    : ToolbarRuleForEntity(CommandName, target, null, null, ui: ui, parameters: parameters, context, decoHelper)
+    ToolbarContext? context = null
+)
+    : ToolbarRuleForEntity(commandName: CommandName, decoHelper: decoHelper, target: target, operation: null, contentType: null, ui: ui, parameters: parameters, context: context)
 {
     public const string CommandName = "params";
 

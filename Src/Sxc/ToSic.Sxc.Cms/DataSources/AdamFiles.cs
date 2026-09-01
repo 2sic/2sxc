@@ -1,6 +1,5 @@
 ﻿using System.Collections.Immutable;
 using ToSic.Eav.DataSource;
-
 using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.DataSource.VisualQuery;
 
@@ -104,6 +103,7 @@ public class AdamFiles : CustomDataSourceAdvanced
 
         return l.Return(entities, "ok");
     })!;
-    private readonly GetOnce<IImmutableList<IEntity>> _getInternal = new();
+    
+    private readonly LazyGet<IImmutableList<IEntity>> _getInternal = new();
 
 }

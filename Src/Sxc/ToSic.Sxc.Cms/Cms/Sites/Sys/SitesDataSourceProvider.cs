@@ -13,13 +13,13 @@ public abstract class SitesDataSourceProvider(SitesDataSourceProvider.Dependenci
     : ServiceBase<SitesDataSourceProvider.Dependencies>(services, logName)
 {
     public record Dependencies(LazySvc<IZoneMapper> ZoneMapperLazy, IAppsCatalog AppsCatalog)
-        : DependenciesRecord(connect: [ZoneMapperLazy, AppsCatalog]);
+        : DependenciesBase(connect: [ZoneMapperLazy, AppsCatalog]);
 
     /// <summary>
     /// So the core data source doesn't have settings to configure this
     /// </summary>
     /// <returns></returns>
-    public abstract List<SiteModel> GetSitesInternal();
+    public abstract List<SiteModelRaw> GetSitesInternal();
 
     public int GetZoneId(int siteId) => Services.ZoneMapperLazy.Value.GetZoneId(siteId);
 

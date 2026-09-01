@@ -8,6 +8,6 @@ internal class UserRolesProviderUnknown(WarnUseOfUnknown<UserRolesProviderUnknow
     : ServiceBase($"{SxcLogName}.{LogConstants.NameUnknown}"),
         IUserRolesProvider
 {
-    public IEnumerable<UserRoleModel> GetRoles()
+    public IEnumerable<UserRoleModelRaw> GetRoles()
         => [];
 }

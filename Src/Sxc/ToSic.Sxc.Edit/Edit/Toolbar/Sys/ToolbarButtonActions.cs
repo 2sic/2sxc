@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.Raw.Sys;
+﻿using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 
@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Edit.Toolbar.Sys;
 [VisualQuery(
     NiceName = "ToolbarButtonActions",
     NameId = "529752a2-11ea-473b-a81f-5634f935e57f",
-    NameIds = ["System.ToolbarButtonActions"], // Internal name for the system, used in some entity-pickers. Can change at any time.
+    NameIds = ["System.ToolbarButtonActions"], // Internal name for the system, used in some entity-pickers to configure Metadata of Content-Types. Can change at any time.
     Type = DataSourceType.System,
     Audience = Audience.System,
     DataConfidentiality = DataConfidentiality.Public,
@@ -73,10 +73,13 @@ public class ToolbarButtonActions : CustomDataSource
                 "info",
             }
             .OrderBy(a => a)
-            .Select(action => new RawEntity(new()
+            .Select(action => new RawEntity
             {
-                { "Name", action },
-            }))
+                Values = new Dictionary<string, object?>
+                {
+                    { "Name", action },
+                }
+            })
             .ToList();
 
         return l.Return(list, $"{list.Count}");

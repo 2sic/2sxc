@@ -1,9 +1,9 @@
-﻿using ToSic.Eav.Data.Sys;
-using ToSic.Eav.Data.Sys.ContentTypes;
+﻿using ToSic.Eav.Data.ContentTypes.Sys;
+using ToSic.Eav.Data.Sys;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Models;
 using ToSic.Eav.Serialization.Sys.Options;
-using ToSic.Sxc.Backend.ImportExport;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Web.Sys.LightSpeed;
 using ToSic.Sys.Utils;
 
@@ -11,29 +11,30 @@ namespace ToSic.Sxc.Backend.Views;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ViewsBackend(
-    GenWorkBasic<WorkViewsMod> workViewsMod,
-    GenWorkPlus<WorkViews> workViews,
-    IContextOfSite context,
+    LazySvc<AppWorkContextService> appCtxSvc,
+    LazySvc<WorkViewDelete> workViewDelete,
+    AppWorkChain<WorkViews> workViews,
     LazySvc<IConvertToEavLight> convertToEavLight,
     Generator<ImpExpHelpers> impExpHelpers)
-    : ServiceBase("Bck.Views", connect: [workViewsMod, convertToEavLight, impExpHelpers, workViews, context])
+    : ServiceBase("Bck.Views", connect: [appCtxSvc, workViewDelete, convertToEavLight, impExpHelpers, workViews])
 {
     public IEnumerable<ViewDetailsDto> GetAll(int appId)
     {
         var l = Log.Fn<IEnumerable<ViewDetailsDto>>($"get all a#{appId}");
 
-        var appViews = workViews.New(appId);
-        var contentTypes = appViews.AppWorkCtx.AppReader.ContentTypes.OfScope(ScopeConstants.Default).ToList();
+        var appCtx = appCtxSvc.Value.ContextNew(appId);
+        var appViews = workViews.New(appCtx);
+        var contentTypes = appCtx.AppReader.ContentTypes.OfScope(ScopeConstants.Default).ToList();
 
         var viewList = appViews.GetAll().ToList();
-        Log.A($"attribute list count:{contentTypes.Count}, template count:{viewList.Count}");
+        Log.A($"fieldDef list count:{contentTypes.Count}, template count:{viewList.Count}");
         var ser = convertToEavLight.Value as ConvertToEavLight;
 
         var views = viewList
             .Select(view =>
             {
-                var lightspeed = view.Metadata
-                    .FirstModel<LightSpeedDecorator>()
+                var lightspeed = view
+                    .GetMetadataModel<LightSpeedDecorator>()
                     .NullOrGetWith(ls => new AppMetadataDto
                         {
                             Id = ls.Id,
@@ -84,13 +85,23 @@ public class ViewsBackend(
             DemoTitle = maybeEntity?.GetBestTitle() ?? ""
         };
     }
-
+    
+    /// <summary>
+    /// Delete a view
+    /// </summary>
+    /// <param name="appId"></param>
+    /// <param name="id">View id</param>
+    /// <returns></returns>
     public bool Delete(int appId, int id)
     {
-        // todo: extra security to only allow zone change if host user
-        Log.A($"delete a{appId}, t:{id}");
-        var app = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(context.Site.ZoneId, appId, context.User, context.Site.ZoneId);
-        workViewsMod.New(app).DeleteView(id);
-        return true;
+        var l = Log.Fn<bool>($"delete a{appId}, t:{id}");
+        
+        // extra security to only allow zone change if host user
+        var appReader = impExpHelpers.New().GetReaderAfterZoneSwitchPermissionCheck(appId);
+        
+        var ctx = appCtxSvc.Value.ContextNew(appReader);
+        workViewDelete.Value.DeleteView(ctx, id);
+        
+        return l.ReturnTrue();
     }
 }

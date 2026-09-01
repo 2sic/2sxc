@@ -1,10 +1,9 @@
 ﻿using System.Web;
-using ToSic.Eav.DataSources.Sys;
+using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Eav.WebApi.Sys.Dto;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Dnn.WebApi.Sys;
-using AppDto = ToSic.Eav.WebApi.Sys.Dto.AppDto;
 using RealController = ToSic.Sxc.Backend.Admin.AppControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
@@ -20,18 +19,25 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     private RealController Real => SysHlp.GetService<RealController>();
 
     /// <inheritdoc />
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [SupportedModules(DnnSupportedModuleNames)]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public ICollection<AppDto> List(int zoneId) => Real.List(zoneId);
+    /// Replayed by DataSource System.Apps
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[SupportedModules(DnnSupportedModuleNames)]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //public ICollection<AppDto> List(int zoneId) => Real.List(zoneId);
 
+    // TODO: @2rb #next
+    // Info: used in Apps-Admin (list of apps)
+    // To work, you must enable the patron feature to share an app (on another site)
+    // ...then it should appear in the list of InheritableApps
+    // Make sure you have a working setup, before you make changes
     /// <inheritdoc />
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [SupportedModules(DnnSupportedModuleNames)]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public ICollection<AppDto> InheritableApps() => Real.InheritableApps();
+    /// Replaced by DataSource System.InheritableApps
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[SupportedModules(DnnSupportedModuleNames)]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+    //public ICollection<AppDto> InheritableApps() => Real.InheritableApps();
 
     /// <inheritdoc />
     [HttpDelete]
@@ -52,17 +58,19 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     public void App(int zoneId, string name, int? inheritAppId = null) => Real.App(zoneId, name, inheritAppId);
 
     /// <inheritdoc />
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [SupportedModules(DnnSupportedModuleNames)]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public ICollection<SiteLanguageDto> Languages(int appId) => Real.Languages(appId);
+    /// Replaced by DataSource System.AppLanguages
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[SupportedModules(DnnSupportedModuleNames)]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //public ICollection<SiteLanguageDto> Languages(int appId) => Real.Languages(appId);
 
-    /// <inheritdoc />
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public AppExportInfoDto Statistics(int zoneId, int appId) => Real.Statistics(zoneId, appId);
+    // Replaced by DataSource System.AppStatistics through query System.SysData.
+    ///// <inheritdoc />
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //public AppExportInfoDto Statistics(int zoneId, int appId) => Real.Statistics(zoneId, appId);
 
 
     /// <inheritdoc />
@@ -76,6 +84,14 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     public HttpResponseMessage Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite, bool assetAdamDeleted = true)
         => Real.Export(new(zoneId, appId, includeContentGroups, resetAppGuid, assetsAdam, assetsSite, assetAdamDeleted))
             .ToHttpResponse();
+
+    /// <inheritdoc />
+    [HttpGet]
+    [ValidateAntiForgeryToken]
+    [SupportedModules(DnnSupportedModuleNames)]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    public PathCasePreflightResult PathCasePreflight(int zoneId, int appId)
+        => Real.PathCasePreflight(zoneId, appId);
 
 
     /// <inheritdoc />
@@ -94,13 +110,13 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
         return Real.Reset(zoneId, appId, PortalSettings.DefaultLanguage, withPortalFiles);
     }
 
-
-    /// <inheritdoc />
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null)
-        => Real.GetStack(appId, part, key, view);
+    // Replaced by DataSource System.SystemStack through query System.SysData.
+    ///// <inheritdoc />
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null)
+    //    => Real.GetStack(appId, part, key, view);
 
     /// <inheritdoc />
     [HttpPost]
@@ -112,13 +128,14 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
         return Real.Import(new(Request, HttpContext.Current.Request), zoneId, HttpContext.Current.Request["Name"]);
     }
 
-    /// <inheritdoc />
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [SupportedModules(DnnSupportedModuleNames)]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public IEnumerable<PendingAppDto> GetPendingApps(int zoneId)
-        => Real.GetPendingApps(zoneId);
+    // Replaced by DataSource System.AppsPendingInitialization through query System.SysData.
+    ///// <inheritdoc />
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[SupportedModules(DnnSupportedModuleNames)]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //public IEnumerable<PendingAppDto> GetPendingApps(int zoneId)
+    //    => Real.GetPendingApps(zoneId);
 
     /// <inheritdoc />
     [HttpPost]

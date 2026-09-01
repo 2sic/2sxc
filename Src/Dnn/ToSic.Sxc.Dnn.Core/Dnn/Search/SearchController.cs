@@ -19,8 +19,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys.Module;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.LookUp;
-using ToSic.Sxc.Engines;
-using ToSic.Sxc.Polymorphism.Sys;
+using ToSic.Sxc.Render.Polymorphism.Sys;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Sys.ExecutionContext;
 using static System.StringComparer;
@@ -43,15 +42,10 @@ internal class SearchController(
     Generator<ISite> siteGenerator,
     LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder,
     LazySvc<ILookUpEngineResolver> dnnLookUpEngineResolver,
-    EngineFactory engineFactory,
     LazySvc<ILogStore> logStore,
-    PolymorphConfigReader polymorphism)
+    IEditionService editionSvc)
     : ServiceBase("DNN.Search",
-        connect:
-        [
-            appsCache, codeCompiler, exCtxFactory, siteGenerator, engineFactory, dnnLookUpEngineResolver,
-            moduleAndBlockBuilder, logStore, polymorphism
-        ])
+        connect: [appsCache, codeCompiler, exCtxFactory, siteGenerator, dnnLookUpEngineResolver, moduleAndBlockBuilder, logStore, editionSvc])
 {
     /// <summary>
     /// Initialize all values which are needed - or return a text with the info why we must stop.
@@ -98,7 +92,7 @@ internal class SearchController(
 
         // Figure out the current edition - if none, stop here
         // New 2023-03-20 - if the view comes with a preset edition, it's an ajax-preview which should be respected
-        _edition = polymorphism.UseViewEditionOrGet(Block);
+        _edition = editionSvc.Edition(Block);
 
         // Convert DNN SearchDocuments from 2sxc SearchInfos
         SearchItems = BuildInitialSearchInfos(streamsToIndex, DnnModule);
@@ -279,10 +273,7 @@ internal class SearchController(
         var l = Log.Fn<KeyValuePair<string, IDataStream>[]>();
         // Check if we should filter the streams - new in 12.02
         var streamsToKeep = Block.View.SearchIndexingStreams
-            .Split(',')
-            .Select(s => s.Trim())
-            .Where(s => !string.IsNullOrEmpty(s))
-            .ToArray();
+            .CsvToArrayWithoutEmpty();
 
         // Decide what streams to keep - new in 12.02
         var streamsToIndex = Block.Data.Out

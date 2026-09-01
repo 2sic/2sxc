@@ -13,7 +13,14 @@ namespace ToSic.Sxc.Data.Sys.Factory;
 
 public interface ICodeDataFactory: ICanGetService, IHasLog
 {
+    /// <remarks>
+    /// never null
+    /// </remarks>>
     object MetadataDynamic(IMetadata mdOf);
+    
+    /// <remarks>
+    /// never null
+    /// </remarks>>
     ITypedMetadata MetadataTyped(IMetadata mdOf);
 
     /// <summary>
@@ -115,7 +122,14 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     T AsStack<T>(object[] parts)
         where T : class, IModelFromData, new();
 
+    /// <remarks>
+    /// Note: never null
+    /// </remarks>
     IDynamicStack AsDynStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources);
+
+    /// <remarks>
+    /// Note: never null
+    /// </remarks>
     ITypedStack AsTypedStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources);
     IField? Field(ITypedItem parent, bool supportOldMetadata, string? name, ModelSettings settings);
     IEntity AsEntity(object thingToConvert);

@@ -5,12 +5,12 @@ namespace ToSic.Sxc.Backend.Cms;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class HistoryControllerReal(GenWorkDb<WorkEntityVersioning> versioning)
+public class HistoryControllerReal(AppWorkQuick<WorkEntityVersioning> versioning)
     : ServiceBase("Api.CmsHistoryRl", connect: [versioning]), IHistoryController
 {
     public const string LogSuffix = "Hist";
 
-    public List<ItemHistory> Get(int appId, ItemIdentifier item)
+    public List<ToSic.Eav.Persistence.Versions.ItemHistory> Get(int appId, ItemIdentifier item)
         => versioning.New(appId: appId).VersionHistory(item.EntityId);
 
 

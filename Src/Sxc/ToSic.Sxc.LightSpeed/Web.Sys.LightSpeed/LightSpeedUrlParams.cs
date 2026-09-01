@@ -22,7 +22,7 @@ internal class LightSpeedUrlParams
 
         // Get the parameter names from the config - use piggyback if possible
         var namesCsv = usePiggyBack && (lsConfig as ICanBeEntity)?.Entity is IHasPiggyBack withCache
-            ? withCache.GetPiggyBack(nameof(LightSpeedUrlParams), () => ExtractConfigCsv(lsConfig))
+            ? withCache.PiggyBackGet(nameof(LightSpeedUrlParams), () => ExtractConfigCsv(lsConfig))
             : ExtractConfigCsv(lsConfig);
 
         var result = ParseParameters(lsConfig, namesCsv, pageParameters, log);

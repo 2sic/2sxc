@@ -3,6 +3,11 @@
 	This is ToSic - RazorBlade.net
 </p>
 <p class="Contributor">
+	v4.5.0 (2026) - Retargeted to DNN 10.1.0 and .NET Framework 4.8 (previously DNN 9.6.1 / .NET Framework 4.7.2). This raises the minimum DNN Platform version required to install/upgrade this module.
+	<br />
+	All shared dependencies are now compiled against the versions the DNN 10.x host ships, and none of them are deployed with this package - the host's copies in bin are reused: Microsoft.Extensions.DependencyInjection 8.0.0, System.Text.Json 8.0.5 and System.Text.Encodings.Web 8.0.0. Verified against clean installs of DNN 10.1.0 through 10.3.3.
+</p>
+<p class="Contributor">
 	By <a href="https://www.2sic.com/" target="_blank">2sic</a>
 	<br />
 	Read the <a href="https://razor-blade.net" target="_blank">API docs</a>

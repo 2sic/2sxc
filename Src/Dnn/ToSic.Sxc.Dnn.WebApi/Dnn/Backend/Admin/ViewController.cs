@@ -16,13 +16,14 @@ public class ViewController() : DnnSxcControllerBase(RealController.LogSuffix), 
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
-    /// <inheritdoc />
-    [HttpGet]
-    [SupportedModules(DnnSupportedModuleNames)]
-    [ValidateAntiForgeryToken]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public IEnumerable<ViewDetailsDto> All(int appId)
-        => Real.All(appId);
+    // Replaced by DataSource System.Views through query System.SysData.
+    ///// <inheritdoc />
+    //[HttpGet]
+    //[SupportedModules(DnnSupportedModuleNames)]
+    //[ValidateAntiForgeryToken]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //public IEnumerable<ViewDetailsDto> All(int appId)
+    //    => Real.All(appId);
 
     /// <inheritdoc />
     [HttpGet, HttpDelete]
@@ -53,19 +54,18 @@ public class ViewController() : DnnSxcControllerBase(RealController.LogSuffix), 
         return Real.Import(new(Request, HttpContext.Current.Request), zoneId, appId);
     }
 
-    /// <inheritdoc />
-    [HttpGet]
-    [SupportedModules(DnnSupportedModuleNames)]
-    [ValidateAntiForgeryToken]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public IEnumerable<ViewDto> Usage(int appId, Guid guid)
-        => Real.UsagePreparations((views, blocks) =>
-            {
-                // create array with all 2sxc modules in this portal
-                var allMods = new DnnPages(Log).AllModulesWithContent(PortalSettings.PortalId);
-                Log.A($"Found {allMods.Count} modules");
-
-                return views.Select(vwb => vwb.Init(blocks, allMods));
-            })
-            .Usage(appId, guid);
+    // Replaced by DataSource System.ViewUsage through query System.SysData.
+    ///// <inheritdoc />
+    //[HttpGet]
+    //[SupportedModules(DnnSupportedModuleNames)]
+    //[ValidateAntiForgeryToken]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //public IEnumerable<ViewDto> Usage(int appId, Guid guid)
+    //    => Real.UsagePreparations((views, blocks) =>
+    //        {
+    //            var allMods = new DnnPages(Log).AllModulesWithContent(PortalSettings.PortalId);
+    //            Log.A($"Found {allMods.Count} modules");
+    //            return views.Select(vwb => vwb.Init(blocks, allMods));
+    //        })
+    //        .Usage(appId, guid);
 }

@@ -11,7 +11,6 @@ using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.ExportImport.Sys;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
@@ -94,7 +93,7 @@ internal class OqtXmlExporter(
             Path = null
         };
 
-        var relativePath = Path.Combine(file?.Folder.Path.Backslash(), file?.Name);
+        var relativePath = Path.Combine(file?.Folder.Path, file?.Name);
         var alias = oqtTenantResolverLazy.Value.GetAlias();
         var path = fileHelper.Value.GetFilePath(hostingEnvironment.ContentRootPath, alias, relativePath);
 

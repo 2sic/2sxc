@@ -3,6 +3,11 @@
 	This is Connect.Koi - there are no special release notes.
 </p>
 <p class="Contributor">
-	By DNN Connect and 2sic<br />
+	v3.1.0 (2026) - Retargeted to DNN 10.1.0 and .NET Framework 4.8 (previously DNN 7.0.0 / .NET Framework 4.7.2). This raises the minimum DNN Platform version required to install/upgrade this module - sites still on DNN 9.x must stay on Koi 3.0.
+	<br />
+	All shared dependencies are now compiled against the versions the DNN 10.x host ships, and none of them are deployed with this package - the host's copies in bin are reused: System.Web.Helpers 3.0.0.0 (via Microsoft.AspNet.WebPages 3.3.0, previously a private 2.0.0.0 copy). Verified against clean installs of DNN 10.1.0 through 10.3.3.
+</p>
+<p class="Contributor">
+	By 2sic/2sxc<br />
 	Visit <a href="https://connect-koi.net/" target="_blank">https://connect-koi.net/</a> to discover more.
 </p>

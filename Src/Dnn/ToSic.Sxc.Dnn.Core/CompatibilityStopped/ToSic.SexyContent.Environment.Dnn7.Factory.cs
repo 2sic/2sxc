@@ -2,7 +2,7 @@
 using DotNetNuke.Entities.Portals;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Render.Sys.RenderBlock;
+using ToSic.Sxc.Render.Block.Sys;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 // ReSharper disable once CheckNamespace
@@ -16,20 +16,20 @@ namespace ToSic.SexyContent.Environment.Dnn7;
 public static class Factory
 {
     [Obsolete]
-    public static IBlockBuilder SxcInstanceForModule(int modId, int pageId)
+    public static IBlockRenderer SxcInstanceForModule(int modId, int pageId)
         => throw new NotSupportedException(Sxc.Dnn.Factory.GenerateMessage());
 
     [Obsolete]
-    public static IBlockBuilder SxcInstanceForModule(ModuleInfo moduleInfo)
+    public static IBlockRenderer SxcInstanceForModule(ModuleInfo moduleInfo)
         => throw new NotSupportedException(Sxc.Dnn.Factory.GenerateMessage());
 
     [Obsolete]
-    public static IBlockBuilder SxcInstanceForModule(IModule moduleInfo)
+    public static IBlockRenderer SxcInstanceForModule(IModule moduleInfo)
         => throw new NotSupportedException(Sxc.Dnn.Factory.GenerateMessage());
 
 
     [Obsolete]
-    public static IDynamicCode CodeHelpers(IBlockBuilder blockBuilder)
+    public static IDynamicCode CodeHelpers(IBlockRenderer blockRenderer)
         => throw new NotSupportedException(Sxc.Dnn.Factory.GenerateMessage());
 
     /// <summary>

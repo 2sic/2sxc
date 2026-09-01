@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps.Sys.Permissions;
-using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.Security.Files;
 using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.Adam.Sys.Manager;
@@ -15,7 +14,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.Dependencies
     #region DI / Constructor
 
     public record Dependencies(Generator<AppPermissionCheck> AppPermissionChecks)
-        : DependenciesRecord(connect: [AppPermissionChecks]);
+        : DependenciesBase(connect: [AppPermissionChecks]);
 
     public IAdamSecurityCheckService Init(AdamContext adamContext, bool usePortalRoot)
     {
@@ -114,7 +113,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.Dependencies
             return l.ReturnFalse("user not restricted / has grants");
 
         // check if the data is public
-        var itm = AdamContext.AppWorkCtx.AppReader.List.GetOne(guid);
+        var itm = AdamContext.AppReader.List.GetOne(guid);
         if (!(itm?.IsPublished ?? false))
             return l.ReturnFalse("not draft");
 
@@ -127,7 +126,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.Dependencies
     //public bool FileTypeIsOkForThisField(out HttpExceptionAbstraction preparedException)
     //{
     //    var l = Log.Fn<bool>();
-    //    var fieldDef = AdamContext.Attribute;
+    //    var fieldDef = AdamContext.Field;
     //    bool result;
     //    // check if this field exists and is actually a file-field or a string (wysiwyg) field
     //    if (fieldDef == null || !(fieldDef.Type != ValueTypes.Hyperlink ||
@@ -193,7 +192,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.Dependencies
     public bool FieldPermissionOk(List<Grants> requiredGrant)
     {
         var fieldPermissions = Services.AppPermissionChecks.New()
-            .For("Attribute", AdamContext.Permissions.MyOptions.SiteContext, AdamContext.Context.AppReaderRequired, AdamContext.Attribute?.Permissions);
+            .For("Field", AdamContext.Permissions.MyOptions.SiteContext, AdamContext.Context.AppReaderRequired, AdamContext.Attribute?.Permissions);
 
         return fieldPermissions.UserMay(requiredGrant).Allowed;
     }

@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Sys.ExecutionContext;
-
-namespace ToSic.Sxc.Services.Sys;
+﻿namespace ToSic.Sxc.Services.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public static class IHasKitExtensions

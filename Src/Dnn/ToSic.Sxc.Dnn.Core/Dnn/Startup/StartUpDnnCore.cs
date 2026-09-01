@@ -31,8 +31,8 @@ using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.StartUp;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Integration.Modules;
-using ToSic.Sxc.Render.Sys.JsContext;
-using ToSic.Sxc.Render.Sys.Output;
+using ToSic.Sxc.Render.JsContext.Sys;
+using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Sys.Integration.Installation;
@@ -66,7 +66,7 @@ internal static class StartUpDnnCore
 
         services.TryAddTransient<IZoneMapper, DnnZoneMapper>();
 
-        services.TryAddTransient<IBlockResourceExtractor, DnnBlockResourceExtractor>();
+        services.TryAddTransient<IAssetsExtractor, DnnAssetsExtractor>();
         services.TryAddTransient<IEnvironmentPermission, DnnEnvironmentPermission>();
 
         services.TryAddTransient<IDnnContext, DnnContext>();
@@ -100,7 +100,7 @@ internal static class StartUpDnnCore
         services.TryAddTransient<IPagePublishing, DnnPagePublishing>();
 
         // v13 option to not use page publishing... #SwitchServicePagePublishingResolver #2749
-        services.AddTransient<IPagePublishingGetSettings, DnnPagePublishingGetSettings>();
+        services.AddTransient<IWorkBlockPublishingLookup, DnnWorkPublishingLookup>();
 
         // new in v12 - .net specific code compiler
         services.TryAddTransient<CodeCompiler, CodeCompilerNetFull>();
@@ -126,10 +126,12 @@ internal static class StartUpDnnCore
         services.TryAddTransient<IModuleAndBlockBuilder, DnnModuleAndBlockBuilder>();
 
         // v13.12
-        services.AddTransient<IBootProcess, DnnBootFeaturesRegistration>();   // must be Add, not TryAdd
+        services.AddTransient<IBootProcess, BootRegisterDnnFeatures>();   // must be Add, not TryAdd
 
         // v14
+#pragma warning disable CS0618 // Type or member is obsolete
         services.TryAddTransient<IDynamicCodeService, DnnDynamicCodeService>();
+#pragma warning restore CS0618 // Type or member is obsolete
         services.TryAddTransient<DnnDynamicCodeService.MyScopedServices>();   // new v15
         services.TryAddTransient<IRenderService, DnnRenderService>();
 

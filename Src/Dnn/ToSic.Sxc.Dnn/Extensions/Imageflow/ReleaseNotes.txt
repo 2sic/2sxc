@@ -1,11 +1,9 @@
 <h2>Imageflow Extension for DNN</h2>
-<p><strong>Version:</strong> 01.12.01</p>
+<p><strong>Version:</strong> 01.13.00</p>
 
 <h3>Changelog</h3>
 <ul>
-  <li>Updated Imageflow dependencies to version <code>0.14.0-rc01</code>.</li>
-  <li>Requires DNN version <strong>9.11.00</strong> or higher.</li>
-  <li>Fully compatible with DNN version <strong>10.00.00</strong>.</li>
+  <li>Fix #6 Read the file into memory and return a MemoryStream to avoid file locks.</li>
 </ul>
 
 <h3>Notes</h3>

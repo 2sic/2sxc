@@ -155,8 +155,7 @@ internal partial class Metadata: ITypedItem
             : [];
     }
 
-    IPublishing ITypedItem.Publishing => _publishing.Get(() => new Publishing.Publishing(this, Cdf))!;
-    private readonly GetOnce<IPublishing> _publishing = new();
+    IPublishing ITypedItem.Publishing => field ??= new Publishing.Publishing(this, Cdf);
 
     /// <inheritdoc />
     [PrivateApi]

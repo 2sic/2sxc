@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Cms.Settings;
 
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 [ModelSpecs(ContentType = ContentTypeNameId)]
-public record GoogleMaps() : ModelFromEntityBasic
+public record GoogleMaps : ModelFromEntity
 {
     public const string ContentTypeNameId = "f5764f60-2621-4a5d-9391-100fbe664640";
 

@@ -5,10 +5,10 @@ namespace ToSic.Sxc.Blocks.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class WorkBlocksMod(
-    GenWorkDb<WorkFieldList> workFieldList,
-    GenWorkDb<WorkEntityCreate> workEntCreate,
-    GenWorkDb<WorkEntityUpdate> workEntUpdate)
-    : WorkUnitBase<IAppWorkCtxWithDb>("AWk.EntCre", connect: [workFieldList, workEntCreate, workEntUpdate])
+    AppWorkChain<WorkFieldList> workFieldList,
+    AppWorkChain<WorkEntityCreate> workEntCreate,
+    AppWorkChain<WorkEntityUpdate> workEntUpdate)
+    : ServiceWithSetup<IAppWorkContext>("AWk.EntCre", connect: [workFieldList, workEntCreate, workEntUpdate])
 {
     public Guid UpdateOrCreateContentGroup(BlockConfiguration blockConfiguration, int templateId)
     {
@@ -17,19 +17,22 @@ public class WorkBlocksMod(
         if (!blockConfiguration.Exists)
         {
             l.A($"doesn't exist, will create new CG with template#{templateId}");
-            var guid = workEntCreate.New(AppWorkCtx).Create(WorkBlocks.BlockTypeName, new()
-            {
-                { ViewParts.TemplateContentType, new List<int> { templateId } },
-                { ViewParts.Content, new List<int>() },
-                { ViewParts.Presentation, new List<int>() },
-                { ViewParts.FieldHeader, new List<int>() },
-                { ViewParts.FieldHeaderPresentation, new List<int>() }
-            }).EntityGuid; // new guid
+            var guid = workEntCreate
+                .New(MyOptions)
+                .Create(WorkBlocks.BlockTypeName, new()
+                {
+                    { ViewParts.TemplateContentType, new List<int> { templateId } },
+                    { ViewParts.Content, new List<int>() },
+                    { ViewParts.Presentation, new List<int>() },
+                    { ViewParts.FieldHeader, new List<int>() },
+                    { ViewParts.FieldHeaderPresentation, new List<int>() }
+                })
+                .EntityGuid; // new guid
             return l.ReturnAndLog(guid, "created");
         }
 
         l.A($"exists, create for group#{blockConfiguration.Guid} with template#{templateId}");
-        workEntUpdate.New(AppWorkCtx).UpdateParts(
+        workEntUpdate.New(MyOptions).UpdateParts(
             blockConfiguration.Id,
             new Dictionary<string, object> { { ViewParts.TemplateContentType, new List<int?> { templateId } } },
             new()
@@ -40,7 +43,7 @@ public class WorkBlocksMod(
 
     public void AddEmptyItem(BlockConfiguration block, int? index, bool forceDraft)
     {
-        workFieldList.New(AppWorkCtx.AppReader)
+        workFieldList.New(MyOptions)
             .FieldListUpdate(
                 (block as ICanBeEntity).Entity,
                 ViewParts.ContentPair,
@@ -75,12 +78,12 @@ public class WorkBlocksMod(
         var l = Log.Fn<int>($"{nameof(parentId)}:{parentId}, {nameof(field)}:{field}, {nameof(index)}, {index}, {nameof(typeName)}:{typeName}");
 
         // create the new entity 
-        var entityId = workEntCreate.New(AppWorkCtx.AppReader)
+        var entityId = workEntCreate.New(MyOptions)
             .GetOrCreate(newGuid, typeName, values);
 
         #region attach to the current list of items
 
-        var cbEnt = AppWorkCtx.AppReader.List.GetOne(parentId)
+        var cbEnt = MyOptions.AppReader.List.GetOne(parentId)
             ?? throw new NullReferenceException($"Tried to use the just-created entity with id '{parentId}' but can't find it.");
         var blockList = cbEnt.Children(field);
 
@@ -97,7 +100,7 @@ public class WorkBlocksMod(
             intList.Insert(index, entityId);
         }
         var updateDic = new Dictionary<string, object> { { field, intList } };
-        workEntUpdate.New(AppWorkCtx.AppReader).UpdateParts(cbEnt.EntityId, updateDic, new());
+        workEntUpdate.New(MyOptions).UpdateParts(cbEnt.EntityId, updateDic, new());
 
         #endregion
 

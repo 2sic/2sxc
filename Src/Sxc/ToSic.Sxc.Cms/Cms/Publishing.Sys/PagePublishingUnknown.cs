@@ -1,0 +1,26 @@
+﻿using ToSic.Eav.Context;
+
+namespace ToSic.Sxc.Cms.Publishing.Sys;
+
+internal class PagePublishingUnknown(WarnUseOfUnknown<PagePublishingUnknown> _) : ServiceBase($"{LogScopes.NotImplemented}.Publsh"), IPagePublishing
+{
+    public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
+    {
+        var l = Log.Fn();
+        var versioningActionInfo = new VersioningActionInfo();
+        action.Invoke(versioningActionInfo);
+        l.Done();
+    }
+
+    public int GetLatestVersion(int instanceId) => 0;
+
+    public int GetPublishedVersion(int instanceId) => 0;
+
+
+    public void Publish(int instanceId, int version)
+    {
+        Log.A($"Publish(m:{instanceId}, v:{version})");
+        Log.A("publish never happened ");
+    }
+
+}

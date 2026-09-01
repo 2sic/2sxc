@@ -11,7 +11,7 @@ internal class OqtWebApiShim(HttpResponse response, ControllerBase owner)
 {
     public HttpResponse Response { get; } = response;
 
-    public dynamic File(NoParamOrder npo = default,
+    public object File(NoParamOrder npo = default,
         // Important: the second parameter should _not_ be a string, otherwise the signature looks the same as the built-in File(...) method
         bool? download = null,
         string virtualPath = null, // important: this is the virtualPath, but it should not have the same name, to not confuse the compiler with same sounding param names

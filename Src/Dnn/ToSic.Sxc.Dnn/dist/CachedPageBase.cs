@@ -1,17 +1,24 @@
 ﻿using System.Web;
 using System.Web.Caching;
+using DotNetNuke.Abstractions.Application;
+using DotNetNuke.Abstractions.Portals;
+using DotNetNuke.Data;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Framework;
 using ToSic.Eav.ImportExport.Integration;
 using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Render.Sys.JsContext;
+using ToSic.Sxc.Render.JsContext.Sys;
 using ToSic.Sxc.Web.Sys.EditUi;
 using ToSic.Sys.Utils;
 using static System.StringComparison;
 
 namespace ToSic.Sxc.Dnn.dist;
 
-public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to preserve correct language cookie
+public class CachedPageBase(
+    IPortalController portalController,
+    IApplicationStatusInfo applicationStatusInfo,
+    IHostSettings hostSettings)
+    : CDefault(portalController, applicationStatusInfo, hostSettings) // HACK: inherits dnn default.aspx to preserve correct language cookie
 {
     private const int UnknownSiteId = -1;
     private const int UnknownPageId = -1;
@@ -23,7 +30,7 @@ public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to pre
     /// If we would get it multiple times, there are edge cases where it could be different each time! #2614
     /// </summary>
     private IServiceProvider ServiceProvider => _serviceProvider.Get(Log, DnnStaticDi.CreateModuleScopedServiceProvider);
-    private readonly GetOnce<IServiceProvider> _serviceProvider = new();
+    private readonly LazyGetAndLog<IServiceProvider> _serviceProvider = new();
     private TService GetService<TService>() => ServiceProvider.Build<TService>(Log);
 
     #endregion
@@ -32,7 +39,7 @@ public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to pre
 
     private ILog Log { get; } = new Log("Sxc.Dnn.CachedPageBase");
     private IEnvironmentLogger EnvLogger => _envLogger.Get(Log, GetService<IEnvironmentLogger>);
-    private readonly GetOnce<IEnvironmentLogger> _envLogger = new();
+    private readonly LazyGetAndLog<IEnvironmentLogger> _envLogger = new();
     #endregion
 
     protected string PageOutputCached(string virtualPath, EditUiResourceSettings settings)
@@ -90,7 +97,8 @@ public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to pre
     {
         var l = Log.Fn<string>($"{nameof(virtualPath)}: {virtualPath}");
         var path = Server.MapPath(virtualPath);
-        if (!File.Exists(path)) throw l.Ex(new Exception("File not found: " + path));
+        if (!File.Exists(path))
+            throw l.Ex(new Exception("File not found: " + path));
         return l.ReturnAsOk(path);
     }
 
@@ -155,17 +163,17 @@ public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to pre
             if (portalId == UnknownSiteId)
             {
                 l.A($"fallback, unknown portalId, trying to get it from {nameof(pageId)}");
-                portalId = PortalController.GetPortalDictionary()[pageId];
+                portalId = PortalController.GetPortalDictionary(GetService<IHostSettings>(), GetService<DataProvider>())[pageId];
                 l.A($"{nameof(portalId)}: {portalId}");
             }
 
             var primaryPortalAlias = GetPrimaryPortalAliasBasedOnRequestUrlAndCulture(portalId);
-            l.A($"primaryPortalAlias: {primaryPortalAlias?.HTTPAlias}");
+            l.A($"primaryPortalAlias: {primaryPortalAlias?.HttpAlias}");
 
             string siteRoot;
             if (primaryPortalAlias != null)
             {
-                siteRoot = CleanLeadingPartSiteRoot(primaryPortalAlias.HTTPAlias);
+                siteRoot = CleanLeadingPartSiteRoot(primaryPortalAlias.HttpAlias);
             }
             else
             {
@@ -190,16 +198,16 @@ public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to pre
         }
     }
 
-    private PortalAliasInfo GetPrimaryPortalAliasBasedOnRequestUrlAndCulture(int portalId)
+    private IPortalAliasInfo GetPrimaryPortalAliasBasedOnRequestUrlAndCulture(int portalId)
     {
-        var l = Log.Fn<PortalAliasInfo>($"{nameof(portalId)}: {portalId}");
+        var l = Log.Fn<IPortalAliasInfo>($"{nameof(portalId)}: {portalId}");
 
         //var cultureCode = LocaleController.Instance.GetCurrentLocale(portalId).Code;
         var cultureCode = Thread.CurrentThread.CurrentCulture.ToString();
         l.A($"cultureCode: {cultureCode}");
 
         // Get all aliases for the portal
-        var aliases = PortalAliasController.Instance
+        var aliases = GetService<IPortalAliasService>()
             .GetPortalAliasesByPortalId(portalId)
             .ToList();
         l.A($"aliases: {aliases.Count}");
@@ -210,27 +218,28 @@ public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to pre
         l.A($"figure out the correct alias based on the current URL:{currentUrl} and culture:{cultureCode}.");
 
         // try to filter aliases on the current url
-        var aliases2 = aliases.Where(a => currentUrl.IndexOf(a.HTTPAlias, OrdinalIgnoreCase) >= 0).ToList();
+        var aliases2 = aliases.Where(a => currentUrl.IndexOf(a.HttpAlias, OrdinalIgnoreCase) >= 0).ToList();
         if (!aliases2.Any())
         {
             l.A("list of aliases filtered by current url is empty, falling back to filter without current URL");
             aliases2 = aliases; // falling back to filter without current URL
         }
-        aliases2.ForEach(a => l.A($"alias: {a.HTTPAlias}, isPrimary: {a.IsPrimary}, culture: {a.CultureCode}"));
+        foreach (var alias in aliases2)
+            l.A($"alias: {alias.HttpAlias}, isPrimary: {alias.IsPrimary}, culture: {alias.CultureCode}");
 
         var primaryPortalAlias = aliases2
             .Where(a => string.Compare(a.CultureCode, cultureCode, OrdinalIgnoreCase) == 0 || string.IsNullOrEmpty(a.CultureCode))
             .OrderByDescending(a => a.IsPrimary)
             .ThenByDescending(a => a.CultureCode)
             .FirstOrDefault();
-        l.A($"primaryPortalAlias: {primaryPortalAlias?.HTTPAlias} based on culture:{cultureCode}");
+        l.A($"primaryPortalAlias: {primaryPortalAlias?.HttpAlias} based on culture:{cultureCode}");
 
         if (primaryPortalAlias == null)
         {
             l.A("primaryPortalAlias based on culture is null, falling back to the first primary alias");
             // fallback to the first primary first
             primaryPortalAlias = aliases.FirstOrDefault(a => a.IsPrimary);
-            l.A($"primaryPortalAlias: {primaryPortalAlias?.HTTPAlias}");
+            l.A($"primaryPortalAlias: {primaryPortalAlias?.HttpAlias}");
         }
 
         if (primaryPortalAlias == null)
@@ -238,7 +247,7 @@ public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to pre
             l.A("primaryPortalAlias is null, falling back to the first alias");
             // and only if this doesn't exist for random reasons, fallback to first alias
             primaryPortalAlias = aliases.FirstOrDefault();
-            l.A($"portalAlias: {primaryPortalAlias?.HTTPAlias}");
+            l.A($"portalAlias: {primaryPortalAlias?.HttpAlias}");
         }
 
         return l.ReturnAsOk(primaryPortalAlias);

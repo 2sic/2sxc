@@ -17,7 +17,6 @@ public abstract class CodeHelperV00Base(CompileCodeHelperSpecs helperSpecs, stri
     public CompileCodeHelperSpecs Specs { get; } = helperSpecs;
 
 
-    public IDevTools DevTools => _devTools.Get(() => new DevTools(Specs, Log))!;
-    private readonly GetOnce<IDevTools> _devTools = new();
+    public IDevTools DevTools => field ??= new DevTools(Specs, Log);
 
 }

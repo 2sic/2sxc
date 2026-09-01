@@ -1,5 +1,6 @@
 ﻿namespace ToSic.Sxc.Sys.ExecutionContext;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IExecutionContextFactory
 {
     /// <summary>

@@ -15,8 +15,7 @@ using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Server.Polymorphism;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.Services;
-using ToSic.Sxc.Render.Sys.Output;
-using ToSic.Sxc.Render.Sys.ResourceExtractor;
+using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
 using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
@@ -40,7 +39,7 @@ partial class OqtRegisterServices
             
         // Page publishing - ATM neutral objects which don't do much
         services.TryAddTransient<IPagePublishing, OqtPagePublishing>();
-        services.AddTransient<IPagePublishingGetSettings, OqtPagePublishingGetGetSettings>(); // #SwitchServicePagePublishingResolver #2749
+        services.AddTransient<IWorkBlockPublishingLookup, OqtWorkPublishingLookup>();
 
         services.TryAddTransient<OqtModuleHelper>();
 
@@ -56,7 +55,7 @@ partial class OqtRegisterServices
         services.TryAddTransient<ILinkService, OqtLinkService>();
 
         services.TryAddTransient<OqtPageOutput>();
-        services.TryAddTransient<IBlockResourceExtractor, BlockResourceExtractorWithInline>();
+        services.TryAddTransient<IAssetsExtractor, AssetsExtractorWithInline>();
         services.TryAddTransient<IValueConverter, OqtValueConverter>();
 
         // Views / Templates / Razor: View Builder

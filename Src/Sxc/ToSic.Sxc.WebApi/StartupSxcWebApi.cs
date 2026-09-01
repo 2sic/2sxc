@@ -21,8 +21,7 @@ using ToSic.Sxc.Backend.SaveHelpers;
 using ToSic.Sxc.Backend.Sys;
 using ToSic.Sxc.Backend.Usage;
 using ToSic.Sxc.Backend.Views;
-using ToSic.Sxc.Render.Sys.Output;
-using ToSic.Sxc.Render.Sys.ResourceExtractor;
+using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.WebApi.Sys;
 using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 
@@ -38,7 +37,7 @@ public static class StartupSxcWebApi
         services.TryAddTransient<ExternalLinksService>();
 
         // These are usually replaced by the target platform
-        services.TryAddTransient<IBlockResourceExtractor, BlockResourceExtractorUnknown>();
+        services.TryAddTransient<IAssetsExtractor, AssetsExtractorUnknown>();
             
         // Real Controllers
 
@@ -76,6 +75,7 @@ public static class StartupSxcWebApi
         services.TryAddTransient<AppContent>();
         services.TryAddTransient<SxcPagePublishing>();
         services.TryAddTransient<ExportApp>();
+        services.TryAddTransient<ExportAppInfo>();
         services.TryAddTransient<ImportApp>();
         services.TryAddTransient<ImportContent>();
         services.TryAddTransient<ExportContent>();
@@ -94,6 +94,7 @@ public static class StartupSxcWebApi
             
         // Helpers
         services.TryAddTransient<ImpExpHelpers>();
+        services.TryAddTransient<ExportHelper>();
 
         // Adam shared code across the APIs
         services.TryAddTransient<AdamCode>();
@@ -111,7 +112,6 @@ public static class StartupSxcWebApi
         services.TryAddTransient<AppDataControllerReal>();
         services.TryAddTransient<AppQueryControllerReal>();
         services.TryAddTransient<CacheControllerReal>();
-        services.TryAddTransient<ContentGroupControllerReal>();
         services.TryAddTransient<EditControllerReal>();
         services.TryAddTransient<HistoryControllerReal>();
         services.TryAddTransient<ListControllerReal>();
@@ -127,6 +127,13 @@ public static class StartupSxcWebApi
 
         // SaveData PreSave
         services.TryAddTransient<DataValidatorContentTypeDataStore>();
+
+        // Separate list Activities into isolated classes v22
+        services.TryAddTransient<ListActivityReplaceOptions>();
+        services.TryAddTransient<ListActivityReplace>();
+        services.TryAddTransient<ListActivityGetItems>();
+        services.TryAddTransient<ListActivitySave>();
+        services.TryAddTransient<ListActivityGetBlockHeader>();
 
         services.AddLoadSettingsProviders();
 

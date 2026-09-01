@@ -48,21 +48,21 @@ public class OqtApiInspector() : ServiceBase(OqtConstants.OqtLogPrefix), IApiIns
 
         return new()
         {
-            ignoreSecurity = member.GetCustomAttribute<AllowAnonymousAttribute>() != null,
-            allowAnonymous = oqtAuthList.Any(a => a.Roles == RoleNames.Everyone),
+            IgnoreSecurity = member.GetCustomAttribute<AllowAnonymousAttribute>() != null,
+            AllowAnonymous = oqtAuthList.Any(a => a.Roles == RoleNames.Everyone),
 
-            requireVerificationToken = GetRequireVerificationToken(member),
-            _validateAntiForgeryToken = member.GetCustomAttribute<ValidateAntiForgeryTokenAttribute>() != null,
-            _autoValidateAntiforgeryToken = member.GetCustomAttribute<AutoValidateAntiforgeryTokenAttribute>() != null,
-            _ignoreAntiforgeryToken = member.GetCustomAttribute<IgnoreAntiforgeryTokenAttribute>() != null,
+            RequireVerificationToken = GetRequireVerificationToken(member),
+            ValidateAntiForgeryToken = member.GetCustomAttribute<ValidateAntiForgeryTokenAttribute>() != null,
+            AutoValidateAntiforgeryToken = member.GetCustomAttribute<AutoValidateAntiforgeryTokenAttribute>() != null,
+            IgnoreAntiforgeryToken = member.GetCustomAttribute<IgnoreAntiforgeryTokenAttribute>() != null,
 
-            superUser = oqtAuthList.Any(a => a.Roles == RoleNames.Host),
-            admin = oqtAuthList.Any(a => a.Roles == RoleNames.Admin),
-            edit = oqtAuthList.Any(a => a.Policy == PolicyNames.EditModule),
-            view = oqtAuthList.Any(a => a.Policy == PolicyNames.ViewModule),
+            SuperUser = oqtAuthList.Any(a => a.Roles == RoleNames.Host),
+            Admin = oqtAuthList.Any(a => a.Roles == RoleNames.Admin),
+            Edit = oqtAuthList.Any(a => a.Policy == PolicyNames.EditModule),
+            View = oqtAuthList.Any(a => a.Policy == PolicyNames.ViewModule),
                 
             // Supported-modules attribute do not exist in Oqtane
-            requireContext = oqtAuthList.Any(),
+            RequireContext = oqtAuthList.Any(),
         };
     }
 

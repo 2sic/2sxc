@@ -26,7 +26,7 @@ public class AppContent(
     ISxcCurrentContextService ctxService,
     Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> typesPermissions,
     Generator<MultiPermissionsItems, MultiPermissionsItems.Options> itemsPermissions,
-    GenWorkDb<WorkFieldList> workFieldList,
+    AppWorkQuick<WorkFieldList> workFieldList,
     LazySvc<SimpleDataEditService> dataControllerLazy)
     : ServiceBase("Sxc.ApiApC",
         connect:
@@ -58,11 +58,13 @@ public class AppContent(
         var l = Log.Fn<IEnumerable<IDictionary<string, object>>>($"get entities type:{contentType}, path:{appPath}");
 
         // verify that read-access to these content-types is permitted
-        var permCheck = ThrowIfNotAllowedInType(contentType, GrantSets.ReadSomething, AppReader);
+        //var permCheck = ThrowIfNotAllowedInType(contentType, GrantSets.ReadSomething, AppReader);
 
-        var includeDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
-        var result = api
-            .GetEntities(AppReader, contentType, includeDrafts, fullRequest)
+        //var includeDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
+        
+        var preparedApi = api.InitOrThrowBasedOnGrants(Context, AppReader, contentType, GrantSets.ReadSomething);
+        var result = preparedApi
+            .GetEntities(AppReader, contentType, /*includeDrafts,*/ fullRequest)
             .ToListOpt();
         return l.Return(result, "found: " + result.Count);
     }
@@ -110,8 +112,10 @@ public class AppContent(
             ? null
             : AppReader.List.GetOrThrow(contentType, id.Value);
 
-        if (itm == null) ThrowIfNotAllowedInType(contentType, GrantSets.CreateSomething, AppReader);
-        else ThrowIfNotAllowedInItem(itm, GrantSets.WriteSomething, AppReader);
+        if (itm == null)
+            ThrowIfNotAllowedInType(contentType, GrantSets.CreateSomething, AppReader);
+        else
+            ThrowIfNotAllowedInItem(itm, GrantSets.WriteSomething, AppReader);
 
         // Convert to case-insensitive dictionary just to be safe!
         var rawValuesCaseInsensitive = newContentItem.ToInvariant();

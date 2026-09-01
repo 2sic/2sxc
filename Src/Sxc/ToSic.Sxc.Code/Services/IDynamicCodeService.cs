@@ -18,6 +18,7 @@ namespace ToSic.Sxc.Services;
 /// </remarks>
 [PublicApi]
 [Obsolete($"Superseded by ITypedApi")]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IDynamicCodeService
 {
     /// <summary>

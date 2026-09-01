@@ -15,14 +15,14 @@ namespace ToSic.Sxc.Backend.Admin;
 public class DataControllerReal(
     ISite site,
     IAppPathsMicroSvc appPathSvc,
-    AppWorkContextService appWorkCtxSvc,
+    IAppReaderFactory appReaders,
     LazySvc<IContextOfSite> context,
     LazySvc<ContentExportApi> contentExportLazy,
     Generator<ImportContent> importContent,
     LazySvc<IUser> userLazy,
-    GenWorkDb<WorkEntityRecycle> recycle)
+    AppWorkQuick<WorkEntityRecycle> recycle)
     : Services_ServiceBase("Api.DtaCtlRl",
-        connect: [site, appPathSvc, appWorkCtxSvc, context, contentExportLazy, importContent, userLazy, recycle])/*, IAdminDataController*/
+        connect: [site, appPathSvc, appReaders, context, contentExportLazy, importContent, userLazy, recycle])
 {
     public const string LogSuffix = "DataCtrl";
 
@@ -62,7 +62,7 @@ public class DataControllerReal(
         var fileNameSafe = FileNames.SanitizeFileName(fileName);
         if (fileName != fileNameSafe) l.A($"File name sanitized:'{fileName}' => '{fileNameSafe}'");
 
-        var appPaths = appPathSvc.Get(appWorkCtxSvc.Context(appId).AppReader, site);
+        var appPaths = appPathSvc.Get(appReaders.Get(appId), site);
         var filePath = Path.Combine(appPaths.PhysicalPath, FolderConstants.DataFolderProtected, AppDataFoldersConstants.BundlesFolder, fileNameSafe);
 
         if (!File.Exists(filePath))

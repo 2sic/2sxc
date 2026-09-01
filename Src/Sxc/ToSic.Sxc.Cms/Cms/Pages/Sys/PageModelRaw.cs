@@ -1,7 +1,6 @@
-﻿using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw;
-using ToSic.Eav.Data.Raw.Sys;
-using ToSic.Eav.Data.Sys.ContentTypes;
 
 namespace ToSic.Sxc.Cms.Pages.Sys;
 
@@ -14,16 +13,10 @@ namespace ToSic.Sxc.Cms.Pages.Sys;
 /// </summary>
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-[ContentTypeSpecs(
-    Guid = "c648a91d-b650-42bf-ad6a-9582015c165e",
-    Description = "Page in the site",
-    Name = TypeName
-)]
-public record PageModelRaw: IRawEntity, IPageModel, IHasRelationshipKeys
+[ContentTypeUse(Type = typeof(IPageModel))]
+public record PageModelRaw: IRawEntity, IPageModel, IRelationshipKeys
 {
     #region IRawEntity
-
-    private const string TypeName = "Page";
 
     internal static DataFactoryOptions Option = new()
     {
@@ -31,39 +24,38 @@ public record PageModelRaw: IRawEntity, IPageModel, IHasRelationshipKeys
         Type = typeof(PageModelRaw)
     };
 
-    IDictionary<string, object?> IRawEntity.Attributes(RawConvertOptions options)
-        => new Dictionary<string, object?>
-        {
-            // v14+
-            { nameof(Title), Title },
-            { nameof(Name), Name },
-            { nameof(ParentId), ParentId },
-            { nameof(IsNavigation), IsNavigation },
-            { nameof(Path), Path },
-            { nameof(Url), Url },
-            // New in v15.01
-            { nameof(IsClickable), IsClickable },
-            { nameof(Order), Order },
-            { nameof(IsDeleted), IsDeleted },
-            { nameof(Level), Level },
-            { nameof(HasChildren), HasChildren },
-            // New in v15.02
-            { nameof(LinkTarget), LinkTarget },
+    IDictionary<string, object?> IRawEntity.Values => field ??= new Dictionary<string, object?>
+    {
+        // v14+
+        { nameof(Title), Title },
+        { nameof(Name), Name },
+        { nameof(ParentId), ParentId },
+        { nameof(IsNavigation), IsNavigation },
+        { nameof(Path), Path },
+        { nameof(Url), Url },
+        // New in v15.01
+        { nameof(IsClickable), IsClickable },
+        { nameof(Order), Order },
+        { nameof(IsDeleted), IsDeleted },
+        { nameof(Level), Level },
+        { nameof(HasChildren), HasChildren },
+        // New in v15.02
+        { nameof(LinkTarget), LinkTarget },
 
-            { "Children", ChildrenRaw }
-        };
+        { "Children", ChildrenRaw }
+    };
 
     private const string ParentPrefix = "ParentId:";
 
-    private RawRelationship ChildrenRaw => new(key: $"{ParentPrefix}{Id}");
+    private RawRelationship ChildrenRaw => new() { Keys = [$"{ParentPrefix}{Id}"] };
 
 
-    IEnumerable<object> IHasRelationshipKeys.RelationshipKeys(RawConvertOptions options)
-        => new List<object>
-        {
-            // For relationships looking for files in this folder
-            $"{ParentPrefix}{ParentId}"
-        };
+    IEnumerable<object> IRelationshipKeys.RelationshipKeys => field ??= new List<object>
+    {
+        // For relationships looking for files in this folder
+        $"{ParentPrefix}{ParentId}"
+    };
+
     #endregion
 
 
@@ -118,7 +110,6 @@ public record PageModelRaw: IRawEntity, IPageModel, IHasRelationshipKeys
     public bool IsDeleted { get; init; }
 
     // Not implemented, and not sure if we should, since it would potentially introduce a lot of prefetch data
-    //[ContentTypeAttributeSpecs(Type = ValueTypes.Entity, Description = "Reference to the child pages.")]
-    //public IEnumerable<IPageModel> Children { get; init; }
-    
+    IEnumerable<IPageModel> IPageModel.Children => throw new NotImplementedException();
+
 }

@@ -35,9 +35,9 @@ internal class OqtUsersProvider(
             : oqtSecurity.Value.CmsUserBuilder(user);
     }
 
-    public IEnumerable<UserModel> GetUsers(UsersGetSpecs specs)
+    public IEnumerable<UserModelRaw> GetUsers(UsersGetSpecs specs)
     {
-        var l = Log.Fn<List<UserModel>>();
+        var l = Log.Fn<List<UserModelRaw>>();
         _specs = specs;
 
         l.A($"Portal Id {SiteId}");
@@ -98,8 +98,7 @@ internal class OqtUsersProvider(
 
     private int SiteId => siteState.Alias.SiteId;
 
-    private IEnumerable<UserRole> OqtAllUserRoles => _oqtAllUserRoles.Get(() => userRolesRepository.Value.GetUserRoles(SiteId));
-    private readonly GetOnce<IEnumerable<UserRole>> _oqtAllUserRoles = new();
+    private IEnumerable<UserRole> OqtAllUserRoles => field ??= userRolesRepository.Value.GetUserRoles(SiteId);
 
     private bool ExcludeUser(UserRole userRole)
     {

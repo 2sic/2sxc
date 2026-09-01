@@ -7,22 +7,24 @@ partial record ToolbarBuilder
     private string? PrepareUi(object? ui, object? uiMerge = default, string? uiMergePrefix = default, IEnumerable<object?>? tweaks = default) 
         => Utils.PrepareUi(ui, uiMerge, uiMergePrefix, Configuration?.Group, tweaks: tweaks);
 
-    private ITweakButton? RunTweaksOrErrorIfCombined(
+    private static ITweakButton? RunTweaksOrErrorIfCombined(
         NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
-        ITweakButton? initial = default,
+        ITweakButton? tweakMixin = default,
         object? ui = default,
         object? parameters = default,
         object? prefill = default,
         object? filter = default,
         [CallerMemberName] string? methodName = null)
     {
-        var tweaks = tweak?.Invoke(initial ?? new TweakButton.TweakButton());
+        // Run tweaks, if we have a mixin use that as the foundation
+        // if we only have the mixin, use that
+        var tweaks = tweak?.Invoke(tweakMixin ?? new TweakButton.TweakButton()) ?? tweakMixin;
         ErrorIfTweakCombined(tweaks, ui, parameters, prefill, filter, methodName);
         return tweaks;
     }
 
-    private void ErrorIfTweakCombined(ITweakButton? tweak, object? ui, object? parameters, object? prefill, object? filter, string? methodName)
+    private static void ErrorIfTweakCombined(ITweakButton? tweak, object? ui, object? parameters, object? prefill, object? filter, string? methodName)
     {
         // No tweak, nothing to check
         if (tweak == null)

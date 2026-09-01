@@ -10,5 +10,4 @@ partial class AppFilesControllerReal
         )
         .PhysicalPathSwitch(global);
     private IAppPaths? _appPaths;
-
 }

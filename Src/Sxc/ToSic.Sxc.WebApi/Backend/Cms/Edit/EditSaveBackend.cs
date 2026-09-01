@@ -2,8 +2,10 @@
 using ToSic.Eav.Data.Processing;
 using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.Serialization.Sys;
+using ToSic.Eav.Services;
 using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Backend.SaveHelpers;
+using ToSic.Sys.HookUp;
 using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Utils;
 
@@ -11,15 +13,17 @@ namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class EditSaveBackend(
-    SxcPagePublishing pagePublishing,
-    GenWorkPlus<WorkEntities> workEntities,
+    AppWorkContextService appCtxSvc,
+    AppWorkChain<SxcPagePublishing> pagePublishing,
+    AppWorkChain<WorkEntities> workEntities,
     ISxcCurrentContextService ctxService,
     JsonSerializer jsonSerializer,
     SaveSecurity saveSecurity,
     SaveEntities saveBackendHelper,
+    IDataSourcesService dataSourcesService,
     LazySvc<DataValidatorContentTypeDataStore> valContentTypeDataStore,
     DataAssembler dataAssembler)
-    : ServiceBase("Cms.SaveBk", connect: [pagePublishing, workEntities, ctxService, jsonSerializer, saveSecurity, saveBackendHelper, dataAssembler, valContentTypeDataStore])
+    : ServiceBase("Cms.SaveBk", connect: [appCtxSvc, pagePublishing, workEntities, ctxService, jsonSerializer, saveSecurity, saveBackendHelper, dataSourcesService, dataAssembler, valContentTypeDataStore])
 {
     public async Task<Dictionary<Guid, int>> Save(int appId, EditSaveDto package, bool partOfPage)
     {
@@ -45,10 +49,11 @@ public class EditSaveBackend(
         //}
 
         // new API WIP
-        var appEntities = workEntities.New(appId);
-        var appCtx = appEntities.AppWorkCtx;
+        var appCtxNew = appCtxSvc.ContextNew(appId);
+        var appEntities = workEntities.New(appCtxNew);
+        //var appCtx = appEntities.AppWorkCtx;
 
-        var ser = jsonSerializer.SetApp(appCtx.AppReader);
+        var ser = jsonSerializer.SetApp(appCtxNew.AppReader);
         // Since we're importing directly into this app, we would prefer local content-types
         ser.PreferLocalAppTypes = true;
 
@@ -78,9 +83,9 @@ public class EditSaveBackend(
         var saveValidator = new SaveDataValidator(Log);
         var updateValidator = new SaveDataUpdateValidator(Log);
         var items = await Task.WhenAll(itemsToProcess
-            .Select(async (i, index) => // index is helpful in case of errors
+            .Select(async (bundle, index) => // index is helpful in case of errors
             {
-                var ent = ser.Deserialize(i.Entity, false, false);
+                var ent = ser.Deserialize(bundle.Entity, false, false);
 
                 // Check basic entity integrity
                 var isOkException = saveValidator.EntityNotNullAndAttributeCountOk(index, ent);
@@ -110,23 +115,20 @@ public class EditSaveBackend(
                 );
 
                 // new in 11.01
-                if (i.Header.Parent != null)
+                var header = bundle.Header;
+                if (header.Parent != null)
                 {
                     // Check if Add was true, and fix if it had already been saved (EntityId != 0)
                     // the entityId is reset by the validator if it turns out to be an update
                     // todo: verify use - maybe it's to set before we save, as maybe afterward it's always != 0?
-                    var add = i.Header.AddSafe;
-                    i.Header.Add = add;
-                    if (ent.EntityId > 0 && add)
-                        i.Header.Add = false;
+                    var add = header.AddSafe && ent.EntityId <= 0;
+                    header = header with { Add = add };
+                    //if (ent.EntityId > 0 && add)
+                    //    header.Add = false;
                 }
 
                 return (
-                    Bundle: new BundleWithHeader<IEntity>
-                    {
-                        Header = i.Header,
-                        Entity = ent
-                    },
+                    Bundle: new BundleWithHeader<IEntity> { Header = header, Entity = ent },
                     Processor: processor
                 );
             })
@@ -141,15 +143,30 @@ public class EditSaveBackend(
             .Select(i => i.Bundle)
             .ToList();
 
-        var result = pagePublishing.SaveInPagePublishing(
-            context,
-            ctxService.BlockOrNull(),
-            appId,
-            itemsWithoutProcessor,
-            partOfPage,
-            forceSaveAsDraft => DoSave(appEntities, itemsWithoutProcessor, package.DraftShouldBranch || forceSaveAsDraft),
-            permCheck
-        );
+        var isUniqueValidator = new IsUniqueValidator(
+                new UniqueValueLookup(dataSourcesService, Log),
+                appEntities.MyOptions.Data,
+                Log
+            );
+
+        var isUniqueValidationException = isUniqueValidator
+            .UniqueValuesOnly(itemsWithoutProcessor
+                .Select(i => i.Entity)
+                .ToList()
+            );
+        if (isUniqueValidationException != null)
+            throw isUniqueValidationException;
+
+        var result = pagePublishing.New(appCtxNew)
+            .SaveInPagePublishing(
+                context,
+                ctxService.BlockOrNull(),
+                appId,
+                itemsWithoutProcessor,
+                partOfPage,
+                forceSaveAsDraft => DoSave(appEntities, itemsWithoutProcessor, package.DraftShouldBranch || forceSaveAsDraft),
+                permCheck
+            );
 
         var itemsWithProcessor = items
             .Where(i => i.Processor != null)
@@ -163,7 +180,7 @@ public class EditSaveBackend(
         {
             try
             {
-                var post = await item.Processor!.Process(DataProcessingEvents.PostSave, new() { Data = item.Bundle.Entity });
+                var post = await item.Processor!.Handle(new(), new(new(DataProcessingEvents.PostSave, item.Bundle.Entity)));
             }
             catch (Exception ex)
             {
@@ -184,7 +201,7 @@ public class EditSaveBackend(
             .Where(e => !e.Header.IsContentBlockMode || !e.Header.IsEmpty)
             .ToList();
 
-        saveBackendHelper.UpdateGuidAndPublishedAndSaveMany(workAppEntities.AppWorkCtx, entitiesToSave, forceSaveAsDraft);
+        saveBackendHelper.UpdateGuidAndPublishedAndSaveMany(workAppEntities.MyOptions, entitiesToSave, forceSaveAsDraft);
         return saveBackendHelper.GenerateIdList(workAppEntities, items);
     }
 }

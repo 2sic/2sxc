@@ -34,11 +34,13 @@ public static class StartupSxcApps
         // Runtimes - new: better architecture v16.07+
         //services.TryAddTransient<WorkBlocks>();
         //services.TryAddTransient<WorkBlocksMod>();
-        services.TryAddTransient<WorkViewsMod>();
+        services.TryAddTransient<WorkViewDelete>();
         services.TryAddTransient<WorkViews>();
         services.TryAddTransient<WorkApps>();
         services.TryAddTransient<WorkAppsRemove>();
 
+        services.TryAddTransient<WorkViewsContentTypes>(); // new v22
+        
         // Simple DataController - registration was missing
         services.TryAddTransient<SimpleDataEditService>();
 

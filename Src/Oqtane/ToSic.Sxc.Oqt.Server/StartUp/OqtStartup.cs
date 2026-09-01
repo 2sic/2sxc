@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Oqtane.Infrastructure;
 using ToSic.Eav;
 using ToSic.Eav.Run.Startup;
@@ -46,6 +45,8 @@ public class OqtStartup : IServerStartup
                 var dllPath = Path.GetDirectoryName(dllLocation);
                 foreach (var dllFile in Directory.GetFiles(dllPath, "*.dll"))
                     options.AdditionalReferencePaths.Add(dllFile);
+
+                CaseInsensitiveSxcFileProvider.Wrap(options.FileProviders);
             });
 
         // TODO: STV - MAKE SURE OUR CONTROLLERS RULES ONLY APPLY TO OURS, NOT TO override rules on normal Oqtane controllers
@@ -95,7 +96,7 @@ public class OqtStartup : IServerStartup
 
         var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
         globalConfig.ConnectionString(Configuration.GetConnectionString("DefaultConnection"));
-        globalConfig.GlobalFolder(Path.Combine(env.ContentRootPath, "wwwroot\\Modules", OqtConstants.PackageName));
+        globalConfig.GlobalFolder(Path.Combine(env.ContentRootPath, "wwwroot", "Modules", OqtConstants.PackageName));
         globalConfig.AppDataTemplateFolder(Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", FolderConstants.DataFolderProtected, FolderConstants.NewAppFolder));
         globalConfig.DataFolder(Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", FolderConstants.DataFolderProtected, FolderConstants.DataSubFolderSystem));
         globalConfig.TemporaryFolder(Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", FolderConstants.TemporaryFolder));

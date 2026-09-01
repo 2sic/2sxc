@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.AppJson;
-using ToSic.Eav.Data.Raw.Sys;
+using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource.VisualQuery;
 
 namespace ToSic.Sxc.DataSources;
@@ -15,14 +15,14 @@ namespace ToSic.Sxc.DataSources;
     UiHint = "App Editions")]
 public class AppEditions : CustomDataSource
 {
-    public AppEditions(Dependencies services, LazySvc<IAppJsonConfigurationService> appJsonService)
+    public AppEditions(Dependencies services, IAppJsonConfigurationService appJsonService)
         : base(services, logName: "App.EditDS", connect: [appJsonService])
     {
         ProvideOutRaw(
-            () => GetList(appJsonService.Value),
+            () => GetList(appJsonService),
             options: () => new()
             {
-                AutoId = false,
+                AutoId = true,
                 TitleField = "Name",
                 TypeName = "Edition",
             });
@@ -38,23 +38,29 @@ public class AppEditions : CustomDataSource
         {
             l.A($"has editions in app.json: {appJson.Editions.Count}");
             var list = appJson.Editions
-                .Select(s => new RawEntity(new()
+                .Select(s => new RawEntity
                 {
-                    { "Name", s.Key },
-                    { "Description", s.Value.Description },
-                    { "IsDefault", s.Value.IsDefault },
-                }))
+                    Values = new Dictionary<string, object?>
+                    {
+                        { "Name", s.Key },
+                        { "Description", s.Value.Description },
+                        { "IsDefault", s.Value.IsDefault },
+                    }
+                })
                 .ToList();
             return l.Return(list, $"{list.Count}");
         }
 
         // default data
-        var rootEdition = new RawEntity(new()
+        var rootEdition = new RawEntity
         {
-            { "Name", "" },
-            { "Description", "Root edition" },
-            { "IsDefault", true },
-        });
+            Values = new Dictionary<string, object?>
+            {
+                { "Name", "" },
+                { "Description", "Root edition" },
+                { "IsDefault", true },
+            }
+        };
         return l.Return([rootEdition], $"editions are not specified, so using default edition data");
     }
 }

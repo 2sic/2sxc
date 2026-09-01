@@ -2,7 +2,6 @@
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Data.Sys.Decorators;
-using ToSic.Sxc.Edit.Sys;
 
 namespace ToSic.Sxc.Data.Sys.Convert;
 
@@ -32,58 +31,63 @@ public class ConvertToEavLightWithCmsInfo(ConvertToEavLight.Dependencies service
 
         AddPresentation(entity, dictionary!);
 
+        // #CleanUp2sxcEditInformation
         // The edit info is an old feature. To phase it out, disable it whenever a $select filter is active.
-        if (PresetFilters.FilterFieldsEnabled != true)
-            AddEditInfo(entity, dictionary!);
+        //if (PresetFilters.FilterFieldsEnabled != true)
+        //    AddEditInfo(entity, dictionary!);
 
         return dictionary;
     }
 
     #region to enhance serializable IEntities with 2sxc specific infos
 
-    private void AddPresentation(IEntity entity, IDictionary<string, object> dictionary)
+    private void AddPresentation(IEntity entity, EavLightEntity dictionary)
     {
         var decorator = entity.GetDecorator<EntityInBlockDecorator>();
 
         // Add full presentation object if it has one...because there we need more than just id/title
-        if (decorator?.Presentation == null || dictionary.ContainsKey(ViewParts.Presentation)) return;
+        if (decorator?.Presentation == null || dictionary.ContainsKey(ViewParts.Presentation))
+            return;
 
         // if (entityInGroup.Presentation != null)
         dictionary.Add(ViewParts.Presentation, GetDictionaryFromEntity(decorator.Presentation));
     }
 
-    /// <summary>
-    /// Add additional information in case we're in edit mode
-    /// </summary>
-    /// <param name="entity"></param>
-    /// <param name="dictionary"></param>
-    private void AddEditInfo(IEntity entity, IDictionary<string, object> dictionary)
-    {
-        if (!WithEdit) return;
+    // #CleanUp2sxcEditInformation 2026-08-26 2dm - this is old, and I believe not used anymore, commented out
 
-        // 2024-02-29 2dm - this is old, and I believe not used any more, commented out
-        // At least in the Edit-UI it shouldn't be used, 
-        // But the key was still found in the inpage, so we're not sure if we can get rid of it
+    ///// <summary>
+    ///// Add additional information in case we're in edit mode
+    ///// </summary>
+    ///// <param name="entity"></param>
+    ///// <param name="dictionary"></param>
+    //private void AddEditInfo(IEntity entity, IDictionary<string, object> dictionary)
+    //{
+    //    if (!WithEdit)
+    //        return;
 
-        var title = entity.GetBestTitle(Languages);
-        if (string.IsNullOrEmpty(title))
-            title = "(no title)";
+    //    // 2024-02-29 2dm - this is old, and I believe not used any more, commented out
+    //    // At least in the Edit-UI it shouldn't be used, 
+    //    // But the key was still found in the inpage, so we're not sure if we can get rid of it
 
-        var editDecorator = entity.GetDecorator<EntityInBlockDecorator>();
+    //    var title = entity.GetBestTitle(Languages);
+    //    if (string.IsNullOrEmpty(title))
+    //        title = "(no title)";
 
-        dictionary.Add(SxcEditSharedConstants.JsonEntityEditNodeName, editDecorator != null // entity is IHasEditingData entWithEditing
-            ? new
-            {
-                sortOrder = editDecorator.SortOrder,
-                isPublished = entity.IsPublished,
-            }
-            : new
-            {
-                entityId = entity.EntityId,
-                title,
-                isPublished = entity.IsPublished,
-            });
-    }
+    //    var editDecorator = entity.GetDecorator<EntityInBlockDecorator>();
+
+    //    dictionary.Add(SxcEditSharedConstants.JsonEntityEditNodeName, editDecorator != null // entity is IHasEditingData entWithEditing
+    //        ? new
+    //        {
+    //            sortOrder = editDecorator.SortOrder,
+    //            isPublished = entity.IsPublished,
+    //        }
+    //        : new
+    //        {
+    //            entityId = entity.EntityId,
+    //            title,
+    //            isPublished = entity.IsPublished,
+    //        });
+    //}
 
     #endregion
 }

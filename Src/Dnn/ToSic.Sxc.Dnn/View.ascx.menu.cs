@@ -47,13 +47,13 @@ partial class View
         {
             // Edit item
             if (viewToUse?.UseForList == true)
-                actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"), "", "", "edit.gif",
+                actions.Add(GetNextActionID(), LocalizeText("ActionEdit.Text"), "", "", "edit.gif",
                     JsAction("edit", "{ useModuleList: true, index: 0 }"),
                     "test", true,
                     SecurityAccessLevel.Edit, true, false);
 
             // Change layout button
-            actions.Add(GetNextActionID(), LocalizeString("ActionChangeLayoutOrContent.Text"), "", "", "action_settings.gif",
+            actions.Add(GetNextActionID(), LocalizeText("ActionChangeLayoutOrContent.Text"), "", "", "action_settings.gif",
                 JsAction("layout"),
                 false,
                 SecurityAccessLevel.Edit, true, false);
@@ -63,7 +63,7 @@ partial class View
 
         // Edit Template Button
         if (user.IsSiteDeveloper && appIsKnown && viewToUse != null)
-            actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent,
+            actions.Add(GetNextActionID(), LocalizeText("ActionEditTemplateFile.Text"), ModuleActionType.EditContent,
                 "templatehelp", "edit.gif",
                 JsAction("template-develop"),
                 "test",

@@ -2,7 +2,7 @@
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
-using ToSic.Sxc.Dnn.Razor;
+using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.Help;
 
@@ -22,11 +22,11 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
 {
     internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
 
-    /// <inheritdoc cref="DnnRazorHelper.RenderPageNotSupported"/>
+    /// <inheritdoc cref="DnnRazorDisabledHelper.RenderPageNotSupported"/>
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public override HelperResult RenderPage(string path, params object[] data)
-        => RzrHlp.RenderPageNotSupported();
+        => DnnRazorDisabledHelper.RenderPageNotSupported();
 
 
     [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
@@ -107,16 +107,19 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
 
     #region CreateInstance
 
-    [PrivateApi] string IGetCodePath.CreateInstancePath { get; set; }
+    private DnnRazorGetCodeHelper RzrGetCodeHlp => field ??= new(this, ExCtx);
+    
+    [PrivateApi]
+    string IGetCodePath.CreateInstancePath { get; set; }
 
     /// <inheritdoc />
     public virtual dynamic CreateInstance(string virtualPath, NoParamOrder npo = default, string name = null, string relativePath = null, bool throwOnError = true)
-        => RzrHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
+        => RzrGetCodeHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
 
     /// <inheritdoc cref="ITypedCode16.GetCode"/>
     [PrivateApi("added in 16.05, but not sure if it should be public")]
     public dynamic GetCode(string path, NoParamOrder npo = default, string className = default)
-        => RzrHlp.GetCode(path: path, className: className);
+        => RzrGetCodeHlp.GetCode(path: path, className: className);
 
     #endregion
 

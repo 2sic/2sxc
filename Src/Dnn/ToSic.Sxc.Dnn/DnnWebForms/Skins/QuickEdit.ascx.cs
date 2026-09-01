@@ -14,8 +14,7 @@ public partial class QuickEdit : System.Web.UI.UserControl
             return;
 
         this.GetScopedService<DnnClientResources>()
-            // #RemovedV20 #OldDnnAutoJQuery
-            .Init(Page, /*false,*/ null)
+            .Init(Page, null)
             .RegisterClientDependencies(Page, true, true, true);
     }
 

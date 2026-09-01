@@ -1,4 +1,6 @@
 ﻿namespace ToSic.Sxc.Code.Sys.CodeErrorHelp;
+
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class RazorExceptions
 {
 

@@ -1,82 +1,17 @@
-﻿using ToSic.Eav.Data.Build;
-using ToSic.Eav.Data.Raw;
-using ToSic.Eav.Data.Raw.Sys;
-using ToSic.Eav.Data.Sys.ContentTypes;
+﻿namespace ToSic.Sxc.Cms.Sites.Sys;
 
-namespace ToSic.Sxc.Cms.Sites.Sys;
-
-/// <summary>
-/// Internal class to hold all the information about the site,
-/// until it's converted to an IEntity in the <see cref="Sites"/> DataSource.
-/// 
-/// TODO:
-/// </summary>
-[PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
-[ShowApiWhenReleased(ShowApiMode.Never)]
-[ContentTypeSpecs(
-    Guid = "89ef9f2c-98d3-42e9-a190-b9b3fc814284",
-    Description = "Site information",
-    Name = TypeName
-)]
-public record SiteModel: IRawEntity, ISiteModel
+[PrivateApi]
+public record SiteModel: ModelFromEntity, ISiteModel
 {
-    #region IRawEntity
-
-    internal const string TypeName = "Site";
-
-    internal static DataFactoryOptions Options => new()
-    {
-        AutoId = false,
-        TitleField = nameof(Name),
-        Type = typeof(SiteModel)
-    };
-
-    IDictionary<string, object?> IRawEntity.Attributes(RawConvertOptions options)
-        => new Dictionary<string, object?>
-        {
-            { nameof(Name), Name },
-            { nameof(Url), Url },
-            { nameof(Languages), Languages },
-            { nameof(DefaultLanguage), DefaultLanguage },
-            { nameof(ZoneId), ZoneId },
-            { nameof(ContentAppId), ContentAppId },
-            { nameof(PrimaryAppId), PrimaryAppId },
-        };
-
-    #endregion
-
-    /// <inheritdoc cref="ISiteModel.Id" />
-    public int Id { get; init; }
-
-    /// <inheritdoc cref="ISiteModel.Guid" />
-    public Guid Guid { get; init; }
-
-    /// <inheritdoc />
-    public string? Name { get; init; }
-
-    /// <inheritdoc />
-    public string? Url { get; init; }
-
-    /// <inheritdoc />
-    public string? Languages { get; init; }
-
-    /// <inheritdoc />
-    public string? DefaultLanguage { get; init; }
-
-    /// <inheritdoc cref="ISiteModel.Created" />
-    public DateTime Created { get; init; }
-
-    /// <inheritdoc cref="ISiteModel.Modified" />
-    public DateTime Modified { get; init; }
-
-
-    /// <inheritdoc />
-    public int ZoneId { get; init; }
-
-    /// <inheritdoc />
-    public int ContentAppId { get; init; }
-
-    /// <inheritdoc />
-    public int PrimaryAppId { get; init; }
-
+    public int Id => Entity.EntityId;
+    public Guid Guid => Entity.EntityGuid;
+    public DateTime Created => Entity.Created;
+    public DateTime Modified => Entity.Modified;
+    public string? Name => GetThis<string>(null);
+    public string? Url => GetThis<string>(null);
+    public string? Languages => GetThis<string>(null);
+    public string? DefaultLanguage => GetThis<string>(null);
+    public int ZoneId => GetThis(0);
+    public int ContentAppId => GetThis(0);
+    public int PrimaryAppId => GetThis(0);
 }

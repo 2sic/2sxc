@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.WebApi.Sys.App;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using static ToSic.Eav.WebApi.Sys.EavWebApiConstants;
 using RealController = ToSic.Sxc.Backend.App.AppDataControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.App;

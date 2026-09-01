@@ -1,7 +1,8 @@
 using System.Text;
 using System.Text.Json;
+using ToSic.Eav.Apps.Sys.Extensions;
 using ToSic.Eav.Apps.Sys.FileSystemState;
-using ToSic.Eav.Sys;
+using static Tests.ToSic.ToSxc.WebApi.Extensions.FolderConstantsTac;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
@@ -33,10 +34,10 @@ public class ExtensionManifestServiceTests : IDisposable
     {
         // Arrange
         var manifestDir = Path.Combine(_tempDir, "test-extension");
-        var dataDir = Path.Combine(manifestDir, FolderConstants.DataFolderProtected);
+        var dataDir = Path.Combine(manifestDir, DataFolderProtected);
         Directory.CreateDirectory(dataDir);
 
-        var manifestPath = Path.Combine(dataDir, FolderConstants.AppExtensionJsonFile);
+        var manifestPath = Path.Combine(dataDir, AppExtensionJsonFile);
         var manifestJson = @"{
             ""name"": ""string-font-icon"",
             ""inputFieldAssets"": {
@@ -73,10 +74,10 @@ public class ExtensionManifestServiceTests : IDisposable
     {
         // Arrange
         var manifestDir = Path.Combine(_tempDir, "complex-extension");
-        var dataDir = Path.Combine(manifestDir, FolderConstants.DataFolderProtected);
+        var dataDir = Path.Combine(manifestDir, DataFolderProtected);
         Directory.CreateDirectory(dataDir);
 
-        var manifestPath = Path.Combine(dataDir, FolderConstants.AppExtensionJsonFile);
+        var manifestPath = Path.Combine(dataDir, AppExtensionJsonFile);
         var manifestJson = @"{
             // Comment to verify comment-tolerant parsing
             ""name"": ""string-wysiwyg"",
@@ -129,10 +130,10 @@ public class ExtensionManifestServiceTests : IDisposable
     {
         // Arrange
         var manifestDir = Path.Combine(_tempDir, "multi-load-test");
-        var dataDir = Path.Combine(manifestDir, FolderConstants.DataFolderProtected);
+        var dataDir = Path.Combine(manifestDir, DataFolderProtected);
         Directory.CreateDirectory(dataDir);
 
-        var manifestPath = Path.Combine(dataDir, FolderConstants.AppExtensionJsonFile);
+        var manifestPath = Path.Combine(dataDir, AppExtensionJsonFile);
         var manifestJson = @"{
             ""name"": ""string-test"",
             ""version"": ""1.0.0"",
@@ -162,10 +163,10 @@ public class ExtensionManifestServiceTests : IDisposable
     {
         // Arrange
         var manifestDir = Path.Combine(_tempDir, "minimal-extension");
-        var dataDir = Path.Combine(manifestDir, FolderConstants.DataFolderProtected);
+        var dataDir = Path.Combine(manifestDir, DataFolderProtected);
         Directory.CreateDirectory(dataDir);
 
-        var manifestPath = Path.Combine(dataDir, FolderConstants.AppExtensionJsonFile);
+        var manifestPath = Path.Combine(dataDir, AppExtensionJsonFile);
         var manifestJson = @"{
             ""name"": ""string-minimal"",
             ""version"": ""1.0.0""
@@ -190,10 +191,10 @@ public class ExtensionManifestServiceTests : IDisposable
     {
         // Arrange
         var manifestDir = Path.Combine(_tempDir, "valid-extension");
-        var dataDir = Path.Combine(manifestDir, FolderConstants.DataFolderProtected);
+        var dataDir = Path.Combine(manifestDir, DataFolderProtected);
         Directory.CreateDirectory(dataDir);
 
-        var manifestPath = Path.Combine(dataDir, FolderConstants.AppExtensionJsonFile);
+        var manifestPath = Path.Combine(dataDir, AppExtensionJsonFile);
         var manifestJson = @"{
             ""name"": ""string-font-icon"",
             ""version"": ""1.2.3"",
@@ -216,10 +217,10 @@ public class ExtensionManifestServiceTests : IDisposable
     {
         // Arrange
         var manifestDir = Path.Combine(_tempDir, "empty-extension");
-        var dataDir = Path.Combine(manifestDir, FolderConstants.DataFolderProtected);
+        var dataDir = Path.Combine(manifestDir, DataFolderProtected);
         Directory.CreateDirectory(dataDir);
 
-        var manifestPath = Path.Combine(dataDir, FolderConstants.AppExtensionJsonFile);
+        var manifestPath = Path.Combine(dataDir, AppExtensionJsonFile);
         File.WriteAllText(manifestPath, "", new UTF8Encoding(false));
 
         // Act
@@ -234,10 +235,10 @@ public class ExtensionManifestServiceTests : IDisposable
     {
         // Arrange
         var manifestDir = Path.Combine(_tempDir, "invalid-extension");
-        var dataDir = Path.Combine(manifestDir, FolderConstants.DataFolderProtected);
+        var dataDir = Path.Combine(manifestDir, DataFolderProtected);
         Directory.CreateDirectory(dataDir);
 
-        var manifestPath = Path.Combine(dataDir, FolderConstants.AppExtensionJsonFile);
+        var manifestPath = Path.Combine(dataDir, AppExtensionJsonFile);
         File.WriteAllText(manifestPath, "{ invalid json }", new UTF8Encoding(false));
 
         // Act

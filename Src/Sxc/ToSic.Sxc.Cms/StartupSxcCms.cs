@@ -15,11 +15,14 @@ public static class StartupSxcCms
 {
     public static IServiceCollection AddSxcCms(this IServiceCollection services)
     {
-        services.TryAddTransient<IPagePublishing, BasicPagePublishing>();
+        services.TryAddTransient<IPagePublishing, PagePublishingUnknown>();
 
         // This must never have a TRY! but only an AddTransient, as many can be registered by this type
-        services.AddTransient<IPagePublishingGetSettings, PagePublishingGetSettingsOptional>(); // new v13 BETA #SwitchServicePagePublishingResolver
-        services.AddTransient<IPagePublishingGetSettings, PagePublishingGetSettingsForbidden>();
+        // New v22 with IWork
+        services.TryAddTransient<BlockPublishingSettingsService>();
+        
+        services.AddTransient<IWorkBlockPublishingLookup, WorkBlockPublishingLookupPreflightDisabled>();
+        services.AddTransient<IWorkBlockPublishingLookup, WorkBlockPublishingFallback>();
 
         // v15 DataSource
         services.TryAddTransient<PagesDataSourceProvider, PagesDataSourceProviderUnknown>();

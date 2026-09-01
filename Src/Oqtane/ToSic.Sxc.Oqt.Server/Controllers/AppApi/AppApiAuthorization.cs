@@ -69,7 +69,7 @@ internal class AppApiAuthorization: IHasLog
         // Original code is commented because endpoint.Metadata is from middleware.
         // In our version endpoint metadata should come from custom web api,
         // so it is provided from ActionContext.ActionDescriptor.EndpointMetadata.
-        var authorizeData = actionContext.ActionDescriptor.EndpointMetadata.OfType<IAuthorizeData>() ?? Array.Empty<IAuthorizeData>();
+        var authorizeData = actionContext.ActionDescriptor.EndpointMetadata.OfType<IAuthorizeData>() ?? [];
         var policy = await AuthorizationPolicy.CombineAsync(policyProvider, authorizeData);
         if (policy == null)
         {

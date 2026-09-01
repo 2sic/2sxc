@@ -24,9 +24,10 @@ internal sealed class OqtSite(
     LazySvc<IServerPaths> serverPaths,
     LazySvc<IZoneMapper> zoneMapper,
     LazySvc<OqtCulture> oqtCulture,
+    LazySvc<OqtSiteGroup> oqtSiteGroup,
     LazySvc<ILinkPaths> linkPathsLazy)
     : Site<Site>(OqtConstants.OqtLogPrefix,
-        connect: [aliasResolver, siteService, serverPaths, zoneMapper, oqtCulture, linkPathsLazy])
+        connect: [aliasResolver, siteService, serverPaths, zoneMapper, oqtCulture, oqtSiteGroup, linkPathsLazy])
 {
     private ILinkPaths LinkPaths => linkPathsLazy.Value;
 
@@ -37,7 +38,7 @@ internal sealed class OqtSite(
         return this;
     }
 
-    public override ISite Init(int siteId, ILog? parentLogOrNull)
+    public override ISite Init(int siteId, ILog parentLogOrNull)
     {
         UnwrappedSite = siteService.Value.GetSiteAsync(siteId).GetAwaiter().GetResult();
         return this;
@@ -48,12 +49,12 @@ internal sealed class OqtSite(
     public override Site GetContents() => UnwrappedSite;
 
     /// <inheritdoc />
-    public override string DefaultCultureCode => field ??= oqtCulture.Value.DefaultCultureCode;
+    public override string DefaultCultureCode => field ??= oqtCulture.Value.GetPrimaryContentCulture(UnwrappedSite);
 
-    public string DefaultLanguageCode => field ??= oqtCulture.Value.DefaultLanguageCode(Alias.SiteId).ToLowerInvariant();
+    public string DefaultLanguageCode => field ??= oqtCulture.Value.DefaultLanguageCode(Id);
 
     /// <inheritdoc />
-    public override string CurrentCultureCode => field ??= oqtCulture.Value.CurrentCultureCode.ToLowerInvariant();
+    public override string CurrentCultureCode => field ??= oqtCulture.Value.GetCurrentContentCulture(UnwrappedSite);
 
     /// <inheritdoc />
     public override int Id => UnwrappedSite.SiteId;
@@ -78,7 +79,7 @@ internal sealed class OqtSite(
 
     [PrivateApi]
     public override string AppsRootPhysical
-        => string.Format(OqtConstants.AppRootTenantSiteBase, Alias.TenantId, Id);
+        => string.Format(OqtConstants.AppRootTenantSiteBase, Alias.TenantId, PrimarySiteId);
 
     [PrivateApi]
     public override string AppAssetsLinkTemplate => OqtPageOutput.GetSiteRoot(aliasResolver.Alias)
@@ -88,18 +89,15 @@ internal sealed class OqtSite(
 
 
     /// <inheritdoc />
-    public override string ContentPath => string.Format(OqtConstants.ContentRootPublicBase, Alias.TenantId, Id);
+    public override string ContentPath => string.Format(OqtConstants.ContentRootPublicBase, Alias.TenantId, PrimarySiteId);
 
-    public override int ZoneId
-    {
-        get
-        {
-            if (_zoneId != null) return _zoneId.Value;
-            // check if id is negative; 0 is a valid tenant id
-            if (Id < 0) return (_zoneId = Eav.Sys.EavConstants.NullId).Value;
-            _zoneId = zoneMapper.Value.GetZoneId(Id);
-            return _zoneId.Value;
-        }
-    }
+    public override int ZoneId => _zoneId ??= (
+        (Id <= 0) // check if siteId is negative; 0 is a valid tenant id
+            ? Eav.Sys.EavConstants.NullId
+            : zoneMapper.Value.GetZoneId(PrimarySiteId)
+    );
     private int? _zoneId;
+
+    private int PrimarySiteId => _primarySiteId ??= oqtSiteGroup.Value.GetPrimaryLocalizationSiteId(Id);
+    private int? _primarySiteId;
 }

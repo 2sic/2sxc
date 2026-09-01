@@ -15,4 +15,8 @@
     <ProjectReference Include="..\ToSic.Sxc.Core\ToSic.Sxc.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Render.Output.Sys\" />
+  </ItemGroup>
+
 </Project>

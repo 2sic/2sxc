@@ -3,7 +3,8 @@ namespace ToSic.Sxc.Data.Models;
 
 partial class ModelFromItem : IMultiWrapper<IEntity>, IEquatable<ITypedItem>
 {
-    bool IEquatable<ITypedItem>.Equals(ITypedItem? other) => Equals(other);
+    bool IEquatable<ITypedItem>.Equals(ITypedItem? other)
+        => Equals(other);
 
     /// <summary>
     /// Ensure that the equality check is done correctly.
@@ -18,7 +19,8 @@ partial class ModelFromItem : IMultiWrapper<IEntity>, IEquatable<ITypedItem>
         => MultiWrapperEquality.GetWrappedHashCode(this);
 
     IEntity? IMultiWrapper<IEntity>.RootContentsForEqualityCheck
-        => (_item as IMultiWrapper<IEntity>)?.RootContentsForEqualityCheck;
+        => (_item as IMultiWrapper<IEntity>)?.RootContentsForEqualityCheck
+           ?? _item?.Entity;
 
     /// <summary>
     /// Ensure that the equality check is done correctly.

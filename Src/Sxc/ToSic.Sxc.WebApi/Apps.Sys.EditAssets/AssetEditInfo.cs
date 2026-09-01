@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Apps.Sys.EditAssets;
 
@@ -8,8 +9,9 @@ namespace ToSic.Sxc.Apps.Sys.EditAssets;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AssetEditInfo
 {
-        
-    private static readonly string[] SafeFileWhitelist = "txt,html,js,md,json,doc,docx,xls,xlsx,xml".Split(',');
+
+    private static readonly string[] SafeFileWhitelist = "txt,html,js,md,json,doc,docx,xls,xlsx,xml"
+        .CsvToArrayWithoutEmpty();
 
     public string?
         Name,

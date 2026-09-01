@@ -31,14 +31,16 @@ public class AdamPathsBase : ServiceBase, IAdamPaths
 
     public string PhysicalPath(string path)
     {
+        path = path.ToSystemPath();
         ThrowIfPathContainsDotDot(path);
 
         // check if it's already a physical path
         if (Path.IsPathRooted(path)) return path;
 
         // check if it already has the root path attached, otherwise add
-        path = path.StartsWith(AdamManager.Site.ContentPath) ? path : Path.Combine(AdamManager.Site.ContentPath, path);
-        return _serverPaths.FullContentPath(path.Backslash());
+        var contentPath = AdamManager.Site.ContentPath.ToSystemPath();
+        path = path.StartsWith(contentPath) ? path : Path.Combine(contentPath, path);
+        return _serverPaths.FullContentPath(path);
     }
 
     public static void ThrowIfPathContainsDotDot(string path)

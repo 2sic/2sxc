@@ -12,7 +12,7 @@ public abstract class SxcImportExportEnvironmentBase: EavImportExportEnvironment
     #region constructor / DI
 
     public record Dependencies(ISite Site, IAppReaderFactory AppReaders, IAppsCatalog AppsCatalog, IAppPathsMicroSvc AppPaths)
-        : DependenciesRecord(connect: [Site, AppReaders, AppPaths]);
+        : DependenciesBase(connect: [Site, AppReaders, AppPaths]);
 
 
     /// <summary>

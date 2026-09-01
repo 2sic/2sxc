@@ -1,11 +1,11 @@
 ﻿using System.Collections;
-using ToSic.Eav.Data.Processing;
-using ToSic.Eav.Data.Sys.ContentTypes;
+using ToSic.Eav.Data.ContentTypes.Sys;
 using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sxc.Backend.Cms.Load.Settings;
+using ToSic.Sys.HookUp;
 using ToSic.Sys.Utils;
 using static System.StringComparer;
 
@@ -16,22 +16,22 @@ public class EditLoadActivitySettingsHelper(
     Generator<JsonSerializer> jsonSerializerGenerator,
     IEnumerable<ILoadSettingsProvider> loadSettingsProviders,
     IEnumerable<ILoadSettingsContentTypesProvider> loadSettingsTypesProviders,
-    GenWorkPlus<WorkEntities> appEntities)
+    AppWorkChain<WorkEntities> appEntities)
     : ServiceBase(SxcLogName + ".LodSet",
         connect: [jsonSerializerGenerator, loadSettingsProviders, appEntities]),
-        ILowCodeAction<EditLoadDto, EditLoadDto>
+        IWork<EditLoadDto, EditLoadDto>
 {
     public record ActionContext(List<IContentType> UsedTypes);
 
-    public async Task<ActionData<EditLoadDto>> Run(LowCodeActionContext actionCtx, ActionData<EditLoadDto> result) =>
-        result with
+    public async Task<Package<EditLoadDto>> Handle(WorkContext actionCtx, Package<EditLoadDto> package) =>
+        package with
         {
-            Data = result.Data with
+            Data = package.Data with
             {
                 Settings = GetSettings(actionCtx.Get<IContextOfApp>(EditLoadContextConstants.AppContext),
                     actionCtx.Get<List<IContentType>>(EditLoadContextConstants.UsedTypes),
-                    result.Data.ContentTypes,
-                    actionCtx.Get<IAppWorkCtxPlus>(EditLoadContextConstants.AppCtxWork)),
+                    package.Data.ContentTypes,
+                    actionCtx.Get<IAppWorkContext>(EditLoadContextConstants.AppWorkCtx)),
             },
         };
 
@@ -42,7 +42,7 @@ public class EditLoadActivitySettingsHelper(
     /// - later get from settings
     /// </summary>
     /// <returns></returns>
-    private EditSettingsDto GetSettings(IContextOfApp contextOfApp, List<IContentType> contentTypes, List<JsonContentType> jsonTypes, IAppWorkCtxPlus appWorkCtx)
+    private EditSettingsDto GetSettings(IContextOfApp contextOfApp, List<IContentType> contentTypes, List<JsonContentType> jsonTypes, IAppWorkContext appWorkCtx)
     {
         var l = Log.Fn<EditSettingsDto>();
         var allInputTypes = jsonTypes
@@ -128,7 +128,7 @@ public class EditLoadActivitySettingsHelper(
             .Select(t =>
             {
                 var normal = serializerForTypes.ToPackage(t, serSettings).ContentType!;
-                var title = t.DetailsOrNull()?.Title;
+                var title = t.DetailsOrNull()?.Label;
                 return new JsonContentTypeWithTitleWip
                 {
                     Id = normal.Id,
@@ -148,7 +148,7 @@ public class EditLoadActivitySettingsHelper(
 
 
 
-    private List<JsonEntity> GetSettingsEntities(IAppWorkCtxPlus appWorkCtx, IEnumerable<string> allInputTypes)
+    private List<JsonEntity> GetSettingsEntities(IAppWorkContext appWorkCtx, IEnumerable<string> allInputTypes)
     {
         var l = Log.Fn<List<JsonEntity>>();
         try

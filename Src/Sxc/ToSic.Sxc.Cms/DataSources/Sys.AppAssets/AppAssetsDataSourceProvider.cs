@@ -21,7 +21,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.Dependencie
         IAppPathsMicroSvc AppPathMicroSvc,
         // Note that we will use Generators for safety, because in rare cases the dependencies could be re-used to create a sub-data-source
         Generator<AppFileManager> FileManagerGenerator)
-        : DependenciesRecord(connect: [AppReaders, AppPathMicroSvc, FileManagerGenerator]);
+        : DependenciesBase(connect: [AppReaders, AppPathMicroSvc, FileManagerGenerator]);
 
     public AppAssetsDataSourceProvider Configure(
         AppAssetsGetSpecs specs,
@@ -35,7 +35,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.Dependencie
         var root = specs.RootFolder;
         var filter = specs.FileFilter;
         var l = Log.Fn<AppAssetsDataSourceProvider>($"a:{specs.AppId}; z:{specs.ZoneId}, root:{root}, filter:{filter}");
-        _root = root.TrimPrefixSlash().Backslash();
+        _root = root.TrimPrefixSlash().ToSystemPath();
         _filter = filter;
 
         var appReader = Services.AppReaders.Get(new AppIdentity(specs.ZoneId, specs.AppId));
@@ -58,9 +58,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.Dependencie
     public (List<FolderModelRaw> Folders, List<FileModelRaw> Files) GetAll()
         => Log.Quick(() => (Folders, Files));
 
-    public List<FileModelRaw> Files => _files.Get(GetFiles)!;
-
-    private readonly GetOnce<List<FileModelRaw>> _files = new();
+    public List<FileModelRaw> Files => field ??= GetFiles();
 
     public List<FileModelRaw> GetFiles()
     {
@@ -94,7 +92,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.Dependencie
         return l.Return(files, $"files:{files.Count}");
     }
 
-    public List<FolderModelRaw> Folders => _folders.Get(GetFolders)!;
+    public List<FolderModelRaw> Folders => field ??= GetFolders();
 
     private List<FolderModelRaw> GetFolders()
     {
@@ -138,9 +136,6 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.Dependencie
             Url = $"{_appPaths.Path}{fullNameFromAppRoot}",
         };
     }
-
-    private readonly GetOnce<List<FolderModelRaw>> _folders = new();
-
 
     /// <summary>
     /// </summary>

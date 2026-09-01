@@ -11,6 +11,17 @@ public class ListController() : DnnSxcControllerBase(RealController.LogSuffix), 
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
+    [HttpPost]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    public void Replace(Guid parent, string part, int index, int entityId, bool add = false)
+        => Real.Replace(parent, part, index, entityId, add);
+
+
+    [HttpGet]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    public ReplacementListDto ReplaceOptions(Guid parent, string part, int index, string? contentType = null)
+        => Real.ReplaceOptions(parent, part, index, contentType);
+
     /// <inheritdoc />
     /// <summary>
     /// used to be GET Module/ChangeOrder
@@ -25,7 +36,24 @@ public class ListController() : DnnSxcControllerBase(RealController.LogSuffix), 
     /// Used to be Get Module/RemoveFromList
     /// </summary>
     [HttpDelete]
-    public void Delete(Guid? parent, string fields, int index)
-        => Real.Delete(parent, fields, index);
+    public void Delete(Guid? parent, string part, int index)
+        => Real.Delete(parent, part, index);
+
+    [HttpGet]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    public List<EntityInListDto> Items(Guid parent, string part)
+        => Real.Items(parent, part);
+
+
+    // TODO: part should be handed in with all the relevant names! atm it's "content" in the content-block scenario
+    [HttpPost]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    public bool Items([FromUri] Guid parent, List<EntityInListDto> list, [FromUri] string part)
+        => Real.Items(parent, list, part);
+
+    [HttpGet]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    public List<EntityInListDto> ContentBlockHeader(Guid parent)
+        => Real.ContentBlockHeader(parent);
 
 }

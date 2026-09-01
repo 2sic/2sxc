@@ -15,5 +15,5 @@ public interface IUserRolesProvider
     /// The inner list retrieving roles. 
     /// </summary>
     /// <returns></returns>
-    IEnumerable<UserRoleModel> GetRoles();
+    IEnumerable<UserRoleModelRaw> GetRoles();
 }

@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps.Sys.AppStack;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.Configuration;
@@ -40,7 +39,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
     #region Url Parameters to Detect Dev / True
 
     public bool UrlIsDevMode => _urlDevMode.Get(() => CspUrlParam.EqualsInsensitive(CspConstants.CspUrlDev));
-    private readonly GetOnce<bool> _urlDevMode = new();
+    private readonly LazyGet<bool> _urlDevMode = new();
 
     private string? CspUrlParam => _cspUrlParam.Get(Log, () =>
     {
@@ -52,7 +51,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
         pageParameters.TryGetValue(CspConstants.CspUrlParameter, out var cspParam);
         return cspParam;
     });
-    private readonly GetOnce<string?> _cspUrlParam = new();
+    private readonly LazyGetAndLog<string?> _cspUrlParam = new();
 
     #endregion
 
@@ -67,7 +66,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
             ?.GetStack(AppStackConstants.PartSiteSystem, AppStackConstants.PartGlobalSystem, AppStackConstants.PartPresetSystem);
         return new CspSettingsReader(pageSettings, user, UrlIsDevMode, Log);
     })!;
-    private readonly GetOnce<CspSettingsReader> _siteCspSettings = new();
+    private readonly LazyGetAndLog<CspSettingsReader> _siteCspSettings = new();
 
     #endregion
 
@@ -77,7 +76,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
     /// Enforce?
     /// </summary>
     internal bool IsEnforced => _cspReportOnly.Get(Log, () => SiteCspSettings.IsEnforced);
-    private readonly GetOnce<bool> _cspReportOnly = new();
+    private readonly LazyGetAndLog<bool> _cspReportOnly = new();
 
 
     /// <summary>
@@ -98,7 +97,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
         // Check URL Parameters - they are null if the feature is not enabled
         return CspUrlParam.EqualsInsensitive(CspConstants.CspUrlTrue) || UrlIsDevMode;
     });
-    private readonly GetOnce<bool> _enabled = new();
+    private readonly LazyGetAndLog<bool> _enabled = new();
 
 
     #endregion
@@ -114,7 +113,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
         Log.A($"Merged: {merged}");
         return new CspPolicyTextProcessor(Log).Parse(merged);
     })!;
-    private readonly GetOnce<List<KeyValuePair<string, string>>> _policies = new();
+    private readonly LazyGetAndLog<List<KeyValuePair<string, string>>> _policies = new();
 
     private string GetAppPolicies()
     {

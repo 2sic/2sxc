@@ -4,10 +4,8 @@ using Oqtane.Infrastructure;
 using Oqtane.Repository;
 using Oqtane.Security;
 using Oqtane.Shared;
-using System.Globalization;
 using Oqtane.Services;
 using ToSic.Sxc.Oqt.Server.Blocks;
-using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared.Helpers;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
@@ -38,7 +36,8 @@ public class OqtSxcRenderService(
                 return Forbidden("Unauthorized Alias Get Attempt {AliasId}", @params.AliasId);
 
             // Set User culture
-            if (@params.Culture != CultureInfo.CurrentUICulture.Name) OqtCulture.SetCulture(@params.Culture);
+            //if (@params.Culture != CultureInfo.CurrentUICulture.Name)
+                //OqtCulture.SetCulture(@params.Culture);
 
             var site = sites.GetSiteAsync(alias.SiteId).GetAwaiter().GetResult();
             if (site == null)

@@ -10,12 +10,12 @@ public partial class ExecutionContext
 
     /// <inheritdoc cref="IDynamicCodeDocs.Content" />
     public object? Content => _contentGo.Get(() => TryToBuildFirstOfStream(StreamDefaultName));
-    private readonly GetOnce<object?> _contentGo = new();
+    private readonly LazyGet<object?> _contentGo = new();
 
 
     /// <inheritdoc cref="IDynamicCodeDocs.Header" />
     public object? Header => _header.Get(GetHeaderOrNull);
-    private readonly GetOnce<object?> _header = new();
+    private readonly LazyGet<object?> _header = new();
 
     private object? GetHeaderOrNull()
     {

@@ -1,6 +1,6 @@
 ﻿using DotNetNuke.Common;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Render.Sys.JsContext;
+using ToSic.Sxc.Render.JsContext.Sys;
 
 namespace ToSic.Sxc.Dnn.Web;
 

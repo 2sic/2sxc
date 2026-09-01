@@ -56,7 +56,7 @@ partial class EditLoadActivityAddPrefetch
             return new() { Value = "error" };
         }
     }
-    private readonly GetOnce<HyperlinkBackend> _hyperlinkBackend = new();
+    private readonly LazyGet<HyperlinkBackend> _hyperlinkBackend = new();
 
 
     private static List<BundleWithLinkField> BundleWithLinkFields(EditLoadDto editData, bool includeStringFields = false)

@@ -14,6 +14,8 @@ public class TemplateCacheService(
     LazySvc<AppCodeLoader> appCodeLoader)
     : ServiceBase("Dnn.TmpCchSvc", connect: [assemblyCacheManager, diskCacheService, appCodeLoader])
 {
+    private const string NoAppCodeHashSeed = "no-appcode";
+
     /// <summary>
     /// Try to get cached assembly from memory or disk cache.
     /// </summary>
@@ -93,10 +95,7 @@ public class TemplateCacheService(
 
     private static string ComputeAppCodeHash(Assembly appCodeAssembly)
     {
-        if (appCodeAssembly == null)
-            return string.Empty;
-
-        var assemblyFullName = appCodeAssembly.FullName ?? string.Empty;
+        var assemblyFullName = appCodeAssembly?.FullName ?? NoAppCodeHashSeed;
 
         using var sha256 = System.Security.Cryptography.SHA256.Create();
         var bytes = System.Text.Encoding.UTF8.GetBytes(assemblyFullName);

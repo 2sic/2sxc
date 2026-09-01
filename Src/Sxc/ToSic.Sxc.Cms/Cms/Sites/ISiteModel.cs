@@ -1,5 +1,5 @@
-﻿using ToSic.Sxc.Cms.Sites.Sys;
-using ToSic.Sxc.Data;
+﻿using ToSic.Eav.Data.ContentTypes;
+using ToSic.Sxc.Cms.Sites.Sys;
 
 namespace ToSic.Sxc.Cms.Sites;
 
@@ -16,10 +16,20 @@ namespace ToSic.Sxc.Cms.Sites;
 /// 
 /// * Introduced in v19.01
 /// </remarks>
-[ModelSpecs(Use = typeof(SiteModelOfEntity))]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
-public interface ISiteModel : IModelFromData
+[ContentType(
+    Guid = "89ef9f2c-98d3-42e9-a190-b9b3fc814284",
+    Description = "Site information",
+    Name = Constants.ContentTypeName
+)]
+public interface ISiteModel : IModelFromEntity<SiteModel>
 {
+    [PrivateApi]
+    internal static class Constants
+    {
+        public const string ContentTypeName = "Site";
+    }
+    
     /// <summary>
     /// The site ID.
     ///
@@ -58,6 +68,7 @@ public interface ISiteModel : IModelFromData
     /// * In Dnn it's from `PageInfo.PortalName`
     /// * in Oqtane it's from `Site.Name`
     /// </summary>
+    [ContentTypeTitle]
     string? Name { get; }
 
     /// <summary>

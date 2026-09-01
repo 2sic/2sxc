@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Models;
-using ToSic.Sxc.Polymorphism.Sys;
+using ToSic.Sxc.Render.Polymorphism.Sys;
 
 namespace ToSic.Sxc.Backend.Views;
 
@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Backend.Views;
 [VisualQuery(
     NiceName = "App Polymorphism Configuration",
     NameId = "a495b51f-44e7-4335-81db-b8a7e33120f0",
-    NameIds = ["System.Polymorphism"], // Internal name for the system, used in some entity-pickers. Can change at any time.
+    NameIds = ["System.Polymorphism"], // Internal name for the system, used in some entity-pickers (to configure Copilot). Can change at any time.
     Type = DataSourceType.System,
     Audience = Audience.System,
     DataConfidentiality = DataConfidentiality.Confidential,
@@ -29,14 +29,14 @@ public class AppPolymorphism : CustomDataSource
         var l = Log.Fn<IEnumerable<IEntity>>($"App: {AppId}");
 
         var poly = appReaders.Get(AppId).List
-            .FirstModel<PolymorphismConfiguration>(nullHandling: ModelNullHandling.PreferModel)!;
+            .FirstModel<PolymorphismConfigurationModel>(options: new() { NullHandling = NullHandling.ReturnModel })!;
 
         var data = DataFactory
             .SpawnNew(new() { AutoId = false })
             .Create(new Dictionary<string, object?>
             {
                 { nameof(poly.Resolver), poly.Resolver },
-                { "TypeName", PolymorphismConfiguration.ContentTypeName },
+                { "TypeName", PolymorphismConfigurationModel.ContentTypeName },
             }, id: poly.Id);
 
         return l.Return([data], $"{poly}");

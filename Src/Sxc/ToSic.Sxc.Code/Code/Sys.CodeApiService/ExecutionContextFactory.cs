@@ -1,5 +1,6 @@
 ﻿using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sys.Utils.Types;
 
 namespace ToSic.Sxc.Code.Sys.CodeApiService;
 
@@ -47,7 +48,7 @@ public class ExecutionContextFactory(IServiceProvider serviceProvider)
             // 1. Detect if it's an IDynamicCode<TModel, TServiceKit>
             var interfaceOnCode = customType
                 .GetInterfaces()
-                .FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == requiredDynCode);
+                .FirstOrDefault(x => x.IsGenericTypeOf(requiredDynCode));
 
             if (interfaceOnCode == null)
                 return l.ReturnNull();

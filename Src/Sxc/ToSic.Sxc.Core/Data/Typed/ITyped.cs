@@ -41,6 +41,23 @@ public partial interface ITyped
     /// <returns>Value as `DateTime`</returns>
     DateTime DateTime(string name, NoParamOrder npo = default, DateTime fallback = default, bool? required = default);
 
+
+    // 2026-06-16 2dm - tried this, but can't work, because `Guid` is already a property on most of the objects, so this will fail
+    ///// <summary>
+    ///// Get a property and return the value as a `Guid`.
+    ///// If conversion fails, will return default `00000000-0000-0000-0000-000000000000` or what is specified in the `fallback`.
+    ///// </summary>
+    ///// <param name="name">property name</param>
+    ///// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    ///// <param name="fallback">_optional_ fallback if conversion fails</param>
+    ///// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
+    ///// <remarks>
+    ///// Added 2sxc v22
+    ///// </remarks>
+    ///// <returns>Value as `Guid`</returns>
+    //Guid Guid(string name, NoParamOrder npo = default, Guid fallback = default, bool? required = default);
+
+
     /// <summary>
     /// Get a property and return the value as a `string`.
     /// If conversion fails, will return default `null` or what is specified in the `fallback`.
@@ -57,10 +74,9 @@ public partial interface ITyped
     /// <returns>Value as `string`</returns>
     string? String(string name, NoParamOrder npo = default, string? fallback = default, bool? required = default, object? scrubHtml = default);
 
+
+
     #region Numbers
-
-
-
 
     /// <summary>
     /// Get a property and return the value as a `int`.

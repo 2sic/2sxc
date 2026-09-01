@@ -18,7 +18,7 @@ internal class OqtPrerenderService(IHttpContextAccessor httpContextAccessor, ITh
             if (!isPrerendered || !UsePrerender) return string.Empty;
 
             var prerenderHtmlFragment = string.Empty;
-            prerenderHtmlFragment = HtmlHelper.ManageStyleSheets(prerenderHtmlFragment, viewResults, siteState.Alias, Theme(themeType).Name, Html);
+            prerenderHtmlFragment = HtmlHelper.ManageStyleSheets(prerenderHtmlFragment, viewResults, siteState.Alias, Theme(themeType, siteState.Alias.SiteId).Name, Html);
             prerenderHtmlFragment = HtmlHelper.ManageScripts(prerenderHtmlFragment, viewResults, siteState.Alias, Html);
             prerenderHtmlFragment = HtmlHelper.ManageInlineScripts(prerenderHtmlFragment, viewResults, siteState.Alias, Html);
             prerenderHtmlFragment = SystemHtml(prerenderHtmlFragment);
@@ -571,7 +571,7 @@ internal class OqtPrerenderService(IHttpContextAccessor httpContextAccessor, ITh
     #endregion
 
     #region Theme
-    private Theme Theme(string themeType) => _theme ??= themes.GetThemes().FirstOrDefault(item => item.Themes.Any(item => item.TypeName == themeType));
+    private Theme Theme(string themeType, int siteId) => _theme ??= themes.GetThemes(siteId).FirstOrDefault(item => item.Themes.Any(item => item.TypeName == themeType));
     private Theme _theme;
 
     #endregion

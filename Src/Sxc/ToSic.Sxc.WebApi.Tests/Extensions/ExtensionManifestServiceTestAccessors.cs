@@ -1,3 +1,4 @@
+using ToSic.Eav.Apps.Sys.Extensions;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 
 // ReSharper disable once CheckNamespace
@@ -18,6 +19,6 @@ internal static class ExtensionManifestServiceTestAccessors
     /// <summary>
     /// Test accessor for GetManifestFile method.
     /// </summary>
-    public static FileInfo GetManifestFileTac(this ExtensionManifestService service, DirectoryInfo extensionFolder)
-        => service.GetManifestFile(extensionFolder: extensionFolder);
+    public static FileInfo GetManifestFileTac(this ExtensionManifestService service, string extensionFolder)
+        => ExtensionManifestService.GetManifestFileInfo(extensionFolder);
 }

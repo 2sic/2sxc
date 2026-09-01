@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using ToSic.Sys.Performance;
 using ToSic.Sys.Utils;
+using ToSic.Sys.Utils.Types;
 
 namespace ToSic.Sxc.Web.Sys.Url;
 

@@ -42,9 +42,9 @@ partial record ToolbarBuilder
             finalToolbar = CreateStandaloneItemDemoToolbar();       // Implement Demo-Mode with info-button only
 
         // don't show toolbar if not enabled (or not for everyone)
-        if (!enabled)
-            return "";
-        return finalToolbar.Render(editSvc);
+        return enabled
+            ? finalToolbar.Render(editSvc)
+            : "";
     }
 
     private (bool enabled, bool showNonAdmin) CheckShowConditions(IEditService? editSvc)
@@ -85,21 +85,18 @@ partial record ToolbarBuilder
 
     private string Render(IEditService? edit)
     {
-        var mode = (Configuration.HtmlMode ?? ToolbarHtmlModes.OnTag).ToLowerInvariant();
+        var mode = Configuration.HtmlMode?.ToLowerInvariant()
+                   ?? ToolbarHtmlModes.OnTag;
         switch (mode)
         {
-            // ReSharper disable AssignNullToNotNullAttribute
             case ToolbarHtmlModes.OnTag:
                 return edit == null
                     ? new Attribute(ToolbarConstants.ToolbarAttributeName, ErrRenderMessage).ToString() // add error
-                    //: edit.TagToolbar(this)?.ToString();
                     : new ItemToolbarV14(this).Render(true).ToString();
             case ToolbarHtmlModes.Standalone:
                 return edit == null
                     ? $"<!-- {ErrRenderMessage} -->" // add error
-                    //: edit.Toolbar(this)?.ToString();       // Show toolbar
                     : new ItemToolbarV14(this).Render(false).ToString();
-            // ReSharper restore AssignNullToNotNullAttribute
             case ToolbarHtmlModes.Json:
                 var rules = Rules
                     .Select(r => r.ToString())

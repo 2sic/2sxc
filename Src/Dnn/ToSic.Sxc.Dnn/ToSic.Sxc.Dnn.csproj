@@ -6,8 +6,8 @@
           Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="BuildScripts\LoadBuildConfig.Targets" />
 
-
-  <Import Project="../../SharedImports/CsProj.Props/CreateXDocsOnRelease.props" />
+  <!-- As of 2026-06-28 2dm this should not be exported ATM -->
+  <!--<Import Project="../../SharedImports/CsProj.Props/CreateXDocsOnRelease.props" />-->
 
   <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
 
@@ -19,7 +19,7 @@
     <RootNamespace>ToSic.Sxc.Dnn</RootNamespace>
     <AssemblyName>ToSic.Sxc.Dnn</AssemblyName>
     <!--For reasons unknown, this is relevant, even though we import the specs with the correct moniker-->
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <TargetFrameworkProfile />
 
     <!-- This places the EAV DLLs here, for the copy-deploy during Dev to work -->
@@ -38,28 +38,28 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetNuke.Core" Version="9.11.0">
+    <PackageReference Include="DotNetNuke.Core" Version="10.1.0">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="DotNetNuke.DependencyInjection" Version="9.11.0">
+    <PackageReference Include="DotNetNuke.DependencyInjection" Version="10.1.0">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="DotNetNuke.Web" Version="9.11.0">
+    <PackageReference Include="DotNetNuke.Web" Version="10.1.0">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="DotNetNuke.Web.Client" Version="9.11.0">
+    <PackageReference Include="DotNetNuke.Web.Client" Version="10.1.0">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.1">
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1">
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9">
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.AspNet.WebApi.WebHost" Version="5.2.9">
+    <PackageReference Include="Microsoft.AspNet.WebApi.WebHost" Version="5.3.0">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="MSBuildTasks">
@@ -89,13 +89,13 @@
     <Reference Include="System.Xml" />
     <Reference Include="ToSic.Imageflow.Dnn">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Dependencies\Imageflow\Dnn\ToSic.Imageflow.Dnn.dll</HintPath>
+      <HintPath>Extensions\Imageflow\bin\ToSic.Imageflow.Dnn.dll</HintPath>
       <Private>False</Private>
       <!-- this is important, otherwise it will be copied to the bin folder -->
     </Reference>
     <Reference Include="ToSic.Razor.Dnn">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net40\ToSic.Razor.Dnn.dll</HintPath>
+      <HintPath>razorblade\bin\ToSic.Razor.Dnn.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,5 @@
-﻿using ToSic.Eav.Apps.Sys.AppStack;
-using ToSic.Eav.Apps.Sys.Caching;
+﻿using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Data.Processing;
-using ToSic.Eav.DataSources.Sys;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
@@ -11,6 +9,7 @@ using ToSic.Sxc.Backend.AppStack;
 using ToSic.Sxc.Backend.ImportExport;
 using ToSic.Sxc.Services;
 using ToSic.Sys.Configuration;
+using ToSic.Sys.HookUp;
 using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 
 namespace ToSic.Sxc.Backend.Admin;
@@ -28,6 +27,7 @@ public class AppControllerReal(
     LazySvc<AppCreator> appBuilderLazy,
     LazySvc<AppStateSyncSave> appStateSyncSave,
     LazySvc<AppStateSyncRestore> appStateSyncRestore,
+    AppWorkQuick<WorkViews> workViews,
     LazySvc<AppCachePurger> systemManagerLazy,
     LazySvc<LanguagesBackend> languagesBackendLazy,
     LazySvc<IAppReaderFactory> appReadersLazy,
@@ -38,16 +38,18 @@ public class AppControllerReal(
         connect:
         [
             appsBackendLazy, workAppsRemove, exportAppLazy, importAppLazy, appBuilderLazy, appStateSyncRestore, appStateSyncSave,
-            systemManagerLazy, languagesBackendLazy, appReadersLazy, appStackBackendLazy, json, globalConfiguration
+            workViews, systemManagerLazy, languagesBackendLazy, appReadersLazy, appStackBackendLazy, json, globalConfiguration
         ])
 {
     public const string LogSuffix = "AppCon";
 
-    public ICollection<AppDto> List(int zoneId)
-        => appsBackendLazy.Value.Apps();
+    // Replayed by DataSource System.Apps
+    //public ICollection<AppDto> List(int zoneId)
+    //    => appsBackendLazy.Value.Apps();
 
-    public ICollection<AppDto> InheritableApps()
-        => appsBackendLazy.Value.GetInheritableApps();
+    // Replaced by DataSource System.InheritableApps
+    //public ICollection<AppDto> InheritableApps()
+    //    => appsBackendLazy.Value.GetInheritableApps();
 
     public void App(int zoneId, int appId, bool fullDelete = true)
         => workAppsRemove.Value.RemoveAppInSiteAndEav(zoneId, appId, fullDelete);
@@ -59,11 +61,13 @@ public class AppControllerReal(
         appBuilderLazy.Value.Init(zoneId).Create(name, null, inheritAppId);
         l.Done("ok");
     }
+    // Replaced by DataSource System.AppLanguages
+    //public List<SiteLanguageDto> Languages(int appId)
+    //    => languagesBackendLazy.Value.GetLanguagesOfApp(appReadersLazy.Value.Get(appId), true);
 
-    public List<SiteLanguageDto> Languages(int appId)
-        => languagesBackendLazy.Value.GetLanguagesOfApp(appReadersLazy.Value.Get(appId), true);
-
-    public AppExportInfoDto Statistics(int zoneId, int appId) => exportAppLazy.Value.GetAppInfo(zoneId, appId);
+    // Replaced by DataSource System.AppStatistics through query System.SysData.
+    // Use app/auto/query/System.SysData/Default with SysDataSource=System.AppStatistics.
+    //public AppExportInfoDto Statistics(int zoneId, int appId) => exportAppLazy.Value.GetAppInfo(zoneId, appId);
 
     public bool FlushCache(int zoneId, int appId)
     {
@@ -73,16 +77,45 @@ public class AppControllerReal(
     }
 
     public FileToUploadToClient Export(AppExportSpecs specs)
-        => exportAppLazy.Value.Export(specs);
+        => exportAppLazy.Value.Export(specs, () => PathCaseReferences(specs.AppId));
 
-    public Task<ActionData<bool>> SaveData(AppExportSpecs specs)
-        => appStateSyncSave.Value.Run(new(), new(specs));
+    public PathCasePreflightResult PathCasePreflight(int zoneId, int appId)
+        => exportAppLazy.Value.PathCasePreflight(new(zoneId, appId), () => PathCaseReferences(appId));
 
-    public List<AppStackDataRaw> GetStack(int appId, string? part, string? key = null, Guid? view = null)
-        => appStackBackendLazy.Value.GetAll(appId, part ?? AppStackConstants.RootNameSettings, key, view);
+    private (IEnumerable<PathCaseItem> App, IEnumerable<PathCaseItem> Shared) PathCaseReferences(int appId)
+    {
+        var views = workViews.New(appId).GetAll();
+        return (
+            views.Where(view => !view.IsShared).Select(view => new PathCaseItem(view.Path)),
+            views.Where(view => view.IsShared).Select(view => new PathCaseItem(view.Path)));
+    }
+
+    public async Task<Package<bool>> SaveData(AppExportSpecs specs)
+    {
+        var l = Log.Fn<Package<bool>>(specs.Dump());
+
+        // Informational only: a failed audit must never prevent saving the source-control export.
+        try
+        {
+            _ = exportAppLazy.Value.PathCasePreflight(specs, () => PathCaseReferences(specs.AppId));
+        }
+        catch (Exception e)
+        {
+            l.W("Path case preflight failed; source-control export will continue");
+            l.Ex(e);
+        }
+
+        var result = await appStateSyncSave.Value.Handle(new(), new(specs));
+        return l.Return(result);
+    }
+
+    // Replaced by DataSource System.SystemStack through query System.SysData.
+    // Use app/auto/query/System.SysData/Default with SysDataSource=System.SystemStack.
+    //public List<AppStackDataRaw> GetStack(int appId, string? part, string? key = null, Guid? view = null)
+    //    => appStackBackendLazy.Value.GetAll(appId, part ?? AppStackConstants.RootNameSettings, key, view);
 
     public async Task<ImportResultDto> Reset(int zoneId, int appId, string defaultLanguage, bool withPortalFiles)
-        => (await appStateSyncRestore.Value.Run(new(), new(new(zoneId, appId, defaultLanguage, withPortalFiles)))).Data;
+        => (await appStateSyncRestore.Value.Handle(new(), new(new(zoneId, appId, defaultLanguage, withPortalFiles)))).Data;
 
     /// <summary>
     /// Import App from import zip.
@@ -98,7 +131,7 @@ public class AppControllerReal(
         if (!uploadInfo.HasFiles())
             return l.Return(new(false, "no file uploaded"), "no file uploaded");
 
-        var (_, stream) = uploadInfo.GetStream(0);
+        var (_, stream) = uploadInfo.GetStream();
         if (stream == null!)
             throw new NullReferenceException("File Stream is null, upload canceled");
 

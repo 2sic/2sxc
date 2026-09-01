@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Sxc.Render.Sys.ModuleHtml;
+using ToSic.Sxc.Render.Output.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.Cache.Sys;
@@ -46,7 +46,7 @@ public static class StartupSxcServices
         services.TryAddTransient<IFeaturesService, FeaturesService>();  // New 13.01
 
         // V15
-        services.TryAddScoped<IModuleHtmlService, ModuleHtmlService>(); // Must be scoped & shared on the module
+        services.TryAddScoped<IModulesOutputService, ModulesOutputService>(); // Must be scoped & shared on the module
         services.TryAddTransient<ITurnOnService, TurnOnService>();
         services.TryAddTransient<ICmsService, CmsService>();
         services.TryAddTransient<CmsServiceStringWysiwyg>();
@@ -58,7 +58,7 @@ public static class StartupSxcServices
         services.TryAddTransient<HtmlInnerContentHelper>();
         services.TryAddTransient<IModuleOutputCacheService, ModuleOutputCacheService>();    // WIP v19.03.03, not official ATM
         services.TryAddTransient<ModuleOutputCacheService>();                         // WIP v19.03.03, not official ATM
-        services.TryAddTransient<IOutputCacheManagementService, OutputCacheManagementService>(); // v21.06.00
+        services.TryAddTransient<IOutputCacheManagementService, OutputCacheManagementService>(); // v21.06-00
 
         // Kits v14 - v16
         services.TryAddTransient<ServiceKit>();

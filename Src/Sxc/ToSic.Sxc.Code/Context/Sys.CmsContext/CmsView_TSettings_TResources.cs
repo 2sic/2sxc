@@ -30,8 +30,8 @@ internal class CmsView<TSettings, TResources>(CmsContext cmsContext, IBlock bloc
     private ICodeDataFactory Cdf => field ??= CmsContext.ExCtx.GetCdf();
 
     public TSettings? Settings => _settings.Get(() => Cdf.AsCustom<TSettings>(Cdf.AsItem(_view.Settings, new() { ItemIsStrict = settingsPropsRequired })));
-    private readonly GetOnce<TSettings?> _settings = new();
+    private readonly LazyGet<TSettings?> _settings = new();
 
     public TResources? Resources => _resources.Get(() => Cdf.AsCustom<TResources>(_view.Resources));
-    private readonly GetOnce<TResources?> _resources = new();
+    private readonly LazyGet<TResources?> _resources = new();
 }

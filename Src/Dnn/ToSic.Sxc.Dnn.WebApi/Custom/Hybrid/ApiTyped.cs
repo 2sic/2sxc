@@ -221,7 +221,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     #region Net Core Compatibility Shims - Copy this entire section to WebApi Files
 
     /// <inheritdoc cref="IDynamicWebApi.File"/>
-    public dynamic File(NoParamOrder npo = default,
+    public object File(NoParamOrder npo = default,
         bool? download = null,
         string virtualPath = null,
         string contentType = null,

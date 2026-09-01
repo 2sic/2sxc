@@ -11,6 +11,7 @@ using ToSic.Sxc.Compatibility.Sxc;
 using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
+using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.Help;
@@ -206,18 +207,11 @@ public abstract class SexyContentWebPage :
                                        "To use it, change your template type to inherit from " +
                                        nameof(RazorComponent) + " see https://go.2sxc.org/RazorComponent");
 
-#pragma warning disable 618
     [Obsolete("Use Header instead")]
     public dynamic ListContent => CodeApi.Header;
 
     [Obsolete("Use Header.Presentation instead")]
     public dynamic ListPresentation => CodeApi.Header?.Presentation;
-
-    // #RemovedV20 #Element
-    //[Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in a future version")]
-    //[field: Obsolete("don't use any more")]
-    //public List<Element> List => field ??= new CodeApiServiceObsolete(ExCtx).ElementList;
-#pragma warning restore 618
 
     /// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(string, string)" />
     public dynamic AsDynamic(string json, string fallback = WrapperConstants.EmptyJson)
@@ -244,11 +238,14 @@ public abstract class SexyContentWebPage :
 
     #region CreateInstance
 
-    [PrivateApi] string IGetCodePath.CreateInstancePath { get; set; }
+    private DnnRazorGetCodeHelper RzrGetCodeHlp => field ??= new(this, ExCtx);
+    
+    [PrivateApi]
+    string IGetCodePath.CreateInstancePath { get; set; }
 
     /// <inheritdoc />
     public virtual dynamic CreateInstance(string virtualPath, NoParamOrder npo = default, string name = null, string relativePath = null, bool throwOnError = true)
-        => RzrHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
+        => RzrGetCodeHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
 
     #endregion
 

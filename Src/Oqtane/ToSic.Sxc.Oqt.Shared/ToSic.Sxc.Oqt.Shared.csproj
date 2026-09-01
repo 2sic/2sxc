@@ -2,7 +2,8 @@
 
   <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-NetCore.props" />
 
-  <Import Project="../../SharedImports/CsProj.Props/CreateXDocsOnRelease.props" />
+  <!-- As of 2026-06-28 2dm this should not be exported ATM, as we also cannot analyze the DLL in our cockpit -->
+  <!--<Import Project="../../SharedImports/CsProj.Props/CreateXDocsOnRelease.props" />-->
 
   <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
 
@@ -21,8 +22,8 @@
 
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" /><!-- from Oqtane.Shared.csproj -->
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="9.0.5" />
-    <PackageReference Include="Oqtane.Shared" Version="6.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="10.0.9" />
+    <PackageReference Include="Oqtane.Shared" Version="10.2.0" />
   </ItemGroup>
 
 </Project>

@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
-using ToSic.Sxc.Engines;
-using ToSic.Sxc.Engines.Sys;
+using ToSic.Sxc.Render.Engines.Sys;
+using ToSic.Sxc.Render.Output.Sys;
+using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.Render.Sys;
-using ToSic.Sxc.Render.Sys.Output;
 using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Sys.ExecutionContext;
 
@@ -19,38 +19,38 @@ namespace ToSic.Sxc.Razor;
 [EngineDefinition(Name = "Razor")]
 internal class RazorEngine(
     EngineSpecsService engineSpecsService,
-    IBlockResourceExtractor blockResourceExtractor,
-    EngineAppRequirements engineAppRequirements,
+    IAssetsExtractor assetsExtractor,
+    EngineRequirementsApp engineRequirementsApp,
     LazySvc<IRazorRenderer> razorRenderer,
     LazySvc<IExecutionContextFactory> exCtxFactory,
     LazySvc<CodeErrorHelpService> errorHelp,
     LazySvc<IRenderingHelper> renderingHelper)
-    : ServiceBase("Sxc.RzrEng", connect: [engineSpecsService, blockResourceExtractor, engineAppRequirements, exCtxFactory, errorHelp, renderingHelper, razorRenderer]),
-        IRazorEngine
+    : ServiceBase("Sxc.RzrEng", connect: [engineSpecsService, assetsExtractor, engineRequirementsApp, exCtxFactory, errorHelp, renderingHelper, razorRenderer]),
+        IEngine // IRazorEngine
 {
     /// <inheritdoc />
-    public RenderEngineResult Render(IBlock block, RenderSpecs specs)
+    public OutputFragmentWithAssets Render(IBlock block, RenderSpecs specs)
     {
-        var l = Log.Fn<RenderEngineResult>(timer: true);
+        var l = Log.Fn<OutputFragmentWithAssets>(timer: true);
 
         // Prepare #1: Specs
         var engineSpecs = engineSpecsService.GetSpecs(block);
 
         // Preflight: check if rendering is possible, or throw exceptions...
-        var preFlightResult = engineAppRequirements.CheckExpectedNoRenderConditions(engineSpecs);
+        var preFlightResult = engineRequirementsApp.CheckExpectedNoRenderConditions(engineSpecs);
         if (preFlightResult != null)
             return l.ReturnAsError(preFlightResult);
 
         // Render and process / return
         var renderedTemplate = RenderEntryRazor(engineSpecs, specs);
-        var result = blockResourceExtractor.Process(renderedTemplate);
+        var result = assetsExtractor.Process(renderedTemplate);
         return l.ReturnAsOk(result);
     }
 
     /// <inheritdoc/>
-    private RenderEngineResultRaw RenderEntryRazor(EngineSpecs engineSpecs, RenderSpecs specs)
+    private OutputFragment RenderEntryRazor(EngineSpecs engineSpecs, RenderSpecs specs)
     {
-        var l = Log.Fn<RenderEngineResultRaw>();
+        var l = Log.Fn<OutputFragment>();
         var task = RenderTask(engineSpecs, specs);
         try
         {

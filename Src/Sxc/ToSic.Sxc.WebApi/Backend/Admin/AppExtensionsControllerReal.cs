@@ -1,3 +1,4 @@
+using ToSic.Eav.Apps.Sys.Extensions;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.App;
@@ -21,8 +22,8 @@ public class AppExtensionsControllerReal(
     /// Get all App Extensions and their configuration (if any).
     /// </summary>
     /// <param name="appId">App identifier</param>
-    /// <returns>Object with property "extensions" containing an array of extensions</returns>
-    public ExtensionsResultDto Extensions(int appId)
+    /// <returns>Installed extensions</returns>
+    public ICollection<ExtensionDto> Extensions(int appId)
         => readerLazy.Value.GetExtensions(appId);
 
     /// <summary>

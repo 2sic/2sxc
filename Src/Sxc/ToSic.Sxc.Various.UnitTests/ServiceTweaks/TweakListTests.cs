@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.Services.Tweaks;
-using ToSic.Sxc.Services.Tweaks.Sys;
+﻿using ToSic.Sxc.Services.Tweaks.Sys;
 
 namespace ToSic.Sxc.Tests.ServiceTweaks;
 

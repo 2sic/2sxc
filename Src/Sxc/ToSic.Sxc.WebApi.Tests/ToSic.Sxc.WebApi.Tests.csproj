@@ -8,10 +8,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps.TestsHelpers\ToSic.Eav.Apps.TestHelpers.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.DataSource.TestHelpers\ToSic.Eav.DataSource.TestHelpers.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Data.Build.TestHelpers\ToSic.Eav.Data.Build.TestHelpers.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Security.TestHelpers\ToSic.Sys.Security.TestHelpers.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <Reference Include="System.Net.Http" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.WebHost" Version="5.3.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
 	  <Reference Include="System.IO.Compression" />
 	  <Reference Include="System.IO.Compression.FileSystem" />
   </ItemGroup>

@@ -1,7 +1,6 @@
 ﻿using System.Web;
 using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Eav.WebApi.Sys.Dto;
-using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using RealController = ToSic.Sxc.Backend.Admin.TypeControllerReal;
 
@@ -25,42 +24,13 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
-    /// <summary>
-    /// Get a list of all content-types.
-    /// See https://docs.2sxc.org/basics/data/content-types/index.html
-    /// </summary>
-    /// <param name="appId"></param>
-    /// <param name="scope"></param>
-    /// <param name="withStatistics"></param>
-    /// <returns></returns>
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
-        => Real.List(appId, scope, withStatistics);
-
-
-    /// <summary>
-    /// Used to be GET Scopes.
-    /// Scopes are a way to organize content types, see https://docs.2sxc.org/basics/data/content-types/scopes.html
-    /// </summary>
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public ScopesDto Scopes(int appId)
-        => Real.Scopes(appId);
-
-
-    /// <summary>
-    /// Used to be GET ContentTypes.
-    /// See https://docs.2sxc.org/basics/data/content-types/index.html
-    /// </summary>
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public ContentTypeDto Get(int appId, string contentTypeId, string scope = null)
-        => Real.Get(appId, contentTypeId, scope);
-
+    // Replaced by DataSource System.ContentTypes through query System.SysData.
+    ///// <summary>Get a list of all content-types.</summary>
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
+    //    => Real.List(appId, scope, withStatistics);
 
     /// <summary>
     /// Delete a Content-Type

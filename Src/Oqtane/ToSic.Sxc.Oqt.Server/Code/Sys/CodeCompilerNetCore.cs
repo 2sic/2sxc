@@ -19,7 +19,7 @@ internal class CodeCompilerNetCore(
     {
         var l = Log.Fn<AssemblyResult>(
             $"{nameof(virtualPath)}: '{virtualPath}'; {nameof(className)}: '{className}'; {spec}", timer: true);
-        var fullContentPath = serverPaths.Value.FullContentPath(virtualPath.Backslash());
+        var fullContentPath = serverPaths.Value.FullContentPath(virtualPath.ToSystemPath());
         var fullPath = NormalizeFullFilePath(fullContentPath);
         l.A($"New paths: '{fullContentPath}', '{fullPath}'");
         try

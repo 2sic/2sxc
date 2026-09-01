@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Sys.Paths;
+﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Eav.Environment.Sys.ServerPaths;
@@ -10,10 +10,9 @@ using ToSic.Eav.ImportExport.Sys.Xml;
 using ToSic.Eav.Persistence.Sys.Logging;
 using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.WebApi.Sys.Helpers.Validation;
-using ToSic.Eav.WebApi.Sys.Security;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Apps.Sys.Paths;
-using ToSic.Sxc.Backend.ImportExport;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sys.Utils;
 
@@ -21,37 +20,33 @@ namespace ToSic.Sxc.Backend.Views;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ViewsExportImport(
-    GenWorkDb<WorkEntitySave> workEntSave,
+    AppWorkQuick<WorkEntitySave> workEntSave,
     IServerPaths serverPaths,
     IEnvironmentLogger envLogger,
     LazySvc<JsonSerializer> jsonSerializerLazy,
-    IContextOfSite context,
+    ISite site,
     AppIconHelpers appIconHelpers,
     Generator<ImpExpHelpers> impExpHelpers,
     IResponseMaker responseMaker,
-    Generator<QueryDefinitionFactory> qDefBuilder,
-    IAppPathsMicroSvc appPathSvc)
+    Generator<QueryDefinitionFactory> qDefBuilder)
     : ServiceBase("Bck.Views",
         connect:
         [
             workEntSave, serverPaths, envLogger, jsonSerializerLazy, appIconHelpers, impExpHelpers, responseMaker,
-            qDefBuilder, appPathSvc
+            qDefBuilder, site
         ])
 {
     public THttpResponseType DownloadViewAsJson(int appId, int viewId)
     {
         var logCall = Log.Fn<THttpResponseType>($"{appId}, {viewId}");
-        SecurityHelpers.ThrowIfNotSiteAdmin(context.User, Log);
-        var appReader = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(context.Site.ZoneId, appId, context.User, context.Site.ZoneId);
+        var (appReader, appPaths) = impExpHelpers.New().GetReaderAndPathsAfterZoneSwitchPermissionCheck(site.ToAppIdentity(appId));
         var bundle = new BundleEntityWithAssets
         {
             Entity = appReader.List.GetOne(viewId)!.IfOfType(Settings.TemplateContentType)!
         };
 
-        var appPaths = appPathSvc.Get(appReader, context.Site);
-
         // Attach files
-        var view = new View(bundle.Entity!, [context.Site.CurrentCultureCode], qDefBuilder);
+        var view = new View(bundle.Entity!, [site.CurrentCultureCode], qDefBuilder);
 
         if (!string.IsNullOrEmpty(view.Path))
         {
@@ -95,8 +90,7 @@ public class ViewsExportImport(
         try
         {
             // 0.1 Check permissions, get the app, 
-            var appRead = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(context.Site.ZoneId, appId, context.User, context.Site.ZoneId);
-            var appPaths = appPathSvc.Get(appRead, context.Site);
+            var (appRead, appPaths) = impExpHelpers.New().GetReaderAndPathsAfterZoneSwitchPermissionCheck(site.ToAppIdentity(appId));
 
             // 0.2 Verify it's json etc.
             if (files.Any(file => !Json.IsValidJson(file.Contents)))
@@ -105,7 +99,9 @@ public class ViewsExportImport(
             // 1. create the views
             var serializer = jsonSerializerLazy.Value.SetApp(appRead);
 
-            var bundles = files.Select(f => serializer.DeserializeEntityWithAssets(f.Contents)).ToList();
+            var bundles = files
+                .Select(f => serializer.DeserializeEntityWithAssets(f.Contents))
+                .ToList();
 
             if (bundles.Any(t => t == null!))
                 throw new NullReferenceException("At least one file returned a null-item, something is wrong");
@@ -135,7 +131,7 @@ public class ViewsExportImport(
         }
     }
 
-    private string? GetRealPath(IAppPaths app, JsonAsset asset)
+    private static string? GetRealPath(IAppPaths app, JsonAsset asset)
     {
         if (!string.IsNullOrEmpty(asset.Storage) && asset.Storage != JsonAsset.StorageApp)
             return null;

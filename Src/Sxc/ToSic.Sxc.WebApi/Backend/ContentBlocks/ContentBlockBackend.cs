@@ -5,9 +5,9 @@ using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockEditor;
 using ToSic.Sxc.Blocks.Sys.Work;
 using ToSic.Sxc.Cms.Publishing.Sys;
+using ToSic.Sxc.Render.Block.Sys;
+using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.Render.Sys;
-using ToSic.Sxc.Render.Sys.Output;
-using ToSic.Sxc.Render.Sys.RenderBlock;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Security.Permissions;
@@ -17,18 +17,18 @@ namespace ToSic.Sxc.Backend.ContentBlocks;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentBlockBackend(
-    GenWorkPlus<WorkViews> workViews,
+    AppWorkChain<WorkViews> workViews,
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> multiPermissionsApp,
     IPagePublishing publishing,
-    GenWorkDb<WorkBlocksMod> workBlocksMod,
+    AppWorkChain<WorkBlocksMod> workBlocksMod,
     ISxcCurrentContextService ctxService,
-    LazySvc<IBlockResourceExtractor> optimizerLazy,
+    LazySvc<IAssetsExtractor> optimizerLazy,
     LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
-    AppWorkContextService appWorkCtxService,
+    AppWorkContextService appCtxSvc,
     Generator<BlockOfEntity> entityBlockGenerator,
-    Generator<IBlockBuilder> blockBuilderGenerator)
+    Generator<IBlockRenderer> blockBuilderGenerator)
     : ServiceBase("Bck.FldLst",
-        connect: [workViews, multiPermissionsApp, publishing, workBlocksMod, ctxService, optimizerLazy, blockEditorSelectorLazy, appWorkCtxService, entityBlockGenerator, blockBuilderGenerator])
+        connect: [workViews, multiPermissionsApp, publishing, workBlocksMod, ctxService, optimizerLazy, blockEditorSelectorLazy, appCtxSvc, entityBlockGenerator, blockBuilderGenerator])
 {
 
     private const bool DebugDetails = true;
@@ -36,7 +36,7 @@ public class ContentBlockBackend(
     public IRenderResult NewBlockAndRender(int parentId, string field, int index, string app = "", Guid? guid = null)
     {
         var block = ctxService.BlockRequired();
-        var appWorkCtxDb = appWorkCtxService.CtxWithDb(block.App);
+        var appWorkCtxDb = appCtxSvc.ContextNew(block.App);
         var entityId = workBlocksMod.New(appWorkCtxDb).NewBlockReference(parentId, field, index, app, guid);
 
         // now return a rendered instance
@@ -50,7 +50,7 @@ public class ContentBlockBackend(
         Log.A($"add order:{index}");
 
         var block = ctxService.BlockRequired();
-        var appWorCtxDb = appWorkCtxService.CtxWithDb(block.App);
+        var appWorCtxDb = appCtxSvc.ContextNew(block.App);
 
         // use dnn versioning - this is always part of page
         publishing.DoInsidePublishing(block.Context, _ 
@@ -151,8 +151,8 @@ public class ContentBlockBackend(
         // if a preview templateId was specified, swap to that
         if (templateId > 0)
         {
-            var appWorkCtxPlus = appWorkCtxService.ContextPlus(block.Context.AppReaderRequired);
-            var template = workViews.New(appWorkCtxPlus).Get(templateId);
+            var ctx = appCtxSvc.ContextNew(block.Context.AppReaderRequired);
+            var template = workViews.New(ctx).Get(templateId);
             template.Edition = edition;
             block = ctxService.SwapBlockView(template);
         }

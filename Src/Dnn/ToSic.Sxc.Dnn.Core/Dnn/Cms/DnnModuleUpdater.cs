@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Dnn.Cms;
 // TODO: @STV - this looks very similar to the Oqtane implementation
 // Probably best to make a base class and de-duplicate.
 internal class DnnModuleUpdater(
-    GenWorkPlus<WorkViews> workViews,
+    AppWorkQuick<WorkViews> workViews,
     IZoneMapper zoneMapper,
     IAppsCatalog appsCatalog,
     ISite site)
@@ -43,17 +43,22 @@ internal class DnnModuleUpdater(
         }
 
         // Change to 1. available preferable default template if app has been set
-        if (appId.HasValue)
+        if (!appId.HasValue)
         {
-            var appIdentity = new AppIdentity(zoneId, appId.Value);
-
-            var templateGuid = workViews.New(appIdentity).GetAll()
-                .OrderByDescending(v => v.Metadata.HasType(KnownDecorators.IsDefaultDecorator)) // first sort by IsDefaultDecorator DESC
-                .ThenBy(v => v.Name) // than by Name ASC
-                .FirstOrDefault(t => !t.IsHidden)?.Guid;
-
-            if (templateGuid.HasValue) SetPreview(instance.Id, templateGuid.Value);
+            l.Done();
+            return;
         }
+
+        var appIdentity = new AppIdentity(zoneId, appId.Value);
+
+        var templateGuid = workViews.New(appIdentity).GetAll()
+            .OrderByDescending(v =>
+                v.Metadata.HasType(KnownDecorators.IsDefaultDecorator)) // first sort by IsDefaultDecorator DESC
+            .ThenBy(v => v.Name) // than by Name ASC
+            .FirstOrDefault(t => !t.IsHidden)?.Guid;
+
+        if (templateGuid.HasValue)
+            SetPreview(instance.Id, templateGuid.Value);
 
         l.Done();
     }

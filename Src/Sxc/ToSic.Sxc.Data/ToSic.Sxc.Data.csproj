@@ -2,6 +2,9 @@
 
   <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-Nullable.props" />
 
+  <!-- As of 2026-06-28 2dm this should be exported again -->
+  <Import Project="../../SharedImports/CsProj.Props/CreateXDocsOnRelease.props" />
+
   <PropertyGroup>
     <AssemblyName>ToSic.Sxc.Data</AssemblyName>
   </PropertyGroup>
@@ -10,10 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ToSic.Sxc.Core\ToSic.Sxc.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Data\DataWrapper %28no namespace%29\" />
   </ItemGroup>
 
 </Project>

@@ -1,9 +1,9 @@
 ﻿using Oqtane.Models;
 using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Render.JsContext.Sys;
+using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.Render.Sys;
-using ToSic.Sxc.Render.Sys.JsContext;
-using ToSic.Sxc.Render.Sys.Output;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sys.Utils;
 
@@ -12,9 +12,9 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output;
 [PrivateApi]
 internal partial class OqtPageOutput(
     SiteState siteState,
-    IBlockResourceExtractor blockResourceExtractor,
+    IAssetsExtractor assetsExtractor,
     IJsApiService jsApiService)
-    : ServiceBase($"{OqtConstants.OqtLogPrefix}.AssHdr", connect: [siteState, blockResourceExtractor, jsApiService])
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.AssHdr", connect: [siteState, assetsExtractor, jsApiService])
 {
     #region Constructor and DI
 

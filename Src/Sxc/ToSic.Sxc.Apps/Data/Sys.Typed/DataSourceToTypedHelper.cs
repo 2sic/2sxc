@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Models.Sys;
+using ToSic.Eav.Models.Sys;
 using ToSic.Sxc.Data.Sys.Factory;
 using static ToSic.Eav.DataSource.DataSourceConstants;
 
@@ -12,7 +12,7 @@ internal class DataSourceToTypedHelper(ICodeDataFactory cdf, IDataSource dataSou
         var autoUseDefault = typeName == null && useDefaultIfNameNotSetAndNotFound;
 
         var streamNames = typeName == null
-            ? DataModelAnalyzer.GetStreamNameList<T>()
+            ? ModelStreamNames.GetStreamNameList<T>()
             : autoUseDefault
                 ? [typeName, StreamDefaultName]
                 : [typeName];

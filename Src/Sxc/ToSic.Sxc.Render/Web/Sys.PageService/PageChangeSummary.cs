@@ -1,6 +1,6 @@
-﻿using ToSic.Sxc.Render.Sys;
-using ToSic.Sxc.Render.Sys.ModuleHtml;
-using ToSic.Sxc.Render.Sys.Output;
+﻿using ToSic.Sxc.Render.Output.Sys;
+using ToSic.Sxc.Render.StaticAssets.Sys;
+using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Sys.Render.PageFeatures;
@@ -8,7 +8,7 @@ using ToSic.Sxc.Web.Sys.ClientAssets;
 using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Sys.PageServiceShared;
 using ToSic.Sys.Requirements;
-using static ToSic.Sxc.Render.Sys.Output.ClientAssetConstants;
+using static ToSic.Sxc.Render.StaticAssets.Sys.ClientAssetConstants;
 using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 
 namespace ToSic.Sxc.Web.Sys.PageService;
@@ -19,10 +19,10 @@ namespace ToSic.Sxc.Web.Sys.PageService;
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class PageChangeSummary(
-    LazySvc<IBlockResourceExtractor> resourceExtractor,
-    LazySvc<RequirementsService> requirements,
-    IModuleHtmlService moduleHtmlService)
-    : Services_ServiceBase(SxcLogName + "PgChSm", connect: [requirements, resourceExtractor, moduleHtmlService])
+    LazySvc<IAssetsExtractor> resourceExtractor,
+    LazySvc<IRequirementsService> requirements,
+    IModulesOutputService modulesOutputService)
+    : Services_ServiceBase(SxcLogName + "PgChSm", connect: [requirements, resourceExtractor, modulesOutputService])
 {
     /// <summary>
     /// Finalize the page and get all changes such as header modifications etc.
@@ -52,13 +52,13 @@ public class PageChangeSummary(
         var features = pss.PageFeatures.GetFeaturesWithDependentsAndFlush(Log);
 
         var errors = requirements.Value
-            .Check(features)
+            .Issues(features)
             .Select(f => f.Message)
             .ToList();
 
         // New beta 2025-03-18 v19.03.03
         var cacheSettings = moduleId != 0
-            ? ((ModuleHtmlService)moduleHtmlService).GetOutputCache(moduleId)
+            ? modulesOutputService.GetOutputCache(moduleId)
             : null;
 
         var csp = ((IPageServiceSharedInternal)pss).Csp;
@@ -68,6 +68,7 @@ public class PageChangeSummary(
             FeaturesFromResources = rest,
             Features = features,
             HeadChanges = pss.GetHeadChangesAndFlush(Log),
+            Hints = modulesOutputService.GetHintsAndFlush(moduleId),
             PageChanges = pss.GetPropertyChangesAndFlush(Log),
 
             HttpStatusCode = pss.HttpStatusCode,

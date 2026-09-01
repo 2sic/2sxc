@@ -13,4 +13,4 @@ public record ApiControllerDependencies(
     IExecutionContextFactory ExCtxFactory,
     DnnAppFolderUtilities AppFolderUtilities,
     LazySvc<Apps.App> AppOverrideLazy)
-    : DependenciesRecord(connect: [ExCtxFactory, AppFolderUtilities, AppOverrideLazy]);
+    : DependenciesBase(connect: [ExCtxFactory, AppFolderUtilities, AppOverrideLazy]);

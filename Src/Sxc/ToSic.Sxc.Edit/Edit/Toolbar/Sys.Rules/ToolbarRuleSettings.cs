@@ -10,7 +10,7 @@ internal class ToolbarRuleSettings(
     string? classes = null,
     string? autoAddMore = null,
     string? ui = null,
-    string? parameters = null) : ToolbarRule(CommandName, ui: ui ?? "", parameters: parameters ?? "")
+    string? parameters = null) : ToolbarRule(command: CommandName, ui: ui ?? "", parameters: parameters ?? "")
 {
     private const string CommandName = "settings";
     private readonly (string, string?)[] _uiParams =

@@ -13,9 +13,10 @@ public abstract class Razor14: Razor12<dynamic>, IRazor14<object, ServiceKit14>
     [field: AllowNull, MaybeNull]
     public ServiceKit14 Kit => field ??= CodeApi.ServiceKit14;
 
+    // #DropOqtaneGetCodeV22
     /// <inheritdoc cref="ITypedCode16.GetCode"/>
     [PrivateApi("added in 16.05, but not sure if it should be public")]
-    public dynamic? GetCode(string path, NoParamOrder npo = default, string? className = default)
-        => RzrHlp.GetCode(path, npo, className);
+    public dynamic GetCode(string path, NoParamOrder npo = default, string? className = default)
+        => throw new NotSupportedException("GetCode() is not supported any more in Oqtane. Use AppCode instead.");
 
 }

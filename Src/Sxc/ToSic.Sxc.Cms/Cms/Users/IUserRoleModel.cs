@@ -1,5 +1,5 @@
-﻿using ToSic.Sxc.Cms.Users.Sys;
-using ToSic.Sxc.Data;
+﻿using ToSic.Eav.Data.ContentTypes;
+using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sxc.DataSources;
 
 namespace ToSic.Sxc.Cms.Users;
@@ -17,10 +17,18 @@ namespace ToSic.Sxc.Cms.Users;
 /// 
 /// * Introduced in v19.01
 /// </remarks>
-[ModelSpecs(Use = typeof(UserRoleModelOfEntity))]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
-public interface IUserRoleModel : IModelFromData
+[ContentType(
+    Guid = "dc104414-e61a-4a59-bda8-455772ceb0cc",
+    Description = "User-Role in the site",
+    Name = Constants.ContentTypeName
+)]
+public interface IUserRoleModel : IModelFromEntity<UserRoleModel>
 {
+    private static class Constants
+    {
+        internal const string ContentTypeName = "Role";
+    }
     /// <summary>
     /// The Role ID in the database.
     /// </summary>
@@ -29,6 +37,7 @@ public interface IUserRoleModel : IModelFromData
     /// <summary>
     /// The Role Name as it is displayed everywhere.
     /// </summary>
+    [ContentTypeTitle]
     string Name { get; }
 
     /// <summary>

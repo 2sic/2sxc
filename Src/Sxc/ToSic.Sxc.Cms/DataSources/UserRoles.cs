@@ -114,14 +114,14 @@ public class UserRoles : CustomDataSourceAdvanced
                 .Where(excludeRolesPredicate)
                 .ToList();
 
-        var rolesFactory = DataFactory.SpawnNew(options: UserRoleModel.Options);
+        var rolesFactory = DataFactory.SpawnNew(new());
 
         var result = rolesFactory.Create(roles);
 
         return l.Return(result, $"found {result.Count} roles");
     }
 
-    private Func<UserRoleModel, bool>? KeepRolesCondition()
+    private Func<UserRoleModelRaw, bool>? KeepRolesCondition()
     {
         var includeRolesFilter = RolesCsvListToInt(RoleIds);
         return includeRolesFilter.Any()
@@ -129,7 +129,7 @@ public class UserRoles : CustomDataSourceAdvanced
             : null;
     }
 
-    private Func<UserRoleModel, bool>? DropRolesCondition()
+    private Func<UserRoleModelRaw, bool>? DropRolesCondition()
     {
         var excludeRolesFilter = RolesCsvListToInt(ExcludeRoleIds);
         return excludeRolesFilter.Any()

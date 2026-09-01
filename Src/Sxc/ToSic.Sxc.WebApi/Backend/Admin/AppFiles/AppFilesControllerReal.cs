@@ -1,8 +1,11 @@
 ﻿using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.DataSource;
+using ToSic.Eav.Services;
 using ToSic.Sxc.Apps.Sys.EditAssets;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sys.Users;
-using static System.StringComparison;
+using ToSic.Sys.Utils;
+using AppEditionsDataSource = ToSic.Sxc.DataSources.AppEditions;
 
 namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
@@ -10,17 +13,15 @@ namespace ToSic.Sxc.Backend.Admin.AppFiles;
 public partial class AppFilesControllerReal(
     ISite site,
     IUser user,
-    Generator<AssetEditor> assetEditorGenerator,
+    AppWorkQuick<AssetEditor> assetEditorGenerator,
     IAppReaderFactory appReaders,
-    LazySvc<CodeControllerReal> codeController,
+    IDataSourceGenerator<AppEditionsDataSource> appEditions,
     LazySvc<AppCodeLoader> appCodeLoader,
     AssetTemplates assetTemplates,
     IAppPathsMicroSvc appPathsFactoryTemp)
     : ServiceBase("Bck.Assets",
-        connect:
-        [
-            assetEditorGenerator, assetTemplates, appReaders, codeController, appCodeLoader, appPathsFactoryTemp
-        ]), IAppFilesController
+        connect: [assetEditorGenerator, assetTemplates, appReaders, appEditions, appCodeLoader, appPathsFactoryTemp]),
+        IAppFilesController
 {
     public const string LogSuffix = "AppAss";
 
@@ -77,7 +78,7 @@ public partial class AppFilesControllerReal(
 
     private static AppFileDto EnsureRequiredFolder(AppFileDto assetFromTemplateDto)
     {
-        assetFromTemplateDto = assetFromTemplateDto with { Path = assetFromTemplateDto.Path.Replace("/", "\\") };
+        assetFromTemplateDto = assetFromTemplateDto with { Path = assetFromTemplateDto.Path.ToSystemPath() };
 
         // ensure that DataSource is in DataSources folder
         if (assetFromTemplateDto.TemplateKey == AssetTemplates.DataSourceHybrid.Key)
@@ -108,18 +109,18 @@ public partial class AppFilesControllerReal(
         // TBD: future purpose implementation
         purpose = (purpose ?? AssetTemplates.ForTemplate).ToLowerInvariant().Trim();
         var defId = AssetTemplates.RazorTyped.Key;
-        if (purpose.Equals(AssetTemplates.ForApi, InvariantCultureIgnoreCase))
+        if (purpose.EqualsInsensitive(AssetTemplates.ForApi))
             defId = AssetTemplates.ApiHybrid.Key;
-        if (purpose.Equals(AssetTemplates.ForDataSource, InvariantCultureIgnoreCase))
+        if (purpose.EqualsInsensitive(AssetTemplates.ForDataSource))
             defId = AssetTemplates.DataSourceHybrid.Key;
-        if (purpose.Equals(AssetTemplates.ForSearch, InvariantCultureIgnoreCase))
+        if (purpose.EqualsInsensitive(AssetTemplates.ForSearch))
             defId = AssetTemplates.DnnSearch.Key;
 
         // For templates we also check the type
-        if (purpose.Equals(AssetTemplates.ForTemplate, InvariantCultureIgnoreCase))
+        if (purpose.EqualsInsensitive(AssetTemplates.ForTemplate))
         {
             type = type?.ToLowerInvariant().Trim() ?? "";
-            if (type.Equals(AssetTemplates.TypeToken, InvariantCultureIgnoreCase))
+            if (type.EqualsInsensitive(AssetTemplates.TypeToken))
                 defId = AssetTemplates.Token.Key;
         }
 
@@ -133,10 +134,9 @@ public partial class AppFilesControllerReal(
     private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(int appId, int templateId, bool global, string? path)
     {
         var l = Log.Fn<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
-        var app = appReaders.Get(appId);
-        var assetEditor = assetEditorGenerator.New();
+        var assetEditor = assetEditorGenerator.New(appId);
 
-        assetEditor.Init(app, path! /* not sure about this, but ignore for now 2026-06-23 2dm */, global, templateId);
+        assetEditor.Init(path! /* not sure about this, but ignore for now 2026-06-23 2dm */, global, templateId);
         assetEditor.EnsureUserMayEditAssetOrThrow();
         return l.Return(assetEditor);
     }
@@ -144,8 +144,8 @@ public partial class AppFilesControllerReal(
     private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(AppFileDto assetFromTemplateDto)
     {
         var l = Log.Fn<AssetEditor>($"a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
-        var app = appReaders.Get(assetFromTemplateDto.AppId);
-        var assetEditor = assetEditorGenerator.New().Init(app, assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0);
+        var assetEditor = assetEditorGenerator.New(assetFromTemplateDto.AppId)
+            .Init(assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0);
         assetEditor.EnsureUserMayEditAssetOrThrow(assetEditor.InternalPath);
         return l.Return(assetEditor);
     }
@@ -159,7 +159,7 @@ public partial class AppFilesControllerReal(
             var assetFromTemplateDto = new AppFileDto
             {
                 AppId = appId,
-                Path = path?.Replace("/", "\\") ?? string.Empty,
+                Path = path?.ToSystemPath() ?? string.Empty,
                 Global = b,
                 TemplateKey = templateKey,
             };
@@ -186,4 +186,13 @@ public partial class AppFilesControllerReal(
         }
 
     }
+
+    private ICollection<string> AvailableEditionNames(int appId)
+        => appEditions
+            .New(new DataSourceOptions { AppIdentityOrReader = appReaders.AppIdentity(appId) })
+            .List
+            .Select(edition => edition.Get<string>("Name"))
+            .Where(name => name != null)
+            .Select(name => name!)
+            .ToListOpt();
 }

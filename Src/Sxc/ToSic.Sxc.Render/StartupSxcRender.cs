@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Sxc.Render.Block.Sys;
+using ToSic.Sxc.Render.JsContext.Sys;
 using ToSic.Sxc.Render.Sys;
-using ToSic.Sxc.Render.Sys.JsContext;
-using ToSic.Sxc.Render.Sys.RenderBlock;
 using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
@@ -23,8 +23,8 @@ public static class StartupSxcRender
         services.TryAddTransient<SimpleRenderer>();
         services.TryAddTransient<InTextContentBlockRenderer>();
         
-        services.TryAddTransient<IBlockBuilder, BlockBuilder>();
-        services.TryAddTransient<BlockBuilder.Dependencies>();
+        services.TryAddTransient<IBlockRenderer, BlockRenderer>();
+        services.TryAddTransient<BlockRenderer.Dependencies>();
 
         services.TryAddTransient<IRenderingHelper, RenderingHelper>();
 

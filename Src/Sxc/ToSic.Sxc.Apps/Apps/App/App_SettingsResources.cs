@@ -21,11 +21,11 @@ public partial class App
 
     /// <inheritdoc cref="Eav.ImportExport.Sys.Settings" />
     public dynamic? Settings => AppSettings == null ? null : _settings.Get(() => MakeDynProperty(AppSettings, propsRequired: false));
-    private readonly GetOnce<dynamic> _settings = new();
+    private readonly LazyGet<dynamic> _settings = new();
 
     /// <inheritdoc cref="IDynamicCode12Docs.Resources" />
     public dynamic? Resources => AppResources == null ? null : _res.Get(() => MakeDynProperty(AppResources, propsRequired: false));
-    private readonly GetOnce<dynamic> _res = new();
+    private readonly LazyGet<dynamic> _res = new();
 
     #endregion
 

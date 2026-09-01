@@ -1,17 +1,14 @@
-﻿using System.Web.Hosting;
-using Custom.Razor.Sys;
+﻿using Custom.Razor.Sys;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Data.Sys.Wrappers;
-using ToSic.Sxc.Dnn.Code;
+using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Sys.ExecutionContext;
-using ToSic.Sys.Code.Help;
-using ToSic.Sys.Exceptions;
 
 namespace ToSic.Sxc.Dnn.Razor;
 
 [PrivateApi]
-internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
+internal class DnnRazorHelper() : CodeHelperBase("Sxc.RzrHlp")
 {
     #region Constructor / Init
 
@@ -52,65 +49,37 @@ internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
     #region Html Helper
 
     internal IHtmlHelper Html => field
-        ??= ExCtx.GetService<HtmlHelper>().Init(Page, this, ExCtx.GetContextOfBlock()?.User.IsSystemAdmin ?? false);
-
-    #endregion
-
-    #region RenderPage
-
-    /// <summary>
-    /// RenderPage is disabled in Razor12+ to force designers to use Html.Partial
-    /// </summary>
-    internal HelperResult RenderPageNotSupported()
-        => throw new NotSupportedException("RenderPage(...) is not supported in Hybrid Razor. Use Html.Partial(...) instead.");
-
-
-    #endregion
-
-    #region Create Instance
-
-    protected override string GetCodeNormalizePath(string virtualPath) 
-        => Page.NormalizePath(virtualPath);
-
-    protected override object GetCodeCshtml(string path)
-    {
-        // ReSharper disable once ConvertTypeCheckToNullCheck
-        if (Page is not IHasDnn)
-            throw new ExceptionWithHelp(new CodeHelp
-            {
-                Name = "create-instance-cshtml-only-in-old-code",
-                Detect = null,
-                UiMessage = "CreateInstance(*.cshtml) is not supported in Hybrid Razor. Use .cs files instead."
-            });
-        var pageAsCode = WebPageBase.CreateInstanceFromVirtualPath(path);
-        var pageAsRcb = pageAsCode as RazorComponentBase;
-        pageAsRcb?.RzrHlp.ConfigurePage(Page, pageAsRcb.VirtualPath);
-        return pageAsCode;
-    }
-
-    protected override string GetCodeFullPathForExistsCheck(string path)
-    {
-        var l = Log.Fn<string>(path);
-        var fullPath = HostingEnvironment.MapPath(path);
-        return l.ReturnAndLog(fullPath);
-    }
+        ??= ExCtx.GetService<Generator<HtmlHelper, HtmlHelperContext>>()
+            .New(new(){ Page = Page, RazorHelper = this, IsSystemAdmin = ExCtx.GetContextOfBlock()?.User.IsSystemAdmin ?? false });
+            //.Init(Page, this, ExCtx.GetContextOfBlock()?.User.IsSystemAdmin ?? false);
 
     #endregion
 
     #region DynamicModel and Factory
 
-    private ICodeDataPoCoWrapperService CodeDataWrapper => _dynJacketFactory.Get(() => ExCtx.GetService<ICodeDataPoCoWrapperService>());
-    private readonly GetOnce<ICodeDataPoCoWrapperService> _dynJacketFactory = new();
+    private ICodeDataPoCoWrapperService CodeDataWrapper => field ??= ExCtx.GetService<ICodeDataPoCoWrapperService>();
 
     /// <inheritdoc cref="IRazor14{TModel,TServiceKit}.DynamicModel"/>
-    public dynamic DynamicModel => _dynamicModel ??= CodeDataWrapper.FromDictionary(Page.PageData);
-    private dynamic _dynamicModel;
+    public object DynamicModel => _dynamicModel ??= CodeDataWrapper.FromDictionary(Page.PageData);
+    private object _dynamicModel;
 
     internal void SetDynamicModel(RenderSpecs viewData)
     {
         var l = Log.Fn();
         _dynamicModel = CodeDataWrapper.DynamicFromObject(viewData.Data, WrapperSettings.Dyn(children: false, realObjectsToo: false));
         l.Done();
+    }
+
+    #endregion
+
+    #region Exception Forwarding (moved here from RazorHelperBase 2026-08-10 2dm
+
+    public List<Exception>? ExceptionsOrNull { get; private set; }
+
+    public Exception Add(Exception ex)
+    {
+        (ExceptionsOrNull ??= []).Add(ex);
+        return ex;
     }
 
     #endregion

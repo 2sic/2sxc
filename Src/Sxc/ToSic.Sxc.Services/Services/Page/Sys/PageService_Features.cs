@@ -1,9 +1,6 @@
-﻿using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Data;
+﻿using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys;
-using ToSic.Sxc.Data.Sys.DynamicStack;
 using ToSic.Sxc.Sys.ExecutionContext;
-using ToSic.Sys.Utils;
 using static ToSic.Sxc.Web.Sys.WebResources.WebResourceConstants;
 
 namespace ToSic.Sxc.Services.Page.Sys;
@@ -57,10 +54,7 @@ partial class PageService
     }
 
     /// <inheritdoc />
-    public string? Activate(
-        NoParamOrder npo = default,
-        bool condition = true,
-        params string[] features)
+    public string? Activate(NoParamOrder npo = default, bool condition = true, params string[] features)
     {
         var l = Log.Fn<string>();
 
@@ -106,17 +100,14 @@ partial class PageService
     /// </summary>
     public List<string> FeatureKeysAdded { get; } = [];
 
-    public bool HasFeature(string featureKey)
-        => FeatureKeysAdded.Any(f => f.EqualsInsensitive(featureKey));
+    //public bool HasFeature(string featureKey)
+    //    => FeatureKeysAdded.Any(f => f.EqualsInsensitive(featureKey));
 
 
     private string? CdnSource => _cdnSource.Get(() => WebResources.Get<string>(CdnSourcePublicField));
-    private readonly GetOnce<string?> _cdnSource = new();
+    private readonly LazyGet<string?> _cdnSource = new();
 
-    private DynamicEntity WebResources => _webResources.Get(() => (DynamicEntity)Settings.Get(WebResourcesNode)!)!;
-    private readonly GetOnce<DynamicEntity> _webResources = new();
-
-    private DynamicStack Settings => _settings.Get(() => (ExCtx.GetDataStack<IDynamicStack>(ExecutionContextStateNames.Settings) as DynamicStack)!)!;
-    private readonly GetOnce<DynamicStack> _settings = new();
-
+    private DynamicEntity WebResources => field
+        ??= (DynamicEntity)ExCtx.GetDataStack<IDynamicStack>(ExecutionContextStateNames.Settings).Get(WebResourcesNode)!;
+    
 }

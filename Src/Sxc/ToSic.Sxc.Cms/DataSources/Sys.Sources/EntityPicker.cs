@@ -58,7 +58,7 @@ public class EntityPicker : DataSourceBase
     /// </summary>
     [PrivateApi]
     public EntityPicker(
-        GenWorkPlus<WorkEntities> workEntities,
+        AppWorkQuick<WorkEntities> workEntities,
         ICurrentContextService ctxService,
         Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions,
         Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> typePermissions,
@@ -76,7 +76,7 @@ public class EntityPicker : DataSourceBase
         ProvideOut(GetList);
     }
 
-    private readonly GenWorkPlus<WorkEntities> _workEntities;
+    private readonly AppWorkQuick<WorkEntities> _workEntities;
     private readonly ICurrentContextService _ctxService;
     private readonly IUser _user;
     private readonly IAppReaderFactory _appReaders;
@@ -88,7 +88,9 @@ public class EntityPicker : DataSourceBase
     /// <summary>
     /// Override Out to provide the Default stream as well as additional streams for each content-type
     /// </summary>
-    public override IReadOnlyDictionary<string, IDataStream> Out => _out.Get(() =>
+    public override IReadOnlyDictionary<string, IDataStream> Out => field ??= GenerateOut();
+
+    private IReadOnlyDictionary<string, IDataStream> GenerateOut()
     {
         // 0. If no names specified, then out is same as base out
         if (TypeNames.IsEmptyOrWs())
@@ -113,9 +115,7 @@ public class EntityPicker : DataSourceBase
         }
 
         return outList.AsReadOnly();
-    })!;
-
-    private readonly GetOnce<IReadOnlyDictionary<string, IDataStream>> _out = new();
+    }
 
     #endregion
 
@@ -172,7 +172,7 @@ public class EntityPicker : DataSourceBase
                 {
                     var withDrafts = permCheckType.EnsureAny(GrantSets.ReadDraft);
                     var entitiesSvc = _workEntities.New(this, showDrafts: withDrafts);
-                    var ofType = entitiesSvc.AppWorkCtx.Data.List.GetAll(type).ToList();
+                    var ofType = entitiesSvc.MyOptions.Data.List.GetAll(type).ToList();
                     result.AddRange(ofType);
                     lType.Done($"{ofType.Count}");
                 }

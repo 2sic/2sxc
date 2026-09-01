@@ -16,7 +16,8 @@ using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Engines.Sys;
+
+using ToSic.Sxc.Render.Engines.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sys.Code.Help;
@@ -112,10 +113,10 @@ public abstract class RazorTyped<TModel>()
 
     #endregion
 
-
+    // #DropOqtaneGetCodeV22
     /// <inheritdoc cref="ITypedCode16.GetCode"/>
     public dynamic? GetCode(string path, NoParamOrder npo = default, string? className = default)
-        => RzrHlp.GetCode(path, npo, className);
+        => throw new NotSupportedException("GetCode() is not supported any more in Oqtane. Use AppCode instead.");
 
     #region MyContext & UniqueKey
 

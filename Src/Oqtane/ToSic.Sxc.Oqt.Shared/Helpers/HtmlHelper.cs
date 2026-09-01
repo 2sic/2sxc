@@ -137,8 +137,12 @@ public class HtmlHelper
             var src = url ?? "";
             if (src.StartsWith('~'))
                 src = src.Replace("~", "/Themes/" + themeName + "/").Replace("//", "/");
-            if (!src.Contains("://") && !string.IsNullOrEmpty(alias.BaseUrl) && !src.StartsWith(alias.BaseUrl))
-                src = alias.BaseUrl + src;
+            if (!src.Contains("://"))
+            {
+                var baseUrl = GetBaseUrl(alias);
+                if (!src.StartsWith(baseUrl))
+                    src = baseUrl + src;
+            }
             if (!html.Contains(src, StringComparison.OrdinalIgnoreCase) && !pageHtml.Contains(src, StringComparison.OrdinalIgnoreCase))
             {
                 ++count;
@@ -226,6 +230,13 @@ public class HtmlHelper
         return html;
     }
 
+    /// <summary>
+    /// Gets the base URL from the alias. If BaseUrl is not set (null for server-side scenarios),
+    /// constructs it from Protocol and Name.
+    /// </summary>
+    private static string GetBaseUrl(Alias alias)
+        => alias?.BaseUrl ?? "";
+
     private static string CreateScript(Resource resource, Alias alias, int count)
     {
         if (!resource.Content.IsNullOrEmpty())
@@ -237,9 +248,10 @@ public class HtmlHelper
         if (resource.Reload)
             return "<page-script src=\"" + resource.Url + "\"></page-script>";
 
+        var baseUrl = GetBaseUrl(alias);
         var str = resource.Url.Contains("://")
             ? resource.Url
-            : alias.BaseUrl + (alias.BaseUrl.EndsWith('/')
+            : baseUrl + (baseUrl.EndsWith('/')
                 ? resource.Url.TrimStart('/')
                 : resource.Url); // avoid "path//file.js" in URL
 

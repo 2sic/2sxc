@@ -25,8 +25,7 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
     private bool IsEnabled => _isEnabled ??= featureSvc.IsEnabled(SxcFeatures.LightSpeedOutputCachePartials.NameId);
     private bool? _isEnabled;
 
-    private string AppRuntimeKey => _appRuntimeKey ??= (exCtx.GetApp() as IAppWithInternal)?.AppReader.Specs.RuntimeKey ?? appId.ToString();
-    private string? _appRuntimeKey;
+    private string AppCacheKey => field ??= (exCtx.GetApp() as IAppWithInternal)?.AppReader.Specs.CacheKey ?? appId.ToString();
 
     /// <summary>
     /// Underlying cache service, taken from the execution context so it knows more about the current request.
@@ -40,7 +39,7 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
     // [field: AllowNull, MaybeNull]
     [field: AllowNull, MaybeNull]
     public ICacheSpecs CacheSpecsRawWithModel => field
-        ??= CacheSvc.CreateSpecs(CacheSpecConstants.PrefixForDontPrefix + OutputCacheKeys.PartialKey(AppRuntimeKey, normalizedPath))
+        ??= CacheSvc.CreateSpecs(CacheSpecConstants.PrefixForDontPrefix + OutputCacheKeys.PartialKey(AppCacheKey, normalizedPath))
             .AttachModel(model);
 
     /// <summary>
@@ -54,10 +53,10 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
 
     [field: AllowNull, MaybeNull]
     private ICacheSpecs CacheSpecsForSettings => field
-        ??= CacheSvc.CreateSpecs(CacheSpecConstants.PrefixForDontPrefix + OutputCacheKeys.PartialSettingsKey(AppRuntimeKey, normalizedPath));
+        ??= CacheSvc.CreateSpecs(CacheSpecConstants.PrefixForDontPrefix + OutputCacheKeys.PartialSettingsKey(AppCacheKey, normalizedPath));
 
     private CacheKeyConfig? CacheSpecsConfig => _cacheSpecsConfig.Get(() => CacheSvc.Get<CacheKeyConfig>(CacheSpecsForSettings));
-    private readonly GetOnce<CacheKeyConfig?> _cacheSpecsConfig = new();
+    private readonly LazyGet<CacheKeyConfig?> _cacheSpecsConfig = new();
 
     private ICacheSpecs? GetSpecsBasedOnSettings()
     {

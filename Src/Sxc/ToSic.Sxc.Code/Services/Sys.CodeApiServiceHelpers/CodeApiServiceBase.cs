@@ -8,6 +8,8 @@ using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Services.Sys.CodeApiServiceHelpers;
+
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class CodeApiServiceBase(CodeApiServiceBase.Dependencies services, string logName)
     : ServiceBase<CodeApiServiceBase.Dependencies>(services, logName),
         ILogWasConnected
@@ -20,13 +22,13 @@ public abstract class CodeApiServiceBase(CodeApiServiceBase.Dependencies service
         LazySvc<ISite> Site,
         LazySvc<IZoneMapper> ZoneMapper,
         LazySvc<IAppsCatalog> AppsCatalog)
-        : DependenciesRecord(connect: [/* never! serviceProvider */ LogStore, User, Site, ZoneMapper, AppsCatalog]);
+        : DependenciesBase(connect: [/* never! serviceProvider */ LogStore, User, Site, ZoneMapper, AppsCatalog]);
 
     public record ScopedDependencies(
         Generator<IExecutionContextFactory> ExCtxGenerator,
         Generator<App> AppGenerator,
         LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder)
-        : DependenciesRecord(connect: [ExCtxGenerator, AppGenerator, ModAndBlockBuilder]);
+        : DependenciesBase(connect: [ExCtxGenerator, AppGenerator, ModAndBlockBuilder]);
 
     protected IApp GetApp(Generator<App> appGenerator, NoParamOrder npo = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
     {
@@ -64,7 +66,7 @@ public abstract class CodeApiServiceBase(CodeApiServiceBase.Dependencies service
     {
         if (_logInitDone) return;
         _logInitDone = true;
-        Services.LogStore.Value.Add("dynamic-code-service", Log);
+        Services.LogStore.Value.Add("code-api-service", Log);
     }
 
 }

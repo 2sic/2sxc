@@ -1,6 +1,6 @@
 ﻿using ToSic.Razor.Blade;
+using ToSic.Sxc.Render.Output.Sys;
 using ToSic.Sxc.Render.Sys;
-using ToSic.Sxc.Render.Sys.ModuleHtml;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Services.TurnOn.Sys;
 using ToSic.Sxc.Sys.Render.PageContext;
@@ -16,7 +16,7 @@ public partial class PageService(
     LazySvc<IContentSecurityPolicyService> cspServiceLazy,
     LazySvc<IHtmlTagsService> htmlTagsLazy,
     LazySvc<ITurnOnService> turnOn,
-    LazySvc<IModuleHtmlService> moduleService,
+    LazySvc<IModulesOutputService> moduleService,
     LazySvc<IFeaturesService> featuresSvc)
     : ServiceWithContext("2sxc.PgeSrv",
             connect: [cspServiceLazy, htmlTagsLazy, moduleService, turnOn, pageServiceShared, featuresSvc]),
@@ -69,7 +69,7 @@ public partial class PageService(
             PageServiceShared.PageFeatures.FeaturesFromSettingsAdd(ffs);
 
         foreach (var tagSet in renderResult.PartialModuleTags ?? [])
-            moduleService.Value.AddTag(tagSet.Tag, moduleId: ModuleId, noDuplicates: tagSet.NoDuplicates);
+            moduleService.Value.AddTag(moduleId: ModuleId, tag: tagSet.Tag, noDuplicates: tagSet.NoDuplicates);
 
         if (renderResult.HeadChanges != null)
             PageServiceShared.Headers.AddRange(renderResult.HeadChanges);

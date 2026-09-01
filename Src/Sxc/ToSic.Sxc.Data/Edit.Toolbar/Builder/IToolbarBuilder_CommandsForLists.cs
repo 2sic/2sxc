@@ -37,11 +37,14 @@ public partial interface IToolbarBuilder
     /// </param>
     /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters</param>
-    /// <param name="contentType"></param>
+    /// <param name="contentType">_optional_ content-type to use whet selecting items to add (new v22)</param>
     /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
     /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
     /// <param name="operation">_optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation)</param>
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
+    /// <remarks>>
+    /// * v22: Added `contentType` parameter to allow to specify type of entities to select.
+    /// </remarks>
     IToolbarBuilder AddExisting(
         object? target = null,
         NoParamOrder npo = default,

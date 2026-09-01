@@ -1,9 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Newtonsoft.Json;
 using ToSic.Eav.WebApi.Sys.ApiExplorer;
 using ToSic.Eav.WebApi.Sys.Context;
 using ToSic.Sxc.Adam.Sys.Security;
+using ToSic.Sxc.Backend.Usage;
 using ToSic.Sxc.Dnn.Backend;
 using ToSic.Sxc.Dnn.Backend.Admin;
 using ToSic.Sxc.Dnn.WebApi.Context;
@@ -20,6 +21,8 @@ public static class StartUpDnnWebApi
         // Settings / WebApi stuff
         services.TryAddTransient<IUiContextBuilder, DnnUiContextBuilder>();
         services.TryAddTransient<IApiInspector, DnnApiInspector>();
+        services.TryAddTransient<IAppWebApiControllerAssemblyLoader, DnnAppWebApiControllerAssemblyLoader>();
+        services.TryAddTransient<IViewUsageDataProvider, DnnViewUsageDataProvider>();
 
         // new #2160
         services.TryAddTransient<IAdamSecurityCheckService, DnnAdamSecurityChecks>();

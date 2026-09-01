@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.Run;
 internal class OqtModuleUpdater(
     SettingsHelper settingsHelper,
     IPageModuleRepository pageModuleRepository,
-    GenWorkPlus<WorkViews> workViews,
+    AppWorkQuick<WorkViews> workViews,
     LazySvc<IAppsCatalog> appsCatalog,
     ISite site)
     : ServiceBase($"{OqtConstants.OqtLogPrefix}.MapA2I",

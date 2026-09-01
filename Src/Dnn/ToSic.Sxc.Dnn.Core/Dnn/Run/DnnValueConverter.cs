@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.Abstractions;
 using DotNetNuke.Entities.Portals;
+using DotNetNuke.Abstractions.Portals;
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
@@ -19,7 +20,8 @@ internal class DnnValueConverter(
     ISite site,
     LazySvc<ISysFeaturesService> featuresLazy,
     LazySvc<PageScopedService<ISite>> siteFromPageLazy,
-    LazySvc<INavigationManager> navigationManager)
+    LazySvc<INavigationManager> navigationManager,
+    IPortalAliasService portalAliasService)
     : ValueConverterBase($"{DnnConstants.LogName}.ValCnv",
         connect: [site, featuresLazy, siteFromPageLazy, navigationManager])
 {
@@ -150,7 +152,7 @@ internal class DnnValueConverter(
 
     }
 
-    private static PortalSettings PortalSettingsForNavigateUrl(int portalId)
+    private PortalSettings PortalSettingsForNavigateUrl(int portalId)
     {
         var psPage = new PortalSettings(portalId);
 
@@ -162,7 +164,8 @@ internal class DnnValueConverter(
         return psPage;
     }
 
-    private static PortalAliasInfo PortalAliasForNavigateUrl(int portalId) =>
-        PortalAliasController.Instance.GetPortalAliasesByPortalId(portalId)
+    private PortalAliasInfo PortalAliasForNavigateUrl(int portalId) =>
+        portalAliasService.GetPortalAliasesByPortalId(portalId)
+            .OfType<PortalAliasInfo>()
             .FirstOrDefault(alias => alias.IsPrimary); // get primary alias
 }

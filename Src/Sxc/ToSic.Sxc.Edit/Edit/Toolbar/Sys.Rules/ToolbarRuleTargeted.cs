@@ -12,12 +12,12 @@ internal abstract class ToolbarRuleTargeted: ToolbarRule
     protected ToolbarRuleTargeted(
         object? target, 
         string command, 
+        ToolbarButtonDecoratorHelper decoHelper,
         string? ui = null, 
         string? parameters = null, 
         char? operation = null,
-        ToolbarContext? context = null,
-        ToolbarButtonDecoratorHelper? decoHelper = null
-    ) : base(command, ui, parameters: parameters, operation: operation, operationCode: target as string, context: context)
+        ToolbarContext? context = null
+    ) : base(command: command, ui: ui, parameters: parameters, operation: operation, operationCode: target as string, context: context)
     {
         Target = target;
         DecoHelper = decoHelper;
@@ -35,25 +35,28 @@ internal abstract class ToolbarRuleTargeted: ToolbarRule
         Operation = targetCouldBeOperation;
     }
 
-    internal object? Target { get; set; }
+    internal object? Target { get; init; }
 
-    protected readonly ToolbarButtonDecoratorHelper? DecoHelper;
+    protected readonly ToolbarButtonDecoratorHelper DecoHelper;
 
     public override string GeneratedUiParams()
-        => UrlParts.ConnectParameters(UiParams(), base.GeneratedUiParams());
+        => UrlParts.ConnectParameters(UiParamsFromDecorator, base.GeneratedUiParams());
 
 
     #region Decorators
 
-    protected virtual string DecoratorTypeName => "";
+    protected virtual string DecoratorTypeName => field
+        ??= (Target as ICanBeEntity)?.Entity.Type.Name
+        ?? "";
 
-    protected ToolbarButtonDecorator? Decorator => _decorator.Get(() =>
-    {
-        var decoTypeName = DecoratorTypeName;
-        return decoTypeName.HasValue() ? DecoHelper?.GetDecorator(Context, decoTypeName ?? "", Command) : null;
-    });
-    private readonly GetOnce<ToolbarButtonDecorator?> _decorator = new();
-    private string UiParams() => Decorator?.AllRules() ?? "";
+    private ToolbarButtonDecorator? Decorator => _decorator.Get(() =>
+        DecoratorTypeName.HasValue()
+            ? DecoHelper.GetDecorator(Context, DecoratorTypeName, Command)
+            : null
+    );
+    private readonly LazyGet<ToolbarButtonDecorator?> _decorator = new();
+
+    private string UiParamsFromDecorator => field ??= Decorator?.AllRules() ?? "";
 
     #endregion
 }

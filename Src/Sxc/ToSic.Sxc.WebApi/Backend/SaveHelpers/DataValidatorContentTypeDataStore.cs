@@ -1,15 +1,17 @@
 ﻿using System.Net;
 using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Processing;
-using ToSic.Eav.Metadata;
+using ToSic.Eav.Metadata.Sys;
 using ToSic.Eav.Models;
-using ToSic.Sys.Utils.Assemblies;
+using ToSic.Sys.HookUp;
+using ToSic.Sys.Users;
+using ToSic.Sys.Utils.Types;
 using static ToSic.Eav.WebApi.Sys.Helpers.Validation.ValidatorBase;
 
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
 [PrivateApi]
-public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBase("Val.DtStor")
+public class DataValidatorContentTypeDataStore(IServiceProvider sp, RemoteWork<WorkEntityBlockUsers, PermissionCheckPayload, IEntity?> blockUser) : ServiceBase("Val.DtStor")
 {
 
     /// <summary>
@@ -20,7 +22,7 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBas
     /// <param name="ent"></param>
     /// <returns></returns>
     internal async Task<Result> PreEdit(int index, IEntity ent) =>
-        await Shared(index, ent, DataProcessingEvents.PreEdit);
+        await RunProcessorsFromDecorator(index, ent, DataProcessingEvents.PreEdit);
 
     /// <summary>
     /// Check if entity was able to deserialize, and if it has attributes.
@@ -35,30 +37,35 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBas
 
         // Check if Save is disabled because of content-type metadata (new v21)
         // This should prevent entities from being put in the DB, where the UI was only meant for some other configuration
-        var sharedWork = await Shared(index, ent, DataProcessingEvents.PreSave);
+        var result = await RunProcessorsFromDecorator(index, ent, DataProcessingEvents.PreSave);
 
         // Preprocessor exists, and supports pre-saving, so execute it
-        if (sharedWork.Exception != null)
-            return l.Return(sharedWork, "error from shared");
+        if (result.Exception != null)
+            return l.Return(result, "error from shared");
 
         // If we have a decorator, check if it forbids saving.
         // For example for Debug-Settings which should never hit the backend
-        if (sharedWork.Decorator?.SaveIsDisabled == true)
-            return l.Return(new(sharedWork.Entity, sharedWork.Decorator, BuildExceptionIfHasIssues($"Save is disabled for content-type {ent.Type.Name} (index: {index})", l)), "save disabled!");
+        if (result.Decorator?.SaveIsDisabled == true)
+            return l.Return(new(
+                    result.Entity,
+                    result.Decorator,
+                    BuildExceptionIfHasIssues($"Save is disabled for content-type {ent.Type.Name} (index: {index})", l)),
+                "save disabled!"
+            );
 
-        return l.Return(sharedWork);
+        return l.Return(result);
 
     }
 
     /// <summary>
-    /// Shared code
+    /// RunProcessorsFromDecorator code
     /// </summary>
     /// <param name="index"></param>
     /// <param name="ent"></param>
     /// <param name="action"></param>
     /// <returns></returns>
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-    private async Task<Result> Shared(int index, IEntity ent, string action)
+    private async Task<Result> RunProcessorsFromDecorator(int index, IEntity ent, string action)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
     {
         var l = Log.Fn<Result>($"action: {action}");
@@ -71,28 +78,14 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBas
         if (decorator == null)
             return l.Return(new (ent, decorator), "no decorator");
 
-        if (string.IsNullOrEmpty(decorator.DataProcessingHandler))
-            return l.Return(new (ent, decorator), "no data processing handler");
-
-
-        // generate an object of the specified type name
-        var dataProcessingType = AssemblyHandling.GetTypeOrNull(decorator.DataProcessingHandler);
-
-        if (dataProcessingType == null)
-            return l.Return(AsError("not found"), "data type results in null");
-
-        // Check if the type is ok, before instantiating it, to avoid security issues with instantiating random types.
-        // It must be a data processor, otherwise it is not valid for this purpose.
-        if (!typeof(IDataProcessor).IsAssignableFrom(dataProcessingType))
-            return l.Return(AsError("is not a valid data processor"), $"not assignable from {nameof(IDataProcessor)}");
-
-        // Re-verify it's a dataProcessor and not null
-        var probablyProcessor = sp.GetService(dataProcessingType);
-        if (probablyProcessor is not IDataProcessor dataProcessor)
-            return l.Return(AsError("could not be instantiated"), "Instantiated type null or wrong type");
+        // Try to build the instance using dependency injection
+        // will return a message if empty, not valid, etc.
+        var (_, dataProcessor, message) = sp.BuildByName<IWorkEntityAction>(decorator.DataProcessingHandler);
+        if (dataProcessor == null)
+            return l.Return(AsError(message), message);
 
         // Preprocessor exists, and supports pre-save and post-save, so execute it
-        var result = await dataProcessor.Process(action, new() { Data = ent });
+        var result = await dataProcessor.Handle(new(), new(new PermissionCheckPayload(action, ent, UserElevation.SiteAdmin)));
         var exception = HttpExceptionAbstraction.FromPossibleException(result.Exceptions.FirstOrDefault(), HttpStatusCode.Forbidden);
         return l.Return(new(result.Data, decorator, exception, dataProcessor), $"action: {action}, {(exception != null ? "with exception" : "")}");
 
@@ -101,11 +94,12 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBas
             new(ent, decorator, BuildExceptionIfHasIssues(
                 $"Data processing handler '{decorator.DataProcessingHandler}' {msg} for content-type {ct.Name} (id: {ct.Id})", l));
     }
+    
 
     public record Result(
         IEntity? Entity,
         DataStorageDecorator? Decorator,
         HttpExceptionAbstraction? Exception = null,
-        IDataProcessor? Processor = null
+        IWorkEntityAction? Processor = null
     );
 }

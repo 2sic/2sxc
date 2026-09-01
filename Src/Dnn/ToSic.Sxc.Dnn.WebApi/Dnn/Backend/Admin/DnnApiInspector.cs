@@ -42,15 +42,15 @@ internal class DnnApiInspector() : ServiceBase(DnnConstants.LogName), IApiInspec
 
         return new()
         {
-            ignoreSecurity = member.GetCustomAttribute<AllowAnonymousAttribute>() != null,
-            allowAnonymous = dnnAuthList.Any(a => a.AccessLevel == SecurityAccessLevel.Anonymous),
-            requireVerificationToken = member.GetCustomAttribute<ValidateAntiForgeryTokenAttribute>() != null,
-            superUser = dnnAuthList.Any(a => a.AccessLevel == SecurityAccessLevel.Host),
-            admin = dnnAuthList.Any(a => a.AccessLevel == SecurityAccessLevel.Admin),
-            edit = dnnAuthList.Any(a => a.AccessLevel == SecurityAccessLevel.Edit),
-            view = dnnAuthList.Any(a => a.AccessLevel == SecurityAccessLevel.View),
+            IgnoreSecurity = member.GetCustomAttribute<AllowAnonymousAttribute>() != null,
+            AllowAnonymous = dnnAuthList.Any(a => a.AccessLevel == SecurityAccessLevel.Anonymous),
+            RequireVerificationToken = member.GetCustomAttribute<ValidateAntiForgeryTokenAttribute>() != null,
+            SuperUser = dnnAuthList.Any(a => a.AccessLevel == SecurityAccessLevel.Host),
+            Admin = dnnAuthList.Any(a => a.AccessLevel == SecurityAccessLevel.Admin),
+            Edit = dnnAuthList.Any(a => a.AccessLevel == SecurityAccessLevel.Edit),
+            View = dnnAuthList.Any(a => a.AccessLevel == SecurityAccessLevel.View),
             // if it has any dnn authorize attributes or supported-modules it needs the context
-            requireContext = dnnAuthList.Any() || member.GetCustomAttribute<SupportedModulesAttribute>() != null,
+            RequireContext = dnnAuthList.Any() || member.GetCustomAttribute<SupportedModulesAttribute>() != null,
         };
     }
 }

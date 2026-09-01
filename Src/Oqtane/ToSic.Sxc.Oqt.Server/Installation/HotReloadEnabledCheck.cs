@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using ToSic.Eav.Serialization.Sys.Json;
 
 namespace ToSic.Sxc.Oqt.Server.Installation;
@@ -8,7 +7,7 @@ internal static class HotReloadEnabledCheck
 {
     private static bool? _hotReloadEnabledCheckedAndError;
 
-    private static string errorMessage = "Warning: You must run Oqtane without Hot-Reload to install Apps. See https://go.2sxc.org/oqt-hr";
+    private const string errorMessage = "Warning: You must run Oqtane without Hot-Reload to install Apps. See https://go.2sxc.org/oqt-hr";
 
     internal static void Check()
     {
@@ -16,50 +15,61 @@ internal static class HotReloadEnabledCheck
         if (!_hotReloadEnabledCheckedAndError.HasValue)
         {
             // Check if Hot Reload is Enabled.
-            // When HotReloadEnabled is not false, special modules are loaded, so we try to find them.
-            _hotReloadEnabledCheckedAndError = IsModuleLoaded("Microsoft.AspNetCore.Watch.BrowserRefresh.dll");
-            if (_hotReloadEnabledCheckedAndError.Value) 
-                AddHotReloadProperty();
+            _hotReloadEnabledCheckedAndError = IsHotReloadActive();
+            if (_hotReloadEnabledCheckedAndError.Value)
+                AddHotReloadPropertyWhenIsMissing(Path.Combine(Directory.GetCurrentDirectory(), "Properties", "launchSettings.json"));
         }
 
         if (_hotReloadEnabledCheckedAndError.Value)
             throw new(errorMessage);
-         
     }
 
-    private static bool IsModuleLoaded(string moduleName)
-    {
-        return Process.GetCurrentProcess().Modules.OfType<ProcessModule>().Any(m => m.ModuleName.Contains(moduleName));
-    }
+    /// <summary>
+    /// True when the runtime will accept hot-reload deltas.
+    /// The CLR only loads assemblies in modifiable state when DOTNET_MODIFIABLE_ASSEMBLIES=debug,
+    /// which VS and dotnet-watch set only while Hot Reload is on.
+    /// Do NOT test for Microsoft.AspNetCore.Watch.BrowserRefresh - as of VS2026 / .NET 10 that module
+    /// is also loaded when just browser-refresh is active and Hot Reload is off (false positive).
+    /// </summary>
+    private static bool IsHotReloadActive()
+        => string.Equals(Environment.GetEnvironmentVariable("DOTNET_MODIFIABLE_ASSEMBLIES"), "debug", StringComparison.OrdinalIgnoreCase);
 
-    private static bool AddHotReloadProperty()
+    /// <summary>
+    /// Set "hotReloadEnabled": false on every launch profile, so the next start is clean.
+    /// Returns true if the file was changed.
+    /// </summary>
+    /// <remarks>
+    /// In the past we set "hotReloadEnabled": true, for most common case with Oqtane source code in Visual Studio in Debug with HotReload on Windows, hosted in IISExpress.
+    /// HotReload become core dotnet feature, working across many dev environments with Kestrel and 2sxc supports Linux and macOS platforms requiring to disable HotReload
+    /// for Oqtane to work properly. So now we set "hotReloadEnabled": false to avoid issues with HotReload on all platforms.
+    /// </remarks>
+    internal static bool AddHotReloadPropertyWhenIsMissing(string launchSettingsFile)
     {
-        var launchSettingsFile = Path.Combine(Directory.GetCurrentDirectory(), $"Properties\\launchSettings.json");
         if (!File.Exists(launchSettingsFile)) return false;
         try
         {
-            var launchSettingsJson = File.ReadAllText(launchSettingsFile);
-
-            var launchSettings = JsonNode.Parse(launchSettingsJson, JsonOptions.JsonNodeDefaultOptions, JsonOptions.JsonDocumentDefaultOptions);
+            var launchSettings = JsonNode.Parse(File.ReadAllText(launchSettingsFile), JsonOptions.JsonNodeDefaultOptions, JsonOptions.JsonDocumentDefaultOptions);
             var profiles = launchSettings?["profiles"]?.AsObject();
-            var iisExpress = profiles?["IIS Express"]?.AsObject();
+            if (profiles is null) return false;
 
-            // json configuration is wrong
-            if (iisExpress is null) return false;
+            var changed = false;
+            foreach (var profile in profiles.Select(p => p.Value as JsonObject).Where(p => p is not null))
+            {
+                // if hot reload exists, leave it alone (do not automatically change user intended configuration)
+                if (profile!["hotReloadEnabled"] is JsonValue existing /*&& existing.TryGetValue<bool>(out var enabled) && !enabled*/)
+                    continue;
+                profile["hotReloadEnabled"] = false; // change to 'false' (default is 'true'), so the next start is clean and will not have hot reload enabled
+                changed = true;
+            }
 
-            // if hotReloadEnabled property exists do nothing
-            if (iisExpress?["hotReloadEnabled"]?.AsValue() is not null) return false;
+            if (changed)
+                File.WriteAllText(launchSettingsFile, launchSettings!.ToJsonString(JsonOptions.UnsafeJsonWithoutEncodingHtml));
 
-            // add hotReloadEnabled: true
-            iisExpress?.Add("hotReloadEnabled", true);
-
-            File.WriteAllText(launchSettingsFile, launchSettings?.ToJsonString(JsonOptions.UnsafeJsonWithoutEncodingHtml));
-
-            return true;
+            return changed;
         }
         catch
         {
             return false;
-        }           
+        }
     }
 }

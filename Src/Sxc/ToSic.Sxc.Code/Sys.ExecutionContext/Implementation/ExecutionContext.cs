@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps.Sys.AppStack;
-using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
@@ -7,7 +6,7 @@ using ToSic.Sxc.Code.Sys.CodeApiService;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Sys.Factory;
-using ToSic.Sxc.Polymorphism.Sys;
+using ToSic.Sxc.Render.Polymorphism.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 using ToSic.Sys.Caching.PiggyBack;
@@ -42,9 +41,9 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
         LazySvc<IConvertService> ConvertService,
         LazySvc<CodeCreateDataSourceSvc> DataSources,
         ICodeDataFactory Cdf,
-        PolymorphConfigReader Polymorphism)
-        : DependenciesRecord(connect:
-            [/* never! serviceProvider */ CodeCompilerLazy, DataStackService, ConvertService, DataSources, Cdf, Polymorphism]);
+        IEditionService EditionSvc)
+        : DependenciesBase(connect:
+            [/* never! serviceProvider */ CodeCompilerLazy, DataStackService, ConvertService, DataSources, Cdf, EditionSvc]);
 
     [PrivateApi]
     protected internal ExecutionContext(Dependencies services, string logPrefix) : base(services, logPrefix + ".DynCdR")

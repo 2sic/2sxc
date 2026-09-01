@@ -28,9 +28,8 @@
 
     <!-- XML documentation is generated in Release only -->
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-      <!-- itmes included only in Release configuration -->
-      <!--<DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.xml" />-->
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Dnn.xml" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.*.xml" />
+      <!--<DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Dnn.xml" />-->
     </ItemGroup>
     
     <ItemGroup>
@@ -142,7 +141,9 @@
     <!-- 2025-11-18 2dm: since  -->
     <!--<Exec Command="robocopy /MIR &quot;$(ProjectDir)Extensions/&quot; &quot;$(BuildTarget)/Extensions/&quot;" IgnoreExitCode="true"/>-->
     <Exec Command="robocopy /MIR &quot;$(ProjectDir)Extensions/Imageflow/&quot; &quot;$(BuildTarget)/Extensions/Imageflow/&quot;" IgnoreExitCode="true"/>
-    <Exec Command="robocopy /MIR &quot;$(ProjectDir)Extensions/ToSic_vCard/&quot; &quot;$(BuildTarget)/Extensions/ToSic_vCard/&quot;" IgnoreExitCode="true"/>
+
+    <!-- 2026-08-03 2dm: removing this in v22, almost certainly not in use -->
+    <!--<Exec Command="robocopy /MIR &quot;$(ProjectDir)Extensions/ToSic_vCard/&quot; &quot;$(BuildTarget)/Extensions/ToSic_vCard/&quot;" IgnoreExitCode="true"/>-->
 
     <!-- Xcopy Commands -->
     <Exec Command="xcopy &quot;$(ProjectDir)View.ascx&quot; &quot;$(BuildTarget)&quot; /y" IgnoreExitCode="true"/>

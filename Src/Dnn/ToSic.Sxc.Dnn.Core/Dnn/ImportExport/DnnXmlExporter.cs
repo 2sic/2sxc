@@ -79,7 +79,7 @@ internal class DnnXmlExporter(
         return new()
         {
             Id = fileId,
-            RelativePath = file?.RelativePath.Replace('/', '\\'),
+            RelativePath = file?.RelativePath,
             Path = file?.PhysicalPath
         };
     }

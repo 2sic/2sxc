@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Blocks.Sys.Views;
 [PrivateApi("Internal implementation - don't publish")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [ModelSpecs(ContentType = ContentTypeNameId)]
-public record ViewConfiguration : ModelFromEntityBasic // , IView
+public record ViewConfiguration : ModelFromEntityFull // , IView
 {
     public const string ContentTypeNameId = AppConstants.TemplateContentType;
     public const string ContentTypeName = AppConstants.TemplateContentType;
@@ -58,21 +58,8 @@ public record ViewConfiguration : ModelFromEntityBasic // , IView
 
     public bool UseForList => GetThis(false);
 
-    // Publishing was removed a long time ago, commented out v21
-    //public bool PublishData => GetThis(false);
-    //public string StreamsToPublish => GetThis("");
-
 
     public string UrlIdentifier => Get(FieldNameInUrl, "");
-
-    ///// <summary>
-    ///// Returns true if the current template uses Razor
-    ///// </summary>
-    //public bool IsRazor => Type == TypeRazorValue;
-
-    //public string? Edition { get; set; }
-
-    //public string? EditionPath { get; set; }
 
     public IEntity? Resources => Child(FieldResources);
 

@@ -6,14 +6,14 @@ public class UserConstants
 {
     #region Constant user objects for Unknown/Anonymous
 
-    public static readonly UserModel AnonymousUser = new()
+    public static readonly UserModelRaw AnonymousUser = new()
     {
         Id = -1,
         Name = SxcUserConstants.Anonymous,
         Roles = [],
     };
 
-    public static readonly UserModel UnknownUser = new()
+    public static readonly UserModelRaw UnknownUser = new()
     {
         Id = -2,
         Name = EavConstants.NullNameId,

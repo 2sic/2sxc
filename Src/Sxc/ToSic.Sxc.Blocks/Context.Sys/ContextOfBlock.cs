@@ -2,6 +2,7 @@
 using ToSic.Eav.Context;
 using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sxc.Sys.Render.PageContext;
+using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Context.Sys;
 
@@ -15,10 +16,11 @@ namespace ToSic.Sxc.Context.Sys;
 internal class ContextOfBlock(
     IPage page,
     IModule module,
-    LazySvc<ServiceSwitcher<IPagePublishingGetSettings>> publishingResolver,
+    //LazySvc<ServiceSwitcher<IPagePublishingGetSettings>> publishingResolver,
+    LazySvc<BlockPublishingSettingsService> pagePubSettings,
     IPageServiceShared pageServiceShared,
     ContextOfApp.Dependencies appServices)
-    : ContextOfApp(appServices, "Sxc.CtxBlk", connect: [module, pageServiceShared, publishingResolver]), IContextOfBlock
+    : ContextOfApp(appServices, "Sxc.CtxBlk", connect: [module, pageServiceShared, /*publishingResolver,*/ pagePubSettings]), IContextOfBlock
 {
 
     #region Override AppIdentity based on module information
@@ -50,10 +52,27 @@ internal class ContextOfBlock(
 
     /// <inheritdoc />
     [field: AllowNull, MaybeNull]
-    public BlockPublishingSettings Publishing => field ??= publishingResolver.Value.Value.SettingsOfModule(Module?.Id ?? -1);
+    public BlockPublishingSettings Publishing => field
+        ??= GetPublishing();
+    
+    private BlockPublishingSettings GetPublishing()
+    {
+        var package = new Package<BlockPublishingSettings>(new() { ModuleId = Module?.Id ?? -1 });
+        var fromNew = pagePubSettings.Value.Handle(new(), package);
+        
+        //var fromOld = publishingResolver.Value.Value.Handle(new(), package)
+        //    .GetAwaiter()
+        //    .GetResult()
+        //    .Data.Settings!;
+
+        return fromNew.GetAwaiter()
+            .GetResult()
+            .Data;
+    }
+
 
     /// <inheritdoc />
     public override IContextOfSite Clone(ILog parentLog)
-        => new ContextOfBlock(Page, Module, publishingResolver, PageServiceShared, AppServices)
+        => new ContextOfBlock(Page, Module, /*publishingResolver,*/ pagePubSettings, PageServiceShared, AppServices)
             .LinkLog(parentLog);
 }

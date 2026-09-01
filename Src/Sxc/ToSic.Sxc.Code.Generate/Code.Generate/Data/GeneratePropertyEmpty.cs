@@ -9,6 +9,6 @@ internal class GeneratePropertyEmpty(CSharpGeneratorHelper helper) : GeneratePro
     /// <summary>
     /// Empty is - empty - so we don't generate anything
     /// </summary>
-    public override List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs)
+    public override List<CodeFragment> Generate(IContentTypeField fieldDef, int tabs)
         => [];
 }

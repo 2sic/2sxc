@@ -10,14 +10,14 @@ internal class AppAssetThumbnail(IAppReader appReader, IAppPaths appPaths, LazyS
     : AppAssetFile
 {
     public override string? Url => _url.Get(() => GetUrl(appReader, appPaths, globalPaths));
-    private readonly GetOnce<string?> _url = new();
+    private readonly LazyGet<string?> _url = new();
 
     public static string? GetUrl(IAppReader appReader, IAppPaths appPaths, LazySvc<GlobalPaths> globalPaths)
     {
         // Primary app - we only PiggyBack cache the icon in this case
         // Because otherwise the icon could get moved, and people would have a hard time seeing the effect
         if (appReader.Specs.IsSiteSettingsApp())
-            return appReader.GetCache().GetPiggyBack("app-thumbnail-primary",
+            return appReader.GetCache().PiggyBackGet("app-thumbnail-primary",
                 () => globalPaths.Value.GlobalPathTo(AppPrimaryIconFile, PathTypes.Link));
 
         // standard app (not global) try to find app-icon in its (portal) app folder

@@ -5,17 +5,18 @@ using ToSic.Sxc.Web.Sys.LightSpeed;
 namespace ToSic.Sxc.WebLightSpeed;
 
 [Startup(typeof(StartupSxcCoreOnly))]
-public class LightSpeedDecoratorTests(DataAssembler dataAssembler, ContentTypeAssembler typeAssembler)//: TestBaseEavCore
+public class LightSpeedDecoratorTests(DataAssembler dataAssembler, ContentTypeAssemblyKit ctAssemblyKit)
 {
-    //public LightSpeedDecoratorTests() => _testData = new(dataBuilder);
-
-    private readonly LightSpeedTestData _testData = new(dataAssembler, typeAssembler);
+    private readonly LightSpeedTestData _testData = new(dataAssembler, ctAssemblyKit);
 
 
     [Fact]
     public void DecoratorWithNullEntity()
     {
-        var lsDecorator = (null as IEntity).ToModel<LightSpeedDecorator>(nullHandling: ModelNullHandling.PreferModel);
+        var lsDecorator = (null as IEntity).ToModel<LightSpeedDecorator>(options: new()
+        {
+            NullHandling = NullHandling.TryOrNull
+        })!;
         TestEmptyDecorator(lsDecorator);
         True(lsDecorator.UrlParametersOthersDisableCache);
     }

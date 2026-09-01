@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi.Sys.Zone;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Eav.WebApi.Sys.Admin.ZoneControllerReal;
 
@@ -23,16 +22,17 @@ public class ZoneController() : OqtStatefulControllerBase(RealController.LogSuff
     private RealController Real => GetService<RealController>();
 
 
-    /// <inheritdoc />
-    [HttpGet]
-    public IList<SiteLanguageDto> GetLanguages() => Real.GetLanguages();
+    ///// <inheritdoc />
+    //[HttpGet]
+    //public IList<SiteLanguageDto> GetLanguages() => Real.GetLanguages();
 
     /// <inheritdoc />
     [HttpGet]
     public void SwitchLanguage(string cultureCode, bool enable) => Real.SwitchLanguage(cultureCode, enable);
 
     /// <inheritdoc />
-    [HttpGet]
-    public SystemInfoSetDto GetSystemInfo() => Real.GetSystemInfo();
+    /// replaced by "System.SystemInfo" DataSource; endpoint disabled.
+    //[HttpGet]
+    //public SystemInfoSetDto GetSystemInfo() => Real.GetSystemInfo();
 
 }

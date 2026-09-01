@@ -4,7 +4,7 @@ using ToSic.Eav.WebApi.Sys.Install;
 namespace ToSic.Sxc.Backend.Sys;
 
 [ModelSpecs(ContentType = ContentTypeNameId)]
-internal record SiteSetupAutoInstallAppsRule : ModelFromEntityBasic
+internal record SiteSetupAutoInstallAppsRule : ModelFromEntity
 {
     public const string ContentTypeNameId = "833baa25-899b-4242-ade7-323a319bcf71";
     public const string ContentTypeName = "⚙️SiteSetupAutoInstallApps";
@@ -17,11 +17,13 @@ internal record SiteSetupAutoInstallAppsRule : ModelFromEntityBasic
     public const string ModeOptional = "o";
     public const string ModeRequired = "r";
 
-    public string Target => GetThis(TargetGuid);
+    public string AppGuid => GetThis("");
 
     public string Mode => GetThis(ModeAllow);
 
-    public string AppGuid => GetThis("");
+    public string Target => GetThis(TargetGuid);
+    
+    public string Title => Entity?.GetBestTitle() ?? "";
 
     public string Url => GetThis("");
 

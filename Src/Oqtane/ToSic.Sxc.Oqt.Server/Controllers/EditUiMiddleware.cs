@@ -6,9 +6,10 @@ using Oqtane.Repository;
 using System.Text;
 using ToSic.Sxc.Oqt.Server.Blocks.Output;
 using ToSic.Sxc.Oqt.Server.Plumbing;
-using ToSic.Sxc.Render.Sys.JsContext;
+using ToSic.Sxc.Render.JsContext.Sys;
 using ToSic.Sxc.Web.Sys.EditUi;
 using ToSic.Sys.Caching;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers;
 
@@ -16,7 +17,7 @@ internal class EditUiMiddleware
 {
     private const int UnknownId = -1;
 
-    public static Task PageOutputCached(HttpContext context, IWebHostEnvironment env, string virtualPath, EditUiResourceSettings settings)
+    public static async Task PageOutputCached(HttpContext context, IWebHostEnvironment env, string virtualPath, EditUiResourceSettings settings)
     {
         context.Response.Headers.TryAdd("test-dev", "2sxc");
 
@@ -26,8 +27,9 @@ internal class EditUiMiddleware
         var memoryCacheService = sp.GetService<MemoryCacheService>();
         if (!memoryCacheService.TryGet<string>(key, out var html))
         {
-            var path = Path.Combine(env.WebRootPath, virtualPath);
-            if (!File.Exists(path)) throw new FileNotFoundException("File not found: " + path);
+            var path = Path.Combine(env.WebRootPath, virtualPath.ToSystemPath());
+            if (!File.Exists(path))
+                throw new FileNotFoundException("File not found: " + path);
 
             var bytesInFile = File.ReadAllBytes(path);
             html = Encoding.Default.GetString(bytesInFile);
@@ -71,9 +73,7 @@ internal class EditUiMiddleware
         // html response
         context.Response.ContentType = "text/html";
         //context.Response.Body.Write(Encoding.Unicode.GetBytes(html));
-        context.Response.Body.WriteAsync(bytes);
-
-        return Task.CompletedTask;
+        await context.Response.Body.WriteAsync(bytes);
     }
 
     private static string CacheKey(string virtualPath) => $"ToSic.Sxc.Oqt.Server.Controllers.{nameof(EditUiMiddleware)}:{virtualPath}";

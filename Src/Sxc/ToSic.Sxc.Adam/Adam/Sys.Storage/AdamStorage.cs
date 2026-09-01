@@ -42,5 +42,5 @@ public abstract class AdamStorage(string? logName = default) : ServiceBase(logNa
     /// <returns></returns>
     public IFolder? RootFolder(bool autoCreate = false)
         => _folder.Get(() => Folder("", autoCreate));
-    private readonly GetOnce<IFolder?> _folder = new();
+    private readonly LazyGet<IFolder?> _folder = new();
 }

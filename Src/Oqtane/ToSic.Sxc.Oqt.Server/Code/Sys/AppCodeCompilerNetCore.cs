@@ -21,7 +21,7 @@ internal class AppCodeCompilerNetCore(
 
         try
         {
-            var sourceRootPath = NormalizeFullPath(serverPaths.Value.FullContentPath(virtualPath.Backslash()));
+            var sourceRootPath = NormalizeFullPath(serverPaths.Value.FullContentPath(virtualPath.ToSystemPath()));
             var sourceFiles = GetSourceFiles(sourceRootPath);
             if (sourceFiles.Length == 0)
                 return l.ReturnAsOk(new());

@@ -7,7 +7,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Blocks.Output;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Run;
-using ToSic.Sxc.Render.Sys.JsContext;
+using ToSic.Sxc.Render.JsContext.Sys;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;
@@ -36,7 +36,7 @@ partial class OqtRegisterServices
         services.TryAddScoped<IJsApiService, OqtJsApiService>();
 
         // must be Transient (scoped cause StackOverflowException infinite recursion)
-        services.TryAddTransient<IRuntimeKeyService, OqtRuntimeKeyService>();
+        services.TryAddTransient<IAppCacheKeyService, OqtAppCacheKeyService>();
 
         return services;
     }

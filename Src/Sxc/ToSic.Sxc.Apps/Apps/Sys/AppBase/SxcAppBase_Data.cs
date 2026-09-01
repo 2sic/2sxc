@@ -4,11 +4,7 @@ namespace ToSic.Sxc.Apps.Sys;
 
 partial class SxcAppBase
 {
-    // #DropAppConfigurationProvider
-    //[PrivateApi]
-    //public ILookUpEngine ConfigurationProvider => AppDataConfig.LookUpEngine;
-
-    protected internal IAppDataConfiguration AppDataConfig => _appDataConfigOnce.Get(() =>
+    protected internal IAppDataConfiguration AppDataConfig => field ??= new Func<IAppDataConfiguration>(() =>
     {
         // New v17
         var config = Services.DataConfigProvider.GetDataConfiguration(this, _dataConfigSpecs);
@@ -18,8 +14,7 @@ partial class SxcAppBase
         Log.A($"init data drafts:{config.ShowDrafts}, hasConf:{config.LookUpEngine}");
         return config;
 
-    })!;
-    private readonly GetOnce<IAppDataConfiguration> _appDataConfigOnce = new();
+    })();
     private AppDataConfigSpecs _dataConfigSpecs = null!;
 
     #region Data

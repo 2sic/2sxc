@@ -9,9 +9,10 @@ using ToSic.Eav.Sys;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Context.Sys;
-using ToSic.Sxc.Polymorphism.Sys;
+using ToSic.Sxc.Render.Polymorphism.Sys;
 using ToSic.Sys.Caching;
 using ToSic.Sys.Utils;
+using ToSic.Sys.Utils.Types;
 
 namespace ToSic.Sxc.DataSources.Sys;
 
@@ -24,12 +25,12 @@ internal class AppDataSourcesLoader(
     LazySvc<CodeCompiler> codeCompilerLazy,
     LazySvc<AppCodeLoader> appCodeLoaderLazy,
     ISxcCurrentContextService ctxService,
-    PolymorphConfigReader polymorphism,
+    IEditionService editionSvc,
     MemoryCacheService memoryCacheService)
     : ServiceBase("Eav.AppDtaSrcLoad",
         connect:
         [
-            logStore, site, appReaders, appPathsLazy, codeCompilerLazy, appCodeLoaderLazy, ctxService, polymorphism,
+            logStore, site, appReaders, appPathsLazy, codeCompilerLazy, appCodeLoaderLazy, ctxService, editionSvc,
             memoryCacheService
         ]), IAppDataSourcesLoader
 {
@@ -105,7 +106,7 @@ internal class AppDataSourcesLoader(
         // Figure out the current edition
         var edition = FigureEdition().TrimLastSlash();
 
-        var spec = new HotBuildSpec(appSpecs.AppId, edition: edition, appSpecs?.Name, appSpecs?.RuntimeKey);
+        var spec = new HotBuildSpec(appSpecs.AppId, edition: edition, appSpecs?.Name, appSpecs?.CacheKey);
 
         return l.ReturnAsOk(spec);
     }
@@ -115,7 +116,7 @@ internal class AppDataSourcesLoader(
         var l = Log.Fn<string?>(timer: true);
 
         var block = ctxService.BlockOrNull();
-        var edition = block.NullOrGetWith(polymorphism.UseViewEditionOrGet);
+        var edition = block.NullOrGetWith(editionSvc.Edition);
 
         return l.Return(edition);
     }

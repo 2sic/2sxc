@@ -33,7 +33,8 @@ internal class RazorCompiler(
         var actionContext = actionContextAccessor.ActionContext ?? NewActionContext();
         var partial = await FindViewAsync(actionContext, partialName, app, spec);
         // do callback to configure the object we received
-        if (partial is RazorView rzv) configure?.Invoke(rzv);
+        if (partial is RazorView rzv)
+            configure.Invoke(rzv);
         return l.ReturnAsOk((partial, actionContext));
     }
 
@@ -65,8 +66,16 @@ internal class RazorCompiler(
             // TODO: SHOULD OPTIMIZE so the file doesn't need to read multiple times
             // 1. probably change so the CodeFileInfo contains the source code
             var razorType = sourceAnalyzer.TypeOfVirtualPath(partialName);
-            if (razorType.IsHotBuildSupported())
-                AddAppCodeAssembly(partialName, app, spec);
+            var shouldRegisterAppCode = razorType.IsHotBuildSupported();
+            l.A($"Source analysis: {Describe(razorType)}; {nameof(partialName)}:'{partialName}'; {nameof(app.RelativePath)}:'{app.RelativePath}'; {nameof(spec.Edition)}:'{spec.Edition}'; {spec}; AppCode registration attempted:{shouldRegisterAppCode}");
+
+            if (shouldRegisterAppCode)
+            {
+                var appCodeReferenceAvailable = AddAppCodeAssembly(partialName, app, spec);
+                l.A($"AppCode registration result: attempted:true; reference available:{appCodeReferenceAvailable}");
+                if (!appCodeReferenceAvailable)
+                    l.W($"AppCode reference missing after registration attempt for '{partialName}'. Razor compilation will continue unchanged.");
+            }
 
             var firstAttempt = viewEngine.GetView(null, partialName, false);
             l.A($"firstAttempt: {firstAttempt}");
@@ -124,23 +133,55 @@ internal class RazorCompiler(
         return l.ReturnAsOk(new(httpContext, new(), new()));
     }
 
-    private void AddAppCodeAssembly(string partialName, IApp app, HotBuildSpec spec)
+    private bool AddAppCodeAssembly(string partialName, IApp app, HotBuildSpec spec)
     {
-        var log = Log.Fn($"{nameof(partialName)}:{partialName}; {nameof(app.RelativePath)}:{app.RelativePath}; {spec}", timer: true);
+        var log = Log.Fn<bool>($"{nameof(partialName)}:{partialName}; {nameof(app.RelativePath)}:{app.RelativePath}; {spec}", timer: true);
 
         // Get assembly - try to get from cache, otherwise compile
-        var (assemblyResult, _) = appCodeLoader.Value.GetAppCode(spec);
-        log.A($"has AppCode assembly: {assemblyResult?.HasAssembly}");
+        var (assemblyResult, resultSpec) = appCodeLoader.Value.GetAppCode(spec);
+        var assembly = assemblyResult?.Assembly;
+        var resolverKey = AppRelativePathWithEdition(app, spec);
+        var resultResolverKey = AppRelativePathWithEdition(app, resultSpec);
+        // Register all app/edition aliases the RuntimeViewCompiler may later use
+        // when resolving the physical AppCode DLL after an Oqtane restart.
+        var resolverKeys = AppCodeResolverKeys.Build(partialName,
+        [
+            resolverKey,
+            resultResolverKey,
+            app.RelativePath
+        ]);
+        log.A($"AppCode loader result: requestedSpec:'{spec}'; resultSpec:'{resultSpec}'; hasResult:{assemblyResult != null}; hasAssembly:{assemblyResult?.HasAssembly}; assembly:'{assembly?.FullName}'; assemblyLocation:'{assembly?.Location}'; assemblyLocations:'{string.Join(";", assemblyResult?.AssemblyLocations ?? [])}'; errorMessages:'{assemblyResult?.ErrorMessages}'; resolverKey:'{resolverKey}'; resultResolverKey:'{resultResolverKey}'");
 
-        if (assemblyResult?.Assembly != null)
+        if (assembly != null)
         {
-            var appRelativePathWithEdition = spec.Edition.HasValue() ? Path.Combine(app.RelativePath, spec.Edition) : app.RelativePath;
-            log.A($"{nameof(appRelativePathWithEdition)}: '{appRelativePathWithEdition}'");
-
             // Add assembly to resolver, so it will be provided to the compiler when used in cshtml
-            assemblyResolver.AddAssembly(assemblyResult.Assembly, appRelativePathWithEdition);
-        };
+            foreach (var key in resolverKeys)
+                assemblyResolver.AddAssembly(assembly, key);
 
-        log.Done();
+            var resolverLookups = AppCodeResolverKeys.Resolve(assemblyResolver, resolverKeys);
+            var matchedResolver = AppCodeResolverKeys.PickBest(resolverLookups);
+            var referenceAvailable = matchedResolver?.Exists == true;
+            log.A($"Resolver lookup after registration: keys:'{AppCodeResolverKeys.Describe(resolverKeys)}'; results:'{AppCodeResolverKeys.DescribeResults(resolverLookups)}'");
+            if (!referenceAvailable)
+            {
+                log.W($"AppCode assembly was loaded but no file reference is available for any resolver key. Requested:'{resolverKey}'; result:'{resultResolverKey}'.");
+                return log.ReturnFalse("no file reference");
+            }
+
+            log.A($"Resolver lookup matched key:'{matchedResolver!.Key.ToSystemPath()}'; location:'{matchedResolver.Location}'");
+            return log.ReturnTrue("reference available");
+        }
+
+        log.W($"AppCode registration requested for '{partialName}' but AppCodeLoader returned no assembly.");
+
+        return log.ReturnFalse("no assembly");
     }
+
+    private static string AppRelativePathWithEdition(IApp app, HotBuildSpec spec)
+        => spec.Edition.HasValue()
+            ? Path.Combine(app.RelativePath, spec.Edition)
+            : app.RelativePath;
+
+    private static string Describe(CodeFileInfo codeFileInfo)
+        => $"{nameof(codeFileInfo.Inherits)}:'{codeFileInfo.Inherits}'; {nameof(codeFileInfo.Type)}:'{codeFileInfo.Type}'; {nameof(codeFileInfo.AppCode)}:{codeFileInfo.AppCode}; {nameof(codeFileInfo.RelativePath)}:'{codeFileInfo.RelativePath}'; {nameof(codeFileInfo.FullPath)}:'{codeFileInfo.FullPath}'";
 }

@@ -6,13 +6,13 @@ internal class GeneratePropertyString(CSharpGeneratorHelper helper) : GeneratePr
 {
     public override ValueTypes ForDataType => ValueTypes.String;
 
-    public override List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs)
+    public override List<CodeFragment> Generate(IContentTypeField fieldDef, int tabs)
     {
-        var name = attribute.Name;
+        var name = fieldDef.Name;
 
         // If we're generating a "Title" for a property that is already the title, don't generate it again
         // Don't do this. Reason is that it will confuse people why it's missing, and serialization might also miss it.
-        // if (name == Attributes.TitleNiceName && attribute.IsTitle) return [];
+        // if (name == Attributes.TitleNiceName && fieldDef.IsTitle) return [];
 
         return
         [

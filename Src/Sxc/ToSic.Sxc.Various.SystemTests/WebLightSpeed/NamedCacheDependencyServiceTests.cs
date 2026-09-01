@@ -4,8 +4,8 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.Metadata;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Render.Output.Sys;
 using ToSic.Sxc.Render.Sys;
-using ToSic.Sxc.Render.Sys.ModuleHtml;
 using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.OutputCache;
 using ToSic.Sxc.Web.Sys.LightSpeed;
@@ -23,7 +23,7 @@ public class NamedCacheDependencyServiceTests(ExecutionContext exCtx)
 
     private ModuleOutputCacheService OutputCache => exCtx.GetService<ModuleOutputCacheService>(reuse: true);
 
-    private ModuleHtmlService ModuleHtml => (ModuleHtmlService)exCtx.GetService<IModuleHtmlService>(reuse: true);
+    private ModulesOutputService ModulesOutput => (ModulesOutputService)exCtx.GetService<IModulesOutputService>(reuse: true);
 
     private MemoryCacheService Cache => exCtx.GetService<MemoryCacheService>(reuse: true);
 
@@ -59,7 +59,7 @@ public class NamedCacheDependencyServiceTests(ExecutionContext exCtx)
         OutputCache.DependOn("Products");
         OutputCache.DependOn(" products ");
 
-        var settings = ModuleHtml.GetOutputCache(42);
+        var settings = ModulesOutput.GetOutputCache(42);
 
         NotNull(settings);
         var dependencies = settings!.ExternalDependencyKeys;

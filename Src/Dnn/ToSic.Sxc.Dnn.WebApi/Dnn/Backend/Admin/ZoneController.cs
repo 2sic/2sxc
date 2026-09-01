@@ -1,6 +1,4 @@
 ﻿using ToSic.Eav.WebApi.Sys.Admin;
-using ToSic.Eav.WebApi.Sys.Dto;
-using ToSic.Eav.WebApi.Sys.Zone;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using RealController = ToSic.Eav.WebApi.Sys.Admin.ZoneControllerReal;
 
@@ -15,10 +13,10 @@ public class ZoneController() : DnnSxcControllerBase(RealController.LogSuffix), 
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
-    /// <inheritdoc />
-    [HttpGet]
-    public IList<SiteLanguageDto> GetLanguages()
-        => Real.GetLanguages();
+    ///// <inheritdoc />
+    //[HttpGet]
+    //public IList<SiteLanguageDto> GetLanguages()
+    //    => Real.GetLanguages();
 
     /// <inheritdoc />
     [HttpGet]
@@ -26,7 +24,8 @@ public class ZoneController() : DnnSxcControllerBase(RealController.LogSuffix), 
         => Real.SwitchLanguage(cultureCode, enable);
 
     /// <inheritdoc />
-    [HttpGet]
-    public SystemInfoSetDto GetSystemInfo()
-        => Real.GetSystemInfo();
+    /// Replaced by "System.SystemInfo" DataSource; endpoint disabled.
+    //[HttpGet]
+    //public SystemInfoSetDto GetSystemInfo()
+    //    => Real.GetSystemInfo();
 }

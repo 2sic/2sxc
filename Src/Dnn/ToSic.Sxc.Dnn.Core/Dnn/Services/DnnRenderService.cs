@@ -19,6 +19,8 @@ internal class DnnRenderService : RenderService
         Generator<IContextOfBlock> context
     ) : base(services)
     {
+        // Must be done like this, since the base class can also be created directly through DI,
+        // so the default constructor can't include `connect`
         ConnectLogs([
             _dnnPageChanges = dnnPageChanges,
             _dnnClientResources = dnnClientResources,
@@ -44,7 +46,6 @@ internal class DnnRenderService : RenderService
     private void DnnPageProcess(Page dnnPage, IRenderResult result)
     {
         _dnnPageChanges.Value.Apply(dnnPage, result);
-        // #RemovedV20 #OldDnnAutoJQuery
-        _dnnClientResources.Value.Init(dnnPage, /*null,*/ null).AddEverything(result.Features);
+        _dnnClientResources.Value.Init(dnnPage, null).AddEverything(result.Features);
     }
 }

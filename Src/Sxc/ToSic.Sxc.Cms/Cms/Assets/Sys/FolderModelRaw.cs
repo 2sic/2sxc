@@ -1,7 +1,5 @@
-﻿using ToSic.Eav.Data.Build;
+﻿using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw;
-using ToSic.Eav.Data.Raw.Sys;
-using ToSic.Eav.Data.Sys.ContentTypes;
 
 namespace ToSic.Sxc.Cms.Assets.Sys;
 
@@ -14,11 +12,12 @@ namespace ToSic.Sxc.Cms.Assets.Sys;
 /// We'll probably move it to another namespace some day.
 /// </summary>
 /// <remarks>
-/// Make sure the property names never change, as they are critical for the created Entity.
+/// * Make sure the property names never change, as they are critical for the created Entity.
+/// * Was InternalApi till v17 - hide till we know how to handle to-typed-conversions
 /// </remarks>
-[PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
+[PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-[ContentTypeSpecs(
+[ContentType(
     Guid = "96cda931-b677-4589-9eb2-df5a38cefff0",
     Description = "Folder in an App",
     Name = TypeName
@@ -27,38 +26,29 @@ public record FolderModelRaw: FileFolderBase, IFolderModelSync
 {
     internal const string TypeName = "Folder";
 
-    internal static DataFactoryOptions Options = new()
-    {
-        TypeName = TypeName,
-        TitleField = nameof(Path)
-    };
-
     /// <inheritdoc cref="IFolderModelSync.Name"/>
-    [ContentTypeAttributeSpecs(Description = "The folder name or blank when it's the root.")]
+    [ContentTypeField(Description = "The folder name or blank when it's the root.")]
     public override string? Name { get; init; }
 
-    [ContentTypeAttributeSpecs(Type = ValueTypes.Entity, Description = "Folders in this folder.")]
-    public RawRelationship Folders => new(key: $"FolderIn:{Path}");
+    [ContentTypeField(Type = ValueTypes.Entity, Description = "Folders in this folder.")]
+    public RawRelationship Folders => new() { Keys = [$"FolderIn:{Path}"] };
 
-    [ContentTypeAttributeSpecs(Type = ValueTypes.Entity, Description = "Files in this folder.")]
-    public RawRelationship Files => new(key: $"FileIn:{Path}");
-
-    [PrivateApi]
-    public override IDictionary<string, object?> Attributes(RawConvertOptions options)
-        => new Dictionary<string, object?>(base.Attributes(options))
-        {
-            { nameof(Folders), Folders },
-            { nameof(Files), Files },
-        };
+    [ContentTypeField(Type = ValueTypes.Entity, Description = "Files in this folder.")]
+    public RawRelationship Files => new() { Keys = [$"FileIn:{Path}"] };
 
     [PrivateApi]
-    public override IEnumerable<object> RelationshipKeys(RawConvertOptions options)
-        => new List<object>
-        {
-            // For Relationships looking for this folder
-            $"Folder:{Path}",
-            // For Relationships looking for folders having a specific parent
-            $"FolderIn:{ParentFolderInternal}",
-        };
+    public override IDictionary<string, object?> Values => field ??= new Dictionary<string, object?>(base.Values)
+    {
+        { nameof(Folders), Folders },
+        { nameof(Files), Files },
+    };
 
+    [PrivateApi]
+    public override IEnumerable<object> RelationshipKeys => field ??= new List<object>
+    {
+        // For Relationships looking for this folder
+        $"Folder:{Path}",
+        // For Relationships looking for folders having a specific parent
+        $"FolderIn:{ParentFolderInternal}",
+    };
 }

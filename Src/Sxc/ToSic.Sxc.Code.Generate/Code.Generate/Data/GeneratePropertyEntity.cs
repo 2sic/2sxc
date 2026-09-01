@@ -1,27 +1,38 @@
-﻿using ToSic.Sxc.Code.Generate.Sys;
+﻿using ToSic.Eav.Data.ContentTypes.Fields.Sys;
+using ToSic.Eav.Data.Sys;
+using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Code.Generate.Data;
 
-internal class GeneratePropertyEntity(CSharpGeneratorHelper helper) : GeneratePropertyBase(helper)
+internal class GeneratePropertyEntity(CSharpGeneratorHelper helper) : GeneratePropertyBase(helper, "Gen.Entity")
 {
     public override ValueTypes ForDataType => ValueTypes.Entity;
 
-    public override List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs)
+    public override List<CodeFragment> Generate(IContentTypeField fieldDef, int tabs)
     {
-        var name = attribute.Name;
+        var name = fieldDef.Name;
+        var l = Log.Fn<List<CodeFragment>>($"name: {name}");
 
-        var entityType = attribute.Metadata.Get<string>("EntityType");
-        var allowMulti = attribute.Metadata.Get<bool>("AllowMultiValue");
+        var inspector = new WorkFieldEntityInspectType();
+        this.ConnectLogs([inspector]);
+        var entityType = inspector.PrimaryTypeName(fieldDef, modeCreate: false, tryOtherModes: true);
+        //if (entityType.IsEmpty())
+        //{
+        //    entityType = inspector.PrimaryTypeName(fieldDef, modeCreate: true);
+        //    l.A($"Entity type was empty, will try for create resulting in: '{entityType}'");
+        //}
+        //var entityType = fieldDef.Metadata.Get<string>(AttributeNames.EntityFieldType);
+        var allowMulti = fieldDef.Metadata.Get<bool>(AttributeNames.EntityFieldAllowMulti);
 
-        var msgPrefix = $"{name} as " + (allowMulti ? "list" : "single item") + " of";
+        l.A($"entityType: {entityType}, allowMulti: {allowMulti}");
+
+        var msgPrefix = $"{name} as {(allowMulti ? "list" : "single item")} of";
         // var msgSuffix = "Use methods such as .Children(\"{name}\") or .Child(\"{name}\") to get the actual items.";
         var method = allowMulti ? "Children" : "Child";
         var result = allowMulti ? "IEnumerable<{0}>" : "{0}";
         var resultType = nameof(ITypedItem);
         var usings = UsingTypedItems;
-
-        // TODO: CONSIDER GOING TO lIST - REQUIRES A ToList at the end.
 
         var msgReturns = allowMulti
             ? "An IEnumerable of specified type, but can be empty."
@@ -34,7 +45,7 @@ internal class GeneratePropertyEntity(CSharpGeneratorHelper helper) : GeneratePr
         // If we know the entity type, we can use the actual type instead of ITypedItem
         if (entityType.HasValue())
             Specs.ExportedContentContentTypes
-                .FirstOrDefault(t => entityType.EqualsInsensitive(t.Name))
+                .FirstOrDefault(t => t.Is(entityType))
                 .DoIfNotNull(ct =>
                 {
                     // Switch the result type
@@ -46,14 +57,15 @@ internal class GeneratePropertyEntity(CSharpGeneratorHelper helper) : GeneratePr
                     msgRemarks += $"The type {resultType} was specified in the field settings.";
                 });
 
-        return
+        return l.Return(
         [
-            GenPropSnip(tabs, string.Format(result, resultType), name, $"{Specs.ItemAccessor}." + method, cache: true, usings: usings,
+            GenPropSnip(tabs, string.Format(result, resultType), name, $"{Specs.ItemAccessor}." + method, cache: true,
+                usings: usings,
                 summary: [$"{msgPrefix} {resultType}."],
                 remarks: [msgRemarks],
                 returns: [msgReturns]
             ),
-        ];
+        ]);
     }
 
     private List<string> UsingList { get; } =

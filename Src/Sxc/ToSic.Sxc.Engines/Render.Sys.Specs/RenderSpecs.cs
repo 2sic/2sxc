@@ -1,5 +1,5 @@
-﻿using ToSic.Sxc.Engines;
-using ToSic.Sys.Data;
+﻿using ToSic.Sxc.Render.Output.Sys;
+using ToSic.Sys;
 
 namespace ToSic.Sxc.Render.Sys.Specs;
 
@@ -7,8 +7,6 @@ namespace ToSic.Sxc.Render.Sys.Specs;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public record RenderSpecs
 {
-    //public RenderSpecs() { }
-
     /// <summary>
     /// The data / view model to be used in the Razor file.
     /// </summary>
@@ -19,7 +17,7 @@ public record RenderSpecs
     /// This is done here / early to avoid having to convert it in every place where it's used.
     /// </summary>
     public IDictionary<string, object?>? DataDic => _dataDic.Get(() => Data?.ToDicInvariantInsensitive());
-    private readonly GetOnce<IDictionary<string, object?>?> _dataDic = new();
+    private readonly LazyGet<IDictionary<string, object?>?> _dataDic = new();
 
     /// <summary>
     /// Info if LightSpeed should be used for rendering - ATM just used for the statistics in the UI.
@@ -29,7 +27,7 @@ public record RenderSpecs
     /// <summary>
     /// Would contain errors from dnn requirements check (like c# 8.0)
     /// </summary>
-    public RenderEngineResult? RenderEngineResult { get; init; }
+    public OutputFragmentWithAssets? RenderEngineResult { get; init; }
 
     /// <summary>
     /// Override default behavior in Oqtane

@@ -41,14 +41,6 @@ public partial class DataService(
     }
     private IAppIdentity? _appIdentity;
 
-    //// TODO: MAKE PRIVATE AGAIN AFTER MOVING TO ToSic.Sxc.Custom
-    //public IDataService SetupOld(IAppIdentity? appIdentity, Func<ILookUpEngine?>? getLookup)
-    //{
-    //    _appIdentity = appIdentity ?? _appIdentity;
-    //    _getLookup = getLookup ?? _getLookup;
-    //    return this;
-    //}
-
 
     public IDataService SpawnNew(NoParamOrder npo = default, IAppIdentity? appIdentity = default, int zoneId = default, int appId = default)
     {
@@ -76,8 +68,7 @@ public partial class DataService(
         return newDs;
     }
 
-    private DataSourceOptionsMs OptionsMs => _optionsHandler.Get(() => new(_appIdentity, _getLookup))!;
-    private readonly GetOnce<DataSourceOptionsMs> _optionsHandler = new();
+    private DataSourceOptionsMs OptionsMs => field ??= new(_appIdentity, _getLookup);
 
     private Func<ILookUpEngine?>? _getLookup;
 

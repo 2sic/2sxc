@@ -28,13 +28,13 @@ internal class CmsServiceStringWysiwyg()
 
     #region Init
 
-    public CmsServiceStringWysiwyg Init(IField field, IContentType contentType, IContentTypeAttribute attribute, IFolder folder, bool debug, object? imageSettings)
+    public CmsServiceStringWysiwyg Init(IField field, IContentType contentType, IContentTypeField fieldDef, IFolder folder, bool debug, object? imageSettings)
     {
         var l = Log.Fn<CmsServiceStringWysiwyg>();
         Field = field;
         ContentType = contentType;
         Folder = folder;
-        Attribute = attribute;
+        FieldDef = fieldDef;
         Debug = debug;
         ImageSettings = imageSettings;
         return l.ReturnAsOk(this);
@@ -45,7 +45,7 @@ internal class CmsServiceStringWysiwyg()
     /// <summary>FYI: is never allowed to be null.</summary>
     protected IContentType ContentType = null!;
     /// <summary>FYI: is never allowed to be null.</summary>
-    protected IContentTypeAttribute Attribute = null!;
+    protected IContentTypeField FieldDef = null!;
     /// <summary>FYI: could be null.</summary>
     protected object? ImageSettings;
     /// <summary>FYI: is never allowed to be null.</summary>
@@ -69,7 +69,7 @@ internal class CmsServiceStringWysiwyg()
         PageService.Activate(SxcPageFeatures.CmsWysiwyg.NameId);
 
         // 2. Check Inner Content
-        html = HtmlInnerContentHelper.ProcessInnerContent(html, ContentType, Attribute, Field);
+        html = HtmlInnerContentHelper.ProcessInnerContent(html, ContentType, FieldDef, Field);
 
         // prepare classes to add
         var classes = WysiwygConstants.WysiwygContainerClass + (Debug ? $" {WysiwygConstants.WysiwygDebugClass}" : "");
@@ -83,7 +83,7 @@ internal class CmsServiceStringWysiwyg()
 
         // check if field metadata specifies alternate Lightbox or image resize settings
 
-        var fieldMd = ImageDecorator.GetOrNull(Attribute, [null]);
+        var fieldMd = ImageDecorator.GetOrNull(FieldDef, [null]);
 
         // Assume fallback-image settings to be the specified or "Wysiwyg"
         var defaultImageSettings = fieldMd?.ResizeSettings ?? ImageSettings ?? "Wysiwyg";

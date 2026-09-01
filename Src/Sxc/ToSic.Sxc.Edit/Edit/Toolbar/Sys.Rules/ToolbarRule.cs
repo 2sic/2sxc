@@ -54,10 +54,10 @@ internal abstract class ToolbarRule: ToolbarRuleBase
                 return "";
             // If Operation is remove, don't add all the additional stuff. Enhanced in 17.10
             case ToolbarRuleOperation.RemoveOperation:
-                return Operation + Command;
+                return $"{Operation}{Command}";
         }
 
-        var result = Operation + Command + (CommandValue.HasValue() ? "=" + CommandValue : "");
+        var result = $"{Operation}{Command}{(CommandValue.HasValue() ? $"={CommandValue}" : "")}";
 
         var genUi = GeneratedUiParams();
         if (genUi.HasValue())
@@ -66,18 +66,15 @@ internal abstract class ToolbarRule: ToolbarRuleBase
             result += "&" + Ui;
             
         var genCmdParams = GeneratedCommandParams();
-        var hasGeneratedCmdParams = genCmdParams.HasValue();
-        var hasCmdParams = Parameters.HasValue();
 
         // Stop if nothing to add
-        if (!hasGeneratedCmdParams && !hasCmdParams)
+        if (!genCmdParams.HasValue() && !Parameters.HasValue())
             return result;
             
-        result += "?" + UrlParts.ConnectParameters(genCmdParams, Parameters);
-        return result;
+        return $"{result}?{UrlParts.ConnectParameters(genCmdParams, Parameters)}";
     }
 
-    protected string BuildValidParameterList(IEnumerable<(string, string?)> values)
+    protected static string BuildValidParameterList(IEnumerable<(string, string?)> values)
     {
         var keep = values.Where(set => !string.IsNullOrWhiteSpace(set.Item2));
         return string.Join("&", keep.Select(set => $"{set.Item1}={set.Item2}"));

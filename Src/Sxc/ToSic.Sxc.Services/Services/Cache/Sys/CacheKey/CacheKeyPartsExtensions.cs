@@ -42,8 +42,8 @@ public static class CacheKeyPartsExtensions
         if (keyParts.Main.StartsWith(DefaultPrefix))
             return keyParts.Main;
 
-        var appKey = keyParts.RuntimeKey.HasValue()
-            ? keyParts.RuntimeKey
+        var appKey = keyParts.AppCacheKey.HasValue()
+            ? keyParts.AppCacheKey
             : keyParts.AppId.ToString();
         var isMagicOverride = keyParts.Main.StartsWith(CacheSpecConstants.PrefixForDontPrefix);
         var prefix = isMagicOverride

@@ -4,6 +4,7 @@ using ToSic.Eav.Data.Processing;
 using ToSic.Sxc.Code.Generate.Data;
 using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sxc.Code.Generate.Sys.CSharpBaseClasses;
+using ToSic.Sys.HookUp;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Run.Startup;
@@ -25,10 +26,9 @@ public static class StartupSxcCodeGenerate
         services.TryAddTransient<CSharpCustomModelsGenerator>();  // direct registration
         services.AddTransient<IFileGenerator, CSharpCustomModelsGenerator>(); // with interface and no try, so all can be listed in DI
 
-        // v21.04 Copilot auto-generate on schema changes
-        services.TryAddTransient<CopilotContentTypeAutoGenerateService>();
-        services.TryAddTransient<CopilotContentTypeDataProcessor>();
-        services.TryAddEnumerable(ServiceDescriptor.Transient(typeof(IDataProcessor), typeof(CopilotContentTypeDataProcessor)));
+        // v21.04 Copilot auto-generate on schema changes.
+        services.TryAddTransient<CopilotCodeGenerateService>();
+        services.AddTransient<IWork<ContentTypeChange, ContentTypeChange>, CopilotContentTypeAutoGenerateAction>();
 
         return services;
     }

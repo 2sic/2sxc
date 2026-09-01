@@ -46,7 +46,7 @@ internal class DnnWebApiHelper : CodeHelperBase
         => ExCtxOrNull?.GetService<TService>()
             ?? _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>(Log);
     // Must cache it, to be really sure we use the same ServiceProvider in the same request
-    private readonly GetOnce<IServiceProvider> _serviceProvider = new();
+    private readonly LazyGet<IServiceProvider> _serviceProvider = new();
 
     public void SetupResponseMaker(System.Web.Http.ApiController apiController)
         => GetService<IResponseMaker>().Init(apiController);
@@ -61,7 +61,7 @@ internal class DnnWebApiHelper : CodeHelperBase
 
     public IBlock GetBlockAndContext(HttpRequestMessage request) 
         => _blcCtx.Get(() => GetService<DnnGetBlock>().GetCmsBlock(request));
-    private readonly GetOnce<IBlock> _blcCtx = new();
+    private readonly LazyGet<IBlock> _blcCtx = new();
 
 
 }

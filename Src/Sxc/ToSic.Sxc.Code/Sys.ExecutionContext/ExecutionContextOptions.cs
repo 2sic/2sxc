@@ -6,6 +6,7 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 /// <summary>
 /// Options necessary to initialize a fresh execution context.
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public record ExecutionContextOptions
 {
     /// <summary>

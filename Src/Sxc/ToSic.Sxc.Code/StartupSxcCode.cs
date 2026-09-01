@@ -12,7 +12,8 @@ using ToSic.Sxc.Context.Sys.Page;
 using ToSic.Sxc.Context.Sys.Platform;
 using ToSic.Sxc.Data.Sys.CodeDataFactory;
 using ToSic.Sxc.Data.Sys.Factory;
-using ToSic.Sxc.Engines;
+using ToSic.Sxc.Render.Engines.Sys;
+using ToSic.Sxc.Render.Engines.Token.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Sys.CodeApiServiceHelpers;
 using ToSic.Sxc.Services.Sys.DynamicCodeService;
@@ -56,8 +57,8 @@ public static class StartupSxcCode
         services.TryAddTransient<ICodeDataFactory, CodeDataFactory>();
         services.TryAddTransient<CodeDataServices>();
 
-        // Temporary solution for the TokenEngine
-        services.TryAddTransient<ITokenEngine, TokenEngine>();
+        // Register TokenEngine
+        services.TryAddKeyedTransient<IEngine, TokenEngine>("token");
 
         // CmsContext / MyContext
         services.TryAddTransient<ICmsContext, CmsContext>();

@@ -1,44 +1,46 @@
-﻿using ToSic.Eav.Apps.Sys.Paths;
-using ToSic.Eav.Data.Processing;
+﻿using ToSic.Eav.Data.Processing;
 using ISite = ToSic.Eav.Context.ISite;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys.Zip;
-using ToSic.Eav.WebApi.Sys.Security;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sys.Capabilities.Features;
-using ToSic.Sys.Users;
+using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Backend.ImportExport;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppStateSyncSave(
-    ZipExport export,
+    Generator<ZipExport, ZipExport.Options> exportGenerator,
     ISite site,
-    IUser user,
     Generator<ImpExpHelpers> impExpHelpers,
-    ISysFeaturesService features,
-    IAppPathsMicroSvc appPathSvc)
-    : ServiceBase("Bck.Export", connect: [export, site, user, features, impExpHelpers, appPathSvc]),
-        ILowCodeAction<AppExportSpecs, bool>
+    ISysFeaturesService features)
+    : ServiceBase("Bck.Export", connect: [exportGenerator, site, features, impExpHelpers]),
+        IWork<AppExportSpecs, bool>
 {
 
-    public async Task<ActionData<bool>> Run(LowCodeActionContext context, ActionData<AppExportSpecs> data)
+    public async Task<Package<bool>> Handle(WorkContext context, Package<AppExportSpecs> package)
     {
-        var specs = data.Data;
+        var specs = package.Data;
         var l = Log.Fn<bool>(specs.Dump());
-        SecurityHelpers.ThrowIfNotSiteAdmin(user, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
         if (features.IsEnabled(BuiltInFeatures.AppStateSyncSaveDisabled))
             throw new FeaturesRefusingException(BuiltInFeatures.AppStateSyncSaveDisabled.NameId,
                 "App Sync Save Disabled is active, probably as a protective measure.");
 
+        
         // Ensure feature available...
-        ExportApp.SyncWithSiteFilesVerifyFeaturesOrThrow(features, specs.WithSiteFiles);
+        ExportHelper.SyncWithSiteFilesVerifyFeaturesOrThrow(features, specs.WithSiteFiles);
 
-        var contextZoneId = site.ZoneId;
-        var appRead = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(specs.ZoneId, specs.AppId, user, contextZoneId);
-        var appPaths = appPathSvc.Get(appRead, site);
+        var (appRead, appPaths) = impExpHelpers.New().GetReaderAndPathsAfterZoneSwitchPermissionCheck(specs);
 
-        var zipExport = export.Init(specs.ZoneId, specs.AppId, appRead.Specs.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
+        var zipExport = exportGenerator.New(new()
+        {
+            ZoneId = specs.ZoneId,
+            AppId = specs.AppId,
+            AppFolder = appRead.Specs.Folder,
+            PhysicalAppPath = appPaths.PhysicalPath,
+            PhysicalPathGlobal = appPaths.PhysicalPathShared
+        });
         zipExport.ExportForSourceControl(specs);
 
         return new(l.ReturnTrue());

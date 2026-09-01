@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.Data.Sys.Ancestors;
-using ToSic.Eav.Data.Sys.ContentTypes;
-using ToSic.Eav.Persistence.Sys.Logging;
+﻿using ToSic.Eav.Persistence.Sys.Logging;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Eav.WebApi.Sys.ImportExport;
@@ -13,9 +11,9 @@ namespace ToSic.Sxc.Backend.Admin;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class TypeControllerReal(
     LazySvc<IContextOfSite> context,
-    LazySvc<ContentTypeDtoService> ctApiLazy,
+    AppWorkQuick<ContentTypeDtoService> ctApiLazy,
     LazySvc<ContentExportApi> contentExportLazy,
-    GenWorkDb<WorkContentTypesMod> typeMod,
+    AppWorkQuick<WorkContentTypesMod> typeMod,
     LazySvc<IUser> userLazy,
     IAppReaderFactory appReaders,
     Generator<ImportContent> importContent)
@@ -28,50 +26,10 @@ public class TypeControllerReal(
     public IEnumerable<ContentTypeDto> List(int appId, string? scope = null, bool withStatistics = false)
     {
         var l = Log.Fn<IEnumerable<ContentTypeDto>>($"{appId}, scope:{scope}, stats:{withStatistics}");
-        var list = ctApiLazy.Value.List(appId, scope, withStatistics);
+        var list = ctApiLazy.New(appId).List(appId, scope, withStatistics);
         return l.Return(list);
     }
-
-    /// <summary>
-    /// Used to be GET ContentTypes/Scopes
-    /// </summary>
-    public ScopesDto Scopes(int appId)
-    {
-        var l = Log.Fn<ScopesDto>($"{appId}");
-        var reader = appReaders.Get(appId);
-        var dic = reader.ContentTypes.GetAllScopesWithLabels();
-        var infos = dic
-            .Select(pair =>
-            {
-                var typesInScope = reader.ContentTypes
-                    .OfScope(pair.Key, includeAttributeTypes: true)
-                    .ToList();
-
-                var withAncestor = typesInScope
-                    .Where(AncestorExtensions.HasAncestor)
-                    .ToList();
-
-                var count = typesInScope.Count;
-                return new ScopeDetailsDto
-                {
-                    Name = pair.Key,
-                    Label = pair.Value ?? pair.Key,
-                    TypesTotal = count,
-                    TypesInherited = withAncestor.Count,
-                    TypesOfApp = count - withAncestor.Count
-                };
-            })
-            .ToList();
-        return l.Return(new() { Old = dic, Scopes = infos });
-    }
-
-    /// <summary>
-    /// Used to be GET ContentTypes/Scopes
-    /// </summary>
-    public ContentTypeDto Get(int appId, string contentTypeId, string? scope = null)
-        => ctApiLazy.Value.GetSingle(appId, contentTypeId, scope);
-
-
+    
     public bool Delete(int appId, string staticName)
         => typeMod.New(appId).Delete(staticName);
 

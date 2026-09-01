@@ -8,7 +8,7 @@ using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Server.Code.Sys;
 using ToSic.Sxc.Oqt.Server.Plumbing;
-using ToSic.Sxc.Polymorphism.Sys;
+using ToSic.Sxc.Render.Polymorphism.Sys;
 using ToSic.Sys.Utils;
 using Log = ToSic.Sys.Logging.Log;
 
@@ -19,13 +19,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 /// </summary>
 internal class AppApiControllerManager : IHasLog
 {
-    public AppApiControllerManager(ApplicationPartManager partManager, ILogStore logStore, Generator<Compiler> compiler, IWebApiContextBuilder webApiContextBuilder, PolymorphConfigReader polymorphism,
+    public AppApiControllerManager(ApplicationPartManager partManager, ILogStore logStore, Generator<Compiler> compiler, IWebApiContextBuilder webApiContextBuilder, IEditionService editionSvc,
         AppCodeLoader appCodeLoader)
     {
         _partManager = partManager;
         _compiler = compiler;
         _webApiContextBuilder = webApiContextBuilder;
-        _polymorphism = polymorphism;
+        _editionSvc = editionSvc;
         _appCodeLoader = appCodeLoader;
         Log = new Log(HistoryLogName, null, "AppApiControllerManager");
         logStore.Add(HistoryLogGroup, Log);
@@ -33,7 +33,7 @@ internal class AppApiControllerManager : IHasLog
     private readonly ApplicationPartManager _partManager;
     private readonly Generator<Compiler> _compiler;
     private readonly IWebApiContextBuilder _webApiContextBuilder;
-    private readonly PolymorphConfigReader _polymorphism;
+    private readonly IEditionService _editionSvc;
     private readonly AppCodeLoader _appCodeLoader;
 
     public ILog Log { get; }
@@ -42,7 +42,7 @@ internal class AppApiControllerManager : IHasLog
 
     protected string HistoryLogName => "Controller.Manager";
 
-    private static readonly object LockObject = new();
+    private static readonly Lock LockObject = new();
 
     /// <summary>
     /// Compile and register dyncode app api controller (for new or updated app api).
@@ -158,7 +158,7 @@ internal class AppApiControllerManager : IHasLog
         // Figure out the current edition
         var edition = FigureEdition(ctxResolver).TrimLastSlash();
 
-        var spec = new HotBuildSpec(appReader?.AppId ?? KnownAppsConstants.AppIdEmpty, edition: edition, appReader?.Specs.Name, appReader?.Specs.RuntimeKey);
+        var spec = new HotBuildSpec(appReader?.AppId ?? KnownAppsConstants.AppIdEmpty, edition: edition, appReader?.Specs.Name, appReader?.Specs.CacheKey);
 
         return l.ReturnAsOk(spec);
     }
@@ -172,7 +172,7 @@ internal class AppApiControllerManager : IHasLog
         var l = Log.Fn<string>(timer: true);
 
         var block = ctxService.BlockOrNull();
-        var edition = block.NullOrGetWith(_polymorphism.UseViewEditionOrGet);
+        var edition = block.NullOrGetWith(_editionSvc.Edition);
 
         return l.Return(edition);
     }

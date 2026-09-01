@@ -15,13 +15,13 @@ namespace ToSic.Sxc.BuildTasks
 
         #region json properties
         [Output]
-        public string[] JsTargets { get; private set; } = Array.Empty<string>();
+        public string[] JsTargets { get; private set; } = [];
 
         [Output]
-        public string[] DnnTargets { get; private set; } = Array.Empty<string>();
+        public string[] DnnTargets { get; private set; } = [];
 
         [Output]
-        public string[] OqtaneTargets { get; private set; } = Array.Empty<string>();
+        public string[] OqtaneTargets { get; private set; } = [];
         [Output]
         public string[] Sources { get; private set; }
 

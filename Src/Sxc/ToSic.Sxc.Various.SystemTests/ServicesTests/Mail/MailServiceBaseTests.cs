@@ -1,8 +1,9 @@
-﻿using ToSic.Sxc.Services.Mail.Sys;
+﻿using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Mail.Sys;
 
 namespace ToSic.Sxc.ServicesTests.Mail;
 
-public class MailServiceBaseTests
+public class MailServiceBaseTests(IMailService mailSvc)
 {
     [Fact]
     public void AutoDetectHtmlTest()
@@ -24,5 +25,17 @@ public class MailServiceBaseTests
         Equal(",,,,", MailServiceBase.NormalizeEmailSeparators(";;;;"));
         // some non standard separators
         Equal(",,,,", MailServiceBase.NormalizeEmailSeparators(",,;;"));
+    }
+
+    [Fact]
+    public void Create_NoAttachments_CreatesMessageWithoutAttachments()
+    {
+        using var message = mailSvc.Create(
+            from: "from@example.com",
+            to: "to@example.com",
+            subject: "Test",
+            body: "Body");
+
+        Empty(message.Attachments);
     }
 }

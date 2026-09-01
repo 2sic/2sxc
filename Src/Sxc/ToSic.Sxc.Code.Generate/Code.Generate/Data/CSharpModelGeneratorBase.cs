@@ -107,12 +107,18 @@ internal abstract class CSharpModelGeneratorBase(CSharpModelsGeneratorBase gener
         return l.Return(new($"{finalClassName}{Specs.FileGeneratedSuffix}", fileContents, GenerateFileIntroComment(UserName)), $"File size: {fileContents.Length}");
     }
 
-    private (bool HasProps, string? Code, List<string>? Usings, string? FirstProperty) ClassProperties(List<IContentTypeAttribute> attributes)
+    private (bool HasProps, string? Code, List<string>? Usings, string? FirstProperty) ClassProperties(List<IContentTypeField> attributes)
     {
         var l = Log.Fn<(bool, string?, List<string>?, string?)>($"{nameof(attributes)}: {attributes.Count}");
 
+        // Ephemeral fields only exist in the edit UI and are not persisted.
+        // Generated properties would access missing data and fail during serialization.
+        var persistedAttributes = attributes
+            .Where(a => !a.IsEphemeral())
+            .ToList();
+
         // Generate all properties with the helpers
-        var propsSnippets = attributes
+        var propsSnippets = persistedAttributes
             .Select(a => new
             {
                 Attribute = a,

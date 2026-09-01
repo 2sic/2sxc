@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using DotNetNuke.Abstractions.Portals;
 using DotNetNuke.Services.Localization;
 using System.Web;
 using System.Web.Hosting;
@@ -26,7 +27,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
 
     /// <summary>
     /// DI Constructor, will get the current portal settings
-    /// #TodoDI not ideal yet, as PortalSettings.current is still retrieved from global
+    /// #TodoDI not ideal yet, as PortalSettings.Current is still retrieved from global
     /// </summary>
     public DnnSite(LazySvc<IZoneMapper> zoneMapperLazy, LazySvc<ILinkPaths> linkPathsLazy, LazySvc<ISysFeaturesService> featuresSvc)
         : base(DnnConstants.LogName, connect: [featuresSvc, zoneMapperLazy, linkPathsLazy])
@@ -54,11 +55,11 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
         AttachToExternalLog(parentLogOrNull);
 
         var l = Log.Fn<DnnSite>();
-        UnwrappedSite = KeepBestPortalSettings(settings);
+        UnwrappedSite = KeepBestPortalSettings(settings, parentLogOrNull);
 
         // reset language info to be sure to get it from the latest source
-        _currentCulture.Reset(Log);
-        _currentCodeFallbacks.Reset(Log);
+        _currentCulture.Reset();
+        CultureCodesWithFallbacks = null!;
         _defaultLanguage = null;
         _zoneId = null;
 
@@ -92,21 +93,26 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     /// In case we're requesting a DnnTenant with incomplete PortalSettings
     /// we want to correct this here
     /// </summary>
-    /// <param name="settings"></param>
     /// <returns></returns>
-    private static PortalSettings KeepBestPortalSettings(PortalSettings settings, ILog extLogOrNull = null)
+    private static PortalSettings KeepBestPortalSettings(PortalSettings settings, ILog logOrNull)
     {
-        var l = extLogOrNull.Fn<PortalSettings>();
+        var l = logOrNull.Fn<PortalSettings>();
         // in case we don't have an HTTP Context with current portal settings, don't try anything
-        if (PortalSettings.Current == null) return l.Return(settings, "null, use given");
+        var current = PortalSettings.Current;
+        if (current == null)
+            return l.Return(settings, "null, use given");
 
         // If we don't have settings, or they point to the same portal, then use that
-        if (settings == null) return l.Return(PortalSettings.Current, "null, use current");
-        if (settings == PortalSettings.Current) return l.Return(PortalSettings.Current, "is current, use current");
-        if (settings.PortalId == PortalSettings.Current.PortalId) return l.Return(PortalSettings.Current, "id=current, use current");
+        var msgKeepCurrent = settings switch
+        {
+            null => "null, use current",
+            _ when settings == current => "is current, use current",
+            _ when settings.PortalId == current.PortalId => "id=current, use current",
+            _ => null,
+        };
 
         // fallback: use supplied settings
-        return l.Return(settings, "use new settings");
+        return l.Return(msgKeepCurrent != null ? current : settings, msgKeepCurrent ?? "use new settings");
     }
 
 
@@ -120,14 +126,14 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
 
 
     public override string CurrentCultureCode => _currentCulture.Get(GetCurrentCultureCode);
-    private readonly GetOnce<string> _currentCulture = new();
+    private readonly LazyGetAndReset<string> _currentCulture = new();
 
     private string GetCurrentCultureCode()
     {
         var l = Log.Fn<string>();
         // First check if we know more about the site
         var portal = UnwrappedSite;
-        if (portal == null /* paranoid */)
+        if (portal == null! /* paranoid */)
             return l.ReturnNull("no portal");
         var aliasCulture = portal.PortalAlias?.CultureCode ?? "";
 
@@ -142,10 +148,13 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
         return l.Return(result, $"Portal.CultureCode: {result}");
     }
 
-    public List<string> CultureCodesWithFallbacks => _currentCodeFallbacks.Get(GetCultureCodesWithFallbacks);
-    private readonly GetOnce<List<string>> _currentCodeFallbacks = new();
+    public List<string>? CultureCodesWithFallbacks
+    {
+        get => field ??= GetCultureCodesWithFallbacks();
+        private set;
+    }
 
-    private List<string> GetCultureCodesWithFallbacks()
+    private List<string>? GetCultureCodesWithFallbacks()
     {
         var l = Log.Fn<List<string>>();
         // 2023-08-31 2dm - new code, as it could contain risks, use try/catch/null to default
@@ -240,8 +249,8 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     /// but the current one. Just keep this in mind in case anything ever breaks.
     /// </remarks>
     public override string UrlRoot
-        => _urlRoot ??= UnwrappedSite?.PortalAlias?.HTTPAlias
-                        ?? PortalSettings.Current?.PortalAlias?.HTTPAlias
+        => _urlRoot ??= (UnwrappedSite?.PortalAlias as IPortalAliasInfo)?.HttpAlias
+                        ?? (PortalSettings.Current?.PortalAlias as IPortalAliasInfo)?.HttpAlias
                         ?? "err-portal-alias-not-loaded";
     private string _urlRoot;
 

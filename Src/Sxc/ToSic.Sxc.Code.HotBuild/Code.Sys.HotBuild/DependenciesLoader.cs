@@ -1,15 +1,17 @@
 ﻿using System.Reflection;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sys.Caching;
+using ISite = ToSic.Eav.Context.ISite;
 
 namespace ToSic.Sxc.Code.Sys.HotBuild;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class DependenciesLoader(ILogStore logStore, IAppReaderFactory appReadFac, LazySvc<IAppPathsMicroSvc> appPathsLazy, AssemblyCacheManager assemblyCacheManager, LazySvc<AppCodeCompiler> appCodeCompilerLazy)
-    : ServiceBase("Sys.AppCodeLoad", connect: [logStore, appReadFac, appPathsLazy, assemblyCacheManager, appCodeCompilerLazy])
+public class DependenciesLoader(ILogStore logStore, ISite site, IAppReaderFactory appReadFac, LazySvc<IAppPathsMicroSvc> appPathsLazy, LazySvc<IZoneMapper> zoneMapper, AssemblyCacheManager assemblyCacheManager, LazySvc<AppCodeCompiler> appCodeCompilerLazy)
+    : ServiceBase("Sys.AppCodeLoad", connect: [logStore, site, appReadFac, appPathsLazy, zoneMapper, assemblyCacheManager, appCodeCompilerLazy])
 {
     public const string DependenciesFolder = "Dependencies";
 
@@ -188,7 +190,9 @@ public class DependenciesLoader(ILogStore logStore, IAppReaderFactory appReadFac
     private (string physicalPath, string relativePath, string physicalPathShared, string relativePathShared) GetDependenciesPaths(string folder, HotBuildSpec spec)
     {
         var l = Log.Fn<(string physicalPath, string relativePath, string physicalPathShared, string relativePathShared)>($"{spec}");
-        var appPaths = appPathsLazy.Value.Get(appReadFac.Get(spec.AppId));
+        var appReader = appReadFac.Get(spec.AppId);
+        var resolvedSite = HotBuildSiteResolver.ResolveForApp(site, appReader, zoneMapper.Value);
+        var appPaths = appPathsLazy.Value.Get(appReader, resolvedSite);
         var folderWithEdition = folder.HasValue()
             ? spec.Edition.HasValue()
                 ? Path.Combine(spec.Edition, folder)

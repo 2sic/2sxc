@@ -76,7 +76,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     public Guid Guid => PreWrap.TryGetTyped(nameof(Guid), npo: default, fallback: Guid.Empty, required: false);
 
     public string? Title => _title.Get(() => PreWrap.TryGetTyped<string>(nameof(ITypedItem.Title), npo: default, fallback: null, required: false));
-    private readonly GetOnce<string?> _title = new();
+    private readonly LazyGet<string?> _title = new();
 
     #region Properties which return null or empty
 
@@ -141,12 +141,11 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
     bool ITypedItem.IsPublished => true;
 
-    IPublishing ITypedItem.Publishing => _publishing.Get(() => new PublishingUnsupported(this))!;
-    private readonly GetOnce<IPublishing> _publishing = new();
+    IPublishing ITypedItem.Publishing => field ??= new PublishingUnsupported(this);
 
     [JsonIgnore]
     public ITypedItem? Presentation => _presentation.Get(() => CreateItemFromProperty(nameof(Presentation)));
-    private readonly GetOnce<ITypedItem?> _presentation = new();
+    private readonly LazyGet<ITypedItem?> _presentation = new();
 
     private ITypedItem? CreateItemFromProperty(string? name)
     {
@@ -233,7 +232,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
                 : [raw]
             : [];
 
-        var df = Cdf.Services.DataFactory.Value.SpawnNew(options: new()
+        var df = Cdf.Services.DataFactory.New(options: new()
         {
             AppId = ((ICodeDataFactoryDeepWip)Cdf).AppIdOrZero,
             AutoId = false,

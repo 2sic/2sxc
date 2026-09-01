@@ -23,7 +23,7 @@ public class GetAndConvertHelperTests
         var dims = new[] { "en", "de", null };
         var languages = TacGetFinalLanguagesList("", MockSystemLanguages2, dims);
         //Assert.True(skipAddDefault);
-        Equal(new string[] { null }, languages);
+        Equal([null], languages);
     }
 
     [Fact]
@@ -32,7 +32,7 @@ public class GetAndConvertHelperTests
         var dims = new[] { "en", "de", null };
         var languages = TacGetFinalLanguagesList("en", MockSystemLanguages2, dims);
         //Assert.True(skipAddDefault);
-        Equal(new[] { "en" }, languages);
+        Equal(["en"], languages);
     }
 
     [Fact]
@@ -41,7 +41,7 @@ public class GetAndConvertHelperTests
         var dims = new[] { "en", "de", null };
         var languages = TacGetFinalLanguagesList("en,de", MockSystemLanguages2, dims);
         //Assert.True(skipAddDefault);
-        Equal(new[] { "en", "de" }, languages);
+        Equal(["en", "de"], languages);
     }
 
     [Fact]
@@ -50,7 +50,7 @@ public class GetAndConvertHelperTests
         var dims = new[] { "en", "de", null };
         var languages = TacGetFinalLanguagesList("en,", MockSystemLanguages2, dims);
         //Assert.True(skipAddDefault);
-        Equal(new[] { "en", null }, languages);
+        Equal(["en", null], languages);
     }
 
     [Fact]
@@ -59,7 +59,7 @@ public class GetAndConvertHelperTests
         var dims = new[] { "en-us", "de-CH", null };
         var languages = TacGetFinalLanguagesList("en", MockSystemLanguages4, dims);
         //Assert.True(skipAddDefault);
-        Equal(new[] { "en-us" }, languages);
+        Equal(["en-us"], languages);
     }
 
     [Fact]
@@ -68,7 +68,7 @@ public class GetAndConvertHelperTests
         var dims = new[] { "en-us", "de-CH", null };
         var languages = TacGetFinalLanguagesList("qr", MockSystemLanguages4, dims);
         //Assert.True(skipAddDefault);
-        Equal(Array.Empty<string>() , languages);
+        Equal([] , languages);
     }
 
 }

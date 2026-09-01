@@ -12,9 +12,16 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 public class MetadataController() : DnnSxcControllerBase(RealController.LogSuffix), IMetadataController
 {
     private RealController Real => SysHlp.GetService<RealController>();
+    // Replaced by DataSource System.ItemMetadata through query System.SysData.
+    //[HttpGet]
+    //public MetadataListDto Get(int appId, int targetType, string keyType, string key, string contentType = null)
+    //    => Real.Get(appId, targetType, keyType, key, contentType);
 
-    [HttpGet]
-    public MetadataListDto Get(int appId, int targetType, string keyType, string key, string contentType = null)
-        => Real.Get(appId, targetType, keyType, key, contentType);
+    // Implemented by DataSource System.ItemMetadata through query System.SysData.
+    // probably 3 streams
+    // - Recommendations
+    // - Items (containing the entities)
+    // - For (what the metadata is for)
+
 
 }

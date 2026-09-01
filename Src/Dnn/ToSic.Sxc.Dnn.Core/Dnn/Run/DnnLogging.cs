@@ -1,6 +1,8 @@
 ﻿using System.Collections.Concurrent;
 using System.Web.Http;
+using DotNetNuke.Abstractions.Logging;
 using DotNetNuke.Services.Log.EventLog;
+using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Sys;
 
 namespace ToSic.Sxc.Dnn.Run;
@@ -19,7 +21,7 @@ internal static class DnnLogging
         {
             var logInfo = new LogInfo
             {
-                LogTypeKey = EventLogController.EventLogType.ADMIN_ALERT.ToString()
+                LogTypeKey = EventLogType.ADMIN_ALERT.ToString()
             };
 
             // the initial message should come first, as it's visible in the summary
@@ -30,7 +32,7 @@ internal static class DnnLogging
 
             (log as Log)?.Entries.ForEach(e => logInfo.AddProperty(e.Source, e.Message));
 
-            new EventLogController().AddLog(logInfo);
+            DnnStaticDi.GetPageScopedServiceProvider().GetRequiredService<IEventLogger>().AddLog(logInfo);
         }
         catch
         {
@@ -46,8 +48,8 @@ internal static class DnnLogging
     {
         try
         {
-            new EventLogController().AddLog("2sxc logging",
-                $"failed to add log from {source}, something in the logging failed", EventLogController.EventLogType.ADMIN_ALERT);
+            DnnStaticDi.GetPageScopedServiceProvider().GetRequiredService<IEventLogger>().AddLog("2sxc logging",
+                $"failed to add log from {source}, something in the logging failed", EventLogType.ADMIN_ALERT);
         }
         catch { /* ignore */ }
     }
@@ -59,8 +61,8 @@ internal static class DnnLogging
             if (dnn != null)
             {
                 logInfo.LogUserName = dnn.User?.DisplayName ?? EavConstants.NullNameId;
-                logInfo.LogUserID = dnn.User?.UserID ?? -1;
-                logInfo.LogPortalID = dnn.Portal.PortalId;
+                ((ILogInfo)logInfo).LogUserId = dnn.User?.UserID ?? -1;
+                ((ILogInfo)logInfo).LogPortalId = dnn.Portal.PortalId;
                 logInfo.AddProperty("Module Id", dnn.Module?.ModuleID.ToString() ?? EavConstants.NullNameId);
             }
         }

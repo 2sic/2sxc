@@ -7,9 +7,8 @@ using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Razor.Sys;
-using ToSic.Sxc.Engines.Sys;
+using ToSic.Sxc.Render.Engines.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -38,11 +37,11 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
         ??= ExCtx.GetTypedApi();
 
 
-    /// <inheritdoc cref="DnnRazorHelper.RenderPageNotSupported"/>
+    /// <inheritdoc cref="DnnRazorDisabledHelper.RenderPageNotSupported"/>
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public override HelperResult RenderPage(string path, params object[] data)
-        => RzrHlp.RenderPageNotSupported();
+        => DnnRazorDisabledHelper.RenderPageNotSupported();
 
 
     /// <inheritdoc cref="ICompatibilityLevel.CompatibilityLevel"/>
@@ -105,10 +104,11 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
 
     /// <inheritdoc />
     public override IHtmlHelper Html => RzrHlp.Html;
-
+    private DnnRazorGetCodeHelper RzrGetCodeHlp => field ??= new(this, ExCtx);
+    
     /// <inheritdoc cref="ITypedCode16.GetCode"/>
     public dynamic GetCode(string path, NoParamOrder npo = default, string className = default)
-        => RzrHlp.GetCode(path: path, className: className);
+        => RzrGetCodeHlp.GetCode(path: path, className: className);
 
     #endregion
 

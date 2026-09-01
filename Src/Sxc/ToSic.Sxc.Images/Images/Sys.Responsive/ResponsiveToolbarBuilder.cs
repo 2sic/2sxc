@@ -70,7 +70,7 @@ internal class ResponsiveToolbarBuilder(ILog parentLog) : HelperBase(parentLog, 
                 });
 
                 // Add note for Copyright - if there is Metadata for that
-                target.HasMdOrNull.Metadata.FirstModel<CopyrightDecorator>()
+                target.HasMdOrNull.GetMetadataModel<CopyrightDecorator>()
                     .DoIfNotNull(copyright => modified = modified.AddNamed(
                         CopyrightDecorator.ContentTypeNameId,
                         btn => btn

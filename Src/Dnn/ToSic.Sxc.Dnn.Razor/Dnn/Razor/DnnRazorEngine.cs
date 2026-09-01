@@ -1,9 +1,9 @@
 ﻿using System.Configuration;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Dnn.Razor.Sys;
-using ToSic.Sxc.Engines;
-using ToSic.Sxc.Engines.Sys;
-using ToSic.Sxc.Render.Sys.Output;
+using ToSic.Sxc.Render.Engines.Sys;
+using ToSic.Sxc.Render.Output.Sys;
+using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
 
 namespace ToSic.Sxc.Dnn.Razor;
@@ -23,22 +23,22 @@ namespace ToSic.Sxc.Dnn.Razor;
 // ReSharper disable once UnusedMember.Global
 internal class DnnRazorEngine(
     EngineSpecsService engineSpecsService,
-    IBlockResourceExtractor blockResourceExtractor,
-    EngineAppRequirements engineAppRequirements,
+    IAssetsExtractor assetsExtractor,
+    EngineRequirementsApp engineRequirementsApp,
     DnnRazorCompiler razorCompiler)
-    : ServiceBase("Dnn.RzEng", connect: [engineSpecsService, blockResourceExtractor, engineAppRequirements, razorCompiler]),
-        IRazorEngine
+    : ServiceBase("Dnn.RzEng", connect: [engineSpecsService, assetsExtractor, engineRequirementsApp, razorCompiler]),
+        IEngine // IRazorEngine
 {
     /// <inheritdoc />
-    public RenderEngineResult Render(IBlock block, RenderSpecs specs)
+    public OutputFragmentWithAssets Render(IBlock block, RenderSpecs specs)
     {
-        var l = Log.Fn<RenderEngineResult>(timer: true);
+        var l = Log.Fn<OutputFragmentWithAssets>(timer: true);
 
         // Prepare #1: Specs
         var engineSpecs = engineSpecsService.GetSpecs(block);
 
         // Preflight: check if rendering is possible, or throw exceptions...
-        var preFlightResult = engineAppRequirements.CheckExpectedNoRenderConditions(engineSpecs);
+        var preFlightResult = engineRequirementsApp.CheckExpectedNoRenderConditions(engineSpecs);
         if (preFlightResult != null)
             return l.ReturnAsError(preFlightResult);
 
@@ -59,12 +59,12 @@ internal class DnnRazorEngine(
 
         // Render and process / return
         var renderedTemplate = DnnRenderImplementation(entryRazorComponent, specs);
-        var result = blockResourceExtractor.Process(renderedTemplate);
+        var result = assetsExtractor.Process(renderedTemplate);
         return l.ReturnAsOk(result);
     }
 
 
-    private RenderEngineResultRaw DnnRenderImplementation(RazorComponentBase webpage, RenderSpecs specs)
+    private OutputFragment DnnRenderImplementation(RazorComponentBase webpage, RenderSpecs specs)
     {
         ILogCall<(TextWriter writer, List<Exception> exceptions)> l = Log.Fn<(TextWriter, List<Exception>)>();
         var (writer, exceptions) = razorCompiler.Render(webpage, new StringWriter(), specs);

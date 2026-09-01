@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Configuration;
 using System.Web.Hosting;
+using ToSic.Eav.Sys;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using static System.StringComparer;
 
@@ -21,8 +22,13 @@ public class ReferencedAssembliesProvider(
     public List<string> Locations(string virtualPath, HotBuildSpec spec)
     {
         var l = Log.Fn<List<string>>($"for: '{virtualPath}'");
-        if (ReferencedAssembliesCache.TryGetValue(virtualPath, out var cachedResult))
-            return l.Return(new(cachedResult), "cached, re-wrapped in new list");
+
+        // never reuse the cache for AppCode folder, because finding this references was not time-consuming,
+        // and it may contain Extensions which are not yet in the cache,
+        // while we still prefer to cache the result for cshtml, because we don't expect them to change
+        var notAppCodeFolder = NotAppCodeFolder(virtualPath);
+        if (notAppCodeFolder && ReferencedAssembliesCache.TryGetValue(virtualPath, out var cachedResult))
+            return l.Return([..cachedResult], "cached, re-wrapped in new list");
 
         var lTimer = Log.Fn("timer for AppRef", timer: true);
         var referencedAssemblies = new List<string>(AppReferencedAssemblies());
@@ -61,10 +67,16 @@ public class ReferencedAssembliesProvider(
             .Select(g => g.Last())
             .ToList();
 
-        ReferencedAssembliesCache.TryAdd(virtualPath, referencedAssemblies);
+        // never cache the results for AppCode folder, while prefer to cache for cshtml
+        if (notAppCodeFolder)
+            ReferencedAssembliesCache.TryAdd(virtualPath, referencedAssemblies);
 
-        return l.Return(new(referencedAssemblies), "created, re-wrapped in new list");
+        return l.Return([..referencedAssemblies], "created, re-wrapped in new list");
     }
+
+    // check that virtual path is not for AppCode folder
+    private static bool NotAppCodeFolder(string virtualPath)
+        => !virtualPath.ForwardSlash().EndsWith($"/{FolderConstants.AppCodeFolder}", StringComparison.InvariantCultureIgnoreCase);
 
     private void ReferenceAssembly(ICollection<string> referencedAssemblies, string assemblyName)
     {
@@ -97,7 +109,7 @@ public class ReferencedAssembliesProvider(
             return;
 
         var referenceReader = extensionReference.Value;
-        foreach (var reference in referenceReader.GetReferences(physicalPath, netFramework: true))
+        foreach (var reference in referenceReader.GetReferences(physicalPath, isNetFramework: true))
         {
             if (ExtensionCompileReferenceService.IsAssemblyName(reference.Value))
             {

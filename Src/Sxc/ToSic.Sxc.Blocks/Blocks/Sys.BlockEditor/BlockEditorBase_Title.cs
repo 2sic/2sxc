@@ -10,8 +10,9 @@ public partial class BlockEditorBase
         // technically it could have multiple different groups to save in, 
         // ...but for now we'll just update the current modules title
         // note: it also correctly handles published/unpublished, but I'm not sure why :)
+        var ctx = Services.AppWorkCtxSvc.Value.ContextNew(Block.Context.AppReaderRequired);
         var contentGroup = Services.AppBlocks
-            .New(Block.Context.AppReaderRequired)
+            .New(ctx)
             .GetBlockConfig(BlockConfiguration.Guid);
 
         var titleItem = contentGroup.Header.FirstOrDefault() ?? contentGroup.Content.FirstOrDefault();

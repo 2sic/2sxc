@@ -31,14 +31,14 @@ internal class Publishing(ITypedItem currentItem, ICodeDataFactory cdf)
         var pubEntity = cdf.GetPublished(currentItem.Entity);
         return cdf.AsItem(pubEntity, new() { ItemIsStrict = true });
     });
-    private readonly GetOnce<ITypedItem?> _published = new();
+    private readonly LazyGet<ITypedItem?> _published = new();
 
     // Get draft - either current, or from appState
     public ITypedItem? GetUnpublished() => _draft.Get(() => !IsPublished
         ? currentItem
         : cdf.AsItem(UnpublishedEntity, new() { ItemIsStrict = true })
     );
-    private readonly GetOnce<ITypedItem?> _draft = new();
+    private readonly LazyGet<ITypedItem?> _draft = new();
 
     /// <summary>
     /// Get draft entity - either current, or from appState.
@@ -50,9 +50,9 @@ internal class Publishing(ITypedItem currentItem, ICodeDataFactory cdf)
         var draftEntity = cdf.GetDraft(currentItem.Entity);
         return draftEntity;
     });
-    private readonly GetOnce<IEntity?> _unPubEntity = new();
+    private readonly LazyGet<IEntity?> _unPubEntity = new();
 
     // Get opposite - either draft or published
     public ITypedItem? GetOpposite() => _other.Get(() => IsPublished ? GetUnpublished() : GetPublished());
-    private readonly GetOnce<ITypedItem?> _other = new();
+    private readonly LazyGet<ITypedItem?> _other = new();
 }

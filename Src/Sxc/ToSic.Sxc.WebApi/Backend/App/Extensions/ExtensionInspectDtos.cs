@@ -1,0 +1,64 @@
+using System.Text.Json.Serialization;
+using ToSic.Eav.Data.ContentTypes;
+using ToSic.Eav.Data.Raw;
+
+namespace ToSic.Sxc.Backend.App;
+
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public class ExtensionInspectResultDto
+{
+    [JsonPropertyName("foundLock")]
+    public bool FoundLock { get; init; }
+
+    [JsonPropertyName("files")]
+    public List<ExtensionFileStatusDto>? Files { get; init; }
+
+    [JsonPropertyName("summary")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public ExtensionInspectSummaryDto? Summary { get; init; }
+
+    [JsonPropertyName("contentTypes")]
+    public List<ExtensionInspectContentTypeDto> ContentTypes { get; init; } = [];
+}
+
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public class ExtensionFileStatusDto : IRawEntityAutoConvert
+{
+    [ContentTypeTitle]
+    [JsonPropertyName("path")]
+    public required string Path { get; init; }
+
+    [JsonPropertyName("status")]
+    public required string Status { get; init; } // unchanged | changed | added | missing
+}
+
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public class ExtensionInspectSummaryDto : IRawEntityAutoConvert
+{
+    [JsonPropertyName("total")]
+    public int Total { get; init; }
+
+    [JsonPropertyName("changed")]
+    public int Changed { get; init; }
+
+    [JsonPropertyName("added")]
+    public int Added { get; init; }
+
+    [JsonPropertyName("missing")]
+    public int Missing { get; init; }
+}
+
+
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public class ExtensionInspectContentTypeDto : IRawEntityAutoConvert
+{
+    [ContentTypeTitle]
+    [JsonPropertyName("name")]
+    public required string Name { get; init; }
+
+    [JsonPropertyName("guid")]
+    public required string Guid { get; init; }
+
+    [JsonPropertyName("localEntities")]
+    public int LocalEntities { get; init; }
+}

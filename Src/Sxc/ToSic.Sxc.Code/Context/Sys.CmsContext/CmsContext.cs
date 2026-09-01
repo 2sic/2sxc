@@ -18,10 +18,9 @@ internal class CmsContext(
     IPlatform platform,
     IContextOfSite siteCtxFallback,
     LazySvc<IPage> pageLazy,
-    //LazySvc<IModule> moduleFallback,
     IAppReaderFactory appReaders)
     : ServiceWithContext(SxcLogName + ".CmsCtx",
-        connect: [siteCtxFallback, pageLazy, /*moduleFallback,*/ appReaders, platform]), ICmsContext
+        connect: [siteCtxFallback, pageLazy, appReaders, platform]), ICmsContext
 {
     #region Internal context
 
@@ -31,11 +30,10 @@ internal class CmsContext(
     internal new IExecutionContext ExCtx => base.ExCtx;
 
     // Note: Internal so it can be used for View<T, T>
-    internal IBlock BlockInternal => _realBlock.Get(() => ExCtx.GetBlock())!;
-    private readonly GetOnce<IBlock?> _realBlock = new();
+    internal IBlock BlockInternal => field ??= ExCtx.GetBlock();
 
     internal IContextOfBlock? CtxBlockOrNull => _ctxBlock.Get(() => BlockInternal?.Context);
-    private readonly GetOnce<IContextOfBlock?> _ctxBlock = new();
+    private readonly LazyGet<IContextOfBlock?> _ctxBlock = new();
 
     internal IContextOfSite CtxSite => CtxBlockOrNull ?? siteCtxFallback;
 

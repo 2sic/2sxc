@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
 
 partial record ToolbarBuilder
 {
-    private IToolbarBuilder AddListAction(
+    private IToolbarBuilder AddListRule(
         string commandName,
         object? target,
         NoParamOrder npo,
@@ -16,16 +16,21 @@ partial record ToolbarBuilder
         object? parameters,
         string? operation,
         Func<ITweakButton, ITweakButton>? tweak,
+        ITweakButton? tweakMixin = null,
         [CallerMemberName] string? methodName = default)
     {
         TargetCheck(target);
-        var pars = PreCleanParams(tweak, defOp: OprAuto, operation: operation, ui: ui, parameters: parameters, methodName: methodName);
-        var command = new ToolbarRuleForEntity(commandName, target, 
+        var pars = PreCleanParams(tweak, tweakMixin: tweakMixin, defOp: OprAuto, operation: operation, ui: ui, parameters: parameters, methodName: methodName);
+        var command = new ToolbarRuleForEntity(
+            commandName: commandName,
+            decoHelper: Services.ToolbarButtonHelper.Value,
+            target: target,
             contentType: contentType,
             ui: pars.Ui,
             parameters: pars.Parameters,
-            propsKeep: KeysOfLists, 
-            operation: pars.Operation);
+            propsKeep: KeysOfLists,
+            operation: pars.Operation
+        );
         return this.AddInternal([command], methodName: methodName);
 
     }
@@ -39,7 +44,7 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddListAction(ActionNames.Add, target, npo, contentType, ui, parameters, operation, tweak);
+    ) => AddListRule(commandName: ActionNames.Add, target: target, npo: npo, contentType: contentType, ui: ui, parameters: parameters, operation: operation, tweak: tweak);
 
     public IToolbarBuilder AddExisting(
         object? target = null,
@@ -49,7 +54,15 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddListAction(ActionNames.AddExisting, target, npo, contentType, ui, parameters, operation, tweak);
+    )
+    {
+        // if we have a content-type, we must mix it in with the tweak...
+        var tweakMixin = contentType == null
+            ? null
+            : new TweakButton.TweakButton().Parameters("contentType", contentType);
+        return AddListRule(commandName: ActionNames.AddExisting, target: target, npo: npo, contentType: contentType,
+            ui: ui, parameters: parameters, operation: operation, tweak: tweak, tweakMixin: tweakMixin);
+    }
 
     public IToolbarBuilder List(
         object? target = null,
@@ -58,7 +71,7 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddListAction(ActionNames.List, target, npo, null, ui, parameters, operation, tweak);
+    ) => AddListRule(commandName: ActionNames.List, target: target, npo: npo, contentType: null, ui: ui, parameters: parameters, operation: operation, tweak: tweak);
 
 
     public IToolbarBuilder MoveDown(
@@ -68,7 +81,7 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddListAction(ActionNames.MoveDown, target, npo, null, ui, parameters, operation, tweak);
+    ) => AddListRule(commandName: ActionNames.MoveDown, target: target, npo: npo, contentType: null, ui: ui, parameters: parameters, operation: operation, tweak: tweak);
 
     public IToolbarBuilder MoveUp(
         object? target = null,
@@ -77,7 +90,7 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddListAction(ActionNames.MoveUp, target, npo, null, ui, parameters, operation, tweak);
+    ) => AddListRule(commandName: ActionNames.MoveUp, target: target, npo: npo, contentType: null, ui: ui, parameters: parameters, operation: operation, tweak: tweak);
 
     public IToolbarBuilder Remove(
         object? target = null,
@@ -86,7 +99,7 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddListAction(ActionNames.Remove, target, npo, null, ui, parameters, operation, tweak);
+    ) => AddListRule(commandName: ActionNames.Remove, target: target, npo: npo, contentType: null, ui: ui, parameters: parameters, operation: operation, tweak: tweak);
 
     public IToolbarBuilder Replace(
         object? target = null,
@@ -95,5 +108,5 @@ partial record ToolbarBuilder
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddListAction(ActionNames.Replace, target, npo, null, ui, parameters, operation, tweak);
+    ) => AddListRule(commandName: ActionNames.Replace, target: target, npo: npo, contentType: null, ui: ui, parameters: parameters, operation: operation, tweak: tweak);
 }

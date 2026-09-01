@@ -131,7 +131,7 @@ public class AppAssets: CustomDataSourceAdvanced
             { StreamFiles, () => files }
         };
     })!;
-    private readonly GetOnce<Dictionary<string, Func<IImmutableList<IEntity>>>> _all = new();
+    private readonly LazyGet<Dictionary<string, Func<IImmutableList<IEntity>>>> _all = new();
 
     /// <summary>
     /// Get both the files and folders stream
@@ -155,7 +155,7 @@ public class AppAssets: CustomDataSourceAdvanced
             return l.Return(([], []), "null/empty");
 
         // Convert Folders to Entities
-        var folderFactory = DataFactory.SpawnNew(options: FolderModelRaw.Options with
+        var folderFactory = DataFactory.SpawnNew(options: new()
         {
             AppId = AppId,
             IdSeed = -100001,
@@ -164,7 +164,7 @@ public class AppAssets: CustomDataSourceAdvanced
         var folders = folderFactory.Create(rawFolders);
 
         // Convert Files to Entities
-        var fileFactory = DataFactory.SpawnNew(options: FileModelRaw.Options with
+        var fileFactory = DataFactory.SpawnNew(options: new()
         {
             AppId = AppId,
             IdSeed = -1,

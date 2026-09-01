@@ -5,6 +5,7 @@
 /// These settings define the language version and preprocessor symbols used during compilation.
 /// </summary>
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class RoslynConstants
 {
     /// <summary>

@@ -6,7 +6,6 @@ using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
-using ToSic.Eav.Data.Raw.Sys;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Sys;
@@ -86,7 +85,7 @@ public class DnnUserProfile : CustomDataSourceAdvanced
     #region Constructor / DI
 
     public new record Dependencies(CustomDataSourceAdvanced.Dependencies ParentServices, ISite Site, IZoneMapper ZoneMapper, LazySvc<DnnSecurity> DnnSecurity)
-        : DependenciesRecord(connect: [Site, ZoneMapper, DnnSecurity]);
+        : DependenciesBase(connect: [Site, ZoneMapper, DnnSecurity]);
 
     public DnnUserProfile(Dependencies services) : base(services.ParentServices, "Dnn.Profile", connect: [services])
     {
@@ -119,7 +118,7 @@ public class DnnUserProfile : CustomDataSourceAdvanced
         // read user Profiles of specified UserIds
         else
         {
-            var userIds = UserIds.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
+            var userIds = UserIds.CsvToArrayWithoutEmpty().Select(int.Parse).ToArray();
             users = [];
             foreach (var user in userIds.Select(userId => UserController.GetUserById(portalId, userId)))
                 users.Add(user);
@@ -148,32 +147,16 @@ public class DnnUserProfile : CustomDataSourceAdvanced
         return l.Return(userProfileDataFactory.Create(results), "ok");
     }
 
-    private static string GetDnnProfileValue(UserInfo user, string property)
-    {
-        string value;
-        switch (property.ToLowerInvariant())
+    private static string GetDnnProfileValue(UserInfo user, string property) =>
+        property.ToLowerInvariant() switch
         {
-            case "displayname":
-                value = user.DisplayName;
-                break;
-            case "email":
-                value = user.Email;
-                break;
-            case "firstname":
-                value = user.FirstName;
-                break;
-            case "lastname":
-                value = user.LastName;
-                break;
-            case "username":
-                value = user.Username;
-                break;
-            default:
-                value = user.Profile.GetPropertyValue(property);
-                break;
-        }
-        return value;
-    }
+            "displayname" => user.DisplayName,
+            "email" => user.Email,
+            "firstname" => user.FirstName,
+            "lastname" => user.LastName,
+            "username" => user.Username,
+            _ => user.Profile.GetPropertyValue(property)
+        };
 }
 
 /// <summary>
@@ -201,6 +184,7 @@ public class DnnUserProfileDataRaw : IRawEntity
         TypeName = TypeName,
         TitleField = nameof(Name)
     };
+    
     public int Id { get; set; }
     public Guid Guid { get; set; }
     public string Name { get; set; } // aka DisplayName
@@ -208,16 +192,13 @@ public class DnnUserProfileDataRaw : IRawEntity
     public DateTime Created { get; set; }
     public DateTime Modified { get; set; }
 
-    public Dictionary<string, object> Properties { get; } = new();
-
-    /// <summary>
-    /// Data but without Id, Guid, Created, Modified
-    /// </summary>
     [PrivateApi]
-    public IDictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>(Properties)
+    public IDictionary<string, object> Values => field ??= new Dictionary<string, object>(Properties)
     {
         { AttributeNames.TitleNiceName, Name },
         { nameof(Name), Name },
     };
+
+    public Dictionary<string, object> Properties { get; } = new();
 
 }

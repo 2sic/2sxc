@@ -49,7 +49,7 @@ partial record ToolbarBuilder
     )
     {
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters);
-        return EntityRule(ActionNames.Fields, target, pars, propsKeep: [KeyContentType], contentType: target as string).Builder;
+        return AddEntityRule(ActionNames.Fields, target, pars, propsKeep: [KeyContentType], contentType: target as string).Builder;
     }
 
 

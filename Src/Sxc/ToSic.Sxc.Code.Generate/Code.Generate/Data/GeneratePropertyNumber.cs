@@ -6,11 +6,11 @@ internal class GeneratePropertyNumber(CSharpGeneratorHelper helper) : GeneratePr
 {
     public override ValueTypes ForDataType => ValueTypes.Number;
 
-    public override List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs)
+    public override List<CodeFragment> Generate(IContentTypeField fieldDef, int tabs)
     {
-        var name = attribute.Name;
+        var name = fieldDef.Name;
 
-        var decimals = attribute.Metadata.Get<int>("Decimals");
+        var decimals = fieldDef.Metadata.Get<int>("Decimals");
 
         return decimals == 0
             ?

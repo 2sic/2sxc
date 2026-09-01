@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Dnn.Install;
 
 internal class DnnPlatformAppInstaller(
     LazySvc<IAppsCatalog> appsCatalog,
-    GenWorkPlus<WorkViews> workViews,
+    AppWorkQuick<WorkViews> workViews,
     LazySvc<ExternalLinksService> remoteRouterLazy)
     : ServiceBase("Dnn.AppIns", connect: [workViews, appsCatalog, remoteRouterLazy]), IPlatformAppInstaller
 {

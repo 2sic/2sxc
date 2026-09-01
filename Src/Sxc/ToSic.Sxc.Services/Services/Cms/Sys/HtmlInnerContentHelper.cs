@@ -12,7 +12,7 @@ internal class HtmlInnerContentHelper()
     private IRenderService RenderService => field
         ??= ExCtx.GetService<IRenderService>(reuse: true);
 
-    public string ProcessInnerContent(string html, IContentType contentType, IContentTypeAttribute attribute, IField field)
+    public string ProcessInnerContent(string html, IContentType contentType, IContentTypeField fieldDef, IField field)
     {
         var l = Log.Fn<string>();
 
@@ -20,7 +20,7 @@ internal class HtmlInnerContentHelper()
         var sortedFields = contentType.Attributes
             .OrderBy(a => a.SortOrder)
             .ToList();
-        var index = sortedFields.IndexOf(attribute);
+        var index = sortedFields.IndexOf(fieldDef);
         if (index == -1 || sortedFields.Count <= index + 1)
             return l.Return(html, "can't check next attribute for content-blocks");
 

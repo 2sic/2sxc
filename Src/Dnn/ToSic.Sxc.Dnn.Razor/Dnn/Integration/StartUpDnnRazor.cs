@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Razor.Sys;
-using ToSic.Sxc.Engines;
+using ToSic.Sxc.Render.Engines.Sys;
 
 namespace ToSic.Sxc.Dnn.Integration;
 
@@ -11,10 +11,11 @@ public static class StartUpDnnRazor
 {
     public static IServiceCollection AddDnnRazor(this IServiceCollection services)
     {
-        services.TryAddTransient<IRazorEngine, DnnRazorEngine>();
+        services.TryAddKeyedTransient<IEngine, DnnRazorEngine>("razor");
         services.TryAddTransient<DnnRazorCompiler>();
 
         services.TryAddTransient<HtmlHelper>();
+        services.TryAddTransient<HtmlHelperErrorHelper>();
 
         services.TryAddTransient<IRoslynBuildManager, RoslynBuildManager>();
         services.TryAddTransient<RoslynCompilationRunner>();

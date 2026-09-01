@@ -15,7 +15,7 @@ public abstract class AdamWorkBase(AdamWorkBase.Dependencies services, string lo
         LazySvc<AdamContext> AdamContext,
         ISxcAppCurrentContextService CtxService,
         AdamGenericHelper AdamGenericHelper)
-        : DependenciesRecord(connect: [AdamContext, CtxService, AdamGenericHelper]);
+        : DependenciesBase(connect: [AdamContext, CtxService, AdamGenericHelper]);
 
     public void Setup(AdamWorkOptions options)
     {

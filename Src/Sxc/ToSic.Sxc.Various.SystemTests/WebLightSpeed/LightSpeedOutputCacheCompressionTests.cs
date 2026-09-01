@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Text;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Web.Sys.LightSpeed;
@@ -104,7 +103,7 @@ public class LightSpeedOutputCacheCompressionTests(ITestOutputHelper output)
             IsPartial = false,
             Errors = ["sample-error"],
         };
-        result.DependentApps.Add(new TestDependentApp(7));
+        result.DependentApps.Add(new TestBlockAppDependencies(7));
 
         var cacheItem = new OutputCacheItem(LightSpeedDataCompression.OptimizeForCache(result, useCompression: true, minBytes: 5_000));
         var compressedResult = (RenderResult)cacheItem.Data;
@@ -169,7 +168,7 @@ public class LightSpeedOutputCacheCompressionTests(ITestOutputHelper output)
         return stopwatch.Elapsed;
     }
 
-    private class TestDependentApp(int appId) : IDependentApp
+    private class TestBlockAppDependencies(int appId) : IDependentApp
     {
         public int AppId { get; } = appId;
         public bool IsSitePrimaryApp { get; } = false;

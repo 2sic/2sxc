@@ -25,8 +25,8 @@ namespace ToSic.Sxc.Sys;
 //[ShowApiWhenReleased(ShowApiMode.Never)]
 internal static class SxcSharedAssemblyInfo
 {
-    public const string AssemblyVersion = "21.07.00";
+    public const string AssemblyVersion = "22.00.00";
     public const string Company = "2sic internet solutions GmbH, Switzerland";
     public const string SxcProduct = "2sxc CMS- and Meta-Module for Dnn and Oqtane";
-    public const string SxcCopyright = "Copyright MIT © 2sic 2025";
+    public const string SxcCopyright = "Copyright MIT © 2sic 2026";
 }

@@ -1,7 +1,4 @@
-﻿using ToSic.Eav.Apps.Sys;
-using ToSic.Eav.Data.Sys;
-using ToSic.Eav.WebApi.Sys.Admin;
-using ToSic.Eav.WebApi.Sys.Dto;
+﻿using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using RealController = ToSic.Eav.WebApi.Sys.Admin.FieldControllerReal;
 
@@ -20,28 +17,6 @@ public class FieldController() : DnnSxcControllerBase(RealController.LogSuffix),
 
     #region Fields - Get, Reorder, Data-Types (for dropdown), etc.
 
-    /// <summary>
-    /// Returns the configuration for a content type
-    /// </summary>
-    [HttpGet]
-    public IEnumerable<ContentTypeFieldDto> All(int appId, string staticName) => Real.All(appId, staticName);
-
-    /// <summary>
-    /// Used to be GET ContentType/DataTypes
-    /// </summary>
-    [HttpGet]
-    public string[] DataTypes(int appId) => Real.DataTypes(appId);
-
-    /// <summary>
-    /// Used to be GET ContentType/InputTypes
-    /// </summary>
-    [HttpGet]
-    public ICollection<InputTypeInfo> InputTypes(int appId) => Real.InputTypes(appId);
-
-    /// <inheritdoc />
-    [HttpGet]
-    public Dictionary<string, string> ReservedNames() => AttributeNames.ReservedNames;
-        
     /// <summary>
     /// Used to be GET ContentType/AddField
     /// </summary>
@@ -81,17 +56,8 @@ public class FieldController() : DnnSxcControllerBase(RealController.LogSuffix),
 
     #region Sharing and Inheriting
 
-    [HttpGet]
-    public IEnumerable<ContentTypeFieldDto> GetSharedFields(int appId, int attributeId = default)
-        => Real.GetSharedFields(appId, attributeId);
-
-    [HttpGet]
-    public IEnumerable<ContentTypeFieldDto> GetAncestors(int appId, int attributeId)
-        => Real.GetAncestors(appId, attributeId);
-
-    [HttpGet]
-    public IEnumerable<ContentTypeFieldDto> GetDescendants(int appId, int attributeId)
-        => Real.GetDescendants(appId, attributeId);
+    // 2rb: GetSharedFields, GetAncestors and GetDescendants were replaced by the
+    // System.SharedFields DataSource through query System.SysData.
     
     [HttpPost]
     public bool Share(int appId, int attributeId, bool share, bool hide = false)

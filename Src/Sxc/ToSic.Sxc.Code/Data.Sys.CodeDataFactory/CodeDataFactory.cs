@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneCulture;
 using ToSic.Eav.Context.Sys.ZoneMapper;
-using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Build.Sys;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Blocks.Sys;
@@ -25,7 +24,7 @@ public partial class CodeDataFactory(
     LazySvc<AdamManager> adamManager,
     LazySvc<IContextOfApp> contextOfAppLazy,
     LazySvc<DataAssembler> dataBuilderLazy,
-    LazySvc<ContentTypeTypeAssembler> contentTypeAssembler,
+    Generator<ContentTypeAssembler, DataAssemblerOptions> contentTypeAssembler,
     LazySvc<ICodeDataPoCoWrapperService> codeDataWrapper,
     Generator<CodeJsonWrapper> wrapJsonGenerator,
     LazySvc<CodeInfoService> codeInfoSvc,
@@ -71,14 +70,7 @@ public partial class CodeDataFactory(
 
     #region CodeDataServices
 
-    public CodeDataServices Services => _services.Get(() => 
-    {
-        var cds = codeDataServices.Value;
-        // if the render service is ever needed, it should be connected to the root
-        //cds.RenderServiceGenerator.SetInit(nowRs => (nowRs as INeedsCodeApiService)?.ConnectToRoot(_CodeApiSvc));
-        return cds;
-    })!;
-    private readonly GetOnce<CodeDataServices> _services = new();
+    public CodeDataServices Services => field ??= codeDataServices.Value;
 
     /// <summary>
     /// List of dimensions for value lookup, incl. priorities etc. and null-trailing.

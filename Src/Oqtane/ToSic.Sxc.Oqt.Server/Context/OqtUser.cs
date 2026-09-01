@@ -17,8 +17,8 @@ internal class OqtUser(
     : ServiceBase($"{OqtConstants.OqtLogPrefix}.User",
         connect: [userRepository, oqtSecurity, httpContextAccessor, siteState]), IUser<User>
 {
-    protected User UnwrappedUser => _unwrappedUser.Get(GetUser);
-    private readonly GetOnce<User> _unwrappedUser = new();
+    protected User UnwrappedUser => field ??= GetUser();
+    
     public User GetContents() => UnwrappedUser;
 
     private User GetUser()
@@ -44,14 +44,13 @@ internal class OqtUser(
 
     public Guid Guid { get; private set; }
 
-    public List<int> Roles => _roles.Get(() => oqtSecurity.Value.Roles(UnwrappedUser));
-    private readonly GetOnce<List<int>> _roles = new();
+    public List<int> Roles => field ??= oqtSecurity.Value.Roles(UnwrappedUser);
 
     public bool IsSystemAdmin => _isSystemAdmin.Get(() => oqtSecurity.Value.IsSystemAdmin(UnwrappedUser));
-    private readonly GetOnce<bool> _isSystemAdmin = new();
+    private readonly LazyGet<bool> _isSystemAdmin = new();
 
     public bool IsSiteAdmin => _isSiteAdmin.Get(() => oqtSecurity.Value.IsSiteAdmin(UnwrappedUser));
-    private readonly GetOnce<bool> _isSiteAdmin = new();
+    private readonly LazyGet<bool> _isSiteAdmin = new();
 
     public bool IsContentAdmin => IsSiteAdmin;
 
@@ -126,14 +125,4 @@ internal class OqtUser(
 
     #endregion
 
-    #region Deprecated in v15
-
-    //[Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
-    //public bool IsSuperUser => IsSystemAdmin;
-
-    //[Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
-    //public bool IsAdmin => IsSiteAdmin;
-
-
-    #endregion
 }

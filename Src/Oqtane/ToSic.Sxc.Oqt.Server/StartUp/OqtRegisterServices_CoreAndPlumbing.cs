@@ -2,11 +2,13 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Environment.Sys.ServerPaths;
+using ToSic.Eav.Persistence.Efc.Sys.DbContext;
 using ToSic.Sxc.Apps.Sys.Installation;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Code.Sys;
 using ToSic.Sxc.Oqt.Server.Configuration;
 using ToSic.Sxc.Oqt.Server.Context;
+using ToSic.Sxc.Oqt.Server.Data;
 using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Server.Plumbing;
@@ -45,11 +47,13 @@ partial class OqtRegisterServices
     {
         // Helper to access settings of a Site, Module etc.
         services.TryAddTransient<SettingsHelper>();
+        services.TryAddTransient<IEavDbContextConfigurator, OqtEavDbContextConfigurator>();
 
         // Helper to get header, query string and route information from current request
         //services.TryAddScoped<RequestHelper>();
 
         // Manage oqtane site culture info
+        services.TryAddTransient<OqtSiteGroup>();
         services.TryAddTransient<OqtCulture>();
 
         // Site State Initializer for APIs etc. to ensure that the SiteState exists and is correctly preloaded

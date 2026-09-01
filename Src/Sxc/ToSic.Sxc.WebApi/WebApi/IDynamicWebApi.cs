@@ -51,7 +51,7 @@ public interface IDynamicWebApi
     /// Added in 2sxc 12.05
     /// </remarks>
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    dynamic File(NoParamOrder npo = default,
+    object File(NoParamOrder npo = default,
         // Important: the second parameter should _not_ be a string, otherwise the signature looks the same as the built-in File(...) method
         bool? download = null,
         // important: this is the virtualPath, but it should not have the same name, to not confuse the compiler with same sounding param names

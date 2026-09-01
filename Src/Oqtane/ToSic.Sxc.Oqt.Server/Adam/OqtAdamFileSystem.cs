@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Oqtane.Models;
 using Oqtane.Repository;
 using ToSic.Eav.Environment.Sys.ServerPaths;
@@ -129,7 +128,7 @@ internal class OqtAdamFileSystem(
 
     public override void AddFolder(string path) => Log.Do(() =>
     {
-        path = path.Backslash();
+        path = path.EnsureOqtaneFolderFormat();
         if (FolderExists(path)) return "";
 
         try
@@ -144,15 +143,10 @@ internal class OqtAdamFileSystem(
             CreateVirtualFolder(parentFolder, path, subfolder);
             return "ok";
         }
-        catch (SqlException)
-        {
-            // don't do anything - this happens when multiple processes try to add the folder at the same time
-            // like when two fields in a dialog cause the web-api to create the folders in parallel calls
-            // see also https://github.com/2sic/2sxc/issues/811
-            return "error in SQL, probably folder already exists";
-        }
         catch (DbUpdateException)
         {
+            // This can happen when parallel requests both try to create the same folder.
+            // See also https://github.com/2sic/2sxc/issues/811.
             return $"error in EF, probably folder already exists";
         }
         catch (NullReferenceException)

@@ -8,13 +8,13 @@ namespace ToSic.Sxc.Context.Sys.CmsContext;
 internal class CmsViewFolder(CmsView cmsView, IApp app, bool shared) : AppAssetFolder
 {
     [field: AllowNull, MaybeNull]
-    public override string Path => field ??= FigureOutPath(shared ? app.RelativePathShared : app.RelativePath).Backslash();
+    public override string Path => field ??= FigureOutPath(shared ? app.RelativePathShared : app.RelativePath).ToSystemPath();
 
     [field: AllowNull, MaybeNull]
     public override string Url => field ??= FigureOutPath(shared ? app.PathShared : app.Path);
 
     [field: AllowNull, MaybeNull]
-    public override string PhysicalPath => field ??= FigureOutPath(shared ? app.PhysicalPathShared : app.PhysicalPath).Backslash();
+    public override string PhysicalPath => field ??= FigureOutPath(shared ? app.PhysicalPathShared : app.PhysicalPath).ToSystemPath();
 
     [field: AllowNull, MaybeNull]
     public override string Name => field ??= new DirectoryInfo(Path).Name;

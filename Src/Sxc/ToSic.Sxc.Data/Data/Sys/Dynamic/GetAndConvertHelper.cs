@@ -28,7 +28,7 @@ internal class GetAndConvertHelper(
     internal GetAndConvertConverter Converter => field ??= new(Cdf, PropsRequired, childrenShouldBeDynamic, canDebug, overrider);
 
     public ILog? LogOrNull => _logOrNull.Get(() => Cdf.Log.SubLogOrNull("Sxc.GetCnv", Debug));
-    private readonly GetOnce<ILog?> _logOrNull = new();
+    private readonly LazyGet<ILog?> _logOrNull = new();
 
     #endregion
 

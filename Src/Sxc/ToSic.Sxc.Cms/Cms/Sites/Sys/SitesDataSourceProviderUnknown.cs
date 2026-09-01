@@ -4,5 +4,5 @@ namespace ToSic.Sxc.Cms.Sites.Sys;
 
 internal class SitesDataSourceProviderUnknown(SitesDataSourceProvider.Dependencies services, WarnUseOfUnknown<SitesDataSourceProviderUnknown> _) : SitesDataSourceProvider(services, $"{SxcLogName}.{LogConstants.NameUnknown}")
 {
-    public override List<SiteModel> GetSitesInternal() => [];
+    public override List<SiteModelRaw> GetSitesInternal() => [];
 }

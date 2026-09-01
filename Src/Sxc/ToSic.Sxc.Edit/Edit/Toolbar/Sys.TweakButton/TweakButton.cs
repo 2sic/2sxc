@@ -24,32 +24,41 @@ internal class TweakButton: ITweakButton
 
     public bool? ConditionValue { get; }
 
+    /// <summary>
+    /// Constructor for new tweak.
+    /// </summary>
     internal TweakButton()
     {
-        UiMerge = ImmutableList.Create<object?>();
-        ParamsMerge = ImmutableList.Create<object?>();
-        Named = new Dictionary<string, Func<ITweakButton, ITweakButton>>().ToImmutableDictionary();
-    }
-
-    private TweakButton(ITweakButton original,
-        IImmutableList<object?>? ui = default,
-        IImmutableList<object?>? parameters = default,
-        IImmutableDictionary<string,
-        Func<ITweakButton, ITweakButton>>? named = default,
-        bool? condition = null)
-    {
-        UiMerge = ui ?? original?.UiMerge ?? ImmutableList.Create<object?>();
-        ParamsMerge = parameters ?? original?.ParamsMerge ?? ImmutableList.Create<object?>();
-        Named = named ?? original?.Named ?? new Dictionary<string, Func<ITweakButton, ITweakButton>>().ToImmutableDictionary();
-        ConditionValue = condition ?? original?.ConditionValue;
+        UiMerge = EmptyUiOrParams;
+        ParamsMerge = EmptyUiOrParams;
+        Named = EmptyNamed;
     }
 
     /// <summary>
-    /// Helper to create an empty TweakButton function as fallback when not provided.
+    /// Clone constructor, requires an original.
     /// </summary>
-    /// <param name="btn"></param>
-    /// <returns></returns>
-    internal static ITweakButton NoOp(ITweakButton btn) => btn;
+    private TweakButton(ITweakButton original,
+        IImmutableList<object?>? ui = default,
+        IImmutableList<object?>? parameters = default,
+        IImmutableDictionary<string, Func<ITweakButton, ITweakButton>>? named = default,
+        bool? condition = null)
+    {
+        UiMerge = ui ?? original.UiMerge;
+        ParamsMerge = parameters ?? original.ParamsMerge;
+        Named = named ?? original.Named;
+        ConditionValue = condition ?? original.ConditionValue;
+    }
+
+    private static readonly IImmutableList<object?> EmptyUiOrParams = ImmutableList.Create<object?>();
+    private static readonly IImmutableDictionary<string, Func<ITweakButton, ITweakButton>> EmptyNamed
+        = ImmutableDictionary<string, Func<ITweakButton, ITweakButton>>.Empty;
+
+    ///// <summary>
+    ///// Helper to create an empty TweakButton function as fallback when not provided.
+    ///// </summary>
+    ///// <param name="btn"></param>
+    ///// <returns></returns>
+    //internal static ITweakButton NoOp(ITweakButton btn) => btn;
 
     #region UI
 

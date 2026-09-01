@@ -21,6 +21,11 @@ public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TF
     /// </summary>
     public class Dependencies;
 
+    /// <summary>
+    /// This service must work without options, as it usually uses default options.
+    /// </summary>
+    protected override AdamItemDtoMakerOptions GetDefaultOptions() => new();
+
 
     [field: AllowNull, MaybeNull]
     public AdamContext AdamContext => field ??= MyOptions.AdamContext!;
@@ -101,18 +106,17 @@ public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TF
         return item;
     }
 
-    private IEnumerable<MetadataOfDto>? GetMetadataOf(ITypedMetadata? md)
+    private IEnumerable<AdamMetadataOfDto>? GetMetadataOf(ITypedMetadata? md)
     {
         if (md == null)
             return null;
 
         var result = ((IHasMetadata)md).Metadata
-            .Select(m => new MetadataOfDto
-            {
-                Id = m.EntityId,
-                Guid = m.EntityGuid,
-                Type = new(m)
-            })
+            .Select(m => new AdamMetadataOfDto(
+                Id: m.EntityId,
+                Guid: m.EntityGuid,
+                Type: new(m)
+            ))
             .ToArray();
         return result.Any()
             ? result
@@ -130,6 +134,5 @@ public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TF
     private bool ContextAllowsEdit
         => _contextAllowsEdit ??= !AdamContext.Security.UserIsRestricted || AdamContext.Security.FieldPermissionOk(GrantSets.WriteSomething);
     private bool? _contextAllowsEdit;
-
 
 }

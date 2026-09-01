@@ -8,7 +8,7 @@ internal class UsersProviderUnknown(WarnUseOfUnknown<UsersProviderUnknown> _) : 
 {
     public string PlatformIdentityTokenPrefix => $"{EavConstants.NullNameId}:";
 
-    public IUserModel GetUser(int userId, int siteId) => new UserModel();
+    public IUserModel GetUser(int userId, int siteId) => new UserModelRaw();
 
-    public IEnumerable<UserModel> GetUsers(UsersGetSpecs specs) => new List<UserModel>();
+    public IEnumerable<UserModelRaw> GetUsers(UsersGetSpecs specs) => new List<UserModelRaw>();
 }

@@ -18,9 +18,10 @@ namespace ToSic.Sxc.Code;
 /// <param name="paramsDictionary"></param>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class TypedRazorModel(CompileCodeHelperSpecs helperSpecs, IDictionary<string, object> paramsDictionary) : ITypedRazorModel
+internal class TypedRazorModel(CompileCodeHelperSpecs helperSpecs, IDictionary<string, object?>? paramsDictionary) : ITypedRazorModel
 {
-    private readonly IDictionary<string, object> _paramsDictionary = paramsDictionary?.ToInvariant() ?? new Dictionary<string, object>();
+    private readonly IDictionary<string, object?> _paramsDictionary = paramsDictionary?.ToInvariant()
+                                                                      ?? new Dictionary<string, object?>();
     private readonly TypedConverter _converter = new(helperSpecs.ExCtx.GetCdf());
 
     #region Check if parameters were supplied

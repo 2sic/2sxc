@@ -27,37 +27,10 @@ public class OutputCacheKeys
             id += $"-c:{currentCulture}";
         return id;
     }
-    //public static string PartialSettingsKey(int appId, string path /*, int moduleId, int? userId, string? viewKey, string? suffix,  string? currentCulture */)
-    //    => PartialSettingsKey(appId.ToString(), path);
 
-    public static string PartialSettingsKey(string appKey, string path /*, int moduleId, int? userId, string? viewKey, string? suffix,  string? currentCulture */)
-    {
-        var id = $"{GlobalCacheKeyPartialRoot}Settings.a:{appKey}-p:{path}";
-        //if (userId.HasValue)
-        //    id += $"-u:{userId.Value}";
-        //if (viewKey != null)
-        //    id += $"-v:{viewKey}";
-        //if (suffix != null)
-        //    id += $"-s:{suffix}";
-        //if (currentCulture != null)
-        //    id += $"-c:{currentCulture}";
-        return id;
-    }
+    public static string PartialSettingsKey(string appKey, string path)
+        => $"{GlobalCacheKeyPartialRoot}Settings.a:{appKey}-p:{path}";
 
-    //public static string PartialKey(int appId, string path /*, int moduleId, int? userId, string? viewKey, string? suffix,  string? currentCulture */)
-    //    => PartialKey(appId.ToString(), path);
-
-    public static string PartialKey(string appKey, string path /*, int moduleId, int? userId, string? viewKey, string? suffix,  string? currentCulture */)
-    {
-        var id = $"{GlobalCacheKeyPartialRoot}a:{appKey}-p:{path}";
-        //if (userId.HasValue)
-        //    id += $"-u:{userId.Value}";
-        //if (viewKey != null)
-        //    id += $"-v:{viewKey}";
-        //if (suffix != null)
-        //    id += $"-s:{suffix}";
-        //if (currentCulture != null)
-        //    id += $"-c:{currentCulture}";
-        return id;
-    }
+    public static string PartialKey(string appKey, string path)
+        => $"{GlobalCacheKeyPartialRoot}a:{appKey}-p:{path}";
 }

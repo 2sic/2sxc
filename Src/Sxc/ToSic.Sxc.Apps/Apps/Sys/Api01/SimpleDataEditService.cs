@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneMapper;
-using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Build.Sys;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.Entities;
@@ -33,11 +32,13 @@ public partial class SimpleDataEditService(
     DataAssembler dataAssembler,
     IZoneMapper zoneMapper,
     IContextOfSite ctx,
-    GenWorkDb<WorkEntitySave> entSave,
-    GenWorkDb<WorkEntityUpdate> entUpdate,
-    GenWorkDb<WorkEntityDelete> entDelete,
+    AppWorkContextService appWorkCtxSvc,
+    AppWorkChain<WorkEntitySave> entSave,
+    AppWorkChain<WorkEntityUpdate> entUpdate,
+    AppWorkChain<WorkEntityDelete> entDelete,
     LazySvc<IValueConverter> valueConverter,
-    Generator<AppPermissionCheck> appPermissionCheckGenerator) : ServiceBase("Dta.Simple", connect: [entSave, entUpdate, entDelete, zoneMapper, dataAssembler, ctx, appPermissionCheckGenerator, valueConverter])
+    Generator<AppPermissionCheck> appPermissionCheckGenerator
+) : ServiceBase("Dta.Simple", connect: [appWorkCtxSvc, entSave, entUpdate, entDelete, zoneMapper, dataAssembler, ctx, appPermissionCheckGenerator, valueConverter])
 {
 
     #region Constructor / DI
@@ -47,7 +48,7 @@ public partial class SimpleDataEditService(
 
     private int _appId;
     private bool _checkWritePermissions = true; // default behavior is to check write publish/draft permissions (that should happen for REST, but not for c# API)
-    private IAppWorkCtxWithDb _ctxWithDb = null!;
+    private IAppWorkContext _ctxWithDb = null!;
 
     /// <param name="zoneId">Zone ID</param>
     /// <param name="appId">App ID</param>
@@ -63,7 +64,7 @@ public partial class SimpleDataEditService(
 
         _defaultLanguageCode = GetDefaultLanguage(zoneId);
         var appIdentity = new AppIdentity(zoneId, appId);
-        _ctxWithDb = entSave.CtxSvc.CtxWithDb(appIdentity);
+        _ctxWithDb = appWorkCtxSvc.ContextNew(appIdentity);
         _checkWritePermissions = checkWritePermissions;
         l.A($"Default language:{_defaultLanguageCode}");
         return l.Return(this);
@@ -87,12 +88,12 @@ public partial class SimpleDataEditService(
     /// </summary>
     /// <param name="contentTypeName">Content-type</param>
     /// <param name="multiValues">
-    ///     Values to be set collected in a dictionary. Each dictionary item is a pair of attribute 
-    ///     name and value. To set references to other entities, set the attribute value to a list of 
+    ///     Values to be set collected in a dictionary. Each dictionary item is a pair of fieldDef 
+    ///     name and value. To set references to other entities, set the fieldDef value to a list of 
     ///     entity ids. 
     /// </param>
     /// <param name="target"></param>
-    /// <exception cref="ArgumentException">Content-type does not exist, or an attribute in attributes</exception>
+    /// <exception cref="ArgumentException">Content-type does not exist, or an fieldDef in attributes</exception>
     public IEnumerable<int> Create(string contentTypeName, IEnumerable<Dictionary<string, object?>>? multiValues, ITarget? target = null) 
     {
         var list = multiValues?.ToListOpt();
@@ -105,7 +106,7 @@ public partial class SimpleDataEditService(
 
         l.A($"Type {contentTypeName} found. Will build entities to save...");
 
-        var entSaver = entSave.New(_ctxWithDb.AppReader);
+        var entSaver = entSave.New(NewAppWorkContextWithDbForOperation());
         var saveOptions = entSaver.SaveOptions();
 
         var importEntity = list
@@ -192,11 +193,11 @@ public partial class SimpleDataEditService(
     /// </summary>
     /// <param name="entityId">Entity ID</param>
     /// <param name="values">
-    ///     Values to be set collected in a dictionary. Each dictionary item is a pair of attribute 
-    ///     name and value. To set references to other entities, set the attribute value to a list of 
+    ///     Values to be set collected in a dictionary. Each dictionary item is a pair of fieldDef 
+    ///     name and value. To set references to other entities, set the fieldDef value to a list of 
     ///     entity ids. 
     /// </param>
-    /// <exception cref="ArgumentException">Attribute in attributes does not exit</exception>
+    /// <exception cref="ArgumentException">Field in attributes does not exit</exception>
     /// <exception cref="ArgumentNullException">Entity does not exist</exception>
     public void Update(int entityId, Dictionary<string, object?> values)
     {
@@ -204,7 +205,7 @@ public partial class SimpleDataEditService(
         var original = _ctxWithDb.AppReader.List.FindRepoId(entityId)
             ?? throw new NullReferenceException($"Can't Update, original not found with ID {entityId}");
         var (entity, publishing) = BuildNewEntity(original.Type, values, null, original.IsPublished);
-        entUpdate.New(_ctxWithDb.AppReader)
+        entUpdate.New(NewAppWorkContextWithDbForOperation())
             .UpdateParts(id: entityId, partialEntity: entity, publishing: publishing);
         l.Done();
     }
@@ -215,14 +216,32 @@ public partial class SimpleDataEditService(
     /// </summary>
     /// <param name="entityId">Entity ID</param>
     /// <exception cref="InvalidOperationException">Entity cannot be deleted for example when it is referenced by another object</exception>
-    public void Delete(int entityId) => entDelete.New(_ctxWithDb.AppReader).Delete(entityId);
+    public void Delete(int entityId) => entDelete.New(NewAppWorkContextWithDbForOperation()).Delete(entityId);
 
 
     /// <summary>
     /// Delete the entity specified by GUID.
     /// </summary>
     /// <param name="entityGuid">Entity GUID</param>
-    public void Delete(Guid entityGuid) => entDelete.New(_ctxWithDb.AppReader).Delete(entityGuid);
+    public void Delete(Guid entityGuid) => entDelete.New(NewAppWorkContextWithDbForOperation()).Delete(entityGuid);
+
+
+    /// <summary>
+    /// Each public CRUD operation must receive a fresh app work context with database.
+    /// Do not "optimize" this by passing _ctxWithDb directly or by caching the result of this method.
+    /// AppWorkContext lazily caches DbStorage, which owns the EF DbContext and its ChangeTracker.
+    /// 
+    /// A single API request can perform multiple operations with this service; for example, Mobius
+    /// FormController.ProcessForm creates an entity and immediately updates that same entity.
+    /// Reusing one work context leaves the graph inserted by Create tracked. Update then loads another
+    /// instance of that graph and UpdateRange/RemoveRange fails because EF is already tracking the same keys.
+    /// 
+    /// Before the AppCtxNew refactor, GenWorkDb.New(AppReader) implicitly created a new context per operation.
+    /// This method deliberately preserves that unit-of-work boundary: reuse the AppReader/cache, but never
+    /// reuse DbStorage/DbContext between separate Create, Update, or Delete calls.
+    /// </summary>
+    private IAppWorkContext NewAppWorkContextWithDbForOperation()
+        => appWorkCtxSvc.ContextNew(_ctxWithDb.AppReader);
 
 
     private IDictionary<string, object?> ConvertRelationsToNullArray(IContentType contentType, IDictionary<string, object?> values)
@@ -313,7 +332,7 @@ public partial class SimpleDataEditService(
                     type: ctAttr.Type,
                     valueToReplace: firstValue,
                     language: valuesLanguage);
-                l.A($"Attribute '{keyValuePair.Key}' will become '{keyValuePair.Value}' ({ctAttr.Type})");
+                l.A($"Field '{keyValuePair.Key}' will become '{keyValuePair.Value}' ({ctAttr.Type})");
                 return new
                 {
                     keyValuePair.Key,

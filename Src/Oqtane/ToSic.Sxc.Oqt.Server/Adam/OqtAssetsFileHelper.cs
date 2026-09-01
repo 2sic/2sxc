@@ -1,7 +1,8 @@
-using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.StaticFiles;
 using Oqtane.Models;
 using Oqtane.Shared;
+using System.Text.RegularExpressions;
+using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sys.Utils;
 using File = System.IO.File;
@@ -9,7 +10,7 @@ using File = System.IO.File;
 namespace ToSic.Sxc.Oqt.Server.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class OqtAssetsFileHelper() : ServiceBase(OqtConstants.OqtLogPrefix + ".FilHlp")
+public class OqtAssetsFileHelper(OqtSiteGroup siteGroup = null) : ServiceBase(OqtConstants.OqtLogPrefix + ".FilHlp")
 {
     public const string RouteAdam = "adam";
     public const string RouteAssets = "assets";
@@ -54,23 +55,24 @@ public class OqtAssetsFileHelper() : ServiceBase(OqtConstants.OqtLogPrefix + ".F
             return l.Return(string.Empty, "code extension");
 
         // Nothing in a ".xyz" folder or a subfolder of this should be allowed (like .data must be protected).
-        if (appName.StartsWith(".") || filePath.StartsWith(".") || Path.GetDirectoryName(filePath).Backslash().Contains(@"\.")) 
+        if (StartsWithDot(appName) || StartsWithDot(filePath) || HasHiddenFolderSegment(filePath))
             return l.Return(string.Empty, "folders or subfolder that start with . are not allowed");
 
-        string fullFilePath = route switch
+        var siteId = ContentSiteId(alias);
+        var fullFilePath = route switch
         {
-            "" => AdamPathWithoutAppName(contentRootPath, alias, filePath),
-            RouteAdam => AdamPath(contentRootPath, alias, appName, filePath),
-            RouteAssets => SxcPath(contentRootPath, alias, appName, filePath),
+            "" => AdamPathWithoutAppName(contentRootPath, alias, siteId, filePath),
+            RouteAdam => AdamPath(contentRootPath, alias, siteId, appName, filePath),
+            RouteAssets => SxcPath(contentRootPath, alias, siteId, appName, filePath),
             RouteShared => SharedPath(contentRootPath, alias, appName, filePath),
 
-            _ => SxcPath(contentRootPath, alias, appName, filePath),
+            _ => SxcPath(contentRootPath, alias, siteId, appName, filePath),
         };
 
-        // Check that file exists in file system.
-        return File.Exists(fullFilePath) 
-            ? l.Return(fullFilePath, "found")
-            : l.Return(string.Empty, "file not found");
+        if (File.Exists(fullFilePath))
+            return l.Return(fullFilePath, "found");
+
+        return l.Return(string.Empty, "file not found");
     }
 
     private static bool IsKnownRiskyExtension(string fileName)
@@ -79,16 +81,32 @@ public class OqtAssetsFileHelper() : ServiceBase(OqtConstants.OqtLogPrefix + ".F
         return !string.IsNullOrEmpty(extension) && RiskyDetector.IsMatch(extension);
     }
 
-    private static string AdamPathWithoutAppName(string contentRootPath, Alias alias, string filePath)
-        => Path.Combine(contentRootPath, string.Format(OqtConstants.ContentRootPublicBase, alias.TenantId, alias.SiteId), filePath).Backslash();
+    // Split explicitly to catch protected folders such as .data regardless of slash direction or host OS.
+    private static bool HasHiddenFolderSegment(string filePath)
+        => filePath
+            .Split(['/', '\\'], StringSplitOptions.RemoveEmptyEntries)
+            .SkipLast(1)
+            .Any(StartsWithDot);
 
-    private static string AdamPath(string contentRootPath, Alias alias, string appName, string filePath)
-        => Path.Combine(contentRootPath, string.Format(OqtConstants.ContentRootPublicBase, alias.TenantId, alias.SiteId), "adam", appName, filePath).Backslash();
+    private static bool StartsWithDot(string value)
+        => value != null && value.StartsWith(".", StringComparison.Ordinal);
 
-    private static string SxcPath(string contentRootPath, Alias alias, string appName, string filePath)
-        => Path.Combine(contentRootPath, string.Format(OqtConstants.AppRootTenantSiteBase, alias.TenantId, alias.SiteId), appName, filePath).Backslash();
+    private int ContentSiteId(Alias alias)
+        => siteGroup?.GetPrimaryLocalizationSiteId(alias.SiteId) ?? alias.SiteId;
+
+    private static string AdamPathWithoutAppName(string contentRootPath, Alias alias, int siteId, string filePath)
+        => BuildPhysicalPath(contentRootPath, string.Format(OqtConstants.ContentRootPublicBase, alias.TenantId, siteId), filePath);
+
+    private static string AdamPath(string contentRootPath, Alias alias, int siteId, string appName, string filePath)
+        => BuildPhysicalPath(contentRootPath, string.Format(OqtConstants.ContentRootPublicBase, alias.TenantId, siteId), RouteAdam, appName, filePath);
+
+    private static string SxcPath(string contentRootPath, Alias alias, int siteId, string appName, string filePath)
+        => BuildPhysicalPath(contentRootPath, string.Format(OqtConstants.AppRootTenantSiteBase, alias.TenantId, siteId), appName, filePath);
 
     private static string SharedPath(string contentRootPath, Alias alias, string appName, string filePath)
-        => Path.Combine(contentRootPath, string.Format(OqtConstants.AppRootTenantSiteBase, alias.TenantId, OqtConstants.SharedAppFolder), appName, filePath).Backslash();
+        => BuildPhysicalPath(contentRootPath, string.Format(OqtConstants.AppRootTenantSiteBase, alias.TenantId, OqtConstants.SharedAppFolder), appName, filePath);
+
+    private static string BuildPhysicalPath(params string[] segments)
+        => Path.GetFullPath(Path.Combine(segments).ToSystemPath());
 
 }

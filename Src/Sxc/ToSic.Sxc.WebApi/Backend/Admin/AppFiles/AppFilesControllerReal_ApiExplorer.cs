@@ -1,6 +1,5 @@
-﻿using System.Reflection;
+using System.Reflection;
 using ToSic.Eav.Sys;
-using ToSic.Eav.WebApi.Sys.ApiExplorer;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sys.Utils;
 
@@ -14,21 +13,20 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
     /// <param name="appId"></param>
     /// <returns>used by ApiExplorerControllerReal.AppApiFiles</returns>
     [PrivateApi]
-    public ICollection<AllApiFileDto> AllApiFilesInAppCodeForAllEditions(int appId)
+    public ICollection<AppWebApiFileRaw> AllApiFilesInAppCodeForAllEditions(int appId)
     {
-        var l = Log.Fn<List<AllApiFileDto>>($"list all in AppCode a#{appId}");
+        var l = Log.Fn<List<AppWebApiFileRaw>>($"list all in AppCode a#{appId}");
 
         const string mask = $"*{EavConstants.ApiControllerSuffix}.cs";
 
         var appPath = ResolveAppPath(appId, global: false);
         var app = appReaders.Get(appId).Specs;
-        var editions = codeController.Value.GetEditions(appId).Editions;
+        var editions = AvailableEditionNames(appId);
         l.A($"{nameof(app.Folder)}:'{app.Folder}', appPath:'{appPath}', editions:{editions.Count}");
 
-        List<AllApiFileDto> appCodeApiControllerFiles = [];
-        foreach (var editionDto in editions)
+        List<AppWebApiFileRaw> appCodeApiControllerFiles = [];
+        foreach (var edition in editions)
         {
-            var edition = editionDto.Name;
             l.A($"collect ApiController files in AppCode for edition:'{edition}'");
 
             if (!Directory.Exists(Path.Combine(appPath, edition, FolderConstants.AppCodeFolder)))
@@ -41,7 +39,7 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
             try
             {
                 // get AppCode assembly
-                var spec = new HotBuildSpec(appId, edition: edition, app.Folder, app.RuntimeKey);
+                var spec = new HotBuildSpec(appId, edition: edition, app.Folder, app.CacheKey);
                 l.A($"{spec}");
                 var (result, _) = appCodeLoader.Value.GetAppCode(spec);
                 appCodeAssembly = result?.Assembly;
@@ -55,20 +53,31 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
             var codeApiControllerFiles = ApiControllerFilesInAppCode(mask, appPath, edition, appCodeAssembly);
             l.A($"ApiController files in AppCode for edition:'{edition}': {codeApiControllerFiles.Count}");
 
-            appCodeApiControllerFiles.AddRange(
-                codeApiControllerFiles
-                    .Select(f => new AllApiFileDto
-                    {
-                        Path = f,
-                        EndpointPath = ApiExplorerControllerReal.AppCodeEndpointPath(edition, Path.GetFileNameWithoutExtension(f)),
-                        IsCompiled = true,
-                        Edition = edition
-                    })
-            );
+            var apiFiles = codeApiControllerFiles
+                .Select(f => new AppWebApiFileRaw
+                {
+                    id = 0,
+                    path = f,
+                    endpointPath = AppCodeEndpointPath(edition, Path.GetFileNameWithoutExtension(f)),
+                    edition = edition,
+                    shared = false,
+                });
+            appCodeApiControllerFiles.AddRange(apiFiles);
         }
 
         return l.Return(appCodeApiControllerFiles, $"ok, count:{appCodeApiControllerFiles.Count}");
     }
+
+    public static string AppCodeEndpointPath(string edition, string controller)
+        => Path
+            .Combine(edition, EavConstants.Api, AdjustControllerName(controller, EavConstants.ApiControllerSuffix))
+            .ForwardSlash();
+
+    private static string AdjustControllerName(string controllerName, string suffix)
+        => controllerName.EndsWith(suffix, StringComparison.OrdinalIgnoreCase)
+            ? controllerName.Substring(0, controllerName.Length - suffix.Length)
+            : controllerName;
+
 
     private ICollection<string> ApiControllerFilesInAppCode(string mask, string appPath, string edition, Assembly? appCodeAssembly)
     {
@@ -109,7 +118,7 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
         var apiControllerFilesInAppCode = filesAfterCheck
             .Select(f => f.FullName)
             .Select(p => EnsurePathMayBeAccessed(p, appPath, user.IsSystemAdmin)) // do another security check
-            .Select(x => x.Replace(appPath + "\\", "")) // truncate / remove internal server root path
+            .Select(x => x.Replace(appPath + Path.DirectorySeparatorChar, "")) // truncate / remove internal server root path
             .Select(x => x.ForwardSlash()) // tip the slashes to web-convention (old template entries used "\")
             .ToListOpt();
 

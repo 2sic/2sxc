@@ -7,9 +7,9 @@
   </Target>
 
   <UsingTask TaskName="GetBuildConfig" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net9.0\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' == 'Core'"/>
-  <UsingTask TaskName="GetBuildConfig" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' != 'Core'"/>
+  <UsingTask TaskName="GetBuildConfig" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net48\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' != 'Core'"/>
   <UsingTask TaskName="ColorMessage" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net9.0\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' == 'Core'"/>
-  <UsingTask TaskName="ColorMessage" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' != 'Core'"/>
+  <UsingTask TaskName="ColorMessage" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net48\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' != 'Core'"/>
 
   <Target Name="BuildConfigTarget" BeforeTargets="Build">
 

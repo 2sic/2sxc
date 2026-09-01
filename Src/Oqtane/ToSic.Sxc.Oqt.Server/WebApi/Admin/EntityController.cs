@@ -33,11 +33,12 @@ public class EntityController() : OqtStatefulControllerBase(RealController.LogSu
 
 
     /// <inheritdoc/>
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    [Authorize(Roles = RoleNames.Admin)]
-    public IEnumerable<Dictionary<string, object>> List(int appId, string contentType) => Real.List(appId, contentType);
+    // 2rb: replaced by EntitiesAdmin datasource
+    //[HttpGet]
+    //[ValidateAntiForgeryToken]
+    ////[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    //[Authorize(Roles = RoleNames.Admin)]
+    //public IEnumerable<Dictionary<string, object>> List(int appId, string contentType) => Real.List(appId, contentType);
 
 
     /// <inheritdoc/>

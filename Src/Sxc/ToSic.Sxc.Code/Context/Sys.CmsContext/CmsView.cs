@@ -46,18 +46,17 @@ internal class CmsView(CmsContext cmsContext, IBlock block) : CmsContextPartBase
     /// Note: this is an explicit implementation, so in Dynamic Razor it won't work. This is by design.
     /// </summary>
     ITypedItem? ICmsView.Settings => _settings.Get(() => Cdf.AsItem(_view.Settings, new() { ItemIsStrict = true }));
-    private readonly GetOnce<ITypedItem?> _settings = new();
+    private readonly LazyGet<ITypedItem?> _settings = new();
 
     /// <summary>
     /// Note: this is an explicit implementation, so in Dynamic Razor it won't work. This is by design.
     /// </summary>
     ITypedItem? ICmsView.Resources => _resources.Get(() => Cdf.AsItem(_view.Resources, new() { ItemIsStrict = true }));
-    private readonly GetOnce<ITypedItem?> _resources = new();
+    private readonly LazyGet<ITypedItem?> _resources = new();
 
     /// <inheritdoc />
     [PrivateApi("Hidden in 16.04, because we want people to use the Folder. Can't remove it though, because there are many apps that already published this.")]
-    public string Path => _path.Get(() => FigureOutPath(block.App.Path))!;
-    private readonly GetOnce<string> _path = new();
+    public string Path => field ??= FigureOutPath(block.App.Path);
 
     /// <summary>
     /// Figure out the path to the view based on a root path.

@@ -47,14 +47,7 @@ internal class LightSpeed(
 
     public bool Save(IRenderResult data) => AddToLightSpeed(data);
 
-    // #RemovedV20 #OldDnnAutoJQuery
-    //#if NETFRAMEWORK
-    //    public bool Save(IRenderResult data, bool enforcePre1025)
-    //        => AddToLightSpeed(data, cacheData => cacheData.EnforcePre1025 = enforcePre1025);
-    //#endif
-
-    // #RemovedV20 #OldDnnAutoJQuery
-    public bool AddToLightSpeed(IRenderResult? data/*, Action<OutputCacheItem>? doOtherStuff = null*/)
+    public bool AddToLightSpeed(IRenderResult? data)
     {
         var l = Log.Fn<bool>(timer: true);
 
@@ -106,8 +99,6 @@ internal class LightSpeed(
                 data,
                 useCompression: features.IsEnabled(LightSpeedOutputCacheCompression.NameId)
             ));
-            // #RemovedV20 #OldDnnAutoJQuery
-            //doOtherStuff?.Invoke(cacheItem);
 
             var duration = Duration;
             // only add if we really have a duration; -1 is disabled, 0 is not set...
@@ -176,29 +167,26 @@ internal class LightSpeed(
     private (bool CachingAllowed, string Extension) UrlParams => _urlParams.Get(() =>
         LightSpeedUrlParams.GetUrlParams(ViewConfigOrNull ?? AppConfig, _block?.Context.Page.Parameters, Log)
     );
-    private readonly GetOnce<(bool CachingAllowed, string Extension)> _urlParams = new();
+    private readonly LazyGet<(bool CachingAllowed, string Extension)> _urlParams = new();
 
-    private string CurrentCulture => _currentCulture.Get(() => site.Value.SafeCurrentCultureCode())!;
-    private readonly GetOnce<string> _currentCulture = new();
+    private string CurrentCulture => field ??= site.Value.SafeCurrentCultureCode();
 
 
-    private string CacheKey => _key.Get(() => Log.Quick(()
-        => OutputCacheKeys.ModuleKey(_pageId, _moduleId, UserIdOrAnon, ViewKey, UrlParams.Extension, CurrentCulture)
-    ))!;
-    private readonly GetOnce<string> _key = new();
+    private string CacheKey => field ??= Log.Quick(()
+        => OutputCacheKeys.ModuleKey(_pageId, _moduleId, UserIdOrAnon, ViewKey, UrlParams.Extension, CurrentCulture));
 
     private int? UserIdOrAnon => _userId.Get(() => _block?.Context.User.IsAnonymous == false ? _block.Context.User.Id : null);
-    private readonly GetOnce<int?> _userId = new();
+    private readonly LazyGet<int?> _userId = new();
 
     // Note 2023-10-30 2dm changed the handling of the preview template and checks if it's set. In case caching is too aggressive this can be the problem. Remove early 2024
     private string? ViewKey => _viewKey.Get(() => _block is { ConfigurationIsReady: true, Configuration.PreviewViewEntity: not null }
         ? $"{_block.Configuration.AppId}:{_block.Configuration.View?.Id}"
         : null
     );
-    private readonly GetOnce<string?> _viewKey = new();
+    private readonly LazyGet<string?> _viewKey = new();
 
     public OutputCacheItem? Existing => _existing.Get(GetExisting);
-    private readonly GetOnce<OutputCacheItem?> _existing = new();
+    private readonly LazyGet<OutputCacheItem?> _existing = new();
 
     private OutputCacheItem? GetExisting()
     {
@@ -234,7 +222,7 @@ internal class LightSpeed(
 
 
     public bool IsEnabled => _enabled.Get(GetLightSpeedIsEnabled);
-    private readonly GetOnce<bool> _enabled = new();
+    private readonly LazyGet<bool> _enabled = new();
 
     private bool GetLightSpeedIsEnabled()
     {
@@ -290,14 +278,13 @@ internal class LightSpeed(
     /// <summary>
     /// Lightspeed Configuration at App Level
     /// </summary>
-    private LightSpeedDecorator AppConfig => _lsd.Get(() => LsConfigHelper.GetLightSpeedConfigOfApp(AppReaderOrNull))!;
-    private readonly GetOnce<LightSpeedDecorator> _lsd = new();
+    private LightSpeedDecorator AppConfig => field ??= LsConfigHelper.GetLightSpeedConfigOfApp(AppReaderOrNull);
 
     /// <summary>
     /// Lightspeed Configuration at View Level
     /// </summary>
     private LightSpeedDecorator? ViewConfigOrNull => _viewConfig.Get(() => LsConfigHelper.ViewConfigOrNull(_block));
-    private readonly GetOnce<LightSpeedDecorator?> _viewConfig = new();
+    private readonly LazyGet<LightSpeedDecorator?> _viewConfig = new();
 
     private OutputCacheManager OutCacheMan => outputCacheManager.Value;
     private INamedCacheDependencyService NamedDependencies => namedDependencies.Value;
