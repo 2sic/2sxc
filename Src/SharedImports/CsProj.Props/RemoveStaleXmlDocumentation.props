@@ -1,0 +1,11 @@
+<Project>
+  <!-- Avoid packaging XML left by an older build after documentation generation was disabled. -->
+  <Target Name="RemoveStaleOwnXmlDocumentation"
+          AfterTargets="Build"
+          Condition="'$(Configuration)' == 'Release'
+            and '$(GenerateDocumentationFile)' != 'true'
+            and '$(DocumentationFile)' == ''
+            and Exists('$(TargetDir)$(TargetName).xml')">
+    <Delete Files="$(TargetDir)$(TargetName).xml" />
+  </Target>
+</Project>
