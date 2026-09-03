@@ -95,7 +95,7 @@ public class RouteMapper : IServiceRouteMapper
         // /Sys/ Part 2: All others
         AddBasic("2sxc-sys", $"{Areas.Sys}/{ValueTokens.SetControllerAction}", [typeof(InstallController).Namespace]);
         AddBasic("2sxc-cms", $"{Areas.Cms}/{ValueTokens.SetControllerAction}", [typeof(BlockController).Namespace]);
-        AddBasic("2sic-admin", $"{Areas.Admin}/{ValueTokens.SetControllerAction}", [typeof(MetadataController).Namespace]);
+        AddBasic("2sic-admin", $"{Areas.Admin}/{ValueTokens.SetControllerAction}", [typeof(TypeController).Namespace]);
         // Specific admin route to support folder segment for AppController.Extensions
         AddBasic($"2sxc-admin-app-extensions-{ValueTokens.Name}", url: $"{Areas.Admin}/{ValueTokens.SetControllerAction}/{ValueTokens.Name}", namespaces: [typeof(AppController).Namespace]);
 

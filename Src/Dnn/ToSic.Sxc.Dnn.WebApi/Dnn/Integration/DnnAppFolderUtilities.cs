@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Web.Http.Routing;
-using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Sys.Routing;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
@@ -25,13 +24,13 @@ public class DnnAppFolderUtilities(
         return this;
     }
 
-    internal string GetAppFolderVirtualPath(ISite site)
-    {
-        var l = Log.Fn<string>();
-        var appFolder = GetAppFolder(true);
-        var appFolderVirtualPath = Path.Combine(site.AppsRootPhysical, appFolder).ForwardSlash();
-        return l.Return(appFolderVirtualPath, $"Ok, AppFolder Virtual Path: {appFolderVirtualPath}");
-    }
+    //internal string GetAppFolderVirtualPath(ISite site)
+    //{
+    //    var l = Log.Fn<string>();
+    //    var appFolder = GetAppFolder(true);
+    //    var appFolderVirtualPath = Path.Combine(site.AppsRootPhysical, appFolder).ForwardSlash();
+    //    return l.Return(appFolderVirtualPath, $"Ok, AppFolder Virtual Path: {appFolderVirtualPath}");
+    //}
 
     internal string GetAppFolder(bool errorIfNotFound, IBlock block = null)
     {
@@ -60,20 +59,22 @@ public class DnnAppFolderUtilities(
         }
         catch (Exception getBlockException)
         {
-            const string msg = errPrefix + "Trying to find app name, unexpected error - possibly bad/invalid headers. " + errSuffix;
-            if (errorIfNotFound)
-                throw l.Done(DnnHttpErrors.LogAndReturnException(Request, HttpStatusCode.BadRequest, getBlockException, msg, errorHelp.Value));
-            return l.Return(null, "not found, maybe error");
+            return errorIfNotFound
+                ? throw l.Done(DnnHttpErrors.LogAndReturnException(Request,
+                    HttpStatusCode.BadRequest,
+                    getBlockException,
+                    $"{errPrefix}Trying to find app name, unexpected error - possibly bad/invalid headers. {errSuffix}",
+                    errorHelp.Value)
+                )
+                : l.Return(null, "not found, maybe error");
         }
 
-        if (string.IsNullOrWhiteSpace(appFolder) && errorIfNotFound)
-        {
-            const string msg = errPrefix + "App name is unknown - tried to check name in url (.../app/[app-name]/...) " +
-                               "and tried app-detection using url-params/headers pageid/moduleid. " + errSuffix;
-            throw l.Done(DnnHttpErrors.LogAndReturnException(Request, HttpStatusCode.BadRequest, new(msg), msg, errorHelp.Value));
-        }
+        if (!string.IsNullOrWhiteSpace(appFolder) || !errorIfNotFound)
+            return l.ReturnAsOk(appFolder);
+        
+        const string errMsg = $"{errPrefix}App name is unknown - tried to check name in url (.../app/[app-name]/...) and tried app-detection using url-params/headers pageid/moduleid. {errSuffix}";
+        throw l.Done(DnnHttpErrors.LogAndReturnException(Request, HttpStatusCode.BadRequest, new(errMsg), errMsg, errorHelp.Value));
 
-        return l.ReturnAsOk(appFolder);
     }
 
     public static string AppPathOrNull(IHttpRouteData route) => route.Values[VarNames.AppPath]?.ToString();
