@@ -16,11 +16,10 @@ namespace ToSic.Sxc.Context.Sys;
 internal class ContextOfBlock(
     IPage page,
     IModule module,
-    //LazySvc<ServiceSwitcher<IPagePublishingGetSettings>> publishingResolver,
     LazySvc<BlockPublishingSettingsService> pagePubSettings,
     IPageServiceShared pageServiceShared,
     ContextOfApp.Dependencies appServices)
-    : ContextOfApp(appServices, "Sxc.CtxBlk", connect: [module, pageServiceShared, /*publishingResolver,*/ pagePubSettings]), IContextOfBlock
+    : ContextOfApp(appServices, "Sxc.CtxBlk", connect: [module, pageServiceShared, pagePubSettings]), IContextOfBlock
 {
 
     #region Override AppIdentity based on module information
@@ -73,6 +72,6 @@ internal class ContextOfBlock(
 
     /// <inheritdoc />
     public override IContextOfSite Clone(ILog parentLog)
-        => new ContextOfBlock(Page, Module, /*publishingResolver,*/ pagePubSettings, PageServiceShared, AppServices)
+        => new ContextOfBlock(Page, Module, pagePubSettings, PageServiceShared, AppServices)
             .LinkLog(parentLog);
 }
