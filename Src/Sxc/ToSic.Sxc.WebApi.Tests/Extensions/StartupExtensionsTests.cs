@@ -7,8 +7,6 @@ using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Apps.Sys.Extensions;
-using ToSic.Eav.Apps.Sys.FileSystemState;
-using ToSic.Eav.Apps.Sys.Loaders;
 using ToSic.Eav.Run.Startup;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Data;
@@ -35,7 +33,6 @@ public class StartupExtensionsTests : StartupTestsEavDataBuild
         services.AddSingleton<ExtensionsTestAppJsonConfigurationService>();
         services.AddSingleton<IAppJsonConfigurationService>(sp => sp.GetRequiredService<ExtensionsTestAppJsonConfigurationService>());
         services.AddSingleton<IAppsCatalog, ExtensionsTestAppsCatalog>();
-        services.AddSingleton<AppsCacheSwitch, ExtensionsTestAppsCacheSwitch>();
         services.AddTransient<AppCachePurger>();
         services.AddTransient<ExtensionManifestService>();
         services.AddTransient<AppEditions>();
@@ -215,31 +212,4 @@ internal sealed class ExtensionsTestAppsCatalog : IAppsCatalog
 
     public string AppNameId(IAppIdentity appIdentity)
         => Guid.NewGuid().ToString();
-}
-
-internal sealed class ExtensionsTestAppsCacheSwitch : AppsCacheSwitch
-{
-    public ExtensionsTestAppsCacheSwitch() : base(null!, null!, null!, null!)
-    {
-        var field = typeof(AppsCacheSwitch).GetField("_value", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        var getOnce = field?.GetValue(this);
-        var resetMethod = getOnce?.GetType().GetMethod("Reset", [typeof(IAppsCacheSwitchable)]);
-        resetMethod?.Invoke(getOnce, [new ExtensionsTestAppsCacheSwitchable()]);
-    }
-}
-
-internal sealed class ExtensionsTestAppsCacheSwitchable : IAppsCacheSwitchable
-{
-    public void Purge(IAppIdentity app) { }
-    public void PurgeZones() { }
-    public IAppStateCache Get(IAppIdentity app, IAppLoaderTools tools) => null!;
-    IReadOnlyDictionary<int, Zone> IAppsCache.Zones(IAppLoaderTools tools) => new Dictionary<int, Zone>();
-    int IAppsCache.ZoneIdOfApp(int appId, IAppLoaderTools tools) => 1;
-    public bool Has(IAppIdentity app) => false;
-    void IAppsCache.Update(IAppIdentity app, IEnumerable<int> entities, ILog log, IAppLoaderTools tools) { }
-    public void Add(IAppStateCache appState) { }
-    public void Load(IAppIdentity app, string primaryLanguage, IAppLoaderTools tools) { }
-    public bool IsViable() => true;
-    public int Priority { get; } = 0;
-    public string NameId { get; } = "Fake";
 }
