@@ -5,6 +5,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.DataSource;
@@ -32,7 +33,7 @@ namespace ToSic.Sxc.Dnn.DataSources;
         "ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource, ToSic.SexyContent"
     ]
 )]
-public class DnnUserProfile : CustomDataSourceAdvanced
+public class DnnUserProfile : CustomDataSource
 {
     #region Configuration-properties
 
@@ -42,10 +43,9 @@ public class DnnUserProfile : CustomDataSourceAdvanced
     [Configuration]
     public string UserIds
     {
-        get => _userIds ?? Configuration.GetThis();
-        set => _userIds = value;
+        get => field ?? Configuration.GetThis();
+        set;
     }
-    private string _userIds;
 
     /// <summary>
     /// List of profile-properties to retrieve, comma-separated
@@ -53,21 +53,20 @@ public class DnnUserProfile : CustomDataSourceAdvanced
     [Configuration(Fallback = "DisplayName,Email,FirstName,LastName,Username")]
     public string Properties
     {
-        get => _properties ?? Configuration.GetThis();
-        set => _properties = value;
+        get => field ?? Configuration.GetThis();
+        set;
     }
-    private string _properties;
 
-    /// <summary>
-    /// Gets or sets the Name of the ContentType to simulate
-    /// </summary>
-    [Configuration(Field = "ContentTypeName", Fallback = DnnUserProfileDataRaw.TypeName)]
-    public string ContentType
-    {
-        get => _contentType ?? Configuration.GetThis();
-        set => _contentType = value;
-    }
-    private string _contentType;
+    ///// <summary>
+    ///// Gets or sets the Name of the ContentType to simulate
+    ///// </summary>
+    //[Configuration(Field = "ContentTypeName", Fallback = DnnUserProfileDataRaw.TypeName)]
+    //public string ContentType
+    //{
+    //    get => _contentType ?? Configuration.GetThis();
+    //    set => _contentType = value;
+    //}
+    //private string _contentType;
 
     /// <summary>
     /// Gets or sets the Name of the Title Attribute of the DNN-UserInfo
@@ -84,22 +83,20 @@ public class DnnUserProfile : CustomDataSourceAdvanced
 
     #region Constructor / DI
 
-    public new record Dependencies(CustomDataSourceAdvanced.Dependencies ParentServices, ISite Site, IZoneMapper ZoneMapper, LazySvc<DnnSecurity> DnnSecurity)
+    public new record Dependencies(CustomDataSource.Dependencies ParentServices, ISite Site, IZoneMapper ZoneMapper, LazySvc<DnnSecurity> DnnSecurity)
         : DependenciesBase(connect: [Site, ZoneMapper, DnnSecurity]);
 
     public DnnUserProfile(Dependencies services) : base(services.ParentServices, "Dnn.Profile", connect: [services])
     {
-        _services = services;
-        ProvideOut(GetList);
+        ProvideOutRaw(() => GetList(services));
     }
 
-    private readonly Dependencies _services;
 
     #endregion
 
-    private IImmutableList<IEntity> GetList()
+    private IImmutableList<IRawEntity> GetList(Dependencies _services)
     {
-        var l = Log.Fn<IImmutableList<IEntity>>();
+        var l = Log.Fn<IImmutableList<IRawEntity>>();
         Configuration.Parse();
 
         var realTenant = _services.Site.Id != EavConstants.NullId
@@ -107,7 +104,6 @@ public class DnnUserProfile : CustomDataSourceAdvanced
             : _services.ZoneMapper.SiteOfApp(AppId);
         l.A($"realTenant {realTenant.Id}");
 
-        var properties = Properties.CsvToArrayWithoutEmpty();
         var portalId = realTenant.Id;
 
         // read all user Profiles
@@ -126,25 +122,27 @@ public class DnnUserProfile : CustomDataSourceAdvanced
         l.A($"users: {users.Count}");
 
         // convert Profiles to Entities
-        var results = new List<DnnUserProfileDataRaw>();
-        foreach (UserInfo user in users)
-        {
-            var dnnUserProfile = new DnnUserProfileDataRaw
+        var properties = Properties.CsvToArrayWithoutEmpty();
+        var results = users
+            .OfType<UserInfo>()
+            .Select(user =>
             {
-                Id = user.UserID,
-                Guid = _services.DnnSecurity.Value.UserGuid(user),
-                Name = GetDnnProfileValue(user, TitleField.ToLowerInvariant())
-            };
+                var dnnUserProfile = new DnnUserProfileDataRaw
+                {
+                    Id = user.UserID,
+                    Guid = _services.DnnSecurity.Value.UserGuid(user),
+                    Name = GetDnnProfileValue(user, TitleField.ToLowerInvariant())
+                };
 
-            // add Profile-Properties
-            foreach (var property in properties)
-                dnnUserProfile.Properties.Add(property, GetDnnProfileValue(user, property));
+                // add Profile-Properties
+                foreach (var property in properties)
+                    dnnUserProfile.Properties.Add(property, GetDnnProfileValue(user, property));
 
-            results.Add(dnnUserProfile);
-        }
+                return (IRawEntity)dnnUserProfile;
+            })
+            .ToImmutableList();
         l.A($"results: {results.Count}");
-        var userProfileDataFactory = DataFactory.SpawnNew(options: DnnUserProfileDataRaw.Options with { TypeName = ContentType?.NullIfNoValue() });
-        return l.Return(userProfileDataFactory.Create(results), "ok");
+        return l.Return(results, "ok");
     }
 
     private static string GetDnnProfileValue(UserInfo user, string property) =>
@@ -175,18 +173,18 @@ public class DnnUserProfile : CustomDataSourceAdvanced
 /// Make sure the property names never change, as they are critical for the created Entity.
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
+[ContentType(
+    Name = TypeName,
+    Guid = "8c72d18b-41a9-451c-905e-dd32ec953567"
+)]
 public class DnnUserProfileDataRaw : IRawEntity
 {
     internal const string TypeName = "UserProfile";
-
-    internal static DataFactoryOptions Options = new()
-    {
-        TypeName = TypeName,
-        TitleField = nameof(Name)
-    };
-    
+  
     public int Id { get; set; }
     public Guid Guid { get; set; }
+
+    [ContentTypeTitle]
     public string Name { get; set; } // aka DisplayName
 
     public DateTime Created { get; set; }
