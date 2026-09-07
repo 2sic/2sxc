@@ -95,10 +95,17 @@ public class OqtStartup : IServerStartup
     {
         var serviceProvider = app.ApplicationServices;
 
-        var loggerFactory = Configuration.GetValue<bool>(LogEventBridge.EnabledConfigurationKey)
+        var isLogBridgeEnabled = Configuration.GetValue<bool>(LogEventBridge.EnabledConfigurationKey);
+        var loggerFactory = isLogBridgeEnabled
             ? serviceProvider.GetService<ILoggerFactory>()
             : null;
         LogEventBridge.SetSink(loggerFactory == null ? null : new OqtaneMicrosoftLoggerEventSink(loggerFactory));
+
+        var bridgeLog = new global::ToSic.Sys.Logging.Log("Sys.Boot", null, nameof(OqtStartup));
+        if (loggerFactory != null)
+            bridgeLog.A($"{nameof(LogEventBridge)} enabled using {loggerFactory.GetType().Name}.");
+        else if (isLogBridgeEnabled)
+            bridgeLog.W($"{nameof(LogEventBridge)} is enabled, but Oqtane has no {nameof(ILoggerFactory)} registered.");
 
         var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
         globalConfig.ConnectionString(Configuration.GetConnectionString("DefaultConnection"));
