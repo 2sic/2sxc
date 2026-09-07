@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace ToSic.Sxc.Dnn.StartUp;
 
@@ -10,10 +11,21 @@ namespace ToSic.Sxc.Dnn.StartUp;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class StartupDnn9 : IDnnStartup
 {
+    private const string DnnLoggingControllerType = "DotNetNuke.Instrumentation.DnnLoggingController";
+
     public void ConfigureServices(IServiceCollection services)
     {
         // Do standard registration of all services
         DnnDi.RegisterServices(services);
+
+        // DNN 10.4+ owns the Microsoft logging pipeline and registers Serilog in its core Startup.
+        // Detect the new public controller instead of checking a version, so prerelease/backported builds work too.
+        // DNN 10.3's DefaultLoggerFactory implements log4net's ILoggerFactory, not Microsoft's ILoggerFactory.
+        // Older DNN versions therefore need this fallback; adding it on newer DNN would write each event twice.
+        if (!DnnHasMicrosoftLogging())
+            services.AddLogging(logging => logging
+                .AddFilter<DnnLoggerProvider>("ToSic.2sxc", LogLevel.Trace)
+                .AddProvider(new DnnLoggerProvider()));
 
         // Give it the Dnn 9 Global Service Provider
         // This is critical, because we need the global service provider (which will be created after this code runs)
@@ -27,4 +39,7 @@ public class StartupDnn9 : IDnnStartup
         // Now activate the Service Provider, because some Dnn code still needs the static implementation
         DnnStaticDi.StaticDiReady(GetPreparedServiceProvider);
     }
+
+    private static bool DnnHasMicrosoftLogging()
+        => typeof(DotNetNuke.Instrumentation.LoggerSource).Assembly.GetType(DnnLoggingControllerType) != null;
 }

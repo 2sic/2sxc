@@ -96,7 +96,9 @@ public class StartupDnn : IServiceRouteMapper
         var loggerFactory = isEnabled ? serviceProvider.GetService<ILoggerFactory>() : null;
         LogEventBridge.SetSink(loggerFactory == null ? null : new DnnMicrosoftLoggerEventSink(loggerFactory));
 
-        if (isEnabled && loggerFactory == null)
+        if (loggerFactory != null)
+            log.A($"{nameof(LogEventBridge)} enabled using {loggerFactory.GetType().Name}.");
+        else if (isEnabled)
             log.W($"{nameof(LogEventBridge)} is enabled, but DNN has no {nameof(ILoggerFactory)} registered.");
     }
 
