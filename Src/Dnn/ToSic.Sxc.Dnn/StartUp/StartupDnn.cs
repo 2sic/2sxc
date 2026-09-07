@@ -1,6 +1,8 @@
 ﻿using DotNetNuke.Web.Api;
 using System.Configuration;
 using System.Web.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Code.Sys.HotBuild;
@@ -52,6 +54,8 @@ public class StartupDnn : IServiceRouteMapper
         // 2023-06-15 2dm - making sure that even if we use the global DI, we're always using it in a scope to never bleed global objects
         var transientSp = DnnStaticDi.GetGlobalScopedServiceProvider();
 
+        ConfigureLoggerBridge(transientSp, l);
+
         // now we should be able to instantiate registration of DB
         var connectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
         
@@ -83,6 +87,17 @@ public class StartupDnn : IServiceRouteMapper
 
         _alreadyConfigured = true;
         return l.ReturnTrue();
+    }
+
+    private static void ConfigureLoggerBridge(IServiceProvider serviceProvider, ILog log)
+    {
+        var isEnabled = bool.TryParse(ConfigurationManager.AppSettings[LogEventBridge.EnabledConfigurationKey], out var enabled)
+            && enabled;
+        var loggerFactory = isEnabled ? serviceProvider.GetService<ILoggerFactory>() : null;
+        LogEventBridge.SetSink(loggerFactory == null ? null : new DnnMicrosoftLoggerEventSink(loggerFactory));
+
+        if (isEnabled && loggerFactory == null)
+            log.W($"{nameof(LogEventBridge)} is enabled, but DNN has no {nameof(ILoggerFactory)} registered.");
     }
 
     /// <summary>

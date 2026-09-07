@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Oqtane.Infrastructure;
 using ToSic.Eav;
 using ToSic.Eav.Run.Startup;
@@ -93,6 +94,11 @@ public class OqtStartup : IServerStartup
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         var serviceProvider = app.ApplicationServices;
+
+        var loggerFactory = Configuration.GetValue<bool>(LogEventBridge.EnabledConfigurationKey)
+            ? serviceProvider.GetService<ILoggerFactory>()
+            : null;
+        LogEventBridge.SetSink(loggerFactory == null ? null : new OqtaneMicrosoftLoggerEventSink(loggerFactory));
 
         var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
         globalConfig.ConnectionString(Configuration.GetConnectionString("DefaultConnection"));
