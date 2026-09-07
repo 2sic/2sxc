@@ -37,10 +37,8 @@ namespace ToSic.Sxc.DataSources;
     NiceName = "Pages",
     Type = DataSourceType.Source,
     UiHint = "Pages in this site")]
-public class Pages: CustomDataSourceAdvanced
+public class Pages: CustomDataSource
 {
-    private readonly PagesDataSourceProvider _provider;
-
     #region Configuration properties
 
     /// <summary>
@@ -127,19 +125,17 @@ public class Pages: CustomDataSourceAdvanced
     [PrivateApi]
     public Pages(Dependencies services, PagesDataSourceProvider provider) : base(services, "CDS.Pages", connect: [provider])
     {
-        _provider = provider;
-
-        ProvideOut(GetPages);
+        ProvideOutRaw(() => GetPages(provider));
     }
     #endregion
 
-    private IImmutableList<IEntity> GetPages()
+    private IImmutableList<PageModelRaw> GetPages(PagesDataSourceProvider provider)
     {
-        var l = Log.Fn<IImmutableList<IEntity>>();
+        var l = Log.Fn<IImmutableList<PageModelRaw>>();
         Configuration.Parse();
 
         // Get pages from underlying system/provider
-        var pagesFromSystem = _provider.GetPagesInternal(
+        var pagesFromSystem = provider.GetPagesInternal(
             includeHidden: IncludeHidden,
             includeDeleted: IncludeDeleted,
             includeAdmin: IncludeAdmin,
@@ -152,10 +148,7 @@ public class Pages: CustomDataSourceAdvanced
         if (pagesFromSystem == null || pagesFromSystem.Count == 0)
             return l.Return([], "null/empty");
 
-        // Convert to Entity-Stream
-        var pageFactory = DataFactory.SpawnNew(options: PageModelRaw.Option);
-
-        var pages = pageFactory.Create(pagesFromSystem);
+        var pages = pagesFromSystem.ToImmutableOpt();
 
         return l.Return(pages, $"{pages.Count}");
         //// Try to add Navigation properties
