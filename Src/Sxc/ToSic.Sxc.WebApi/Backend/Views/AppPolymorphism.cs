@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
+using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Models;
 using ToSic.Sxc.Render.Polymorphism.Sys;
 
@@ -20,25 +21,24 @@ public class AppPolymorphism : CustomDataSource
     public AppPolymorphism(Dependencies services, IAppReaderFactory appReaders)
         : base(services, logName: "Sxc.PolyMo", connect: [appReaders])
     {
-        ProvideOut(() => AppConfig(appReaders));
+        ProvideOutRaw(() => AppConfig(appReaders));
     }
 
 
-    private IEnumerable<IEntity> AppConfig(IAppReaderFactory appReaders)
+    private IEnumerable<AppPolymorphismRaw> AppConfig(IAppReaderFactory appReaders)
     {
-        var l = Log.Fn<IEnumerable<IEntity>>($"App: {AppId}");
+        var l = Log.Fn<IEnumerable<AppPolymorphismRaw>>($"App: {AppId}");
 
         var poly = appReaders.Get(AppId).List
             .FirstModel<PolymorphismConfigurationModel>(options: new() { NullHandling = NullHandling.ReturnModel })!;
 
-        var data = DataFactory
-            .SpawnNew(new() { AutoId = false })
-            .Create(new Dictionary<string, object?>
-            {
-                { nameof(poly.Resolver), poly.Resolver },
-                { "TypeName", PolymorphismConfigurationModel.ContentTypeName },
-            }, id: poly.Id);
+        var data = new AppPolymorphismRaw(
+            Id: poly.Id,
+            Resolver: poly.Resolver,
+            TypeName: PolymorphismConfigurationModel.ContentTypeName);
 
         return l.Return([data], $"{poly}");
     }
+
+    private sealed record AppPolymorphismRaw(int Id, string? Resolver, string TypeName) : IRawEntityAutoConvert;
 }

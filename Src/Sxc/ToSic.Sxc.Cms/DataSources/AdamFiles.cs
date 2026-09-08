@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.DataSource.VisualQuery;
@@ -30,7 +31,7 @@ namespace ToSic.Sxc.DataSources;
 )]
 [PrivateApi("Was till v17 InternalApi_DoNotUse_MayChangeWithoutNotice(still wip / finishing specs etc.)")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamFiles : CustomDataSourceAdvanced
+public class AdamFiles : CustomDataSource
 {
     private readonly AdamDataSourceProvider<int, int> _provider;
 
@@ -69,23 +70,27 @@ public class AdamFiles : CustomDataSourceAdvanced
     {
         _provider = provider;
 
-        ProvideOut(GetInternal);
-        ProvideOut(GetFolders, "Folders");
-        ProvideOut(GetFiles, "Files");
+        ProvideOut(GetInternal, options: Options);
+        ProvideOut(GetFolders, name: "Folders", options: Options);
+        ProvideOut(GetFiles, name: "Files", options: Options);
     }
     #endregion
 
-    private IImmutableList<IEntity> GetFolders() => GetInternal()
-        .Where(e => e.Get<bool>("IsFolder"))
-        .ToImmutableOpt();
+    private DataFactoryOptions Options() => new() { AppId = AppId };
 
-    private IImmutableList<IEntity> GetFiles() => GetInternal()
-        .Where(e => !e.Get<bool>("IsFolder"))
-        .ToImmutableOpt();
+    private object GetFolders()
+        => GetInternal() is IImmutableList<AdamItemDataRaw> items
+            ? items.Where(e => e.IsFolder).ToImmutableOpt()
+            : GetInternal();
 
-    private IImmutableList<IEntity> GetInternal() => _getInternal.Get(() =>
+    private object GetFiles()
+        => GetInternal() is IImmutableList<AdamItemDataRaw> items
+            ? items.Where(e => !e.IsFolder).ToImmutableOpt()
+            : GetInternal();
+
+    private object GetInternal() => _getInternal.Get(() =>
     {
-        var l = Log.Fn<IImmutableList<IEntity>>(timer: true);
+        var l = Log.Fn<object>(timer: true);
         Configuration.Parse();
 
         // Make sure we have an In - otherwise error
@@ -97,13 +102,10 @@ public class AdamFiles : CustomDataSourceAdvanced
             filter: Filter);
         var find = _provider.GetInternal();
 
-        var adamFactory = DataFactory.SpawnNew(options: AdamItemDataRaw.Options with { AppId = AppId });
-
-        var entities = adamFactory.Create(source.SelectMany(o => find(o)));
-
-        return l.Return(entities, "ok");
+        var items = source.SelectMany(o => find(o)).ToImmutableOpt();
+        return l.Return(items, "ok");
     })!;
     
-    private readonly LazyGet<IImmutableList<IEntity>> _getInternal = new();
+    private readonly LazyGet<object> _getInternal = new();
 
 }

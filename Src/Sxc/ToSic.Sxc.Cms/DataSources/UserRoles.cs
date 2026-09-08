@@ -35,7 +35,7 @@ namespace ToSic.Sxc.DataSources;
     Type = DataSourceType.Source,
     ConfigurationType = "1b9fd9d1-dde0-40ad-bb66-5cd7f30de18d"
 )]
-public class UserRoles : CustomDataSourceAdvanced
+public class UserRoles : CustomDataSource
 {
     private readonly IUserRolesProvider _provider;
 
@@ -83,14 +83,14 @@ public class UserRoles : CustomDataSourceAdvanced
     {
         _provider = provider;
 
-        ProvideOut(GetList);
+        ProvideOutRaw(GetList);
     }
 
     #endregion
 
-    private IImmutableList<IEntity> GetList()
+    private IImmutableList<UserRoleModelRaw> GetList()
     {
-        var l = Log.Fn<IImmutableList<IEntity>>();
+        var l = Log.Fn<IImmutableList<UserRoleModelRaw>>();
         var roles = _provider.GetRoles()?.ToList();
         l.A($"found {roles?.Count} roles");
 
@@ -114,10 +114,7 @@ public class UserRoles : CustomDataSourceAdvanced
                 .Where(excludeRolesPredicate)
                 .ToList();
 
-        var rolesFactory = DataFactory.SpawnNew(new());
-
-        var result = rolesFactory.Create(roles);
-
+        var result = roles.ToImmutableOpt();
         return l.Return(result, $"found {result.Count} roles");
     }
 

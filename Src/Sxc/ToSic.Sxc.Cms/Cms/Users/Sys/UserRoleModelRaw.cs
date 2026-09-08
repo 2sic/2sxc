@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Cms.Users.Sys;
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [ContentTypeUse(Type = typeof(IUserRoleModel))]
-public record UserRoleModelRaw: IRawEntity, IRole, IUserRoleModel
+public record UserRoleModelRaw: IRawEntity, IRelationshipKeys, IRole, IUserRoleModel
 {
     #region IRawEntity
 
@@ -33,5 +33,7 @@ public record UserRoleModelRaw: IRawEntity, IRole, IUserRoleModel
     public DateTime Modified { get; init; } = DateTime.Now;
 
     public string Name { get; init; } = "unknown";
+
+    IEnumerable<object> IRelationshipKeys.RelationshipKeys => [$"{UserModelRaw.RoleRelationshipPrefix}{Id}"];
 
 }

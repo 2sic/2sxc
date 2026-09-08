@@ -1,8 +1,10 @@
 ﻿using System.Collections.Immutable;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 
 using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.DataSource.VisualQuery;
+using ToSic.Eav.Data.Sys.Entities.Sources;
 using ToSic.Sxc.Cms.Assets;
 using ToSic.Sxc.Cms.Assets.Sys;
 using ToSic.Sxc.DataSources.Sys.AppAssets;
@@ -45,7 +47,7 @@ namespace ToSic.Sxc.DataSources;
     UiHint = "Files and folders in the App folder")]
 [PublicApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppAssets: CustomDataSourceAdvanced
+public class AppAssets: CustomDataSource
 {
     private readonly AppAssetsDataSourceProvider _appAssetsSource;
 
@@ -90,92 +92,97 @@ public class AppAssets: CustomDataSourceAdvanced
     {
         _appAssetsSource = appAssetsSource;
 
-        ProvideOut(() => Get(DataSourceConstants.StreamDefaultName));
-        ProvideOut(() => Get(StreamFolders), StreamFolders);
-        ProvideOut(() => Get(StreamFiles), StreamFiles);
-        ProvideOut(() => Get(StreamAll), StreamAll);
+        ProvideOut(GetFiles, options: FilesOptions);
+        ProvideOut(GetFolders, name: StreamFolders, options: FoldersOptions);
+        ProvideOut(() => Out[DataSourceConstants.StreamDefaultName].List, StreamFiles);
+        ProvideOut(GetAll, StreamAll);
     }
     #endregion
 
-    /// <summary>
-    /// Mini-cache.
-    /// Reason is that we can only generate the streams together, so this ensures that after generating them once,
-    /// other streams requested at the same time won't re-trigger stream generation.
-    /// </summary>
-    private IImmutableList<IEntity> Get(string streamName)
-    {
-        // check in both values
-        var toCheck = RootFolder + " " + FileFilter;
-        if (toCheck.Contains(".."))
-            return Error.Create(title: "Invalid characters in RootFolder or FileFilter", message: "The sequence '..' is not allowed in the path or file filter.", streamName: streamName);
+    private readonly LazyLookup<object, IEntity> _relationships = new();
 
-        var all = GetAll();
-        return all.TryGetValue(streamName, out var stream)
-            ? stream()
-            : Error.TryGetOutFailed(name: streamName);
+    private DataFactoryOptions FilesOptions() => new()
+    {
+        AppId = AppId,
+        IdSeed = -1,
+        Relationships = _relationships,
+    };
+
+    private DataFactoryOptions FoldersOptions() => new()
+    {
+        AppId = AppId,
+        IdSeed = -100001,
+        Relationships = _relationships,
+    };
+
+    private object GetFiles()
+    {
+        if (InvalidPathOrFilter())
+            return InvalidPathError(DataSourceConstants.StreamDefaultName);
+
+        EnsureOtherStream(StreamFolders);
+        return Raw.Files;
     }
 
-    /// <summary>
-    /// Mini-cache.
-    /// Reason is that we can only generate the streams together, so this ensures that after generating them once,
-    /// other streams requested at the same time won't re-trigger stream generation.
-    /// </summary>
-    private IDictionary<string, Func<IImmutableList<IEntity>>> GetAll() => _all.Get(() =>
+    private object GetFolders()
     {
-        var (folders, files) = GetInternal();
-        return new(OrdinalIgnoreCase)
-        {
-            { DataSourceConstants.StreamDefaultName, () => files },
-            { StreamAll, () => folders.Concat(files).ToImmutableOpt() },
-            { StreamFolders, () => folders },
-            { StreamFiles, () => files }
-        };
-    })!;
-    private readonly LazyGet<Dictionary<string, Func<IImmutableList<IEntity>>>> _all = new();
+        if (InvalidPathOrFilter())
+            return InvalidPathError(StreamFolders);
 
-    /// <summary>
-    /// Get both the files and folders stream
-    /// </summary>
-    /// <returns></returns>
-    private (IImmutableList<IEntity> folders, IImmutableList<IEntity> files) GetInternal()
+        EnsureOtherStream(DataSourceConstants.StreamDefaultName);
+        return Raw.Folders;
+    }
+
+    private IEnumerable<IEntity> GetAll()
+        => Out[StreamFolders].List
+            .Concat(Out[DataSourceConstants.StreamDefaultName].List)
+            .ToImmutableOpt();
+
+    private bool InvalidPathOrFilter() => (RootFolder + " " + FileFilter).Contains("..");
+
+    private IImmutableList<IEntity> InvalidPathError(string streamName)
+        => Error.Create(
+            title: "Invalid characters in RootFolder or FileFilter",
+            message: "The sequence '..' is not allowed in the path or file filter.",
+            streamName: streamName);
+
+    private void EnsureOtherStream(string streamName)
     {
-        var l = Log.Fn<(IImmutableList<IEntity> folders, IImmutableList<IEntity> files)>(timer: true);
+        if (_preparingRelationships)
+            return;
+
+        try
+        {
+            _preparingRelationships = true;
+            _ = Out[streamName].List;
+        }
+        finally
+        {
+            _preparingRelationships = false;
+        }
+    }
+    private bool _preparingRelationships;
+
+    private (IImmutableList<FolderModelRaw> Folders, IImmutableList<FileModelRaw> Files) Raw
+        => _raw.Get(GetRaw)!;
+    private readonly LazyGet<(IImmutableList<FolderModelRaw> Folders, IImmutableList<FileModelRaw> Files)> _raw = new();
+
+    private (IImmutableList<FolderModelRaw> Folders, IImmutableList<FileModelRaw> Files) GetRaw()
+    {
+        var l = Log.Fn<(IImmutableList<FolderModelRaw>, IImmutableList<FileModelRaw>)>(timer: true);
 
         var specs = Specs with
         {
             AppId = Specs.AppId == int.MinValue ? AppId : Specs.AppId,
             ZoneId = Specs.ZoneId == int.MinValue ? ZoneId : Specs.ZoneId,
         };
-        
+
         _appAssetsSource.Configure(specs);
+        var (folders, files) = _appAssetsSource.GetAll();
 
-        // Get pages from underlying system/provider
-        var (rawFolders, rawFiles) = _appAssetsSource.GetAll();
-        if (!rawFiles.Any() && !rawFolders.Any())
-            return l.Return(([], []), "null/empty");
-
-        // Convert Folders to Entities
-        var folderFactory = DataFactory.SpawnNew(options: new()
-        {
-            AppId = AppId,
-            IdSeed = -100001,
-            Type = typeof(FolderModelRaw),
-        });
-        var folders = folderFactory.Create(rawFolders);
-
-        // Convert Files to Entities
-        var fileFactory = DataFactory.SpawnNew(options: new()
-        {
-            AppId = AppId,
-            IdSeed = -1,
-            Type = typeof(FileModelRaw),
-            // Make sure we share relationships source with folders, as files need folders and folders need files
-            Relationships = folderFactory.Relationships,
-        });
-        var files = fileFactory.Create(rawFiles);
-
-        return l.Return((folders, files), $"folders: {folders.Count}, files: {files.Count}");
+        var rawFolders = folders.ToImmutableOpt();
+        var rawFiles = files.ToImmutableOpt();
+        return l.Return((rawFolders, rawFiles), $"folders: {rawFolders.Count}, files: {rawFiles.Count}");
     }
-
 
 }
