@@ -52,8 +52,6 @@
       <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.Extensions.Caching.Abstractions.dll" />
       <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.Extensions.Caching.Memory.dll" />
       <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.Extensions.Configuration.Abstractions.dll" />
-      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.Extensions.Configuration.Binder.dll" />
-      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.Extensions.Configuration.dll" />
       <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.Extensions.Logging.Abstractions.dll" />
       <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.Extensions.Logging.dll" />
       <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.Extensions.Options.dll" />

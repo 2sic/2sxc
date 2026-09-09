@@ -132,8 +132,6 @@
       <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Caching.Abstractions.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Caching.Memory.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Configuration.Abstractions.dll" />
-      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Configuration.Binder.dll" />
-      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Configuration.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Logging.Abstractions.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Logging.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Options.dll" />

@@ -94,10 +94,12 @@ public class StartupDnn : IServiceRouteMapper
         var isEnabled = bool.TryParse(ConfigurationManager.AppSettings[LogEventBridge.EnabledConfigurationKey], out var enabled)
             && enabled;
         var loggerFactory = isEnabled ? serviceProvider.GetService<ILoggerFactory>() : null;
-        LogEventBridge.SetSink(loggerFactory == null ? null : new DnnMicrosoftLoggerEventSink(loggerFactory));
+        LogEventBridge.SetSink(loggerFactory == null ? null : new MicrosoftLoggerEventSink(loggerFactory));
+        var storeStatus = serviceProvider.GetService<ILogStoreLive>()?.Configure(
+            ConfigurationManager.AppSettings[LogStoreLive.StoreConfigurationKey], loggerFactory != null);
 
         if (loggerFactory != null)
-            log.A($"{nameof(LogEventBridge)} enabled using {loggerFactory.GetType().Name}.");
+            log.A($"{nameof(LogEventBridge)} enabled using {loggerFactory.GetType().Name}; {storeStatus}");
         else if (isEnabled)
             log.W($"{nameof(LogEventBridge)} is enabled, but DNN has no {nameof(ILoggerFactory)} registered.");
     }

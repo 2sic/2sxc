@@ -332,45 +332,33 @@
             <!-- Microsoft.Extensions.Configuration transitive dependency -->
             <assembly>
               <name>Microsoft.Extensions.Configuration.Abstractions.dll</name>
-              <!-- v2.1.1.0 -->
-              <version>2.1.1.18157</version>
-            </assembly>
-            <!-- Microsoft.Extensions.Logging transitive dependency -->
-            <assembly>
-              <name>Microsoft.Extensions.Configuration.Binder.dll</name>
-              <!-- v2.1.1.0 -->
-              <version>2.1.1.18157</version>
-            </assembly>
-            <!-- Microsoft.Extensions.Configuration.Binder transitive dependency -->
-            <assembly>
-              <name>Microsoft.Extensions.Configuration.dll</name>
-              <!-- v2.1.1.0 -->
-              <version>2.1.1.18157</version>
+              <!-- v2.2.0.0 -->
+              <version>2.2.0.18315</version>
             </assembly>
             <!-- Microsoft.Extensions.Logging transitive dependency -->
             <assembly>
               <name>Microsoft.Extensions.Logging.Abstractions.dll</name>
-              <!-- v2.1.1.0 -->
-              <version>2.1.1.18157</version>
+              <!-- v8.0.0.0 -->
+              <version>8.0.23.53103</version>
             </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
               <name>Microsoft.Extensions.Logging.dll</name>
-              <!-- v2.1.1.0 -->
-              <version>2.1.1.18157</version>
+              <!-- v8.0.0.0 -->
+              <version>8.0.23.53103</version>
             </assembly>
             <!-- Microsoft.Extensions.Caching.Memory transitive dependency -->
             <!-- Microsoft.Extensions.Logging transitive dependency -->
             <assembly>
               <name>Microsoft.Extensions.Options.dll</name>
-              <!-- v2.1.1.0 -->
-              <version>2.1.1.18157</version>
+              <!-- v8.0.0.0 -->
+              <version>8.0.23.53103</version>
             </assembly>
             <!-- Microsoft.Extensions.Options transitive dependency -->
             <assembly>
               <name>Microsoft.Extensions.Primitives.dll</name>
-              <!-- v2.1.1.0 -->
-              <version>2.1.1.18157</version>
+              <!-- v8.0.0.0 -->
+              <version>8.0.23.53103</version>
             </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
