@@ -1,4 +1,6 @@
 ﻿using Oqtane.Models;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Server.Context;
@@ -17,6 +19,8 @@ namespace ToSic.Sxc.Oqt.Server.Blocks;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
 {
+    private static readonly ActivitySource Activities = new("ToSic.2sxc.Module");
+
     #region Constructor and DI
 
     public OqtSxcViewBuilder(
@@ -27,6 +31,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
         ILogStore logStore,
         GlobalTypesCheck globalTypesCheck,
         IOutputCache outputCache,
+        ILoggerFactory loggerFactory,
         Generator<IBlockRenderer> blockBuilderGenerator)
         : base($"{OqtConstants.OqtLogPrefix}.Buildr", connect: [pageOutput, contextOfBlockEmpty, blockModuleEmpty, currentContextServiceForLookUps, globalTypesCheck, outputCache, pageOutput, blockBuilderGenerator])
     {
@@ -36,8 +41,9 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
         _globalTypesCheck = globalTypesCheck;
         OutputCache = outputCache;
         PageOutput = pageOutput;
+        _logger = loggerFactory.CreateLogger(MicrosoftLoggerEventSink.Category);
         _blockBuilderGenerator = blockBuilderGenerator;
-        logStore.Add("oqt-view", Log);
+        _logStoreEntry = logStore.Add("oqt-view", Log);
     }
 
     public Output.OqtPageOutput PageOutput { get; }
@@ -45,6 +51,8 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
     private readonly BlockOfModule _blockModuleEmpty;
     private readonly ISxcCurrentContextService _currentContextServiceForLookUps;
     private readonly GlobalTypesCheck _globalTypesCheck;
+    private readonly ILogger _logger;
+    private readonly LogStoreEntry _logStoreEntry;
     private readonly Generator<IBlockRenderer> _blockBuilderGenerator;
 
     #endregion
@@ -61,6 +69,16 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
         Page = page;
         Module = module;
         PreRender = preRender;
+        _logStoreEntry?.UpdateSpecs(new Dictionary<string, string>
+        {
+            ["SiteId"] = site.SiteId.ToString(),
+            ["PageId"] = page.PageId.ToString(),
+            ["ModuleId"] = module.ModuleId.ToString(),
+        });
+
+        using var execution = _logger.BeginExecution(Log, Activities, "Oqtane.Module.Render",
+            siteId: site.SiteId, pageId: page.PageId, moduleId: module.ModuleId);
+        _logger.LogTrace("Rendering Oqtane module {ModuleId} on page {PageId}", module.ModuleId, page.PageId);
 
         // Check for installation errors before even trying to build a view, and otherwise return this object if Refs are missing.
         if (RefsInstalledCheck.WarnIfRefsAreNotInstalled(out var oqtViewResultsDtoWarning))
