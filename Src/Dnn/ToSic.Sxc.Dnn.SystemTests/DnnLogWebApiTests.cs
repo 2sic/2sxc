@@ -48,6 +48,29 @@ public class DnnLogWebApiTests
         Null(Activity.Current);
     }
 
+    [Fact]
+    public async Task ExecuteActionFilterAsync_PropagatesException_ForDnnExceptionFilter()
+    {
+        var expected = new InvalidOperationException("Expected app API failure.");
+        var controllerContext = new HttpControllerContext
+        {
+            Controller = new TestController(),
+            Request = new(HttpMethod.Get, "https://example.test/api/test"),
+        };
+        var actionDescriptor = new ReflectedHttpActionDescriptor(
+            new HttpControllerDescriptor { ControllerType = typeof(TestController), ControllerName = "Test" },
+            typeof(TestController).GetMethod(nameof(TestController.Action))!);
+        var actionContext = new HttpActionContext(controllerContext, actionDescriptor);
+        var filter = new DnnLogWebApi();
+
+        var exception = await ThrowsAsync<InvalidOperationException>(() => filter.ExecuteActionFilterAsync(
+            actionContext,
+            CancellationToken.None,
+            () => Task.FromException<HttpResponseMessage>(expected)));
+
+        Same(expected, exception);
+    }
+
     private sealed class TestDnnLogWebApi(ILogger logger, ActivitySource source) : DnnLogWebApi
     {
         protected override IDisposable? BeginExecution(HttpActionContext actionContext)

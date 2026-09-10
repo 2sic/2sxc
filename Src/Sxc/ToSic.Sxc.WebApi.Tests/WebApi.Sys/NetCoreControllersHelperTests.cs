@@ -1,4 +1,5 @@
 #if NETCOREAPP
+using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -6,7 +7,9 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.WebApi.Sys;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 using static Xunit.Assert;
 
 namespace Tests.ToSic.ToSxc.WebApi.WebApi.Sys;
@@ -54,6 +57,46 @@ public class NetCoreControllersHelperTests
             await helper.OnActionExecutionAsync(executing, Next, "test");
 
         False(scopes.HasExecutionScope);
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_ReturnsCustomError_WhenExceptionFilterHandlesActionFailure()
+    {
+        using var loggerFactory = LoggerFactory.Create(_ => { });
+        using var services = new ServiceCollection()
+            .AddSingleton<ILogStore, FakeLogStore>()
+            .AddSingleton(loggerFactory)
+            .BuildServiceProvider();
+        var controller = new TestController();
+        var helper = new NetCoreControllersHelper(controller);
+        var descriptor = new ControllerActionDescriptor
+        {
+            ControllerName = "Test",
+            ActionName = "Action",
+            MethodInfo = typeof(NetCoreControllersHelperTests).GetMethod(nameof(Action))!,
+        };
+        var actionContext = new ActionContext(
+            new DefaultHttpContext { RequestServices = services },
+            new RouteData(),
+            descriptor);
+        var filters = new List<IFilterMetadata>();
+        var executing = new ActionExecutingContext(actionContext, filters, new Dictionary<string, object?>(), controller);
+        var exception = new HttpExceptionAbstraction(HttpStatusCode.NotFound, "Expected app API failure.");
+        ActionExecutedContext handled = null!;
+
+        Task<ActionExecutedContext> Next()
+        {
+            handled = new(actionContext, filters, controller) { Exception = exception };
+            new HttpResponseExceptionFilter().OnActionExecuted(handled);
+            return Task.FromResult(handled);
+        }
+
+        await helper.OnActionExecutionAsync(executing, Next, "test");
+
+        True(handled.ExceptionHandled);
+        var result = IsType<ObjectResult>(handled.Result);
+        Equal((int)HttpStatusCode.NotFound, result.StatusCode);
+        Equal(exception.Message, result.Value);
     }
 
     public static Task Action() => Task.CompletedTask;
