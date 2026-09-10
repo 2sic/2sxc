@@ -1,4 +1,6 @@
 ﻿using DotNetNuke.Entities.Modules;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 using System.Web.UI;
 using ToSic.Eav.Web.Sys;
 using ToSic.Sxc.Blocks.Sys;
@@ -18,6 +20,8 @@ namespace ToSic.Sxc.Dnn;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class View : PortalModuleBase, IActionable
 {
+    private static readonly ActivitySource Activities = new("ToSic.2sxc.Module");
+
     private static bool _loggedToBootLog;
 
     public View()
@@ -63,6 +67,9 @@ public partial class View : PortalModuleBase, IActionable
             .New(new() { Segment = "module", RootName = "Sxc.View" });
 
     private ILog Log => field ??= new Log("Sxc.View", RequestLogging.RootLog);
+
+    private ILogger MicrosoftLogger => field ??= GetService<ILoggerFactory>()
+        .CreateLogger(MicrosoftLoggerEventSink.Category);
 
     /// <summary>
     /// Log Timer to use everywhere we want to track the cumulative time.
@@ -134,6 +141,9 @@ public partial class View : PortalModuleBase, IActionable
     /// <param name="e"></param>
     protected void Page_PreRender(object sender, EventArgs e)
     {
+        using var execution = MicrosoftLogger.BeginExecution(Log, Activities, "Dnn.Module.Render",
+            siteId: PortalId, pageId: TabId, moduleId: ModuleId);
+
         var l = Log.Fn();
         var finalMessage = "";
         LogTimer.DoInTimer(() =>
