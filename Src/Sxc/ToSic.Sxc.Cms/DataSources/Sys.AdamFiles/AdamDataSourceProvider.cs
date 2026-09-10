@@ -19,7 +19,7 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
     public record Dependencies(LazySvc<AdamContext> AdamContext, ISxcAppCurrentContextService CtxService)
         : DependenciesBase(connect: [AdamContext, CtxService]);
 
-    protected AdamDataSourceProvider(Dependencies services) : base(services, $"{SxcLogName}.AdamDs")
+    public AdamDataSourceProvider(Dependencies services) : base(services, $"{SxcLogName}.AdamDs")
     { }
 
     public AdamDataSourceProvider<TFolderId, TFileId> Configure(
