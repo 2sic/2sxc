@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using System.Diagnostics;
 using Oqtane.Shared;
 using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -22,7 +20,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class EditController() : OqtStatefulControllerBase(RealController.LogSuffix), IEditController
 {
-    private static readonly ActivitySource Activities = new("ToSic.2sxc.WebApi");
     private RealController Real => GetService<RealController>();
 
 
@@ -32,16 +29,11 @@ public class EditController() : OqtStatefulControllerBase(RealController.LogSuff
     public async Task<EditLoadDto> Load([FromBody] List<ItemIdentifier> items, int appId)
     {
         var services = HttpContext.RequestServices;
-        var logger = services.GetRequiredService<ILoggerFactory>().CreateLogger(MicrosoftLoggerEventSink.Category);
-        using var execution = logger.BeginExecution(Log, Activities, "Edit.Load", appId: appId);
-        logger.LogTrace("Loading edit data for app {AppId} with {ItemCount} items", appId, items?.Count);
         // Legacy/Compare still need parent propagation into their original entry buffers.
         var backend = services.GetRequiredService<ILogStoreLive>().Mode == LogStoreMode.ILogger
             ? services.Build<RealController>()
             : Real;
-        var result = await backend.Load(items, appId);
-        logger.LogTrace("Loaded edit data for app {AppId}", appId);
-        return result;
+        return await backend.Load(items, appId);
     }
 
     [HttpPost]
