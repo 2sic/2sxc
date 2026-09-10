@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers;
 [SystemTextJsonFormatter] // This is needed to preserve compatibility with previous api usage
 [ServiceFilter(typeof(OptionalBodyFilter))] // Instead of global options.AllowEmptyInputInBodyModelBinding = true;
 [ServiceFilter(typeof(HttpResponseExceptionFilter))]
-public abstract class OqtControllerBase : ControllerBase, IHasLog, IActionFilter
+public abstract class OqtControllerBase : ControllerBase, IHasLog, IAsyncActionFilter
 {
     #region Setup
 
@@ -62,27 +62,18 @@ public abstract class OqtControllerBase : ControllerBase, IHasLog, IActionFilter
     /// </summary>
     /// <param name="context"></param>
     [NonAction]
-    public virtual void OnActionExecuting(ActionExecutingContext context)
-    {
-        var l = Log.Fn();
-        _helper.OnActionExecuting(context, HistoryLogGroup);
+    public virtual Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        => _helper.OnActionExecutionAsync(context, next, HistoryLogGroup, () =>
+        {
+            var l = Log.Fn();
 
-        // background processes can pass in an alias using the SiteState service
-        GetService<AliasResolver>().InitIfEmpty();
-            
-        if (_withBlockContext)
-            CtxHlp.InitializeBlockContext(context);
-        l.Done();
-    }
+            // background processes can pass in an alias using the SiteState service
+            GetService<AliasResolver>().InitIfEmpty();
 
-    /// <inheritdoc/>
-    [NonAction]
-    public virtual void OnActionExecuted(ActionExecutedContext context)
-    {
-        var l = Log.Fn();
-        _helper.OnActionExecuted(context);
-        l.Done();
-    }
+            if (_withBlockContext)
+                CtxHlp.InitializeBlockContext(context);
+            l.Done();
+        });
 
     protected TService GetService<TService>() where TService : class
         => _helper.GetService<TService>();

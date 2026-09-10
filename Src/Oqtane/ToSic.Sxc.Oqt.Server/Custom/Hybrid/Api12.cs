@@ -39,11 +39,12 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
     /// </summary>
     /// <param name="context"></param>
     [NonAction]
-    public override void OnActionExecuting(ActionExecutingContext context)
-    {
-        base.OnActionExecuting(context);
-        CtxHlp.OnActionExecutingEnd(context);
-    }
+    public override Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        => base.OnActionExecutionAsync(context, () =>
+        {
+            CtxHlp.OnActionExecutingEnd(context);
+            return next();
+        });
 
     #endregion
 

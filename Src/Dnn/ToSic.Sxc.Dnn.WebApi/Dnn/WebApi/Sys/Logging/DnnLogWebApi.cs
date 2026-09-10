@@ -1,5 +1,7 @@
 ﻿using System.Web.Http.Filters;
 using System.Diagnostics;
+using System.Net.Http;
+using System.Threading;
 using Microsoft.Extensions.Logging;
 using System.Web.Http.Controllers;
 using ToSic.Sxc.Dnn.Run;
@@ -7,33 +9,39 @@ using ToSic.Sxc.Dnn.Run;
 namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class DnnLogWebApi : ActionFilterAttribute
+public class DnnLogWebApi : FilterAttribute, IActionFilter
 {
     private static readonly ActivitySource Activities = new("ToSic.2sxc.WebApi");
 
     public override bool AllowMultiple => false;
 
     private const string AlreadyLogged = "LogDetailsAlreadyHappened";
-    private const string ExecutionScope = "2sxc.ILoggerExecutionScope";
-
-    public override void OnActionExecuting(HttpActionContext actionContext)
+    public async Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext,
+        CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
     {
-        base.OnActionExecuting(actionContext);
+        using var execution = BeginExecution(actionContext);
+        try
+        {
+            return await continuation();
+        }
+        finally
+        {
+            LogDetails(actionContext);
+        }
+    }
 
+    protected virtual IDisposable? BeginExecution(HttpActionContext actionContext)
+    {
         if (actionContext.ControllerContext.Controller is not DnnSxcControllerRoot controller)
-            return;
+            return null;
         var logger = controller.SysHlp.GetService<ILoggerFactory>().CreateLogger(MicrosoftLoggerEventSink.Category);
         var appId = actionContext.ActionArguments.TryGetValue("appId", out var value) && value is int id ? id : (int?)null;
         var operation = $"{actionContext.ControllerContext.ControllerDescriptor.ControllerName}.{actionContext.ActionDescriptor.ActionName}";
-        var scope = logger.BeginExecution(controller.Log, Activities, operation, appId: appId);
-        if (scope != null)
-            actionContext.Request.Properties[ExecutionScope] = scope;
+        return logger.BeginExecution(controller.Log, Activities, operation, appId: appId);
     }
 
-    public override void OnActionExecuted(HttpActionExecutedContext actionContext)
+    private static void LogDetails(HttpActionContext actionContext)
     {
-        base.OnActionExecuted(actionContext);
-
         try
         {
             var reqProps = actionContext.Request.Properties;
@@ -58,11 +66,6 @@ public class DnnLogWebApi : ActionFilterAttribute
         catch
         {
             DnnLogging.TryToReportLoggingFailure("WebApiLogDetails");
-        }
-        finally
-        {
-            if (actionContext.Request.Properties.TryGetValue(ExecutionScope, out var scope))
-                (scope as IDisposable)?.Dispose();
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Threading.Tasks;
 using ToSic.Sxc.WebApi.Sys;
 
 namespace IntegrationSamples.SxcEdit01.Controllers
@@ -46,22 +47,8 @@ namespace IntegrationSamples.SxcEdit01.Controllers
         /// </summary>
         /// <param name="context"></param>
         [NonAction]
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            base.OnActionExecuting(context);
-            _helper.OnActionExecuting(context, HistoryLogGroup);
-        }
-
-        /// <summary>
-        /// Make sure we stop the timer and do some minor fixes
-        /// </summary>
-        /// <param name="context"></param>
-        [NonAction]
-        public override void OnActionExecuted(ActionExecutedContext context)
-        {
-            base.OnActionExecuted(context);
-            _helper.OnActionExecuted(context);
-        }
+        public override Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+            => _helper.OnActionExecutionAsync(context, next, HistoryLogGroup);
 
         /// <summary>
         /// The RealController which is the full backend of this controller.
