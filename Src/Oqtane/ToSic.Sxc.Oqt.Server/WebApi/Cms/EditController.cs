@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using Oqtane.Shared;
 using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sys.Logging;
 using RealController = ToSic.Sxc.Backend.Cms.EditControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
@@ -27,14 +25,7 @@ public class EditController() : OqtStatefulControllerBase(RealController.LogSuff
     // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
     [AllowAnonymous]   // will check security internally, so assume no requirements
     public async Task<EditLoadDto> Load([FromBody] List<ItemIdentifier> items, int appId)
-    {
-        var services = HttpContext.RequestServices;
-        // Legacy/Compare still need parent propagation into their original entry buffers.
-        var backend = services.GetRequiredService<ILogStoreLive>().Mode == LogStoreMode.ILogger
-            ? services.Build<RealController>()
-            : Real;
-        return await backend.Load(items, appId);
-    }
+        => await Real.Load(items, appId);
 
     [HttpPost]
     // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]

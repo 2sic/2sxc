@@ -10,11 +10,8 @@ public class EditControllerReal(
     LazySvc<EditSaveBackend> saveBackendLazy,
     LazySvc<HyperlinkBackend> linkBackendLazy,
     LazySvc<AppViewPickerBackend> appViewPickerBackendLazy,
-    ILogStoreLive store,
     ILoggerFactory loggerFactory)
-    : ServiceBase("Api.EditRl", connect: store.Mode == LogStoreMode.ILogger
-        ? [saveBackendLazy, linkBackendLazy, appViewPickerBackendLazy]
-        : [loadBackend, saveBackendLazy, linkBackendLazy, appViewPickerBackendLazy]),
+    : ServiceBase("Api.EditRl", connect: [loadBackend, saveBackendLazy, linkBackendLazy, appViewPickerBackendLazy]),
         IEditController
 {
     public const string LogSuffix = "Edit";
