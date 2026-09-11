@@ -74,28 +74,33 @@ public record PageModelRaw: IPageModel, IRawEntityConvertible
     IRawEntityConverter IRawEntityConvertible.GetConverter() => Converter;
 
     private static IRawEntityConverter Converter { get; } =
-        new RawEntityConverterFactory<PageModelRaw>((source, _) => new RawEntity
+        new RawEntityConverterFactory<PageModelRaw>((source, _) => new PageRaw(source)
         {
             Id = source.Id,
             Guid = source.Guid,
             Created = source.Created,
             Modified = source.Modified,
-            Values = new Dictionary<string, object?>
-            {
-                { nameof(Title), source.Title },
-                { nameof(Name), source.Name },
-                { nameof(ParentId), source.ParentId },
-                { nameof(IsNavigation), source.IsNavigation },
-                { nameof(Path), source.Path },
-                { nameof(Url), source.Url },
-                { nameof(IsClickable), source.IsClickable },
-                { nameof(Order), source.Order },
-                { nameof(IsDeleted), source.IsDeleted },
-                { nameof(Level), source.Level },
-                { nameof(HasChildren), source.HasChildren },
-                { nameof(LinkTarget), source.LinkTarget },
-                { nameof(IPageModel.Children), new RawRelationship { Keys = [$"{ParentPrefix}{source.Id}"] } }
-            },
             RelationshipKeys = [$"{ParentPrefix}{source.ParentId}"]
         });
+
+    private sealed record PageRaw(PageModelRaw Source) : RawEntity
+    {
+        protected override IDictionary<string, object?> GetValues() =>
+            new Dictionary<string, object?>
+            {
+                { nameof(Title), Source.Title },
+                { nameof(Name), Source.Name },
+                { nameof(ParentId), Source.ParentId },
+                { nameof(IsNavigation), Source.IsNavigation },
+                { nameof(Path), Source.Path },
+                { nameof(Url), Source.Url },
+                { nameof(IsClickable), Source.IsClickable },
+                { nameof(Order), Source.Order },
+                { nameof(IsDeleted), Source.IsDeleted },
+                { nameof(Level), Source.Level },
+                { nameof(HasChildren), Source.HasChildren },
+                { nameof(LinkTarget), Source.LinkTarget },
+                { nameof(IPageModel.Children), new RawRelationship { Keys = [$"{ParentPrefix}{Source.Id}"] } }
+            };
+    }
 }

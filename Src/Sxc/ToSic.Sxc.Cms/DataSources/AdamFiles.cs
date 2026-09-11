@@ -2,6 +2,7 @@
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Sys;
+using ToSic.Eav.DataSource.Sys.Errors;
 using ToSic.Eav.DataSource.VisualQuery;
 
 // Important Info to people working with this
@@ -70,42 +71,49 @@ public class AdamFiles : CustomDataSource
     {
         _provider = provider;
 
-        ProvideOut(GetInternal, options: Options);
-        ProvideOut(GetFolders, name: "Folders", options: Options);
-        ProvideOut(GetFiles, name: "Files", options: Options);
+        ProvideOutRaw(() => Streams.All, options: Options);
+        ProvideOutRaw(() => Streams.Folders, name: "Folders", options: Options);
+        ProvideOutRaw(() => Streams.Files, name: "Files", options: Options);
     }
     #endregion
 
     private DataFactoryOptions Options() => new() { AppId = AppId };
 
-    private object GetFolders()
-        => GetInternal() is IImmutableList<AdamItemDataRaw> items
-            ? items.Where(e => e.IsFolder).ToImmutableOpt()
-            : GetInternal();
+    private StreamResults Streams => _streams ??= BuildStreams();
+    private StreamResults? _streams;
 
-    private object GetFiles()
-        => GetInternal() is IImmutableList<AdamItemDataRaw> items
-            ? items.Where(e => !e.IsFolder).ToImmutableOpt()
-            : GetInternal();
-
-    private object GetInternal() => _getInternal.Get(() =>
+    private StreamResults BuildStreams()
     {
-        var l = Log.Fn<object>(timer: true);
+        var l = Log.Fn<StreamResults>(timer: true);
         Configuration.Parse();
 
         // Make sure we have an In - otherwise error
         var source = TryGetIn();
         if (source is null)
-            return l.Return(Error.TryGetInFailed(), "error");
+        {
+            var failed = new ResultOrError<IEnumerable<AdamItemDataRaw>>(false, null, Error.TryGetInFailed());
+            return l.Return(new(failed, failed, failed), "error");
+        }
 
         _provider.Configure(appId: AppId, entityIds: EntityIds, entityGuids: EntityGuids, fields: Fields,
             filter: Filter);
         var find = _provider.GetInternal();
 
         var items = source.SelectMany(o => find(o)).ToImmutableOpt();
-        return l.Return(items, "ok");
-    })!;
-    
-    private readonly LazyGet<object> _getInternal = new();
+        var folders = items.Where(item => item.IsFolder).ToImmutableOpt();
+        var files = items.Where(item => !item.IsFolder).ToImmutableOpt();
+
+        return l.Return(new(
+            new(true, items),
+            new(true, folders),
+            new(true, files)
+        ), $"all: {items.Count}, folders: {folders.Count}, files: {files.Count}");
+    }
+
+    private sealed record StreamResults(
+        ResultOrError<IEnumerable<AdamItemDataRaw>> All,
+        ResultOrError<IEnumerable<AdamItemDataRaw>> Folders,
+        ResultOrError<IEnumerable<AdamItemDataRaw>> Files
+    );
 
 }

@@ -3,6 +3,7 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 
 using ToSic.Eav.DataSource.Sys;
+using ToSic.Eav.DataSource.Sys.Errors;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Data.Sys.Entities.Sources;
 using ToSic.Sxc.Cms.Assets;
@@ -92,8 +93,8 @@ public class AppAssets: CustomDataSource
     {
         _appAssetsSource = appAssetsSource;
 
-        ProvideOut(GetFiles, options: FilesOptions);
-        ProvideOut(GetFolders, name: StreamFolders, options: FoldersOptions);
+        ProvideOutRaw(GetFiles, options: FilesOptions);
+        ProvideOutRaw(GetFolders, name: StreamFolders, options: FoldersOptions);
         ProvideOut(() => Out[DataSourceConstants.StreamDefaultName].List, StreamFiles);
         ProvideOut(GetAll, StreamAll);
     }
@@ -115,22 +116,22 @@ public class AppAssets: CustomDataSource
         Relationships = _relationships,
     };
 
-    private object GetFiles()
+    private ResultOrError<IEnumerable<FileModelRaw>> GetFiles()
     {
         if (InvalidPathOrFilter())
-            return InvalidPathError(DataSourceConstants.StreamDefaultName);
+            return new(false, null, InvalidPathError(DataSourceConstants.StreamDefaultName));
 
         EnsureOtherStream(StreamFolders);
-        return Raw.Files;
+        return new(true, Raw.Files);
     }
 
-    private object GetFolders()
+    private ResultOrError<IEnumerable<FolderModelRaw>> GetFolders()
     {
         if (InvalidPathOrFilter())
-            return InvalidPathError(StreamFolders);
+            return new(false, null, InvalidPathError(StreamFolders));
 
         EnsureOtherStream(DataSourceConstants.StreamDefaultName);
-        return Raw.Folders;
+        return new(true, Raw.Folders);
     }
 
     private IEnumerable<IEntity> GetAll()
