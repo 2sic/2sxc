@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers;
 [SystemTextJsonFormatter] // This is needed to preserve compatibility with previous api usage
 [ServiceFilter(typeof(OptionalBodyFilter))] // Instead of global options.AllowEmptyInputInBodyModelBinding = true;
 [ServiceFilter(typeof(HttpResponseExceptionFilter))]
-public abstract class OqtControllerBase : ControllerBase, IHasLog, IAsyncActionFilter
+public abstract class OqtControllerBase : ControllerBase, IHasLog, IActionFilter, IAsyncActionFilter
 {
     #region Setup
 
@@ -63,17 +63,26 @@ public abstract class OqtControllerBase : ControllerBase, IHasLog, IAsyncActionF
     /// <param name="context"></param>
     [NonAction]
     public virtual Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
-        => _helper.OnActionExecutionAsync(context, next, HistoryLogGroup, () =>
-        {
-            var l = Log.Fn();
+        => _helper.OnActionExecutionAsync(context, next, HistoryLogGroup,
+            () => OnActionExecuting(context), OnActionExecuted);
 
-            // background processes can pass in an alias using the SiteState service
-            GetService<AliasResolver>().InitIfEmpty();
+    /// <summary>Compatibility hook for custom controllers, invoked inside the execution scope.</summary>
+    [NonAction]
+    public virtual void OnActionExecuting(ActionExecutingContext context)
+    {
+        var l = Log.Fn();
 
-            if (_withBlockContext)
-                CtxHlp.InitializeBlockContext(context);
-            l.Done();
-        });
+        // background processes can pass in an alias using the SiteState service
+        GetService<AliasResolver>().InitIfEmpty();
+
+        if (_withBlockContext)
+            CtxHlp.InitializeBlockContext(context);
+        l.Done();
+    }
+
+    /// <summary>Compatibility hook for custom controllers, invoked before disposing the execution scope.</summary>
+    [NonAction]
+    public virtual void OnActionExecuted(ActionExecutedContext context) { }
 
     protected TService GetService<TService>() where TService : class
         => _helper.GetService<TService>();

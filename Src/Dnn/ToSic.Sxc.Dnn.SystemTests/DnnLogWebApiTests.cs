@@ -12,17 +12,22 @@ namespace ToSic.Sxc.Dnn;
 
 public class DnnLogWebApiTests
 {
-    [Fact]
-    public async Task ExecuteActionFilterAsync_ClearsExecution_AfterCancellation()
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    public async Task ExecuteActionFilterAsync_ClearsExecution_AfterCancellationOrShortCircuit(bool cancel, bool listen)
     {
         using var source = new ActivitySource("DnnLogWebApiTests");
         using var listener = new ActivityListener
         {
-            ShouldListenTo = candidate => candidate == source,
+            ShouldListenTo = candidate => listen && candidate == source,
             Sample = (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllData,
         };
         ActivitySource.AddActivityListener(listener);
-        using var loggerFactory = LoggerFactory.Create(_ => { });
+        var scopes = new ScopeTrackingProvider();
+        using var loggerFactory = LoggerFactory.Create(builder => builder.AddProvider(scopes));
         var filter = new TestDnnLogWebApi(loggerFactory.CreateLogger("test"), source);
         var controller = new TestController();
         var controllerContext = new HttpControllerContext
@@ -34,18 +39,28 @@ public class DnnLogWebApiTests
             new HttpControllerDescriptor { ControllerType = typeof(TestController), ControllerName = "Test" },
             typeof(TestController).GetMethod(nameof(TestController.Action))!);
         var actionContext = new HttpActionContext(controllerContext, actionDescriptor);
+        var previousActivity = Activity.Current;
+        var response = new HttpResponseMessage(HttpStatusCode.Forbidden);
 
         async Task<HttpResponseMessage> Next()
         {
-            NotNull(Activity.Current);
+            True(scopes.HasExecutionScope);
+            if (listen)
+                NotNull(Activity.Current);
             await Task.Yield();
-            throw new OperationCanceledException();
+            if (cancel)
+                throw new OperationCanceledException();
+            return response;
         }
 
-        await ThrowsAsync<OperationCanceledException>(() => filter.ExecuteActionFilterAsync(actionContext,
-            CancellationToken.None, Next));
+        if (cancel)
+            await ThrowsAsync<OperationCanceledException>(() => filter.ExecuteActionFilterAsync(actionContext,
+                CancellationToken.None, Next));
+        else
+            Same(response, await filter.ExecuteActionFilterAsync(actionContext, CancellationToken.None, Next));
 
-        Null(Activity.Current);
+        False(scopes.HasExecutionScope);
+        Same(previousActivity, Activity.Current);
     }
 
     [Fact]
@@ -80,5 +95,33 @@ public class DnnLogWebApiTests
     private sealed class TestController : global::System.Web.Http.ApiController
     {
         public HttpResponseMessage Action() => new(HttpStatusCode.OK);
+    }
+
+    private sealed class ScopeTrackingProvider : ILoggerProvider
+    {
+        private readonly IExternalScopeProvider _scopes = new LoggerExternalScopeProvider();
+        public bool HasExecutionScope
+        {
+            get
+            {
+                var found = false;
+                _scopes.ForEachScope((scope, _) =>
+                {
+                    if (scope is IEnumerable<KeyValuePair<string, object>> values)
+                        found |= values.Any(pair => pair.Key == LogExecution.AmbientLogIdKey);
+                }, 0);
+                return found;
+            }
+        }
+
+        public ILogger CreateLogger(string categoryName) => new ScopeLogger(_scopes);
+        public void Dispose() { }
+
+        private sealed class ScopeLogger(IExternalScopeProvider scopes) : ILogger
+        {
+            public IDisposable BeginScope<TState>(TState state) where TState : notnull => scopes.Push(state);
+            public bool IsEnabled(LogLevel level) => true;
+            public void Log<TState>(LogLevel level, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter) { }
+        }
     }
 }

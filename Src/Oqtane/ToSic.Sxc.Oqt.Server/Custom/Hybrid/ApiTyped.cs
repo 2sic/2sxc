@@ -43,12 +43,11 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     /// </summary>
     /// <param name="context"></param>
     [NonAction]
-    public override Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
-        => base.OnActionExecutionAsync(context, () =>
-        {
-            CtxHlp.OnActionExecutingEnd(context);
-            return next();
-        });
+    public override void OnActionExecuting(ActionExecutingContext context)
+    {
+        base.OnActionExecuting(context);
+        CtxHlp.OnActionExecutingEnd(context);
+    }
 
     [PrivateApi] public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel16;
 

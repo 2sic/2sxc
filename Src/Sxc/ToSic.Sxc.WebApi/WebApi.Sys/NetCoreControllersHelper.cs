@@ -24,12 +24,20 @@ public class NetCoreControllersHelper(ControllerBase parent) : ICanGetService
 
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next,
-        string historyLogGroup, Action? beforeAction = null)
+        string historyLogGroup, Action? beforeAction = null, Action<ActionExecutedContext>? afterAction = null)
     {
         using var execution = OnActionExecuting(context, historyLogGroup);
         beforeAction?.Invoke();
+        // Match MVC: a controller that short-circuits its own before hook gets no after hook.
+        if (context.Result != null)
+        {
+            _actionTimerWrap.Done("short-circuited");
+            _actionTimerWrap = null;
+            return;
+        }
         var executed = await next();
         OnActionExecuted(executed);
+        afterAction?.Invoke(executed);
     }
 
     private IDisposable? OnActionExecuting(ActionExecutingContext context, string historyLogGroup)
