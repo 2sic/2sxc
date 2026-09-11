@@ -24,7 +24,7 @@ public class StartupDnn9 : IDnnStartup
         // Older DNN versions therefore need this fallback; adding it on newer DNN would write each event twice.
         if (!DnnHasMicrosoftLogging())
             services.AddLogging(logging => logging
-                .AddFilter<DnnLoggerProvider>("ToSic.2sxc", LogLevel.Trace)
+                .AddFilter<DnnLoggerProvider>("ToSic.2sxc", LogLevel.Warning)
                 .AddProvider(new DnnLoggerProvider()));
 
         // Give it the Dnn 9 Global Service Provider
