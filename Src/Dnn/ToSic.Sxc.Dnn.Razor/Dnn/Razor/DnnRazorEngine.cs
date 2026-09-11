@@ -66,12 +66,12 @@ internal class DnnRazorEngine(
 
     private OutputFragment DnnRenderImplementation(RazorComponentBase webpage, RenderSpecs specs)
     {
-        ILogCall<(TextWriter writer, List<Exception> exceptions)> l = Log.Fn<(TextWriter, List<Exception>)>();
+        var l = Log.Fn<OutputFragment>();
         var (writer, exceptions) = razorCompiler.Render(webpage, new StringWriter(), specs);
-        return new ()
+        return l.ReturnAsOk(new ()
         {
             Html = writer.ToString(),
             ExceptionsOrNull = exceptions
-        };
+        });
     }
 }
