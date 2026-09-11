@@ -16,21 +16,22 @@ public interface IDataService
 {
     #region CreateDataSource - new in v15 - make sure it's copied in identical form to IDynamicCode, ...
 
-    /// <summary>
-    /// Spawn a new <see cref="IDataService"/> with specific configuration.
-    /// Uses the [Spawn New convention](xref:NetCode.Conventions.SpawnNew).
-    /// </summary>
-    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    /// <param name="appIdentity"></param>
-    /// <param name="zoneId"></param>
-    /// <param name="appId"></param>
-    /// <returns></returns>
-    [PrivateApi]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    IDataService SpawnNew(NoParamOrder npo = default,
-        IAppIdentity? appIdentity = default,
-        int zoneId = default,
-        int appId = default);
+    // #DropSpawnNew
+    ///// <summary>
+    ///// Spawn a new <see cref="IDataService"/> with specific configuration.
+    ///// Uses the [Spawn New convention](xref:NetCode.Conventions.SpawnNew).
+    ///// </summary>
+    ///// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    ///// <param name="appIdentity"></param>
+    ///// <param name="zoneId"></param>
+    ///// <param name="appId"></param>
+    ///// <returns></returns>
+    //[PrivateApi("Being deprecated")]
+    //[ShowApiWhenReleased(ShowApiMode.Never)]
+    //IDataService SpawnNew(NoParamOrder npo = default,
+    //    IAppIdentity? appIdentity = default,
+    //    int zoneId = default,
+    //    int appId = default);
 
     /// <summary>
     /// Get the App DataSource containing the App Data.
