@@ -144,7 +144,7 @@ public partial class View : PortalModuleBase, IActionable
         using var execution = MicrosoftLogger.BeginExecution(Log, Activities, "Dnn.Module.Render",
             siteId: PortalId, pageId: TabId, moduleId: ModuleId);
 
-        var l = Log.Fn();
+        var l = LogTimer.Fn();
         var finalMessage = "";
         LogTimer.DoInTimer(() =>
         {
