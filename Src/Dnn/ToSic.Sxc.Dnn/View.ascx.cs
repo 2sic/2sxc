@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Dnn;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class View : PortalModuleBase, IActionable
 {
-    private static readonly ActivitySource Activities = new("ToSic.2sxc.Module");
+    private static readonly ActivitySource Activities = new(LogExecution.ActivitySourceName, LogExecution.ActivitySourceVersion);
 
     private static bool _loggedToBootLog;
 

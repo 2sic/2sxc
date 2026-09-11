@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
 {
-    private static readonly ActivitySource Activities = new("ToSic.2sxc.Module");
+    private static readonly ActivitySource Activities = new(LogExecution.ActivitySourceName, LogExecution.ActivitySourceVersion);
 
     #region Constructor and DI
 

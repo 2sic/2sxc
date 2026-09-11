@@ -12,7 +12,7 @@ namespace ToSic.Sxc.WebApi.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class NetCoreControllersHelper(ControllerBase parent) : ICanGetService
 {
-    private static readonly ActivitySource Activities = new("ToSic.2sxc.WebApi");
+    private static readonly ActivitySource Activities = new(LogExecution.ActivitySourceName, LogExecution.ActivitySourceVersion);
 
     public ControllerBase Parent { get; } = parent;
     public ILog? LogOrNull { get; } = (parent as IHasLog)?.Log;
