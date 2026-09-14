@@ -210,10 +210,11 @@ public partial class View : PortalModuleBase, IActionable
                 _dnnClientResources?.AddEverything(renderResult?.Features);
         });
 
+        l.Done();
+
         // Mini workaround: We must briefly start the timer again, so that the Done() call will stop and propagate the value to the proper place
         LogTimer.Timer.Start();
         LogTimer.Done(IsError ? "⚠️" : finalMessage);
-        l.Done();
     }
 
     private IRenderResult RenderViewAndGatherJsCssSpecs(bool useLightspeed)
