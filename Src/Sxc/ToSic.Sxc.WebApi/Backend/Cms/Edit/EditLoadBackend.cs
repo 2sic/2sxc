@@ -40,7 +40,7 @@ public class EditLoadBackend(
 {
     public async Task<EditLoadDto> Load(int appId, List<ItemIdentifier> items)
     {
-        var l = Log.Fn<EditLoadDto>($"load many a#{appId}, items⋮{items.Count}");
+        using var l = Log.Fn<EditLoadDto>($"load many a#{appId}, items⋮{items.Count}");
 
         var appContext = ctxService.GetExistingAppOrSet(appId);
 

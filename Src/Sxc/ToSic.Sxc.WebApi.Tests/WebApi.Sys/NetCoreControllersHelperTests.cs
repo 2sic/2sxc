@@ -108,9 +108,18 @@ public class NetCoreControllersHelperTests
 
     private sealed class FakeLogStore : ILogStore
     {
-        public LogStoreEntry? Add(string segment, ILog log) => null;
+        private readonly LogStoreLive _store = CreateStore();
 
-        public LogStoreEntry? ForceAdd(string key, ILog log) => null;
+        private static LogStoreLive CreateStore()
+        {
+            var store = new LogStoreLive();
+            store.Configure("ILogger", bridgeEnabled: true);
+            return store;
+        }
+
+        public LogStoreEntry? Add(string segment, ILog log) => _store.Add(segment, log);
+
+        public LogStoreEntry? ForceAdd(string key, ILog log) => _store.ForceAdd(key, log);
     }
 
     private sealed class ScopeTrackingProvider : ILoggerProvider, ISupportExternalScope

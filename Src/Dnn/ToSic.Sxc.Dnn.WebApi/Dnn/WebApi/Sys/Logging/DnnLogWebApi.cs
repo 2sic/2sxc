@@ -37,7 +37,8 @@ public class DnnLogWebApi : FilterAttribute, IActionFilter
         var logger = controller.SysHlp.GetService<ILoggerFactory>().CreateLogger(MicrosoftLoggerEventSink.Category);
         var appId = actionContext.ActionArguments.TryGetValue("appId", out var value) && value is int id ? id : (int?)null;
         var operation = $"{actionContext.ControllerContext.ControllerDescriptor.ControllerName}.{actionContext.ActionDescriptor.ActionName}";
-        return logger.BeginExecution(controller.Log, Activities, operation, appId: appId);
+        actionContext.Request.Properties.TryGetTyped(EavLogKey, out LogStoreEntry logStoreEntry);
+        return logger.BeginExecution(logStoreEntry, Activities, operation, appId: appId);
     }
 
     private static void LogDetails(HttpActionContext actionContext)

@@ -76,7 +76,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
             ["ModuleId"] = module.ModuleId.ToString(),
         });
 
-        using var execution = _logger.BeginExecution(Log, Activities, "Oqtane.Module.Render",
+        using var execution = _logger.BeginExecution(_logStoreEntry, Activities, "Oqtane.Module.Render",
             siteId: site.SiteId, pageId: page.PageId, moduleId: module.ModuleId);
         _logger.LogTrace("Rendering Oqtane module {ModuleId} on page {PageId}", module.ModuleId, page.PageId);
 
@@ -87,7 +87,8 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
         OqtViewResultsDto ret = null;
         IRenderResult renderResult = null;
         var finalMessage = "";
-        LogTimer.DoInTimer(() => Log.Do(timer: true, action: () =>
+        using var logTimer = LogTimer;
+        logTimer.DoInTimer(() => Log.Do(timer: true, action: () =>
         {
             #region Lightspeed output caching
 
@@ -136,7 +137,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
                     .ToList(), // convert NameValueCollection to (query) string because can't serialize NameValueCollection to json
             };
         }));
-        LogTimer.Done(renderResult?.IsError ?? false ? "⚠️" : finalMessage);
+        logTimer.Done(renderResult?.IsError ?? false ? "⚠️" : finalMessage);
 
         // Check if there is less than 50 global types and warn user to restart application
         // HACK: in v14.03 this check was moved bellow LogTimer.DoInTimer because we got exception (probably timing issue)

@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Backend.InPage;
-using Microsoft.Extensions.Logging;
 
 namespace ToSic.Sxc.Backend.Cms;
 
@@ -9,18 +8,14 @@ public class EditControllerReal(
     LazySvc<EditLoadBackend> loadBackend,
     LazySvc<EditSaveBackend> saveBackendLazy,
     LazySvc<HyperlinkBackend> linkBackendLazy,
-    LazySvc<AppViewPickerBackend> appViewPickerBackendLazy,
-    ILoggerFactory loggerFactory)
+    LazySvc<AppViewPickerBackend> appViewPickerBackendLazy)
     : ServiceBase("Api.EditRl", connect: [loadBackend, saveBackendLazy, linkBackendLazy, appViewPickerBackendLazy]),
         IEditController
 {
     public const string LogSuffix = "Edit";
-    private readonly ILogger _logger = loggerFactory.CreateLogger(MicrosoftLoggerEventSink.Category);
-
     public async Task<EditLoadDto> Load(List<ItemIdentifier> items, int appId)
     {
-        var l = Log.Fn<EditLoadDto>($"appId:{appId}, items:{items?.Count}");
-        using var invocation = _logger.BeginInvocation(l);
+        using var l = Log.Fn<EditLoadDto>($"appId:{appId}, items:{items?.Count}");
         try
         {
             var result = await loadBackend.Value.Load(appId, items!);

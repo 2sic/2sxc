@@ -91,7 +91,7 @@ public partial class View : PortalModuleBase, IActionable
 
         LogTimer.DoInTimer(() =>
         {
-            var l = Log.Fn(message: nameof(Page_Load), timer: true);
+            using var l = Log.Fn(message: nameof(Page_Load), timer: true);
             // todo: this should be dynamic at some future time, because normally once it's been checked, it wouldn't need checking again
             var checkPortalIsReady = true;
 
@@ -141,12 +141,13 @@ public partial class View : PortalModuleBase, IActionable
     /// <param name="e"></param>
     protected void Page_PreRender(object sender, EventArgs e)
     {
-        using var execution = MicrosoftLogger.BeginExecution(Log, Activities, "Dnn.Module.Render",
+        using var execution = MicrosoftLogger.BeginExecution(RequestLogging.StoreEntry, Activities, "Dnn.Module.Render",
             siteId: PortalId, pageId: TabId, moduleId: ModuleId);
 
-        var l = LogTimer.Fn();
+        using var logTimer = LogTimer;
+        using var l = logTimer.Fn();
         var finalMessage = "";
-        LogTimer.DoInTimer(() =>
+        logTimer.DoInTimer(() =>
         {
             // #lightspeed
             var cachedResult = OutputCache.Existing?.Data;
@@ -194,7 +195,7 @@ public partial class View : PortalModuleBase, IActionable
                         phOutput.Controls.Add(new LiteralControl(renderResult.Html));
 
                     // #Lightspeed
-                    var lLightSpeed = Log.Fn(message: "Lightspeed", timer: true);
+                    using var lLightSpeed = Log.Fn(message: "Lightspeed", timer: true);
 
                     // Do not save cache hits again. Cached entries may already carry compressed HTML,
                     // so saving them again would just trigger another decompress/recompress cycle.
@@ -213,13 +214,13 @@ public partial class View : PortalModuleBase, IActionable
         l.Done();
 
         // Mini workaround: We must briefly start the timer again, so that the Done() call will stop and propagate the value to the proper place
-        LogTimer.Timer.Start();
-        LogTimer.Done(IsError ? "⚠️" : finalMessage);
+        logTimer.Timer.Start();
+        logTimer.Done(IsError ? "⚠️" : finalMessage);
     }
 
     private IRenderResult RenderViewAndGatherJsCssSpecs(bool useLightspeed)
     {
-        var l = Log.Fn<IRenderResult>(message: $"module {ModuleId} on page {TabId}", timer: true);
+        using var l = Log.Fn<IRenderResult>(message: $"module {ModuleId} on page {TabId}", timer: true);
 
         var result = new RenderResult();
         TryCatchAndLogToDnn(() =>

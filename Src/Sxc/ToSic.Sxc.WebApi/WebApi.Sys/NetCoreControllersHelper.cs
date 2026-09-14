@@ -27,17 +27,24 @@ public class NetCoreControllersHelper(ControllerBase parent) : ICanGetService
         string historyLogGroup, Action? beforeAction = null, Action<ActionExecutedContext>? afterAction = null)
     {
         using var execution = OnActionExecuting(context, historyLogGroup);
-        beforeAction?.Invoke();
-        // Match MVC: a controller that short-circuits its own before hook gets no after hook.
-        if (context.Result != null)
+        try
         {
-            _actionTimerWrap.Done("short-circuited");
-            _actionTimerWrap = null;
-            return;
+            beforeAction?.Invoke();
+            // Match MVC: a controller that short-circuits its own before hook gets no after hook.
+            if (context.Result != null)
+            {
+                _actionTimerWrap.Done("short-circuited");
+                return;
+            }
+            var executed = await next();
+            OnActionExecuted(executed);
+            afterAction?.Invoke(executed);
         }
-        var executed = await next();
-        OnActionExecuted(executed);
-        afterAction?.Invoke(executed);
+        finally
+        {
+            _actionTimerWrap?.Dispose();
+            _actionTimerWrap = null;
+        }
     }
 
     private IDisposable? OnActionExecuting(ActionExecutingContext context, string historyLogGroup)
@@ -46,14 +53,13 @@ public class NetCoreControllersHelper(ControllerBase parent) : ICanGetService
         _serviceProvider = context.HttpContext.RequestServices;
 
         // Add to Log History
-        if (LogOrNull != null)
-            GetService<ILogStore>().Add(historyLogGroup, LogOrNull);
+        var logStoreEntry = LogOrNull == null ? null : GetService<ILogStore>().Add(historyLogGroup, LogOrNull);
 
         if (context.ActionDescriptor is ControllerActionDescriptor action)
         {
             var appId = context.ActionArguments.TryGetValue("appId", out var value) && value is int id ? id : (int?)null;
             var logger = GetService<ILoggerFactory>().CreateLogger(MicrosoftLoggerEventSink.Category);
-            var execution = logger.BeginExecution(LogOrNull, Activities, $"{action.ControllerName}.{action.ActionName}", appId: appId);
+            var execution = logger.BeginExecution(logStoreEntry, Activities, $"{action.ControllerName}.{action.ActionName}", appId: appId);
             _actionTimerWrap = LogOrNull.Fn($"action executing url: {context.HttpContext.Request.GetDisplayUrl()}", timer: true);
             return execution;
         }
@@ -82,7 +88,6 @@ public class NetCoreControllersHelper(ControllerBase parent) : ICanGetService
         }
 
         _actionTimerWrap.Done("ok");
-        _actionTimerWrap = null; // just to mark that Action Delegate is not in use any more, so GC can collect it
     }
 
     public TService GetService<TService>() where TService : class => ServiceProvider.Build<TService>(LogOrNull);
