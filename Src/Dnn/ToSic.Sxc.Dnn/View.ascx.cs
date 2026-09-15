@@ -66,7 +66,7 @@ public partial class View : PortalModuleBase, IActionable
         ??= ServiceProvider.Build<Generator<HttpRequestLoggingScoped, HttpRequestLoggingScoped.Opts>>()
             .New(new() { Segment = "module", RootName = "Sxc.View" });
 
-    private ILog Log => field ??= new Log("Sxc.View", RequestLogging.RootLog);
+    private ILog Log => RequestLogging.RootLog;
 
     private ILogger MicrosoftLogger => field ??= GetService<ILoggerFactory>()
         .CreateLogger(MicrosoftLoggerEventSink.Category);
@@ -141,8 +141,7 @@ public partial class View : PortalModuleBase, IActionable
     /// <param name="e"></param>
     protected void Page_PreRender(object sender, EventArgs e)
     {
-        using var execution = MicrosoftLogger.BeginExecution(RequestLogging.StoreEntry, Activities, "Dnn.Module.Render",
-            siteId: PortalId, pageId: TabId, moduleId: ModuleId);
+        using var execution = MicrosoftLogger.BeginExecution(RequestLogging.StoreEntry, Activities, "Dnn.Module.Render", siteId: PortalId, pageId: TabId, moduleId: ModuleId);
 
         using var logTimer = LogTimer;
         using var l = logTimer.Fn();
