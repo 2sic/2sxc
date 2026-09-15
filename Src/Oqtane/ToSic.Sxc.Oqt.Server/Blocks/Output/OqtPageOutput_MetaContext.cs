@@ -16,7 +16,7 @@ partial class OqtPageOutput
     /// <returns></returns>
     public string ContextMetaContents()
     {
-        var l = Log.Fn<string>();
+        using var l = Log.Fn<string>();
         var pageId = Parent?.Page.PageId ?? -1;
         var siteRoot = GetSiteRoot(siteState.Alias);
         var rvt = AntiForgeryToken();

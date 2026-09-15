@@ -17,7 +17,7 @@ partial class View
 
     private ModuleActionCollection GetModuleActions()
     {
-        var l = Log.Fn<ModuleActionCollection>();
+        using var l = Log.Fn<ModuleActionCollection>();
         try
         {
             // Don't offer options if it's from another portal

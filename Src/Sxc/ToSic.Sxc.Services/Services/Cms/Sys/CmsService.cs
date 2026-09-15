@@ -11,7 +11,7 @@ using ToSic.Sxc.Sys.ExecutionContext;
 namespace ToSic.Sxc.Services.Cms.Sys;
 
 internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
-    : ServiceWithContext($"{SxcLogName}.CmsSrv", connect: [stringWysiwyg]), ICmsService
+    : ServiceWithContext($"{SxcLogName}.CmsSrv"), ICmsService
 {
     [field: AllowNull, MaybeNull]
     private Generator<CmsServiceStringWysiwyg> StringWysiwygGen => field
@@ -29,7 +29,7 @@ internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
     )
     {
         var field = thing as IField;
-        var l = Log.Fn<IHtmlTag>($"Field: {field?.Name}");
+        using var l = Log.Fn<IHtmlTag>($"Field: {field?.Name}");
         // Initialize the container helper, as we'll use it a few times
         var cntHelper = new CmsServiceContainerHelper(ExCtx, field, container, classes, toolbar, Log);
 
@@ -72,7 +72,7 @@ internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
 
     private IHtmlTag HtmlString(IContentType contentType, IContentTypeField fieldDef, IField field, string? value, object? imageSettings, CmsServiceContainerHelper cntHelper, bool debug)
     {
-        var l = Log.Fn<IHtmlTag>($"Attribute: {fieldDef.Name}");
+        using var l = Log.Fn<IHtmlTag>($"Attribute: {fieldDef.Name}");
         var inputType = fieldDef.InputType;
         if (debug) l.A($"Field type is: {ValueTypes.String}:{inputType}");
 
@@ -93,7 +93,7 @@ internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
 
     private static string? ProcessTweaks(Func<ITweakInput<string>, ITweakInput<string>>? tweak, string? value, ILog? log)
     {
-        var l = log.Fn<string?>();
+        using var l = log.Fn<string?>();
         if (tweak == null)
             return l.Return(value, "no tweaks");
 

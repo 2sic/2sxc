@@ -10,7 +10,7 @@ public class ListActivityReplace(
     AppWorkQuick<WorkFieldList> workFieldList,
     Generator<IPagePublishing> publishing,
     ISxcCurrentContextService ctxService
-) : ServiceBase("Act.LsRpOp", connect: [workFieldList, ctxService, publishing])
+) : ServiceBase("Act.LsRpOp")
 {
     public record Options(
         Guid Guid,
@@ -22,7 +22,7 @@ public class ListActivityReplace(
 
     public void Replace(Options options)
     {
-        var l = Log.Fn($"options:{options}");
+        using var l = Log.Fn($"options:{options}");
 
         // use dnn versioning - this is always part of page
         var context = ctxService.BlockContextRequired();
@@ -35,7 +35,7 @@ public class ListActivityReplace(
     {
         var (guid, part, index, entityId, add) = options;
         var isContentPair = ViewParts.ContentLower.EqualsInsensitive(part);
-        var l = Log.Fn($"target:{guid}, {nameof(part)}:{part}, {nameof(isContentPair)}: {isContentPair}, {nameof(index)}:{index}, {nameof(entityId)}:{entityId}");
+        using var l = Log.Fn($"target:{guid}, {nameof(part)}:{part}, {nameof(isContentPair)}: {isContentPair}, {nameof(index)}:{index}, {nameof(entityId)}:{entityId}");
 
         var entity = context.AppReaderRequired.GetDraftOrPublished(guid)
                      ?? throw l.Done(new Exception($"Can't find item '{guid}'"));

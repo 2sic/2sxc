@@ -24,7 +24,7 @@ public class ImgResizeLinker(
     LazySvc<ICss> koi,
     LazySvc<ISite> siteLazy,
     ResizeDimensionGenerator dimGen)
-    : ServiceBase($"{SxcLogName}.ImgRes", connect: [features, koi, dimGen, siteLazy]), ICanDebug
+    : ServiceBase($"{SxcLogName}.ImgRes"), ICanDebug
 {
     public bool Debug { get; set; }
 
@@ -54,7 +54,7 @@ public class ImgResizeLinker(
         IExecutionContext? executionContext = default
     )
     {
-        var l = (Debug ? Log : null).Fn<string?>($"{nameof(url)}:{url}");
+        using var l = (Debug ? Log : null).Fn<string?>($"{nameof(url)}:{url}");
 
         // Modern case - all settings have already been prepared, the other settings are ignored
         if (settings is ResizeSettings.ResizeSettings resizeSettings)
@@ -74,7 +74,7 @@ public class ImgResizeLinker(
         
     internal OneResize ImgResizeSettings(string? url, ResizeSettings.ResizeSettings settings, IHasMetadata? field, string? overrideFramework = null)
     {
-        var l = Log.Fn<OneResize>();
+        using var l = Log.Fn<OneResize>();
         var srcSetSettings = settings.Find(SrcSetType.Img, useFactors: UseFactors, overrideFramework ?? Koi.Framework);
         return l.Return(ConstructUrl(url, settings, srcSetSettings, field), "no srcset");
     }
@@ -82,7 +82,7 @@ public class ImgResizeLinker(
 
     internal string? SrcSet(string? url, ResizeSettings.ResizeSettings settings, SrcSetType srcSetType, IHasMetadata? field = null, string? overrideFramework = null)
     {
-        var l = Log.Fn<string?>();
+        using var l = Log.Fn<string?>();
 
         var srcSetSettings = settings.Find(srcSetType, useFactors: UseFactors, overrideFramework ?? Koi.Framework);
 
@@ -163,7 +163,7 @@ public class ImgResizeLinker(
     // ReSharper disable once UnusedMethodReturnValue.Local
     private bool ImgAddIfRelevant(NameValueCollection resizer, string? key, object? value, string irrelevant = "")
     {
-        var l = (Debug ? Log : null).Fn<bool>();
+        using var l = (Debug ? Log : null).Fn<bool>();
         if (key == null || value == null)
             return l.ReturnFalse($"Won't add '{key}', since key or value are null");
 

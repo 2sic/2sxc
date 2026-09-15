@@ -10,7 +10,7 @@ internal class SaveDataUpdateValidator(ILog parentLog) : ValidatorBase(parentLog
 {
     internal (int? ResetId, HttpExceptionAbstraction? Exception) IfUpdateValidateAndCorrectIds(WorkEntities workEntities, int count, IEntity newEntity)
     {
-        var l = Log.Fn<(int?, HttpExceptionAbstraction?)>();
+        using var l = Log.Fn<(int?, HttpExceptionAbstraction?)>();
         var previousEntity = workEntities.Get(newEntity.EntityId)
                              ?? workEntities.Get(newEntity.EntityGuid);
 
@@ -40,7 +40,7 @@ internal class SaveDataUpdateValidator(ILog parentLog) : ValidatorBase(parentLog
 
     private void CompareTypes(int count, IEntity originalEntity, IEntity newEntity)
     {
-        var l = Log.Fn($"ids:{newEntity.Type.NameId}/{originalEntity.Type.NameId}");
+        using var l = Log.Fn($"ids:{newEntity.Type.NameId}/{originalEntity.Type.NameId}");
         if (originalEntity.Type.NameId != newEntity.Type.NameId)
             Add($"entity type mismatch on {count}");
         l.Done();
@@ -48,7 +48,7 @@ internal class SaveDataUpdateValidator(ILog parentLog) : ValidatorBase(parentLog
 
     private void CompareIdentities(int count, IEntity originalEntity, IEntity newEntity)
     {
-        var l = Log.Fn($"ids:{newEntity.EntityId}/{originalEntity.EntityId}");
+        using var l = Log.Fn($"ids:{newEntity.EntityId}/{originalEntity.EntityId}");
         if (originalEntity.EntityId != newEntity.EntityId)
             Add($"entity ID mismatch on {count} - {newEntity.EntityId}/{originalEntity.EntityId}");
 
@@ -60,7 +60,7 @@ internal class SaveDataUpdateValidator(ILog parentLog) : ValidatorBase(parentLog
 
     private void CompareAttributes(int count, IEntity original, IEntity ent)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
         if (original.Attributes.Count != ent.Attributes.Count)
             Add($"entity {count} has different amount " +
                 $"of attributes {ent.Attributes.Count} " +

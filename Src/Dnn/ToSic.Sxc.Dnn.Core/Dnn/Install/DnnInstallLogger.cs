@@ -10,7 +10,7 @@ internal class DnnInstallLogger: ServiceBase
 
     public DnnInstallLogger(): base("Dnn.InstLg")
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
         _saveUnimportantDetails = DnnEnvironmentInstaller.SaveUnimportantDetails;
         l.A($"{nameof(_saveUnimportantDetails)}: {_saveUnimportantDetails}");
         l.Done();
@@ -18,7 +18,7 @@ internal class DnnInstallLogger: ServiceBase
 
     internal void CloseLogFiles()
     {
-        var l = Log.Fn($"Closing: {DateTime.Now.Ticks}");
+        using var l = Log.Fn($"Closing: {DateTime.Now.Ticks}");
         if (_fileStreamWriterCached == null)
             return;
 
@@ -34,7 +34,7 @@ internal class DnnInstallLogger: ServiceBase
 
     internal StreamWriter OpenLogFiles(int attempts)
     {
-        var l = Log.Fn<StreamWriter>($"Opening: {DateTime.Now.Ticks}; {nameof(attempts)}: {attempts}");
+        using var l = Log.Fn<StreamWriter>($"Opening: {DateTime.Now.Ticks}; {nameof(attempts)}: {attempts}");
         EnsureLogDirectoryExists();
 
         var logFileNameBase = DnnConstants.LogDirectory +
@@ -74,7 +74,7 @@ internal class DnnInstallLogger: ServiceBase
 
     internal void LogStep(string version, string message, bool isImportant = true)
     {
-        var l = Log.Fn($"{nameof(version)} '{version}': {message}");
+        using var l = Log.Fn($"{nameof(version)} '{version}': {message}");
         var niceLine = FormatLogMessage(version, message);
 
         if (!isImportant && !_saveUnimportantDetails)
@@ -90,7 +90,7 @@ internal class DnnInstallLogger: ServiceBase
 
     internal void LogVersionCompletedToPreventRerunningTheUpgrade(string version)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
         EnsureLogDirectoryExists();
 
         var logFilePath = HostingEnvironment.MapPath(DnnConstants.LogDirectory + version + ".resources")!;

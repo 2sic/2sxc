@@ -1,4 +1,4 @@
-﻿using Oqtane.Managers;
+using Oqtane.Managers;
 using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
@@ -16,7 +16,7 @@ internal class OqtUsersProvider(
     LazySvc<OqtSecurity> oqtSecurity,
     LazySvc<IUserRoleRepository> userRolesRepository,
     LazySvc<UserManager> userManager)
-    : ServiceBase("Oqt.Users", connect: [siteState, oqtSecurity, userRolesRepository, userManager]), IUsersProvider
+    : ServiceBase("Oqt.Users"), IUsersProvider
 {
     #region Configuration
     private UsersGetSpecs _specs;
@@ -37,7 +37,7 @@ internal class OqtUsersProvider(
 
     public IEnumerable<UserModelRaw> GetUsers(UsersGetSpecs specs)
     {
-        var l = Log.Fn<List<UserModelRaw>>();
+        using var l = Log.Fn<List<UserModelRaw>>();
         _specs = specs;
 
         l.A($"Portal Id {SiteId}");

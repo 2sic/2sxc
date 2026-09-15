@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Render.Output.Sys;
+using ToSic.Sxc.Render.Output.Sys;
 using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
@@ -22,7 +22,7 @@ public class PageChangeSummary(
     LazySvc<IAssetsExtractor> resourceExtractor,
     LazySvc<IRequirementsService> requirements,
     IModulesOutputService modulesOutputService)
-    : Services_ServiceBase(SxcLogName + "PgChSm", connect: [requirements, resourceExtractor, modulesOutputService])
+    : Services_ServiceBase(SxcLogName + "PgChSm")
 {
     /// <summary>
     /// Finalize the page and get all changes such as header modifications etc.
@@ -34,7 +34,7 @@ public class PageChangeSummary(
     /// <returns></returns>
     public RenderResult FinalizeAndGetAllChanges(int moduleId, IPageServiceShared pss, RenderSpecs specs, bool enableEdit)
     {
-        var l = Log.Fn<RenderResult>(timer: true);
+        using var l = Log.Fn<RenderResult>(timer: true);
         if (enableEdit)
             pss.PageFeatures.Activate([
                 SxcPageFeatures.ToolbarsInternal.NameId,
@@ -98,7 +98,7 @@ public class PageChangeSummary(
 
     private (List<ClientAsset> newAssets, List<PageFeatureFromSettings> rest) ConvertSettingsAssetsIntoReal(List<PageFeatureFromSettings> featuresFromSettings, RenderSpecs specs)
     {
-        var l = Log.Fn<(List<ClientAsset> newAssets, List<PageFeatureFromSettings> rest)>($"{featuresFromSettings.Count}");
+        using var l = Log.Fn<(List<ClientAsset> newAssets, List<PageFeatureFromSettings> rest)>($"{featuresFromSettings.Count}");
         var newAssets = new List<ClientAsset>();
         var withUpdatedHtml = featuresFromSettings
             .Select(settingFeature =>

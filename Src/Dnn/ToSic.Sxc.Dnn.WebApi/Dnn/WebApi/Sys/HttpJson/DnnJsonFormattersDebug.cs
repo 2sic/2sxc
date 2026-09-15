@@ -6,7 +6,7 @@ internal class DnnJsonFormattersDebug
 
     internal static void DumpFormattersToLog(ILog log, string phase, MediaTypeFormatterCollection formatters)
     {
-        var l = log.Fn($"dump:{phase}");
+        using var l = log.Fn($"dump:{phase}");
         try
         {
             // Intro

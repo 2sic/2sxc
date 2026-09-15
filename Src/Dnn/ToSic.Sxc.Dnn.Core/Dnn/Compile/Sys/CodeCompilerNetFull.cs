@@ -11,11 +11,11 @@ internal class CodeCompilerNetFull(
     IRoslynBuildManager roslynBuildManager,
     LazySvc<SourceAnalyzer> sourceAnalyzer,
     LazySvc<IAppJsonConfigurationService> appJson)
-    : CodeCompiler(serviceProvider, connect: [roslynBuildManager, sourceAnalyzer, appJson])
+    : CodeCompiler(serviceProvider)
 {
     public override AssemblyResult GetAssembly(string relativePath, string className, HotBuildSpec spec)
     {
-        var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {nameof(className)}: '{className}'; {spec}", timer: true);
+        using var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {nameof(className)}: '{className}'; {spec}", timer: true);
 
         AssemblyResult ReportError(Exception ex, string additionalInfo)
         {

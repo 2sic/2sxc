@@ -14,7 +14,7 @@ internal class ExtensionValidationHelper(ExtensionManifestService manifestSvc, I
     internal (string? error, Dictionary<string, LockValidationResult> lockResults, Dictionary<string, ManifestValidationResult> manifestResults) ValidateCandidateSubfolders(string tempDir,
         string[] candidateDirs)
     {
-        var l = Log.Fn<(string? error, Dictionary<string, LockValidationResult> lockResults, Dictionary<string, ManifestValidationResult> manifestResults)>();
+        using var l = Log.Fn<(string? error, Dictionary<string, LockValidationResult> lockResults, Dictionary<string, ManifestValidationResult> manifestResults)>();
 
         var issues = new List<string>();
         var lockResults = new Dictionary<string, LockValidationResult>(StringComparer.OrdinalIgnoreCase);
@@ -67,7 +67,7 @@ internal class ExtensionValidationHelper(ExtensionManifestService manifestSvc, I
 
     internal ManifestValidationResult ValidateExtensionJsonFile(string extensionJsonFilePath)
     {
-        var l = Log.Fn<ManifestValidationResult>();
+        using var l = Log.Fn<ManifestValidationResult>();
 
         try
         {
@@ -92,7 +92,7 @@ internal class ExtensionValidationHelper(ExtensionManifestService manifestSvc, I
     // Validate lock file against a single candidate folder only
     internal LockValidationResult ValidateLockFile(string lockFilePath, string tempDir, string candidatePath)
     {
-        var l = Log.Fn<LockValidationResult>();
+        using var l = Log.Fn<LockValidationResult>();
 
         var lockRead = ReadLockFile(lockFilePath, l);
         if (!lockRead.Success || lockRead.ExpectedWithHash == null || lockRead.AllowedFiles == null)

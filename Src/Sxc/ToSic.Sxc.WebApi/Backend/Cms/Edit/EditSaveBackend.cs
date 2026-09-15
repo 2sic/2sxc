@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.Build.Sys;
+using ToSic.Eav.Data.Build.Sys;
 using ToSic.Eav.Data.Processing;
 using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.Serialization.Sys;
@@ -23,11 +23,11 @@ public class EditSaveBackend(
     IDataSourcesService dataSourcesService,
     LazySvc<DataValidatorContentTypeDataStore> valContentTypeDataStore,
     DataAssembler dataAssembler)
-    : ServiceBase("Cms.SaveBk", connect: [appCtxSvc, pagePublishing, workEntities, ctxService, jsonSerializer, saveSecurity, saveBackendHelper, dataSourcesService, dataAssembler, valContentTypeDataStore])
+    : ServiceBase("Cms.SaveBk")
 {
     public async Task<Dictionary<Guid, int>> Save(int appId, EditSaveDto package, bool partOfPage)
     {
-        var l = Log.Fn<Dictionary<Guid, int>>($"save started with a#{appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
+        using var l = Log.Fn<Dictionary<Guid, int>>($"save started with a#{appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
 
         // The context should be from the block if there is one, because it affects saving/publishing
         // Basically it can result in things being saved draft or titles being updated

@@ -12,7 +12,7 @@ internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
 
     internal ImagePropertiesExtracted ExtractImageProperties(string imgTag, IFolder folder)
     {
-        var l = Log.Fn<ImagePropertiesExtracted>($"old: '{imgTag}'");
+        using var l = Log.Fn<ImagePropertiesExtracted>($"old: '{imgTag}'");
         string? src = null;
         string? factor = null;
         object? width = default;

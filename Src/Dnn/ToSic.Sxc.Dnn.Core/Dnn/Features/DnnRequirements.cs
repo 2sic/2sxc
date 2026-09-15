@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Dnn.Features;
 /// </remarks>
 /// <param name="requirements"></param>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class DnnRequirements(IRequirementsService requirements) : ServiceBase("Eng.DnnReq", connect: [requirements])
+public class DnnRequirements(IRequirementsService requirements) : ServiceBase("Eng.DnnReq")
 {
     internal bool RequirementsMet() 
         => !RequirementsStatus.SafeAny();
@@ -27,7 +27,7 @@ public class DnnRequirements(IRequirementsService requirements) : ServiceBase("E
 
     internal OutputFragmentWithAssets GetMessageForRequirements()
     {
-        var l = Log.Fn<OutputFragmentWithAssets>();
+        using var l = Log.Fn<OutputFragmentWithAssets>();
 
         if (RequirementsMet())
             return l.ReturnNull("all seems ok");

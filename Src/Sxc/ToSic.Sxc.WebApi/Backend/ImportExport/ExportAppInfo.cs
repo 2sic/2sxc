@@ -16,11 +16,11 @@ public class ExportAppInfo(
     AppWorkChain<WorkEntities> workEntities,
     ExportHelper exportHelper,
     ISite site
-) : ServiceBase("Bck.Export", connect: [workEntities, appCtxSvc, workViews, zoneMapper, site, exportHelper])
+) : ServiceBase("Bck.Export")
 {
     public AppExportInfoModel GetAppInfo(IAppIdentity appIdentity)
     {
-        var l = Log.Fn<AppExportInfoModel>($"get app info for app: {appIdentity.Show()}");
+        using var l = Log.Fn<AppExportInfoModel>($"get app info for app: {appIdentity.Show()}");
         var (appReader, zipExport) = exportHelper.GetZipExportAndCheckZoneSwitchPermissions(appIdentity);
     
         var ctxNew = appCtxSvc.ContextNew(appReader);

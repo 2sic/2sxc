@@ -1,4 +1,4 @@
-﻿using DotNetNuke.Entities.Portals;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Security.Membership;
 using DotNetNuke.Security.Roles;
@@ -18,7 +18,7 @@ internal class DnnUsersProvider(
     IPortalController portalController,
     IApplicationStatusInfo appStatus,
     IPortalGroupController portalGroupController)
-    : ServiceBase("Dnn.Users", connect: [dnnSecurity]), IUsersProvider
+    : ServiceBase("Dnn.Users"), IUsersProvider
 {
     #region Configuration
     private UsersGetSpecs _specs;
@@ -37,7 +37,7 @@ internal class DnnUsersProvider(
 
     public IEnumerable<UserModelRaw> GetUsers(UsersGetSpecs specs)
     {
-        var l = Log.Fn<IEnumerable<UserModelRaw>>($"specs:{specs}");
+        using var l = Log.Fn<IEnumerable<UserModelRaw>>($"specs:{specs}");
         _specs = specs;
         try
         {
@@ -52,7 +52,7 @@ internal class DnnUsersProvider(
 
     private IEnumerable<UserModelRaw> GetUsersInternal()
     {
-        var l = Log.Fn<List<UserModelRaw>>();
+        using var l = Log.Fn<List<UserModelRaw>>();
         var siteId = PortalSettings.Current?.PortalId ?? NullInteger;
         l.A($"Portal Id {siteId}");
         try

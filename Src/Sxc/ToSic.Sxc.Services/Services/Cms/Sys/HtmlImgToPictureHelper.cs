@@ -6,7 +6,7 @@ using ToSic.Sys.Utils;
 namespace ToSic.Sxc.Services.Cms.Sys;
 
 internal class HtmlImgToPictureHelper(CmsServiceImageExtractor imageExtractor)
-    : ServiceWithContext("Cms.StrWys", connect: [imageExtractor])
+    : ServiceWithContext("Cms.StrWys")
 {
     [field: AllowNull, MaybeNull]
     internal IImageService ImageService => field

@@ -30,19 +30,14 @@ public class ImportContent(
     AppCachePurger appCachePurger,
     LazySvc<ISysFeaturesService> features,
     AppWorkQuick<WorkEntitySave> workEntSave)
-    : ServiceBase("Bck.Export",
-        connect:
-        [
-            envLogger, importerLazy, xmlImportWithFilesLazy, zipImport, jsonSerializerGenerator, globalConfiguration,
-            appReaders, appCachePurger, userLazy, features, workEntSave
-        ])
+    : ServiceBase("Bck.Export")
 {
 
     protected readonly AppCachePurger AppCachePurger = appCachePurger;
 
     public ImportResultDto Import(int zoneId, int appId, string fileName, Stream stream, string defaultLanguage)
     {
-        var l = Log.Fn<ImportResultDto>();
+        using var l = Log.Fn<ImportResultDto>();
         var result = new ImportResultDto();
 
         var allowSystemChanges = userLazy.Value.IsSystemAdmin;
@@ -77,7 +72,7 @@ public class ImportContent(
 
     public ImportResultDto ImportJsonFiles(int zoneId, int appId, List<FileUploadDto> files, string defaultLanguage)
     {
-        var l = Log.Fn<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
+        using var l = Log.Fn<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
         try
         {
             // 0. Verify it's json etc.

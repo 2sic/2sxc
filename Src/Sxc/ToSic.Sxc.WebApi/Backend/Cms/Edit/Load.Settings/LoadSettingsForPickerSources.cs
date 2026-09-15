@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.ContentTypes.Fields.Sys;
+using ToSic.Eav.Data.ContentTypes.Fields.Sys;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Settings;
@@ -11,7 +11,7 @@ internal class LoadSettingsForPickerSources() : LoadSettingsProviderBase($"{SxcL
 {
     public List<IContentType> GetContentTypes(LoadSettingsProviderParameters parameters)
     {
-        var l = Log.Fn<List<IContentType>>();
+        using var l = Log.Fn<List<IContentType>>();
 
         // Find all attributes which show a picker
         var pickerAttributes = parameters.ContentTypes

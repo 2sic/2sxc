@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Cms.Users.Sys;
+using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sxc.DataSources;
 
 // ReSharper disable once CheckNamespace
@@ -11,7 +11,7 @@ public class MockUserRolesProvider() : ServiceBase("DS.MockRoles"), IUserRolesPr
 {
     public IEnumerable<UserRoleModelRaw> GetRoles()
     {
-        var l = Log.Fn<IEnumerable<UserRoleModelRaw>>();
+        using var l = Log.Fn<IEnumerable<UserRoleModelRaw>>();
         const int siteId = 0;
         l.A($"Mock Portal Id {siteId}");
 

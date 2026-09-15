@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.LookUp;
+using ToSic.Eav.LookUp;
 using ToSic.Eav.LookUp.Sources;
 using ToSic.Eav.LookUp.Sys;
 using ToSic.Eav.LookUp.Sys.Engines;
@@ -16,7 +16,7 @@ public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> bui
     /// <returns></returns>
     public virtual ILookUpEngine GetLookUpEngine(int moduleId)
     {
-        var l = Log.Fn<ILookUpEngine>($"{nameof(moduleId)}:{moduleId}");
+        using var l = Log.Fn<ILookUpEngine>($"{nameof(moduleId)}:{moduleId}");
 
         // Try Cached first
         // if we already have a list of shared sources, return that
@@ -35,7 +35,7 @@ public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> bui
     /// <returns></returns>
     protected virtual LookUpEngine BuildLookupEngine(int moduleId)
     {
-        var l = Log.Fn<LookUpEngine>($"{nameof(moduleId)}:{moduleId}");
+        using var l = Log.Fn<LookUpEngine>($"{nameof(moduleId)}:{moduleId}");
         var sources = AddHttpAndDiSources([]);
         var luEngine = new LookUpEngine(Log, sources: sources);
         //AddHttpAndDiSources(/*luEngine,*/ []).DoIfNotNull(luEngine.Add);
@@ -78,7 +78,7 @@ public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> bui
     protected List<ILookUp> AddHttpAndDiSources(/*LookUpEngine existingList,*/ List<ILookUp> sources)
     {
         sources ??= [];
-        var l = Log.Fn<List<ILookUp>>($"provider: {sources.Count}");
+        using var l = Log.Fn<List<ILookUp>>($"provider: {sources.Count}");
 
         l.A("Found Http-Context, will ty to add params for querystring, server etc.");
 

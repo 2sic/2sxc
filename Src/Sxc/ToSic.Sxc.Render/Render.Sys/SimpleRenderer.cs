@@ -10,13 +10,13 @@ namespace ToSic.Sxc.Render.Sys;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class SimpleRenderer(Generator<BlockOfEntity> blkFrmEntGen, Generator<IBlockRenderer> blockBuilderGenerator)
-    : ServiceBase(SxcLogName + "RndSmp", connect: [blkFrmEntGen, blockBuilderGenerator])
+    : ServiceBase(SxcLogName + "RndSmp")
 {
     private const string EmptyMessage = "<!-- auto-render of item {0} -->";
 
     public string? Render(IBlock parentBlock, IEntity entity, object? data = default)
     {
-        var l = Log.Fn<string?>();
+        using var l = Log.Fn<string?>();
 
         // if not the expected content-type, just output a hidden html placeholder
         if (entity.Type.Name != AppConstants.ContentGroupRefTypeName)
@@ -45,7 +45,7 @@ public class SimpleRenderer(Generator<BlockOfEntity> blkFrmEntGen, Generator<IBl
 
     internal string RenderWithEditContext(IBlock block, ICanBeEntity parent, ICanBeEntity? subItem, string? cbFieldName, Guid? newGuid, IEditService edit, object? data = default)
     {
-        var l = Log.Fn<string>();
+        using var l = Log.Fn<string>();
         var attribs = edit.ContextAttributes(parent, field: cbFieldName, newGuid: newGuid);
         var inner = subItem == null
             ? ""
@@ -58,7 +58,7 @@ public class SimpleRenderer(Generator<BlockOfEntity> blkFrmEntGen, Generator<IBl
 
     public string RenderListWithContext(IBlock block, IEntity parent, string? fieldName, string? apps, int max, IEditService edit)
     {
-        var l = Log.Fn<string>();
+        using var l = Log.Fn<string>();
         var innerBuilder = new StringBuilder();
         var children = parent.Entity
             .Children(fieldName)

@@ -4,7 +4,7 @@ using ToSic.Sys.Configuration;
 namespace ToSic.Sxc.Apps.Sys.Paths;
 
 public class GlobalPaths(LazySvc<IServerPaths> serverPaths, LazySvc<IGlobalConfiguration> config)
-    : ServiceBase("Viw.Help", connect: [serverPaths, config])
+    : ServiceBase("Viw.Help")
 {
 
     /// <summary>
@@ -12,7 +12,7 @@ public class GlobalPaths(LazySvc<IServerPaths> serverPaths, LazySvc<IGlobalConfi
     /// </summary>
     public string GlobalPathTo(string path, PathTypes pathType)
     {
-        var l = Log.Fn<string>($"path:{path},pathType:{pathType}");
+        using var l = Log.Fn<string>($"path:{path},pathType:{pathType}");
         var assetPath = $"{config.Value.AssetsVirtualUrl().TrimLastSlash()}/{path.TrimPrefixSlash()}";
         var assetLocation = pathType switch
         {

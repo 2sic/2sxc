@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Code.Sys.HotBuild;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : ServiceBase(SxcLogName + ".AssCMn", connect: [memoryCacheService])
+public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : ServiceBase(SxcLogName + ".AssCMn")
 {
     private const string GlobalCacheRoot = "Sxc-AssemblyCache.App.";
 
@@ -47,7 +47,7 @@ public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : Servi
 
     public string Add(string cacheKey, object data, int slidingDuration, IList<string>? filePaths = null, IDictionary<string, bool>? folderPaths = null, IEnumerable<ICanBeCacheDependency>? dependencies = default)
     {
-        var l = Log.Fn<string>($"{nameof(cacheKey)}: {cacheKey}; {nameof(slidingDuration)}: {slidingDuration}", timer: true);
+        using var l = Log.Fn<string>($"{nameof(cacheKey)}: {cacheKey}; {nameof(slidingDuration)}: {slidingDuration}", timer: true);
 
         // Never store 0, that's like never-expire
         if (slidingDuration <= 0)

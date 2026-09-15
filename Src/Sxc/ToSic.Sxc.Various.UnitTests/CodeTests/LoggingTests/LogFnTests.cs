@@ -7,7 +7,7 @@ public class LogFnTests : LogTestBase
     public void NoReturnBasic()
     {
         var log = L("Test");
-        var call = log.Fn();
+        using var call = log.Fn();
         Equal(1, log.Entries.Count);
         call.Done("ok");
             
@@ -20,7 +20,7 @@ public class LogFnTests : LogTestBase
     public void NoReturnAll()
     {
         var log = L("Test");
-        var call = log.Fn($"something: {7}", "start msg", true);
+        using var call = log.Fn($"something: {7}", "start msg", true);
         True(call.Timer.ElapsedMilliseconds < 1);
         Equal(1, log.Entries.Count);
         System.Threading.Thread.Sleep(10); // wait 10 ms
@@ -37,7 +37,7 @@ public class LogFnTests : LogTestBase
     public void GenericBasic()
     {
         var log = L("Test");
-        var call = log.Fn<string>();
+        using var call = log.Fn<string>();
             
         Equal(1, log.Entries.Count);  // Should have one when starting
         var result = call.Return("result", "ok");

@@ -73,7 +73,7 @@ internal abstract class CSharpModelGeneratorBase(CSharpModelsGeneratorBase gener
     internal GeneratedDataModel? PrepareFile()
     {
         var finalClassName = ClassName;
-        var l = Log.Fn<GeneratedDataModel>($"ClassName: {finalClassName}; {nameof(Type)}: {Type?.Name} ({Type?.NameId})");
+        using var l = Log.Fn<GeneratedDataModel>($"ClassName: {finalClassName}; {nameof(Type)}: {Type?.Name} ({Type?.NameId})");
 
         if (Type == null)
             return l.ReturnNull("No content type provided");
@@ -109,7 +109,7 @@ internal abstract class CSharpModelGeneratorBase(CSharpModelsGeneratorBase gener
 
     private (bool HasProps, string? Code, List<string>? Usings, string? FirstProperty) ClassProperties(List<IContentTypeField> attributes)
     {
-        var l = Log.Fn<(bool, string?, List<string>?, string?)>($"{nameof(attributes)}: {attributes.Count}");
+        using var l = Log.Fn<(bool, string?, List<string>?, string?)>($"{nameof(attributes)}: {attributes.Count}");
 
         // Ephemeral fields only exist in the edit UI and are not persisted.
         // Generated properties would access missing data and fail during serialization.

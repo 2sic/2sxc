@@ -1,4 +1,4 @@
-﻿using DotNetNuke.Framework.JavaScriptLibraries;
+using DotNetNuke.Framework.JavaScriptLibraries;
 using DotNetNuke.Web.Client;
 using DotNetNuke.Abstractions.Application;
 using DotNetNuke.Abstractions.Logging;
@@ -20,7 +20,7 @@ internal class DnnClientResources(
     IApplicationStatusInfo appStatus,
     IEventLogger eventLogger,
     IPortalController portalController)
-    : ServiceBase($"{DnnConstants.LogName}.JsCss", connect: [dnnJsApiHeader, dnnRequirements])
+    : ServiceBase($"{DnnConstants.LogName}.JsCss")
 {
     public DnnClientResources Init(Page page, IBlockRenderer blockRenderer)
     {
@@ -35,7 +35,7 @@ internal class DnnClientResources(
 
     public IList<IPageFeature> AddEverything(IList<IPageFeature> features = null)
     {
-        var l = Log.Fn<IList<IPageFeature>>();
+        using var l = Log.Fn<IList<IPageFeature>>();
         // temporary solution, till the features are correctly activated in the block
         // auto-detect BlockBuilder params
         features ??= Features;
@@ -65,7 +65,7 @@ internal class DnnClientResources(
 
     public void RegisterClientDependencies(Page page, bool readJs, bool editJs, bool editCss, IList<IPageFeature> overrideFeatures = null)
     {
-        var l = Log.Fn($"-, {nameof(readJs)}:{readJs}, {nameof(editJs)}:{editJs}, {nameof(editCss)}:{editCss}");
+        using var l = Log.Fn($"-, {nameof(readJs)}:{readJs}, {nameof(editJs)}:{editJs}, {nameof(editCss)}:{editCss}");
         
         var features = overrideFeatures ?? Features;
 

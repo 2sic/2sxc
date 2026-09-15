@@ -29,7 +29,7 @@ public abstract class DnnSxcControllerRoot : DnnApiController, IHasLog
     [ShowApiWhenReleased(ShowApiMode.Never)]
     protected override void Initialize(HttpControllerContext controllerContext)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
         // Add the logger to the request, in case it's needed in error-reporting
         SysHlp.WebApiLogging.OnInitialize(controllerContext);
         base.Initialize(controllerContext);

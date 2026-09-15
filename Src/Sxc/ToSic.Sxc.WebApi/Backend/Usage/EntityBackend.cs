@@ -9,7 +9,7 @@
 //public class EntityBackend(
 //    ISxcCurrentContextService ctxService,
 //    Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions)
-//    : ServiceBase("Bck.Entity", connect: [ctxService, appPermissions])
+//    : ServiceBase("Bck.Entity")
 //{
 //    // New feature in 11.03 - Usage Statistics
 

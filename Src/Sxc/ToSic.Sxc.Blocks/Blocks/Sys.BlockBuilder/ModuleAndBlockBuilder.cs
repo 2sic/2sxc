@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Blocks.Sys.BlockBuilder;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class ModuleAndBlockBuilder(Generator<BlockOfModule> blockGenerator, string logPrefix, object[]? connect = default)
-    : ServiceBase($"{logPrefix}.BnMBld", connect: [..connect ?? [], blockGenerator]), IModuleAndBlockBuilder
+    : ServiceBase($"{logPrefix}.BnMBld"), IModuleAndBlockBuilder
 {
     /// <summary>
     /// Get the module specific to each platform.
@@ -22,7 +22,7 @@ public abstract class ModuleAndBlockBuilder(Generator<BlockOfModule> blockGenera
 
     public IBlock BuildBlock(int pageId, int moduleId)
     {
-        var l = Log.Fn<IBlock>($"{pageId}, {moduleId}");
+        using var l = Log.Fn<IBlock>($"{pageId}, {moduleId}");
         var module = GetModule(pageId, moduleId);
         var ctx = GetContextOfBlock(module, pageId);
         
@@ -32,7 +32,7 @@ public abstract class ModuleAndBlockBuilder(Generator<BlockOfModule> blockGenera
 
     public IBlock BuildBlock<TPlatformModule>(TPlatformModule module, int? page) where TPlatformModule : class
     {
-        var l = Log.Fn<IBlock>($"{module}, {page}");
+        using var l = Log.Fn<IBlock>($"{module}, {page}");
         var ctx = GetContextOfBlock(module, page);
         var block = blockGenerator.New().GetBlockOfModule(ctx);
         return l.Return(block);

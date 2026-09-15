@@ -39,7 +39,7 @@ public class InheritableApps : CustomDataSource
         Generator<IAppPathsMicroSvc> appPathsGen,
         LazySvc<GlobalPaths> globalPaths,
         LazySvc<IUser> user)
-        : base(services, logName: "Sxc.InhApps", connect: [workApps, context, codeStats, appPathsGen, globalPaths, user])
+        : base(services, logName: "Sxc.InhApps")
     {
         _workApps = workApps;
         _context = context;
@@ -58,7 +58,7 @@ public class InheritableApps : CustomDataSource
 
     private IEnumerable<AppRaw> GetApps()
     {
-        var l = Log.Fn<IEnumerable<AppRaw>>();
+        using var l = Log.Fn<IEnumerable<AppRaw>>();
 
         if (!_user.Value.IsSystemAdmin)
             throw HttpException.PermissionDenied("Listing inheritable apps requires SuperUser permissions.");

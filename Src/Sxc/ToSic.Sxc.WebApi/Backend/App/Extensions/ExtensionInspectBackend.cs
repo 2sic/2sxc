@@ -12,11 +12,11 @@ public class ExtensionInspectBackend(
     LazySvc<IAppReaderFactory> appReadersLazy,
     ISite site,
     IAppPathsMicroSvc appPathSvc)
-    : ServiceBase("Bck.ExtInsp", connect: [appReadersLazy, site, appPathSvc])
+    : ServiceBase("Bck.ExtInsp")
 {
     public ExtensionInspectResultDto Inspect(int appId, string name, string? edition)
     {
-        var l = Log.Fn<ExtensionInspectResultDto>($"app:{appId}, name:{name}, edition:{edition}");
+        using var l = Log.Fn<ExtensionInspectResultDto>($"app:{appId}, name:{name}, edition:{edition}");
         if (!ExtensionFolderNameValidator.IsValid(name))
             throw l.Ex(new ArgumentException("invalid extension name", nameof(name)));
 
@@ -134,7 +134,7 @@ public class ExtensionInspectBackend(
 
     private List<ExtensionInspectContentTypeDto> BuildContentTypes(int appId, string extensionName)
     {
-        var l = Log.Fn<List<ExtensionInspectContentTypeDto>>($"app:{appId}, ext:{extensionName}");
+        using var l = Log.Fn<List<ExtensionInspectContentTypeDto>>($"app:{appId}, ext:{extensionName}");
 
         try
         {

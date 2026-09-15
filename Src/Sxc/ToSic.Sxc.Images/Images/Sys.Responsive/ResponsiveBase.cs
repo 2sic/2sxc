@@ -66,7 +66,7 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
 
     private Img GetImg()
     {
-        var l = Log.Fn<Img>(enabled: ImgService.Debug);
+        using var l = Log.Fn<Img>(enabled: ImgService.Debug);
         var imgTag = ToSic.Razor.Blade.Tag.Img().Src(Src);
 
         // Add all kind of attributes if specified
@@ -128,7 +128,7 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     /// <returns></returns>
     private Img AddLightbox(Img original, string? imageGroup, string? description)
     {
-        var l = Log.Fn<Img>();
+        using var l = Log.Fn<Img>();
 
         // Mark image for lightbox use, different html for single image or group
         var img = imageGroup.HasValue()
@@ -156,7 +156,7 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     [PrivateApi]
     protected TImg AddAttributes<TImg>(TImg imgTag, IDictionary<string, object?>? addAttributes, IEnumerable<string>? skip = default) where TImg : Tag<TImg>
     {
-        var l = Log.Fn<TImg>();
+        using var l = Log.Fn<TImg>();
         if (addAttributes == null || addAttributes.Count == 0)
             return l.Return(imgTag, "nothing to add");
 
@@ -240,7 +240,7 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
 
     private string? StyleOrClassGenerator(string? codePart, string key)
     {
-        var l = (ImgService.Debug ? Log : null).Fn<string?>();
+        using var l = (ImgService.Debug ? Log : null).Fn<string?>();
         var hasOnImgClass = codePart.HasValue();
         var hasOnAttrs = TryGetAttribute(ThisResize.Recipe?.Attributes, key, out var attrValue);
 
@@ -278,7 +278,7 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     {
         var isEnabled = ImgService.Features.IsEnabled(SxcFeatures.ImageServiceMultipleSizes.NameId);
         var hasVariants = (ThisResize?.Recipe?.Variants).HasValue();
-        var l = (ImgService.Debug ? Log : null).Fn<string?>($"{nameof(isEnabled)}: {isEnabled}, {nameof(hasVariants)}: {hasVariants}");
+        using var l = (ImgService.Debug ? Log : null).Fn<string?>($"{nameof(isEnabled)}: {isEnabled}, {nameof(hasVariants)}: {hasVariants}");
         return isEnabled && hasVariants
             ? l.Return(ImgService.ImgLinker.SrcSet(Target.Link.Url!, Settings, SrcSetType.Img,
                 Target.HasMdOrNull, overrideFramework: ImgService.OverrideCssFramework))
@@ -301,7 +301,7 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
 
     private string? UseIfActive<T>(bool? active, T value, [CallerMemberName] string? name = default)
     {
-        var l = (ImgService.Debug ? Log : null).Fn<string>($"{name}: active: {active}; value: {value}");
+        using var l = (ImgService.Debug ? Log : null).Fn<string>($"{name}: active: {active}; value: {value}");
         return active == true && value.IsNotDefault()
             ? l.ReturnAndLog($"{value}")
             : l.ReturnNull("disabled");

@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using ToSic.Eav.DataSource;
 
 using ToSic.Eav.DataSource.Sys;
@@ -125,7 +125,7 @@ public class Pages: CustomDataSourceAdvanced
     #region Constructor
 
     [PrivateApi]
-    public Pages(Dependencies services, PagesDataSourceProvider provider) : base(services, "CDS.Pages", connect: [provider])
+    public Pages(Dependencies services, PagesDataSourceProvider provider) : base(services, "CDS.Pages")
     {
         _provider = provider;
 
@@ -135,7 +135,7 @@ public class Pages: CustomDataSourceAdvanced
 
     private IImmutableList<IEntity> GetPages()
     {
-        var l = Log.Fn<IImmutableList<IEntity>>();
+        using var l = Log.Fn<IImmutableList<IEntity>>();
         Configuration.Parse();
 
         // Get pages from underlying system/provider

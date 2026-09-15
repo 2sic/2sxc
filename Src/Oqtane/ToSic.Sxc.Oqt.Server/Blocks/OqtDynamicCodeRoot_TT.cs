@@ -10,11 +10,7 @@ internal class OqtExecutionContext<TModel, TServiceKit> : ExecutionContext<TMode
 {
     private readonly LazySvc<AliasResolver> _aliasResolverLazy;
     public OqtExecutionContext(Dependencies services, LazySvc<AliasResolver> aliasResolverLazy) : base(services, OqtConstants.OqtLogPrefix)
-    {
-        ConnectLogs([
-            _aliasResolverLazy = aliasResolverLazy
-        ]);
-    }
+        => _aliasResolverLazy = aliasResolverLazy;
 
     public override IExecutionContext Setup(ExecutionContextOptions options)
     {

@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.Sys;
@@ -21,8 +21,7 @@ public class AppCodeLoader(
     LazySvc<AppCodeCompiler> appCompilerLazy,
     AssemblyCacheManager assemblyCacheManager,
     LazySvc<IFeaturesService> features)
-    : ServiceBase("Sys.AppCodeLoad",
-        connect: [logStore, site, appReadFac, appPathsLazy, zoneMapper, appCompilerLazy, assemblyCacheManager, features])
+    : ServiceBase("Sys.AppCodeLoad")
 {
     /// <summary>
     /// Try to get the app code - first of the edition, then of the root.
@@ -31,7 +30,7 @@ public class AppCodeLoader(
     /// <returns></returns>
     public (SourceCode.AssemblyResult? AssemblyResult, HotBuildSpec Specs) GetAppCode(HotBuildSpec spec)
     {
-        var l = Log.Fn<(SourceCode.AssemblyResult?, HotBuildSpec)>(spec.ToString());
+        using var l = Log.Fn<(SourceCode.AssemblyResult?, HotBuildSpec)>(spec.ToString());
         var firstRound = GetOrBuildAppCode(spec);
         if (firstRound.AssemblyResult?.Assembly != null)
             return l.Return(firstRound, $"AppCode for '{spec.EditionToLog}'.");
@@ -53,7 +52,7 @@ public class AppCodeLoader(
     /// <returns></returns>
     private (SourceCode.AssemblyResult? AssemblyResult, HotBuildSpec Specs) GetOrBuildAppCode(HotBuildSpec spec)
     {
-        var l = Log.Fn<(AssemblyResult?, HotBuildSpec)>(spec.ToString());
+        using var l = Log.Fn<(AssemblyResult?, HotBuildSpec)>(spec.ToString());
 
         // Check cache first
         var assemblyResult = assemblyCacheManager.TryGetAppCode(spec).AssemblyResult;
@@ -78,7 +77,7 @@ public class AppCodeLoader(
         logSummary.UpdateSpecs(spec.ToDictionary());
 
         // Initial message for insights-overview
-        var l = Log.Fn<AssemblyResult?>($"{spec}", timer: true);
+        using var l = Log.Fn<AssemblyResult?>($"{spec}", timer: true);
 
         var assemblyResults = TryBuildAppCode(spec, logSummary);
 
@@ -95,7 +94,7 @@ public class AppCodeLoader(
 
     private AssemblyResult? TryBuildAppCode(HotBuildSpec spec, LogStoreEntry logSummary)
     {
-        var l = Log.Fn<AssemblyResult?>($"{spec}");
+        using var l = Log.Fn<AssemblyResult?>($"{spec}");
 
         var (result, cacheKey) = assemblyCacheManager.TryGetAppCode(spec);
         logSummary.AddSpec("Cached", $"{result != null!} on {cacheKey}");
@@ -177,7 +176,7 @@ public class AppCodeLoader(
 
     private static IDictionary<string, bool> GetWatcherFolders(bool editionHasAssembly, HotBuildSpec spec, string physicalPathAppCode, ILog log)
     {
-        var l = log.Fn<IDictionary<string, bool>>($"{nameof(physicalPathAppCode)}: {physicalPathAppCode}");
+        using var l = log.Fn<IDictionary<string, bool>>($"{nameof(physicalPathAppCode)}: {physicalPathAppCode}");
         var folders = new Dictionary<string, bool>();
 
         // take AppCode folder (like ...\edition\AppCode)
@@ -221,7 +220,7 @@ public class AppCodeLoader(
         // Helper to add and return info if it exists
         bool IfExistsThenAdd(string folder, bool watchSubfolders)
         {
-            var l2 = log.Fn<bool>(folder);
+            using var l2 = log.Fn<bool>(folder);
             if (!Directory.Exists(folder)) return l2.ReturnFalse();
             folders.Add(folder, watchSubfolders);
             return l2.ReturnTrue();
@@ -230,7 +229,7 @@ public class AppCodeLoader(
 
     private (string physicalPath, string relativePath, string physicalPathShared, string relativePathShared) GetAppPaths(string folder, HotBuildSpec spec)
     {
-        var l = Log.Fn<(string physicalPath, string relativePath, string physicalPathShared, string relativePathShared)>($"{nameof(folder)}: '{folder}'; {spec}");
+        using var l = Log.Fn<(string physicalPath, string relativePath, string physicalPathShared, string relativePathShared)>($"{nameof(folder)}: '{folder}'; {spec}");
         var appReader = appReadFac.Get(spec.AppId);
         var resolvedSite = HotBuildSiteResolver.ResolveForApp(site, appReader, zoneMapper.Value);
         l.A($"site id: {site.Id}, resolved: {resolvedSite.Id}, ...: {resolvedSite.AppsRootPhysicalFull}");

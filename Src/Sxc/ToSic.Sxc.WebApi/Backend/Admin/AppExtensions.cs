@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Backend.Admin;
 public class AppExtensions : CustomDataSource
 {
     public AppExtensions(Dependencies services, LazySvc<ExtensionReaderBackend> reader)
-        : base(services, "Sxc.AppExts", connect: [reader])
+        : base(services, "Sxc.AppExts")
         => ProvideOutRaw(() => reader.Value.GetExtensions(AppId), options: Options);
 
     private static DataFactoryOptions Options() => new() { TypeName = "AppExtension", AllowUnknownValueTypes = true };
@@ -43,7 +43,7 @@ public class AppExtensionDetails : CustomDataSource
     public string Edition => Configuration.GetThis<string>("");
 
     public AppExtensionDetails(Dependencies services, LazySvc<ExtensionInspectBackend> inspect)
-        : base(services, "Sxc.ExtDetails", connect: [inspect])
+        : base(services, "Sxc.ExtDetails")
     {
         ProvideOutRaw(() => Details(inspect), options: () => new() { TypeName = "AppExtensionDetails" });
         // Compatibility for deployed UIs which still use System.AppExtensionInspect.

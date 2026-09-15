@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Sys.Caching;
+using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Data.Processing;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.Sys;
@@ -34,12 +34,7 @@ public class AppControllerReal(
     LazySvc<AppStackBackend> appStackBackendLazy,
     LazySvc<IJsonService> json,
     IGlobalConfiguration globalConfiguration)
-    : Services_ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
-        connect:
-        [
-            appsBackendLazy, workAppsRemove, exportAppLazy, importAppLazy, appBuilderLazy, appStateSyncRestore, appStateSyncSave,
-            workViews, systemManagerLazy, languagesBackendLazy, appReadersLazy, appStackBackendLazy, json, globalConfiguration
-        ])
+    : Services_ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl")
 {
     public const string LogSuffix = "AppCon";
 
@@ -56,7 +51,7 @@ public class AppControllerReal(
 
     public void App(int zoneId, string name, int? inheritAppId = null)
     {
-        var l = Log.Fn($"{nameof(zoneId)}:{zoneId}, {nameof(name)}:{name}, {nameof(inheritAppId)}:{inheritAppId}");
+        using var l = Log.Fn($"{nameof(zoneId)}:{zoneId}, {nameof(name)}:{name}, {nameof(inheritAppId)}:{inheritAppId}");
         l.A("create default new app without template");
         appBuilderLazy.Value.Init(zoneId).Create(name, null, inheritAppId);
         l.Done("ok");
@@ -71,7 +66,7 @@ public class AppControllerReal(
 
     public bool FlushCache(int zoneId, int appId)
     {
-        var l = Log.Fn<bool>($"{zoneId}, {appId}");
+        using var l = Log.Fn<bool>($"{zoneId}, {appId}");
         systemManagerLazy.Value.Purge(zoneId, appId);
         return l.ReturnTrue("ok");
     }
@@ -92,7 +87,7 @@ public class AppControllerReal(
 
     public async Task<Package<bool>> SaveData(AppExportSpecs specs)
     {
-        var l = Log.Fn<Package<bool>>(specs.Dump());
+        using var l = Log.Fn<Package<bool>>(specs.Dump());
 
         // Informational only: a failed audit must never prevent saving the source-control export.
         try
@@ -126,7 +121,7 @@ public class AppControllerReal(
     /// <returns></returns>
     public ImportResultDto Import(HttpUploadedFile uploadInfo, int zoneId, string renameApp)
     {
-        var l = Log.Fn<ImportResultDto>();
+        using var l = Log.Fn<ImportResultDto>();
 
         if (!uploadInfo.HasFiles())
             return l.Return(new(false, "no file uploaded"), "no file uploaded");
@@ -149,7 +144,7 @@ public class AppControllerReal(
     /// <returns></returns>
     public IEnumerable<PendingAppDto> GetPendingApps(int zoneId)
     {
-        var l = Log.Fn<IEnumerable<PendingAppDto>>();
+        using var l = Log.Fn<IEnumerable<PendingAppDto>>();
         var result = importAppLazy.Value.GetPendingApps(zoneId);
         return l.ReturnAsOk(result);
     }
@@ -162,7 +157,7 @@ public class AppControllerReal(
     /// <returns></returns>
     public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppDto> pendingApps)
     {
-        var l = Log.Fn<ImportResultDto>();
+        using var l = Log.Fn<ImportResultDto>();
         var result = importAppLazy.Value.InstallPendingApps(zoneId, pendingApps);
         return l.ReturnAsOk(result);
     }

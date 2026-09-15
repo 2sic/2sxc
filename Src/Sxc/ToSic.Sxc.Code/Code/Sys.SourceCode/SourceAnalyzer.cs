@@ -4,11 +4,11 @@ using ToSic.Eav.Environment.Sys.ServerPaths;
 namespace ToSic.Sxc.Code.Sys.SourceCode;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc", connect: [serverPaths])
+public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc")
 {
     public CodeFileInfo TypeOfVirtualPath(string virtualPath)
     {
-        var l = Log.Fn<CodeFileInfo>($"{nameof(virtualPath)}: '{virtualPath}'");
+        using var l = Log.Fn<CodeFileInfo>($"{nameof(virtualPath)}: '{virtualPath}'");
         string? fullPath = default, sourceCode = default;
         try
         {
@@ -25,7 +25,7 @@ public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc"
 
     private (string relativePath, string? fullPath, string? sourceCode) GetFileContentsOfVirtualPath(string relativePath)
     {
-        var l = Log.Fn<(string, string?, string?)>($"{nameof(relativePath)}: '{relativePath}'");
+        using var l = Log.Fn<(string, string?, string?)>($"{nameof(relativePath)}: '{relativePath}'");
 
         if (relativePath.IsEmptyOrWs())
             return l.Return((relativePath, null, null), "no relativePath");
@@ -43,7 +43,7 @@ public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc"
 
     private CodeFileInfo AnalyzeContent(string relativePath, string? fullPath, string sourceCode)
     {
-        var l = Log.Fn<CodeFileInfo>($"{nameof(relativePath)}:{relativePath}");
+        using var l = Log.Fn<CodeFileInfo>($"{nameof(relativePath)}:{relativePath}");
         if (sourceCode.Length < 10)
             return l.Return(new(CodeFileInfo.TemplateUnknown, sourceCode: sourceCode), "file too short");
 

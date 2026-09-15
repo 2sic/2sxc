@@ -35,7 +35,7 @@ internal class DnnRazorGetCodeHelper(RazorComponentBase page, IExecutionContext 
 
     private string GetCodeFullPathForExistsCheck(string path)
     {
-        var l = Log.Fn<string>(path);
+        using var l = Log.Fn<string>(path);
         var fullPath = HostingEnvironment.MapPath(path);
         return l.ReturnAndLog(fullPath);
     }
@@ -68,7 +68,7 @@ internal class DnnRazorGetCodeHelper(RazorComponentBase page, IExecutionContext 
         // Note: Don't do parameter checks, as they have already been done
         // and the warnings are a bit different depending on the public signature
 
-        var l = Log.Fn<object?>($"'{virtualPath}', '{name}'");
+        using var l = Log.Fn<object?>($"'{virtualPath}', '{name}'");
 
         if (virtualPath.IsEmptyOrWs())
             return !throwOnError
@@ -107,7 +107,7 @@ internal class DnnRazorGetCodeHelper(RazorComponentBase page, IExecutionContext 
     /// <returns></returns>
     private string? ResolvePathIfAbsoluteToApp(string? path, IExecutionContext? overrideRootExCtx = default)
     {
-        var l = Log.Fn<string>(path);
+        using var l = Log.Fn<string>(path);
         if (path == null || (!path.StartsWith("/") && !path.StartsWith("\\")))
             return l.ReturnNull("not absolute, return null");
 

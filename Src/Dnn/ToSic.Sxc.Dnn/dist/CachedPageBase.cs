@@ -47,7 +47,7 @@ public class CachedPageBase(
         // add to insights-history for analytic
         GetService<ILogStore>().Add("edit-dialog", Log);
 
-        var l = Log.Fn<string>($"{nameof(virtualPath)}: {virtualPath}");
+        using var l = Log.Fn<string>($"{nameof(virtualPath)}: {virtualPath}");
 
         var html = GetPageHtml(virtualPath);
         l.A($"html: {html.Length} chars");
@@ -71,7 +71,7 @@ public class CachedPageBase(
 
     private string GetPageHtml(string virtualPath)
     {
-        var l = Log.Fn<string>($"{nameof(virtualPath)}: {virtualPath}");
+        using var l = Log.Fn<string>($"{nameof(virtualPath)}: {virtualPath}");
 
         var key = CacheKey(virtualPath);
         if (Cache.Get(key) is string html) return l.Return(html,"ok, from cache");
@@ -95,7 +95,7 @@ public class CachedPageBase(
 
     private string GetPath(string virtualPath)
     {
-        var l = Log.Fn<string>($"{nameof(virtualPath)}: {virtualPath}");
+        using var l = Log.Fn<string>($"{nameof(virtualPath)}: {virtualPath}");
         var path = Server.MapPath(virtualPath);
         if (!File.Exists(path))
             throw l.Ex(new Exception("File not found: " + path));
@@ -104,7 +104,7 @@ public class CachedPageBase(
 
     private int GetSiteId()
     {
-        var l = Log.Fn<int>();
+        using var l = Log.Fn<int>();
 
         // portalId should be provided in query string (because of DNN special handling of aspx pages in DesktopModules)
         var portalIdString = Request.QueryString[DnnJsApiService.PortalIdParamName];
@@ -118,7 +118,7 @@ public class CachedPageBase(
 
     private int GetPageId()
     {
-        var l = Log.Fn<int>();
+        using var l = Log.Fn<int>();
 
         // pageId should be provided in query string
         var pageIdString = Request.QueryString[HtmlDialog.PageIdInUrl];
@@ -132,7 +132,7 @@ public class CachedPageBase(
 
     private bool WithPublicKey()
     {
-        var l = Log.Fn<bool>();
+        using var l = Log.Fn<bool>();
 
         // 'wpk' should be provided in query string
         var withPublicKeyString = Request.QueryString[HtmlDialog.WithPublicKey];
@@ -152,7 +152,7 @@ public class CachedPageBase(
     /// <returns></returns>
     private string GetSiteRoot(int pageId, int portalId)
     {
-        var l = Log.Fn<string>($"{nameof(pageId)}: {pageId}, {nameof(portalId)}: {portalId}");
+        using var l = Log.Fn<string>($"{nameof(pageId)}: {pageId}, {nameof(portalId)}: {portalId}");
         
         try
         {
@@ -200,7 +200,7 @@ public class CachedPageBase(
 
     private IPortalAliasInfo GetPrimaryPortalAliasBasedOnRequestUrlAndCulture(int portalId)
     {
-        var l = Log.Fn<IPortalAliasInfo>($"{nameof(portalId)}: {portalId}");
+        using var l = Log.Fn<IPortalAliasInfo>($"{nameof(portalId)}: {portalId}");
 
         //var cultureCode = LocaleController.Instance.GetCurrentLocale(portalId).Code;
         var cultureCode = Thread.CurrentThread.CurrentCulture.ToString();
@@ -255,7 +255,7 @@ public class CachedPageBase(
 
     private string CleanLeadingPartSiteRoot(string path)
     {
-        var l = Log.Fn<string>($"{nameof(path)}:{path}");
+        using var l = Log.Fn<string>($"{nameof(path)}:{path}");
         var index = path.IndexOf('/');
         l.A($"position of /: {index}");
         return l.ReturnAsOk(index <= 0 ? "/" : path.Substring(index).SuffixSlash());

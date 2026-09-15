@@ -2,7 +2,7 @@
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CspOfPage(Generator<CspParameterFinalizer> cspParameterFinalizer)
-    : ServiceBase(CspConstants.LogPrefix + ".Page", connect: [cspParameterFinalizer])
+    : ServiceBase(CspConstants.LogPrefix + ".Page")
 {
     public List<CspParameters> CspParameters { get; } = [];
 
@@ -21,7 +21,7 @@ public class CspOfPage(Generator<CspParameterFinalizer> cspParameterFinalizer)
     {
         try
         {
-            var l = Log.Fn<string>();
+            using var l = Log.Fn<string>();
             var relevant = CspParameters.Where(cs => cs != null).ToList();
             if (!relevant.Any())
                 return l.ReturnNull("none relevant");

@@ -26,8 +26,7 @@ internal sealed class OqtSite(
     LazySvc<OqtCulture> oqtCulture,
     LazySvc<OqtSiteGroup> oqtSiteGroup,
     LazySvc<ILinkPaths> linkPathsLazy)
-    : Site<Site>(OqtConstants.OqtLogPrefix,
-        connect: [aliasResolver, siteService, serverPaths, zoneMapper, oqtCulture, oqtSiteGroup, linkPathsLazy])
+    : Site<Site>(OqtConstants.OqtLogPrefix)
 {
     private ILinkPaths LinkPaths => linkPathsLazy.Value;
 

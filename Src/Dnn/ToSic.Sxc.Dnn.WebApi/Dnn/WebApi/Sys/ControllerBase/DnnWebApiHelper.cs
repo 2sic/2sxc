@@ -16,8 +16,6 @@ internal class DnnWebApiHelper : CodeHelperBase
     {
         var requestLogging = GetService<Generator<HttpRequestLoggingScoped, HttpRequestLoggingScoped.Opts>>()
                 .New(new() { Segment = historyLogGroup ?? EavWebApiConstants.HistoryNameWebApi, RootName = "Dnn.Api" });
-        this.LinkLog(requestLogging.RootLog);
-        apiController.LinkLog(requestLogging.RootLog);
         WebApiLogging = new(requestLogging, firstMessage: firstMessage);
     }
 

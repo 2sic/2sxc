@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Context.Sys.ZoneMapper;
@@ -11,13 +11,13 @@ namespace ToSic.Sxc.Code.Sys.HotBuild;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class DependenciesLoader(ILogStore logStore, ISite site, IAppReaderFactory appReadFac, LazySvc<IAppPathsMicroSvc> appPathsLazy, LazySvc<IZoneMapper> zoneMapper, AssemblyCacheManager assemblyCacheManager, LazySvc<AppCodeCompiler> appCodeCompilerLazy)
-    : ServiceBase("Sys.AppCodeLoad", connect: [logStore, site, appReadFac, appPathsLazy, zoneMapper, assemblyCacheManager, appCodeCompilerLazy])
+    : ServiceBase("Sys.AppCodeLoad")
 {
     public const string DependenciesFolder = "Dependencies";
 
     public (List<Assembly>? Assemblies, HotBuildSpec Specs) TryGetOrFallback(HotBuildSpec spec)
     {
-        var l = Log.Fn<(List<Assembly>?, HotBuildSpec)>(spec.ToString());
+        using var l = Log.Fn<(List<Assembly>?, HotBuildSpec)>(spec.ToString());
         var (assemblyResults, cacheKey) = TryGetAssemblyOfDependenciesFromCache(spec, Log);
         if (assemblyResults != null)
             return l.Return((assemblyResults.Select(r => r.Assembly!).ToList(), spec), "Dependencies where cached.");
@@ -37,7 +37,7 @@ public class DependenciesLoader(ILogStore logStore, ISite site, IAppReaderFactor
 
     private (List<AssemblyResult>? assemblyResults, string cacheKey) TryGetAssemblyOfDependenciesFromCache(HotBuildSpec spec, ILog callerLog)
     {
-        var l = callerLog.Fn<(List<AssemblyResult>?, string)>($"{spec}");
+        using var l = callerLog.Fn<(List<AssemblyResult>?, string)>($"{spec}");
         var (assemblyResults, cacheKey) = assemblyCacheManager.TryGetDependencies(spec);
         if (assemblyResults == null)
             return l.Return((null, cacheKey), "no dependencies in cache");
@@ -59,7 +59,7 @@ public class DependenciesLoader(ILogStore logStore, ISite site, IAppReaderFactor
         logSummary?.UpdateSpecs(spec.ToDictionary());
 
         // Initial message for insights-overview
-        var l = Log.Fn<List<Assembly>>($"{spec}", timer: true);
+        using var l = Log.Fn<List<Assembly>>($"{spec}", timer: true);
 
         var assemblyResults = TryLoadDependencyAssemblies(spec, cacheKey, logSummary);
 
@@ -70,7 +70,7 @@ public class DependenciesLoader(ILogStore logStore, ISite site, IAppReaderFactor
 
     private List<AssemblyResult>? TryLoadDependencyAssemblies(HotBuildSpec spec, string cacheKey, LogStoreEntry? logSummary)
     {
-        var l = Log.Fn<List<AssemblyResult>>($"{spec}");
+        using var l = Log.Fn<List<AssemblyResult>>($"{spec}");
 
         // Get paths
         var (physicalPath, relativePath, physicalPathShared, relativePathShared) = GetDependenciesPaths(DependenciesFolder, spec);
@@ -115,7 +115,7 @@ public class DependenciesLoader(ILogStore logStore, ISite site, IAppReaderFactor
 
     private List<AssemblyResult> GetAssemblyResults(HotBuildSpecWithSharedSuffix spec, string physicalPath)
     {
-        var l = Log.Fn<List<AssemblyResult>>($"{spec}; {nameof(physicalPath)}: '{physicalPath}'");
+        using var l = Log.Fn<List<AssemblyResult>>($"{spec}; {nameof(physicalPath)}: '{physicalPath}'");
         var assemblyResults = new List<AssemblyResult>();
         foreach (var dependency in Directory.GetFiles(physicalPath, "*.dll"))
         {
@@ -189,7 +189,7 @@ public class DependenciesLoader(ILogStore logStore, ISite site, IAppReaderFactor
     // TODO: stv# candidate for refactoring, similar to AppCodeLoader.GetAppPaths
     private (string physicalPath, string relativePath, string physicalPathShared, string relativePathShared) GetDependenciesPaths(string folder, HotBuildSpec spec)
     {
-        var l = Log.Fn<(string physicalPath, string relativePath, string physicalPathShared, string relativePathShared)>($"{spec}");
+        using var l = Log.Fn<(string physicalPath, string relativePath, string physicalPathShared, string relativePathShared)>($"{spec}");
         var appReader = appReadFac.Get(spec.AppId);
         var resolvedSite = HotBuildSiteResolver.ResolveForApp(site, appReader, zoneMapper.Value);
         var appPaths = appPathsLazy.Value.Get(appReader, resolvedSite);

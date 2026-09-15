@@ -18,7 +18,7 @@ internal class OqtJsApiService(
     JsApiCacheService jsApiCache,
     AliasResolver aliasResolver,
     RsaCryptographyService rsaCryptographyService)
-    : ServiceBase("OqtJsApi", connect: [antiForgery, http, jsApiCache, aliasResolver, rsaCryptographyService]), IJsApiService
+    : ServiceBase("OqtJsApi"), IJsApiService
 {
     public string GetJsApiJson(int? pageId = null, string siteRoot = null, string rvt = null, bool withPublicKey = false) 
         => JsonSerializer.Serialize(GetJsApi(pageId, siteRoot, rvt, withPublicKey));

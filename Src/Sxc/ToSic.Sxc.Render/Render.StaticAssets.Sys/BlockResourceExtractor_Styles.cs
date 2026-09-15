@@ -7,7 +7,7 @@ public abstract partial class AssetsExtractor
 {
     protected string ExtractStyles(string renderedTemplate, ClientAssetsExtractSettings settings)
     {
-        var l = Log.Fn<string>();
+        using var l = Log.Fn<string>();
         var styleMatches = RegexUtil.StyleDetection.Value.Matches(renderedTemplate);
         var styleMatchesToRemove = new List<Match>();
 

@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Sys.AppJson;
+using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource.VisualQuery;
 
@@ -16,7 +16,7 @@ namespace ToSic.Sxc.DataSources;
 public class AppEditions : CustomDataSource
 {
     public AppEditions(Dependencies services, IAppJsonConfigurationService appJsonService)
-        : base(services, logName: "App.EditDS", connect: [appJsonService])
+        : base(services, logName: "App.EditDS")
     {
         ProvideOutRaw(
             () => GetList(appJsonService),
@@ -30,7 +30,7 @@ public class AppEditions : CustomDataSource
 
     private IEnumerable<IRawEntity> GetList(IAppJsonConfigurationService appJsonService)
     {
-        var l = Log.Fn<IEnumerable<IRawEntity>>();
+        using var l = Log.Fn<IEnumerable<IRawEntity>>();
         var appJson = appJsonService.GetAppJson(AppId);
 
         // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract

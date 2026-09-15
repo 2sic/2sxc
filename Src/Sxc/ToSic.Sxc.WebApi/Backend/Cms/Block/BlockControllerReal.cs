@@ -12,7 +12,7 @@ public class BlockControllerReal(
     LazySvc<ContentBlockBackend> blockBackend,
     LazySvc<AppViewPickerBackend> viewsBackend,
     LazySvc<WorkApps> workApps)
-    : Services_ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [context, blockBackend, viewsBackend, workApps]),
+    : Services_ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl"),
         IBlockController
 {
     public const string LogSuffix = "Block";

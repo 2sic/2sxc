@@ -14,14 +14,14 @@ public class BlockCachingHelper(
     LazySvc<IAppsCatalog> appsCatalog,
     LazySvc<IAppReaderFactory> appReadersLazy,
     Generator<IAppPathsMicroSvc> appPathsLazy)
-    : ServiceBase("Sxc.BlInHl", connect: [featuresSvc, appsCatalog, appReadersLazy, appPathsLazy])
+    : ServiceBase("Sxc.BlInHl")
 {
     [field: AllowNull, MaybeNull]
     private LightSpeedConfigHelper LsConfigHelper => field ??= new(Log);
 
     internal bool PushAppDependenciesToRoot(IBlock? currentBlock)
     {
-        var l = Log.Fn<bool>();
+        using var l = Log.Fn<bool>();
         if (currentBlock == null)
             return l.ReturnFalse("no block");
 

@@ -19,15 +19,14 @@ internal class OqtModule(
     IAppsCatalog appsCatalog,
     LazySvc<AppFinder> appFinderLazy,
     ISite site)
-    : Module<Module>($"{OqtConstants.OqtLogPrefix}.Cont",
-        connect: [settingsHelper, moduleRepository, appsCatalog, appFinderLazy, site])
+    : Module<Module>($"{OqtConstants.OqtLogPrefix}.Cont")
 {
     private Dictionary<string, string> _settings;
 
     public new OqtModule Init(Module module)
     {
         base.Init(module);
-        var l = Log.Fn<OqtModule>($"id:{module.ModuleId}", timer: true);
+        using var l = Log.Fn<OqtModule>($"id:{module.ModuleId}", timer: true);
 
         InitializeIsPrimary(module);
 
@@ -94,7 +93,7 @@ internal class OqtModule(
 
     private (int AppId, string AppNameId) GetInstanceAppId(int zoneId)
     {
-        var l = Log.Fn<(int, string)>($"{zoneId}", timer: true);
+        using var l = Log.Fn<(int, string)>($"{zoneId}", timer: true);
 
         if (IsContent) 
             return l.Return((appsCatalog.DefaultAppIdentity(zoneId).AppId, "Content"), "Content");

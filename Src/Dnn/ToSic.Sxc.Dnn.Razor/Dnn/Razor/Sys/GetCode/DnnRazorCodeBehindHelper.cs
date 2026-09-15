@@ -46,7 +46,7 @@ internal class DnnRazorCodeBehindHelper(RazorComponentBase parent, ILog parentLo
     /// <param name="rzrGetCodeHlp"></param>
     private bool TryToBuildCode(DnnRazorGetCodeHelper rzrGetCodeHlp)
     {
-        var l = Log.Fn<bool>();
+        using var l = Log.Fn<bool>();
         if (_buildComplete)
             return l.Return(true);
         var codeFile = Parent.VirtualPath

@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.DataSource.VisualQuery;
@@ -65,7 +65,7 @@ public class AdamFiles : CustomDataSourceAdvanced
     #region Constructor
 
     [PrivateApi]
-    public AdamFiles(Dependencies services, AdamDataSourceProvider<int, int> provider) : base(services, "CDS.Adam", connect: [provider])
+    public AdamFiles(Dependencies services, AdamDataSourceProvider<int, int> provider) : base(services, "CDS.Adam")
     {
         _provider = provider;
 
@@ -85,7 +85,7 @@ public class AdamFiles : CustomDataSourceAdvanced
 
     private IImmutableList<IEntity> GetInternal() => _getInternal.Get(() =>
     {
-        var l = Log.Fn<IImmutableList<IEntity>>(timer: true);
+        using var l = Log.Fn<IImmutableList<IEntity>>(timer: true);
         Configuration.Parse();
 
         // Make sure we have an In - otherwise error

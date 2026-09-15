@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Code.Sys.HotBuild;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ExtensionCompileReferenceService(MemoryCacheService cache)
-    : ServiceBase("Sxc.ExtRefRd", connect: [cache])
+    : ServiceBase("Sxc.ExtRefRd")
 {
     private const string CompileConfigFileName = "compile.json";
 
@@ -29,7 +29,7 @@ public class ExtensionCompileReferenceService(MemoryCacheService cache)
     /// </summary>
     public IReadOnlyList<ExtensionReference> GetReferences(string? startPath, bool isNetFramework)
     {
-        var l = Log.Fn<List<ExtensionReference>>($"start:{startPath}, net4:{isNetFramework}");
+        using var l = Log.Fn<List<ExtensionReference>>($"start:{startPath}, net4:{isNetFramework}");
         var appCodeFolder = FindAppCodeFolder(startPath);
         if (appCodeFolder.IsEmpty())
             return l.Return([], "no-appcode");
@@ -93,7 +93,7 @@ public class ExtensionCompileReferenceService(MemoryCacheService cache)
 
     public string? ResolveReferencePath(ExtensionReference reference)
     {
-        var l = Log.Fn<string?>($"value:{reference.Value}");
+        using var l = Log.Fn<string?>($"value:{reference.Value}");
         if (reference.Value.IsEmpty())
             return l.ReturnNull("empty");
 
@@ -113,7 +113,7 @@ public class ExtensionCompileReferenceService(MemoryCacheService cache)
 
     public string? TryResolveAssemblyLocation(string assemblyName)
     {
-        var l = Log.Fn<string?>($"assembly:{assemblyName}");
+        using var l = Log.Fn<string?>($"assembly:{assemblyName}");
         var normalized = ExtensionCompileReferenceService.NormalizeAssemblyName(assemblyName);
         if (normalized.IsEmpty())
             return l.ReturnNull("empty");
@@ -140,7 +140,7 @@ public class ExtensionCompileReferenceService(MemoryCacheService cache)
 
     private string? FindAppCodeFolder(string? startPath)
     {
-        var l = Log.Fn<string?>($"start:{startPath}");
+        using var l = Log.Fn<string?>($"start:{startPath}");
         if (startPath.IsEmpty())
             return l.ReturnNull("empty");
 
@@ -179,7 +179,7 @@ public class ExtensionCompileReferenceService(MemoryCacheService cache)
         if (cache.TryGet<CompileConfigCache>(cacheKey, out var cached) && cached is not null)
             return cached;
 
-        var l = Log.Fn<CompileConfigCache>($"config:{configPath}");
+        using var l = Log.Fn<CompileConfigCache>($"config:{configPath}");
         var entry = ReadConfig(configPath);
         cache.Set(cacheKey, entry, options =>
         {
@@ -200,7 +200,7 @@ public class ExtensionCompileReferenceService(MemoryCacheService cache)
     }
     private CompileConfigCache ReadConfig(string configPath)
     {
-        var l = Log.Fn<CompileConfigCache>($"config:{configPath}");
+        using var l = Log.Fn<CompileConfigCache>($"config:{configPath}");
 
         if (!File.Exists(configPath))
             return l.Return(new CompileConfigCache([], []), "missing");
@@ -222,7 +222,7 @@ public class ExtensionCompileReferenceService(MemoryCacheService cache)
 
     private List<string> GetExistingParent(string filePath)
     {
-        var l = Log.Fn<List<string>>($"parent:{filePath}");
+        using var l = Log.Fn<List<string>>($"parent:{filePath}");
 
         var parentPath = Path.GetDirectoryName(filePath);
         while (!parentPath.IsEmpty())

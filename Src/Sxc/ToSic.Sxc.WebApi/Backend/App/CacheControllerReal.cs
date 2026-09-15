@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Backend.App;
 public class CacheControllerReal(
     ISxcCurrentContextService ctxService,
     LazySvc<IOutputCacheManagementService> outputCacheManagement)
-    : ServiceBase("Sxc.ApiApCac", connect: [ctxService, outputCacheManagement])
+    : ServiceBase("Sxc.ApiApCac")
 {
     public const string LogSuffix = "AppCac";
 
@@ -21,7 +21,7 @@ public class CacheControllerReal(
 
     private bool FlushInternal(int appId, AppCacheFlushSpecs? specs)
     {
-        var l = Log.Fn<bool>($"app:{appId}");
+        using var l = Log.Fn<bool>($"app:{appId}");
 
         //if (!context.User.IsContentAdmin)
         //{

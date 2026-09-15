@@ -13,7 +13,7 @@ using ToSic.Sys.Locking;
 namespace ToSic.Sxc.Dnn.Run;
 
 internal class DnnZoneMapper(Generator<ISite> site, LazySvc<ZoneCreator> zoneCreatorLazy, IAppsCatalog appsCatalog)
-    : ZoneMapperBase(appsCatalog, "DNN.ZoneMp", connect: [site, zoneCreatorLazy])
+    : ZoneMapperBase(appsCatalog, "DNN.ZoneMp")
 {
     /// <inheritdoc />
     /// <summary>
@@ -70,7 +70,7 @@ internal class DnnZoneMapper(Generator<ISite> site, LazySvc<ZoneCreator> zoneCre
 
     public override ISite SiteOfZone(int zoneId)
     {
-        var l = Log.Fn<ISite>($"{zoneId}");
+        using var l = Log.Fn<ISite>($"{zoneId}");
         var portalController = PortalController.Instance;
         var portals = portalController.GetPortals();
         l.A($"Sites/Portals Count: {portals.Count}");

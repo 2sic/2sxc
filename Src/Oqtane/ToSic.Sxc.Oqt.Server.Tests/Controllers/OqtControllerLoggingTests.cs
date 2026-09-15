@@ -35,7 +35,7 @@ public class OqtControllerLoggingTests
         LogEventBridge.SetSink(new MicrosoftLoggerEventSink(factory));
         try
         {
-            store.Configure("ILogger", bridgeEnabled: true);
+            store.Configure(null);
             var calls = new List<string>();
             var result = new OkObjectResult("custom response");
             void Before(ActionExecutingContext context)

@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.Apps.Sys.Permissions;
@@ -28,11 +28,7 @@ public class AppContent(
     Generator<MultiPermissionsItems, MultiPermissionsItems.Options> itemsPermissions,
     AppWorkQuick<WorkFieldList> workFieldList,
     LazySvc<SimpleDataEditService> dataControllerLazy)
-    : ServiceBase("Sxc.ApiApC",
-        connect:
-        [
-            workFieldList, api, entToDicLazy, ctxService, typesPermissions, itemsPermissions, dataControllerLazy
-        ])
+    : ServiceBase("Sxc.ApiApC")
 {
     #region Constructor / DI
 
@@ -55,7 +51,7 @@ public class AppContent(
 
     public IEnumerable<IDictionary<string, object>> GetItems(string contentType, string? appPath = default, Uri? fullRequest = null)
     {
-        var l = Log.Fn<IEnumerable<IDictionary<string, object>>>($"get entities type:{contentType}, path:{appPath}");
+        using var l = Log.Fn<IEnumerable<IDictionary<string, object>>>($"get entities type:{contentType}, path:{appPath}");
 
         // verify that read-access to these content-types is permitted
         //var permCheck = ThrowIfNotAllowedInType(contentType, GrantSets.ReadSomething, AppReader);
@@ -153,7 +149,7 @@ public class AppContent(
 
     private bool AddParentRelationship(IDictionary<string, object?> valuesCaseInsensitive, int addedEntityId)
     {
-        var l = Log.Fn<bool>($"item dictionary key count: {valuesCaseInsensitive.Count}");
+        using var l = Log.Fn<bool>($"item dictionary key count: {valuesCaseInsensitive.Count}");
 
         if (!valuesCaseInsensitive.Keys.Contains(ParentRelationship))
             return l.ReturnFalse($"'{ParentRelationship}' key is missing");
@@ -186,7 +182,7 @@ public class AppContent(
 
     private Target? GetMetadata(Dictionary<string, object?> newContentItemCaseInsensitive)
     {
-        var l = Log.Fn<Target>($"count: {newContentItemCaseInsensitive.Count}");
+        using var l = Log.Fn<Target>($"count: {newContentItemCaseInsensitive.Count}");
         if (!newContentItemCaseInsensitive.Keys.Contains(AttributeNames.JsonKeyMetadataFor))
             return l.ReturnNull($"'{AttributeNames.JsonKeyMetadataFor}' key is missing");
 
@@ -229,7 +225,7 @@ public class AppContent(
 
     private IConvertToEavLight InitEavAndSerializer(int appId, bool userMayEdit, Uri? uri)
     {
-        var l = Log.Fn<IConvertToEavLight>($"init eav for a#{appId}");
+        using var l = Log.Fn<IConvertToEavLight>($"init eav for a#{appId}");
         // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
         var ser = entToDicLazy.Value;
         ser.WithGuid = true;
@@ -247,7 +243,7 @@ public class AppContent(
 
     public void Delete(string contentType, int id, string? appPathForLogOnly)
     {
-        var l = Log.Fn($"id:{id}, type:{contentType}, path:{appPathForLogOnly}");
+        using var l = Log.Fn($"id:{id}, type:{contentType}, path:{appPathForLogOnly}");
         // Note: if app-path specified, use that app, otherwise use from context - probably automatic based on headers?
 
         // don't allow type "any" on this
@@ -263,7 +259,7 @@ public class AppContent(
 
     public void Delete(string? contentType, Guid guid, string? appPathForLogOnly)
     {
-        var l = Log.Fn($"guid:{guid}, type:{contentType}, path:{appPathForLogOnly}");
+        using var l = Log.Fn($"guid:{guid}, type:{contentType}, path:{appPathForLogOnly}");
         // Note: if app-path specified, use that app, otherwise use from context - probably automatic based on headers?
 
         var entityApi = api.Init(AppReader.AppId);

@@ -6,13 +6,13 @@ namespace ToSic.Sxc.Blocks.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public sealed class BlockOfEntity(BlockGeneratorHelpers helpers, LazySvc<AppFinder> appFinderLazy)
-    : ServiceBase("CB.Ent", connect: [appFinderLazy, helpers])
+    : ServiceBase("CB.Ent")
 {
     #region Init
 
     public IBlock GetBlockOfEntity(IBlock parentBlock, IEntity? blockEntity, int contentBlockId = -1)
     {
-        var l = Log.Fn<BlockSpecs>($"{nameof(contentBlockId)}:{contentBlockId}; {nameof(blockEntity)}:{blockEntity?.EntityId}", timer: true);
+        using var l = Log.Fn<BlockSpecs>($"{nameof(contentBlockId)}:{contentBlockId}; {nameof(blockEntity)}:{blockEntity?.EntityId}", timer: true);
 
         // Get the content-block definition if we only have the ID
         // The block ID. Is usually negative to mark inner-content-blocks

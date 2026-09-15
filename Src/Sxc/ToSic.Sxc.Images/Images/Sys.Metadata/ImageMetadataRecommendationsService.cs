@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Images.Sys.Metadata;
 /// <summary>
 /// Small service to image metadata additional recommendations as configured.
 /// </summary>
-class ImageMetadataRecommendationsService(IFeaturesService featuresSvc) : ServiceWithContext("Img.MdRecS", connect: [featuresSvc]), IImageMetadataRecommendationsService
+class ImageMetadataRecommendationsService(IFeaturesService featuresSvc) : ServiceWithContext("Img.MdRecS"), IImageMetadataRecommendationsService
 {
     /// <summary>
     /// Optionally add image-metadata recommendations

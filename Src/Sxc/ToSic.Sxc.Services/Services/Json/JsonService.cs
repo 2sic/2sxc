@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Services;
 [PrivateApi("Hide implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class JsonService(Generator<CodeJsonWrapper> wrapJsonGenerator)
-    : ServiceBase("Sxc.JsnSvc", connect: [wrapJsonGenerator]), IJsonService
+    : ServiceBase("Sxc.JsnSvc"), IJsonService
 {
     /// <inheritdoc />
     public T? To<T>(string json) 

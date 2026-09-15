@@ -31,7 +31,7 @@ public class ContentTypeDetails : CustomDataSource
         ConvertContentTypeToDto convTypeDto,
         AppWorkQuick<WorkAttributes> workAttributes,
         Generator<ConvertAttributeToDto> convAttrDto)
-        : base(services, logName: "Eav.CtDetails", connect: [workEntities, convTypeDto, workAttributes, convAttrDto])
+        : base(services, logName: "Eav.CtDetails")
     {
 
         ProvideOutRaw(() => GetContentTypeDetails(workEntities.New(AppId), convTypeDto), options: () => new()
@@ -48,7 +48,7 @@ public class ContentTypeDetails : CustomDataSource
     private IEnumerable<ContentTypeDto> GetContentTypeDetails(WorkEntities workEntities,
         ConvertContentTypeToDto convTypeDto)
     {
-        var l = Log.Fn<IEnumerable<ContentTypeDto>>();
+        using var l = Log.Fn<IEnumerable<ContentTypeDto>>();
 
         var contentType = workEntities.MyOptions.AppReader.TryGetContentType(ContentTypeId);
 
@@ -63,7 +63,7 @@ public class ContentTypeDetails : CustomDataSource
     private IEnumerable<ContentTypeFieldDto> GetFields(WorkAttributes workAttributes,
         Generator<ConvertAttributeToDto> convAttrDto)
     {
-        var l = Log.Fn<IEnumerable<ContentTypeFieldDto>>();
+        using var l = Log.Fn<IEnumerable<ContentTypeFieldDto>>();
 
         var fields = workAttributes.GetFields(ContentTypeId);
 

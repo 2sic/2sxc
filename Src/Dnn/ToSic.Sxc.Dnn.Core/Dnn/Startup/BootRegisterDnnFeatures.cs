@@ -5,7 +5,7 @@ using ToSic.Sys.Capabilities.Features;
 namespace ToSic.Sxc.Dnn.StartUp;
 
 internal class BootRegisterDnnFeatures(FeaturesCatalog featuresCatalog)
-    : BootProcessBase("DnnFts", bootPhase: BootPhase.Registrations, connect: [featuresCatalog]), IBootProcess
+    : BootProcessBase("DnnFts", bootPhase: BootPhase.Registrations), IBootProcess
 {
     /// <summary>
     /// Register Dnn features before loading

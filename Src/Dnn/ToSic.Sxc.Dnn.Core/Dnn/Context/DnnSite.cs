@@ -1,4 +1,4 @@
-﻿using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Abstractions.Portals;
 using DotNetNuke.Services.Localization;
@@ -30,7 +30,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     /// #TodoDI not ideal yet, as PortalSettings.Current is still retrieved from global
     /// </summary>
     public DnnSite(LazySvc<IZoneMapper> zoneMapperLazy, LazySvc<ILinkPaths> linkPathsLazy, LazySvc<ISysFeaturesService> featuresSvc)
-        : base(DnnConstants.LogName, connect: [featuresSvc, zoneMapperLazy, linkPathsLazy])
+        : base(DnnConstants.LogName)
     {
         _featuresSvc = featuresSvc;
         _zoneMapperLazy = zoneMapperLazy;
@@ -54,7 +54,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     {
         AttachToExternalLog(parentLogOrNull);
 
-        var l = Log.Fn<DnnSite>();
+        using var l = Log.Fn<DnnSite>();
         UnwrappedSite = KeepBestPortalSettings(settings, parentLogOrNull);
 
         // reset language info to be sure to get it from the latest source
@@ -70,7 +70,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     {
         AttachToExternalLog(extLog);
 
-        var l = extLog.Fn<DnnSite>($"Owner Site: {module?.OwnerPortalID}, Current Site: {module?.PortalID}");
+        using var l = extLog.Fn<DnnSite>($"Owner Site: {module?.OwnerPortalID}, Current Site: {module?.PortalID}");
         if (module == null) return l.Return(this, "no module");
         if (module.OwnerPortalID < 0) return l.Return(this, "no change, owner < 0");
 
@@ -81,8 +81,6 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
 
     private void AttachToExternalLog(ILog extLogOrNull)
     {
-        if (extLogOrNull != null && extLogOrNull != Log)
-            this.LinkLog(extLogOrNull, forceConnect: true);
     }
 
 
@@ -96,7 +94,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     /// <returns></returns>
     private static PortalSettings KeepBestPortalSettings(PortalSettings settings, ILog logOrNull)
     {
-        var l = logOrNull.Fn<PortalSettings>();
+        using var l = logOrNull.Fn<PortalSettings>();
         // in case we don't have an HTTP Context with current portal settings, don't try anything
         var current = PortalSettings.Current;
         if (current == null)
@@ -130,7 +128,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
 
     private string GetCurrentCultureCode()
     {
-        var l = Log.Fn<string>();
+        using var l = Log.Fn<string>();
         // First check if we know more about the site
         var portal = UnwrappedSite;
         if (portal == null! /* paranoid */)
@@ -156,7 +154,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
 
     private List<string>? GetCultureCodesWithFallbacks()
     {
-        var l = Log.Fn<List<string>>();
+        using var l = Log.Fn<List<string>>();
         // 2023-08-31 2dm - new code, as it could contain risks, use try/catch/null to default
         try
         {

@@ -11,7 +11,7 @@ using ToSic.Sys.Security.Encryption;
 namespace ToSic.Sxc.Dnn.Web;
 
 internal class DnnJsApiService(JsApiCacheService jsApiCache, RsaCryptographyService rsaCryptographyService)
-    : ServiceBase("DnnJsAPi", connect: [jsApiCache, rsaCryptographyService]), IJsApiService
+    : ServiceBase("DnnJsAPi"), IJsApiService
 {
     public const string PortalIdParamName = "portalId";
 

@@ -186,7 +186,7 @@ partial record ToolbarBuilder
         string? operation = null,
         string? context = null)
     {
-        var l = Log.Fn<IToolbarBuilder>();
+        using var l = Log.Fn<IToolbarBuilder>();
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill);
 
         // Note: DO NOT check the target, as here an IAsset is absolutely valid

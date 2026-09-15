@@ -22,7 +22,7 @@ internal class GlobalDebugParser(ILog parentLog) : HelperBase(parentLog, "Dnn.Db
     // Precedence: explicit query toggle -> cached host-setting -> default(false)
     internal bool IsDebugEnabled()
     {
-        var l = Log.Fn<bool>("parse debug state");
+        using var l = Log.Fn<bool>("parse debug state");
         try
         {
 #if DEBUG

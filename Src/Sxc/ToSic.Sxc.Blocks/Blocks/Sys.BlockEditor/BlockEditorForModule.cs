@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Blocks.Sys.BlockEditor;
 public class BlockEditorForModule(
     BlockEditorBase.Dependencies services,
     LazySvc<IPlatformModuleUpdater> platformModuleUpdater)
-    : BlockEditorBase(services, connect: [platformModuleUpdater])
+    : BlockEditorBase(services)
 {
     private IPlatformModuleUpdater PlatformModuleUpdater => platformModuleUpdater.Value;
 

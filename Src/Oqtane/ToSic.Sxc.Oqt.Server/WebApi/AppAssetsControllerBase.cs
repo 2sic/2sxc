@@ -19,7 +19,7 @@ public abstract class AppAssetsControllerBase : OqtControllerBase
         LazySvc<AppFolderLookupForWebApi> AppFolder,
         SiteState SiteState,
         LazySvc<OqtAssetsFileHelper> FileHelper)
-        : DependenciesBase(connect: [HostingEnvironment, AppFolder, SiteState, FileHelper]);
+        : DependenciesBase();
 
     #endregion
 
@@ -35,7 +35,7 @@ public abstract class AppAssetsControllerBase : OqtControllerBase
     [HttpGet("{*filePath}")]
     public IActionResult GetFile([FromRoute] string appName, [FromRoute] string filePath)
     {
-        var l = Log.Fn<IActionResult>($"{nameof(appName)}: {appName}; {nameof(filePath)}: {filePath}");
+        using var l = Log.Fn<IActionResult>($"{nameof(appName)}: {appName}; {nameof(filePath)}: {filePath}");
         try
         {
             if (appName == OqtWebApiConstants.Auto) appName = Deps.AppFolder.Value.GetAppFolder();

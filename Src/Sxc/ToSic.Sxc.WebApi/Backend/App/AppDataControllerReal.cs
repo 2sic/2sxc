@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Backend.App;
 /// <inheritdoc cref="IAppDataController" />
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppDataControllerReal(LazySvc<AppContent> appContentLazy)
-    : ServiceBase("Api.DataRl", connect: [appContentLazy])/*, IAppDataController*/
+    : ServiceBase("Api.DataRl")/*, IAppDataController*/
 {
     public const string LogSuffix = "Data";
 

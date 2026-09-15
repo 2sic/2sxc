@@ -1,4 +1,4 @@
-﻿using ToSic.Razor.Blade;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Sys.Render.PageContext;
 
 namespace ToSic.Sxc.Web.Sys.PageServiceShared;
@@ -12,7 +12,7 @@ partial class PageServiceShared
 
     public IList<HeadChange> GetHeadChangesAndFlush(ILog log)
     {
-        var l = log.Fn<IList<HeadChange>>();
+        using var l = log.Fn<IList<HeadChange>>();
         var changes = Headers.ToArray().ToList();
         Headers.Clear();
         return l.Return(changes, $"{changes.Count}");

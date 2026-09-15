@@ -1,4 +1,4 @@
-﻿using DotNetNuke.Entities.Users;
+using DotNetNuke.Entities.Users;
 using System.Collections;
 using System.Collections.Immutable;
 using ToSic.Eav.Context;
@@ -85,9 +85,9 @@ public class DnnUserProfile : CustomDataSourceAdvanced
     #region Constructor / DI
 
     public new record Dependencies(CustomDataSourceAdvanced.Dependencies ParentServices, ISite Site, IZoneMapper ZoneMapper, LazySvc<DnnSecurity> DnnSecurity)
-        : DependenciesBase(connect: [Site, ZoneMapper, DnnSecurity]);
+        : DependenciesBase();
 
-    public DnnUserProfile(Dependencies services) : base(services.ParentServices, "Dnn.Profile", connect: [services])
+    public DnnUserProfile(Dependencies services) : base(services.ParentServices, "Dnn.Profile")
     {
         _services = services;
         ProvideOut(GetList);
@@ -99,7 +99,7 @@ public class DnnUserProfile : CustomDataSourceAdvanced
 
     private IImmutableList<IEntity> GetList()
     {
-        var l = Log.Fn<IImmutableList<IEntity>>();
+        using var l = Log.Fn<IImmutableList<IEntity>>();
         Configuration.Parse();
 
         var realTenant = _services.Site.Id != EavConstants.NullId

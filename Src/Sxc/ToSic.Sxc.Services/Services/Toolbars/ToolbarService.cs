@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Services;
 [PrivateApi("Hide implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class ToolbarService(Generator<IToolbarBuilder> toolbarGenerator)
-    : ServiceWithContext($"{SxcLogName}.TlbSvc", connect: [toolbarGenerator]), IToolbarService
+    : ServiceWithContext($"{SxcLogName}.TlbSvc"), IToolbarService
 {
 
     /// <inheritdoc />
@@ -61,7 +61,7 @@ internal class ToolbarService(Generator<IToolbarBuilder> toolbarGenerator)
         string? context,
         object? target)
     {
-        var l = Log.Fn<IToolbarBuilder>($"{nameof(toolbarTemplate)}:{toolbarTemplate}");
+        using var l = Log.Fn<IToolbarBuilder>($"{nameof(toolbarTemplate)}:{toolbarTemplate}");
         
         // The following lines must be just as this, because it's a functional object, where each call may return a new copy
         var tlb = (ToolbarBuilder)toolbarGenerator.New();

@@ -8,7 +8,7 @@ partial class DnnEnvironmentInstaller
 
     public bool ResumeAbortedUpgrade()
     {
-        var l = Log.Fn<bool>();
+        using var l = Log.Fn<bool>();
         if (IsUpgradeRunning)
         {
             l.A("Upgrade is still running");

@@ -26,17 +26,7 @@ public class EditLoadBackend(
     EditLoadActivityAddPrefetch actAddPrefetch,
     EditLoadActivitySettingsHelper actAddActivitySettings
 )
-    : ServiceBase("Cms.LoadBk",
-        connect:
-        [
-            workCtxSvc, actGetForEditing, ctxService, typesPermissions, valContentTypeDataStore, actAddPrefetch, actAddActivitySettings,
-            actCleanupRequest,
-            actConvertRequest,
-            actAddContentTypes,
-            actAddNecessaryInputTypes,
-            actAddContext,
-            actAddRequiredFeatures,
-        ])
+    : ServiceBase("Cms.LoadBk")
 {
     public async Task<EditLoadDto> Load(int appId, List<ItemIdentifier> items)
     {

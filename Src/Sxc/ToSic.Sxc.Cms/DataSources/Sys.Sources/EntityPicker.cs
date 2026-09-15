@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.Apps.Sys.Work;
@@ -65,7 +65,7 @@ public class EntityPicker : DataSourceBase
         IUser user,
         IAppReaderFactory appReaders,
         Dependencies services
-    ) : base(services, "Api.EntPck", connect: [workEntities, appPermissions, typePermissions, ctxService, appReaders])
+    ) : base(services, "Api.EntPck")
     {
         _workEntities = workEntities;
         _ctxService = ctxService;
@@ -122,7 +122,7 @@ public class EntityPicker : DataSourceBase
     private IEnumerable<IEntity> GetList()
     {
         // Open the log after config-parse, so we have type names
-        var l = Log.Fn<IEnumerable<IEntity>>($"get list with type:{TypeNames}");
+        using var l = Log.Fn<IEnumerable<IEntity>>($"get list with type:{TypeNames}");
 
         // Get the context - must be pre-set by the caller
 
@@ -164,7 +164,7 @@ public class EntityPicker : DataSourceBase
             var result = new List<IEntity>();
             foreach (var type in types)
             {
-                var lType = l.Fn($"Adding all of '{type.Name}'");
+                using var lType = l.Fn($"Adding all of '{type.Name}'");
 
                 var permCheckType = _typePermissions.New(new() { SiteContext = context, App = context.AppReaderRequired, ContentTypes = [type.Name] });
 
@@ -211,7 +211,7 @@ public class EntityPicker : DataSourceBase
     private List<IContentType> ContentTypes => field ??= GetContentTypes();
     private List<IContentType> GetContentTypes()
     {
-        var l = Log.Fn<List<IContentType>>();
+        using var l = Log.Fn<List<IContentType>>();
 
         try
         {
@@ -244,7 +244,7 @@ public class EntityPicker : DataSourceBase
 
     private List<IEntity> FilterByIds(List<IEntity> list)
     {
-        var l = Log.Fn<List<IEntity>>($"started with {list.Count}");
+        using var l = Log.Fn<List<IEntity>>($"started with {list.Count}");
         var rawIds = ItemIds;
         if (rawIds.IsEmptyOrWs())
             return l.Return(list, "no filter, return all");

@@ -12,12 +12,12 @@ internal class AppCodeCompilerNetCore(
     Generator<Compiler> compiler,
     IGlobalConfiguration globalConfiguration,
     SourceCodeHasher sourceCodeHasher)
-    : AppCodeCompiler(globalConfiguration, sourceCodeHasher, connect: [serverPaths, compiler, sourceCodeHasher])
+    : AppCodeCompiler(globalConfiguration, sourceCodeHasher)
 {
 
     public override AssemblyResult GetAppCode(string virtualPath, HotBuildSpecWithSharedSuffix spec)
     {
-        var l = Log.Fn<AssemblyResult>($"{nameof(virtualPath)}: '{virtualPath}'; {spec}", timer: true);
+        using var l = Log.Fn<AssemblyResult>($"{nameof(virtualPath)}: '{virtualPath}'; {spec}", timer: true);
 
         try
         {

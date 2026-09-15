@@ -6,7 +6,7 @@ using ToSic.Sys.Utils;
 namespace ToSic.Sxc.Services.Cms.Sys;
 
 internal class HtmlInnerContentHelper()
-    : ServiceWithContext("Cms.StrWys", connect: [])
+    : ServiceWithContext("Cms.StrWys")
 {
     [field: AllowNull, MaybeNull]
     private IRenderService RenderService => field
@@ -14,7 +14,7 @@ internal class HtmlInnerContentHelper()
 
     public string ProcessInnerContent(string html, IContentType contentType, IContentTypeField fieldDef, IField field)
     {
-        var l = Log.Fn<string>();
+        using var l = Log.Fn<string>();
 
         // Find out if "next" field has inner-content. For that, sort attributes in the order they will be in
         var sortedFields = contentType.Attributes

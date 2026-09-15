@@ -8,7 +8,7 @@ partial class AdamWorkUpload
 
     internal bool CustomFileFilterOk(string additionalFilter, string fileName)
     {
-        var l = Log.Fn<bool>();
+        using var l = Log.Fn<bool>();
         var extension = Path.GetExtension(fileName)?.TrimStart('.') ?? "";
         var hasNonAzChars = new Regex("[^a-z]", RegexOptions.IgnoreCase);
 

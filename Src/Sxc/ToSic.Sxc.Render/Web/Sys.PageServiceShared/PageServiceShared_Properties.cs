@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Sys.Render.PageContext;
+using ToSic.Sxc.Sys.Render.PageContext;
 
 namespace ToSic.Sxc.Web.Sys.PageServiceShared;
 
@@ -11,7 +11,7 @@ partial class PageServiceShared
 
     public IList<PagePropertyChange> GetPropertyChangesAndFlush(ILog log)
     {
-        var l = log.Fn<IList<PagePropertyChange>>();
+        using var l = log.Fn<IList<PagePropertyChange>>();
         var changes = PropertyChanges.ToArray().ToList();
         PropertyChanges.Clear();
         return l.Return(changes, $"{changes.Count}");

@@ -15,7 +15,7 @@ internal class OqtEnvironmentPermission(
     IHttpContextAccessor httpContextAccessor,
     LazySvc<IUserPermissions> userPermissions,
     LazySvc<IUser> oqtUser)
-    : EnvironmentPermission(OqtConstants.OqtLogPrefix, connect: [httpContextAccessor, userPermissions, oqtUser])
+    : EnvironmentPermission(OqtConstants.OqtLogPrefix)
 {
     /// <summary>
     /// Gets the <see cref="ClaimsPrincipal"/> for user associated with the executing action.
@@ -50,7 +50,7 @@ internal class OqtEnvironmentPermission(
 
     protected override bool UserIsModuleAdmin()
     {
-        var l = Log.Fn<bool>($"{nameof(Module)}: {Module?.Id}.");
+        using var l = Log.Fn<bool>($"{nameof(Module)}: {Module?.Id}.");
         return l.ReturnAsOk(UserIsModuleEditor());
     }
 
@@ -59,7 +59,7 @@ internal class OqtEnvironmentPermission(
         return _userIsModuleEditor ??= IsModuleEditor();
         bool IsModuleEditor()
         {
-            var l = Log.Fn<bool>();
+            using var l = Log.Fn<bool>();
             if (Module == null)
                 return l.ReturnFalse();
             try

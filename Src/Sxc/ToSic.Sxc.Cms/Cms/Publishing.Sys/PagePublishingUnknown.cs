@@ -6,7 +6,7 @@ internal class PagePublishingUnknown(WarnUseOfUnknown<PagePublishingUnknown> _) 
 {
     public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
         var versioningActionInfo = new VersioningActionInfo();
         action.Invoke(versioningActionInfo);
         l.Done();

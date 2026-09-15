@@ -1,4 +1,4 @@
-﻿
+
 namespace ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -6,7 +6,7 @@ public class CspPolicyTextProcessor(ILog parentLog) : HelperBase(parentLog, $"{C
 {
     public List<KeyValuePair<string,string>> Parse(string policyText)
     {
-        var l = Log.Fn<List<KeyValuePair<string, string>>>();
+        using var l = Log.Fn<List<KeyValuePair<string, string>>>();
 
         var result = new List<KeyValuePair<string,string>>();
         if (policyText.IsEmpty())

@@ -18,8 +18,6 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : CodeHelperBa
     {
         base.ConnectToRoot(exCtx);
         _exCtx = exCtx;
-        owner.LinkLog(exCtx.Log);
-        Log.A("OqtRazorHelper connect Log");
     }
 
     private const string DynCode = "_dynCode";
@@ -78,7 +76,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : CodeHelperBa
     // TODO: DON'T think this is called in Oqtane - maybe document how it works, or remove it?
     public void SetDynamicModel(RenderSpecs renderSpecs)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
         _renderSpecs = renderSpecs;
         _overridePageData = renderSpecs.Data;
         l.Done();

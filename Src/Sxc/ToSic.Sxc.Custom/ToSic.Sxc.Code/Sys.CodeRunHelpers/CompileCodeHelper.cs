@@ -33,7 +33,7 @@ public class CompileCodeHelper() : CodeHelperBase("Sxc.CdHlp")
     /// <inheritdoc />
     public object? CreateInstance(string virtualPath, NoParamOrder npo = default, string? name = null, string? relativePath = null, bool throwOnError = true)
     {
-        var l = Log.Fn<object?>();
+        using var l = Log.Fn<object?>();
 
         // Prevent GetCode / CreateInstance from being used inside AppCode
         CodeRunThrowIfParentIsInsideAppCode(_parent);

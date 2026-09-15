@@ -20,7 +20,7 @@ partial class DynamicCodeService
     /// <inheritdoc />
     public IDynamicCode12 OfModule(int pageId, int moduleId)
     {
-        var l = Log.Fn<IDynamicCode12>($"{pageId}, {moduleId}");
+        using var l = Log.Fn<IDynamicCode12>($"{pageId}, {moduleId}");
         MakeSureLogIsInHistory();
         ActivateEditUi();
         var cmsBlock = ServicesScoped.ModAndBlockBuilder.Value.BuildBlock(pageId, moduleId);
@@ -44,7 +44,7 @@ partial class DynamicCodeService
 
     private IDynamicCode12 OfAppInternal(int? zoneId = null, int? appId = null)
     {
-        var l = Log.Fn<IDynamicCode12>();
+        using var l = Log.Fn<IDynamicCode12>();
         MakeSureLogIsInHistory();
         ActivateEditUi();
         var exCtx = ServicesScoped.ExCtxGenerator.New().New(new()

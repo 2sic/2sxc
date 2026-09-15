@@ -12,7 +12,7 @@ public class TemplateCacheService(
     AssemblyCacheManager assemblyCacheManager,
     IAssemblyDiskCacheService diskCacheService,
     LazySvc<AppCodeLoader> appCodeLoader)
-    : ServiceBase("Dnn.TmpCchSvc", connect: [assemblyCacheManager, diskCacheService, appCodeLoader])
+    : ServiceBase("Dnn.TmpCchSvc")
 {
     private const string NoAppCodeHashSeed = "no-appcode";
 
@@ -21,7 +21,7 @@ public class TemplateCacheService(
     /// </summary>
     public AssemblyResult TryGetFromCache(CodeFileInfo codeFileInfo, HotBuildSpec spec)
     {
-        var l = Log.Fn<AssemblyResult>($"{codeFileInfo}");
+        using var l = Log.Fn<AssemblyResult>($"{codeFileInfo}");
 
         // Check memory cache first
         var memoryResult = assemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath!);
@@ -65,7 +65,7 @@ public class TemplateCacheService(
     public void AddToCache(CodeFileInfo codeFileInfo, HotBuildSpec spec, AssemblyResult assemblyResult, 
         string contentHash, string appCodeHash, AssemblyResult appCodeAssemblyResult)
     {
-        var l = Log.Fn($"{codeFileInfo}");
+        using var l = Log.Fn($"{codeFileInfo}");
 
         // Add to memory cache
         var dependencies = appCodeAssemblyResult == null ? null : new ICanBeCacheDependency[] { appCodeAssemblyResult };
@@ -85,7 +85,7 @@ public class TemplateCacheService(
 
     internal AppCodeCacheInfo GetAppCodeCacheInfo(HotBuildSpec spec)
     {
-        var l = Log.Fn<AppCodeCacheInfo>($"{spec}");
+        using var l = Log.Fn<AppCodeCacheInfo>($"{spec}");
 
         var (appCodeAssemblyResult, _) = appCodeLoader.Value.GetAppCode(spec);
         var hash = ComputeAppCodeHash(appCodeAssemblyResult?.Assembly);

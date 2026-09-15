@@ -8,7 +8,7 @@ internal class LightSpeedUrlParams
 {
     internal static (bool CachingAllowed, string Extension) GetUrlParams(LightSpeedDecorator? lsConfig, IParameters? pageParameters, ILog log, bool usePiggyBack = true)
     {
-        var l = log.Fn<(bool, string)>();
+        using var l = log.Fn<(bool, string)>();
 
         // Preflight exit checks
         if (lsConfig == null)
@@ -31,7 +31,7 @@ internal class LightSpeedUrlParams
 
     private static (bool CachingAllowed, string Extension) ParseParameters(LightSpeedDecorator lsConfig, string namesCsv, IParameters pageParameters, ILog log)
     {
-        var l = log.Fn<(bool, string)>();
+        using var l = log.Fn<(bool, string)>();
 
         if (pageParameters == null! /* paranoid */)
             return l.Return((false, ""), "No page parameters / context, probably an error, certainly don't cache.");

@@ -8,7 +8,7 @@ public class AdamWorkGet(AdamWorkBase.Dependencies services)
 {
     public AdamFolderFileSet? ItemsInField(string subFolderName, bool autoCreate = false)
     {
-        var l = Log.Fn<AdamFolderFileSet>($"Subfolder: {subFolderName}; AutoCreate: {autoCreate}");
+        using var l = Log.Fn<AdamFolderFileSet>($"Subfolder: {subFolderName}; AutoCreate: {autoCreate}");
 
         l.A("starting permissions checks");
         if (AdamContext.Security.UserIsRestricted && !AdamContext.Security.FieldPermissionOk(GrantSets.ReadSomething))

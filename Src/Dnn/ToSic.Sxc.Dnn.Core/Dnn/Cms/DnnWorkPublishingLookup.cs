@@ -28,7 +28,7 @@ internal class DnnWorkPublishingLookup(IFeaturesService featuresService)
 
     protected PublishingModes LookupRequirements(int moduleId)
     {
-        var l = Log.Fn<PublishingModes>($"Requirements(mod:{moduleId}) - checking first time (others will be cached)");
+        using var l = Log.Fn<PublishingModes>($"Requirements(mod:{moduleId}) - checking first time (others will be cached)");
         try
         {
             // TODO V14 - probably we can set ignoreCache to false then, as it's probably just a workaround for an old bug

@@ -27,8 +27,7 @@ public class ContentBlockBackend(
     AppWorkContextService appCtxSvc,
     Generator<BlockOfEntity> entityBlockGenerator,
     Generator<IBlockRenderer> blockBuilderGenerator)
-    : ServiceBase("Bck.FldLst",
-        connect: [workViews, multiPermissionsApp, publishing, workBlocksMod, ctxService, optimizerLazy, blockEditorSelectorLazy, appCtxSvc, entityBlockGenerator, blockBuilderGenerator])
+    : ServiceBase("Bck.FldLst")
 {
 
     private const bool DebugDetails = true;
@@ -70,7 +69,7 @@ public class ContentBlockBackend(
 
     public AjaxRenderDto RenderForAjax(int templateId, string lang, string root, string edition)
     {
-        var l = Log.Fn<AjaxRenderDto>($"{nameof(templateId)}: {templateId}; {nameof(lang)}: {lang}; {nameof(root)}: {root}; {nameof(edition)}: {edition}");
+        using var l = Log.Fn<AjaxRenderDto>($"{nameof(templateId)}: {templateId}; {nameof(lang)}: {lang}; {nameof(root)}: {root}; {nameof(edition)}: {edition}");
         l.A("1. Get Render result");
         var result = RenderToResult(templateId, lang, edition);
 
@@ -145,7 +144,7 @@ public class ContentBlockBackend(
 
     private IRenderResult RenderToResult(int templateId, string lang, string edition)
     {
-        var l = Log.Fn<IRenderResult>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
+        using var l = Log.Fn<IRenderResult>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
 
         var block = ctxService.BlockRequired();
         // if a preview templateId was specified, swap to that

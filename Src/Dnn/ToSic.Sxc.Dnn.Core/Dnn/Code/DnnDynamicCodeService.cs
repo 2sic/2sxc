@@ -21,7 +21,7 @@ internal class DnnDynamicCodeService: DynamicCodeService
         LazySvc<PageChangeSummary> PageChangeSummary,
         LazySvc<DnnPageChanges> DnnPageChanges,
         LazySvc<DnnClientResources> DnnClientResources)
-        : DependenciesBase(connect: [PageServiceShared, PageChangeSummary, DnnPageChanges, DnnClientResources]);
+        : DependenciesBase();
 
     public DnnDynamicCodeService(Dependencies services) : base(services, $"{DnnConstants.LogName}.DynCdS")
     {
@@ -39,7 +39,7 @@ internal class DnnDynamicCodeService: DynamicCodeService
 
     private void Page_PreRender(object sender, EventArgs e)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
         var user = _user.Value;
         var changes = _scopedServices.PageChangeSummary.Value.FinalizeAndGetAllChanges(
             moduleId: 0, // ignore module Id, we don't expect any caching info here

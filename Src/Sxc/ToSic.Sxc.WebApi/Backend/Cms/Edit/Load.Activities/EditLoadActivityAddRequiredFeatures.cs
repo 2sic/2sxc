@@ -1,15 +1,15 @@
-﻿using ToSic.Eav.WebApi.Sys.Entities;
+using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
-public class EditLoadActivityAddRequiredFeatures(IUiContextBuilder contextBuilder): ServiceBase("UoW.AddCtx", connect: [contextBuilder]),
+public class EditLoadActivityAddRequiredFeatures(IUiContextBuilder contextBuilder): ServiceBase("UoW.AddCtx"),
     IWork<EditLoadDto, EditLoadDto>
 {
     public async Task<Package<EditLoadDto>> Handle(WorkContext actionCtx, Package<EditLoadDto> package)
     {
-        var l = Log.Fn<Package<EditLoadDto>>();
+        using var l = Log.Fn<Package<EditLoadDto>>();
 
         // Determine required features for the UI WIP 18.02
         var inheritedFields = actionCtx.Get<List<IContentType>>(EditLoadContextConstants.UsedTypes)

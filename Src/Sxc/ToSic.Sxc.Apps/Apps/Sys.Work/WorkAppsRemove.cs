@@ -10,7 +10,7 @@ public class WorkAppsRemove(
     IAppReaderFactory appReaders,
     IAppPathsMicroSvc appPaths,
     IAppsCatalog appsCatalog
-) : ServiceBase("Cms.AppsRt", connect: [zoneManagerLazy, appReaders, appPaths, appsCatalog])
+) : ServiceBase("Cms.AppsRt")
 {
 
     internal void RemoveAppInSiteAndEav(int zoneId, int appId, bool fullDelete)

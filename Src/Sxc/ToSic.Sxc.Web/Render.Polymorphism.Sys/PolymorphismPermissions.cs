@@ -20,7 +20,7 @@ public class PolymorphismPermissions(IUser user) : IPolymorphismResolver
 
     public string? Edition(PolymorphismConfigurationModel config, string? overrule, ILog log)
     {
-        var l = log.Fn<string>();
+        using var l = log.Fn<string>();
         
         // Verify that it's the mode we plan to process
         if (!config.Parameters.EqualsInsensitive(ModeIsSuperUser))

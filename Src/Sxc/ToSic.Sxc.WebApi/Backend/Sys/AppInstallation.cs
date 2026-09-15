@@ -22,7 +22,7 @@ public class AppInstallation : CustomDataSource
     public bool IsContentApp => Configuration.GetThis(false);
 
     public AppInstallation(Dependencies services, LazySvc<InstallControllerReal> install, ISxcCurrentContextService context)
-        : base(services, "Sxc.AppInstall", connect: [install, context])
+        : base(services, "Sxc.AppInstall")
     {
         ProvideOutRaw(() => Settings(install, context), name: "Settings", options: Options);
         ProvideOutRaw(() => InstalledApps(install, context), name: "InstalledApps", options: Options);

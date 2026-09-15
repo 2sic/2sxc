@@ -17,14 +17,14 @@ internal class LightSpeed(
     LazySvc<ISite> site,
     LazySvc<OutputCacheManager> outputCacheManager,
     LazySvc<INamedCacheDependencyService> namedDependencies
-) : ServiceBase(SxcLogName + ".Lights", connect: [features, outputCacheManager, namedDependencies]), IOutputCache
+) : ServiceBase(SxcLogName + ".Lights"), IOutputCache
 {
     [field: AllowNull, MaybeNull]
     private LightSpeedConfigHelper LsConfigHelper => field ??= new(Log);
 
     public IOutputCache Init(int moduleId, int pageId, IBlock block)
     {
-        var l = Log.Fn<IOutputCache>($"mod: {moduleId}");
+        using var l = Log.Fn<IOutputCache>($"mod: {moduleId}");
         _moduleId = moduleId;
         _pageId = pageId;
         _block = block;
@@ -49,7 +49,7 @@ internal class LightSpeed(
 
     public bool AddToLightSpeed(IRenderResult? data)
     {
-        var l = Log.Fn<bool>(timer: true);
+        using var l = Log.Fn<bool>(timer: true);
 
         // Check many exit-early clauses
         try
@@ -146,7 +146,7 @@ internal class LightSpeed(
     /// </summary>
     private bool IsEnabledOnDependentApps(List<IDependentApp> dependentApps)
     {
-        var l = Log.Fn<bool>(timer: true);
+        using var l = Log.Fn<bool>(timer: true);
         var appWhereNotEnabled = dependentApps
             .FirstOrDefault(dependentApp => !dependentApp.IsEnabled);
 
@@ -190,7 +190,7 @@ internal class LightSpeed(
 
     private OutputCacheItem? GetExisting()
     {
-        var l = Log.Fn<OutputCacheItem>();
+        using var l = Log.Fn<OutputCacheItem>();
         try
         {
             // If App not known, it can't have a cache - exit early
@@ -226,7 +226,7 @@ internal class LightSpeed(
 
     private bool GetLightSpeedIsEnabled()
     {
-        var l = Log.Fn<bool>();
+        using var l = Log.Fn<bool>();
 
         //// No real app yet, probably module was just added
         //if (_block.App == null)

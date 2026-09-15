@@ -33,7 +33,7 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp, RemoteWork<W
     /// <returns></returns>
     internal async Task<Result> PreSave(int index, IEntity ent)
     {
-        var l = Log.Fn<Result>();
+        using var l = Log.Fn<Result>();
 
         // Check if Save is disabled because of content-type metadata (new v21)
         // This should prevent entities from being put in the DB, where the UI was only meant for some other configuration
@@ -68,7 +68,7 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp, RemoteWork<W
     private async Task<Result> RunProcessorsFromDecorator(int index, IEntity ent, string action)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
     {
-        var l = Log.Fn<Result>($"action: {action}");
+        using var l = Log.Fn<Result>($"action: {action}");
 
         // Check if Save is disabled because of content-type metadata (new v21)
         // This should prevent entities from being put in the DB, where the UI was only meant for some other configuration

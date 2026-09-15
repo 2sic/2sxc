@@ -8,11 +8,11 @@ namespace ToSic.Sxc.Dnn.Integration;
 public class DnnGetBlock(
     Generator<BlockOfEntity> blockFromEntity,
     Generator<IModuleAndBlockBuilder> moduleAndBlockBuilder)
-    : ServiceBase($"{LogName}.GetBlk", connect: [blockFromEntity, moduleAndBlockBuilder])
+    : ServiceBase($"{LogName}.GetBlk")
 {
     internal IBlock GetCmsBlock(HttpRequestMessage request)
     {
-        var l = Log.Fn<IBlock>(timer: true);
+        using var l = Log.Fn<IBlock>(timer: true);
         var moduleInfo = request.FindModuleInfo();
 
         if (moduleInfo == null)
@@ -38,7 +38,7 @@ public class DnnGetBlock(
 
     private IBlock GetBlockOrInnerContentBlock(HttpRequestMessage request, IBlock block, int blockId)
     {
-        var l = Log.Fn<IBlock>($"{nameof(blockId)}: {blockId}");
+        using var l = Log.Fn<IBlock>($"{nameof(blockId)}: {blockId}");
 
         // If we have a list of inner-blocks (WIP, I believe not implemented) do we go down the list of blocks to find the inner-most one
         if (request.Headers.Contains(HeaderContentBlockList))

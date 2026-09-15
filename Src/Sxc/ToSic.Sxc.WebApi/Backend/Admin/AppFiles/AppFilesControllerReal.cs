@@ -19,8 +19,7 @@ public partial class AppFilesControllerReal(
     LazySvc<AppCodeLoader> appCodeLoader,
     AssetTemplates assetTemplates,
     IAppPathsMicroSvc appPathsFactoryTemp)
-    : ServiceBase("Bck.Assets",
-        connect: [assetEditorGenerator, assetTemplates, appReaders, appEditions, appCodeLoader, appPathsFactoryTemp]),
+    : ServiceBase("Bck.Assets"),
         IAppFilesController
 {
     public const string LogSuffix = "AppAss";
@@ -30,7 +29,7 @@ public partial class AppFilesControllerReal(
     /// </summary>
     public AssetEditInfo Asset(int appId, int templateId = 0, string? path = null, bool global = false)
     {
-        var l = Log.Fn<AssetEditInfo>($"asset templ:{templateId}, path:{path}, global:{global}");
+        using var l = Log.Fn<AssetEditInfo>($"asset templ:{templateId}, path:{path}, global:{global}");
         var assetEditor = GetAssetEditorOrThrowIfInsufficientPermissions(appId, templateId, global, path);
         assetEditor.EnsureUserMayEditAssetOrThrow();
         return l.Return(assetEditor.EditInfoWithSource);
@@ -41,7 +40,7 @@ public partial class AppFilesControllerReal(
     /// </summary>
     public bool Asset(int appId, AssetEditInfo template, int templateId, string? path, bool global)
     {
-        var l = Log.Fn<bool>($"templ:{templateId}, global:{global}, path:{path}");
+        using var l = Log.Fn<bool>($"templ:{templateId}, global:{global}, path:{path}");
         var assetEditor = GetAssetEditorOrThrowIfInsufficientPermissions(appId, templateId, global, path);
         assetEditor.Source = template.Code!;
         return l.ReturnTrue();
@@ -64,7 +63,7 @@ public partial class AppFilesControllerReal(
             Global = global,
             TemplateKey = templateKey,
         };
-        var l = Log.Fn<bool>($"create a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
+        using var l = Log.Fn<bool>($"create a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
 
         assetFromTemplateDto = EnsureRequiredFolder(assetFromTemplateDto);
 
@@ -133,7 +132,7 @@ public partial class AppFilesControllerReal(
 
     private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(int appId, int templateId, bool global, string? path)
     {
-        var l = Log.Fn<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
+        using var l = Log.Fn<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
         var assetEditor = assetEditorGenerator.New(appId);
 
         assetEditor.Init(path! /* not sure about this, but ignore for now 2026-06-23 2dm */, global, templateId);
@@ -143,7 +142,7 @@ public partial class AppFilesControllerReal(
 
     private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(AppFileDto assetFromTemplateDto)
     {
-        var l = Log.Fn<AssetEditor>($"a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
+        using var l = Log.Fn<AssetEditor>($"a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
         var assetEditor = assetEditorGenerator.New(assetFromTemplateDto.AppId)
             .Init(assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0);
         assetEditor.EnsureUserMayEditAssetOrThrow(assetEditor.InternalPath);
@@ -152,7 +151,7 @@ public partial class AppFilesControllerReal(
 
     public TemplatePreviewDto Preview(int appId, string path, string templateKey, bool b)
     {
-        var l = Log.Fn<TemplatePreviewDto>($"create a#{appId}, path:{path}, global:{b}, key:{templateKey}");
+        using var l = Log.Fn<TemplatePreviewDto>($"create a#{appId}, path:{path}, global:{b}, key:{templateKey}");
 
         try
         {

@@ -16,7 +16,7 @@ public class HyperlinkBackend(
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions,
     Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> adamDtoMaker,
     IValueConverter valueConverter)
-    : ServiceBase("Bck.HypLnk", connect: [adamCtxGen, appPermissions, ctxService, adamDtoMaker, valueConverter])
+    : ServiceBase("Bck.HypLnk")
 {
     public LinkInfoDto LookupHyperlink(int appId, string hyperlink, string? contentType, Guid guid, string? field)
     {

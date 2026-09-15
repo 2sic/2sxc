@@ -1,4 +1,4 @@
-﻿using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search.Entities;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -44,8 +44,7 @@ internal class SearchController(
     LazySvc<ILookUpEngineResolver> dnnLookUpEngineResolver,
     LazySvc<ILogStore> logStore,
     IEditionService editionSvc)
-    : ServiceBase("DNN.Search",
-        connect: [appsCache, codeCompiler, exCtxFactory, siteGenerator, dnnLookUpEngineResolver, moduleAndBlockBuilder, logStore, editionSvc])
+    : ServiceBase("DNN.Search")
 {
     /// <summary>
     /// Initialize all values which are needed - or return a text with the info why we must stop.
@@ -55,7 +54,7 @@ internal class SearchController(
     /// <returns></returns>
     private string InitAllAndVerifyIfOk(IModule module)
     {
-        var l = Log.Fn<string>();
+        using var l = Log.Fn<string>();
         // Start by getting the module info
         DnnModule = (module as Module<ModuleInfo>)?.GetContents();
         l.A($"start search for mod#{DnnModule?.ModuleID}");
@@ -118,7 +117,7 @@ internal class SearchController(
     /// <returns></returns>
     public IList<SearchDocument> GetModifiedSearchDocuments(IModule module, DateTime beginDate)
     {
-        var l = Log.Fn<List<SearchDocument>>();
+        using var l = Log.Fn<List<SearchDocument>>();
         // Turn off logging into history by default - the template code can reactivate this if desired
         var logWithPreserve = Log as Log;
         logWithPreserve?.Preserve = false;
@@ -209,7 +208,7 @@ internal class SearchController(
     /// </summary>
     private Dictionary<string, List<ISearchItem>> BuildInitialSearchInfos(KeyValuePair<string, IDataStream>[] streamsToIndex, ModuleInfo dnnModule)
     {
-        var l = Log.Fn<Dictionary<string, List<ISearchItem>>>();
+        using var l = Log.Fn<Dictionary<string, List<ISearchItem>>>();
         var language = dnnModule.CultureCode;
         var searchInfoDictionary = new Dictionary<string, List<ISearchItem>>();
         foreach (var stream in streamsToIndex)
@@ -270,7 +269,7 @@ internal class SearchController(
     /// </summary>
     private KeyValuePair<string, IDataStream>[] GetStreamsToIndex()
     {
-        var l = Log.Fn<KeyValuePair<string, IDataStream>[]>();
+        using var l = Log.Fn<KeyValuePair<string, IDataStream>[]>();
         // Check if we should filter the streams - new in 12.02
         var streamsToKeep = Block.View.SearchIndexingStreams
             .CsvToArrayWithoutEmpty();
@@ -290,7 +289,7 @@ internal class SearchController(
 
     private ICustomizeSearch CreateAndInitViewController(ISite site, IBlock block)
     {
-        var l = Log.Fn<ICustomizeSearch>();
+        using var l = Log.Fn<ICustomizeSearch>();
         // 1. Get and compile the view.ViewController
         var path = Path
             .Combine(Block.View.IsShared ? site.SharedAppsRootRelative() : site.AppsRootPhysical, block.Context.AppReaderRequired.Specs.Folder)

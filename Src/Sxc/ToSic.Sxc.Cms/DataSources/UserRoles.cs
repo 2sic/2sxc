@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.DataSource.VisualQuery;
@@ -79,7 +79,7 @@ public class UserRoles : CustomDataSourceAdvanced
     /// </summary>
     [PrivateApi]
     public UserRoles(Dependencies services, IUserRolesProvider provider)
-        : base(services, "SDS.Roles", connect: [provider])
+        : base(services, "SDS.Roles")
     {
         _provider = provider;
 
@@ -90,7 +90,7 @@ public class UserRoles : CustomDataSourceAdvanced
 
     private IImmutableList<IEntity> GetList()
     {
-        var l = Log.Fn<IImmutableList<IEntity>>();
+        using var l = Log.Fn<IImmutableList<IEntity>>();
         var roles = _provider.GetRoles()?.ToList();
         l.A($"found {roles?.Count} roles");
 

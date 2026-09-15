@@ -4,7 +4,7 @@ public partial class BlockEditorBase
 {
     internal void UpdateTitle()
     {
-        var l = Log.Fn("update title");
+        using var l = Log.Fn("update title");
 
         // check the blockConfiguration as to what should be the module title, then try to set it
         // technically it could have multiple different groups to save in, 

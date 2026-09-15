@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Services.Sys.ConvertService;
 
 [PrivateApi("Hide implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ConvertForCodeService(ConvertValueService cnvSvc) : ServiceBase("Sxc.CnvSrv", connect: [cnvSvc])
+public class ConvertForCodeService(ConvertValueService cnvSvc) : ServiceBase("Sxc.CnvSrv")
 {
     public string? ForCode(object? value, NoParamOrder npo = default, string? fallback = default)
     {

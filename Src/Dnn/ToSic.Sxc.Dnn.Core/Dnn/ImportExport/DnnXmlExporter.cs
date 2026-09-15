@@ -17,7 +17,7 @@ internal class DnnXmlExporter(
     ISxcCurrentContextService ctxService,
     XmlSerializer xmlSerializer,
     IAppsCatalog appsCat)
-    : SxcXmlExporter(xmlSerializer, appsCat, ctxService, DnnConstants.LogName, connect: [adamManager])
+    : SxcXmlExporter(xmlSerializer, appsCat, ctxService, DnnConstants.LogName)
 {
     #region Constructor / DI
 

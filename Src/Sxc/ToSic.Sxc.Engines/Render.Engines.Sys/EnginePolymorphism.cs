@@ -8,12 +8,12 @@ namespace ToSic.Sxc.Render.Engines.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class EnginePolymorphism(IEditionService editionSvc, IServerPaths serverPaths)
-    : ServiceBase("Sxc.EngPly", connect: [editionSvc, serverPaths])
+    : ServiceBase("Sxc.EngPly")
 {
     internal (string? NewPath, string? Edition) PolymorphTryToSwitchPath(string root, IView view, IAppReader appReader)
     {
         var subPath = view.Path;
-        var l = Log.Fn<(string? NewPath, string? Edition)>($"{root}, {subPath}");
+        using var l = Log.Fn<(string? NewPath, string? Edition)>($"{root}, {subPath}");
         // Get initial path - here the file is already reliably stored
         view.EditionPath = subPath.ToAbsolutePathForwardSlash();
         subPath = view.EditionPath.TrimPrefixSlash();
@@ -53,7 +53,7 @@ public class EnginePolymorphism(IEditionService editionSvc, IServerPaths serverP
 
     private (string? Edition, IView View) PolymorphTestPathAndSetIfFound(IView view, string root, string edition, string subPath)
     {
-        var l = Log.Fn<(string?, IView)>($"root: {root}; edition: {edition}; subPath: {subPath}");
+        using var l = Log.Fn<(string?, IView)>($"root: {root}; edition: {edition}; subPath: {subPath}");
         var fullPathForTest = Path.Combine(root, edition, subPath).ToAbsolutePathForwardSlash();
         if (!File.Exists(serverPaths.FullAppPath(fullPathForTest)))
             return l.Return((null, view),"not found");

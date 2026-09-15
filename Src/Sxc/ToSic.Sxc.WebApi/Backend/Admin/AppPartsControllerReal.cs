@@ -9,7 +9,7 @@ public class AppPartsControllerReal(
     LazySvc<IContextOfSite> context,
     LazySvc<ExportContent> exportContent,
     Generator<ImportContent> importContent)
-    : Services_ServiceBase("Api.APartsRl", connect: [context, exportContent, importContent]), IAppPartsController
+    : Services_ServiceBase("Api.APartsRl"), IAppPartsController
 {
     public const string LogSuffix = "AParts";
 
@@ -48,7 +48,7 @@ public class AppPartsControllerReal(
     /// <exception cref="ArgumentException"></exception>
     public ImportResultDto Import(HttpUploadedFile uploadInfo, int zoneId, int appId)
     {
-        var l = Log.Fn<ImportResultDto>();
+        using var l = Log.Fn<ImportResultDto>();
 
         if (!uploadInfo.HasFiles()) 
             return l.Return(new(false, "no file uploaded"), "no file uploaded");

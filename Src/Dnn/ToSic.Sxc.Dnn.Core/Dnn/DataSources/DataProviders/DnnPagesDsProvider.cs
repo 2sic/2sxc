@@ -1,4 +1,4 @@
-﻿using DotNetNuke.Entities.Portals;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Security.Permissions;
 using ToSic.Sxc.Cms.Pages.Sys;
@@ -23,7 +23,7 @@ internal class DnnPagesDsProvider() : PagesDataSourceProvider("Dnn.Pages")
         bool requireViewPermissions = true,
         bool requireEditPermissions = true)
     {
-        var l = Log.Fn<List<PageModelRaw>>($"PortalId: {PortalSettings.Current?.PortalId ?? -1}");
+        using var l = Log.Fn<List<PageModelRaw>>($"PortalId: {PortalSettings.Current?.PortalId ?? -1}");
         List<TabInfo> pages;
         try
         {

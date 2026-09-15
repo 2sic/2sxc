@@ -57,7 +57,7 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
         var log = new Log("Sxc.Http", null, uriToLog);
         AddToInsightsHistory(sp, uriToLog, log);
 
-        var l = log.Fn<HttpControllerDescriptor>();
+        using var l = log.Fn<HttpControllerDescriptor>();
 
         if (!IsSxcOrEavRequest(request))
             return l.Return(PreviousSelector.SelectController(request), $"not 2sxc request, use upstream ${nameof(HttpControllerDescriptor)}");

@@ -1,4 +1,4 @@
-﻿using Oqtane.Repository;
+using Oqtane.Repository;
 using Oqtane.Models;
 using Oqtane.Shared;
 using ToSic.Sxc.Blocks;
@@ -16,7 +16,7 @@ public class Pages(
 {
     public List<PageModule> AllModulesWithContent(int siteId)
     {
-        var l = Log.Fn<List<PageModule>>($"{siteId}");
+        using var l = Log.Fn<List<PageModule>>($"{siteId}");
 
         // create an array with all modules
         var sxcContents = pageModuleRepository.GetPageModules(siteId)

@@ -1,4 +1,4 @@
-﻿using ToSic.Sys.Utils;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
@@ -6,7 +6,7 @@ partial class AppFilesControllerReal
 {
     public ICollection<string> All(int appId, bool global, string? path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
     {
-        var l = Log.Fn<ICollection<string>>(
+        using var l = Log.Fn<ICollection<string>>(
             $"list a#{appId}, {nameof(global)}:{global}, {nameof(path)}:'{path}', {nameof(mask)}:'{mask}', withSub:{withSubfolders}, {nameof(returnFolders)}:{returnFolders}"
         );
 
@@ -50,7 +50,7 @@ partial class AppFilesControllerReal
     public AllFilesDto AppFiles(int appId, string? path, string? mask)
     {
         mask = mask ?? "*.*";
-        var l = Log.Fn<AllFilesDto>($"list all files a#{appId}, path:'{path}', mask:'{mask}'");
+        using var l = Log.Fn<AllFilesDto>($"list all files a#{appId}, path:'{path}', mask:'{mask}'");
 
         var localFiles =
             All(appId, global: false, path: path, mask: mask, withSubfolders: true, returnFolders: false)

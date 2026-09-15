@@ -14,7 +14,7 @@ partial class SimpleDataEditService
     /// <returns></returns>
     public static EntitySavePublishing GetPublishSpecs(object? publishedState, bool? defaultPublished, bool writePublishAllowed, ILog log)
     {
-        var l = log.Fn<EntitySavePublishing>($"{nameof(publishedState)}: {publishedState}; {nameof(defaultPublished)}: {defaultPublished}; {nameof(writePublishAllowed)}: {writePublishAllowed}");
+        using var l = log.Fn<EntitySavePublishing>($"{nameof(publishedState)}: {publishedState}; {nameof(defaultPublished)}: {defaultPublished}; {nameof(writePublishAllowed)}: {writePublishAllowed}");
         // If it already has a published original
         // Then we want to keep it that way, unless it's not allowed,
         // in which case we must branch (if we will create a draft, to be determined later on)

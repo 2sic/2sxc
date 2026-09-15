@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Sys.Permissions;
+using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Blocks.Sys.Work;
@@ -13,11 +13,11 @@ public class UsageBackend(
     AppWorkChain<WorkViews> workViews,
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions,
     ISxcCurrentContextService ctxService)
-    : ServiceBase("Bck.Usage", connect: [appCtxSvc, appPermissions, ctxService, workViews, appBlocks])
+    : ServiceBase("Bck.Usage")
 {
     public IEnumerable<ViewDto> ViewUsage(int appId, Guid guid, Func<ICollection<IView>, ICollection<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
     {
-        var l = Log.Fn<IEnumerable<ViewDto>>($"{appId}, {guid}");
+        using var l = Log.Fn<IEnumerable<ViewDto>>($"{appId}, {guid}");
         var context = ctxService.GetExistingAppOrSet(appId);
 
         // extra security to only allow zone change if host user

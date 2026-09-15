@@ -18,7 +18,6 @@ internal class DynamicApiCompileCodeHelpers: CompileCodeHelper
     public DynamicApiCompileCodeHelpers(DnnApiController owner, DnnWebApiHelper sysHlp)
     {
         _owner = owner;
-        this.LinkLog((owner as IHasLog)?.Log);
         _sysHlp = sysHlp;
     }
 
@@ -96,7 +95,7 @@ internal class DynamicApiCompileCodeHelpers: CompileCodeHelper
 
     private IApp GetAppOrNullFromUrlParams(ApiControllerDependencies services, HttpRequestMessage request)
     {
-        var l = Log.Fn<IApp>();
+        using var l = Log.Fn<IApp>();
         try
         {
             var routeAppPath = services.AppFolderUtilities.Setup(request).GetAppFolder(false);

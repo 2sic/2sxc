@@ -19,20 +19,16 @@ internal class DnnRenderService : RenderService
         Generator<IContextOfBlock> context
     ) : base(services)
     {
-        // Must be done like this, since the base class can also be created directly through DI,
-        // so the default constructor can't include `connect`
-        ConnectLogs([
-            _dnnPageChanges = dnnPageChanges,
-            _dnnClientResources = dnnClientResources,
-            _context = context
-        ]);
+        _dnnPageChanges = dnnPageChanges;
+        _dnnClientResources = dnnClientResources;
+        _context = context;
     }
 
     public override IRenderResult Module(int pageId, int moduleId,
         NoParamOrder npo = default,
         object data = null)
     {
-        var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
+        using var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
         var result = base.Module(pageId, moduleId, npo, data);
 
         // this code should be executed in PreRender of page (ensure when calling) or it is too late

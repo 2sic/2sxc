@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Oqt.Shared.Models;
+using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Sys.Render.PageContext;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output;
@@ -26,7 +26,7 @@ partial class OqtPageOutput
 
     public IEnumerable<OqtPagePropertyChanges> GetOqtPagePropertyChangesList(IList<PagePropertyChange> props)
     {
-        var l = Log.Fn<IEnumerable<OqtPagePropertyChanges>>();
+        using var l = Log.Fn<IEnumerable<OqtPagePropertyChanges>>();
 
         var result = new List<OqtPagePropertyChanges>();
         foreach (var p in props)

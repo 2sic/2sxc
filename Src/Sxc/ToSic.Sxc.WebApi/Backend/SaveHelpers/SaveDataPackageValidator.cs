@@ -18,7 +18,7 @@ internal class SaveDataPackageValidator(ILog parentLog) : ValidatorBase(parentLo
     /// <returns></returns>
     internal HttpExceptionAbstraction? ContainsOnlyExpectedNodes(EditSaveDto package)
     {
-        var l = Log.Fn<HttpExceptionAbstraction?>();
+        using var l = Log.Fn<HttpExceptionAbstraction?>();
 
         // check that items are mostly intact
         if (package.Items == null! || package.Items.Count == 0)
@@ -39,7 +39,7 @@ internal class SaveDataPackageValidator(ILog parentLog) : ValidatorBase(parentLo
     /// </summary>
     private void ValidateEachItemInBundle(IList<BundleWithHeader<JsonEntity>> list)
     {
-        var l = Log.Fn($"{list.Count}");
+        using var l = Log.Fn($"{list.Count}");
         foreach (var item in list)
         {
             if (item.Header == null! /* paranoid */ || item.Entity == null!)
@@ -61,7 +61,7 @@ internal class SaveDataPackageValidator(ILog parentLog) : ValidatorBase(parentLo
     /// </summary>
     private void VerifyAllGroupAssignmentsValid(IReadOnlyCollection<BundleWithHeader<JsonEntity>> list)
     {
-        var l = Log.Fn($"{list.Count}");
+        using var l = Log.Fn($"{list.Count}");
         var groupAssignments = list
             .Select(i => i.Header.ContentBlockAppId)
             .Where(g => g != null)

@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Sys.State;
+using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.Data.ContentTypes.Fields.Sys;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockEditor;
@@ -13,7 +13,7 @@ public class ContentGroupList(
     AppWorkChain<WorkBlocks> blocks,
     LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
     AppWorkChain<WorkFieldList> workFieldList)
-    : ServiceWithSetup<IAppWorkContext>("Api.GrpPrc", connect: [blocks, workFieldList, blockEditorSelectorLazy])
+    : ServiceWithSetup<IAppWorkContext>("Api.GrpPrc")
 {
     #region Constructor / DI
 
@@ -30,7 +30,7 @@ public class ContentGroupList(
 
     internal bool IfChangesAffectListUpdateIt(IBlock? block, List<BundleWithHeader<IEntity>> items, Dictionary<Guid, int> ids)
     {
-        var l = Log.Fn<bool>();
+        using var l = Log.Fn<bool>();
         var groupItems = items
             .Where(i => i.Header.Parent != null)
             .GroupBy(i => i.Header.Parent!.Value.ToString() + i.Header.IndexSafeOrFallback() + i.Header.AddSafe)
@@ -45,7 +45,7 @@ public class ContentGroupList(
 
     private bool PostSaveUpdateIdsInParent(IBlock? block, Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, BundleWithHeader<IEntity>>> pairsOrSingleItems)
     {
-        var l = Log.Fn<bool>($"{MyOptions.AppReader.AppId}");
+        using var l = Log.Fn<bool>($"{MyOptions.AppReader.AppId}");
 
         // If no content block given, skip all this
         if (block == null)
@@ -123,7 +123,7 @@ public class ContentGroupList(
 
     private int? FindPresentationItem(Dictionary<Guid, int> postSaveIds, IGrouping<string, BundleWithHeader<IEntity>> bundle)
     {
-        var l = Log.Fn<int?>();
+        using var l = Log.Fn<int?>();
         int? presentationId = null;
         var presItem =
             bundle.FirstOrDefault(e => e.Header.Field.EqualsInsensitive(ViewParts.Presentation))
@@ -143,7 +143,7 @@ public class ContentGroupList(
 
     internal List<ItemIdentifier> ConvertGroup(List<ItemIdentifier> identifiers)
     {
-        var l = Log.Fn<List<ItemIdentifier>>();
+        using var l = Log.Fn<List<ItemIdentifier>>();
         var result = identifiers
             .Select(ItemIdentifier? (identifier) => identifier == null! /* paranoid */
                 ? null
@@ -158,13 +158,13 @@ public class ContentGroupList(
 
     internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers)
     {
-        var lOuter = Log.Fn<List<ItemIdentifier>>();
+        using var lOuter = Log.Fn<List<ItemIdentifier>>();
          //new List<ItemIdentifier>();
         var appBlocks = blocks.New(MyOptions);
         var corrected = identifiers
             .Select((identifier, index) =>
             {
-                var l = lOuter.Fn<ItemIdentifier>($"{index}");
+                using var l = lOuter.Fn<ItemIdentifier>($"{index}");
                 // Case one, it's a Content-Group - in this case the content-type name comes from View configuration
                 if (identifier.IsContentBlockMode)
                 {
@@ -233,7 +233,7 @@ public class ContentGroupList(
     /// <returns></returns>
     private bool DetectContentBlockMode(ItemIdentifier identifier)
     {
-        var l = Log.Fn<bool>();
+        using var l = Log.Fn<bool>();
         if (!identifier.Parent.HasValue)
             return l.ReturnFalse("no parent");
 
@@ -245,7 +245,7 @@ public class ContentGroupList(
 
     private ItemIdentifier ConvertListIndexToEntityIds(ItemIdentifier identifier, BlockConfiguration blockConfiguration)
     {
-        var l = Log.Fn<ItemIdentifier>();
+        using var l = Log.Fn<ItemIdentifier>();
         var part = blockConfiguration[identifier.Field!];
         if (!identifier.AddSafe) // not in add-mode
         {

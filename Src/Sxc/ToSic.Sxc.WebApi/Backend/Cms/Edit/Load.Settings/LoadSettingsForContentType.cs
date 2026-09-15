@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Sys.AppStack;
+using ToSic.Eav.Apps.Sys.AppStack;
 using ToSic.Eav.Data.ContentTypes.Sys;
 using ToSic.Sys.Utils;
 using static System.String;
@@ -10,7 +10,7 @@ internal class LoadSettingsForContentType()
 {
     public Dictionary<string, object> GetSettings(LoadSettingsProviderParameters parameters)
     {
-        var l = Log.Fn<Dictionary<string, object>>();
+        using var l = Log.Fn<Dictionary<string, object>>();
         // find all keys which may be necessary
         var settingsKeys = parameters.ContentTypes
             .SelectMany(ct =>

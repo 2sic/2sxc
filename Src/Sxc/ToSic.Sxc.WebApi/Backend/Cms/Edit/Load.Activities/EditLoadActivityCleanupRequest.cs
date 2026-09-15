@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Metadata.Targets;
 using ToSic.Eav.WebApi.Sys.Entities;
@@ -9,13 +9,13 @@ using ToSic.Sys.Utils;
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
 public class EditLoadActivityCleanupRequest(AppWorkChain<ContentGroupList> contentGroupList, ITargetTypeService mdTargetTypes)
-    : ServiceBase("UoW.AddCtx", connect: [contentGroupList, mdTargetTypes]),
+    : ServiceBase("UoW.AddCtx"),
         IWork<List<ItemIdentifier>, List<ItemIdentifier>>
 {
     // Note: reworked this 2026-05-15 2dm to make the objects immutable, hope no side effects #ImmutableIsTheNewBlack
     public async Task<Package<List<ItemIdentifier>>> Handle(WorkContext actionCtx, Package<List<ItemIdentifier>> package)
     {
-        var l = Log.Fn<List<ItemIdentifier>>();
+        using var l = Log.Fn<List<ItemIdentifier>>();
 
         var items = package.Data;
         var appCtx = actionCtx.Get<IAppWorkContext>(EditLoadContextConstants.AppWorkCtx);
@@ -35,7 +35,7 @@ public class EditLoadActivityCleanupRequest(AppWorkChain<ContentGroupList> conte
     // ReSharper disable once UnusedMethodReturnValue.Local
     private List<ItemIdentifier> TryToAutoFindMetadataSingleton(List<ItemIdentifier> list, IMetadataSource appMdSource)
     {
-        var l = Log.Fn<List<ItemIdentifier>>();
+        using var l = Log.Fn<List<ItemIdentifier>>();
 
         var result = list
             .Select(header =>

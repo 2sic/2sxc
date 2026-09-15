@@ -21,7 +21,7 @@ public partial class DataService(
     LazySvc<IAppsCatalog> appsCatalog,
     LazySvc<QueryManager<Query>> queryManager,
     IUser user)
-    : ServiceWithContext("Sxc.DatSvc", connect: [user, dataSources, catalog, appsCatalog, queryManager]),
+    : ServiceWithContext("Sxc.DatSvc"),
         IDataService,
         IServiceWithSetup<DataService.Options>
 {
@@ -75,7 +75,7 @@ public partial class DataService(
 
     public IDataSource GetAppSource(NoParamOrder npo = default, object? parameters = default, object? options = default)
     {
-        var l = Log.Fn<IDataSource>($"{nameof(options)}: {options}");
+        using var l = Log.Fn<IDataSource>($"{nameof(options)}: {options}");
         var fullOptions = OptionsMs.SafeOptions(parameters, options: options, identityRequired: true);
         var appSource = dataSources.Value.CreateDefault(fullOptions);
         return l.Return(appSource);

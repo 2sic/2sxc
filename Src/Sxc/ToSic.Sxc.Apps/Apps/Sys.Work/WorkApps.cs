@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.AppReader.Sys;
+using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Apps.Sys.State;
@@ -11,12 +11,12 @@ namespace ToSic.Sxc.Apps.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class WorkApps(IAppStateCacheService appStates, IAppReaderFactory appReaders, Generator<IAppPathsMicroSvc> appPathsGen, LazySvc<GlobalPaths> globalPaths, IAppsCatalog appsCatalog)
-    : ServiceBase("Cms.AppsRt", connect: [appStates, appReaders, appPathsGen, globalPaths, appsCatalog])
+    : ServiceBase("Cms.AppsRt")
 {
 
     public IList<AppUiInfo> GetSelectableApps(ISite site, string? filter)
     {
-        var l = Log.Fn<List<AppUiInfo>>($"filter:{filter}");
+        using var l = Log.Fn<List<AppUiInfo>>($"filter:{filter}");
         var list =
             GetApps(site)
                 .Where(reader =>
@@ -76,7 +76,7 @@ public class WorkApps(IAppStateCacheService appStates, IAppReaderFactory appRead
     /// <returns></returns>
     public ICollection<IAppReader> GetInheritableApps(ISite site)
     {
-        var l = Log.Fn<ICollection<IAppReader>>();
+        using var l = Log.Fn<ICollection<IAppReader>>();
         
         var defaultAppId = appsCatalog.DefaultAppIdentity(site.ZoneId).AppId;
 

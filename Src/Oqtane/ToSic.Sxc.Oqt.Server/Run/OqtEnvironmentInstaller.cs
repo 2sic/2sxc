@@ -14,7 +14,7 @@ internal class OqtEnvironmentInstaller(
     AppWorkQuick<WorkViews> workViews,
     ExternalLinksService externalLinksService,
     IAppsCatalog appsCatalog)
-    : ServiceBase($"{OqtConstants.OqtLogPrefix}.Instll", connect: [workViews, appsCatalog, externalLinksService]),
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.Instll"),
         IEnvironmentInstaller, IPlatformAppInstaller
 {
     public string UpgradeMessages()

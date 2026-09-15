@@ -12,7 +12,7 @@ public class RoslynCacheFallbackHandler(
     IAssemblyDiskCacheService diskCacheService,
     TemplateCacheService cacheService,
     AssemblyDiskCache diskCache)
-    : ServiceBase("Dnn.RzCacheFb", connect: [diskCacheService, cacheService, diskCache])
+    : ServiceBase("Dnn.RzCacheFb")
 {
     public AssemblyResult TryUseExisting(
         CodeFileInfo codeFileInfo,
@@ -26,7 +26,7 @@ public class RoslynCacheFallbackHandler(
         AssemblyResult appCodeAssemblyResult,
         Func<Assembly, AssemblyResult> createResult)
     {
-        var l = Log.Fn<AssemblyResult>(timer: true);
+        using var l = Log.Fn<AssemblyResult>(timer: true);
 
         if (errors == null || !IsWriteLockError(errors))
             return l.ReturnNull();

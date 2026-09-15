@@ -13,7 +13,7 @@ public abstract record HybridHtmlStringLog: HybridHtmlString, IHasLog
 
     protected HybridHtmlStringLog(ILog parentLog, string logName)
     {
-        Log = new Log(logName, parentLog);
+        Log = new Log(logName);
     }
 
 

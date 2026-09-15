@@ -14,7 +14,7 @@ public partial class ExecutionContext
         string? relativePath = null,
         bool throwOnError = true)
     {
-        var l = Log.Fn<object>($"{virtualPath}, {name}, {relativePath}, {throwOnError}");
+        using var l = Log.Fn<object>($"{virtualPath}, {name}, {relativePath}, {throwOnError}");
 
         // Compile
         var compiler = Services.CodeCompilerLazy.Value;

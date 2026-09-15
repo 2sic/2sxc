@@ -10,13 +10,13 @@ namespace ToSic.Sxc.Code.Sys.CodeApiService;
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ExecutionContextFactory(IServiceProvider serviceProvider)
-    : ServiceBase($"{SxcLogName}.ExCtxF", connect: [/* never! serviceProvider */]), IExecutionContextFactory
+    : ServiceBase($"{SxcLogName}.ExCtxF"), IExecutionContextFactory
 {
 
     /// <inheritdoc/>
     public IExecutionContext New(ExecutionContextOptions options)
     {
-        var l = Log.Fn<ExecutionContext>($"{nameof(options.Compatibility)}: {options.Compatibility}");
+        using var l = Log.Fn<ExecutionContext>($"{nameof(options.Compatibility)}: {options.Compatibility}");
 
         // New v14 case - the Razor component implements IDynamicData<model, Kit>
         // which specifies what kit version to use.
@@ -40,7 +40,7 @@ public class ExecutionContextFactory(IServiceProvider serviceProvider)
     /// <returns>`null` if not applicable, otherwise the typed DynamicRoot</returns>
     private ExecutionContext? TryBuildCodeApiServiceForDynamic(Type customType)
     {
-        var l = Log.Fn<ExecutionContext>();
+        using var l = Log.Fn<ExecutionContext>();
         try
         {
             var requiredDynCode = typeof(IHasKit<>);

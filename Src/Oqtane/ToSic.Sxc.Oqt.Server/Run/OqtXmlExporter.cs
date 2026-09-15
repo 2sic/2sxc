@@ -24,11 +24,7 @@ internal class OqtXmlExporter(
     LazySvc<ITenantResolver> oqtTenantResolverLazy,
     IAppsCatalog appsCatalog,
     LazySvc<OqtAssetsFileHelper> fileHelper)
-    : SxcXmlExporter(xmlSerializer, appsCatalog, ctxService, OqtConstants.OqtLogPrefix,
-        connect:
-        [
-            hostingEnvironment, fileRepositoryLazy, folderRepositoryLazy, oqtTenantResolverLazy, fileHelper, adamManager
-        ])
+    : SxcXmlExporter(xmlSerializer, appsCatalog, ctxService, OqtConstants.OqtLogPrefix)
 {
     #region Constructor / DI
 

@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.Sys.PropertyStack;
+using ToSic.Eav.Data.Sys.PropertyStack;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Settings;
 
@@ -7,7 +7,7 @@ public abstract class LoadSettingsProviderBase(string logName) : ServiceBase(log
 {
     protected Dictionary<string, object> SettingsByKeys(PropertyStack appSettings, List<string> keys)
     {
-        var l = Log.Fn<Dictionary<string, object>>();
+        using var l = Log.Fn<Dictionary<string, object>>();
         // Try to find each setting
         var settings = keys.ToDictionary(
             key => key,

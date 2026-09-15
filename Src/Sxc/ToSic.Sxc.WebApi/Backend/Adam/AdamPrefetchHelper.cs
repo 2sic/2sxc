@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Adam.Sys.Work;
+using ToSic.Sxc.Adam.Sys.Work;
 
 namespace ToSic.Sxc.Backend.Adam;
 
@@ -18,7 +18,7 @@ public class AdamPrefetchHelper(Generator<AdamWorkGet, AdamWorkOptions> adamGet,
 
     public ICollection<AdamItemDto> GetAdamItemsForPrefetch(string subFolderName, bool autoCreate = true)
     {
-        var l = Log.Fn<ICollection<AdamItemDto>>($"subFolderName:{subFolderName}, autoCreate:{autoCreate}");
+        using var l = Log.Fn<ICollection<AdamItemDto>>($"subFolderName:{subFolderName}, autoCreate:{autoCreate}");
         var adamGetReady = adamGet.New(MyOptions);
         var items = adamGetReady.ItemsInField(subFolderName, autoCreate);
         

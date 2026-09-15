@@ -18,8 +18,7 @@ internal class OqtGetBlock(
     Generator<IContextOfBlock> cntOfBlkGen,
     Generator<BlockOfModule> blkFromModGen,
     Generator<BlockOfEntity> blkFromEntGen)
-    : ServiceBase("Sxc.GetBlk",
-            connect: [modRepoLazy, requestHelper, currentContextServiceToInit, cntOfBlkGen, blkFromModGen, blkFromEntGen]),
+    : ServiceBase("Sxc.GetBlk"),
         IWebApiContextBuilder
 {
     public ISxcCurrentContextService PrepareContextResolverForApiRequest()
@@ -36,7 +35,7 @@ internal class OqtGetBlock(
 
     private IBlock InitializeBlock()
     {
-        var l = Log.Fn<IBlock>();
+        using var l = Log.Fn<IBlock>();
 
         // WebAPI calls can contain the original parameters that made the page, so that views can respect that
         var moduleId = TryGetId(ContextConstants.ModuleIdKey);
@@ -63,7 +62,7 @@ internal class OqtGetBlock(
 
     private int TryGetId(string key)
     {
-        var l = Log.Fn<int>(key);
+        using var l = Log.Fn<int>(key);
         var id = requestHelper.TryGetId(key);
         return l.Return(id, id == Eav.Sys.EavConstants.NullId ? "not found" : $"found {id}");
     }

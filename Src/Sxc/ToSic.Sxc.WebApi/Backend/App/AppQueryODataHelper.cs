@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.DataFormats.EavLight;
+using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.OData;
 using ToSic.Eav.DataSource.Sys.Convert;
@@ -15,13 +15,13 @@ namespace ToSic.Sxc.Backend.App;
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppQueryODataHelper(Generator<IConvertToEavLight> dataConverter, IDataSourcesService dataSourcesService)
-    : ServiceBase("Sxc.ApiApQ", connect: [dataConverter, dataSourcesService])
+    : ServiceBase("Sxc.ApiApQ")
 {
 
 
     internal IDictionary<string, IEnumerable<EavLightEntity>> ApplyOData(IDataSource query, IDictionary<string, ODataOptions> streams, string[]? filterGuids, bool withGuid = false, bool withEdit = false)
     {
-        var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>();
+        using var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>();
         var oDataEngine = new ODataQueryEngine(dataSourcesService);
 
         var guidFilter = DataSourceConvertHelper.SafeParseGuidList(filterGuids);
@@ -35,7 +35,7 @@ public class AppQueryODataHelper(Generator<IConvertToEavLight> dataConverter, ID
             .Select(stream =>
             {
                 var streamName = stream.Key;
-                var lStream = l.Fn<(string name, IEnumerable<EavLightEntity> list)>(streamName);
+                using var lStream = l.Fn<(string name, IEnumerable<EavLightEntity> list)>(streamName);
                 
                 var sourceStream = query.GetStream(streamName, nullIfNotFound: true);
 

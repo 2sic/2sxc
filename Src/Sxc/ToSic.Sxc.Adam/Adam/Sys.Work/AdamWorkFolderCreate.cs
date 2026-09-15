@@ -9,7 +9,7 @@ public class AdamWorkFolderCreate(AdamWorkBase.Dependencies services)
 {
     public bool Create(string parentSubfolder, string newFolder)
     {
-        var l = Log.Fn<bool>($"get folders for subfolder:{parentSubfolder}, new:{newFolder}");
+        using var l = Log.Fn<bool>($"get folders for subfolder:{parentSubfolder}, new:{newFolder}");
         if (AdamContext.Security.UserIsRestricted && !AdamContext.Security.FieldPermissionOk(GrantSets.ReadSomething))
             return l.ReturnFalse();
 

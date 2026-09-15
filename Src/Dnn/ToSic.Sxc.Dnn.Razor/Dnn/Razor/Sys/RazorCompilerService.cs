@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys;
 public class RazorCompilerService(
     MemoryCacheService memoryCacheService,
     IAssemblyDiskCacheService diskCacheService)
-    : ServiceBase("Dnn.RzrCmpSvc", connect: [memoryCacheService, diskCacheService])
+    : ServiceBase("Dnn.RzrCmpSvc")
 {
     private const string FallbackBaseClass = "System.Web.WebPages.WebPageBase";
     private const string CSharpCodeProviderCacheKey = "Sxc-Dnn-CSharpCodeProvider";
@@ -34,7 +34,7 @@ public class RazorCompilerService(
         string sourceFileName, 
         string outputAssemblyPath = null)
     {
-        var l = Log.Fn<(Assembly, List<CompilerError>)>(timer: true, parameters: $"sourceCode: {sourceCode.Length} chars");
+        using var l = Log.Fn<(Assembly, List<CompilerError>)>(timer: true, parameters: $"sourceCode: {sourceCode.Length} chars");
 
         var baseClass = FindBaseClass(sourceCode);
         l.A($"Base class: {baseClass}");
@@ -42,17 +42,17 @@ public class RazorCompilerService(
         var engine = CreateRazorTemplateEngine(className, baseClass, DefaultNamespace);
 
         // Generate C# code from Razor template
-        var lTimer = Log.Fn("Generate Code", timer: true);
+        using var lTimer = Log.Fn("Generate Code", timer: true);
         using var reader = new StringReader(sourceCode);
         var razorResults = engine.GenerateCode(reader, className, DefaultNamespace, sourceFileName);
         lTimer.Done();
 
         // Compile the template into an assembly
         var compiler = GetCSharpCodeProvider();
-        lTimer = Log.Fn("Compile", timer: true);
+        using var compileTimer = Log.Fn("Compile", timer: true);
         var compilerParameters = CreateCompilerParameters(referencedAssemblies, outputAssemblyPath);
         var compilerResults = compiler.CompileAssemblyFromDom(compilerParameters, razorResults.GeneratedCode);
-        lTimer.Done();
+        compileTimer.Done();
 
         if (compilerResults.Errors.Count <= 0)
             return l.ReturnAsOk((compilerResults.CompiledAssembly, null));
@@ -66,7 +66,7 @@ public class RazorCompilerService(
 
     private string FindBaseClass(string template)
     {
-        var l = Log.Fn<string>($"template: {template.Length} chars");
+        using var l = Log.Fn<string>($"template: {template.Length} chars");
         
         try
         {
@@ -90,7 +90,7 @@ public class RazorCompilerService(
 
     private RazorTemplateEngine CreateRazorTemplateEngine(string className, string baseClass, string defaultNamespace)
     {
-        var l = Log.Fn<RazorTemplateEngine>($"className: '{className}'; baseClass: '{baseClass}'", timer: true);
+        using var l = Log.Fn<RazorTemplateEngine>($"className: '{className}'; baseClass: '{baseClass}'", timer: true);
 
         var host = new RazorEngineHost(new CSharpRazorCodeLanguage())
         {
@@ -123,7 +123,7 @@ public class RazorCompilerService(
 
     private CSharpCodeProvider GetCSharpCodeProvider()
     {
-        var l = Log.Fn<CSharpCodeProvider>(timer: true);
+        using var l = Log.Fn<CSharpCodeProvider>(timer: true);
         
         if (memoryCacheService.TryGet<CSharpCodeProvider>(CSharpCodeProviderCacheKey, out var fromCache))
             return l.Return(fromCache, "from cached");

@@ -18,7 +18,7 @@ public class CspOfApp : ServiceWithContext
 
     #region Constructor
 
-    public CspOfApp(IUser user, CspOfModule moduleCsp) : base(CspConstants.LogPrefix + ".AppLvl", connect: [/* nothing everything is already connected */])
+    public CspOfApp(IUser user, CspOfModule moduleCsp) : base(CspConstants.LogPrefix + ".AppLvl")
     {
         _user = user;
         _moduleCsp = moduleCsp;
@@ -35,7 +35,7 @@ public class CspOfApp : ServiceWithContext
     /// <param name="exCtx"></param>
     public override void ConnectToRoot(IExecutionContext exCtx)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
         base.ConnectToRoot(exCtx);
         // Also connect upstream CspOfModule in case it's not yet connected
         _moduleCsp.ConnectToRoot(exCtx);
@@ -51,7 +51,7 @@ public class CspOfApp : ServiceWithContext
 
     private string? GetAppPolicies()
     {
-        var l = Log.Fn<string?>(AppId.ToString());
+        using var l = Log.Fn<string?>(AppId.ToString());
 
         // Get Stack
         if (ExCtxOrNull?.GetDataStack<IDynamicStack>(ExecutionContextStateNames.Settings) is not { } stack) 

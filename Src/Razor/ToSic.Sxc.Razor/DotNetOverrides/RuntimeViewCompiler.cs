@@ -66,9 +66,9 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
         SourceAnalyzer sourceAnalyzer,
         IWebHostEnvironment env,
         ILogStore logStore) 
-        : base($"{SxcLogging.SxcLogName}.RzrViewCmp", connect: [assemblyResolver, sourceAnalyzer])
+        : base($"{SxcLogging.SxcLogName}.RzrViewCmp")
     {
-        var l = Dbg ? base.Log.Fn($"{nameof(precompiledViews)}:{precompiledViews?.Count}") : null;
+        using var l = Dbg ? base.Log.Fn($"{nameof(precompiledViews)}:{precompiledViews?.Count}") : null;
 
         if (Dbg)
             logStore.Add(SxcLogging.SxcLogAppCodeLoader, base.Log);
@@ -127,7 +127,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
 
     public Task<CompiledViewDescriptor> CompileAsync(string relativePath)
     {
-        var l = Dbg ? base.Log.Fn<Task<CompiledViewDescriptor>>($"{nameof(relativePath)}:'{relativePath}'") : null;
+        using var l = Dbg ? base.Log.Fn<Task<CompiledViewDescriptor>>($"{nameof(relativePath)}:'{relativePath}'") : null;
         
         ArgumentNullException.ThrowIfNull(relativePath);
 
@@ -373,7 +373,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
 
     private string AppCodeRelativePathIfExists(string normalizedPath)
     {
-        var l = Dbg ? base.Log.Fn<string>($"{nameof(normalizedPath)}:'{normalizedPath}'") : null;
+        using var l = Dbg ? base.Log.Fn<string>($"{nameof(normalizedPath)}:'{normalizedPath}'") : null;
 
         var (appRelativePath, edition) = GetSxcAppRelativePathWithEdition(normalizedPath);
         l.A($"{nameof(appRelativePath)}:'{appRelativePath}'; {nameof(edition)}:'{edition}'");
@@ -418,7 +418,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
     /// <returns></returns>
     private IReadOnlyList<MetadataReference> GetMetadataReferences(string relativePath)
     {
-        var l = base.Log.Fn<IReadOnlyList<MetadataReference>>($"{nameof(relativePath)}:'{relativePath}'");
+        using var l = base.Log.Fn<IReadOnlyList<MetadataReference>>($"{nameof(relativePath)}:'{relativePath}'");
 
         var references = new List<MetadataReference>();
         var razorType = _sourceAnalyzer.TypeOfVirtualPath(relativePath);
@@ -508,7 +508,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
     /// <returns>string "2sxc\\n\\aaa-folder-name\\edition" or null</returns>
     private (string? appRelativePath, string? edition) GetSxcAppRelativePathWithEditionFallback(string? relativePath)
     {
-        var l = Dbg ? base.Log.Fn<(string? appRelativePath, string? edition)>($"{nameof(relativePath)}:'{relativePath}'") : null;
+        using var l = Dbg ? base.Log.Fn<(string? appRelativePath, string? edition)>($"{nameof(relativePath)}:'{relativePath}'") : null;
 
         relativePath = relativePath?.ForwardSlash();
 

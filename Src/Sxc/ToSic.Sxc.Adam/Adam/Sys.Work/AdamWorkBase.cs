@@ -15,7 +15,7 @@ public abstract class AdamWorkBase(AdamWorkBase.Dependencies services, string lo
         LazySvc<AdamContext> AdamContext,
         ISxcAppCurrentContextService CtxService,
         AdamGenericHelper AdamGenericHelper)
-        : DependenciesBase(connect: [AdamContext, CtxService, AdamGenericHelper]);
+        : DependenciesBase();
 
     public void Setup(AdamWorkOptions options)
     {
@@ -23,7 +23,7 @@ public abstract class AdamWorkBase(AdamWorkBase.Dependencies services, string lo
         var context = options.AppId > 0
             ? Services.CtxService.GetExistingAppOrSet(options.AppId)
             : Services.CtxService.AppNameRouteBlock(null);
-        var l = Log.Fn($"app: {context.AppReaderRequired.Show()}, type: {o.ContentType}, itemGuid: {o.ItemGuid}, field: {o.Field}, portalRoot: {o.UsePortalRoot}");
+        using var l = Log.Fn($"app: {context.AppReaderRequired.Show()}, type: {o.ContentType}, itemGuid: {o.ItemGuid}, field: {o.Field}, portalRoot: {o.UsePortalRoot}");
         AdamContext.Init(context, o.ContentType, o.Field, o.ItemGuid, o.UsePortalRoot);
         l.Done();
     }

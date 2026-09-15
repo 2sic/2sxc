@@ -23,7 +23,7 @@ public class AdamStorageOfField(): AdamStorage("Adm.OfFld")
 
     protected override string GeneratePath(string subFolder)
     {
-        var l = Log.Fn<string>(subFolder);
+        using var l = Log.Fn<string>(subFolder);
         var result = AdamConstants.ItemFolderMask
             .Replace("[AdamRoot]", Manager.Path)
             .Replace("[Guid22]", _entityGuid.GuidCompress())

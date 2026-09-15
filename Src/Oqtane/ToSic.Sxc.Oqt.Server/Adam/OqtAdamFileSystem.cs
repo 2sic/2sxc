@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Oqtane.Models;
 using Oqtane.Repository;
 using ToSic.Eav.Environment.Sys.ServerPaths;
@@ -36,7 +36,7 @@ internal class OqtAdamFileSystem(
 
     public override void Rename(IFile file, string newName)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
         try
         {
             var path = serverPaths.FullContentPath(file.Path);
@@ -63,7 +63,7 @@ internal class OqtAdamFileSystem(
 
     public override void Delete(IFile file)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
         var oqtFile = OqtFileRepository.GetFile(file.AsOqt().SysId);
         OqtFileRepository.DeleteFile(oqtFile.FileId);
         l.Done();
@@ -71,7 +71,7 @@ internal class OqtAdamFileSystem(
 
     public override IFile Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
     {
-        var l = Log.Fn<IFile>($"..., ..., {fileName}, {ensureUniqueName}");
+        using var l = Log.Fn<IFile>($"..., ..., {fileName}, {ensureUniqueName}");
         if (ensureUniqueName)
             fileName = FindUniqueFileName(parent, fileName);
         var fullContentPath = serverPaths.FullContentPath(parent.Path);
@@ -107,7 +107,7 @@ internal class OqtAdamFileSystem(
     /// <returns></returns>
     private string FindUniqueFileName(IFolder parentFolder, string fileName)
     {
-        var l = Log.Fn<string>($"..., {fileName}");
+        using var l = Log.Fn<string>($"..., {fileName}");
 
         var oqtFolder = OqtFolderRepository.GetFolder(parentFolder.AsOqt().SysId);
         var serverPath = Path.Combine(serverPaths.FullContentPath(AdamManager.Site.ContentPath), oqtFolder.Path);
@@ -177,7 +177,7 @@ internal class OqtAdamFileSystem(
 
     public override List<IFolder> GetFolders(IFolder folder)
     {
-        var l = Log.Fn<List<IFolder>>();
+        using var l = Log.Fn<List<IFolder>>();
         var fldObj = GetOqtFolder(folder.AsOqt().SysId);
         if (fldObj == null) return [];
 
@@ -214,7 +214,7 @@ internal class OqtAdamFileSystem(
 
     public override List<IFile> GetFiles(IFolder folder)
     {
-        var l = Log.Fn<List<IFile>>();
+        using var l = Log.Fn<List<IFile>>();
         var fldObj = OqtFolderRepository.GetFolder(folder.AsOqt().SysId);
         // sometimes the folder doesn't exist for whatever reason
         if (fldObj == null)
@@ -235,7 +235,7 @@ internal class OqtAdamFileSystem(
 
     private IFolder OqtToAdam(Folder f)
     {
-        var l = Log.Fn<Folder<int, int>>($"folderName: {f.Name}");
+        using var l = Log.Fn<Folder<int, int>>($"folderName: {f.Name}");
 
         var typed = new Folder<int, int>(AdamManager)
         {
@@ -260,7 +260,7 @@ internal class OqtAdamFileSystem(
 
     private IFile OqtToAdam(File f)
     {
-        var l = Log.Fn<File<int, int>>($"fileName: {f.Name}");
+        using var l = Log.Fn<File<int, int>>($"fileName: {f.Name}");
 
         var typed = new File<int, int>(AdamManager)
         {

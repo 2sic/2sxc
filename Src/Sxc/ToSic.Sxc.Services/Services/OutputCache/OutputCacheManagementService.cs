@@ -5,11 +5,11 @@ namespace ToSic.Sxc.Services.OutputCache;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class OutputCacheManagementService(INamedCacheDependencyService cacheDependenciesSvc)
-    : ServiceBase("Sxc.OutCacMng", connect: [cacheDependenciesSvc]), IOutputCacheManagementService
+    : ServiceBase("Sxc.OutCacMng"), IOutputCacheManagementService
 {
     public int Flush(int appId, NoParamOrder npo = default, IEnumerable<string>? dependencies = null)
     {
-        var l = Log.Fn<int>($"Flush appId: {appId}, dependencies: {string.Join(", ", dependencies ?? [])}");
+        using var l = Log.Fn<int>($"Flush appId: {appId}, dependencies: {string.Join(", ", dependencies ?? [])}");
 
         if (appId <= 0)
             throw l.Ex(new ArgumentOutOfRangeException(nameof(appId), appId, "App id must be greater than zero."));

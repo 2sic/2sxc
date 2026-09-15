@@ -18,7 +18,7 @@ public class ContextResolverBase(
     Generator<IContextOfApp> appCtxGenerator,
     string? logName = default,
     object[]? connect = default)
-    : ServiceBase(logName ?? "Eav.CtxRes", connect: [..connect ?? [], siteCtxGenerator, appCtxGenerator])
+    : ServiceBase(logName ?? "Eav.CtxRes")
 {
    
     public IContextOfSite Site() => _site.Get(siteCtxGenerator.New)!;

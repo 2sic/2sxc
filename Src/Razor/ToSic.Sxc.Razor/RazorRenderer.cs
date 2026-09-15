@@ -12,8 +12,7 @@ namespace ToSic.Sxc.Razor;
 internal class RazorRenderer(
     ITempDataProvider tempDataProvider,
     IRazorCompiler appCodeRazorCompiler)
-    : ServiceBase($"{SxcLogging.SxcLogName}.RzrRdr",
-        connect: [tempDataProvider, appCodeRazorCompiler]), IRazorRenderer
+    : ServiceBase($"{SxcLogging.SxcLogName}.RzrRdr"), IRazorRenderer
 {
 
     public async Task<string> RenderToStringAsync<TModel>(EngineSpecs engineSpecs, TModel model, Action<RazorView> configure)
@@ -21,7 +20,7 @@ internal class RazorRenderer(
         var templatePath = engineSpecs.TemplatePath;
         var app = engineSpecs.App;
         var hotBuildSpec = engineSpecs.ToHotBuildSpec();
-        var l = Log.Fn<string>($"{nameof(templatePath)}: '{templatePath}'; {nameof(app.PhysicalPath)}: '{app.PhysicalPath}'; {hotBuildSpec}");
+        using var l = Log.Fn<string>($"{nameof(templatePath)}: '{templatePath}'; {nameof(app.PhysicalPath)}: '{app.PhysicalPath}'; {hotBuildSpec}");
 
         var (view, actionContext) = await appCodeRazorCompiler.CompileView(templatePath, configure, app, hotBuildSpec);
 
@@ -60,7 +59,7 @@ internal class RazorRenderer(
     /// </remarks>
     private ViewDataDictionary? CreateViewDataDictionaryForRazorViewWithGenericBaseTypeOrNull(IView view, object? model)
     {
-        var l = Log.Fn<ViewDataDictionary?>($"{nameof(view.Path)}: '{view.Path}'");
+        using var l = Log.Fn<ViewDataDictionary?>($"{nameof(view.Path)}: '{view.Path}'");
 
         if (view is not RazorView rsv)
             return l.ReturnNull("Not a RazorView");

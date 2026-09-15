@@ -17,8 +17,7 @@ internal class OqtCulture(
     LazySvc<ILanguageRepository> languageRepository,
     LazySvc<OqtSiteGroup> siteGroup,
     IHttpContextAccessor httpContextAccessor)
-    : ServiceBase($"{OqtConstants.OqtLogPrefix}.Cultur",
-        connect: [localizationManager, languageRepository, siteGroup, httpContextAccessor])
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.Cultur")
 {
     const string FallbackLanguageCode = "en-us";
 

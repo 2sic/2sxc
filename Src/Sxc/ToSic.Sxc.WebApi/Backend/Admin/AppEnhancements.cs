@@ -36,7 +36,7 @@ public class AppEnhancements : CustomDataSource
         Generator<ConvertAttributeToDto> convertAttribute,
         IAppsCatalog appsCatalog,
         LazySvc<MetadataControllerReal> metadataController)
-        : base(services, logName: "Sxc.AppEnh", connect: [appWorkCtxSvc, workAttributes, convertAttribute, appsCatalog, metadataController])
+        : base(services, logName: "Sxc.AppEnh")
     {
         _workContext = new(() => appWorkCtxSvc.ContextNew(AppId));
         _workAttributes = new(() => workAttributes.New(_workContext.Value));

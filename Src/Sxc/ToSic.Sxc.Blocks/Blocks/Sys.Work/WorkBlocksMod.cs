@@ -8,11 +8,11 @@ public class WorkBlocksMod(
     AppWorkChain<WorkFieldList> workFieldList,
     AppWorkChain<WorkEntityCreate> workEntCreate,
     AppWorkChain<WorkEntityUpdate> workEntUpdate)
-    : ServiceWithSetup<IAppWorkContext>("AWk.EntCre", connect: [workFieldList, workEntCreate, workEntUpdate])
+    : ServiceWithSetup<IAppWorkContext>("AWk.EntCre")
 {
     public Guid UpdateOrCreateContentGroup(BlockConfiguration blockConfiguration, int templateId)
     {
-        var l = Log.Fn<Guid>();
+        using var l = Log.Fn<Guid>();
 
         if (!blockConfiguration.Exists)
         {
@@ -60,7 +60,7 @@ public class WorkBlocksMod(
 
     public int NewBlockReference(int parentId, string field, int index, string app = "", Guid? guid = null)
     {
-        var l = Log.Fn<int>($"get CB parent:{parentId}, field:{field}, order:{index}, app:{app}, guid:{guid}");
+        using var l = Log.Fn<int>($"get CB parent:{parentId}, field:{field}, order:{index}, app:{app}, guid:{guid}");
         var contentTypeName = AppConstants.ContentGroupRefTypeName;
         var values = new Dictionary<string, object>
         {
@@ -75,7 +75,7 @@ public class WorkBlocksMod(
 
     private int CreateItemAndAddToList(int parentId, string field, int index, string typeName, Dictionary<string, object> values, Guid newGuid)
     {
-        var l = Log.Fn<int>($"{nameof(parentId)}:{parentId}, {nameof(field)}:{field}, {nameof(index)}, {index}, {nameof(typeName)}:{typeName}");
+        using var l = Log.Fn<int>($"{nameof(parentId)}:{parentId}, {nameof(field)}:{field}, {nameof(index)}, {index}, {nameof(typeName)}:{typeName}");
 
         // create the new entity 
         var entityId = workEntCreate.New(MyOptions)

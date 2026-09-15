@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.ContentTypes.Sys;
+using ToSic.Eav.Data.ContentTypes.Sys;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Models;
@@ -16,11 +16,11 @@ public class ViewsBackend(
     AppWorkChain<WorkViews> workViews,
     LazySvc<IConvertToEavLight> convertToEavLight,
     Generator<ImpExpHelpers> impExpHelpers)
-    : ServiceBase("Bck.Views", connect: [appCtxSvc, workViewDelete, convertToEavLight, impExpHelpers, workViews])
+    : ServiceBase("Bck.Views")
 {
     public IEnumerable<ViewDetailsDto> GetAll(int appId)
     {
-        var l = Log.Fn<IEnumerable<ViewDetailsDto>>($"get all a#{appId}");
+        using var l = Log.Fn<IEnumerable<ViewDetailsDto>>($"get all a#{appId}");
 
         var appCtx = appCtxSvc.Value.ContextNew(appId);
         var appViews = workViews.New(appCtx);
@@ -94,7 +94,7 @@ public class ViewsBackend(
     /// <returns></returns>
     public bool Delete(int appId, int id)
     {
-        var l = Log.Fn<bool>($"delete a{appId}, t:{id}");
+        using var l = Log.Fn<bool>($"delete a{appId}, t:{id}");
         
         // extra security to only allow zone change if host user
         var appReader = impExpHelpers.New().GetReaderAfterZoneSwitchPermissionCheck(appId);

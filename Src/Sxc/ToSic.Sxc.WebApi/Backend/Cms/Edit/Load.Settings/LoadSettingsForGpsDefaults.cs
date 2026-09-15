@@ -4,7 +4,7 @@ using ToSic.Sys.Capabilities.Features;
 namespace ToSic.Sxc.Backend.Cms.Load.Settings;
 
 internal class LoadSettingsForGpsDefaults(LazySvc<Services.IFeaturesService> features)
-    : LoadSettingsForBase($"{SxcLogName}.LdGpsD", connect: [features])
+    : LoadSettingsForBase($"{SxcLogName}.LdGpsD")
 {
     public override Dictionary<string, object> GetSettings(LoadSettingsProviderParameters parameters) =>
         GetSettings<MapsCoordinates, GoogleMaps>(

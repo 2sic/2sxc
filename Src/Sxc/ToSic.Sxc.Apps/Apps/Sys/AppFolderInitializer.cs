@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Apps.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppFolderInitializer(IServerPaths serverPaths, IGlobalConfiguration globalConfiguration, ISite site)
-    : ServiceBase("Viw.Help", connect: [serverPaths, globalConfiguration, site])
+    : ServiceBase("Viw.Help")
 {
 
     /// <summary>
@@ -16,7 +16,7 @@ public class AppFolderInitializer(IServerPaths serverPaths, IGlobalConfiguration
     /// </summary>
     public void EnsureTemplateFolderExists(string appFolder, bool isShared)
     {
-        var l = Log.Fn($"{isShared}");
+        using var l = Log.Fn($"{isShared}");
         var portalPath = isShared
             ? serverPaths.FullAppPath(globalConfiguration.SharedAppsFolder())
             : site.AppsRootPhysicalFull ?? "";

@@ -15,14 +15,14 @@ namespace ToSic.Sxc.Oqt.Server.Code.Sys
     // https://github.com/laurentkempe/DynamicRun
     // https://laurentkempe.com/2019/02/18/dynamically-compile-and-run-code-using-dotNET-Core-3.0/
     internal class Compiler(LazySvc<AppCodeLoader> appCodeLoader, HotBuildReferenceManager referenceManager)
-        : ServiceBase("Sys.CodCpl", connect: [appCodeLoader, referenceManager])
+        : ServiceBase("Sys.CodCpl")
     {
         // Ensure that can't be kept alive by stack slot references (real- or JIT-introduced locals).
         // That could keep the SimpleUnloadableAssemblyLoadContext alive and prevent the unload.
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal AssemblyResult Compile(string sourceFile, string dllName, HotBuildSpec spec)
         {
-            var l = Log.Fn<AssemblyResult>($"Starting compilation of: '{sourceFile}'; {nameof(dllName)}: '{dllName}'; {spec}'.");
+            using var l = Log.Fn<AssemblyResult>($"Starting compilation of: '{sourceFile}'; {nameof(dllName)}: '{dllName}'; {spec}'.");
 
             var (assemblyResult, _) = appCodeLoader.Value.GetAppCode(spec);
 
@@ -92,7 +92,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Sys
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal AssemblyResult GetCompiledAssemblyFromFolder(string[] sourceFiles, string assemblyFilePath, string pdbFilePath, string dllName, HotBuildSpec spec, string sourceRootPath)
         {
-            var l = Log.Fn<AssemblyResult>($"{nameof(sourceFiles)}: {sourceFiles.Length}; {nameof(assemblyFilePath)}: '{assemblyFilePath}'", timer: true);
+            using var l = Log.Fn<AssemblyResult>($"{nameof(sourceFiles)}: {sourceFiles.Length}; {nameof(assemblyFilePath)}: '{assemblyFilePath}'", timer: true);
 
             var encoding = Encoding.UTF8;
 

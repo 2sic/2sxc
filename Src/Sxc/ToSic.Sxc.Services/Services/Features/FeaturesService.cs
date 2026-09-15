@@ -10,7 +10,7 @@ internal class FeaturesService(ISysFeaturesService sysFeaturesSvc)
     {
         var result = sysFeaturesSvc.IsEnabled(nameIds);
         if (!Debug) return result;
-        var l = Log.Fn<bool>(string.Join(",", nameIds ?? []));
+        using var l = Log.Fn<bool>(string.Join(",", nameIds ?? []));
         return l.Return(result, $"{result}");
     }
 

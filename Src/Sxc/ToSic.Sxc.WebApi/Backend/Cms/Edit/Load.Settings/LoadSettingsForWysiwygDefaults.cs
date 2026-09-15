@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Backend.Cms.Load.Settings;
 
 internal class LoadSettingsForWysiwygDefaults()
-    : LoadSettingsForBase($"{SxcLogName}.LdGpsD", connect: [])
+    : LoadSettingsForBase($"{SxcLogName}.LdGpsD")
 {
     public override Dictionary<string, object> GetSettings(LoadSettingsProviderParameters parameters) =>
         GetSettings<StringWysiwyg, StringWysiwyg>(

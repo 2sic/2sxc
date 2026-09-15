@@ -9,7 +9,7 @@ public class DialogControllerReal(
     ISxcCurrentContextService ctxService,
     IUiContextBuilder uiContextBuilder,
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions)
-    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [ctxService, uiContextBuilder, appPermissions]),
+    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl"),
         IDialogController
 {
     public const string LogSuffix = "Dialog";

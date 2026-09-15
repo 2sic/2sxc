@@ -24,7 +24,7 @@ internal class DnnAppWebApiControllerAssemblyLoader(
     SourceAnalyzer sourceAnalyzer,
     IRoslynBuildManager roslynBuildManager,
     IEditionService editionSvc)
-    : ServiceBase($"{DnnConstants.LogName}.ApiCtlAsm", connect: [appFolderLookup, site, ctxService, appJson, sourceAnalyzer, roslynBuildManager, editionSvc]),
+    : ServiceBase($"{DnnConstants.LogName}.ApiCtlAsm"),
         IAppWebApiControllerAssemblyLoader
 {
     public Assembly GetAssembly(string path)

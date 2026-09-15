@@ -32,7 +32,7 @@ public class AdamContext(AdamContext.Dependencies services)
         LazySvc<AdamManager> AdamManagerLazy,
         Generator<AdamStorageOfSite> SiteStorageGen,
         Generator<AdamStorageOfField> FieldStorageGen)
-        : DependenciesBase(connect: [TypesPermissions, AdamSecurityGenerator, FeaturesSvc, AdamManagerLazy, SiteStorageGen, FieldStorageGen]);
+        : DependenciesBase();
 
     public IAdamSecurityCheckService Security { get; private set; } = null!;
     public MultiPermissionsTypes Permissions { get; private set; } = null!;
@@ -52,7 +52,7 @@ public class AdamContext(AdamContext.Dependencies services)
     /// </summary>
     public AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot)
     {
-        var l = Log.Fn<AdamContext>($"app: {context.AppReaderRequired.Show()}, field:{fieldName}, guid:{entityGuid}, usePortalRoot: {usePortalRoot}");
+        using var l = Log.Fn<AdamContext>($"app: {context.AppReaderRequired.Show()}, field:{fieldName}, guid:{entityGuid}, usePortalRoot: {usePortalRoot}");
         AdamManager.Init(context, CompatibilityLevels.CompatibilityLevel10);
         AdamRoot = usePortalRoot
             ? Services.SiteStorageGen.New()

@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Backend.Admin;
 public class Views : CustomDataSource
 {
     public Views(Dependencies services, LazySvc<ViewsBackend> views)
-        : base(services, "Sxc.Views", connect: [views])
+        : base(services, "Sxc.Views")
         => ProvideOutRaw(() => views.Value.GetAll(AppId), options: Options);
     private static DataFactoryOptions Options() => new() { AutoId = false, TypeName = "View", AllowUnknownValueTypes = true };
 }
@@ -41,7 +41,7 @@ public class ViewUsage : CustomDataSource
     public Guid ViewGuid => Configuration.GetThis(Guid.Empty);
 
     public ViewUsage(Dependencies services, LazySvc<UsageBackend> usage, IViewUsageDataProvider provider, ISxcCurrentContextService context)
-        : base(services, "Sxc.ViewUsage", connect: [usage, provider, context])
+        : base(services, "Sxc.ViewUsage")
         => ProvideOutRaw(() => Get(usage, provider, context), options: Options);
 
     private IEnumerable<ViewUsageRaw> Get(LazySvc<UsageBackend> usage, IViewUsageDataProvider provider, ISxcCurrentContextService context)

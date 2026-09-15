@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Cms.Publishing.Sys;
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class WorkBlockPublishingLookupPreflightDisabled(IFeaturesService featuresService)
-    : ServiceBase("Pub.Forb", connect: [featuresService]),
+    : ServiceBase("Pub.Forb"),
         IWorkBlockPublishingLookup
 {
     /// <summary>

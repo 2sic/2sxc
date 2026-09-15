@@ -16,7 +16,7 @@ internal class ExtensionPreflightHelper(
 {
     internal ExtensionEditionDto? BuildEditionInfo(int appId, string appRoot, string extensionName, string edition, ExtensionManifest incomingManifest)
     {
-        var l = Log.Fn<ExtensionEditionDto>();
+        using var l = Log.Fn<ExtensionEditionDto>();
 
         var editionRoot = AppEditionPathsHelpers.GetEditionRoot(appRoot, edition);
 

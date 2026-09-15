@@ -13,11 +13,11 @@ internal class DnnPlatformAppInstaller(
     LazySvc<IAppsCatalog> appsCatalog,
     AppWorkQuick<WorkViews> workViews,
     LazySvc<ExternalLinksService> remoteRouterLazy)
-    : ServiceBase("Dnn.AppIns", connect: [workViews, appsCatalog, remoteRouterLazy]), IPlatformAppInstaller
+    : ServiceBase("Dnn.AppIns"), IPlatformAppInstaller
 {
     public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp)
     {
-        var l = Log.Fn<string>();
+        using var l = Log.Fn<string>();
         var moduleInfo = (module as DnnModule)?.GetContents();
         var portal = (site as DnnSite)?.GetContents();
         if (moduleInfo == null || portal == null)

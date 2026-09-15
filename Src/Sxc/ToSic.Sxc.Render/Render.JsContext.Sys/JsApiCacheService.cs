@@ -4,7 +4,7 @@ using ToSic.Sxc.Web.Sys.Http;
 namespace ToSic.Sxc.Render.JsContext.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class JsApiCacheService(IHttp http) : ServiceBase("JsApi", connect: [http])
+public class JsApiCacheService(IHttp http) : ServiceBase("JsApi")
 {
     private const string JsApiKey = "JsApi";
 

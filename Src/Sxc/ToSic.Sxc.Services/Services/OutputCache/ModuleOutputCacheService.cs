@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Services.OutputCache;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class ModuleOutputCacheService(IModulesOutputService modulesOutputService)
-    : ServiceWithContext("Sxc.OutCac", connect: [modulesOutputService]), IModuleOutputCacheService
+    : ServiceWithContext("Sxc.OutCac"), IModuleOutputCacheService
 {
     [PrivateApi("internal use only, external API should not know about this.")]
     public int ModuleId

@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Context;
 using ToSic.Eav.DataSource;
@@ -27,12 +27,7 @@ internal class AppDataSourcesLoader(
     ISxcCurrentContextService ctxService,
     IEditionService editionSvc,
     MemoryCacheService memoryCacheService)
-    : ServiceBase("Eav.AppDtaSrcLoad",
-        connect:
-        [
-            logStore, site, appReaders, appPathsLazy, codeCompilerLazy, appCodeLoaderLazy, ctxService, editionSvc,
-            memoryCacheService
-        ]), IAppDataSourcesLoader
+    : ServiceBase("Eav.AppDtaSrcLoad"), IAppDataSourcesLoader
 {
     private const string DataSourcesFolder = "DataSources";
 
@@ -40,7 +35,7 @@ internal class AppDataSourcesLoader(
     {
         logStore.Add(EavLogs.LogStoreAppDataSourcesLoader, Log);
         // Initial message for insights-overview
-        var l = Log.Fn<AppLocalDataSources>($"{nameof(appId)}: {appId}", timer: true);
+        using var l = Log.Fn<AppLocalDataSources>($"{nameof(appId)}: {appId}", timer: true);
         
         try
         {
@@ -98,7 +93,7 @@ internal class AppDataSourcesLoader(
 
     private HotBuildSpec BuildHotBuildSpec(int appId)
     {
-        var l = Log.Fn<HotBuildSpec>($"{appId}:'{appId}'", timer: true);
+        using var l = Log.Fn<HotBuildSpec>($"{appId}:'{appId}'", timer: true);
 
         // Prepare / Get App State
         var appSpecs = appReaders.Get(appId).Specs;
@@ -113,7 +108,7 @@ internal class AppDataSourcesLoader(
 
     private string? FigureEdition()
     {
-        var l = Log.Fn<string?>(timer: true);
+        using var l = Log.Fn<string?>(timer: true);
 
         var block = ctxService.BlockOrNull();
         var edition = block.NullOrGetWith(editionSvc.Edition);
@@ -145,7 +140,7 @@ internal class AppDataSourcesLoader(
     /// <returns></returns>
     private IEnumerable<TempDsInfo> LoadAppCodeDataSources(HotBuildSpec spec, out string? cacheKey)
     {
-        var l = Log.Fn<IEnumerable<TempDsInfo>>();
+        using var l = Log.Fn<IEnumerable<TempDsInfo>>();
 
         l.A("Search for DataSources in AppCode");
         var (result, _) = appCodeLoaderLazy.Value.GetAppCode(spec);
@@ -190,7 +185,7 @@ internal class AppDataSourcesLoader(
     /// <returns></returns>
     private IEnumerable<TempDsInfo> LoadAppDataSources(HotBuildSpec spec, string physicalPath, string relativePath)
     {
-        var l = Log.Fn<IEnumerable<TempDsInfo>>(
+        using var l = Log.Fn<IEnumerable<TempDsInfo>>(
             $"{spec}; {nameof(physicalPath)}: '{physicalPath}'; {nameof(relativePath)}: '{relativePath}'");
 
         if (!Directory.Exists(physicalPath))
@@ -236,7 +231,7 @@ internal class AppDataSourcesLoader(
 
     private List<DataSourceInfo> CreateDataSourceInfos(int appId, IEnumerable<TempDsInfo> types)
     {
-        var l = Log.Fn<List<DataSourceInfo>>($"{nameof(appId)}: {appId}; has {nameof(types)}: {types != null}");
+        using var l = Log.Fn<List<DataSourceInfo>>($"{nameof(appId)}: {appId}; has {nameof(types)}: {types != null}");
 
         // null check
         if (types == null) return l.Return([], "types are null");
@@ -246,7 +241,7 @@ internal class AppDataSourcesLoader(
         var data = types
             .Select(pair =>
             {
-                var l2 = l.Fn<DataSourceInfo>(pair.ClassName);
+                using var l2 = l.Fn<DataSourceInfo>(pair.ClassName);
 
                 // 0. If error then type is null, in this case, return a specially crafted DSI
                 if (pair.Type == null)

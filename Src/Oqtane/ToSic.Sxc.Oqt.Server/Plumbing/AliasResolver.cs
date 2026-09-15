@@ -28,8 +28,7 @@ public class AliasResolver(
     IAliasAccessor aliasAccessor,
     LazySvc<IAliasRepository> aliasRepository,
     LazySvc<ITenantManager> tenantManager)
-    : ServiceBase($"{OqtConstants.OqtLogPrefix}.SSInit",
-        connect: [])
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.SSInit")
 {
     /// <summary>
     /// Use this from inner code, which must always have an initialized state.
@@ -68,7 +67,7 @@ public class AliasResolver(
     /// <returns></returns>
     internal bool InitIfEmpty(int? siteId = null)
     {
-        var l = Log.Fn<bool>($"{nameof(siteId)}:{siteId}");
+        using var l = Log.Fn<bool>($"{nameof(siteId)}:{siteId}");
 
         // This would indicate it was called improperly, because we need the shared SiteState variable to work properly
         if (siteState == null) throw l.Ex(new ArgumentNullException(nameof(siteState)));
@@ -99,7 +98,7 @@ public class AliasResolver(
 
     private Alias FindAlias()
     {
-        var l = Log.Fn<Alias>();
+        using var l = Log.Fn<Alias>();
 
         var alias= tenantManager.Value.GetAlias(); // get alias (note that this also sets SiteState.Alias)
         l.A($"siteState.Alias:'{siteState.Alias?.Name}'");

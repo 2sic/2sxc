@@ -39,7 +39,7 @@ internal class CacheService(
     LazySvc<IAppsCatalog> appsCatalog,
     Generator<IAppPathsMicroSvc> appPathsLazy,
     ISysFeaturesService features
-    ) : ServiceWithContext($"{SxcLogName}.CchSvc", connect: [cache, appCacheKeyService, appsCatalog]), ICacheService
+    ) : ServiceWithContext($"{SxcLogName}.CchSvc"), ICacheService
 {
     /// <summary>
     /// AppId to use in key generation, so it won't collide with other apps.
@@ -54,7 +54,7 @@ internal class CacheService(
 
     public ICacheSpecs CreateSpecs(string key, NoParamOrder npo = default, string? regionName = default, bool? shared = default)
     {
-        var l = Log.Fn<ICacheSpecs>($"Key: {key} / Segment: {regionName}");
+        using var l = Log.Fn<ICacheSpecs>($"Key: {key} / Segment: {regionName}");
         var keySpecs = new CacheKeyParts
         {
             AppId = shared == true ? CacheKeyParts.NoApp : AppId,

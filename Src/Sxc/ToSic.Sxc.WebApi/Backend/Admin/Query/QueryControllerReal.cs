@@ -13,7 +13,7 @@ public class QueryControllerReal(
     Generator<WorkViews, IAppWorkContext> workViews,
     ISxcCurrentContextService currentContextService,
     Generator<IAppDataConfigProvider> tokenEngineWithContext)
-    : QueryControllerBase(services, "Api." + LogSuffix, connect: [appCtxSvc, workViews, currentContextService, tokenEngineWithContext])
+    : QueryControllerBase(services, "Api." + LogSuffix)
 {
     public const string LogSuffix = "Query";
     public const string LogGroup = EavWebApiConstants.HistoryNameWebApi + "-query";
@@ -24,7 +24,7 @@ public class QueryControllerReal(
     /// </summary>
     public bool DeleteIfUnused(int appId, int id)
     {
-        var l = Log.Fn<bool>($"{nameof(appId)}: {appId}; {nameof(id)}: {id}");
+        using var l = Log.Fn<bool>($"{nameof(appId)}: {appId}; {nameof(id)}: {id}");
 
         // Stop if views still use this Query
         var ctx = appCtxSvc.ContextNew(appId);

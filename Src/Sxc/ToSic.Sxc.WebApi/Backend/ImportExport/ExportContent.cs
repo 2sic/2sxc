@@ -15,14 +15,13 @@ public class ExportContent(
     AppWorkChain<WorkEntities> workEntities,
     Generator<ImpExpHelpers> impExpHelpers,
     IResponseMaker responseMaker)
-    : ServiceBase("Bck.Export",
-        connect: [xmlExporter, appCtxSvc, workViews, workEntities, impExpHelpers, responseMaker])
+    : ServiceBase("Bck.Export")
 {
 
     public ExportPartsOverviewDto PreExportSummary(int zoneId, int appId, string scope)
     {
         var appIdentity = new AppIdentity(zoneId, appId);
-        var l = Log.Fn<ExportPartsOverviewDto>($"get content info for {appIdentity.Show()} scope:{scope}");
+        using var l = Log.Fn<ExportPartsOverviewDto>($"get content info for {appIdentity.Show()} scope:{scope}");
         var currentApp = impExpHelpers.New().GetReaderAfterZoneSwitchPermissionCheck(appIdentity);
 
         var appCtx = appCtxSvc.ContextNew(currentApp);
@@ -66,7 +65,7 @@ public class ExportContent(
 
     public THttpResponseType Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
     {
-        var l = Log.Fn<THttpResponseType>($"export content z#{zoneId}, a#{appId}, ids:{entityIdsString}, templId:{templateIdsString}");
+        using var l = Log.Fn<THttpResponseType>($"export content z#{zoneId}, a#{appId}, ids:{entityIdsString}, templId:{templateIdsString}");
 
         var specs = new AppExportSpecs(zoneId, appId);
         var currentApp = impExpHelpers.New().GetReaderAfterZoneSwitchPermissionCheck(specs);

@@ -18,7 +18,7 @@ internal class DnnLinkService(
     LazySvc<IValueConverter> dnnValueConverterLazy,
     LazySvc<ILinkPaths> linkPathsLazy,
     LazySvc<INavigationManager> navigationManager)
-    : LinkServiceBase(imgLinker, linkPathsLazy, connect: [dnnValueConverterLazy, navigationManager])
+    : LinkServiceBase(imgLinker, linkPathsLazy)
 {
     [PrivateApi] private IDnnContext Dnn => field ??= ExCtx.GetService<IDnnContext>();
     [PrivateApi] private DnnValueConverter DnnValueConverter => field ??= dnnValueConverterLazy.Value as DnnValueConverter;

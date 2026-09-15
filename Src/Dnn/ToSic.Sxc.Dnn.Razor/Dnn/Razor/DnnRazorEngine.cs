@@ -26,13 +26,13 @@ internal class DnnRazorEngine(
     IAssetsExtractor assetsExtractor,
     EngineRequirementsApp engineRequirementsApp,
     DnnRazorCompiler razorCompiler)
-    : ServiceBase("Dnn.RzEng", connect: [engineSpecsService, assetsExtractor, engineRequirementsApp, razorCompiler]),
+    : ServiceBase("Dnn.RzEng"),
         IEngine // IRazorEngine
 {
     /// <inheritdoc />
     public OutputFragmentWithAssets Render(IBlock block, RenderSpecs specs)
     {
-        var l = Log.Fn<OutputFragmentWithAssets>(timer: true);
+        using var l = Log.Fn<OutputFragmentWithAssets>(timer: true);
 
         // Prepare #1: Specs
         var engineSpecs = engineSpecsService.GetSpecs(block);
@@ -66,7 +66,7 @@ internal class DnnRazorEngine(
 
     private OutputFragment DnnRenderImplementation(RazorComponentBase webpage, RenderSpecs specs)
     {
-        var l = Log.Fn<OutputFragment>();
+        using var l = Log.Fn<OutputFragment>();
         var (writer, exceptions) = razorCompiler.Render(webpage, new StringWriter(), specs);
         return l.ReturnAsOk(new ()
         {

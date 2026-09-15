@@ -21,8 +21,7 @@ public class DataControllerReal(
     Generator<ImportContent> importContent,
     LazySvc<IUser> userLazy,
     AppWorkQuick<WorkEntityRecycle> recycle)
-    : Services_ServiceBase("Api.DtaCtlRl",
-        connect: [site, appPathSvc, appReaders, context, contentExportLazy, importContent, userLazy, recycle])
+    : Services_ServiceBase("Api.DtaCtlRl")
 {
     public const string LogSuffix = "DataCtrl";
 
@@ -31,7 +30,7 @@ public class DataControllerReal(
 
     public ImportResultDto BundleImport(HttpUploadedFile uploadInfo, int zoneId, int appId)
     {
-        var l = Log.Fn<ImportResultDto>();
+        using var l = Log.Fn<ImportResultDto>();
 
         SecurityHelpers.ThrowIfNotSiteAdmin(userLazy.Value, l);
 
@@ -55,7 +54,7 @@ public class DataControllerReal(
 
     public bool BundleRestore(string fileName, int zoneId, int appId)
     {
-        var l = Log.Fn<bool>();
+        using var l = Log.Fn<bool>();
 
         SecurityHelpers.ThrowIfNotSiteAdmin(userLazy.Value, l);
 
@@ -78,7 +77,7 @@ public class DataControllerReal(
 
     public void Recycle(int appId, int transactionId)
     {
-        var l = Log.Fn($"appId:{appId}, tx:{transactionId}");
+        using var l = Log.Fn($"appId:{appId}, tx:{transactionId}");
 
         recycle
             .New(appId)

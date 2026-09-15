@@ -20,7 +20,7 @@ partial record ToolbarBuilder
 
     private string[] FindMetadataRecommendations(object? target)
     {
-        var l = Log.Fn<string[]>();
+        using var l = Log.Fn<string[]>();
         // ReSharper disable once ConvertIfStatementToSwitchStatement
         if (target == null)
             return l.Return([], "null");

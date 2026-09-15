@@ -19,7 +19,7 @@ public partial class ExecutionContext
 
     private object? GetHeaderOrNull()
     {
-        var l = Log.Fn<object?>();
+        using var l = Log.Fn<object?>();
         if (TryToBuildFirstOfStream(StreamHeader) is { } header)
             return l.Return(header, "found");
         // If header isn't found, it could be that an old query is used which attached the stream to the old name
@@ -35,7 +35,7 @@ public partial class ExecutionContext
     /// <returns></returns>
     private object? TryToBuildFirstOfStream(string sourceStream)
     {
-        var l = Log.Fn<object>(sourceStream);
+        using var l = Log.Fn<object>(sourceStream);
         if (Block is not { DataIsReady: true })
             return l.ReturnNull("no data/view");
         var data = Block.Data;

@@ -23,7 +23,7 @@ internal class OqtLinkService(
     AliasResolver aliasResolver,
     ImgResizeLinker imgLinker,
     LazySvc<ILinkPaths> linkPathsLazy)
-    : LinkServiceBase(imgLinker, linkPathsLazy, connect: [pageRepository, aliasResolver])
+    : LinkServiceBase(imgLinker, linkPathsLazy)
 {
     public Razor12 RazorPage { get; set; }
     private IContextOfBlock _blockCtx;

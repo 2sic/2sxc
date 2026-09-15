@@ -33,7 +33,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
         IOutputCache outputCache,
         ILoggerFactory loggerFactory,
         Generator<IBlockRenderer> blockBuilderGenerator)
-        : base($"{OqtConstants.OqtLogPrefix}.Buildr", connect: [pageOutput, contextOfBlockEmpty, blockModuleEmpty, currentContextServiceForLookUps, globalTypesCheck, outputCache, pageOutput, blockBuilderGenerator])
+        : base($"{OqtConstants.OqtLogPrefix}.Buildr")
     {
         _contextOfBlockEmpty = contextOfBlockEmpty;
         _blockModuleEmpty = blockModuleEmpty;

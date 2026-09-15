@@ -11,8 +11,7 @@ namespace ToSic.Sxc.Services.Sys.CodeApiServiceHelpers;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class CodeApiServiceBase(CodeApiServiceBase.Dependencies services, string logName)
-    : ServiceBase<CodeApiServiceBase.Dependencies>(services, logName),
-        ILogWasConnected
+    : ServiceBase<CodeApiServiceBase.Dependencies>(services, logName)
 {
     public record Dependencies(
         IServiceProvider ServiceProvider,
@@ -22,13 +21,13 @@ public abstract class CodeApiServiceBase(CodeApiServiceBase.Dependencies service
         LazySvc<ISite> Site,
         LazySvc<IZoneMapper> ZoneMapper,
         LazySvc<IAppsCatalog> AppsCatalog)
-        : DependenciesBase(connect: [/* never! serviceProvider */ LogStore, User, Site, ZoneMapper, AppsCatalog]);
+        : DependenciesBase();
 
     public record ScopedDependencies(
         Generator<IExecutionContextFactory> ExCtxGenerator,
         Generator<App> AppGenerator,
         LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder)
-        : DependenciesBase(connect: [ExCtxGenerator, AppGenerator, ModAndBlockBuilder]);
+        : DependenciesBase();
 
     protected IApp GetApp(Generator<App> appGenerator, NoParamOrder npo = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
     {
@@ -53,19 +52,16 @@ public abstract class CodeApiServiceBase(CodeApiServiceBase.Dependencies service
 
     protected IApp GetAndInitApp(App app, IAppIdentityPure appIdentity, ISite? overrideSite, bool? showDrafts = null)
     {
-        var l = Log.Fn<IApp>($"{appIdentity.Show()}, site:{overrideSite != null}, showDrafts: {showDrafts}");
+        using var l = Log.Fn<IApp>($"{appIdentity.Show()}, site:{overrideSite != null}, showDrafts: {showDrafts}");
         app.Init(overrideSite, appIdentity, new() { ShowDrafts = showDrafts });
         return l.Return(app);
     }
 
 
-    public void LogWasConnected() => _logInitDone = true; // if we link it to a parent, we don't need to add own entry in log history
-    private bool _logInitDone;
-
     protected void MakeSureLogIsInHistory()
     {
-        if (_logInitDone) return;
-        _logInitDone = true;
+        if (LogExecution.HasActiveExecution)
+            return;
         Services.LogStore.Value.Add("code-api-service", Log);
     }
 

@@ -8,7 +8,7 @@ partial class SimpleDataEditService
 
     private EntitySavePublishing DetectPublishingOrError(IContentType contentType, IDictionary<string, object?> values, bool? existingIsPublished)
     {
-        var l = Log.Fn<EntitySavePublishing?>($"..., ..., attributes: {values.Count}");
+        using var l = Log.Fn<EntitySavePublishing?>($"..., ..., attributes: {values.Count}");
 
         // First, ensure WritePublished or WriteDraft user permissions. 
         var allowed = GetWriteAndPublishAllowed(contentType);
@@ -44,7 +44,7 @@ partial class SimpleDataEditService
 
     private (bool PublishAllowed, bool WriteAllowed) GetWriteAndPublishAllowed(IContentType targetType)
     {
-        var l = Log.Fn<(bool PublishAllowed, bool WriteAllowed)>();
+        using var l = Log.Fn<(bool PublishAllowed, bool WriteAllowed)>();
         // skip write publish/draft permission checks when used in C# API
         // because in that case, the developer should have already checked permissions
         if (!_checkWritePermissions)

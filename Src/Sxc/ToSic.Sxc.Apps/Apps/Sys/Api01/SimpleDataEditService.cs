@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Sys.Permissions;
+using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.Data.Build.Sys;
@@ -38,7 +38,7 @@ public partial class SimpleDataEditService(
     AppWorkChain<WorkEntityDelete> entDelete,
     LazySvc<IValueConverter> valueConverter,
     Generator<AppPermissionCheck> appPermissionCheckGenerator
-) : ServiceBase("Dta.Simple", connect: [appWorkCtxSvc, entSave, entUpdate, entDelete, zoneMapper, dataAssembler, ctx, appPermissionCheckGenerator, valueConverter])
+) : ServiceBase("Dta.Simple")
 {
 
     #region Constructor / DI
@@ -55,7 +55,7 @@ public partial class SimpleDataEditService(
     /// <param name="checkWritePermissions"></param>
     public SimpleDataEditService Init(int zoneId, int appId, bool checkWritePermissions = true)
     {
-        var l = Log.Fn<SimpleDataEditService>($"{zoneId}, {appId}");
+        using var l = Log.Fn<SimpleDataEditService>($"{zoneId}, {appId}");
         _appId = appId;
 
         // when zoneId is not that same as in current context, we need to set right site for provided zoneId
@@ -72,7 +72,7 @@ public partial class SimpleDataEditService(
 
     private string GetDefaultLanguage(int zoneId)
     {
-        var l = Log.Fn<string>($"{zoneId}");
+        using var l = Log.Fn<string>($"{zoneId}");
         var site = zoneMapper.SiteOfZone(zoneId);
         if (site == null! /* paranoid */)
             return l.Return("", "site is null");
@@ -97,7 +97,7 @@ public partial class SimpleDataEditService(
     public IEnumerable<int> Create(string contentTypeName, IEnumerable<Dictionary<string, object?>>? multiValues, ITarget? target = null) 
     {
         var list = multiValues?.ToListOpt();
-        var l = Log.Fn<IEnumerable<int>>($"{contentTypeName}, items: {list?.Count()}, target: {target != null}");
+        using var l = Log.Fn<IEnumerable<int>>($"{contentTypeName}, items: {list?.Count()}, target: {target != null}");
         if (list == null)
             return l.Return([],"attributes were null");
 
@@ -135,7 +135,7 @@ public partial class SimpleDataEditService(
         ITarget? targetOrNull,
         bool? existingIsPublished) 
     {
-        var l = Log.Fn<(IEntity Entity, EntitySavePublishing Publishing)>
+        using var l = Log.Fn<(IEntity Entity, EntitySavePublishing Publishing)>
             ($"{type.Name}, {values.Count}, target: {targetOrNull != null}; {existingIsPublished}");
         // We're going to make changes to the dictionary, so we MUST copy it first, so we don't affect upstream code
         // also ensure its case-insensitive...
@@ -201,7 +201,7 @@ public partial class SimpleDataEditService(
     /// <exception cref="ArgumentNullException">Entity does not exist</exception>
     public void Update(int entityId, Dictionary<string, object?> values)
     {
-        var l = Log.Fn($"update i:{entityId}");
+        using var l = Log.Fn($"update i:{entityId}");
         var original = _ctxWithDb.AppReader.List.FindRepoId(entityId)
             ?? throw new NullReferenceException($"Can't Update, original not found with ID {entityId}");
         var (entity, publishing) = BuildNewEntity(original.Type, values, null, original.IsPublished);
@@ -246,7 +246,7 @@ public partial class SimpleDataEditService(
 
     private IDictionary<string, object?> ConvertRelationsToNullArray(IContentType contentType, IDictionary<string, object?> values)
     {
-        var l = Log.Fn<IDictionary<string, object?>>();
+        using var l = Log.Fn<IDictionary<string, object?>>();
         // Find all attributes which are relationships
         var relationships = contentType.Attributes
             .Where(a => a.IsEntity() /*.Type == ValueTypes.Entity*/)
@@ -307,7 +307,7 @@ public partial class SimpleDataEditService(
 
     private IDictionary<string, IAttribute> BuildNewEntityValues(IContentType contentType, IReadOnlyDictionary<string, IAttribute> attributes, string valuesLanguage)
     {
-        var l = Log.Fn<Dictionary<string, IAttribute>>($"..., ..., attributes: {attributes.Count}, {valuesLanguage}");
+        using var l = Log.Fn<Dictionary<string, IAttribute>>($"..., ..., attributes: {attributes.Count}, {valuesLanguage}");
         if (attributes.SafeNone())
             return l.Return(new(), "null/empty");
 

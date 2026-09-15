@@ -51,7 +51,7 @@ internal class AppApiControllerManager : IHasLog
     /// <returns></returns>
     public async ValueTask<bool> PrepareController(RouteValueDictionary values)
     {
-        var l = Log.Fn<bool>();
+        using var l = Log.Fn<bool>();
 
         var apiFile = (string)values["apiFile"];
         var dllName = (string)values["dllName"];
@@ -149,7 +149,7 @@ internal class AppApiControllerManager : IHasLog
     /// <returns></returns>
     private HotBuildSpec BuildHotBuildSpec(string appFolder)
     {
-        var l = Log.Fn<HotBuildSpec>($"{appFolder}:'{appFolder}'", timer: true);
+        using var l = Log.Fn<HotBuildSpec>($"{appFolder}:'{appFolder}'", timer: true);
 
         // Prepare / Get App State, while possibly also initializing the App...
         var ctxResolver = _webApiContextBuilder.PrepareContextResolverForApiRequest();
@@ -169,7 +169,7 @@ internal class AppApiControllerManager : IHasLog
     /// <returns></returns>
     private string FigureEdition(ISxcCurrentContextService ctxService)
     {
-        var l = Log.Fn<string>(timer: true);
+        using var l = Log.Fn<string>(timer: true);
 
         var block = ctxService.BlockOrNull();
         var edition = block.NullOrGetWith(_editionSvc.Edition);
@@ -182,7 +182,7 @@ internal class AppApiControllerManager : IHasLog
 
     private bool AddController(Assembly assembly, string dllName = null)
     {
-        var l = Log.Fn<bool>($"{nameof(dllName)}: '{dllName}'", timer: true);
+        using var l = Log.Fn<bool>($"{nameof(dllName)}: '{dllName}'", timer: true);
 
         dllName ??= assembly.GetName().Name;
         l.A($"TryAdd ApplicationPart:'{dllName}'.");
@@ -203,7 +203,7 @@ internal class AppApiControllerManager : IHasLog
 
     private bool RemoveController(string apiFile, string dllName)
     {
-        var l = Log.Fn<bool>($"{nameof(apiFile)}: '{apiFile}'; {nameof(dllName)}: '{dllName}'", timer: true);
+        using var l = Log.Fn<bool>($"{nameof(apiFile)}: '{apiFile}'; {nameof(dllName)}: '{dllName}'", timer: true);
 
         l.A($"In ApplicationParts, find AppApi controller: '{dllName}'.");
         // In edge cases the part may be already registered more than once, so we want to clean all

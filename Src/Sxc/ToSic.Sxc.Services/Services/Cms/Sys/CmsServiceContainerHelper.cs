@@ -29,7 +29,7 @@ internal class CmsServiceContainerHelper(
 
     public IHtmlTag Wrap(object? contents, bool defaultToolbar)
     {
-        var l = Log.Fn<IHtmlTag>($"{nameof(defaultToolbar)}: {defaultToolbar}");
+        using var l = Log.Fn<IHtmlTag>($"{nameof(defaultToolbar)}: {defaultToolbar}");
         var tag = GetContainer(container);
         tag = tag.Wrap(contents);
         // If tag is not a real tag (no name) then it also can't have classes or toolbars; just finish and return
@@ -72,7 +72,7 @@ internal class CmsServiceContainerHelper(
 
     private IHtmlTag GetContainer(object? cont)
     {
-        var l = Log.Fn<IHtmlTag>();
+        using var l = Log.Fn<IHtmlTag>();
         return cont switch
         {
             // Already an ITag

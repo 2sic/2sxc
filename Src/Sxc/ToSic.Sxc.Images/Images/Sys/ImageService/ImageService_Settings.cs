@@ -65,7 +65,7 @@ partial class ImageService
     /// <returns></returns>
     private object? GetBestSettings(object? settings)
     {
-        var l = Log.Fn<object?>(enabled: Debug);
+        using var l = Log.Fn<object?>(enabled: Debug);
         return settings switch
         {
             null or true => l.Return(GetSettingsByName("Content"), "null/default"),

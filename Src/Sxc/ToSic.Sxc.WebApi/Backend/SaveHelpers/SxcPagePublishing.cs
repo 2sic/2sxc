@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sys.Security.Permissions;
 
@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Backend.SaveHelpers;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class SxcPagePublishing(AppWorkChain<ContentGroupList> contentGroupList, IPagePublishing pagePublishing, IAppsCatalog appsCatalog)
-    : ServiceWithSetup<IAppWorkContext>("Sxc.PgPubl", connect: [contentGroupList, pagePublishing, appsCatalog])
+    : ServiceWithSetup<IAppWorkContext>("Sxc.PgPubl")
 {
 
     internal Dictionary<Guid, int> SaveInPagePublishing(
@@ -19,7 +19,7 @@ public class SxcPagePublishing(AppWorkChain<ContentGroupList> contentGroupList, 
         IMultiPermissionCheck permCheck
     )
     {
-        var l = Log.Fn<Dictionary<Guid, int>>();
+        using var l = Log.Fn<Dictionary<Guid, int>>();
         var allowWriteLive = permCheck.UserMayOnAll(GrantSets.WritePublished);
         var forceDraft = !allowWriteLive;
         l.A($"allowWrite: {allowWriteLive} forceDraft: {forceDraft}");

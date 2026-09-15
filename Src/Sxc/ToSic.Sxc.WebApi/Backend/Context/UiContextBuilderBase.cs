@@ -27,7 +27,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
         LazySvc<GlobalPaths> GlobalPaths,
         IAppsCatalog AppsCatalog,
         LazySvc<IUserService> UsersSvc
-    ) : DependenciesBase(connect: [SiteCtx, Features, UiDataLazy, AppPaths, LanguagesBackend, GlobalPaths, AppsCatalog, UsersSvc]);
+    ) : DependenciesBase();
 
     #endregion
 

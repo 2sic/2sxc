@@ -10,7 +10,7 @@ using ToSic.Sys.Users;
 namespace ToSic.Sxc.Oqt.Server.Services;
 
 internal class OqtMailService(LazySvc<ISettingRepository> settingRepositoryLazy, LazySvc<IUser> userLazy)
-    : MailServiceBase(userLazy, connect: [settingRepositoryLazy])
+    : MailServiceBase(userLazy)
 {
     protected override SmtpClient SmtpClient()
     {

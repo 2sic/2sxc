@@ -23,7 +23,7 @@ public class AdamFileSystemHelpers(IAdamPaths adamPaths) : ServiceBase("Sxc.AdmF
     /// <returns></returns>
     public string FindUniqueFileName(string serverPath, string fileName)
     {
-        var l = Log.Fn<string>($"{serverPath}, {fileName}");
+        using var l = Log.Fn<string>($"{serverPath}, {fileName}");
 
         var name = Path.GetFileNameWithoutExtension(fileName);
         var ext = Path.GetExtension(fileName);
@@ -38,7 +38,7 @@ public class AdamFileSystemHelpers(IAdamPaths adamPaths) : ServiceBase("Sxc.AdmF
 
     public bool TryToRenameFile(string originalWithPath, string newName)
     {
-        var l = Log.Fn<bool>($"{newName}");
+        using var l = Log.Fn<bool>($"{newName}");
 
         if (!File.Exists(originalWithPath))
             return l.ReturnFalse($"Can't rename because source file does not exist {originalWithPath}");

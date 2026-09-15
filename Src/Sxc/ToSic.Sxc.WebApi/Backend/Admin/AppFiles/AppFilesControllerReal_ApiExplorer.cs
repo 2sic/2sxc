@@ -15,7 +15,7 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
     [PrivateApi]
     public ICollection<AppWebApiFileRaw> AllApiFilesInAppCodeForAllEditions(int appId)
     {
-        var l = Log.Fn<List<AppWebApiFileRaw>>($"list all in AppCode a#{appId}");
+        using var l = Log.Fn<List<AppWebApiFileRaw>>($"list all in AppCode a#{appId}");
 
         const string mask = $"*{EavConstants.ApiControllerSuffix}.cs";
 
@@ -81,7 +81,7 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
 
     private ICollection<string> ApiControllerFilesInAppCode(string mask, string appPath, string edition, Assembly? appCodeAssembly)
     {
-        var l = Log.Fn<ICollection<string>>(
+        using var l = Log.Fn<ICollection<string>>(
             $"list ApiController files, {nameof(mask)}:'{mask}', {nameof(appPath)}:'{appPath}', {nameof(edition)}:'{edition}', has appCode assembly:{appCodeAssembly != null}");
 
         // 1. Check for AppCode assembly
@@ -127,7 +127,7 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
 
     private bool CheckForControllerTypeInAppCodeAssembly(string controllerTypeName, Assembly appCodeAssembly)
     {
-        var l = Log.Fn<bool>($"({nameof(controllerTypeName)}:'{controllerTypeName}'");
+        using var l = Log.Fn<bool>($"({nameof(controllerTypeName)}:'{controllerTypeName}'");
 
         // Check if name ends with "Controller" - if not, then no need to look in assembly
         return controllerTypeName.EndsWith(EavConstants.ApiControllerSuffix, StringComparison.OrdinalIgnoreCase)

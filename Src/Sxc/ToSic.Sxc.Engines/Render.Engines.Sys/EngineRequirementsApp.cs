@@ -9,11 +9,11 @@ namespace ToSic.Sxc.Render.Engines.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class EngineRequirementsApp(IRequirementsService requirementsService)
-    : ServiceBase("Eng.AppReq", connect: [requirementsService])
+    : ServiceBase("Eng.AppReq")
 {
     public OutputFragmentWithAssets? CheckExpectedNoRenderConditions(EngineSpecs engineSpecs)
     {
-        var l = Log.Fn<OutputFragmentWithAssets>();
+        using var l = Log.Fn<OutputFragmentWithAssets>();
 
         // Check App Requirements (new 16.08)
         var block = engineSpecs.Block;
@@ -47,7 +47,7 @@ public class EngineRequirementsApp(IRequirementsService requirementsService)
 
     internal OutputFragmentWithAssets? GetMessageForRequirements(IAppReader? appReader)
     {
-        var l = Log.Fn<OutputFragmentWithAssets>();
+        using var l = Log.Fn<OutputFragmentWithAssets>();
 
         // 1. Preflight
         // 1.1. make sure we have an App-State

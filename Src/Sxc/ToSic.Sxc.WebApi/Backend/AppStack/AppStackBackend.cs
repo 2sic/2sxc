@@ -15,7 +15,7 @@ public class AppStackBackend(
     IAppReaderFactory appReaders,
     Generator<QueryDefinitionFactory> qDefBuilder,
     IPropertyDumpService dumperService)
-    : ServiceBase("Sxc.ApiApQ", connect: [dataStackService, zoneCulture, appReaders, dumperService])
+    : ServiceBase("Sxc.ApiApQ")
 {
     public List<AppStackDataRaw> GetAll(int appId, string part, string? key, Guid? viewGuid)
     {

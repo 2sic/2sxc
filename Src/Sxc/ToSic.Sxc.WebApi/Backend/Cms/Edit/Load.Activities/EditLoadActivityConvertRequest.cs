@@ -9,13 +9,13 @@ using ToSic.Sys.HookUp;
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
 public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerializerGenerator, DataAssembler entityAssemblerKit)
-    : ServiceBase("UoW.AddCtx", connect: [jsonSerializerGenerator, entityAssemblerKit]),
+    : ServiceBase("UoW.AddCtx"),
         IWork<List<BundleWithHeaderOptional<IEntity>>, EditLoadDto>
 {
     // Note: reworked this 2026-05-15 2dm to make the objects immutable, hope no side effects #ImmutableIsTheNewBlack
     public async Task<Package<EditLoadDto>> Handle(WorkContext actionCtx, Package<List<BundleWithHeaderOptional<IEntity>>> package)
     {
-        var l = Log.Fn<EditLoadDto>();
+        using var l = Log.Fn<EditLoadDto>();
 
         var appReader = actionCtx.Get<IAppReader>(EditLoadContextConstants.AppReader);
         var jsonSerializer = jsonSerializerGenerator.New().SetApp(appReader);
@@ -59,7 +59,7 @@ public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerial
     private JsonEntity GetSerializeAndMdAssignJsonEntity(int appId, BundleWithHeaderOptional<IEntity> bundle,
         JsonSerializer jsonSerializer, IAppReader appReader)
     {
-        var l = Log.Fn<JsonEntity>();
+        using var l = Log.Fn<JsonEntity>();
         // attach original metadata assignment when creating a new one
         var ent = GetJsonEntityOrCreateEmpty();
 
@@ -104,7 +104,7 @@ public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerial
     
     private IEntity ConstructEmptyEntity(int appId, ItemIdentifier header, IAppReader appReader)
     {
-        var l = Log.Fn<IEntity>();
+        using var l = Log.Fn<IEntity>();
         var type = appReader.GetContentType(header.ContentTypeName!);
         var ent = entityAssemblerKit.EmptyOfType(appId, header.Guid, header.EntityId, type);
         return l.Return(ent);

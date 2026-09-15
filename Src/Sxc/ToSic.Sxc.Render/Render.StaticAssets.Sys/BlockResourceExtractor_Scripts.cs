@@ -8,7 +8,7 @@ public abstract partial class AssetsExtractor
 {
     protected string ExtractExternalScripts(string renderedTemplate, ref bool include2SxcJs, ClientAssetsExtractSettings settings, bool logDetails = false)
     {
-        var l = Log.Fn<string>(logDetails ? renderedTemplate : null);
+        using var l = Log.Fn<string>(logDetails ? renderedTemplate : null);
 
         var scriptMatches = RegexUtil.ScriptSrcDetection.Value.Matches(renderedTemplate);
         var scriptMatchesToRemove = new List<Match>();
@@ -103,7 +103,7 @@ public abstract partial class AssetsExtractor
 
     protected string ExtractInlineScripts(string renderedTemplate)
     {
-        var l = Log.Fn<string>();
+        using var l = Log.Fn<string>();
         var scriptMatches = RegexUtil.ScriptContentDetection.Value.Matches(renderedTemplate);
         var scriptMatchesToRemove = new List<Match>();
 

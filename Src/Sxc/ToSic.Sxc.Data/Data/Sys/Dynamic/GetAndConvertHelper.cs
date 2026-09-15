@@ -67,7 +67,7 @@ internal class GetAndConvertHelper(
     public TryGetResult TryGet(string? field, string? language = null, bool lookupLink = false)
     {
         var logOrNull = LogOrNull.SubLogOrNull("GnC.GetInt", Debug);
-        var l = logOrNull.Fn<TryGetResult>($"Type: {parent.GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookupLink)}:{lookupLink}");
+        using var l = logOrNull.Fn<TryGetResult>($"Type: {parent.GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookupLink)}:{lookupLink}");
 
         if (!field.HasValue())
             return l.Return(new(false, null), "field null/empty");

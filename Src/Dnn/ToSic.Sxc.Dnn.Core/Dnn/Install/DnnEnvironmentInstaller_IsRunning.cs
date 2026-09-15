@@ -26,7 +26,7 @@ partial class DnnEnvironmentInstaller
 
     private bool IsUpgradeComplete(string version, bool alwaysLogToFile, string note = "")
     {
-        var l = Log.Fn<bool>(message: $"{note} Log to file even if all is ok: {alwaysLogToFile}", timer: true);
+        using var l = Log.Fn<bool>(message: $"{note} Log to file even if all is ok: {alwaysLogToFile}", timer: true);
         var logger = new DnnInstallLoggerForVersion(_installLogger, version);
 
         // 2023-03-23 2dm
@@ -75,7 +75,7 @@ partial class DnnEnvironmentInstaller
     {
         get
         {
-            var l = Log.Fn<bool>($"Cached value set: {_running.HasValue}");
+            using var l = Log.Fn<bool>($"Cached value set: {_running.HasValue}");
             var result = _running ??= new DnnFileLock().IsSet;
             return l.ReturnAndLog(result);
         }

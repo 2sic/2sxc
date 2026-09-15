@@ -11,7 +11,7 @@ using ToSic.Sys.Users.Permissions;
 namespace ToSic.Sxc.Dnn.Context;
 
 internal class DnnUser(LazySvc<DnnSecurity> dnnSecurity, IRoleController roleController)
-    : ServiceBase("dnnUsr", connect: [dnnSecurity]), IUser<UserInfo>
+    : ServiceBase("dnnUsr"), IUser<UserInfo>
 {
     private string GetUserIdentityToken ()
     {

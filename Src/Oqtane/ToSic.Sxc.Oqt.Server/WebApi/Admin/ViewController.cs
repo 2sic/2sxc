@@ -19,11 +19,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 public class ViewController : OqtStatefulControllerBase, IViewController
 {
     public ViewController(LazySvc<Pages.Pages> pages) : base(RealController.LogSuffix)
-    {
-        this.ConnectLogs([
-            _pages = pages
-        ]);
-    }
+        => _pages = pages;
     private readonly LazySvc<Pages.Pages> _pages;
 
     private RealController Real => GetService<RealController>();

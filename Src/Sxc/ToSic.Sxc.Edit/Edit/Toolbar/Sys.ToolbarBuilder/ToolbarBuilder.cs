@@ -27,7 +27,7 @@ public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, ITo
     public record Dependencies(
         LazySvc<ToolbarButtonDecoratorHelper> ToolbarButtonHelper,
         LazySvc<IAppsCatalog> AppsCatalog)
-        : DependenciesBase(connect: [ToolbarButtonHelper, AppsCatalog]);
+        : DependenciesBase();
 
     /// <summary>
     /// Public constructor for DI

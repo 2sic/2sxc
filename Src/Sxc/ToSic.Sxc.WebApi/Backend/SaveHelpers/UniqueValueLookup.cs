@@ -13,7 +13,7 @@ internal sealed class UniqueValueLookup(IDataSourcesService dataSources, ILog pa
 
     internal IEntity? FindConflict(IDataSource appData, UniqueValueLookupRequest request)
     {
-        var l = Log.Fn<IEntity?>($"{request.ContentTypeNameId}.{request.FieldName}", timer: true);
+        using var l = Log.Fn<IEntity?>($"{request.ContentTypeNameId}.{request.FieldName}", timer: true);
 
         if (!IsSupported(request.FieldType) || string.IsNullOrWhiteSpace(request.Value))
             return l.ReturnNull("ignored");

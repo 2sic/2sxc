@@ -34,7 +34,7 @@ public abstract partial class RazorComponentBase : WebPageBase, IRazor, IHasCode
     internal virtual HelperResult BaseRenderPage(string path, RenderSpecs renderSpecs)
     {
         var data = renderSpecs.Data;
-        var l = (this as IHasLog).Log.Fn<HelperResult>($"{nameof(path)}: '{path}', {nameof(data)}: {data != null}; partialSpecs: {renderSpecs.PartialSpecs}");
+        using var l = (this as IHasLog).Log.Fn<HelperResult>($"{nameof(path)}: '{path}', {nameof(data)}: {data != null}; partialSpecs: {renderSpecs.PartialSpecs}");
 
         // Do the proper RenderPage of the base class, and also pass in the RenderSpecs
         // because they might be used to communicate caching settings back.

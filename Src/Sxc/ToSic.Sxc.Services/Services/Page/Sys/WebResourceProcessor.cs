@@ -30,7 +30,7 @@ internal class WebResourceProcessor(IFeaturesService features, string? cdnSource
 
     public PageFeatureFromSettings? Process(string key, DynamicEntity webRes)
     {
-        var l = Log.Fn<PageFeatureFromSettings>(key);
+        using var l = Log.Fn<PageFeatureFromSettings>(key);
 
         // Check if it's enabled
         if (webRes.Get(WebResEnabledField) as bool? == false)

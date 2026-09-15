@@ -1,4 +1,4 @@
-﻿using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Sxc.Blocks;
 
@@ -13,7 +13,7 @@ internal class DnnPages(ILog parentLog) : HelperBase(parentLog, "Dnn.Pages")
 {
     internal List<ModuleWithContent> AllModulesWithContent(int portalId)
     {
-        var l = Log.Fn<List<ModuleWithContent>>($"{portalId}");
+        using var l = Log.Fn<List<ModuleWithContent>>($"{portalId}");
         var mc = ModuleController.Instance;
         var tabC = TabController.Instance;
 

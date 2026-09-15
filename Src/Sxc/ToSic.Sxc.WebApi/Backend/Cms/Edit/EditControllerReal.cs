@@ -9,7 +9,7 @@ public class EditControllerReal(
     LazySvc<EditSaveBackend> saveBackendLazy,
     LazySvc<HyperlinkBackend> linkBackendLazy,
     LazySvc<AppViewPickerBackend> appViewPickerBackendLazy)
-    : ServiceBase("Api.EditRl", connect: [loadBackend, saveBackendLazy, linkBackendLazy, appViewPickerBackendLazy]),
+    : ServiceBase("Api.EditRl"),
         IEditController
 {
     public const string LogSuffix = "Edit";

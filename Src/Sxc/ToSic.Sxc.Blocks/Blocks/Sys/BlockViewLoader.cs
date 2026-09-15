@@ -24,7 +24,7 @@ internal class BlockViewLoader(ILog parentLog) : HelperBase(parentLog, "Blk.View
 
     private IView? TryGetViewBasedOnUrlParams(IContextOfBlock context, WorkViews views)
     {
-        var l = Log.Fn<IView>("template override - check");
+        using var l = Log.Fn<IView>("template override - check");
 
         // Get the parameters from the page, and exit early if there are none
         var parameters = context.Page.Parameters;

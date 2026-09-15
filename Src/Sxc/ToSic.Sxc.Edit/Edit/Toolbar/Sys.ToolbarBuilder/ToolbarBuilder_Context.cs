@@ -33,7 +33,7 @@ partial record ToolbarBuilder : IToolbarBuilderInternal
 
     private ToolbarContext? GenerateContext(object? target, string? context)
     {
-        var l = Log.Fn<ToolbarContext>($"{nameof(context)}:{context}");
+        using var l = Log.Fn<ToolbarContext>($"{nameof(context)}:{context}");
         // Check if context had already been prepared
         if (context.ContainsInsensitive("context:"))
             return l.Return(new(context!), "contains context:");
@@ -73,7 +73,7 @@ partial record ToolbarBuilder : IToolbarBuilderInternal
 
     private int FindContextAppId(object target)
     {
-        var l = Log.Fn<int>();
+        using var l = Log.Fn<int>();
         return target switch
         {
             IEntity entity => l.Return(entity.AppId, "entity-appid"),

@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Services.HttpCtx;
 #if NETFRAMEWORK
 internal class HttpContextService(): ServiceWithContext("Sxc.HttpCx"), IHttpContextService
 #else
-internal class HttpContextService(IHttpContextAccessor httpContextAccessor): ServiceWithContext("Sxc.HttpCx", connect: [httpContextAccessor]), IHttpContextService
+internal class HttpContextService(IHttpContextAccessor httpContextAccessor): ServiceWithContext("Sxc.HttpCx"), IHttpContextService
 #endif
 {
     public void Redirect301(string url) => Redirect(url, 301);

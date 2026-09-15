@@ -16,7 +16,7 @@ public class AppsBackend(
     CodeInfoStats codeStats,
     Generator<IAppPathsMicroSvc> appPathsGen,
     LazySvc<GlobalPaths> globalPaths)
-    : ServiceBase("Bck.Apps", connect: [workApps, codeStats, context, appPathsGen, globalPaths])
+    : ServiceBase("Bck.Apps")
 {
     public ICollection<AppRaw> Apps()
     {

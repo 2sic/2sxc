@@ -57,9 +57,9 @@ public sealed partial class CmsBlock : DataSourceBase, IDataSourceLinkable
         LazySvc<IDataSourcesService> DataSourceFactory,
         LazySvc<AppWorkContextService> AppCtxSvc,
         AppWorkChain<WorkBlocks> AppBlocks)
-        : DependenciesBase(connect: [ModuleLazy, DataSourceFactory, AppCtxSvc, AppBlocks]);
+        : DependenciesBase();
 
-    public CmsBlock(Dependencies services): base(services.ParentServices, $"SDS.CmsBks", connect: [services])
+    public CmsBlock(Dependencies services): base(services.ParentServices, $"SDS.CmsBks")
     {
         _services = services;
 

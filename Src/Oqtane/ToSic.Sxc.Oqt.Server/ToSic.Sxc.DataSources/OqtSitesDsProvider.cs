@@ -1,4 +1,4 @@
-﻿using Oqtane.Repository;
+using Oqtane.Repository;
 using ToSic.Sxc.Cms.Sites.Sys;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sys.Utils;
@@ -21,18 +21,16 @@ internal class OqtSitesDsProvider : SitesDataSourceProvider
     public OqtSitesDsProvider(Dependencies services, IAliasRepository aliases, ISiteRepository sites, LazySvc<OqtCulture> oqtCulture)
         :base(services, "Oqt.Sites")
     {
-        ConnectLogs([
-            _aliases = aliases,
-            _sites = sites,
-            _oqtCulture = oqtCulture
-        ]);
+        _aliases = aliases;
+        _sites = sites;
+        _oqtCulture = oqtCulture;
     }
 
     #endregion
 
     public override List<SiteModelRaw> GetSitesInternal()
     {
-        var l = Log.Fn<List<SiteModelRaw>>();
+        using var l = Log.Fn<List<SiteModelRaw>>();
         var sites = _sites.GetSites().ToList();
         return l.ReturnAsOk(sites.Select(s => new SiteModelRaw
         {

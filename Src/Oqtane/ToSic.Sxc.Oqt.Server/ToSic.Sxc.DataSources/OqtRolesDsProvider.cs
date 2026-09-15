@@ -1,4 +1,4 @@
-﻿using Oqtane.Repository;
+using Oqtane.Repository;
 using Oqtane.Shared;
 using ToSic.Sxc.Cms.Users.Sys;
 
@@ -9,13 +9,13 @@ namespace ToSic.Sxc.DataSources;
 /// Deliver a list of roles from the Oqtane
 /// </summary>
 internal class OqtRolesDsProvider(IRoleRepository roles, SiteState siteState)
-    : ServiceBase("Oqt.Roles", connect: [roles, siteState]),
+    : ServiceBase("Oqt.Roles"),
         IUserRolesProvider
 {
     [PrivateApi]
     public IEnumerable<UserRoleModelRaw> GetRoles()
     {
-        var l = Log.Fn<IEnumerable<UserRoleModelRaw>>();
+        using var l = Log.Fn<IEnumerable<UserRoleModelRaw>>();
         var siteId = siteState.Alias.SiteId;
         l.A($"Portal Id {siteId}");
         try

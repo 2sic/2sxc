@@ -24,7 +24,7 @@ public class ExtensionExportService(
     LazySvc<ContentExportApi> contentExport,
     ExtensionManifestService manifestService
     )
-    : ServiceBase("Bck.ExtExp", connect: [appReadersLazy, site, appPathSvc, contentExport, manifestService])
+    : ServiceBase("Bck.ExtExp")
 {
     /// <summary>
     /// ZIP file name format, with placeholders for name and version
@@ -38,7 +38,7 @@ public class ExtensionExportService(
 
     public FileToUploadToClient Export(int appId, string name)
     {
-        var l = Log.Fn<FileToUploadToClient>($"export extension a#{appId}, name:'{name}'");
+        using var l = Log.Fn<FileToUploadToClient>($"export extension a#{appId}, name:'{name}'");
 
         if (string.IsNullOrWhiteSpace(name))
             throw l.Ex(new ArgumentException(@"Extension name is required", nameof(name)));
@@ -147,7 +147,7 @@ public class ExtensionExportService(
         string primaryExtensionName,
         string primaryVersionString)
     {
-        var l = Log.Fn<MemoryStream>($"exts:{exports.Count}, primary:{primaryExtensionName}");
+        using var l = Log.Fn<MemoryStream>($"exts:{exports.Count}, primary:{primaryExtensionName}");
 
         var memoryStream = new MemoryStream();
         using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
@@ -188,7 +188,7 @@ public class ExtensionExportService(
 
     private ExtensionExportSpec BuildExtensionExport(int appId, string extensionName, IAppPaths appPaths)
     {
-        var l = Log.Fn<ExtensionExportSpec>($"a#{appId}, ext:'{extensionName}'");
+        using var l = Log.Fn<ExtensionExportSpec>($"a#{appId}, ext:'{extensionName}'");
 
         var extensionsRoot = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppExtensionsFolder);
         var extensionPath = ExtensionValidationHelper.GetActualCasedPath(extensionsRoot, extensionName);
@@ -255,7 +255,7 @@ public class ExtensionExportService(
 
     private ExtensionManifest ModifyExtensionManifest(ExtensionManifest manifest, int appId)
     {
-        var l = Log.Fn<ExtensionManifest>();
+        using var l = Log.Fn<ExtensionManifest>();
 
         l.A($"Modifying {FolderConstants.AppExtensionJsonFile}");
 
@@ -277,7 +277,7 @@ public class ExtensionExportService(
         var expandedReleases = releases
             .Select(releaseRef =>
             {
-                var lr = Log.Fn<AppExtensionRelease>();
+                using var lr = Log.Fn<AppExtensionRelease>();
                 if (releaseRef.ValueKind != JsonValueKind.String)
                     return lr.ReturnNull($"Skipping non-string release reference: {releaseRef.ValueKind}");
 
@@ -312,7 +312,7 @@ public class ExtensionExportService(
         IAppPaths appPaths,
         string extensionName)
     {
-        var l = Log.Fn<List<(string sourcePath, string zipPath)>>();
+        using var l = Log.Fn<List<(string sourcePath, string zipPath)>>();
 
         l.A("Collecting files to include");
 
@@ -360,7 +360,7 @@ public class ExtensionExportService(
         string extensionName,
         int appId)
     {
-        var l = Log.Fn<List<(string, string, string)>>();
+        using var l = Log.Fn<List<(string, string, string)>>();
 
         if (!manifest.DataInside)
             return l.Return([], "no data bundles");
@@ -438,7 +438,7 @@ public class ExtensionExportService(
 
     private List<(string, string)> AddDirectoryFiles(string sourcePath, string baseSourcePath, string baseZipPath, string[]? exclude = null)
     {
-        var l = Log.Fn<List<(string, string)>>($"source:{sourcePath}, base:{baseSourcePath}, zipBase:{baseZipPath}");
+        using var l = Log.Fn<List<(string, string)>>($"source:{sourcePath}, base:{baseSourcePath}, zipBase:{baseZipPath}");
 
         // Directory enumeration is one of the first places Windows legacy MAX_PATH fails. Convert
         // physical paths to the extended namespace for disk access, but keep ZIP paths and log output
@@ -495,7 +495,7 @@ public class ExtensionExportService(
         string extensionJsonZipPath,
         string finalExtensionJson)
     {
-        var l = Log.Fn<PackageIndexFile>($"Creating {PackageIndexFile.LockFileName} file");
+        using var l = Log.Fn<PackageIndexFile>($"Creating {PackageIndexFile.LockFileName} file");
 
         l.A($"{nameof(version)}:{version}");
 
@@ -533,7 +533,7 @@ public class ExtensionExportService(
 
     private PackageInstallFile CreatePackageInstallFile(List<ExtensionExportSpec> exports)
     {
-        var l = Log.Fn<PackageInstallFile>();
+        using var l = Log.Fn<PackageInstallFile>();
 
         // Create the package object
         var package = new PackageInstallFile
@@ -563,7 +563,7 @@ public class ExtensionExportService(
 
     private void AddFilesToZip(ZipArchive archive, IReadOnlyCollection<(string sourcePath, string zipPath)> files)
     {
-        var l = Log.Fn($"{nameof(files)}:{files.Count}");
+        using var l = Log.Fn($"{nameof(files)}:{files.Count}");
 
         foreach (var (sourcePath, zipPath) in files)
         {

@@ -23,7 +23,7 @@ internal class DnnEnvironmentPermission() : EnvironmentPermission(DnnConstants.L
 
     public override bool VerifyConditionOfEnvironment(string condition)
     {
-        var l = Log.Fn<bool>($"condition: {condition}");
+        using var l = Log.Fn<bool>($"condition: {condition}");
         var fullPrefix = (SalPrefix + ".").ToLowerInvariant();
         if (!condition.StartsWith(fullPrefix, StringComparison.InvariantCultureIgnoreCase))
             return l.ReturnFalse("unknown condition: false");
@@ -49,14 +49,14 @@ internal class DnnEnvironmentPermission() : EnvironmentPermission(DnnConstants.L
 
     protected override bool UserIsModuleAdmin()
     {
-        var l = Log.Fn<bool>();
+        using var l = Log.Fn<bool>();
         return l.ReturnAsOk(Module != null && ModulePermissionController.CanAdminModule(Module));
     }
  
 
     protected override bool UserIsModuleEditor()
     {
-        var l = Log.Fn<bool>();
+        using var l = Log.Fn<bool>();
         if (Module == null)
             return false;
 

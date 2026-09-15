@@ -10,11 +10,11 @@ public class CopilotCodeGenerateService(
     FileSaver fileSaver,
     LazySvc<IEnumerable<IFileGenerator>> generators,
     IAppReaderFactory appReaders)
-    : ServiceBase(SxcLogName + ".AutoGen.Run", connect: [fileSaver, generators, appReaders])
+    : ServiceBase(SxcLogName + ".AutoGen.Run")
 {
     public Result GenerateDataModels(int appId, string? edition, string generatorName, int configurationId = 0)
     {
-        var l = Log.Fn<Result>($"{nameof(appId)}:{appId};{nameof(edition)}:{edition};{nameof(generatorName)}:{generatorName};{nameof(configurationId)}:{configurationId}", timer: true);
+        using var l = Log.Fn<Result>($"{nameof(appId)}:{appId};{nameof(edition)}:{edition};{nameof(generatorName)}:{generatorName};{nameof(configurationId)}:{configurationId}", timer: true);
 
         try
         {
@@ -54,7 +54,7 @@ public class CopilotCodeGenerateService(
 
     internal List<Exception> AutoGenerate(Job job)
     {
-        var l = Log.Fn<List<Exception>>($"job:{job}");
+        using var l = Log.Fn<List<Exception>>($"job:{job}");
         var errors = new List<Exception>();
 
         try
@@ -81,7 +81,6 @@ public class CopilotCodeGenerateService(
 
     private void GenerateAndSave(IFileGenerator generator, IFileGeneratorSpecs specs)
     {
-        (generator as IHasLog)?.LinkLog(Log);
         fileSaver.GenerateAndSaveFiles(generator, specs);
     }
 

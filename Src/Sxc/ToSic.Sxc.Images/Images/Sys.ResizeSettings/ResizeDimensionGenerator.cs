@@ -87,7 +87,7 @@ public class ResizeDimensionGenerator() : ServiceBase("Img.ResDim")
     private int HeightFromAspectRatioOrFactor((int Width, int Height) dims, double factor, bool useAspectRatio, double aspectRatio)
     {
         var maybeLog = Debug ? Log : null;
-        var l = maybeLog.Fn<int>();
+        using var l = maybeLog.Fn<int>();
 
         var hasAspectRatio = !DNearZero(aspectRatio);
 
@@ -103,7 +103,7 @@ public class ResizeDimensionGenerator() : ServiceBase("Img.ResDim")
     internal (int W, int H) KeepInRangeProportional((int W, int H) original)
     {
         var maybeLog = Debug ? Log : null;
-        var l = maybeLog.Fn<(int, int)>();
+        using var l = maybeLog.Fn<(int, int)>();
 
         // Simple case - it fits into the max-range
         if (original.W <= MaxSize && original.H <= MaxSize)

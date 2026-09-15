@@ -17,11 +17,11 @@ using static ToSic.Sxc.Render.StaticAssets.Sys.ClientAssetConstants;
 namespace ToSic.Sxc.Dnn.Services;
 
 internal class DnnPageChanges(LazySvc<IFeaturesService> featuresService, Generator<CspOfPage> pageCspGenerator)
-    : ServiceBase($"{DnnConstants.LogName}.PgeCng", connect: [featuresService, pageCspGenerator])
+    : ServiceBase($"{DnnConstants.LogName}.PgeCng")
 {
     public int Apply(Page page, IRenderResult renderResult)
     {
-        var l = Log.Fn<int>("Will apply PageChanges");
+        using var l = Log.Fn<int>("Will apply PageChanges");
 
         if (renderResult == null)
             return 0;
@@ -51,7 +51,7 @@ internal class DnnPageChanges(LazySvc<IFeaturesService> featuresService, Generat
 
     private int Apply(DnnHtmlPage dnnPage, IList<PagePropertyChange> props)
     {
-        var l = Log.Fn<int>($"{props.Count} props");
+        using var l = Log.Fn<int>($"{props.Count} props");
         // 2022-05-03 2dm - don't think the props are ever null, requiring access to the shared data
         // props = props ?? PageServiceShared.GetPropertyChangesAndFlush(Log);
         foreach (var p in props)
@@ -99,7 +99,7 @@ internal class DnnPageChanges(LazySvc<IFeaturesService> featuresService, Generat
 
     private int ApplyHttpHeaders(Page page, IRenderResult result)
     {
-        var l = Log.Fn<int>();
+        using var l = Log.Fn<int>();
         var httpHeaders = result.HttpHeaders;
 
         // Register CSP changes for applying once all modules have been prepared

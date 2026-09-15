@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Services;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class TurnOnService(LazySvc<IHtmlTagsService> htmlTagsService)
-    : ServiceBase(SxcLogName + ".TrnOnS", connect: [htmlTagsService]), ITurnOnService
+    : ServiceBase(SxcLogName + ".TrnOnS"), ITurnOnService
 {
     protected virtual string TagName => "turnOn";
     private const string AttributeName = "turn-on";
@@ -22,7 +22,7 @@ internal class TurnOnService(LazySvc<IHtmlTagsService> htmlTagsService)
         object? data = default
     )
     {
-        var l = Log.Fn<Attribute>();
+        using var l = Log.Fn<Attribute>();
         var specs = PickOrBuildSpecs(runOrSpecs: runOrSpecs, require: require, data: data, args: null, addContext: null);
         var attr = htmlTagsService.Value.Attr(AttributeName, specs);
         return l.ReturnAsOk(attr);
@@ -37,7 +37,7 @@ internal class TurnOnService(LazySvc<IHtmlTagsService> htmlTagsService)
         string? addContext = default
     )
     {
-        var l = Log.Fn<IHtmlTag>();
+        using var l = Log.Fn<IHtmlTag>();
         var specs = PickOrBuildSpecs(runOrSpecs: runOrSpecs, require: require, data: data, args: args, addContext: addContext);
         var tag = htmlTagsService.Value.Custom(TagName).Attr(AttributeName, specs);
         return l.ReturnAsOk(tag);

@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Blocks.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDefinitionFactory> qDefBuilder, AppWorkChain<WorkEntities> workEntities)
-    : ServiceWithSetup<IAppWorkContext>("SxS.Blocks", connect: [cultureResolver, qDefBuilder, workEntities])
+    : ServiceWithSetup<IAppWorkContext>("SxS.Blocks")
 {
     public const string BlockTypeName = "2SexyContent-ContentGroup";
 
@@ -39,7 +39,7 @@ public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDef
     /// <returns>Will always return an object, even if the group doesn't exist yet. The .Entity would be null then</returns>
     public BlockConfiguration GetBlockConfig(Guid contentGroupGuid)
     {
-        var l = Log.Fn<BlockConfiguration>($"get CG#{contentGroupGuid}");
+        using var l = Log.Fn<BlockConfiguration>($"get CG#{contentGroupGuid}");
         var groupEntity = GetContentGroups().GetOne(contentGroupGuid);
         var found = groupEntity != null;
         return l.Return(found
@@ -55,7 +55,7 @@ public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDef
 
     public BlockConfiguration GetOrGeneratePreviewConfig(IBlockIdentifier blockId)
     {
-        var l = Log.Fn<BlockConfiguration>($"grp#{blockId.Guid}, preview#{blockId.PreviewView}");
+        using var l = Log.Fn<BlockConfiguration>($"grp#{blockId.Guid}, preview#{blockId.PreviewView}");
         // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
         var createTempBlockForPreview = blockId.Guid == Guid.Empty;
         l.A($"{nameof(createTempBlockForPreview)}:{createTempBlockForPreview}");

@@ -22,7 +22,7 @@ internal partial class DnnPagePublishing(
     LazySvc<AppWorkContextService> appWorkCtxSvc,
     LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder,
     LazySvc<WorkEntityPublish> entPublish)
-    : ServiceBase("Dnn.Publsh", connect: [appWorkCtxSvc, moduleAndBlockBuilder, entPublish]), IPagePublishing
+    : ServiceBase("Dnn.Publsh"), IPagePublishing
 {
 
     public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
@@ -73,7 +73,7 @@ internal partial class DnnPagePublishing(
 
     public void Publish(int instanceId, int version)
     {
-        var l = Log.Fn($"Publish(m:{instanceId}, v:{version})");
+        using var l = Log.Fn($"Publish(m:{instanceId}, v:{version})");
         try
         {
             // publish all entities of this content block

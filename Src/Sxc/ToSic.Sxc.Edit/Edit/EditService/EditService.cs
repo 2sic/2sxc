@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Edit.EditService;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal partial class EditService(IJsonService jsonService)
-    : ServiceWithContext("Sxc.Edit", connect: [jsonService]), IEditService, IEditServiceSetup
+    : ServiceWithContext("Sxc.Edit"), IEditService, IEditServiceSetup
 {
     public override void ConnectToRoot(IExecutionContext exCtx)
     {

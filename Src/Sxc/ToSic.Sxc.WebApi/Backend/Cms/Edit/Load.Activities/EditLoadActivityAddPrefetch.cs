@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.WebApi.Sys.Cms;
+using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sxc.Adam.Sys.Work;
 using ToSic.Sxc.Backend.Adam;
@@ -11,12 +11,12 @@ public partial class EditLoadActivityAddPrefetch(
     Generator<HyperlinkBackend> hyperlinkBackend,
     Generator<IAdamPrefetchHelper, AdamWorkOptions> adamTransGetItems,
     EntityPickerApi entityPickerBackend)
-    : ServiceBase(SxcLogName + ".Prefetch", connect: [adamTransGetItems, hyperlinkBackend, entityPickerBackend]),
+    : ServiceBase(SxcLogName + ".Prefetch"),
         IWork<EditLoadDto, EditLoadDto>
 {
     public async Task<Package<EditLoadDto>> Handle(WorkContext actionCtx, Package<EditLoadDto> package)
     {
-        var l = Log.Fn<Package<EditLoadDto>>();
+        using var l = Log.Fn<Package<EditLoadDto>>();
         try
         {
             package = package with
@@ -46,7 +46,7 @@ public partial class EditLoadActivityAddPrefetch(
 
     private ICollection<EntityForPickerDto> PrefetchEntities(int appId, EditLoadDto editData)
     {
-        var l = Log.Fn<ICollection<EntityForPickerDto>>();
+        using var l = Log.Fn<ICollection<EntityForPickerDto>>();
         try
         {
             // Step 1: try to find entity fields

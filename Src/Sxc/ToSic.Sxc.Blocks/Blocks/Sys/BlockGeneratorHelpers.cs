@@ -16,13 +16,13 @@ public class BlockGeneratorHelpers(
     LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
     LazySvc<App> appLazy
 )
-    : ServiceBase("Eav.BlGenH", connect: [bdsFactoryLazy, appLazy, workViews, appBlocks])
+    : ServiceBase("Eav.BlGenH")
 {
     internal LazySvc<App> AppLazy { get; } = appLazy;
 
     public BlockSpecs CompleteInit(BlockSpecs currentSpecs, IBlock? parentOrNull, IBlockIdentifier blockIdentifier, int blockId)
     {
-        var l = Log.Fn<BlockSpecs>();
+        using var l = Log.Fn<BlockSpecs>();
 
         var specs = currentSpecs with
         {

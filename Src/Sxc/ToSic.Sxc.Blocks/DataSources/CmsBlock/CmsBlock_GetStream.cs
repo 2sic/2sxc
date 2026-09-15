@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using ToSic.Eav.DataSource;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Data.Sys.Decorators;
@@ -17,7 +17,7 @@ public sealed partial class CmsBlock
         bool isListHeader
     )
     {
-        var l = Log.Fn<IImmutableList<IEntity>>($"content⋮{items.Count}, demo#{cDemoItem?.EntityId}, present⋮{presList?.Count}, presDemo#{pDemoItem?.EntityId}, header:{isListHeader}");
+        using var l = Log.Fn<IImmutableList<IEntity>>($"content⋮{items.Count}, demo#{cDemoItem?.EntityId}, present⋮{presList?.Count}, presDemo#{pDemoItem?.EntityId}, header:{isListHeader}");
         try
         {
             // if no template is defined, return empty list
@@ -100,7 +100,7 @@ public sealed partial class CmsBlock
 
     private IImmutableList<IEntity> GetInOrAutoCreate()
     {
-        var l = Log.Fn<IImmutableList<IEntity>>();
+        using var l = Log.Fn<IImmutableList<IEntity>>();
         // Check if in not connected, in which case we must find it yourself
         if (!In.ContainsKey(StreamDefaultName))
         {

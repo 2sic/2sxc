@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.Sys;
+using ToSic.Eav.Data.Sys;
 using ToSic.Eav.DataSource.Sys.Caching;
 using ToSic.Eav.Metadata;
 using ToSic.Sxc.Apps.Sys.Api01;
@@ -21,10 +21,8 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
 
     public AppDataWithCrud(Dependencies services, LazySvc<SimpleDataEditService> dataController, LazySvc<IDataSourceCacheService> dsCacheSvc) : base(services)
     {
-        ConnectLogs([
-            DataController = dataController.SetInit(dc => dc.Init(ZoneId, AppId, false)),
-            _dsCacheSvc = dsCacheSvc
-        ]);
+        DataController = dataController.SetInit(dc => dc.Init(ZoneId, AppId, false));
+        _dsCacheSvc = dsCacheSvc;
     }
 
     #endregion
@@ -50,7 +48,7 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
     /// <inheritdoc />
     public IEntity Create(string contentTypeName, Dictionary<string, object?> values, string? userName = default, ITarget? target = default)
     {
-        var l = Log.Fn<IEntity>(contentTypeName);
+        using var l = Log.Fn<IEntity>(contentTypeName);
         // Ensure case insensitive
         values = values.ToInvariant();
 
@@ -77,7 +75,7 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
     public IEnumerable<IEntity> Create(string contentTypeName, IEnumerable<Dictionary<string, object?>> multiValues, string? userName = default)
     {
         var valueList = multiValues.ToListOpt();
-        var l = Log.Fn<IEnumerable<IEntity>>($"app create many ({valueList.Count}) new entities of type:{contentTypeName}");
+        using var l = Log.Fn<IEnumerable<IEntity>>($"app create many ({valueList.Count}) new entities of type:{contentTypeName}");
         // ensure case insensitive
         multiValues = valueList
             .Select(mv => mv.ToInvariant())
@@ -98,7 +96,7 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
     /// <inheritdoc />
     public void Update(int entityId, Dictionary<string, object?> values, string? userName = default)
     {
-        var l = Log.Fn($"app update i:{entityId}");
+        using var l = Log.Fn($"app update i:{entityId}");
         // FYI: userName is not used (to change owner of updated entity).
         DataController.Value.Update(entityId, values);
         FlushDataSnapshot();
@@ -109,7 +107,7 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
     /// <inheritdoc />
     public void Delete(int entityId, string? userName = default)
     {
-        var l = Log.Fn($"app delete i:{entityId}");
+        using var l = Log.Fn($"app delete i:{entityId}");
         // FYI: userName is not used (to change owner of deleted entity).
         DataController.Value.Delete(entityId);
         FlushDataSnapshot();

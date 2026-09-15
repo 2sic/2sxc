@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Oqt.Server.Run;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class OqtSecurity(LazySvc<IUserRoleRepository> userRoleRepository, UserManager<IdentityUser> identityUserManager)
-    : ServiceBase($"{OqtConstants.OqtLogPrefix}.User", connect: [userRoleRepository, identityUserManager])
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.User")
 {
     public int Id(User user) => user?.UserId ?? -1;
 

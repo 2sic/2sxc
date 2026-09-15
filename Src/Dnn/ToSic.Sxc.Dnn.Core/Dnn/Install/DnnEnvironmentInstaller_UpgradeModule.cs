@@ -13,7 +13,7 @@ partial class DnnEnvironmentInstaller
 {
     internal string UpgradeModule(string version, bool closeWhenDone)
     {
-        var l = Log.Fn<string>($"{nameof(version)}: {version}, {nameof(closeWhenDone)}: {closeWhenDone}");
+        using var l = Log.Fn<string>($"{nameof(version)}: {version}, {nameof(closeWhenDone)}: {closeWhenDone}");
 
         var logger = new DnnInstallLoggerForVersion(_installLogger, version);
 

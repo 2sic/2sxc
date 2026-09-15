@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Apps.Sys;
 [PrivateApi("Hide implementation - was PublicApi_Stable_ForUseInYourCode till 16.09")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract partial class SxcAppBase(SxcAppBase.Dependencies services, string? logName = default, object[]? connect = default)
-    : AppBase<SxcAppBase.Dependencies>(services, logName ?? "Eav.App", connect: connect)
+    : AppBase<SxcAppBase.Dependencies>(services, logName ?? "Eav.App", null)
 {
     // ReSharper disable once InconsistentNaming
     private readonly Dependencies services = services;
@@ -40,7 +40,7 @@ public abstract partial class SxcAppBase(SxcAppBase.Dependencies services, strin
         IDataSourcesService DataSourceFactory,
         LazySvc<QueryManager> QueryManager,
         IAppDataConfigProvider DataConfigProvider)
-        : DependenciesBase(connect: [ZoneMapper, Site, AppReaders, DataSourceFactory, QueryManager, DataConfigProvider]);
+        : DependenciesBase();
 
     #endregion
 
@@ -97,7 +97,7 @@ public abstract partial class SxcAppBase(SxcAppBase.Dependencies services, strin
 
     public SxcAppBase Init(ISite? replaceSite, IAppIdentityPure appIdentity, AppDataConfigSpecs? dataSpecs)
     {
-        var l = Log.Fn<SxcAppBase>();
+        using var l = Log.Fn<SxcAppBase>();
 
         // If we have a replacement site (like App being used from another site), set it here
         if (replaceSite != null)

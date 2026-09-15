@@ -13,7 +13,7 @@ public class ExtensionDownloadBackend() : ServiceBase("Bck.ExtDl")
     public (Stream Stream, string FileName, string Url) DownloadFirstAvailable(string[] urls)
     {
         // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
-        var l = Log.Fn<(Stream, string, string)>($"urls:{urls?.Length ?? 0}");
+        using var l = Log.Fn<(Stream, string, string)>($"urls:{urls?.Length ?? 0}");
 
         if (urls == null || urls.Length == 0)
             throw l.Ex(new ArgumentException("no urls provided"));
@@ -45,7 +45,7 @@ public class ExtensionDownloadBackend() : ServiceBase("Bck.ExtDl")
 
     private (Stream Stream, string FileName) DownloadSingleUrl(string url)
     {
-        var l = Log.Fn<(Stream, string)>($"url:'{url}'");
+        using var l = Log.Fn<(Stream, string)>($"url:'{url}'");
 
         MemoryStream? stream = null;
         try

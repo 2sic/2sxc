@@ -38,11 +38,9 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
     {
         Log = new Log(HistoryLogName, null, nameof(AppApiDynamicRouteValueTransformer));
         logStore.Add(HistoryLogGroup, Log);
-        this.ConnectLogs([
-            _tenantResolver = tenantResolver,
-            _hostingEnvironment = hostingEnvironment,
-            _oqtSiteGroup = oqtSiteGroup
-        ]);
+        _tenantResolver = tenantResolver;
+        _hostingEnvironment = hostingEnvironment;
+        _oqtSiteGroup = oqtSiteGroup;
     }
 
     public ILog Log { get; }
@@ -55,7 +53,7 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
     {
         return await Task.Run(() =>
         {
-            var l = Log.Fn<RouteValueDictionary>();
+            using var l = Log.Fn<RouteValueDictionary>();
 
             #region Ensure required alias
 

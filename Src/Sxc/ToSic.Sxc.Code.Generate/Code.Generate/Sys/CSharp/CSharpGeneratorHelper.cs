@@ -23,7 +23,7 @@ internal class CSharpGeneratorHelper(CSharpCodeSpecs specs, ILog parentLog): Hel
 
     public string CodeComment(int tabs, string[] comment, int padBefore = 1, int padAfter = default, int altGap = 1)
     {
-        var l = Log.Fn<string>();
+        using var l = Log.Fn<string>();
         // If nothing, return empty lines as much as altGap
         if (!comment.SafeAny())
             return new('\n', altGap);
@@ -45,7 +45,7 @@ internal class CSharpGeneratorHelper(CSharpCodeSpecs specs, ILog parentLog): Hel
 
     public string XmlComment(int tabs, string[]? summary = default, string[]? remarks = default, string[]? returns = default, int padBefore = 1, int padAfter = default, int altGap = 1)
     {
-        var l = Log.Fn<string>();
+        using var l = Log.Fn<string>();
         // 1. If nothing, return empty lines as much as altGap
         // first merge all the comments to see if we have any
         var merged = (summary ?? []).Concat(returns ?? []).ToList();
@@ -108,13 +108,13 @@ internal class CSharpGeneratorHelper(CSharpCodeSpecs specs, ILog parentLog): Hel
 
     internal CodeFragment NamespaceWrapper(string @namespace)
     {
-        var l = Log.Fn<CodeFragment>($"{nameof(@namespace)}: {@namespace}");
+        using var l = Log.Fn<CodeFragment>($"{nameof(@namespace)}: {@namespace}");
         return l.Return(new("namespace", $"{Indent(specs.TabsNamespace)}namespace {@namespace}" + "\n{", closing: "}"));
     }
 
     internal CodeFragment ClassWrapper(string className, bool isAbstract, bool isPartial, string? inherits)
     {
-        var l = Log.Fn<CodeFragment>($"{nameof(className)}: {className}; {nameof(isAbstract)}: {isAbstract}; {nameof(isPartial)}: {isPartial}; {nameof(inherits)}: {inherits}");
+        using var l = Log.Fn<CodeFragment>($"{nameof(className)}: {className}; {nameof(isAbstract)}: {isAbstract}; {nameof(isPartial)}: {isPartial}; {nameof(inherits)}: {inherits}");
         var indent = Indent(specs.TabsClass);
         var specifiers = (isAbstract ? "abstract " : "") + (isPartial ? "partial " : "");
         inherits = inherits.NullOrGetWith(i => $": {i}");

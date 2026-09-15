@@ -15,11 +15,11 @@ namespace ToSic.Sxc.Code.Sys.SourceCode;
 /// </remarks>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class CodeCompiler(IServiceProvider serviceProvider, object[]? connect = default) : ServiceBase("Sys.CsCmpl", connect: connect /* never! serviceProvider */), IClassCompiler
+public abstract class CodeCompiler(IServiceProvider serviceProvider, object[]? connect = default) : ServiceBase("Sys.CsCmpl"), IClassCompiler
 {
     public object? InstantiateClass(string virtualPath, HotBuildSpec spec, string? className = null, string? relativePath = null, bool throwOnError = true)
     {
-        var l = Log.Fn<object>($"{virtualPath}; {spec}; {nameof(className)}:{className}; {nameof(relativePath)}:{relativePath}; {nameof(throwOnError)}: {throwOnError}");
+        using var l = Log.Fn<object>($"{virtualPath}; {spec}; {nameof(className)}:{className}; {nameof(relativePath)}:{relativePath}; {nameof(throwOnError)}: {throwOnError}");
 
         // Perform various checks on the path values
         var hasErrorMessage = CheckIfPathsOkAndCleanUp(ref virtualPath, relativePath);
@@ -62,7 +62,7 @@ public abstract class CodeCompiler(IServiceProvider serviceProvider, object[]? c
 
     public (Type? Type, string? ErrorMessages) GetTypeOrErrorMessages(string relativePath, string? className, bool throwOnError, HotBuildSpec spec)
     {
-        var l = Log.Fn<(Type? Type, string? ErrorMessages)>($"{nameof(relativePath)}: '{relativePath}'; {nameof(className)} '{className}'; {nameof(throwOnError)}: {throwOnError}; {spec}");
+        using var l = Log.Fn<(Type? Type, string? ErrorMessages)>($"{nameof(relativePath)}: '{relativePath}'; {nameof(className)} '{className}'; {nameof(throwOnError)}: {throwOnError}; {spec}");
 
         // if no name provided, use the name which is the same as the file name
         className ??= Path.GetFileNameWithoutExtension(relativePath) ?? EavConstants.NullNameId;
@@ -117,7 +117,7 @@ public abstract class CodeCompiler(IServiceProvider serviceProvider, object[]? c
     /// <returns>null if all is ok, or an error message if not</returns>
     private string? CheckIfPathsOkAndCleanUp(ref string virtualPath, string? relativePath)
     {
-        var l = Log.Fn<string>($"{nameof(virtualPath)}: '{virtualPath}', {nameof(relativePath)}: '{relativePath}'");
+        using var l = Log.Fn<string>($"{nameof(virtualPath)}: '{virtualPath}', {nameof(relativePath)}: '{relativePath}'");
         if (string.IsNullOrWhiteSpace(virtualPath))
             return l.ReturnAndLog("no path/name provided");
 
@@ -144,7 +144,7 @@ public abstract class CodeCompiler(IServiceProvider serviceProvider, object[]? c
 
     private bool AttachRelativePath(string virtualPath, object instance)
     {
-        var l = Log.Fn<bool>($"{nameof(virtualPath)}: {virtualPath}");
+        using var l = Log.Fn<bool>($"{nameof(virtualPath)}: {virtualPath}");
 
         if (instance is not IGetCodePath codeForwarding)
             return l.ReturnFalse("didn't attach");

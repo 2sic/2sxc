@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Services.Sys;
 //[ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
 public abstract class ServiceWithContext(string logName, NoParamOrder npo = default, object[]? connect = default)
-    : ServiceBase(logName, npo: npo, connect: connect), INeedsExecutionContext, ICanDebug
+    : ServiceBase(logName, npo: npo), INeedsExecutionContext, ICanDebug
 {
     /// <summary>
     /// Connect to CodeRoot and it's log
@@ -37,10 +37,6 @@ public abstract class ServiceWithContext(string logName, NoParamOrder npo = defa
 
         // Remember the parent
         ExCtxOrNull = exCtx;
-        // Link the logs
-        this.LinkLog(parentLog ?? exCtx?.Log);
-        // report connection in log
-        Log.Fn(message: "Linked to Root").Done();
     }
     private bool _alreadyConnected;
 

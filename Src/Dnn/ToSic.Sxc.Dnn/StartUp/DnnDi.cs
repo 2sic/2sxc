@@ -20,7 +20,7 @@ public static class DnnDi
 
     public static IServiceCollection RegisterServices(IServiceCollection services)
     {
-        var l = BootLog.Log.Fn("Dnn: Registering Services", timer: true);
+        using var l = BootLog.Log.Fn("Dnn: Registering Services", timer: true);
 
         if (_alreadyRegistered)
             return OriginalServiceCollection;

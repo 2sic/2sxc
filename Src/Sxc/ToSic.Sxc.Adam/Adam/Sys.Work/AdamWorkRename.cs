@@ -8,7 +8,7 @@ public class AdamWorkRename(AdamWorkBase.Dependencies services)
 {
     public bool Rename(string parentSubfolder, bool isFolder, AdamAssetIdentifier folderId, AdamAssetIdentifier fileId, string newName)
     {
-        var l = Log.Fn<bool>();
+        using var l = Log.Fn<bool>();
 
         if (AdamContext.Security.UserNotPermittedOnField(GrantSets.WriteSomething, out var exp))
             throw l.Ex(exp);

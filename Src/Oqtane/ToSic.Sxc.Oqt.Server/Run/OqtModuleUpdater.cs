@@ -23,12 +23,11 @@ internal class OqtModuleUpdater(
     AppWorkQuick<WorkViews> workViews,
     LazySvc<IAppsCatalog> appsCatalog,
     ISite site)
-    : ServiceBase($"{OqtConstants.OqtLogPrefix}.MapA2I",
-        connect: [settingsHelper, pageModuleRepository, appsCatalog, workViews, site]), IPlatformModuleUpdater
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.MapA2I"), IPlatformModuleUpdater
 {
     public void SetAppId(IModule instance, int? appId)
     {
-        var l = Log.Fn($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
+        using var l = Log.Fn($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
         // Reset temporary template
         ClearPreview(instance.Id);
 

@@ -8,14 +8,14 @@ internal class LightSpeedConfigHelper(ILog? parentLog) : HelperBase(parentLog, "
 
     public LightSpeedDecorator GetLightSpeedConfigOfApp(IAppReader? appReader)
     {
-        var l = Log.Fn<LightSpeedDecorator>();
+        using var l = Log.Fn<LightSpeedDecorator>();
         var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(appReader);
         return l.Return(decoFromPiggyBack, $"has decorator: {(decoFromPiggyBack as ICanBeEntity).Entity != null!}");
     }
 
     public LightSpeedDecorator? ViewConfigOrNull(IBlock? block)
     {
-        var l = Log.Fn<LightSpeedDecorator?>();
+        using var l = Log.Fn<LightSpeedDecorator?>();
         if (block?.ViewIsReady != true)
             return l.ReturnNull("view not ready");
             

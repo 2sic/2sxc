@@ -20,7 +20,7 @@ public partial class AdamFileSystemString
     /// <inheritdoc />
     public override IFile Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
     {
-        var l = Log.Fn<IFile>($"..., ..., {fileName}, {ensureUniqueName}");
+        using var l = Log.Fn<IFile>($"..., ..., {fileName}, {ensureUniqueName}");
         if (ensureUniqueName)
             fileName = FsHelpers.FindUniqueFileName(AdamPaths.PhysicalPath(parent.Path), fileName);
         var fullContentPath = AdamPaths.PhysicalPath(parent.Path);

@@ -21,7 +21,7 @@ public class QueryDefinition : CustomDataSource
     public int QueryId => Configuration.GetThis(0);
 
     public QueryDefinition(Dependencies services, LazySvc<QueryControllerReal> query)
-        : base(services, "Sxc.QueryDef", connect: [query])
+        : base(services, "Sxc.QueryDef")
     {
         ProvideOutRaw(() => Definition(query), name: "Definition", options: Options);
         ProvideOutRaw(() => Parts(query), name: "DataSources", options: Options);
@@ -62,7 +62,7 @@ public class DataSources : CustomDataSource
     public int OfZoneId => Configuration.GetThis(ZoneId);
 
     public DataSources(Dependencies services, LazySvc<QueryControllerReal> query)
-        : base(services, "Sxc.DataSources", connect: [query])
+        : base(services, "Sxc.DataSources")
         => ProvideOutRaw(
             () => query.Value.DataSources(new AppIdentity(OfZoneId, AppId)),
             options: Options);

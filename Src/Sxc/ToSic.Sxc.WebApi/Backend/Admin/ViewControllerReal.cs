@@ -13,7 +13,7 @@ public class ViewControllerReal(
     LazySvc<ViewsBackend> viewsBackend,
     LazySvc<ViewsExportImport> viewExportImport,
     LazySvc<UsageBackend> usageBackend)
-    : Services_ServiceBase("Api.ViewRl", connect: [context, usageBackend, viewsBackend, viewExportImport]),
+    : Services_ServiceBase("Api.ViewRl"),
         IViewController
 {
     public const string LogSuffix = "View";
@@ -46,7 +46,7 @@ public class ViewControllerReal(
     /// <exception cref="ArgumentException"></exception>
     public ImportResultDto Import(HttpUploadedFile uploadInfo, int zoneId, int appId)
     {
-        var l = Log.Fn<ImportResultDto>();
+        using var l = Log.Fn<ImportResultDto>();
             
         if (!uploadInfo.HasFiles())
             return l.Return(new(false, "no file uploaded", Message.MessageTypes.Error), "no file uploaded");

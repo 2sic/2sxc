@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sys.HookUp;
@@ -19,7 +19,7 @@ public class EditLoadActivityAddNecessaryInputTypes(AppWorkChain<WorkInputTypes>
 
     private List<InputTypeInfo> GetNecessaryInputTypes(List<JsonContentType> contentTypes, IAppWorkContext appCtx)
     {
-        var l = Log.Fn<List<InputTypeInfo>>($"{nameof(contentTypes)}: {contentTypes.Count}");
+        using var l = Log.Fn<List<InputTypeInfo>>($"{nameof(contentTypes)}: {contentTypes.Count}");
         var fields = contentTypes
             .SelectMany(t => t.AttributesSafe())
             .Select(a => a.InputType)

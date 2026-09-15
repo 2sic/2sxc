@@ -11,7 +11,7 @@ internal class ConvertService(
     ConvertValueService cnvSvc,
     LazySvc<ConvertForCodeService> code,
     LazySvc<IJsonService> json)
-    : ServiceBase("Sxc.CnvSrv", connect: [cnvSvc, code, json]), IConvertService
+    : ServiceBase("Sxc.CnvSrv"), IConvertService
 {
     public bool OptimizeNumbers => true;
 

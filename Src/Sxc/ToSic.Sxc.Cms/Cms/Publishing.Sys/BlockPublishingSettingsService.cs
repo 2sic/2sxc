@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Cms.Publishing.Sys;
@@ -17,7 +17,7 @@ public class BlockPublishingSettingsService(IWorkSequence<IWorkBlockPublishingLo
     public async Task<Package<BlockPublishingSettings>> Handle(WorkContext workCtx, Package<BlockPublishingSettings> package)
     {
         var instanceId = package.Data.ModuleId;
-        var l = Log.Fn<Package<BlockPublishingSettings>>($"ModuleId: {instanceId}");
+        using var l = Log.Fn<Package<BlockPublishingSettings>>($"ModuleId: {instanceId}");
         
         // If no ID, exit early
         if (instanceId < 0)

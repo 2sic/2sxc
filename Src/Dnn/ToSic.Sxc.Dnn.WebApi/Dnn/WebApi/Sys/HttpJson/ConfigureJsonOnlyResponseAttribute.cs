@@ -54,7 +54,7 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
         // Create an independent log for this operation - don't use a class-level log because it would grow too much
         // add to insights-history for analytic
         PlaceLogInHistory(Log);
-        var l = Log.Fn($"{nameof(controllerDescriptor)}: {controllerDescriptor.ControllerType.FullName}");
+        using var l = Log.Fn($"{nameof(controllerDescriptor)}: {controllerDescriptor.ControllerType.FullName}");
 
         try
         {
@@ -99,7 +99,7 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
     {
         // Log = new Log("Dnn.Attr"); // new log for each run
         PlaceLogInHistory(Log);
-        var l = Log.Fn($"{nameof(context.Request.RequestUri)}:{context.Request?.RequestUri}");
+        using var l = Log.Fn($"{nameof(context.Request.RequestUri)}:{context.Request?.RequestUri}");
 
         try
         {

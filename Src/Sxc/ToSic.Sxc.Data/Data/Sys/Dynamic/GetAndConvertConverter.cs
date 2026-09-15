@@ -17,7 +17,7 @@ internal class GetAndConvertConverter(ICodeDataFactory cdf, bool propsRequired, 
 
     internal object? ValueAutoConverted(PropReqResult original, bool lookupLink, string field, ILog? logOrNull)
     {
-        var l = logOrNull.Fn<object?>($"..., {nameof(lookupLink)}: {lookupLink}, {nameof(field)}: {field}");
+        using var l = logOrNull.Fn<object?>($"..., {nameof(lookupLink)}: {lookupLink}, {nameof(field)}: {field}");
         var value = original.Result;
         var parent = original.Source as IEntity;
 

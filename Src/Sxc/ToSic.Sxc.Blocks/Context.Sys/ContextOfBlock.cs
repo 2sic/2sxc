@@ -19,7 +19,7 @@ internal class ContextOfBlock(
     LazySvc<BlockPublishingSettingsService> pagePubSettings,
     IPageServiceShared pageServiceShared,
     ContextOfApp.Dependencies appServices)
-    : ContextOfApp(appServices, "Sxc.CtxBlk", connect: [module, pageServiceShared, pagePubSettings]), IContextOfBlock
+    : ContextOfApp(appServices, "Sxc.CtxBlk"), IContextOfBlock
 {
 
     #region Override AppIdentity based on module information
@@ -30,7 +30,7 @@ internal class ContextOfBlock(
         {
             if (base.AppIdentity != null)
                 return base.AppIdentity;
-            var l = Log.Fn<IAppIdentity?>();
+            using var l = Log.Fn<IAppIdentity?>();
             var identifier = Module?.BlockIdentifier;
             if (identifier == null)
                 return l.ReturnNull("no mod-block-id");
@@ -72,6 +72,5 @@ internal class ContextOfBlock(
 
     /// <inheritdoc />
     public override IContextOfSite Clone(ILog parentLog)
-        => new ContextOfBlock(Page, Module, pagePubSettings, PageServiceShared, AppServices)
-            .LinkLog(parentLog);
+        => new ContextOfBlock(Page, Module, pagePubSettings, PageServiceShared, AppServices);
 }

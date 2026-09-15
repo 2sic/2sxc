@@ -7,7 +7,7 @@ using ToSic.Sys.Locking;
 namespace ToSic.Sxc.Code.Sys.HotBuild;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class SourceCodeHasher(LazySvc<IPlatformInfo> platform, MemoryCacheService memoryCacheService) : ServiceBase("Sxc.ScCdHsh", connect: [memoryCacheService])
+public class SourceCodeHasher(LazySvc<IPlatformInfo> platform, MemoryCacheService memoryCacheService) : ServiceBase("Sxc.ScCdHsh")
 {
     private const string CsFiles = ".cs";
     private const bool UseSubfolders = true;
@@ -18,7 +18,7 @@ public class SourceCodeHasher(LazySvc<IPlatformInfo> platform, MemoryCacheServic
 
     public string GetHashString(string folderPath)
     {
-        var l = Log.Fn<string>($"{nameof(folderPath)}: '{folderPath}'", timer: true);
+        using var l = Log.Fn<string>($"{nameof(folderPath)}: '{folderPath}'", timer: true);
 
         // See if in memory cache
         var cacheKey = FolderHashCacheKey(folderPath);
@@ -49,7 +49,7 @@ public class SourceCodeHasher(LazySvc<IPlatformInfo> platform, MemoryCacheServic
 
     internal string[] GetSourceFilesInFolder(string fullPath)
     {
-        var l = Log.Fn<string[]>($"{nameof(fullPath)}: '{fullPath}'", timer: true);
+        using var l = Log.Fn<string[]>($"{nameof(fullPath)}: '{fullPath}'", timer: true);
 
         // See if in memory cache
         var cacheKey = SourceFilesInFolderCacheKey(fullPath);
@@ -92,7 +92,7 @@ public class SourceCodeHasher(LazySvc<IPlatformInfo> platform, MemoryCacheServic
     /// <returns></returns>
     private byte[] ComputeHashForFiles(string[] files)
     {
-        var l = Log.Fn<byte[]>($"{nameof(files)}: {files.Count()}", timer: true);
+        using var l = Log.Fn<byte[]>($"{nameof(files)}: {files.Count()}", timer: true);
 
         using var hashAlgorithm = SHA256.Create(); // fips compatibility
 
@@ -122,7 +122,7 @@ public class SourceCodeHasher(LazySvc<IPlatformInfo> platform, MemoryCacheServic
     // Combines relevant keys, incl. 2sxc and platform versions to hash.
     private byte[] GetPlatformBytes()
     {
-        var l = Log.Fn<byte[]>($"", timer: true);
+        using var l = Log.Fn<byte[]>($"", timer: true);
         var platformVersion = platform.Value.Version;
         var sxcVersion = Assembly.GetExecutingAssembly().GetName().Version!;
         var platformString = $"{platform.Value.Name.ToLowerInvariant()}:{platformVersion.Major}.{platformVersion.Minor}.{platformVersion.Build}.{platformVersion.Revision}_2sxc:{sxcVersion.Major}.{sxcVersion.Minor}.{sxcVersion.Build}.{sxcVersion.Revision}";

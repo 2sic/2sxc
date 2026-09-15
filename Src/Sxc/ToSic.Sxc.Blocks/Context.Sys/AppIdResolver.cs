@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Context.Sys;
 /// It does not perform security checks ATM and maybe never will
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class AppIdResolver(IHttp http, AppFinder appFinder) : ServiceBase("Api.FindAp", connect: [http, appFinder])
+internal class AppIdResolver(IHttp http, AppFinder appFinder) : ServiceBase("Api.FindAp")
 {
     /// <summary>
     /// New implementation to replace previous
@@ -17,7 +17,7 @@ internal class AppIdResolver(IHttp http, AppFinder appFinder) : ServiceBase("Api
     /// <returns></returns>
     internal int GetAppIdFromPath(int zoneId, string appPath, bool required)
     {
-        var l = Log.Fn<int>($"{zoneId}, {appPath}, {required}");
+        using var l = Log.Fn<int>($"{zoneId}, {appPath}, {required}");
         // get app from AppName
         var aid = appFinder/* _zoneRuntime.Init(zoneId, Log)*/.FindAppId(zoneId, appPath, true);
         if (aid <= KnownAppsConstants.AppIdEmpty && required)

@@ -53,7 +53,7 @@ public class AdvancedSettings : IHasPiggyBack
     [PrivateApi]
     public static AdvancedSettings FromJson(object? value, ILog? log = null)
     {
-        var l = log.Fn<AdvancedSettings>();
+        using var l = log.Fn<AdvancedSettings>();
         try
         {
             if (value is string advString && !string.IsNullOrWhiteSpace(advString))

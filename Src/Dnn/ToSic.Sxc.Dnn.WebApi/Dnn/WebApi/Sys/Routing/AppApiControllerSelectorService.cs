@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Hosting;
@@ -37,7 +37,7 @@ internal partial class AppApiControllerSelectorService(
     LazySvc<ISxcCurrentContextService> sxcContextResolver,
     MemoryCacheService memoryCacheService,
     LazySvc<IAppJsonConfigurationService> appJson)
-    : ServiceBase("Dnn.ApiSSv", connect: [folderUtilities, site, roslynLazy, getBlockLazy, analyzerLazy, codeErrorSvc, assemblyCacheManager, appCodeLoader, sxcContextResolver, memoryCacheService, appJson])
+    : ServiceBase("Dnn.ApiSSv")
 {
     #region Setup / Init
 
@@ -60,7 +60,7 @@ internal partial class AppApiControllerSelectorService(
     {
         Setup(configuration, request);
 
-        var l = Log.Fn<HttpControllerDescriptor>();
+        using var l = Log.Fn<HttpControllerDescriptor>();
 
         var routeData = request.GetRouteData();
 
@@ -125,7 +125,7 @@ internal partial class AppApiControllerSelectorService(
 
     private (HttpControllerDescriptorWithPaths descriptor, IEnumerable<string> cacheKeys, IList<string> filePaths) BuildDescriptorIfExists(string appFolder, string edition, string controllerTypeName, bool shared, HotBuildSpec spec)
     {
-        var l = Log.Fn<(HttpControllerDescriptorWithPaths descriptor, IEnumerable<string> cacheKeys, IList<string> filePaths)>(
+        using var l = Log.Fn<(HttpControllerDescriptorWithPaths descriptor, IEnumerable<string> cacheKeys, IList<string> filePaths)>(
             $"{nameof(appFolder)}:'{appFolder}'; {nameof(edition)}:'{edition}'; {nameof(controllerTypeName)}:'{controllerTypeName}'; {nameof(shared)}:{shared}; {spec}",
             timer: true
         );
@@ -173,7 +173,7 @@ internal partial class AppApiControllerSelectorService(
 
     private (HttpControllerDescriptor HttpControllerDescriptor, List<string> CacheDependecyKeys) BuildDescriptorOrThrow(string fullPath, string typeName, HotBuildSpec spec)
     {
-        var l = Log.Fn<(HttpControllerDescriptor, List<string>)>($"{nameof(fullPath)}:'{fullPath}'; {nameof(typeName)}:'{typeName}'; {spec}", timer: true);
+        using var l = Log.Fn<(HttpControllerDescriptor, List<string>)>($"{nameof(fullPath)}:'{fullPath}'; {nameof(typeName)}:'{typeName}'; {spec}", timer: true);
         Assembly assembly;
         List<string> cacheDependencyKeys = null;
         var codeFileInfo = analyzerLazy.Value.TypeOfVirtualPath(fullPath);

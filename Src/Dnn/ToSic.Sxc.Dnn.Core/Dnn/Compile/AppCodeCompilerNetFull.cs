@@ -18,7 +18,7 @@ internal class AppCodeCompilerNetFull(
     IGlobalConfiguration globalConfiguration,
     SourceCodeHasher sourceCodeHasher,
     AssemblyDiskCache diskCache)
-    : AppCodeCompiler(globalConfiguration, sourceCodeHasher, connect: [hostingEnvironment, referencedAssembliesProvider, sourceCodeHasher, diskCache])
+    : AppCodeCompiler(globalConfiguration, sourceCodeHasher)
 {
     private const int LoadRetryDelayMs = 100;
     private const int LoadRetryTimeoutMs = 3000;
@@ -31,7 +31,7 @@ internal class AppCodeCompilerNetFull(
     /// <returns></returns>
     public override AssemblyResult GetAppCode(string relativePath, HotBuildSpecWithSharedSuffix spec)
     {
-        var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {spec}", timer: true);
+        using var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {spec}", timer: true);
 
         // Step 1: Get source files
         string sourceRootPath;
@@ -156,7 +156,7 @@ internal class AppCodeCompilerNetFull(
 
     private CompilerResults CompileAssemblyFromAppCodeFolder(string[] sourceFiles, string assemblyFilePath, string relativePath, HotBuildSpec spec)
     {
-        var l = Log.Fn<CompilerResults>($"{nameof(sourceFiles)}: {sourceFiles.Length}; {nameof(assemblyFilePath)}: '{assemblyFilePath}'", timer: true);
+        using var l = Log.Fn<CompilerResults>($"{nameof(sourceFiles)}: {sourceFiles.Length}; {nameof(assemblyFilePath)}: '{assemblyFilePath}'", timer: true);
 
         // Save to disk so it can be loaded by runtime
         var parameters = new CompilerParameters(null, assemblyFilePath)
@@ -180,7 +180,7 @@ internal class AppCodeCompilerNetFull(
 
     private CompilerResults LoadCachedAssemblyWithRetry(string assemblyPath, ILogCall<AssemblyResult> parentLog)
     {
-        var l = parentLog.Fn<CompilerResults>($"load from path: '{assemblyPath}'");
+        using var l = parentLog.Fn<CompilerResults>($"load from path: '{assemblyPath}'");
 
         // Use shared AssemblyDiskCache.LoadWithRetry instead of manual retry logic
         var assembly = diskCache.LoadWithRetry(

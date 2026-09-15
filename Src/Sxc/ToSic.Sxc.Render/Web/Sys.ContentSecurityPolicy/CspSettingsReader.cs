@@ -30,7 +30,7 @@ internal class CspSettingsReader(ICanGetByName? settingsStackOrNull, IUser user,
     /// <returns></returns>
     private object? GetFromPreferredOrDefaultSource(string field)
     {
-        var cLog = Log.Fn<object>(field);
+        using var cLog = Log.Fn<object>(field);
 
         var pref = SettingPreferred;
         if (pref.Entity?.Get(field) is { } result)

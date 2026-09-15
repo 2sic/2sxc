@@ -1,15 +1,15 @@
-﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
-public class EditLoadActivityAddContext(IUiContextBuilder contextBuilder): ServiceBase("UoW.AddCtx", connect: [contextBuilder]),
+public class EditLoadActivityAddContext(IUiContextBuilder contextBuilder): ServiceBase("UoW.AddCtx"),
     IWork<EditLoadDto, EditLoadDto>
 {
     public async Task<Package<EditLoadDto>> Handle(WorkContext actionCtx, Package<EditLoadDto> package)
     {
-        var l = Log.Fn<Package<EditLoadDto>>();
+        using var l = Log.Fn<Package<EditLoadDto>>();
         var isSystemType = actionCtx.Get<List<IContentType>>(EditLoadContextConstants.UsedTypes).Any(t => t.AppId == KnownAppsConstants.PresetAppId);
         l.A($"isSystemType: {isSystemType}");
 

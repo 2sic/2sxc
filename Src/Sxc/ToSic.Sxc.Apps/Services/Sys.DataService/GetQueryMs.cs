@@ -15,7 +15,6 @@ internal class GetQueryMs<TQuery>: ServiceBase where TQuery : Query
     {
         _queryManager = queryManager;
         _optionsMs = optionsMs;
-        this.LinkLog(parentLog);
     }
 
     public TQuery? GetQuery(
@@ -24,7 +23,7 @@ internal class GetQueryMs<TQuery>: ServiceBase where TQuery : Query
         IDataSourceLinkable? attach = default,
         object? parameters = default)
     {
-        var l = Log.Fn<TQuery>($"{name}, {nameof(parameters)}: {(parameters == null ? "null" : "not null")}");
+        using var l = Log.Fn<TQuery>($"{name}, {nameof(parameters)}: {(parameters == null ? "null" : "not null")}");
 
 
         // If no in-source was provided, make sure that we create one from the current app

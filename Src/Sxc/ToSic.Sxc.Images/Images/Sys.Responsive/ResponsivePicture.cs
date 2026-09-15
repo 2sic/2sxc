@@ -47,7 +47,7 @@ public record ResponsivePicture: ResponsiveBase, IResponsivePicture
     private TagList SourceTagsInternal(string? url, IResizeSettings resizeSettings)
     {
         var logOrNull = ImgService.Debug ? Log : null;
-        var l = logOrNull.Fn<TagList>();
+        using var l = logOrNull.Fn<TagList>();
         // Check formats
         var defFormat = ImgService.GetFormat(url);
 

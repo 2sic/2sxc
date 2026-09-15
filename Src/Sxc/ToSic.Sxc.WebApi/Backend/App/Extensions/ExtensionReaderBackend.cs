@@ -19,13 +19,13 @@ public class ExtensionReaderBackend(
     LazySvc<IJsonService> jsonLazy,
     ExtensionManifestService manifestService,
     IDataSourceGenerator<AppEditionsDataSource> appEditions)
-    : ServiceBase("Bck.ExtRead", connect: [appReadersLazy, site, appPathSvc, jsonLazy, manifestService, appEditions])
+    : ServiceBase("Bck.ExtRead")
 {
     private const string IconFileName = "icon.png";
 
     public List<ExtensionDto> GetExtensions(int appId)
     {
-        var l = Log.Fn<List<ExtensionDto>>($"a#{appId}");
+        using var l = Log.Fn<List<ExtensionDto>>($"a#{appId}");
         var appReader = appReadersLazy.Value.Get(appId);
         var appPaths = appPathSvc.Get(appReader, site);
         var editionNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)

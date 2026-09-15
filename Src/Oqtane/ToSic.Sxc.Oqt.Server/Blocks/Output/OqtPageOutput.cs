@@ -14,7 +14,7 @@ internal partial class OqtPageOutput(
     SiteState siteState,
     IAssetsExtractor assetsExtractor,
     IJsApiService jsApiService)
-    : ServiceBase($"{OqtConstants.OqtLogPrefix}.AssHdr", connect: [siteState, assetsExtractor, jsApiService])
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.AssHdr")
 {
     #region Constructor and DI
 

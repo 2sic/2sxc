@@ -60,7 +60,7 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
 
     private ICacheSpecs? GetSpecsBasedOnSettings()
     {
-        var l = Log.Fn<ICacheSpecs?>();
+        using var l = Log.Fn<ICacheSpecs?>();
         var config = CacheSpecsConfig;
         if (config == null)
             return l.ReturnNull("settings for partial not in cache");
@@ -76,7 +76,7 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
     /// <returns></returns>
     public IRenderResult? TryGetFromCache()
     {
-        var l = Log.Fn<IRenderResult?>();
+        using var l = Log.Fn<IRenderResult?>();
         if (!IsEnabled)
             return l.ReturnNull("feature not enabled");
 
@@ -112,7 +112,7 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
 
     public bool SaveToCacheIfEnabled(string html)
     {
-        var l = Log.Fn<bool>();
+        using var l = Log.Fn<bool>();
         var partialRenderSpecs = RenderPartialSpecsForRazor.CacheSpecs;
         if (!IsFullyEnabled)
             return l.ReturnFalse("no partial caching");

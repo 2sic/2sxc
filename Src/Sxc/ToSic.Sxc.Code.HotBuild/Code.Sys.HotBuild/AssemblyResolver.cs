@@ -26,7 +26,7 @@ public class AssemblyResolver : ServiceBase, ILogShouldNeverConnect
 
     public AssemblyResolver(ILogStore logStore) : base($"{SxcLogName}.AsmRsl")
     {
-        var l = Debug ? Log.Fn() : null;
+        using var l = Debug ? Log.Fn() : null;
         
         if (_isHandlerRegistered)
         {
@@ -45,7 +45,7 @@ public class AssemblyResolver : ServiceBase, ILogShouldNeverConnect
 
     private Assembly? CurrentDomain_AssemblyResolve(object? sender, ResolveEventArgs args)
     {
-        var l = Debug ? Log.Fn<Assembly?>($"{nameof(sender)}:'{sender}'; {nameof(args.Name)}:'{args.Name}'; {nameof(args.RequestingAssembly)}:'{args.RequestingAssembly}'") : null;
+        using var l = Debug ? Log.Fn<Assembly?>($"{nameof(sender)}:'{sender}'; {nameof(args.Name)}:'{args.Name}'; {nameof(args.RequestingAssembly)}:'{args.RequestingAssembly}'") : null;
         var r = _assemblyCache.TryGetValue(args.Name, out var assembly)
             ? assembly
             : null;
@@ -54,7 +54,7 @@ public class AssemblyResolver : ServiceBase, ILogShouldNeverConnect
 
     public void AddAssemblies(List<Assembly> assemblies, string? appRelativePath = null)
     {
-        var l = Debug ? Log.Fn($"{nameof(assemblies)}:'{assemblies?.Count}'; {nameof(appRelativePath)}:'{appRelativePath}'") : null;
+        using var l = Debug ? Log.Fn($"{nameof(assemblies)}:'{assemblies?.Count}'; {nameof(appRelativePath)}:'{appRelativePath}'") : null;
         if (assemblies == null)
         {
             l.Done("assemblies is null");
@@ -67,7 +67,7 @@ public class AssemblyResolver : ServiceBase, ILogShouldNeverConnect
 
     public void AddAssembly(Assembly? assembly, string? appRelativePath = null)
     {
-        var l = Debug ? Log.Fn($"{nameof(assembly)}:'{assembly}'; {nameof(appRelativePath)}:'{appRelativePath}'") : null;
+        using var l = Debug ? Log.Fn($"{nameof(assembly)}:'{assembly}'; {nameof(appRelativePath)}:'{appRelativePath}'") : null;
         if (assembly == null)
         {
             l.Done("assembly is null");
@@ -94,7 +94,7 @@ public class AssemblyResolver : ServiceBase, ILogShouldNeverConnect
             return null; // No app-relative path means no assembly location can be found
 
         appRelativePath = NormalizeAppRelativePath(appRelativePath);
-        var l = Debug
+        using var l = Debug
             ? Log.Fn<string?>($"{nameof(appRelativePath)}:'{appRelativePath}'")
             : null; 
         var r = _assemblyPathPerApp.TryGetValue(appRelativePath, out var location)

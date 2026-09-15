@@ -14,14 +14,14 @@ public class AppStateSyncSave(
     ISite site,
     Generator<ImpExpHelpers> impExpHelpers,
     ISysFeaturesService features)
-    : ServiceBase("Bck.Export", connect: [exportGenerator, site, features, impExpHelpers]),
+    : ServiceBase("Bck.Export"),
         IWork<AppExportSpecs, bool>
 {
 
     public async Task<Package<bool>> Handle(WorkContext context, Package<AppExportSpecs> package)
     {
         var specs = package.Data;
-        var l = Log.Fn<bool>(specs.Dump());
+        using var l = Log.Fn<bool>(specs.Dump());
 
         if (features.IsEnabled(BuiltInFeatures.AppStateSyncSaveDisabled))
             throw new FeaturesRefusingException(BuiltInFeatures.AppStateSyncSaveDisabled.NameId,

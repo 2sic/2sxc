@@ -19,7 +19,7 @@ internal class ExtensionExtractionHelper(
 {
     internal ExtensionExtractionResult PrepareExtraction(int appId, Stream zipStream, string editions)
     {
-        var l = Log.Fn<ExtensionExtractionResult>($"prep a:{appId}");
+        using var l = Log.Fn<ExtensionExtractionResult>($"prep a:{appId}");
 
         var appReader = appReadersLazy.Value.Get(appId);
         var appPaths = appPathSvc.Get(appReader, site);

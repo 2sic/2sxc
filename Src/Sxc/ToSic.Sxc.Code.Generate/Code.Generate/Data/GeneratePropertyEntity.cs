@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.ContentTypes.Fields.Sys;
+using ToSic.Eav.Data.ContentTypes.Fields.Sys;
 using ToSic.Eav.Data.Sys;
 using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sxc.Data;
@@ -12,10 +12,9 @@ internal class GeneratePropertyEntity(CSharpGeneratorHelper helper) : GeneratePr
     public override List<CodeFragment> Generate(IContentTypeField fieldDef, int tabs)
     {
         var name = fieldDef.Name;
-        var l = Log.Fn<List<CodeFragment>>($"name: {name}");
+        using var l = Log.Fn<List<CodeFragment>>($"name: {name}");
 
         var inspector = new WorkFieldEntityInspectType();
-        this.ConnectLogs([inspector]);
         var entityType = inspector.PrimaryTypeName(fieldDef, modeCreate: false, tryOtherModes: true);
         //if (entityType.IsEmpty())
         //{

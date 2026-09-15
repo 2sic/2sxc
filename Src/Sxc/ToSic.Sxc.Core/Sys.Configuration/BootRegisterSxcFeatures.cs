@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Sys.Configuration;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public sealed class BootRegisterSxcFeatures(FeaturesCatalog featuresCatalog)
-    : BootProcessBase($"{SxcLogName}.SUpReg", bootPhase: BootPhase.Registrations, connect: [featuresCatalog]), IBootProcess
+    : BootProcessBase($"{SxcLogName}.SUpReg", bootPhase: BootPhase.Registrations), IBootProcess
 {
     /// <summary>
     /// Register Sxc features during boot.

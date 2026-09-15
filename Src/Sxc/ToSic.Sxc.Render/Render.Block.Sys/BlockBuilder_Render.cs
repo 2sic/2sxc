@@ -1,4 +1,4 @@
-﻿using ToSic.Razor.Blade;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Context.Sys;
@@ -25,7 +25,7 @@ public partial class BlockRenderer
         if (_cached != null)
             return _cached;
 
-        var l = Log.Fn<IRenderResult>(timer: true);
+        using var l = Log.Fn<IRenderResult>(timer: true);
         try
         {
             var (html, isErr, exceptionsOrNull) = RenderInternal(specs);
@@ -78,7 +78,7 @@ public partial class BlockRenderer
 
     private (string? Html, bool IsError, List<Exception> exsOrNull) RenderInternal(RenderSpecs specs)
     {
-        var l = Log.Fn<(string?, bool, List<Exception>)>(timer: true);
+        using var l = Log.Fn<(string?, bool, List<Exception>)>(timer: true);
 
         // any errors from dnn requirements check (like missing c# 8.0)
         var oldExceptions = specs.RenderEngineResult?.ExceptionsOrNull;
@@ -296,7 +296,7 @@ public partial class BlockRenderer
     /// <returns></returns>
     private IEngine? GetEngine()
     {
-        var l = Log.Fn<IEngine>(timer: true);
+        using var l = Log.Fn<IEngine>(timer: true);
         if (_engine != null)
             return l.Return(_engine, "cached");
         // edge case: view hasn't been built/configured yet, so no engine to find/attach

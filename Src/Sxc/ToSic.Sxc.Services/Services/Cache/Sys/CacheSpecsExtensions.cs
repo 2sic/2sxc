@@ -23,7 +23,7 @@ public static class CacheSpecsExtensions
     public static ICacheSpecs AttachModel(this ICacheSpecs specs, IDictionary<string, object?>? model)
     {
         var typed = (CacheSpecs)specs;
-        var l = typed.Log.Fn<ICacheSpecs>($"hasModel: {model != null}; count: {model?.Count}");
+        using var l = typed.Log.Fn<ICacheSpecs>($"hasModel: {model != null}; count: {model?.Count}");
         return l.ReturnAsOk(typed with
         {
             CacheSpecsContextAndTools = typed.CacheSpecsContextAndTools with

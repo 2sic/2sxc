@@ -3,11 +3,11 @@ using ToSic.Sys.Capabilities.Features;
 
 namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
-public class OutputCacheManager(MemoryCacheService memoryCacheService, LazySvc<ISysFeaturesService> featuresDoNotConnect) : ServiceBase(SxcLogName + ".OutputCacheManager", connect: [memoryCacheService])
+public class OutputCacheManager(MemoryCacheService memoryCacheService, LazySvc<ISysFeaturesService> featuresDoNotConnect) : ServiceBase(SxcLogName + ".OutputCacheManager")
 {
     public string Add(string cacheKey, OutputCacheItem data, int duration, List<string> apps, IEnumerable<string>? externalDependencies, IList<string>? appPaths)
     {
-        var l = Log.Fn<string>($"key: {cacheKey}", timer: true);
+        using var l = Log.Fn<string>($"key: {cacheKey}", timer: true);
 
         // if we don't have a duration = 0 (which would be never expire), don't even add
         if (duration == 0)

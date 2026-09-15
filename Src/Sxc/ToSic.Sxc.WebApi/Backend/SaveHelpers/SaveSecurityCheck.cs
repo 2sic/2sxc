@@ -6,13 +6,13 @@ namespace ToSic.Sxc.Backend.SaveHelpers;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class SaveSecurity(Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> multiPermissionsTypesGen)
-    : ServiceBase("Api.SavSec", connect: [multiPermissionsTypesGen])
+    : ServiceBase("Api.SavSec")
 {
 
     public IMultiPermissionCheck DoPreSaveSecurityCheck(IContextOfApp context, IEnumerable<BundleWithHeader> items)
     {
         var list = items.ToListOpt();
-        var l = Log.Fn<IMultiPermissionCheck>($"{list.Count} items");
+        using var l = Log.Fn<IMultiPermissionCheck>($"{list.Count} items");
 
         var appReader = context.AppReaderRequired;
         var permCheck = multiPermissionsTypesGen.New(new()

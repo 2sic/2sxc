@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Mvc.WebApi
 
         protected IBlock GetBlock(bool allowNoContextFound = true)
         {
-            var wrapLog = Log.Fn<IBlock>(parameters: $"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
+            using var wrapLog = Log.Fn<IBlock>(parameters: $"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
 
             var containerId = GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderInstanceId, -1);
             var contentblockId = GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0

@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Render.JsContext.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class JsContextAll(JsContextLanguage jsLangCtxSvc, IJsApiService jsApiService, CodeInfosInScope codeWarnings, IAppJsonConfigurationService appJson, LazySvc<IFeaturesService> featuresSvc)
-    : ServiceBase("Sxc.CliInf", connect: [jsLangCtxSvc, jsApiService, appJson, codeWarnings])
+    : ServiceBase("Sxc.CliInf")
 {
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public JsContextEnvironment? Environment;
@@ -43,7 +43,7 @@ public class JsContextAll(JsContextLanguage jsLangCtxSvc, IJsApiService jsApiSer
 
     public JsContextAll GetJsApiOnly(IBlock block)
     {
-        var l = Log.Fn<JsContextAll>();
+        using var l = Log.Fn<JsContextAll>();
 
         var addPublicKey = Features(block).Contains(SxcPageFeatures.EncryptFormData)
             && featuresSvc.Value.IsEnabled(SxcFeatures.NetworkDataEncryption.NameId);
@@ -60,7 +60,7 @@ public class JsContextAll(JsContextLanguage jsLangCtxSvc, IJsApiService jsApiSer
     public JsContextAll GetJsContext(string systemRootUrl, IBlock block, string? errorCode, List<Exception>? exsOrNull,
         RenderStatistics? statistics)
     {
-        var l = Log.Fn<JsContextAll>();
+        using var l = Log.Fn<JsContextAll>();
         var ctx = block.Context;
 
         Environment = new(systemRootUrl, ctx);

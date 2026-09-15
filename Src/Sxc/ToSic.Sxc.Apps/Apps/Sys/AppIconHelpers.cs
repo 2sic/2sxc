@@ -8,12 +8,12 @@ namespace ToSic.Sxc.Apps.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppIconHelpers(LazySvc<IValueConverter> iconConverterLazy)
-    : ServiceBase("Viw.Help", connect: [iconConverterLazy])
+    : ServiceBase("Viw.Help")
 {
 
     public string? IconPathOrNull(IAppPaths appPaths, IView view, PathTypes type)
     {
-        var l = Log.Fn<string?>();
+        using var l = Log.Fn<string?>();
         // 1. Check if the file actually exists or is a file:... reference
         var iconFile = IconPath(appPaths, view, PathTypes.PhysFull);
         var assumeExists = ValueConverterBase.CouldBeReference(iconFile) || File.Exists(iconFile);

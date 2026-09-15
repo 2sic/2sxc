@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Mvc.Web
 
         public string ContextHeader()
         {
-            var wrapLog = Log.Fn<string>();
+            using var wrapLog = Log.Fn<string>();
 
             var pageId = 0;
             var siteRoot = MvcConstants.SiteRoot;

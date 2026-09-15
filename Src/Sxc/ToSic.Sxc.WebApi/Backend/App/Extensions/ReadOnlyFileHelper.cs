@@ -9,7 +9,7 @@ internal class ReadOnlyFileHelper(ILog? parentLog) : HelperBase(parentLog, "Bck.
 {
     internal void RemoveReadOnlyRecursive(string directory)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
         if (!Directory.Exists(directory))
         {
             l.Done("path not exist");
@@ -28,7 +28,7 @@ internal class ReadOnlyFileHelper(ILog? parentLog) : HelperBase(parentLog, "Bck.
 
     internal void RemoveReadOnlyIfNeeded(string path, string? relPath = null)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
 
         if (!File.Exists(path))
         {
@@ -49,7 +49,7 @@ internal class ReadOnlyFileHelper(ILog? parentLog) : HelperBase(parentLog, "Bck.
 
     internal void EnsureReadOnly(string path, string relPath)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
 
         if (!File.Exists(path))
         {
@@ -70,7 +70,7 @@ internal class ReadOnlyFileHelper(ILog? parentLog) : HelperBase(parentLog, "Bck.
 
     internal void ClearDirectoryReadOnly(string directory)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
         var info = new DirectoryInfo(directory);
         var attributes = info.Attributes;
         if (!attributes.HasFlag(FileAttributes.ReadOnly))

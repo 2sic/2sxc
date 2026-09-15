@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys;
 /// </summary>
 [PrivateApi]
 internal class HtmlHelper(LazySvc<IFeaturesService> featureSvc, IModulesOutputService modulesOutputService, Generator<HtmlHelperErrorHelper, HtmlHelperContextWithPaths> errHelperGenerator)
-    : ServiceWithSetup<HtmlHelperContext>("Dnn.HtmHlp", connect: [featureSvc, modulesOutputService, errHelperGenerator]), IHtmlHelper
+    : ServiceWithSetup<HtmlHelperContext>("Dnn.HtmHlp"), IHtmlHelper
 {
     private HtmlHelperTimeKeeper TimeKeeper { get; } = new();
 
@@ -42,7 +42,7 @@ internal class HtmlHelper(LazySvc<IFeaturesService> featureSvc, IModulesOutputSe
         // so the ID in a cache remains the same no matter how it was called
         var fullOptions = new HtmlHelperContextWithPaths(MyOptions, relativePath);
 
-        var l = Log.Fn<IHtmlString>($"{nameof(relativePath)}: '{relativePath}', {nameof(fullOptions.CacheKey)}: '{fullOptions.CacheKey}', {nameof(data)}: {data != null}", timer: true);
+        using var l = Log.Fn<IHtmlString>($"{nameof(relativePath)}: '{relativePath}', {nameof(fullOptions.CacheKey)}: '{fullOptions.CacheKey}', {nameof(data)}: {data != null}", timer: true);
         var fullTime = TimeKeeper.Start(fullOptions.Normalized);
 
         // Prepare RenderSpecs with data, since it may be needed to check if caching is relevant
@@ -125,7 +125,7 @@ internal class HtmlHelper(LazySvc<IFeaturesService> featureSvc, IModulesOutputSe
     private HelperResult RenderWithRoslynOrClassic(HtmlHelperContextWithPaths fullOptions, RenderSpecs renderSpecs)
     {
         var useRoslyn = MyOptions.Page is ICanUseRoslynCompiler;
-        var l = Log.Fn<HelperResult>($"{nameof(useRoslyn)}: {useRoslyn}");
+        using var l = Log.Fn<HelperResult>($"{nameof(useRoslyn)}: {useRoslyn}");
 
         // We can use Roslyn
         // Classic setup without Roslyn, use the built-in RenderPage
@@ -152,7 +152,7 @@ internal class HtmlHelper(LazySvc<IFeaturesService> featureSvc, IModulesOutputSe
 
     private bool CheckFileNameCompatibleWithLinux(HtmlHelperContextWithPaths fullOptions)
     {
-        var l = Log.Fn<bool>();
+        using var l = Log.Fn<bool>();
         try
         {
             var pathResult = PathCasingValidator.IsPathOkForLinux(fullOptions);

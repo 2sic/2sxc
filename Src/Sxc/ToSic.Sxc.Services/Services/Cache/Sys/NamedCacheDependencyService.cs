@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Services.Cache.Sys;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class NamedCacheDependencyService(MemoryCacheService memoryCacheService)
-    : ServiceBase($"{SxcLogName}.NmCacDp", connect: [memoryCacheService]), INamedCacheDependencyService
+    : ServiceBase($"{SxcLogName}.NmCacDp"), INamedCacheDependencyService
 {
     private const string DependencyRoot = "Sxc-Dependency.";
     private static readonly DateTimeOffset MarkerExpiration = DateTimeOffset.MaxValue;

@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.AppReader.Sys;
+using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context.Sys.ZoneCulture;
 using ToSic.Eav.DataSource.Query.Sys;
@@ -10,8 +10,7 @@ namespace ToSic.Sxc.Apps.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class WorkViews(AppWorkChain<WorkEntities> appEntities, IZoneCultureResolver cultureResolver, Generator<QueryDefinitionFactory> qDefBuilder)
-    : ServiceWithSetup<IAppWorkContext>("Cms.ViewRd",
-        connect: [appEntities, cultureResolver, qDefBuilder])
+    : ServiceWithSetup<IAppWorkContext>("Cms.ViewRd")
 {
     /// <summary>
     /// Helper class to get information about views, especially for selecting them based on the url identifier
@@ -53,7 +52,7 @@ public class WorkViews(AppWorkChain<WorkEntities> appEntities, IZoneCultureResol
     /// <returns></returns>
     public List<ViewInfoForPathSelect> GetForViewSwitch()
     {
-        var l = Log.Fn<List<ViewInfoForPathSelect>>();
+        using var l = Log.Fn<List<ViewInfoForPathSelect>>();
 
         // get from cache if available or generate
         var views = MyOptions.AppReader

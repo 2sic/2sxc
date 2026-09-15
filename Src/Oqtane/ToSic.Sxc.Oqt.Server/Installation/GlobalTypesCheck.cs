@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Oqt.Server.Installation;
 // but after next restart of oqtane application all is ok, and all 2sxc global types are loaded as expected
 // this code will check if there is less than 50 global types and warn user to restart application to fix that
 internal class GlobalTypesCheck(LazySvc<IAppReaderFactory> appReaders)
-    : ServiceBase($"{OqtConstants.OqtLogPrefix}.GlbTCh", connect: [appReaders])
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.GlbTCh")
 {
     private static bool? _globalTypesCheckedAndError;
 

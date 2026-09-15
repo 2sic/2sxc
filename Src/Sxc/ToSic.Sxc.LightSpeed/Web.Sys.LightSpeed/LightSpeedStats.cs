@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Web.Sys.LightSpeed;
 /// Statistics for LightSpeed
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class LightSpeedStats(MemoryCacheService memoryCacheService) : ServiceBase(SxcLogName + ".LightSpeedStats", connect: [memoryCacheService])
+public class LightSpeedStats(MemoryCacheService memoryCacheService) : ServiceBase(SxcLogName + ".LightSpeedStats")
 {
     private MemorySizeEstimator Estimator => field ??= new(Log);
 

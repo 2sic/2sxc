@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Web.Sys.EditUi;
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class EditUiResources(AppDataStackService stackServiceHelper, IZoneMapper zoneMapper, IFeaturesService features)
-    : ServiceBase("Sxc.EUiRes", connect: [stackServiceHelper, zoneMapper, features])
+    : ServiceBase("Sxc.EUiRes")
 {
 
     #region Resources / Constants

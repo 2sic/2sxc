@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.DataSource.Sys.Errors;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
@@ -26,7 +26,7 @@ public sealed partial class CmsBlock
 
     private ResultOrError<BlockConfiguration> LoadBlockConfiguration()
     {
-        var l = Log.Fn<ResultOrError<BlockConfiguration>>();
+        using var l = Log.Fn<ResultOrError<BlockConfiguration>>();
         if (UseSxcInstanceContentGroup)
             return l.Return(new(true, Block.Configuration), "need content-group, will use from Sxc Instance ContentGroup");
 

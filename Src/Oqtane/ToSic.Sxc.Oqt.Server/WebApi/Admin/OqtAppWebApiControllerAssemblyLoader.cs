@@ -25,7 +25,7 @@ internal class OqtAppWebApiControllerAssemblyLoader(
     ISxcCurrentContextService ctxService,
     IEditionService editionSvc,
     IServerPaths serverPaths)
-    : ServiceBase($"{OqtConstants.OqtLogPrefix}.ApiCtlAsm", connect: [compiler, siteState, aliasResolver, appFolderLookup, ctxService, editionSvc, serverPaths]),
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.ApiCtlAsm"),
         IAppWebApiControllerAssemblyLoader
 {
     public Assembly GetAssembly(string path)

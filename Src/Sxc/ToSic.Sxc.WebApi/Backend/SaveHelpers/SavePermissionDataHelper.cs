@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.Sys.Entities;
+using ToSic.Eav.Data.Sys.Entities;
 
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
@@ -12,7 +12,7 @@ internal class SavePermissionDataHelper(ILog parentLog): HelperBase(parentLog, "
     /// </summary>
     internal List<string> ExtractTypeNamesFromItems(IAppReader parent, IEnumerable<ItemIdentifier> items)
     {
-        var l = Log.Fn<List<string>>();
+        using var l = Log.Fn<List<string>>();
         var allData = parent.List;
 
         l.A($"items in full list: {allData.Count}");

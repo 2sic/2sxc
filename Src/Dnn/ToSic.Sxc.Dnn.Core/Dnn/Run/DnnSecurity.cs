@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Dnn.Run;
 // TODO: probably change this to use an interface so we can make it internal
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [PrivateApi]
-public class DnnSecurity(LazySvc<RoleController> roleController) : ServiceBase("dnnSec", connect: [roleController])
+public class DnnSecurity(LazySvc<RoleController> roleController) : ServiceBase("dnnSec")
 {
     /// <summary>
     /// Returns true if a DotNetNuke User Group "2sxc Designers" / "2sxcAdministrators" exists

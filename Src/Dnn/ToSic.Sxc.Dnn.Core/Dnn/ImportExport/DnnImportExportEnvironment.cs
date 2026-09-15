@@ -1,4 +1,4 @@
-﻿using DotNetNuke.Entities.Portals;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.Persistence.Sys.Logging;
@@ -25,7 +25,7 @@ internal class DnnImportExportEnvironment : SxcImportExportEnvironmentBase
     /// <param name="destinationFolder">The portal-relative path where the files should be copied to</param>
     public override List<Message> TransferFilesToSite(string sourceFolder, string destinationFolder)
     {
-        var l = Log.Fn<List<Message>>($"{sourceFolder}, {destinationFolder}");
+        using var l = Log.Fn<List<Message>>($"{sourceFolder}, {destinationFolder}");
         var messages = new List<Message>();
         var files = Directory.GetFiles(sourceFolder, "*.*");
 
@@ -97,7 +97,7 @@ internal class DnnImportExportEnvironment : SxcImportExportEnvironmentBase
 
     public override void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap)
     {
-        var l = Log.Fn($"files: {filesAndPaths.Count}, map size: {fileIdMap.Count}");
+        using var l = Log.Fn($"files: {filesAndPaths.Count}, map size: {fileIdMap.Count}");
         var siteId = Site.Id;
         var fileManager = FileManager.Instance;
         var folderManager = FolderManager.Instance;
@@ -139,7 +139,7 @@ internal class DnnImportExportEnvironment : SxcImportExportEnvironmentBase
 
     public override void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog) 
     {
-        var l = Log.Fn($"folders and paths: {foldersAndPath.Count}");
+        using var l = Log.Fn($"folders and paths: {foldersAndPath.Count}");
         var siteId = Site.Id;
         var folderManager = FolderManager.Instance;
 

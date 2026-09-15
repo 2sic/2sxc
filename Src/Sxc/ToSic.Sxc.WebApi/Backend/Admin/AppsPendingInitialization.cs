@@ -20,7 +20,7 @@ public class AppsPendingInitialization : CustomDataSource
     public int OfZoneId => Configuration.GetThis(ZoneId);
 
     public AppsPendingInitialization(Dependencies services, LazySvc<ImportApp> importApp)
-        : base(services, "Sxc.PendingApps", connect: [importApp])
+        : base(services, "Sxc.PendingApps")
         => ProvideOutRaw(() => Get(importApp), options: Options);
 
     private IEnumerable<PendingAppDto> Get(LazySvc<ImportApp> importApp)

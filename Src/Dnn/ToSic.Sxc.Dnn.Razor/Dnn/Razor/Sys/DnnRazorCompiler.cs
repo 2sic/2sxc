@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Web;
 using System.Web.Compilation;
@@ -39,7 +39,7 @@ internal class DnnRazorCompiler(
     LazySvc<SourceAnalyzer> sourceAnalyzer,
     LazySvc<IRoslynBuildManager> roslynBuildManager,
     LazySvc<IAppJsonConfigurationService> appJson)
-    : ServiceBase("Dnn.RzComp", connect: [exCtxFactory, errorHelp, sourceAnalyzer, roslynBuildManager, appJson])
+    : ServiceBase("Dnn.RzComp")
 {
     protected HotBuildSpec HotBuildSpecs;
     [PrivateApi] protected IBlock Block;
@@ -59,7 +59,7 @@ internal class DnnRazorCompiler(
     [PrivateApi]
     internal (TextWriter writer, List<Exception> exceptions) Render(RazorComponentBase page, TextWriter writer, RenderSpecs renderSpecs)
     {
-        var l = Log.Fn<(TextWriter writer, List<Exception> exception)>(message: "will render into TextWriter");
+        using var l = Log.Fn<(TextWriter writer, List<Exception> exception)>(message: "will render into TextWriter");
         try
         {
             if (page is ISetDynamicModel setDyn)
@@ -89,7 +89,7 @@ internal class DnnRazorCompiler(
 
     private (TextWriter writer, List<Exception> exceptions) RenderImplementation(RazorComponentBase webpage, RenderSpecs specs)
     {
-        ILogCall<(TextWriter writer, List<Exception> exceptions)> l = Log.Fn<(TextWriter, List<Exception>)>();
+        using ILogCall<(TextWriter writer, List<Exception> exceptions)> l = Log.Fn<(TextWriter, List<Exception>)>();
         var writer = new StringWriter();
         var result = Render(webpage, writer, specs);
         return l.ReturnAsOk(result);
@@ -97,7 +97,7 @@ internal class DnnRazorCompiler(
 
     private RazorBuildTempResult<object> CreateWebPageInstance(string templatePath)
     {
-        var l = Log.Fn<RazorBuildTempResult<object>>(templatePath);
+        using var l = Log.Fn<RazorBuildTempResult<object>>(templatePath);
         object page = null;
 
         Type compiledType;
@@ -147,7 +147,7 @@ internal class DnnRazorCompiler(
 
     public RazorBuildTempResult<RazorComponentBase> InitWebpage(string templatePath, bool exitIfNoHotBuild)
     {
-        var l = Log.Fn<RazorBuildTempResult<RazorComponentBase>>();
+        using var l = Log.Fn<RazorBuildTempResult<RazorComponentBase>>();
         if (string.IsNullOrEmpty(templatePath))
             return l.ReturnNull("null path");
 
@@ -174,7 +174,7 @@ internal class DnnRazorCompiler(
 
     private void InitHelpers(RazorComponentBase webPage)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
         // Only generate this for the first / top EntryRazorComponent
         // All children which are then generated here should re-use that CodeApiService
         if (_sharedCodeApiService == null)
@@ -208,7 +208,7 @@ internal class DnnRazorCompiler(
 
     internal static PrepToExecute PrepareForRoslyn(RazorComponentBase parent, string templatePath, object data)
     {
-        var l = (parent as IHasLog).Log.Fn<PrepToExecute>();
+        using var l = (parent as IHasLog).Log.Fn<PrepToExecute>();
 
         // Find the RazorEngine which MUST be on the CodeApiService PiggyBack, or throw an error
         var razorCompiler = parent.ExCtx.PiggyBackGet(nameof(DnnRazorCompiler), DnnRazorCompiler () => null)
@@ -222,7 +222,7 @@ internal class DnnRazorCompiler(
 
     internal static RazorBuildTempResult<HelperResult> ExecuteWithRoslyn(PrepToExecute preparations, RazorComponentBase parent, RenderSpecs renderSpecs)
     {
-        var l = (parent as IHasLog).Log.Fn<RazorBuildTempResult<HelperResult>>();
+        using var l = (parent as IHasLog).Log.Fn<RazorBuildTempResult<HelperResult>>();
 
         var (writer, exceptions) = preparations.Compiler
             .RenderImplementation(preparations.SubPage.Instance, renderSpecs);

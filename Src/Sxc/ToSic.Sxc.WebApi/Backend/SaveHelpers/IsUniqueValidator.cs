@@ -10,7 +10,7 @@ internal class IsUniqueValidator(UniqueValueLookup lookup, IDataSource appData, 
 {
     internal HttpExceptionAbstraction? UniqueValuesOnly(IReadOnlyCollection<IEntity> pendingEntities)
     {
-        var l = Log.Fn<HttpExceptionAbstraction?>($"{nameof(pendingEntities)}:{pendingEntities.Count}", timer: true);
+        using var l = Log.Fn<HttpExceptionAbstraction?>($"{nameof(pendingEntities)}:{pendingEntities.Count}", timer: true);
         
         if (pendingEntities.Count == 0)
             return l.ReturnNull("no pending entities");

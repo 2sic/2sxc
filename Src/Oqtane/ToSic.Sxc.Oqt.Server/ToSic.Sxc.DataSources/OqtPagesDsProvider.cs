@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Oqtane.Repository;
 using Oqtane.Security;
 using Oqtane.Shared;
@@ -21,8 +21,7 @@ internal class OqtPagesDsProvider(
     IUserPermissions userPermissions,
     IHttpContextAccessor httpContextAccessor,
     LazySvc<ILinkPaths> linkPathsLazy)
-    : PagesDataSourceProvider("Oqt.Pages",
-        connect: [pages, siteState, userPermissions, httpContextAccessor, linkPathsLazy])
+    : PagesDataSourceProvider("Oqt.Pages")
 {
     private const int OqtLevelOffset = 1;
 
@@ -36,7 +35,7 @@ internal class OqtPagesDsProvider(
         bool requireViewPermissions = true,
         bool requireEditPermissions = true)
     {
-        var l = Log.Fn<List<PageModelRaw>>();
+        using var l = Log.Fn<List<PageModelRaw>>();
         var user = httpContextAccessor?.HttpContext?.User;
         var allowed = pages
             .GetPages(siteState.Alias.SiteId)

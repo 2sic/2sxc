@@ -27,12 +27,7 @@ public class InstallControllerReal(
     LazySvc<IFeaturesService> featureService,
     LazySvc<AppsBackend> appsBackend,
     LazySvc<AppDataStackService> appSettingsStack)
-    : Services_ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
-        connect:
-        [
-            context, envInstallerLazy, platformAppInstaller, impFromRemoteLazy, responseMaker, featureService,
-            appSettingsStack, appsBackend
-        ])
+    : Services_ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl")
 {
     public const string LogSuffix = "Install";
 
@@ -50,7 +45,7 @@ public class InstallControllerReal(
 
     public InstallAppsDto InstallSettings(bool isContentApp, IModule module)
     {
-        var l = Log.Fn<InstallAppsDto>();
+        using var l = Log.Fn<InstallAppsDto>();
         
         // Get Remote Install URL
         var site = context.Value.Site;
@@ -102,7 +97,7 @@ public class InstallControllerReal(
     /// <returns></returns>
     public THttpResponseType RemotePackage(string packageUrl, IModule container, string? newName = null)
     {
-        var l = Log.Fn<THttpResponseType>();
+        using var l = Log.Fn<THttpResponseType>();
 
         var isApp = !container.IsContent;
 

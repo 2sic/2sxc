@@ -21,7 +21,7 @@ public class ItemHistory : CustomDataSource
     public int EntityId => Configuration.GetThis(0);
 
     public ItemHistory(Dependencies services, AppWorkQuick<WorkEntityVersioning> versioning)
-        : base(services, "Sxc.ItemHist", connect: [versioning])
+        : base(services, "Sxc.ItemHist")
     {
         ProvideOutRaw(() => versioning.New(appId: AppId)
             .VersionHistory(EntityId)

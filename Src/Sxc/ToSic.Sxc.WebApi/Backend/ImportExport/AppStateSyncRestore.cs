@@ -27,8 +27,7 @@ public class AppStateSyncRestore(
     IImportExportEnvironment env,
     ZipImport zipImport,
     ISysFeaturesService features)
-    : ServiceBase("Bck.Export",
-        connect: [xmlImportWithFilesLazy, impExpHelpers, workAppsRemove, site, user, env, zipImport, features]),
+    : ServiceBase("Bck.Export"),
         IWork<AppStateSyncRestore.Parameters, ImportResultDto>
 {
     public record Parameters(int ZoneId, int AppId, string DefaultLanguage, bool WithSiteFiles): IAppIdentity;
@@ -36,7 +35,7 @@ public class AppStateSyncRestore(
     public async Task<Package<ImportResultDto>> Handle(WorkContext context, Package<Parameters> package)
     {
         var parameters = package.Data;
-        var l = Log.Fn<ImportResultDto>($"Reset App {parameters.Show()}");
+        using var l = Log.Fn<ImportResultDto>($"Reset App {parameters.Show()}");
         var result = new ImportResultDto();
 
 

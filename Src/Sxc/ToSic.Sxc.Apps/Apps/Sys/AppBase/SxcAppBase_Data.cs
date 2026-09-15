@@ -30,7 +30,7 @@ partial class SxcAppBase
         where TDataSource : TResult
         where TResult : class, IDataSource
     {
-        var l = Log.Fn<TResult>();
+        using var l = Log.Fn<TResult>();
         var dataConfig = AppDataConfig;
         if (dataConfig.LookUpEngine == null) // note: as of 2025-09, I believe this can never be null.
             throw new("Cannot provide Data for the object App as crucial information is missing. " +

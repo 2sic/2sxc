@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Backend.Adam;
 [PrivateApi("Used by DynamicApiController and Hybrid.Api12_DynCode")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamCode(Generator<AdamWorkUpload, AdamWorkOptions> adamUploadGenerator, LazySvc<ISysFeaturesService> featuresLazy)
-    : ServiceWithContext("AdamCode", connect: [adamUploadGenerator, featuresLazy])
+    : ServiceWithContext("AdamCode")
 {
     public IFile SaveInAdam(NoParamOrder npo = default,
         Stream? stream = null,
@@ -25,7 +25,7 @@ public class AdamCode(Generator<AdamWorkUpload, AdamWorkOptions> adamUploadGener
         string? field = null,
         string subFolder = "")
     {
-        var l = Log.Fn<IFile>();
+        using var l = Log.Fn<IFile>();
 
         if (stream == null || fileName == null || contentType == null || guid == null || field == null)
             throw new ArgumentException($"all these arguments must be available: {nameof(stream)}, {nameof(field)}, {nameof(contentType)}, {nameof(guid)}, {nameof(field)}");

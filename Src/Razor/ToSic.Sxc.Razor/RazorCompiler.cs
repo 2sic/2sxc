@@ -21,15 +21,11 @@ internal class RazorCompiler(
     LazySvc<AppCodeLoader> appCodeLoader,
     AssemblyResolver assemblyResolver,
     SourceAnalyzer sourceAnalyzer)
-    : ServiceBase($"{SxcLogging.SxcLogName}.RzrCmp",
-        connect:
-        [
-            applicationPartManager, viewEngine, /* never! serviceProvider,*/ httpContextAccessor, actionContextAccessor, appCodeLoader, assemblyResolver, sourceAnalyzer
-        ]), IRazorCompiler
+    : ServiceBase($"{SxcLogging.SxcLogName}.RzrCmp"), IRazorCompiler
 {
     public async Task<(IView view, ActionContext context)> CompileView(string partialName, Action<RazorView> configure, IApp app, HotBuildSpec spec)
     {
-        var l = Log.Fn<(IView view, ActionContext context)>($"partialName:{partialName},appCodePath:{app}");
+        using var l = Log.Fn<(IView view, ActionContext context)>($"partialName:{partialName},appCodePath:{app}");
         var actionContext = actionContextAccessor.ActionContext ?? NewActionContext();
         var partial = await FindViewAsync(actionContext, partialName, app, spec);
         // do callback to configure the object we received
@@ -41,7 +37,7 @@ internal class RazorCompiler(
     private static bool _executedAlready;
     private async Task<IView> FindViewAsync(ActionContext actionContext, string partialName, IApp app, HotBuildSpec spec)
     {
-        var l = Log.Fn<IView>($"partialName:{partialName}");
+        using var l = Log.Fn<IView>($"partialName:{partialName}");
         var searchedLocations = new List<string>();
         var exceptions = new List<Exception>();
         try
@@ -128,14 +124,14 @@ internal class RazorCompiler(
 
     private ActionContext NewActionContext()
     {
-        var l = Log.Fn<ActionContext>();
+        using var l = Log.Fn<ActionContext>();
         var httpContext = httpContextAccessor.HttpContext ?? new DefaultHttpContext { RequestServices = serviceProvider };
         return l.ReturnAsOk(new(httpContext, new(), new()));
     }
 
     private bool AddAppCodeAssembly(string partialName, IApp app, HotBuildSpec spec)
     {
-        var log = Log.Fn<bool>($"{nameof(partialName)}:{partialName}; {nameof(app.RelativePath)}:{app.RelativePath}; {spec}", timer: true);
+        using var log = Log.Fn<bool>($"{nameof(partialName)}:{partialName}; {nameof(app.RelativePath)}:{app.RelativePath}; {spec}", timer: true);
 
         // Get assembly - try to get from cache, otherwise compile
         var (assemblyResult, resultSpec) = appCodeLoader.Value.GetAppCode(spec);

@@ -30,14 +30,13 @@ public partial class BlockRenderer(BlockRenderer.Dependencies services)
         IModulesOutputService ModulesOutputService,
         CodeInfosInScope CodeInfos,
         BlockCachingHelper BlockCachingHelper)
-        : DependenciesBase(connect:
-            [EngineFactory, EnvInstGen, RenderHelpGen, PageChangeSummary, LicenseService, ModulesOutputService, CodeInfos, BlockCachingHelper]);
+        : DependenciesBase();
 
     #region Constructor
 
     public IBlockRenderer Setup(IBlock cb)
     {
-        var l = Log.Fn<IBlockRenderer>($"get CmsInstance for a:{cb.AppId} cb:{cb.ContentBlockId}");
+        using var l = Log.Fn<IBlockRenderer>($"get CmsInstance for a:{cb.AppId} cb:{cb.ContentBlockId}");
         // the root block is the main container. If there is none yet, use this, as it will be the root
         Block = cb;
         return l.Return(this);

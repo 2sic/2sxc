@@ -30,7 +30,7 @@ public class AdamManager(AdamManager.Dependencies services)
         LazySvc<IAdamFileSystem> AdamFsLazy,
         Generator<AdamStorageOfField> FieldStorageGenerator,
         AdamGenericHelper AdamGenericHelper)
-        : DependenciesBase(connect: [CdfIfNotProvided, AdamConfiguration, AdamFsLazy, FieldStorageGenerator]);
+        : DependenciesBase();
 
     #endregion
 
@@ -38,7 +38,7 @@ public class AdamManager(AdamManager.Dependencies services)
 
     public AdamManager Init(IContextOfApp appCtx, int compatibility, ICodeDataFactory? cdf = default)
     {
-        var l = Log.Fn<AdamManager>();
+        using var l = Log.Fn<AdamManager>();
         AppContext = appCtx;
         Cdf = cdf
               ?? Services.CdfIfNotProvided
@@ -82,7 +82,7 @@ public class AdamManager(AdamManager.Dependencies services)
 
     internal IFolder? Folder(string path, bool autoCreate)
     {
-        var l = Log.Fn<IFolder>($"{path}, {autoCreate}");
+        using var l = Log.Fn<IFolder>($"{path}, {autoCreate}");
 
         // create all folders to ensure they exist. Must do one-by-one because the environment must have it in the catalog
         var pathParts = path.Split('/');

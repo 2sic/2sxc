@@ -21,7 +21,7 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
 
     private object EnsureNoNulls(MediaTypeFormatterCollection formatters)
     {
-        var l = Log.Fn<object>();
+        using var l = Log.Fn<object>();
         try
         {
             if (formatters.All(f => f != null))
@@ -47,7 +47,7 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
     // This creates a controller-specific configuration
     internal void ReconfigureControllerWithBestSerializers(MediaTypeFormatterCollection formatters, Attribute[] customAttributes)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
 
         if (IsDebugEnabled())
             DumpFormattersToLog(Log, "before-controller", formatters);
@@ -119,7 +119,7 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
         MediaTypeFormatterCollection formatters,
         JsonFormatterAttribute jsonFormatterAttributeOnAction)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
 
         // Get JsonFormatterAttribute from action **Method**
         l.A(jsonFormatterAttributeOnAction == null
@@ -160,7 +160,7 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
 
     internal void ReplaceJsonFormatterWithNewInstance(MediaTypeFormatterCollection formatters, JsonFormatterAttribute jsonFormatterAttributeOnAction)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
 
         // 2025-11-08 2dm - creating a list to avoid multiple enumeration of formatters
         // since I sometimes observed a single error after restart "Collection was modified; enumeration operation may not execute."

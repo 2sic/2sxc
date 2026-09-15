@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Render.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class RenderingHelper(ILinkPaths linkPaths, LazySvc<IEnvironmentLogger> errorLogger, Generator<JsContextAll> jsContextAllGen)
-    : ServiceBase("Sxc.RndHlp", connect: [linkPaths, errorLogger, jsContextAllGen]), IRenderingHelper
+    : ServiceBase("Sxc.RndHlp"), IRenderingHelper
 {
     #region Constructors and DI
 

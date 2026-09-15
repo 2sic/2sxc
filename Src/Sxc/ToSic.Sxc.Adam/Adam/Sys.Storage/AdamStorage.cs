@@ -30,7 +30,7 @@ public abstract class AdamStorage(string? logName = default) : ServiceBase(logNa
     /// </remarks>
     public IFolder? Folder(string subFolder, bool autoCreate)
     {
-        var l = Log.Fn<IFolder?>($"{nameof(Folder)}(\"{subFolder}\", {autoCreate})");
+        using var l = Log.Fn<IFolder?>($"{nameof(Folder)}(\"{subFolder}\", {autoCreate})");
         var fld = Manager.Folder(GeneratePath(subFolder), autoCreate);
         return l.ReturnAsOk(fld);
     }

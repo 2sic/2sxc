@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Services.Link.Sys;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy, object[]? connect = default)
-    : ServiceWithContext($"{SxcLogName}.LnkHlp", connect: [..connect ?? [], linkPathsLazy, imgLinker]), ILinkService
+    : ServiceWithContext($"{SxcLogName}.LnkHlp"), ILinkService
 {
     [PrivateApi]
     protected ILinkPaths LinkPaths => linkPathsLazy.Value;
@@ -34,7 +34,7 @@ public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPa
         string? language = null
     )
     {
-        var l = (Debug ? Log : null).Fn<string>($"pid:{pageId},api:{api},t:{type},l:{language}");
+        using var l = (Debug ? Log : null).Fn<string>($"pid:{pageId},api:{api},t:{type},l:{language}");
 
         // Check initial conflicting values.
         if (pageId != null && api != null)

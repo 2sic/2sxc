@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Mvc
             bool showDrafts,
             ILog parentLog)
         {
-            var log = new Log("Mvc.Factry", parentLog);
+            var log = new Log("Mvc.Factry");
             log.A($"Create App(z:{zoneId}, a:{appId}, tenantObj:{site != null}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
             var app = Eav.Factory.StaticBuild<App>();
             if (site != null) app.PreInit(site);

@@ -15,7 +15,7 @@ internal static class ToolbarBuilderExtensions
     /// </remarks>
     public static ToolbarBuilder AddInternal(this ToolbarBuilder original, ToolbarRuleBase[] newRules, [CallerMemberName] string? methodName = default)
     {
-        var l = original.Log.Fn<ToolbarBuilder>(methodName);
+        using var l = original.Log.Fn<ToolbarBuilder>(methodName);
         if (!newRules.Any())
             return l.Return(original, "no new rules");
 

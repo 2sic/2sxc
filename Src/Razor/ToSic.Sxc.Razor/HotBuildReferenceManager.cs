@@ -11,8 +11,7 @@ internal class HotBuildReferenceManager(
     LazySvc<DependenciesLoader> dependenciesLoader,
     AssemblyResolver assemblyResolver,
     LazySvc<ExtensionCompileReferenceService> extensionReference)
-    : ServiceBase($"{SxcLogging.SxcLogName}.HbRefMgr",
-        connect: [referenceManager, dependenciesLoader, assemblyResolver, extensionReference])
+    : ServiceBase($"{SxcLogging.SxcLogName}.HbRefMgr")
 {
     private readonly RazorReferenceManagerEnhanced _referenceManager = (RazorReferenceManagerEnhanced)referenceManager;
 

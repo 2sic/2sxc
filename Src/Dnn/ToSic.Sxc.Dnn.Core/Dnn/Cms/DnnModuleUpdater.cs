@@ -22,11 +22,11 @@ internal class DnnModuleUpdater(
     IZoneMapper zoneMapper,
     IAppsCatalog appsCatalog,
     ISite site)
-    : ServiceBase("Dnn.MapA2I", connect: [workViews, appsCatalog, site, zoneMapper]), IPlatformModuleUpdater
+    : ServiceBase("Dnn.MapA2I"), IPlatformModuleUpdater
 {
     public void SetAppId(IModule instance, int? appId)
     {
-        var l = Log.Fn($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
+        using var l = Log.Fn($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
         // Reset temporary template
         ClearPreview(instance.Id);
 

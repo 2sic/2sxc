@@ -57,7 +57,7 @@ partial class CodeDataFactory: ICodeDataFactoryDeepWip
     /// </summary>
     public object? AsDynamicFromObject(object dynObject)
     {
-        var l = Log.Fn<object?>();
+        using var l = Log.Fn<object?>();
         //var typed = AsTypedInternal(dynObject);
         //if (typed != null) return l.Return(typed, nameof(ITypedRead));
 

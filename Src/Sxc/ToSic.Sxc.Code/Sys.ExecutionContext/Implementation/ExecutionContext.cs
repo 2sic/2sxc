@@ -42,8 +42,7 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
         LazySvc<CodeCreateDataSourceSvc> DataSources,
         ICodeDataFactory Cdf,
         IEditionService EditionSvc)
-        : DependenciesBase(connect:
-            [/* never! serviceProvider */ CodeCompilerLazy, DataStackService, ConvertService, DataSources, Cdf, EditionSvc]);
+        : DependenciesBase();
 
     [PrivateApi]
     protected internal ExecutionContext(Dependencies services, string logPrefix) : base(services, logPrefix + ".DynCdR")
@@ -73,8 +72,7 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
 
     public virtual IExecutionContext Setup(ExecutionContextOptions options)
     {
-        this.LinkLog(options.ParentLog);
-        var cLog = Log.Fn<IExecutionContext>();
+        using var cLog = Log.Fn<IExecutionContext>();
 
         Cdf.SetCompatibilityLevel(options.Compatibility);
         ModuleIfBlockUnknown = options.ModuleIfBlockUnknown;

@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Sys.State;
+using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.Data.ContentTypes.Fields.Sys;
 using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Blocks.Sys.Views;
@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Backend.Cms;
 public class ListActivityReplaceOptions(
     AppWorkChain<WorkBlocks> appBlocks,
     AppWorkChain<WorkEntities> workEntities
-) : ServiceWithSetup<IAppWorkContext>("Act.LstRep", connect: [appBlocks, workEntities])
+) : ServiceWithSetup<IAppWorkContext>("Act.LstRep")
 {
     public record Options(
         Guid Parent,
@@ -26,7 +26,7 @@ public class ListActivityReplaceOptions(
     /// </summary>
     public ReplacementListDto ReplaceOptions(Options options)
     {
-        var l = Log.Fn<ReplacementListDto>($"{options}");
+        using var l = Log.Fn<ReplacementListDto>($"{options}");
         options = options with
         {
             TypeNames = options.TypeNames ?? FindTypeNameOnContentGroup(options)
@@ -44,7 +44,7 @@ public class ListActivityReplaceOptions(
     /// <returns></returns>
     private string? FindTypeNameOnContentGroup(Options options)
     {
-        var l = Log.Fn<string>($"{options}");
+        using var l = Log.Fn<string>($"{options}");
 
         var contentGroup = appBlocks.New(MyOptions).GetBlockConfig(options.Parent);
         if ((contentGroup as ICanBeEntity)?.Entity == null || contentGroup.View == null)
@@ -59,7 +59,7 @@ public class ListActivityReplaceOptions(
 
     private ReplacementListDto GetOptions(Options options)
     {
-        var l = Log.Fn<ReplacementListDto>($"{options}");
+        using var l = Log.Fn<ReplacementListDto>($"{options}");
 
         var (existingItemsInField, typeNameOfField) = FindItemAndFieldTypeName(MyOptions.AppReader, options);
 
@@ -111,7 +111,7 @@ public class ListActivityReplaceOptions(
     private (List<IEntity> items, IList<string> typeNames) FindItemAndFieldTypeName(IAppReader appReader, Options options)
     {
         var (guid, part, _, _) = options;
-        var l = Log.Fn<(List<IEntity>, IList<string>)>($"guid:{guid},part:{part}");
+        using var l = Log.Fn<(List<IEntity>, IList<string>)>($"guid:{guid},part:{part}");
 
         // Find owner/parent
         var parent = appReader.GetDraftOrPublished(guid);

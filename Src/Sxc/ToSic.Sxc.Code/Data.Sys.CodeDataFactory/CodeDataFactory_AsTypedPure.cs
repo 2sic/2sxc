@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using ToSic.Eav.Models.Sys;
 using ToSic.Sxc.Data.Sys.Wrappers;
 
@@ -10,7 +10,7 @@ partial class CodeDataFactory
 
     public ITyped? AsTyped(object data, ModelSettings settings, string? detailsMessage = default)
     {
-        var l = Log.Fn<ITyped>();
+        using var l = Log.Fn<ITyped>();
 
         if (AsTypedPreflightReturnNull(data, NameOfAsTyped, settings.EntryPropIsRequired, detailsMessage))
             return l.ReturnNull();
@@ -29,7 +29,7 @@ partial class CodeDataFactory
     private const string NameOfAsTypedList = /*nameof(IDynamicCode16.AsTypedList)*/ "AsTypedList" + "(...)";
     public IEnumerable<ITyped>? AsTypedList(object list, ModelSettings settings)
     {
-        var l = Log.Fn<IEnumerable<ITyped>>();
+        using var l = Log.Fn<IEnumerable<ITyped>>();
 
         if (AsTypedPreflightReturnNull(list, NameOfAsTypedList, settings.EntryPropIsRequired))
             return l.ReturnNull();
@@ -52,7 +52,7 @@ partial class CodeDataFactory
 
     private bool AsTypedPreflightReturnNull(object original, string methodName, bool required, string? detailsMessage = default)
     {
-        var l = Log.Fn<bool>();
+        using var l = Log.Fn<bool>();
         switch (original)
         {
             case null:

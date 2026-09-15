@@ -21,7 +21,7 @@ partial class PageService
     public string Activate(params string[] keys)
     {
         keys ??= [];
-        var l = Log.Fn<string>($"{nameof(keys)}: '{string.Join(",", keys)}'");
+        using var l = Log.Fn<string>($"{nameof(keys)}: '{string.Join(",", keys)}'");
         FeatureKeysAdded.AddRange(keys);
 
         // #PartialCaching must know about all activated features
@@ -56,7 +56,7 @@ partial class PageService
     /// <inheritdoc />
     public string? Activate(NoParamOrder npo = default, bool condition = true, params string[] features)
     {
-        var l = Log.Fn<string>();
+        using var l = Log.Fn<string>();
 
         // Check condition - default is true - so if it's false, this overload was called
         return !condition
@@ -66,7 +66,7 @@ partial class PageService
 
     private string[] AddResourcesFromSettings(string[] keys)
     {
-        var l = Log.Fn<string[]>();
+        using var l = Log.Fn<string[]>();
         var keysToRemove = new List<string>();
         var processor = new WebResourceProcessor(featuresSvc.Value, _overrideCdnSource ?? CdnSource, Log);
         foreach (var key in keys)

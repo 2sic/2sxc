@@ -14,7 +14,7 @@ internal static class ExtensionLockHelper
     // TODO: @2rb - change to use the typed PackageIndexFile instead of the raw JsonDocument
     internal static LockFileReadResult ReadLockFile(string lockFilePath, ILog? parentLog)
     {
-        var l = parentLog.Fn<LockFileReadResult>();
+        using var l = parentLog.Fn<LockFileReadResult>();
         try
         {
             var json = File.ReadAllText(lockFilePath);

@@ -18,8 +18,7 @@ public partial class PageService(
     LazySvc<ITurnOnService> turnOn,
     LazySvc<IModulesOutputService> moduleService,
     LazySvc<IFeaturesService> featuresSvc)
-    : ServiceWithContext("2sxc.PgeSrv",
-            connect: [cspServiceLazy, htmlTagsLazy, moduleService, turnOn, pageServiceShared, featuresSvc]),
+    : ServiceWithContext("2sxc.PgeSrv"),
         IPageService // Important: Write with namespace, because it's easy to confuse with IPageService it supports
 {
     public IPageServiceShared PageServiceShared { get; } = pageServiceShared;
@@ -61,7 +60,7 @@ public partial class PageService(
     /// </remarks>
     public void ReplayCachedChanges(RenderResult renderResult)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
         if (renderResult.PartialActivateWip?.Any() == true)
             Activate(renderResult.PartialActivateWip.ToArray());
 

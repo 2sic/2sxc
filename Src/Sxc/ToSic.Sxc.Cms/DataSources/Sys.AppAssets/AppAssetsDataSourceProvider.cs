@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Razor.Blade;
@@ -21,7 +21,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.Dependencie
         IAppPathsMicroSvc AppPathMicroSvc,
         // Note that we will use Generators for safety, because in rare cases the dependencies could be re-used to create a sub-data-source
         Generator<AppFileManager> FileManagerGenerator)
-        : DependenciesBase(connect: [AppReaders, AppPathMicroSvc, FileManagerGenerator]);
+        : DependenciesBase();
 
     public AppAssetsDataSourceProvider Configure(
         AppAssetsGetSpecs specs,
@@ -34,7 +34,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.Dependencie
     {
         var root = specs.RootFolder;
         var filter = specs.FileFilter;
-        var l = Log.Fn<AppAssetsDataSourceProvider>($"a:{specs.AppId}; z:{specs.ZoneId}, root:{root}, filter:{filter}");
+        using var l = Log.Fn<AppAssetsDataSourceProvider>($"a:{specs.AppId}; z:{specs.ZoneId}, root:{root}, filter:{filter}");
         _root = root.TrimPrefixSlash().ToSystemPath();
         _filter = filter;
 
@@ -62,7 +62,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.Dependencie
 
     public List<FileModelRaw> GetFiles()
     {
-        var l = Log.Fn<List<FileModelRaw>>();
+        using var l = Log.Fn<List<FileModelRaw>>();
         var pathsFromRoot = PreparePaths(_appPaths, "");
 
         var files = _appFileManager.GetAllTransferableFiles(_filter)
@@ -96,7 +96,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.Dependencie
 
     private List<FolderModelRaw> GetFolders()
     {
-        var l = Log.Fn<List<FolderModelRaw>>();
+        using var l = Log.Fn<List<FolderModelRaw>>();
         var pathsFromRoot = PreparePaths(_appPaths, "");
 
         var folders = _appFileManager.GetAllTransferableFolders(/*filter*/)

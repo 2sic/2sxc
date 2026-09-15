@@ -25,13 +25,13 @@ internal class RazorEngine(
     LazySvc<IExecutionContextFactory> exCtxFactory,
     LazySvc<CodeErrorHelpService> errorHelp,
     LazySvc<IRenderingHelper> renderingHelper)
-    : ServiceBase("Sxc.RzrEng", connect: [engineSpecsService, assetsExtractor, engineRequirementsApp, exCtxFactory, errorHelp, renderingHelper, razorRenderer]),
+    : ServiceBase("Sxc.RzrEng"),
         IEngine // IRazorEngine
 {
     /// <inheritdoc />
     public OutputFragmentWithAssets Render(IBlock block, RenderSpecs specs)
     {
-        var l = Log.Fn<OutputFragmentWithAssets>(timer: true);
+        using var l = Log.Fn<OutputFragmentWithAssets>(timer: true);
 
         // Prepare #1: Specs
         var engineSpecs = engineSpecsService.GetSpecs(block);
@@ -50,7 +50,7 @@ internal class RazorEngine(
     /// <inheritdoc/>
     private OutputFragment RenderEntryRazor(EngineSpecs engineSpecs, RenderSpecs specs)
     {
-        var l = Log.Fn<OutputFragment>();
+        using var l = Log.Fn<OutputFragment>();
         var task = RenderTask(engineSpecs, specs);
         try
         {

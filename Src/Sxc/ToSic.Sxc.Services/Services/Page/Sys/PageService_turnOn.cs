@@ -16,7 +16,7 @@ partial class PageService
         string? addContext = default
     )
     {
-        var l = Log.Fn<string?>($"{runOrSpecs}: {runOrSpecs}; {require}; {data}");
+        using var l = Log.Fn<string?>($"{runOrSpecs}: {runOrSpecs}; {require}; {data}");
 
         // Check condition - default is true - so if it's false, this overload was called
         if (!condition)

@@ -22,8 +22,7 @@ internal class DnnValueConverter(
     LazySvc<PageScopedService<ISite>> siteFromPageLazy,
     LazySvc<INavigationManager> navigationManager,
     IPortalAliasService portalAliasService)
-    : ValueConverterBase($"{DnnConstants.LogName}.ValCnv",
-        connect: [site, featuresLazy, siteFromPageLazy, navigationManager])
+    : ValueConverterBase($"{DnnConstants.LogName}.ValCnv")
 {
     public const string CurrentLanguage = "current";
 

@@ -2,7 +2,7 @@
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class WorkViewDelete(AppWorkChain<WorkViews> appViews, AppWorkChain<WorkEntityDelete> entityDelete)
-    : ServiceBase("AWk.EntCre", connect: [appViews, entityDelete])
+    : ServiceBase("AWk.EntCre")
 {
 
     public bool DeleteView(IAppWorkContext appWorkCtx, int viewId)

@@ -15,9 +15,9 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.Depe
         AppWorkChain<WorkBlocks> AppBlocks,
         AppWorkChain<WorkBlocksMod> WorkBlocksMod,
         LazySvc<WorkEntityPublish> Publisher
-    ) : DependenciesBase(connect: [AppWorkCtxSvc, WorkBlocksMod, AppBlocks, Publisher]);
+    ) : DependenciesBase();
 
-    internal BlockEditorBase(Dependencies services, object[] connect) : base(services, "CG.RefMan", connect: connect)
+    internal BlockEditorBase(Dependencies services, object[]? connect = null) : base(services, "CG.RefMan")
     { }
 
     internal void Init(IBlock block) => Block = block;
@@ -33,7 +33,7 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.Depe
         
     public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
     {
-        var l = Log.Fn<Guid?>($"save template#{templateId}, CG-exists:{BlockConfiguration.Exists} forceCreateCG:{forceCreateContentGroup}");
+        using var l = Log.Fn<Guid?>($"save template#{templateId}, CG-exists:{BlockConfiguration.Exists} forceCreateCG:{forceCreateContentGroup}");
 
         // if it exists or has a force-create, then write to the Content-Group, otherwise it's just a preview
         if (BlockConfiguration.Exists || forceCreateContentGroup)
@@ -57,7 +57,7 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.Depe
 
     public bool Publish(string part, int index)
     {
-        var l = Log.Fn<bool>($"publish part{part}, order:{index}");
+        using var l = Log.Fn<bool>($"publish part{part}, order:{index}");
         var contentGroup = BlockConfiguration;
         var contEntity = contentGroup[part][index];
         var presKey = part.ToLowerInvariant() == ViewParts.ContentLower 

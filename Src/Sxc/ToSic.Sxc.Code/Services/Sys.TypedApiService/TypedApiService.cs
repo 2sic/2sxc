@@ -41,7 +41,7 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
 
     public IAppTyped App(NoParamOrder npo = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
     {
-        var l = Log.Fn<IAppTyped>();
+        using var l = Log.Fn<IAppTyped>();
         MakeSureLogIsInHistory();
 
         var app = GetApp(ServicesScoped.AppGenerator, zoneId: zoneId, appId: appId, site: site, withUnpublished: withUnpublished);
@@ -51,7 +51,7 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
     /// <inheritdoc />
     public IAppTyped AppOfSite()
     {
-        var l = Log.Fn<IAppTyped>();
+        using var l = Log.Fn<IAppTyped>();
 
         MakeSureLogIsInHistory();
         var app = GetAndInitApp(ServicesScoped.AppGenerator.New(), GetPrimaryAppIdentity(null), null);
@@ -72,7 +72,7 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
     /// <inheritdoc />
     public ITypedApi ApiOfModule(int pageId, int moduleId)
     {
-        var l = Log.Fn<ITypedApi>($"{pageId}, {moduleId}");
+        using var l = Log.Fn<ITypedApi>($"{pageId}, {moduleId}");
         MakeSureLogIsInHistory();
         ActivateEditUi();
         var cmsBlock = ServicesScoped.ModAndBlockBuilder.Value.BuildBlock(pageId, moduleId);
@@ -111,7 +111,7 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
 
     private ITypedApi OfAppOrSiteInternal(int? zoneId = null, int? appId = null, IModule? moduleIfBlockUnknown = default)
     {
-        var l = Log.Fn<ITypedApi>();
+        using var l = Log.Fn<ITypedApi>();
         MakeSureLogIsInHistory();
         ActivateEditUi();
         var app = GetApp(ServicesScoped.AppGenerator, zoneId: zoneId, appId: appId);

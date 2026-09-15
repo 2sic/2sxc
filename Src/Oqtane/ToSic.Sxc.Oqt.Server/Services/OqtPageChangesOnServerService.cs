@@ -12,8 +12,7 @@ internal class OqtPageChangesOnServerService(
     IHttpContextAccessor httpContextAccessor,
     LazySvc<IFeaturesService> featuresService,
     Generator<CspOfPage> cspOfPage)
-    : ServiceBase($"{SxcLogging.SxcLogName}.OqtPgChService",
-        connect: [httpContextAccessor, featuresService, cspOfPage]), IOqtPageChangesOnServerService
+    : ServiceBase($"{SxcLogging.SxcLogName}.OqtPgChService"), IOqtPageChangesOnServerService
 {
     public int ApplyHttpHeaders(OqtViewResultsDto result, IOqtHybridLog page)
     {

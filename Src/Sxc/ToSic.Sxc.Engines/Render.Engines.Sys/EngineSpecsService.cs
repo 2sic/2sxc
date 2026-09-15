@@ -12,7 +12,7 @@ public class EngineSpecsService(
     EnginePolymorphism enginePolymorphism,
     EngineCheckTemplate engineCheckTemplate,
     IAppCacheKeyService appCacheKeyService
-) : ServiceBase("Sxc.EgSpec", connect: [serverPaths, enginePolymorphism, engineCheckTemplate, appCacheKeyService])
+) : ServiceBase("Sxc.EgSpec")
 {
     /// <summary>
     /// Do various preflight checks and create the Engine Specs according to the information in the BlockSpecs
@@ -22,7 +22,7 @@ public class EngineSpecsService(
     /// <exception cref="RenderingException"></exception>
     public EngineSpecs GetSpecs(IBlock block)
     {
-        var l = Log.Fn<EngineSpecs>();
+        using var l = Log.Fn<EngineSpecs>();
 
         // Do various pre-checks and path variations
         var view = block.View!;

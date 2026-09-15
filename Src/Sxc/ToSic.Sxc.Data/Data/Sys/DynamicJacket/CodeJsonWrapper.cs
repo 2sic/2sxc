@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Data.Sys.DynamicJacket;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator)
-    : ServiceBase($"{SxcLogName}.CdJsWr", connect: [wrapTypeGenerator])
+    : ServiceBase($"{SxcLogName}.CdJsWr")
 {
     #region Constructor / Setup
 
@@ -103,7 +103,7 @@ public class CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator)
         IfJsonTryConvertTo<TResult>(object? original, Func<JsonObject, TResult?> toObj, Func<JsonArray, TResult?> toArr)
         where TResult : class
     {
-        var l = Log.Fn<(TResult? Jacket, bool Ok, JsonValueKind ValueKind)>();
+        using var l = Log.Fn<(TResult? Jacket, bool Ok, JsonValueKind ValueKind)>();
         if (original is not JsonNode jsonNode)
             return l.Return((null, false, JsonValueKind.Undefined), "not json node");
 

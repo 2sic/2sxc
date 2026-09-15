@@ -9,11 +9,11 @@ namespace ToSic.Sxc.Oqt.Server.Context;
 internal class OqtTenantContext(
     ITenantManager tenantManager,
     IConfiguration configuration)
-    : ServiceBase($"{OqtConstants.OqtLogPrefix}.TenCtx", connect: [tenantManager]), IOqtTenantContext
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.TenCtx"), IOqtTenantContext
 {
     public OqtTenantContextInfo? Get()
     {
-        var l = Log.Fn<OqtTenantContextInfo?>();
+        using var l = Log.Fn<OqtTenantContextInfo?>();
 
         var alias = tenantManager.GetAlias();
         if (alias == null)

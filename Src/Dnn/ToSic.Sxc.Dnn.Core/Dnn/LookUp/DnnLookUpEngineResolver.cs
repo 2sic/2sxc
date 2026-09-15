@@ -15,11 +15,11 @@ namespace ToSic.Sxc.Dnn.LookUp;
 /// Internally it asks DNN for the current Property-Access objects and prepares them for use in EAV.
 /// </summary>
 internal class DnnLookUpEngineResolver(IZoneCultureResolver cultureResolver, LazySvc<IHttp> httpLazy, LazySvc<IEnumerable<ILookUp>> builtInSources)
-    : LookUpEngineResolverBase(builtInSources, "Dnn.LookUp", connect: [cultureResolver, httpLazy])
+    : LookUpEngineResolverBase(builtInSources, "Dnn.LookUp")
 {
     protected override LookUpEngine BuildLookupEngine(int moduleId)
     {
-        var l = Log.Fn<LookUpEngine>($"{nameof(moduleId)}:{moduleId}");
+        using var l = Log.Fn<LookUpEngine>($"{nameof(moduleId)}:{moduleId}");
         return PortalSettings.Current == null
             ? l.Return(base.BuildLookupEngine(moduleId), "no context, use base")
             : l.Return(BuildDnnBasedLookupEngine(PortalSettings.Current, moduleId), "with site");
@@ -28,7 +28,7 @@ internal class DnnLookUpEngineResolver(IZoneCultureResolver cultureResolver, Laz
     [PrivateApi]
     public LookUpEngine LookUpEngineOfPortalSettings(PortalSettings portalSettings, int moduleId)
     {
-        var l = Log.Fn<LookUpEngine>($"{nameof(moduleId)}: {moduleId}");
+        using var l = Log.Fn<LookUpEngine>($"{nameof(moduleId)}: {moduleId}");
 
         //// if we already have a list of shared sources, return that
         //// as the sources don't change per request, but per module
@@ -43,7 +43,7 @@ internal class DnnLookUpEngineResolver(IZoneCultureResolver cultureResolver, Laz
     [PrivateApi]
     private LookUpEngine BuildDnnBasedLookupEngine(PortalSettings portalSettings, int moduleId)
     {
-        var l = Log.Fn<LookUpEngine>($"{nameof(moduleId)}: {moduleId}");
+        using var l = Log.Fn<LookUpEngine>($"{nameof(moduleId)}: {moduleId}");
 
         // Otherwise build using Dnn Built-In Sources and HttpSources and more
         var dnnUsr = portalSettings.UserInfo;

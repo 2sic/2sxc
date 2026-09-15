@@ -21,7 +21,7 @@ public class AppStatistics : CustomDataSource
     public int OfZoneId => Configuration.GetThis(ZoneId);
 
     public AppStatistics(Dependencies services, ExportAppInfo exportAppLazy)
-        : base(services, logName: "Sxc.AppStats", connect: [exportAppLazy])
+        : base(services, logName: "Sxc.AppStats")
     {
         ProvideOutRaw(() => new[] { exportAppLazy.GetAppInfo(new AppIdentity(OfZoneId, AppId)) });
     }

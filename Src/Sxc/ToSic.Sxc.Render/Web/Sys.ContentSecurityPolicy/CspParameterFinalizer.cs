@@ -6,7 +6,7 @@ public class CspParameterFinalizer() : ServiceBase($"{CspConstants.LogPrefix}.Pa
     [return: NotNullIfNotNull(nameof(original))]
     public CspParameters? Finalize(CspParameters? original)
     {
-        var l = Log.Fn<CspParameters?>();
+        using var l = Log.Fn<CspParameters?>();
         // Empty, skip
         if (original == null || !original.HasKeys())
             return l.Return(original, "none");
@@ -18,7 +18,7 @@ public class CspParameterFinalizer() : ServiceBase($"{CspConstants.LogPrefix}.Pa
     [return: NotNullIfNotNull(nameof(original))]
     public CspParameters? MergedWithAll(CspParameters? original)
     {
-        var l = Log.Fn<CspParameters?>();
+        using var l = Log.Fn<CspParameters?>();
         // Empty, skip
         if (original == null || !original.HasKeys())
             return l.Return(original, "none");
@@ -50,7 +50,7 @@ public class CspParameterFinalizer() : ServiceBase($"{CspConstants.LogPrefix}.Pa
     [return: NotNullIfNotNull(nameof(original))]
     public CspParameters? DeduplicateValues(CspParameters? original)
     {
-        var l = Log.Fn<CspParameters?>();
+        using var l = Log.Fn<CspParameters?>();
         // Empty, skip
         if (original == null || !original.HasKeys())
             return l.Return(original, "none");

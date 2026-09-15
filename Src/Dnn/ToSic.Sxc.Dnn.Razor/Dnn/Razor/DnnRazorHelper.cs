@@ -65,7 +65,7 @@ internal class DnnRazorHelper() : CodeHelperBase("Sxc.RzrHlp")
 
     internal void SetDynamicModel(RenderSpecs viewData)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
         _dynamicModel = CodeDataWrapper.DynamicFromObject(viewData.Data, WrapperSettings.Dyn(children: false, realObjectsToo: false));
         l.Done();
     }

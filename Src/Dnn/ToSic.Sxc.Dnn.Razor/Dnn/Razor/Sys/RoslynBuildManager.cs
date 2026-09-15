@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys;
 public class RoslynBuildManager(
     TemplateCacheService cacheService,
     RoslynCompilationRunner compilationRunner)
-    : ServiceBase("Dnn.RoslynBuildManager", connect: [cacheService, compilationRunner]),
+    : ServiceBase("Dnn.RoslynBuildManager"),
         IRoslynBuildManager
 {
     private static readonly NamedLocks CompileAssemblyLocks = new();
@@ -25,7 +25,7 @@ public class RoslynBuildManager(
 
     public AssemblyResult GetCompiledAssembly(CodeFileInfo codeFileInfo, string className, HotBuildSpec spec)
     {
-        var l = Log.Fn<AssemblyResult>($"{codeFileInfo}; {spec};");
+        using var l = Log.Fn<AssemblyResult>($"{codeFileInfo}; {spec};");
         var lockObject = CompileAssemblyLocks.Get(codeFileInfo.FullPath!);
         var cachedResult = cacheService.TryGetFromCache(codeFileInfo, spec);
         var cacheMissLogged = false;

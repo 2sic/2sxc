@@ -17,13 +17,13 @@ public class ExtensionDeleteBackend(
     LazySvc<ExtensionInspectBackend> inspectorLazy,
     LazySvc<EntityApi> entityApiLazy,
     LazySvc<AppCachePurger> appCachePurgerLazy)
-    : ServiceBase("Bck.ExtDel", connect: [appReadersLazy, site, appPathSvc, manifestService, inspectorLazy, entityApiLazy, appCachePurgerLazy])
+    : ServiceBase("Bck.ExtDel")
 {
     private ReadOnlyFileHelper ReadOnlyHelper => field ??= new(Log);
 
     public bool DeleteExtension(int appId, string name, string? edition, bool force, bool withData)
     {
-        var l = Log.Fn<bool>($"a:{appId}, name:{name}, edition:{edition}, force:{force}, withData:{withData}");
+        using var l = Log.Fn<bool>($"a:{appId}, name:{name}, edition:{edition}, force:{force}, withData:{withData}");
 
         if (string.IsNullOrWhiteSpace(name) || !ExtensionFolderNameValidator.IsValid(name))
             throw l.Ex(new ArgumentException("invalid extension name", nameof(name)));
@@ -73,7 +73,7 @@ public class ExtensionDeleteBackend(
 
     private void DeleteData(IAppReader appReader, int appId, IEnumerable<ExtensionInspectContentTypeDto> types)
     {
-        var l = Log.Fn($"delete data app:{appId}");
+        using var l = Log.Fn($"delete data app:{appId}");
 
         var typeNames = new HashSet<string>(types
             .Select(t => t.Guid)
@@ -101,7 +101,7 @@ public class ExtensionDeleteBackend(
 
     private void DeleteFiles(string appRoot, string edition, string extensionName)
     {
-        var l = Log.Fn($"del files ext:{extensionName}, edition:{edition}");
+        using var l = Log.Fn($"del files ext:{extensionName}, edition:{edition}");
 
         var extensionPath = AppExtensionPathHelpers.GetExtensionRoot(appRoot, extensionName, edition);
         DeleteDirectorySafe(extensionPath);
@@ -119,7 +119,7 @@ public class ExtensionDeleteBackend(
 
     private void DeleteDirectorySafe(string path)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
         if (path.IsEmpty())
         {
             l.Done("path empty");

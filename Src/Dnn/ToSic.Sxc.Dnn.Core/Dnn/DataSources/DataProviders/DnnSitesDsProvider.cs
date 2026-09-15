@@ -1,4 +1,4 @@
-﻿using DotNetNuke.Entities.Portals;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Abstractions.Portals;
 using ToSic.Sxc.Cms.Sites.Sys;
 
@@ -14,7 +14,7 @@ internal class DnnSitesDsProvider(
 {
     public override List<SiteModelRaw> GetSitesInternal()
     {
-        var l = Log.Fn<List<SiteModelRaw>>($"PortalId: {PortalSettings.Current?.PortalId ?? -1}");
+        using var l = Log.Fn<List<SiteModelRaw>>($"PortalId: {PortalSettings.Current?.PortalId ?? -1}");
         var portals = portalController
             .GetPortals()
             .OfType<PortalInfo>()

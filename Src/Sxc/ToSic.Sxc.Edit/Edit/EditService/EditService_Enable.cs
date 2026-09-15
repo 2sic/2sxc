@@ -18,7 +18,7 @@ partial class EditService
     public string? Enable(NoParamOrder npo = default, bool? js = null, bool? api = null,
         bool? forms = null, bool? context = null, bool? autoToolbar = null, bool? styles = null)
     {
-        var l = Log.Fn<string>();
+        using var l = Log.Fn<string>();
 
         var ps = ExCtx.GetService<IPageService>(reuse: true);
         if (ps == null! /* paranoid */)

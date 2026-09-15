@@ -1,10 +1,10 @@
-﻿namespace ToSic.Sxc.Backend.Cms.Load.Activities;
+namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
 partial class EditLoadActivityAddPrefetch
 {
     private Dictionary<string, Dictionary<string, IEnumerable< /*AdamItemDto*/object>>> PrefetchAdam(int appId, EditLoadDto editData)
     {
-        var l = Log.Fn<Dictionary<string, Dictionary<string, IEnumerable<object>>>>();
+        using var l = Log.Fn<Dictionary<string, Dictionary<string, IEnumerable<object>>>>();
 
         // Step 1: try to find hyperlink fields
         var bundlesHavingLinks = BundleWithLinkFields(editData, true);
@@ -48,7 +48,7 @@ partial class EditLoadActivityAddPrefetch
 
     private IEnumerable<AdamItemDto> GetAdamListOfItems(int appId, BundleWithLinkField set, string key)
     {
-        var l = Log.Fn<IEnumerable<AdamItemDto>>();
+        using var l = Log.Fn<IEnumerable<AdamItemDto>>();
         var adamListMaker = adamTransGetItems.New(new()
         {
             AppId = appId,

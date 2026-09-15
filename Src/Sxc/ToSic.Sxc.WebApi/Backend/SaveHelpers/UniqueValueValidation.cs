@@ -39,7 +39,7 @@ public class UniqueValueValidation : CustomDataSource
         Dependencies services,
         IAppReaderFactory appReaders,
         IDataSourcesService dataSources)
-        : base(services, logName: "Sxc.UnqVal", connect: [appReaders, dataSources])
+        : base(services, logName: "Sxc.UnqVal")
     {
         _appReaders = appReaders;
         _dataSources = dataSources;
@@ -59,7 +59,7 @@ public class UniqueValueValidation : CustomDataSource
 
     private IEnumerable<IRawData> GetValidationResult()
     {
-        var l = Log.Fn<IEnumerable<IRawData>>($"{ContentTypeName}.{FieldName}");
+        using var l = Log.Fn<IEnumerable<IRawData>>($"{ContentTypeName}.{FieldName}");
 
         var appReader = _appReaders.Get(this);
         var currentEntity = ResolveCurrentEntity(appReader);

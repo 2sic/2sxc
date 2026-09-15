@@ -20,8 +20,7 @@ internal partial class SxcCurrentContextService(
     LazySvc<IAppReaderFactory> appReaderFactory,
     LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
     LazySvc<IHttp> http)
-    : ContextResolverBase(siteCtxGenerator, appCtxGenerator, "Sxc.CtxRes",
-        connect: [appIdResolverLazy, siteCtxGenerator, appCtxGenerator, featuresService, http, appReaderFactory, bdsFactoryLazy]),
+    : ContextResolverBase(siteCtxGenerator, appCtxGenerator, "Sxc.CtxRes"),
         ISxcCurrentContextService
 {
     private const string CookieTemplate = "app-{0}-data-preview";

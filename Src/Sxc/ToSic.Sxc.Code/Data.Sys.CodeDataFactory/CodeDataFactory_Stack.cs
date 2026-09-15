@@ -20,7 +20,7 @@ partial class CodeDataFactory
     private TStackType AsStack<TStackType>(string? name, object[] parts, bool strictTypes, Func<string, List<KeyValuePair<string, IPropertyLookup>>, TStackType> generate)
     {
         name ??= EavConstants.NullNameId;
-        var l = Log.Fn<TStackType>($"'{name}', {parts?.Length}");
+        using var l = Log.Fn<TStackType>($"'{name}', {parts?.Length}");
 
         // Error if nothing
         if (parts == null || !parts.SafeAny())

@@ -19,11 +19,11 @@ public class RoslynCompilationRunner(
     AssemblyResolver assemblyResolver,
     LazySvc<AppCodeLoader> appCodeLoader,
     RoslynCacheFallbackHandler fallbackHandler)
-    : ServiceBase("Dnn.RzCmpRun", connect: [cacheService, razorCompiler, csharpCompiler, diskCacheService, referencedAssembliesProvider, assemblyUtilities, assemblyResolver, appCodeLoader, fallbackHandler])
+    : ServiceBase("Dnn.RzCmpRun")
 {
     public AssemblyResult Compile(CodeFileInfo codeFileInfo, string className, HotBuildSpec spec)
     {
-        var l = Log.Fn<AssemblyResult>($"{codeFileInfo}; {spec};", timer: true);
+        using var l = Log.Fn<AssemblyResult>($"{codeFileInfo}; {spec};", timer: true);
 
         var appCodeInfo = cacheService.GetAppCodeCacheInfo(spec);
         var (referencedAssemblies, appCodeAssemblyResult) = GetReferencedAssemblies(codeFileInfo, spec, appCodeInfo.AssemblyResult);
@@ -73,7 +73,7 @@ public class RoslynCompilationRunner(
 
     private string GetOutputAssemblyPath(CodeFileInfo codeFileInfo, HotBuildSpec spec, string contentHash, string appCodeHash)
     {
-        var l = Log.Fn<string>(timer: true);
+        using var l = Log.Fn<string>(timer: true);
 
         if (!diskCacheService.IsEnabled())
             return l.ReturnNull();
@@ -91,7 +91,7 @@ public class RoslynCompilationRunner(
 
     private (List<string>, AssemblyResult) GetReferencedAssemblies(CodeFileInfo codeFileInfo, HotBuildSpec spec, AssemblyResult preloadedAppCode)
     {
-        var l = Log.Fn<(List<string>, AssemblyResult)>(timer: true);
+        using var l = Log.Fn<(List<string>, AssemblyResult)>(timer: true);
 
         var referencedAssemblies = referencedAssembliesProvider.Locations(codeFileInfo.RelativePath, spec) ?? [];
         var appCodeAssemblyResult = EnsureAppCodeAssembly(preloadedAppCode, spec);
@@ -110,7 +110,7 @@ public class RoslynCompilationRunner(
 
     private AssemblyResult EnsureAppCodeAssembly(AssemblyResult appCodeAssemblyResult, HotBuildSpec spec)
     {
-        var l = Log.Fn<AssemblyResult>(timer: true);
+        using var l = Log.Fn<AssemblyResult>(timer: true);
 
         if (appCodeAssemblyResult != null)
             return l.Return(appCodeAssemblyResult, $"OK, {nameof(appCodeAssemblyResult)} has value.");
@@ -121,7 +121,7 @@ public class RoslynCompilationRunner(
 
     private AssemblyResult CreateAssemblyResult(Assembly generatedAssembly, string className, bool isCshtml, CodeFileInfo codeFileInfo, AssemblyResult appCodeAssemblyResult)
     {
-        var l = Log.Fn<AssemblyResult>(timer: true);
+        using var l = Log.Fn<AssemblyResult>(timer: true);
 
         var mainType = assemblyUtilities.FindMainType(generatedAssembly, className, isCshtml);
         l.A($"Main type: {mainType}");

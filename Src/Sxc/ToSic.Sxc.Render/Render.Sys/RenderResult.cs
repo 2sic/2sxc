@@ -119,7 +119,7 @@ public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize, 
     /// </summary>
     SizeEstimate ICanEstimateSize.EstimateSize(ILog? log)
     {
-        var l = log.Fn<SizeEstimate>();
+        using var l = log.Fn<SizeEstimate>();
         var estimator = new MemorySizeEstimator(log);
         try
         {

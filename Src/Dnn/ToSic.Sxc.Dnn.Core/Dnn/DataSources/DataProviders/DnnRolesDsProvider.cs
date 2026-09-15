@@ -1,4 +1,4 @@
-﻿using DotNetNuke.Entities.Portals;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security.Roles;
 using ToSic.Sxc.Cms.Users.Sys;
 
@@ -12,7 +12,7 @@ internal class DnnRolesDsProvider() : ServiceBase("Dnn.Roles"), IUserRolesProvid
 {
     public IEnumerable<UserRoleModelRaw> GetRoles()
     {
-        var l = Log.Fn<IEnumerable<UserRoleModelRaw>>();
+        using var l = Log.Fn<IEnumerable<UserRoleModelRaw>>();
         var siteId = PortalSettings.Current?.PortalId ?? -1;
         l.A($"Portal Id {siteId}");
         try

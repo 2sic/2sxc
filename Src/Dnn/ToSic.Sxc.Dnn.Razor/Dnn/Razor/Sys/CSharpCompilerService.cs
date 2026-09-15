@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys;
 public class CSharpCompilerService(
     MemoryCacheService memoryCacheService,
     IAssemblyDiskCacheService diskCacheService)
-    : ServiceBase("Dnn.CsCmpSvc", connect: [memoryCacheService, diskCacheService])
+    : ServiceBase("Dnn.CsCmpSvc")
 {
     private const string CSharpCodeProviderCacheKey = "Sxc-Dnn-CSharpCodeProvider";
     private const int CSharpCodeProviderCacheMinutes = 5;
@@ -25,16 +25,16 @@ public class CSharpCompilerService(
         List<string> referencedAssemblies, 
         string outputAssemblyPath = null)
     {
-        var l = Log.Fn<(Assembly, List<CompilerError>)>(timer: true, parameters: $"sourceCode: {sourceCode.Length} chars");
+        using var l = Log.Fn<(Assembly, List<CompilerError>)>(timer: true, parameters: $"sourceCode: {sourceCode.Length} chars");
 
-        var lTimer = Log.Fn("Compiler Params", timer: true);
+        using var lTimer = Log.Fn("Compiler Params", timer: true);
         var compilerParameters = CreateCompilerParameters(referencedAssemblies, outputAssemblyPath);
         lTimer.Done();
 
         var compiler = GetCSharpCodeProvider();
-        lTimer = Log.Fn("Compile", timer: true);
+        using var compileTimer = Log.Fn("Compile", timer: true);
         var compilerResults = compiler.CompileAssemblyFromSource(compilerParameters, sourceCode);
-        lTimer.Done();
+        compileTimer.Done();
 
         if (compilerResults.Errors.Count <= 0)
             return l.ReturnAsOk((compilerResults.CompiledAssembly, null));
@@ -48,7 +48,7 @@ public class CSharpCompilerService(
 
     private CSharpCodeProvider GetCSharpCodeProvider()
     {
-        var l = Log.Fn<CSharpCodeProvider>(timer: true);
+        using var l = Log.Fn<CSharpCodeProvider>(timer: true);
 
         if (memoryCacheService.TryGet<CSharpCodeProvider>(CSharpCodeProviderCacheKey, out var fromCache))
             return l.Return(fromCache, "from cached");

@@ -10,13 +10,13 @@ namespace ToSic.Sxc.Services.User.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class UserService(LazySvc<IContextOfSite> context, LazySvc<IUsersProvider> usersSvc, LazySvc<IUserRolesProvider> rolesSvc)
-    : ServiceWithContext($"{SxcLogName}.UsrSrv", connect: [context, usersSvc]), IUserService
+    : ServiceWithContext($"{SxcLogName}.UsrSrv"), IUserService
 {
     #region GetCurrentUser
 
     public IUserModel GetCurrentUser()
     {
-        var l = Log.Fn<IUserModel>();
+        using var l = Log.Fn<IUserModel>();
         var user = context.Value.User;
         if (user == null! /* paranoid */ || user.IsAnonymous)
             return l.Return(UserConstants.AnonymousUser, "no user/anonymous");
@@ -32,7 +32,7 @@ public class UserService(LazySvc<IContextOfSite> context, LazySvc<IUsersProvider
     // FYI: PublicApi
     public IUserModel GetUser(string nameId)
     {
-        var l = Log.Fn<IUserModel>($"token:{nameId}");
+        using var l = Log.Fn<IUserModel>($"token:{nameId}");
 
         var userId = UserId(nameId);
 
@@ -44,7 +44,7 @@ public class UserService(LazySvc<IContextOfSite> context, LazySvc<IUsersProvider
     // FYI: PublicApi
     public IUserModel GetUser(int userId) 
     {
-        var l = Log.Fn<IUserModel>($"id:{userId}");
+        using var l = Log.Fn<IUserModel>($"id:{userId}");
 
         var unknown = UserConstants.UnknownUser;
         var anon = UserConstants.AnonymousUser;
@@ -68,7 +68,7 @@ public class UserService(LazySvc<IContextOfSite> context, LazySvc<IUsersProvider
     /// <returns></returns>
     private (IUserModel? SpecialUser, int UserId) UserId(string identityToken) 
     {
-        var l = Log.Fn<(IUserModel?, int)>($"token:{identityToken}");
+        using var l = Log.Fn<(IUserModel?, int)>($"token:{identityToken}");
 
         var unknown = UserConstants.UnknownUser;
         var anon = UserConstants.AnonymousUser;

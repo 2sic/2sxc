@@ -10,7 +10,7 @@ internal class HtmlHelperErrorHelper(
     LazySvc<SourceAnalyzer> codeAnalysis,
     LazySvc<CodeErrorHelpService> codeErrService,
     Generator<IRenderingHelper> renderingHelperGenerator)
-: ServiceWithSetup<HtmlHelperContextWithPaths>("Dnn.ErrHlp", connect: [featureSvc, codeAnalysis, codeErrService, renderingHelperGenerator])
+: ServiceWithSetup<HtmlHelperContextWithPaths>("Dnn.ErrHlp")
 {
     internal HashSet<string> ErrorPaths = new(StringComparer.InvariantCultureIgnoreCase);
 

@@ -25,7 +25,7 @@ public class AssemblyDiskCacheService(
     LazySvc<IAppPathsMicroSvc> appPathsLazy,
     LazySvc<IZoneMapper> zoneMapper,
     ISite site)
-  : ServiceBase("Dnn.AsmDskCch", connect: [featureService, globalConfiguration, diskCache, assemblyUtilities, assemblyResolver, appReadFac, appPathsLazy, zoneMapper, site]), IAssemblyDiskCacheService
+  : ServiceBase("Dnn.AsmDskCch"), IAssemblyDiskCacheService
 {
     /// <summary>
     /// Attempts to load a cached assembly from disk for the specified template.
@@ -38,7 +38,7 @@ public class AssemblyDiskCacheService(
         AssemblyResult appCodeDependency,
         CodeFileInfo codeFileInfo)
     {
-        var l = Log.Fn<AssemblyResult>($"app:{spec.AppId}, edition:{spec.Edition}, template:{templateRelativePath}", timer: true);
+        using var l = Log.Fn<AssemblyResult>($"app:{spec.AppId}, edition:{spec.Edition}, template:{templateRelativePath}", timer: true);
 
         // Generate cache key
         var cachePath = GetCacheFilePath(spec, templateRelativePath, contentHash, appCodeHash);
@@ -94,7 +94,7 @@ public class AssemblyDiskCacheService(
         string appCodeHash,
         AssemblyResult assemblyResult)
     {
-        var l = Log.Fn<bool>($"app:{spec.AppId}, edition:{spec.Edition}, template:{templateRelativePath}", timer: true);
+        using var l = Log.Fn<bool>($"app:{spec.AppId}, edition:{spec.Edition}, template:{templateRelativePath}", timer: true);
 
         // Generate cache key
         var cachePath = GetCacheFilePath(spec, templateRelativePath, contentHash, appCodeHash);
@@ -144,7 +144,7 @@ public class AssemblyDiskCacheService(
     /// </summary>
     public void InvalidateCache(string templateRelativePath, string edition, string appPath = null)
     {
-        var l = Log.Fn($"template:{templateRelativePath}");
+        using var l = Log.Fn($"template:{templateRelativePath}");
 
         var cacheDir = GetCacheDirectoryPath();
         var normalizedPath = CacheKey.NormalizePath(templateRelativePath, edition, appPath);
@@ -161,7 +161,7 @@ public class AssemblyDiskCacheService(
     /// </summary>
     public void InvalidateAppCache(int appId, string edition)
     {
-        var l = Log.Fn($"app:{appId}, edition:{edition}");
+        using var l = Log.Fn($"app:{appId}, edition:{edition}");
 
         var cacheDir = GetCacheDirectoryPath();
         var appDir = Path.Combine(cacheDir, CacheKey.GetAppFolder(appId, edition));

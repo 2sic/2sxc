@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Sys.AppStack;
+using ToSic.Eav.Apps.Sys.AppStack;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.Configuration;
@@ -21,7 +21,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
 
     internal bool RegisterAppCsp(CspOfApp? appCsp)
     {
-        var cLog = Log.Fn<bool>("appId: not yet known, not yet attached");
+        using var cLog = Log.Fn<bool>("appId: not yet known, not yet attached");
         if (appCsp == null)
             return cLog.ReturnFalse("null");
 
@@ -117,7 +117,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
 
     private string GetAppPolicies()
     {
-        var cLog = Log.Fn<string>();
+        using var cLog = Log.Fn<string>();
 
         var deduplicate = AppCsps
             .GroupBy(ac => ac.AppId)
@@ -147,7 +147,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
 
     public List<CspParameters> CspParameters()
     {
-        var l = Log.Fn<List<CspParameters>>();
+        using var l = Log.Fn<List<CspParameters>>();
         if (!IsEnabled)
             return l.Return([], "disabled");
 

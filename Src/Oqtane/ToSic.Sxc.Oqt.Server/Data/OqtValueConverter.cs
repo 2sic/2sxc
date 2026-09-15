@@ -23,8 +23,7 @@ internal class OqtValueConverter(
     LazySvc<IServerPaths> serverPaths,
     LazySvc<AliasResolver> aliasResolverLazy,
     LazySvc<ISysFeaturesService> featuresLazy)
-    : ValueConverterBase("Oqt.ValCn",
-        connect: [featuresLazy, fileRepository, folderRepository, tenantResolver, pageRepository, serverPaths, aliasResolverLazy])
+    : ValueConverterBase("Oqt.ValCn")
 {
     public LazySvc<IFileRepository> FileRepository { get; } = fileRepository;
     public LazySvc<IFolderRepository> FolderRepository { get; } = folderRepository;

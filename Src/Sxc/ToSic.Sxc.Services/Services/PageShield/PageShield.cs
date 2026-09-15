@@ -11,7 +11,7 @@ using ToSic.Sys.Users;
 namespace ToSic.Sxc.Services.PageShield;
 
 internal class PageShield(IPageServiceShared pageServiceShared, IUser user, IHttpContextService httpContextService, ISysFeaturesService features)
-    : ServiceWithContext("Sxc.OutCac", connect: [pageServiceShared, httpContextService, features]), IPageShield
+    : ServiceWithContext("Sxc.OutCac"), IPageShield
 {
 
     private IPageServiceSharedInternal PssInternal => (IPageServiceSharedInternal)pageServiceShared;
@@ -51,7 +51,7 @@ internal class PageShield(IPageServiceShared pageServiceShared, IUser user, IHtt
 
     public IHtmlTag? Enforce(NoParamOrder npo = default, string? prioritizeParameters = null)
     {
-        var l = Log.Fn<IHtmlTag?>($"{nameof(prioritizeParameters)}:'{prioritizeParameters}'");
+        using var l = Log.Fn<IHtmlTag?>($"{nameof(prioritizeParameters)}:'{prioritizeParameters}'");
 
         if (!features.IsEnabled(SxcFeatures.PageShieldFloodGates))
             return l.ReturnNull("feature not enabled");

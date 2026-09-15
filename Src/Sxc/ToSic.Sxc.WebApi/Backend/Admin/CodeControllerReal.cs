@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sxc.Code.Sys.Documentation;
 using ToSic.Sys.Utils.Assemblies;
@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Backend.Admin;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeControllerReal(
     CopilotCodeGenerateService codeGenerate) 
-    : ServiceBase("Api.CodeRl", connect: [codeGenerate])
+    : ServiceBase("Api.CodeRl")
 {
     public const string LogSuffix = "Code";
 
@@ -22,7 +22,7 @@ public class CodeControllerReal(
 
     public IEnumerable<HelpItem> InlineHelp(string language)
     {
-        var l = Log.Fn<IEnumerable<HelpItem>>($"InlineHelp:l:{language}", timer: true);
+        using var l = Log.Fn<IEnumerable<HelpItem>>($"InlineHelp:l:{language}", timer: true);
 
         if (_inlineHelp != null)
             return l.ReturnAsOk(_inlineHelp);
@@ -53,7 +53,7 @@ public class CodeControllerReal(
 
     public RichResult GenerateDataModels(int appId, string? edition, string generator, int configurationId = 0)
     {
-        var l = Log.Fn<RichResult>($"{nameof(appId)}:{appId};{nameof(edition)}:{edition}", timer: true);
+        using var l = Log.Fn<RichResult>($"{nameof(appId)}:{appId};{nameof(edition)}:{edition}", timer: true);
 
         var result = codeGenerate.GenerateDataModels(appId, edition, generator, configurationId);
         return l.Return(new RichResult

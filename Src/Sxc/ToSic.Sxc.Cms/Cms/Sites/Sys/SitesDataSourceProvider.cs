@@ -13,7 +13,7 @@ public abstract class SitesDataSourceProvider(SitesDataSourceProvider.Dependenci
     : ServiceBase<SitesDataSourceProvider.Dependencies>(services, logName)
 {
     public record Dependencies(LazySvc<IZoneMapper> ZoneMapperLazy, IAppsCatalog AppsCatalog)
-        : DependenciesBase(connect: [ZoneMapperLazy, AppsCatalog]);
+        : DependenciesBase();
 
     /// <summary>
     /// So the core data source doesn't have settings to configure this

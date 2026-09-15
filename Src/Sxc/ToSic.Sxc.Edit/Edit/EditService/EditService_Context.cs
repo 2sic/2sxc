@@ -19,7 +19,7 @@ partial class EditService
         string? apps = null,
         int max = 100)
     {
-        var l = Log.Fn<IRawHtmlString>("ctx attribs - enabled:{Enabled}");
+        using var l = Log.Fn<IRawHtmlString>("ctx attribs - enabled:{Enabled}");
         if (!Enabled)
             return null;
 

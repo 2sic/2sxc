@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Services;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Settings;
 
@@ -7,7 +7,7 @@ internal class LoadSettingsApiKeys(LazySvc<ISecureDataService> secureDataService
 {
     public Dictionary<string, object> GetSettings(LoadSettingsProviderParameters parameters) 
     {
-        var l = Log.Fn<Dictionary<string, object>>();
+        using var l = Log.Fn<Dictionary<string, object>>();
         var stack = parameters.ContextOfApp.AppSettings;
 
         var apiKeyNames = new List<string>

@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.Sys;
 
 namespace ToSic.Sxc.Backend.Admin.AppFiles;
@@ -9,7 +9,7 @@ partial class AppFilesControllerReal
 
     private (List<DirectoryInfo> Folders, List<FileInfo> Files) FullDirList(DirectoryInfo dir, string searchPattern, bool withSubfolders, int level = 0)
     {
-        var l = Log.Fn<(List<DirectoryInfo> Folders, List<FileInfo> Files)>($"'{dir.FullName}', '{searchPattern}', {nameof(withSubfolders)}: {withSubfolders}, level:{level}");
+        using var l = Log.Fn<(List<DirectoryInfo> Folders, List<FileInfo> Files)>($"'{dir.FullName}', '{searchPattern}', {nameof(withSubfolders)}: {withSubfolders}, level:{level}");
 
         // detect special case when searching for api controller files
         var isApiControllerSearch = searchPattern.Equals($"*{EavConstants.ApiControllerSuffix}.cs", StringComparison.OrdinalIgnoreCase);

@@ -8,7 +8,7 @@ using static ToSic.Razor.Blade.Tag;
 namespace ToSic.Sxc.Backend.Sys;
 
 internal class InsightsLightSpeed(LightSpeedStats lightSpeedStats, IAppReaderFactory appReader)
-    : InsightsProvider(new() { Name = Link, Teaser = "Show LightSpeed Caching Statistics", HelpCategory = "Performance" }, connect: [lightSpeedStats, appReader])
+    : InsightsProvider(new() { Name = Link, Teaser = "Show LightSpeed Caching Statistics", HelpCategory = "Performance" })
 {
     public static string Link = "LightSpeedStats";
 

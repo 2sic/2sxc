@@ -70,7 +70,7 @@ public abstract class OqtControllerBase : ControllerBase, IHasLog, IActionFilter
     [NonAction]
     public virtual void OnActionExecuting(ActionExecutingContext context)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
 
         // background processes can pass in an alias using the SiteState service
         GetService<AliasResolver>().InitIfEmpty();

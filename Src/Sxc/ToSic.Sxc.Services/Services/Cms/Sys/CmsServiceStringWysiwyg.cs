@@ -11,7 +11,7 @@ using ToSic.Sys.Utils;
 namespace ToSic.Sxc.Services.Cms.Sys;
 
 internal class CmsServiceStringWysiwyg()
-    : ServiceWithContext("Cms.StrWys", connect: [])
+    : ServiceWithContext("Cms.StrWys")
 {
     #region Sub-Services which should come from the same Code context
 
@@ -30,7 +30,7 @@ internal class CmsServiceStringWysiwyg()
 
     public CmsServiceStringWysiwyg Init(IField field, IContentType contentType, IContentTypeField fieldDef, IFolder folder, bool debug, object? imageSettings)
     {
-        var l = Log.Fn<CmsServiceStringWysiwyg>();
+        using var l = Log.Fn<CmsServiceStringWysiwyg>();
         Field = field;
         ContentType = contentType;
         Folder = folder;
@@ -60,7 +60,7 @@ internal class CmsServiceStringWysiwyg()
     /// <param name="value"></param>
     internal CmsProcessed HtmlForStringAndWysiwyg(string? value)
     {
-        var l = Log.Fn<CmsProcessed>();
+        using var l = Log.Fn<CmsProcessed>();
         var html = value ?? Field.Raw as string;
         if (html.IsEmptyOrWs())
             return l.Return(new(false, null, null), "no html, treat as unknown, return null to let parent do wrapping with original");

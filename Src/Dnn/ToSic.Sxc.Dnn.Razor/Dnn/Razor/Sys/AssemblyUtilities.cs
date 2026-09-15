@@ -17,7 +17,7 @@ public class AssemblyUtilities() : ServiceBase("Dnn.RzAmUt")
     /// </summary>
     internal Type FindMainType(Assembly generatedAssembly, string className, bool isCshtml)
     {
-        var l = Log.Fn<Type>($"className: '{className}'; isCshtml: {isCshtml}", timer: true);
+        using var l = Log.Fn<Type>($"className: '{className}'; isCshtml: {isCshtml}", timer: true);
         
         if (generatedAssembly == null) 
             return l.ReturnAsError(null, "generatedAssembly is null");

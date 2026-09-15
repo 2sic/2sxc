@@ -14,7 +14,7 @@ public class AppExtensionsControllerReal(
     LazySvc<ExtensionDeleteBackend> deleteLazy,
     LazySvc<ExtensionExportService> exportExtensionLazy,
     LazySvc<ExtensionDownloadBackend> downloadLazy)
-    : ServiceBase("Api.ExtsRl", connect: [readerLazy, writerLazy, zipLazy, inspectorLazy, deleteLazy, exportExtensionLazy, downloadLazy])
+    : ServiceBase("Api.ExtsRl")
 {
     public const string LogSuffix = "ApiExts";
 
@@ -35,7 +35,7 @@ public class AppExtensionsControllerReal(
     /// <returns>Preflight result describing detected state and installation options</returns>
     public PreflightResultDto InstallPreflight(HttpUploadedFile uploadInfo, int appId, string editions = "")
     {
-        var l = Log.Fn<PreflightResultDto>($"a:{appId}, editions:'{editions}'");
+        using var l = Log.Fn<PreflightResultDto>($"a:{appId}, editions:'{editions}'");
 
         if (!uploadInfo.HasFiles())
             throw l.Ex(new ArgumentException("no file uploaded", nameof(uploadInfo)));
@@ -59,7 +59,7 @@ public class AppExtensionsControllerReal(
     /// <returns>true if installation succeeded</returns>
     public bool Install(HttpUploadedFile uploadInfo, int zoneId, int appId, string editions = "", bool overwrite = false)
     {
-        var l = Log.Fn<bool>($"a:{appId}, editions:'{editions}', overwrite:{overwrite}");
+        using var l = Log.Fn<bool>($"a:{appId}, editions:'{editions}', overwrite:{overwrite}");
 
         if (!uploadInfo.HasFiles())
             throw l.Ex(new ArgumentException("no file uploaded", nameof(uploadInfo)));
@@ -77,7 +77,7 @@ public class AppExtensionsControllerReal(
     /// </summary>
     public PreflightResultDto InstallPreflightFrom(string[] urls, int appId, string editions = "")
     {
-        var l = Log.Fn<PreflightResultDto>($"a:{appId}, editions:'{editions}'");
+        using var l = Log.Fn<PreflightResultDto>($"a:{appId}, editions:'{editions}'");
 
         var download = downloadLazy.Value.DownloadFirstAvailable(urls);
         using var stream = download.Stream;
@@ -92,7 +92,7 @@ public class AppExtensionsControllerReal(
     /// </summary>
     public bool InstallFrom(string[] urls, int zoneId, int appId, string editions = "", bool overwrite = false)
     {
-        var l = Log.Fn<bool>($"a:{appId}, editions:'{editions}', overwrite:{overwrite}");
+        using var l = Log.Fn<bool>($"a:{appId}, editions:'{editions}', overwrite:{overwrite}");
 
         var download = downloadLazy.Value.DownloadFirstAvailable(urls);
         using var stream = download.Stream;

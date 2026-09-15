@@ -14,8 +14,7 @@ internal class OqtUser(
     LazySvc<OqtSecurity> oqtSecurity,
     IHttpContextAccessor httpContextAccessor,
     SiteState siteState)
-    : ServiceBase($"{OqtConstants.OqtLogPrefix}.User",
-        connect: [userRepository, oqtSecurity, httpContextAccessor, siteState]), IUser<User>
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.User"), IUser<User>
 {
     protected User UnwrappedUser => field ??= GetUser();
     

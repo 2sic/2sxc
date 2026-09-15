@@ -22,7 +22,7 @@ public class CodeErrorHelpService: ServiceBase
 
     public Exception AddHelpForCompileProblems(Exception ex, CodeFileInfo fileInfo)
     {
-        var l = Log.Fn<Exception>();
+        using var l = Log.Fn<Exception>();
         try
         {
             // Check if it already has help included
@@ -46,7 +46,7 @@ public class CodeErrorHelpService: ServiceBase
 
     public Exception AddHelpIfKnownError(Exception ex, object? mainCodeObject)
     {
-        var l = Log.Fn<Exception>();
+        using var l = Log.Fn<Exception>();
         try
         {
             // Check if it already has help included

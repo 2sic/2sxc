@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Adam.Sys;
+using ToSic.Sxc.Adam.Sys;
 using ToSic.Sxc.Adam.Sys.Work;
 
 namespace ToSic.Sxc.Backend.Adam;
@@ -11,11 +11,11 @@ public class AdamControllerReal<TIdentifier>(
     Generator<AdamWorkDelete, AdamWorkOptions> adamDelete,
     Generator<AdamWorkRename, AdamWorkOptions> adamRename,
     Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> dtoMaker)
-    : ServiceBase("Api.Adam", connect: [adamUpload, adamWorkGet, adamFolders, adamDelete, adamRename])
+    : ServiceBase("Api.Adam")
 {
     public AdamItemDto Upload(HttpUploadedFile uploadInfo, int appId, string contentType, Guid guid, string field, string subFolder = "", bool usePortalRoot = false)
     {
-        var l = Log.Fn<AdamItemDto>();
+        using var l = Log.Fn<AdamItemDto>();
         // wrap all of it in try/catch, to reformat error in better way for js to tell the user
         try
         {
@@ -57,7 +57,7 @@ public class AdamControllerReal<TIdentifier>(
     // Note: #AdamItemDto - as of now, we must use object because System.Io.Text.Json will otherwise not convert the object correctly :(
     public IEnumerable</*AdamItemDto*/object> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
     {
-        var l = Log.Fn<IEnumerable<AdamItemDto>>($"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
+        using var l = Log.Fn<IEnumerable<AdamItemDto>>($"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
         var adamGet = adamWorkGet.New(new()
         {
             AppId = appId,
@@ -80,7 +80,7 @@ public class AdamControllerReal<TIdentifier>(
 
     public IEnumerable</*AdamItemDto*/object> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
     {
-        var l = Log.Fn<IEnumerable<object>>();
+        using var l = Log.Fn<IEnumerable<object>>();
         adamFolders.New(new()
             {
                 AppId = appId,

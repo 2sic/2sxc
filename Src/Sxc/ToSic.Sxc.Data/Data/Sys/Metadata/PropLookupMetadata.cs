@@ -8,7 +8,7 @@ internal class PropLookupMetadata(IHasMetadata parent, Func<bool> getDebug) : IP
     public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
     {
         specs = specs.SubLog("Sxc.DynEnt", getDebug());
-        var l = specs.LogOrNull.Fn<PropReqResult>(specs.Dump(), "DynEntity");
+        using var l = specs.LogOrNull.Fn<PropReqResult>(specs.Dump(), "DynEntity");
         // check Entity is null (in cases where null-objects are asked for properties)
         if (parent.Metadata == null! /* paranoid */)
             return l.Return(PropReqResult.Null(path),"no parent with metadata");

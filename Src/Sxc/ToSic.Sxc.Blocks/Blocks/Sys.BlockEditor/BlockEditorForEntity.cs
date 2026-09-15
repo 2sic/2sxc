@@ -9,7 +9,7 @@ public class BlockEditorForEntity(
     BlockEditorBase.Dependencies services,
     AppWorkQuick<WorkEntityUpdate> entityUpdate,
     IAppsCatalog appsCatalog)
-    : BlockEditorBase(services, connect: [entityUpdate, appsCatalog])
+    : BlockEditorBase(services)
 {
     #region methods which the entity-implementation must customize 
 

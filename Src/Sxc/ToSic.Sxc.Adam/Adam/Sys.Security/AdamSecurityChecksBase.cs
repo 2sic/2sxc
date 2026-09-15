@@ -14,11 +14,11 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.Dependencies
     #region DI / Constructor
 
     public record Dependencies(Generator<AppPermissionCheck> AppPermissionChecks)
-        : DependenciesBase(connect: [AppPermissionChecks]);
+        : DependenciesBase();
 
     public IAdamSecurityCheckService Init(AdamContext adamContext, bool usePortalRoot)
     {
-        var l = Log.Fn<IAdamSecurityCheckService>();
+        using var l = Log.Fn<IAdamSecurityCheckService>();
         AdamContext = adamContext;
 
         var firstChecker = AdamContext.Permissions.PermissionCheckers.First().Value;
@@ -106,7 +106,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.Dependencies
     /// </summary>
     public bool UserIsRestrictedOrItemIsNotDraft(Guid guid, [NotNullWhen(true)] out HttpExceptionAbstraction? exp)
     {
-        var l = Log.Fn<bool>($"is restricted ({UserIsRestricted}) or if the item '{guid}' is draft");
+        using var l = Log.Fn<bool>($"is restricted ({UserIsRestricted}) or if the item '{guid}' is draft");
         exp = null;
         // check that if the user should only see drafts, he doesn't see items of normal data
         if (!UserIsRestricted || FieldPermissionOk(GrantSets.ReadPublished))
@@ -146,7 +146,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.Dependencies
     //}
     public bool FieldDoesNotSupportFiles([NotNullWhen(true)] out HttpExceptionAbstraction? preparedException)
     {
-        var l = Log.Fn<bool>();
+        using var l = Log.Fn<bool>();
         var fieldDef = AdamContext.Attribute;
         // check if this field exists and is actually a file-field or a string (wysiwyg) field
         if (fieldDef == null || !(fieldDef.Type != ValueTypes.Hyperlink ||

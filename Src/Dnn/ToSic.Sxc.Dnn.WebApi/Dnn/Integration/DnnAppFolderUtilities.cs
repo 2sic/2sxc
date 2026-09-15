@@ -13,7 +13,7 @@ public class DnnAppFolderUtilities(
     Generator<AppFolderLookupForWebApi> folder,
     Generator<DnnGetBlock> dnnGetBlock,
     LazySvc<CodeErrorHelpService> errorHelp)
-    : ServiceBase($"{DnnConstants.LogName}.AppFld", connect: [errorHelp, folder, dnnGetBlock])
+    : ServiceBase($"{DnnConstants.LogName}.AppFld")
 {
     private HttpRequestMessage _request;
 
@@ -27,7 +27,7 @@ public class DnnAppFolderUtilities(
 
     internal string GetAppFolderVirtualPath(ISite site)
     {
-        var l = Log.Fn<string>();
+        using var l = Log.Fn<string>();
         var appFolder = GetAppFolder(true);
         var appFolderVirtualPath = Path.Combine(site.AppsRootPhysical, appFolder).ForwardSlash();
         return l.Return(appFolderVirtualPath, $"Ok, AppFolder Virtual Path: {appFolderVirtualPath}");
@@ -35,7 +35,7 @@ public class DnnAppFolderUtilities(
 
     internal string GetAppFolder(bool errorIfNotFound, IBlock block = null)
     {
-        var l = Log.Fn<string>();
+        using var l = Log.Fn<string>();
         const string errPrefix = "Api Controller Finder Error: ";
         const string errSuffix = "Check event-log, code and inner exception. ";
 

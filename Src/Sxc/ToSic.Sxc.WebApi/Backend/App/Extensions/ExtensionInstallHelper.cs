@@ -13,7 +13,7 @@ internal class ExtensionInstallHelper(ReadOnlyFileHelper readOnlyHelper, ILog? p
 {
     internal ValidationResult InstallSingleExtension(string folderName, LockValidationResult lockValidation, string tempDir, string extensionsRoot, string appRoot, bool overwrite)
     {
-        var l = Log.Fn<ValidationResult>($"folder:'{folderName}'");
+        using var l = Log.Fn<ValidationResult>($"folder:'{folderName}'");
 
         if (!ExtensionFolderNameValidator.IsValid(folderName))
             return l.ReturnAsError(new(false, $"invalid folder name:'{folderName}'"));
@@ -54,7 +54,7 @@ internal class ExtensionInstallHelper(ReadOnlyFileHelper readOnlyHelper, ILog? p
     // Ensure the destination directory is ready to receive new files, deleting previous content when required.
     private ValidationResult EnsureTargetReadyForCopy(string tempSourcePath, string targetPath, bool overwrite, string areaName)
     {
-        var l = Log.Fn<ValidationResult>($"area:{areaName}");
+        using var l = Log.Fn<ValidationResult>($"area:{areaName}");
 
         // The source temp folder may have been created from a long ZIP entry, and the target may
         // already contain long installed files. Check existence through the same disk-access helper
@@ -79,7 +79,7 @@ internal class ExtensionInstallHelper(ReadOnlyFileHelper readOnlyHelper, ILog? p
 
     private ValidationResult CopyAllowedFiles(string sourceRoot, string targetRoot, string folderName, HashSet<string> allowedFiles)
     {
-        var l = Log.Fn<ValidationResult>($"copy:'{folderName}'");
+        using var l = Log.Fn<ValidationResult>($"copy:'{folderName}'");
 
         var sourceRootFull = EnsureTrailingSeparator(Path.GetFullPath(sourceRoot));
         var targetRootFull = EnsureTrailingSeparator(Path.GetFullPath(targetRoot));

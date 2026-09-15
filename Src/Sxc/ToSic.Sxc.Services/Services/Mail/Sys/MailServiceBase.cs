@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Services.Mail.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class MailServiceBase(LazySvc<IUser> userLazy, object[]? connect = default)
-    : ServiceWithContext($"{SxcLogName}.MailSrv", connect: [..connect ?? [], userLazy]), IMailService
+    : ServiceWithContext($"{SxcLogName}.MailSrv"), IMailService
 {
     private static readonly Regex HtmlDetectionRegex = new("<(.*\\s*)>", RegexOptions.Compiled);
     
@@ -20,7 +20,7 @@ public abstract class MailServiceBase(LazySvc<IUser> userLazy, object[]? connect
     /// <inheritdoc />
     public void Send(MailMessage message)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
         try
         {
             using var client = SmtpClient();
@@ -51,7 +51,7 @@ public abstract class MailServiceBase(LazySvc<IUser> userLazy, object[]? connect
         Encoding? encoding = null,
         object? attachments = null)
     {
-        var l = Log.Fn<MailMessage>(
+        using var l = Log.Fn<MailMessage>(
             parameters: $"{nameof(from)}: {from}, {nameof(to)}: {to}, {nameof(cc)}: {cc}, {nameof(bcc)}: {bcc}, {nameof(replyTo)}: {replyTo}, " +
                         $"{nameof(subject)}: {subject}, {nameof(body)}: {body}, {nameof(isHtml)}: {isHtml}, {nameof(encoding)}: {encoding}, " +
                         $"{nameof(attachments)}: {attachments}");
@@ -97,7 +97,7 @@ public abstract class MailServiceBase(LazySvc<IUser> userLazy, object[]? connect
         Encoding? encoding = null,
         object? attachments = null)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
         // Note: don't log all the parameters here, because we'll do it again on the Create-call
         var mailMessage = Create(
             from: from,
@@ -132,7 +132,7 @@ public abstract class MailServiceBase(LazySvc<IUser> userLazy, object[]? connect
     // was probably an experiment from STV during dev, but we shouldn't keep it in the interface
     internal bool AddMailAddresses(string addressType, MailAddressCollection targetMails, object? mailAddresses)
     {
-        var l = Log.Fn<bool>(); // return a bool just to make return-statements easier later on
+        using var l = Log.Fn<bool>(); // return a bool just to make return-statements easier later on
 
         switch (mailAddresses)
         {
@@ -172,7 +172,7 @@ public abstract class MailServiceBase(LazySvc<IUser> userLazy, object[]? connect
 
     public bool AddAttachments(AttachmentCollection targetAttachments, object? attachments)
     {
-        var l = Log.Fn<bool>(); // return a bool just to make return-statements easier later on
+        using var l = Log.Fn<bool>(); // return a bool just to make return-statements easier later on
         switch (attachments)
         {
             case Attachment inputAttachment:

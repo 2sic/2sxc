@@ -29,16 +29,11 @@ public class ViewsExportImport(
     Generator<ImpExpHelpers> impExpHelpers,
     IResponseMaker responseMaker,
     Generator<QueryDefinitionFactory> qDefBuilder)
-    : ServiceBase("Bck.Views",
-        connect:
-        [
-            workEntSave, serverPaths, envLogger, jsonSerializerLazy, appIconHelpers, impExpHelpers, responseMaker,
-            qDefBuilder, site
-        ])
+    : ServiceBase("Bck.Views")
 {
     public THttpResponseType DownloadViewAsJson(int appId, int viewId)
     {
-        var logCall = Log.Fn<THttpResponseType>($"{appId}, {viewId}");
+        using var logCall = Log.Fn<THttpResponseType>($"{appId}, {viewId}");
         var (appReader, appPaths) = impExpHelpers.New().GetReaderAndPathsAfterZoneSwitchPermissionCheck(site.ToAppIdentity(appId));
         var bundle = new BundleEntityWithAssets
         {
@@ -85,7 +80,7 @@ public class ViewsExportImport(
 
     public ImportResultDto ImportView(int zoneId, int appId, List<FileUploadDto> files, string defaultLanguage)
     {
-        var l = Log.Fn<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
+        using var l = Log.Fn<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
 
         try
         {

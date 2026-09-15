@@ -35,7 +35,7 @@ public class OqtAssetsFileHelper(OqtSiteGroup siteGroup = null) : ServiceBase(Oq
 
     public string GetFilePath(string contentRootPath, Alias alias, string route, string appName, string filePath)
     {
-        var l = Log.Fn<string>(
+        using var l = Log.Fn<string>(
             $"{nameof(contentRootPath)}: '{contentRootPath}'; {nameof(route)}: {route}; {nameof(appName)}: '{appName}'; {nameof(filePath)}: '{filePath}'");
             
         // Validate for alias.

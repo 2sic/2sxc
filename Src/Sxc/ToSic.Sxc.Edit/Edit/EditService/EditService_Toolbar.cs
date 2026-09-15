@@ -46,7 +46,7 @@ partial class EditService
         object? settings,
         object? toolbar)
     {
-        var l = Log.Fn<ItemToolbarBase?>($"enabled:{Enabled}; inline{inTag}");
+        using var l = Log.Fn<ItemToolbarBase?>($"enabled:{Enabled}; inline{inTag}");
 
         // #DropRoutingToolbarBuilderThroughEditService v20
         //// new v17.08 - force-show for everyone
@@ -85,7 +85,7 @@ partial class EditService
 
     private bool IsConditionOk(object? condition)
     {
-        var l = Log.Fn<bool>();
+        using var l = Log.Fn<bool>();
         // Null = no condition and certainly not false, say ok
         if (condition == null)
             return l.ReturnTrue("null,true");

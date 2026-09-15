@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Oqt.Server.Context;
 public sealed class OqtSiteGroup(
     ISiteRepository siteRepository,
     ISiteGroupMemberRepository siteGroupMemberRepository)
-    : ServiceBase($"{OqtConstants.OqtLogPrefix}.SitGrp", connect: [/*siteRepository, siteGroupMemberRepository*/])
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.SitGrp")
 {
     internal Site GetPrimaryLocalizationSite(Site site)
     {

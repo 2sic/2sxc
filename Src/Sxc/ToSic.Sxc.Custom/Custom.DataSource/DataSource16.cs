@@ -30,7 +30,7 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.Dependencie
     [PublicApi]
     [method: PrivateApi]
     public record Dependencies(CustomDataSource.Dependencies ParentServices, ServiceKitLight16 Kit)
-        : DependenciesBase(connect: [Kit])
+        : DependenciesBase()
     {
         [PrivateApi]
         public CustomDataSource.Dependencies ParentServices { get; } = ParentServices;

@@ -10,7 +10,7 @@ public abstract class AppCodeCompiler(
     IGlobalConfiguration globalConfiguration,
     SourceCodeHasher sourceCodeHasher,
     object[]? connect = default)
-    : ServiceBase("Sxc.MyApCd", connect: connect)
+    : ServiceBase("Sxc.MyApCd")
 {
     protected const string AppCodeDll = "AppCode.dll";
 
@@ -18,7 +18,7 @@ public abstract class AppCodeCompiler(
 
     protected string[] GetSourceFiles(string fullPath)
     {
-        var l = Log.Fn<string[]>(timer: true);
+        using var l = Log.Fn<string[]>(timer: true);
 
         if (!Directory.Exists(fullPath))
             return l.ReturnAsOk([]);
@@ -38,7 +38,7 @@ public abstract class AppCodeCompiler(
     /// <returns>The generated random name.</returns>
     private string GetAppCodeDllName(string sourceRootPath, HotBuildSpecWithSharedSuffix spec)
     {
-        var l = Log.Fn<string>($"{nameof(sourceRootPath)}: '{sourceRootPath}'; {spec}", timer: true);
+        using var l = Log.Fn<string>($"{nameof(sourceRootPath)}: '{sourceRootPath}'; {spec}", timer: true);
         var appCodeHash = sourceCodeHasher.GetHashString(sourceRootPath);
         var appCodeHashShort = appCodeHash.Length > 6
             ? appCodeHash.Substring(0, 6)
@@ -53,7 +53,7 @@ public abstract class AppCodeCompiler(
     /// <returns>The generated random name.</returns>
     private string GetDependencyDllName(string folderPath, HotBuildSpecWithSharedSuffix spec, string dependency)
     {
-        var l = Log.Fn<string>($"{nameof(dependency)}: '{dependency}'; {nameof(folderPath)}: '{folderPath}'; {spec}", timer: true);
+        using var l = Log.Fn<string>($"{nameof(dependency)}: '{dependency}'; {nameof(folderPath)}: '{folderPath}'; {spec}", timer: true);
         var dependencyFileName = Path.GetFileNameWithoutExtension(dependency);
         var assemblyName = $"dep-{dependencyFileName}";
         return l.ReturnAsOk(RandomNameWithoutExtension(folderPath, assemblyName));
@@ -84,7 +84,7 @@ public abstract class AppCodeCompiler(
 
     protected void LogAllTypes(Assembly? assembly)
     {
-        var l = Log.Fn<bool>(assembly?.FullName);
+        using var l = Log.Fn<bool>(assembly?.FullName);
 
         if (assembly == null)
         {
@@ -101,7 +101,7 @@ public abstract class AppCodeCompiler(
 
     protected (string SymbolsPath, string AssemblyPath) GetAssemblyLocations(HotBuildSpecWithSharedSuffix spec, string sourceRootPath)
     {
-        var l = Log.Fn<(string, string)>($"{spec}");
+        using var l = Log.Fn<(string, string)>($"{spec}");
         var cacheFolder = GetAppAssemblyFolder(spec);
         l.A($"App cache folder: '{cacheFolder}'");
 
@@ -118,7 +118,7 @@ public abstract class AppCodeCompiler(
 
     protected internal string GetDependencyAssemblyLocations(string dependency, HotBuildSpecWithSharedSuffix spec)
     {
-        var l = Log.Fn<string>($"{spec}");
+        using var l = Log.Fn<string>($"{spec}");
         var cacheFolder = GetAppAssemblyFolder(spec);
         l.A($"TempAssemblyFolderPath: '{cacheFolder}'");
 
@@ -136,7 +136,7 @@ public abstract class AppCodeCompiler(
 
     protected bool ShouldGenerate(string assemblyPath)
     {
-        var l = Log.Fn<bool>(assemblyPath);
+        using var l = Log.Fn<bool>(assemblyPath);
         if (!File.Exists(assemblyPath))
             return l.ReturnTrue("should generate, file doesn't exist");
 
@@ -153,7 +153,7 @@ public abstract class AppCodeCompiler(
 
     private bool IsFileLocked(FileInfo fileInfo, string filePath)
     {
-        var l = Log.Fn<bool>($"{filePath}");
+        using var l = Log.Fn<bool>($"{filePath}");
         try
         {
             // Check if the file is read-only

@@ -50,10 +50,9 @@ internal sealed class RuntimeViewCompilerProvider : ServiceBase, IViewCompilerPr
         IHttpContextAccessor httpContextAccessor,
         SourceAnalyzer sourceAnalyzer,
         IWebHostEnvironment env,
-        ILogStore logStore) : base($"{SxcLogging.SxcLogName}.RzrViewCmpProv",
-            connect: [assemblyResolver, sourceAnalyzer])
+        ILogStore logStore) : base($"{SxcLogging.SxcLogName}.RzrViewCmpProv")
     {
-        var l = Dbg ? Log.Fn() : null;
+        using var l = Dbg ? Log.Fn() : null;
 
         _applicationPartManager = applicationPartManager;
         _razorProjectEngine = razorProjectEngine;
@@ -78,7 +77,7 @@ internal sealed class RuntimeViewCompilerProvider : ServiceBase, IViewCompilerPr
 
     public IViewCompiler GetCompiler()
     {
-        var l = Dbg ? Log.Fn<IViewCompiler>() : null;
+        using var l = Dbg ? Log.Fn<IViewCompiler>() : null;
 
         return l.ReturnAsOk(LazyInitializer.EnsureInitialized(
             ref _compiler,
@@ -89,7 +88,7 @@ internal sealed class RuntimeViewCompilerProvider : ServiceBase, IViewCompilerPr
 
     private IViewCompiler CreateCompiler()
     {
-        var l = Dbg ? Log.Fn<IViewCompiler>() : null;
+        using var l = Dbg ? Log.Fn<IViewCompiler>() : null;
 
         var feature = new ViewsFeature();
         _applicationPartManager.PopulateFeature(feature);

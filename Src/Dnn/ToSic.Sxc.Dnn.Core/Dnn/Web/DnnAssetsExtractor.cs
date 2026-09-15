@@ -22,7 +22,7 @@ internal class DnnAssetsExtractor(IPageServiceShared pageServiceShared)
 
     protected override (string Template, bool Include2sxcJs) ExtractFromHtml(string html, ClientAssetsExtractSettings settings)
     {
-        var l = Log.Fn<(string, bool)>();
+        using var l = Log.Fn<(string, bool)>();
         var include2SxcJs = false;
             
         // Handle Client Dependency injection

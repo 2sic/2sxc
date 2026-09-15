@@ -11,7 +11,7 @@ internal class DevTools(CompileCodeHelperSpecs specs, ILog parentLog) : HelperBa
 
     public void Debug(object target, NoParamOrder npo = default, bool debug = true)
     {
-        var l = Log.Fn($"{nameof(target)}: '{target?.GetType()}', {nameof(debug)}: {debug}");
+        using var l = Log.Fn($"{nameof(target)}: '{target?.GetType()}', {nameof(debug)}: {debug}");
         
         if (target is not ICanDebug canDebug)
             throw new ArgumentException($"Can't enable debug on {nameof(target)} as it doesn't support {nameof(ICanDebug)}");

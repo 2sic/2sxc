@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Apps.Sys.AppTyped;
 // - use that instead
 
 internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager<TypedQuery>> queryManager)
-    : ServiceWithContext(SxcLogName + ".AppTyp", connect: [globalPaths, queryManager]),
+    : ServiceWithContext(SxcLogName + ".AppTyp"),
         IAppTyped
 {
     [field: AllowNull, MaybeNull]

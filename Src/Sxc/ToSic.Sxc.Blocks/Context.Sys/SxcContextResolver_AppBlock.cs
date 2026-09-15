@@ -8,7 +8,7 @@ partial class SxcCurrentContextService
 {
     public IContextOfApp GetExistingAppOrSet(int appId)
     {
-        var l = Log.Fn<IContextOfApp>($"a#{appId}");
+        using var l = Log.Fn<IContextOfApp>($"a#{appId}");
         // get the current block context
         var moduleCtx = BlockContextOrNull();
 

@@ -34,7 +34,7 @@ public class TokenEngine(
     IServerPaths serverPaths,
     LazySvc<IExecutionContextFactory> exCtxFactory,
     Generator<IAppDataConfigProvider> tokenEngineWithContext)
-    : ServiceBase("Sxc.TokEng", connect: [engineSpecsService, assetsExtractor, engineRequirementsApp, exCtxFactory, tokenEngineWithContext]),
+    : ServiceBase("Sxc.TokEng"),
         IEngine // ITokenEngine
 {
     #region Replacement List to still support old Tokens
@@ -85,7 +85,7 @@ public class TokenEngine(
     /// <inheritdoc />
     public OutputFragmentWithAssets Render(IBlock block, RenderSpecs specs)
     {
-        var l = Log.Fn<OutputFragmentWithAssets>(timer: true);
+        using var l = Log.Fn<OutputFragmentWithAssets>(timer: true);
 
         // Prepare #1: Specs
         var engineSpecs = engineSpecsService.GetSpecs(block);
@@ -129,7 +129,7 @@ public class TokenEngine(
     [PrivateApi]
     protected OutputFragment RenderTokenTemplate(EngineSpecs engineSpecs, RenderSpecs specs, ICodeDataFactory cdf, CultureInfo cultureInfo, LookUpEngine rootLookups)
     {
-        var l = Log.Fn<OutputFragment>();
+        using var l = Log.Fn<OutputFragment>();
         var templateSource = File.ReadAllText(serverPaths.FullAppPath(engineSpecs.TemplatePath));
         // Convert old <repeat> elements to the new ones
         templateSource = _upgrade6To7Dict.Aggregate(templateSource,
@@ -197,7 +197,7 @@ public class TokenEngine(
 
     private string RenderSection(string template, LookUpEngine rootLookups, IDictionary<string, ILookUp> valuesForThisInstanceOnly)
     {
-        var l = Log.Fn<string>($"{nameof(valuesForThisInstanceOnly)}: {valuesForThisInstanceOnly.Count}");
+        using var l = Log.Fn<string>($"{nameof(valuesForThisInstanceOnly)}: {valuesForThisInstanceOnly.Count}");
         if (string.IsNullOrEmpty(template))
             return l.Return("", "empty");
 

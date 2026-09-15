@@ -12,7 +12,7 @@ internal class DataSourceOptionsMs(IAppIdentity? identity, Func<ILookUpEngine?>?
 
     public IDataSourceOptions SafeOptions(object? dsParams, object? options, bool identityRequired = false)
     {
-        var l = Log.Fn<IDataSourceOptions>($"{nameof(options)}: {options}, {nameof(identityRequired)}: {identityRequired}");
+        using var l = Log.Fn<IDataSourceOptions>($"{nameof(options)}: {options}, {nameof(identityRequired)}: {identityRequired}");
         // Ensure we have a valid AppIdentity
         var appIdentity = identity
                           ?? (options as IDataSourceOptions)?.AppIdentityOrReader

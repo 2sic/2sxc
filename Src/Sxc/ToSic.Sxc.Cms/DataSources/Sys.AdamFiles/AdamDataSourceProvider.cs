@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Context;
+using ToSic.Eav.Context;
 using ToSic.Eav.Metadata;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Sys.Manager;
@@ -17,7 +17,7 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
     private IContextOfApp _context = null!;
 
     public record Dependencies(LazySvc<AdamContext> AdamContext, ISxcAppCurrentContextService CtxService)
-        : DependenciesBase(connect: [AdamContext, CtxService]);
+        : DependenciesBase();
 
     protected AdamDataSourceProvider(Dependencies services) : base(services, $"{SxcLogName}.AdamDs")
     { }
@@ -31,7 +31,7 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
         string? filter = default
     )
     {
-        var l = Log.Fn<AdamDataSourceProvider<TFolderId, TFileId>>($"a:{appId}; entityIds:{entityIds}, entityGuids:{entityGuids}, fields:{fields}, filter:{filter}");
+        using var l = Log.Fn<AdamDataSourceProvider<TFolderId, TFileId>>($"a:{appId}; entityIds:{entityIds}, entityGuids:{entityGuids}, fields:{fields}, filter:{filter}");
         _context = appId > 0
             ? Services.CtxService.GetExistingAppOrSet(appId)
             : Services.CtxService.AppNameRouteBlock(null);
@@ -53,7 +53,7 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
 
     private IEnumerable<AdamItemDataRaw> GetAdamListOfItems(IEntity entity)
     {
-        var l = Log.Fn<IEnumerable<AdamItemDataRaw>>();
+        using var l = Log.Fn<IEnumerable<AdamItemDataRaw>>();
         // This will contain the list of items
         var list = new List<AdamItemDataRaw>();
 

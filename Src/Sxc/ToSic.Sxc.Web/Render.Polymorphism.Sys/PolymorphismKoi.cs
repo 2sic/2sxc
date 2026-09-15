@@ -16,7 +16,7 @@ public class PolymorphismKoi(ICss pageCss) : IPolymorphismResolver
 
     public string? Edition(PolymorphismConfigurationModel config, string? overrule, ILog log)
     {
-        var l = log.Fn<string?>();
+        using var l = log.Fn<string?>();
         return !config.Parameters.EqualsInsensitive(ModeCssFramework)
             ? l.Return(overrule, "unknown param")
             : l.ReturnAndLog(overrule.NullIfNoValue() ?? pageCss.Framework);

@@ -20,7 +20,7 @@ public class ExtensionInstallBackend(
     LazySvc<ExtensionInspectBackend> inspectorLazy,
     IDataSourceGenerator<DataSources.AppEditions> appEditions,
     LazySvc<AppCachePurger> appCachePurgerLazy)
-    : ServiceBase("Bck.ExtZip", connect: [appReadersLazy, site, appPathSvc, globalConfiguration, manifestService, inspectorLazy, appEditions, appCachePurgerLazy])
+    : ServiceBase("Bck.ExtZip")
 {
     private ReadOnlyFileHelper ReadOnlyHelper => field ??= new(Log);
     private ExtensionValidationHelper Validation => field ??= new(manifestService, Log);
@@ -30,7 +30,7 @@ public class ExtensionInstallBackend(
 
     public bool InstallExtensionZip(int zoneId, int appId, Stream zipStream, bool overwrite = false, string? originalZipFileName = null, string editions = null!)
     {
-        var l = Log.Fn<bool>($"a:{appId}, overwrite:{overwrite}, ofn:'{originalZipFileName}'");
+        using var l = Log.Fn<bool>($"a:{appId}, overwrite:{overwrite}, ofn:'{originalZipFileName}'");
 
         string? tempDir = null;
         try
@@ -102,7 +102,7 @@ public class ExtensionInstallBackend(
 
     public PreflightResultDto InstallPreflight(int appId, Stream zipStream, string? originalZipFileName = null, string editions = null!)
     {
-        var l = Log.Fn<PreflightResultDto>($"a:{appId}, ofn:'{originalZipFileName}'");
+        using var l = Log.Fn<PreflightResultDto>($"a:{appId}, ofn:'{originalZipFileName}'");
 
         string? tempDir = null;
         try

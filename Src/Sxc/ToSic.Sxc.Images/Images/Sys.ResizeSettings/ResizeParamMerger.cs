@@ -41,7 +41,7 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
         IExecutionContext? executionContext = default
     )
     {
-        var l = (Debug ? Log : null).Fn<ResizeSettings>();
+        using var l = (Debug ? Log : null).Fn<ResizeSettings>();
         // Common mistake: both height and aspect ratio provided
         if (aspectRatio != null && height != null)
         {
@@ -105,7 +105,7 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
 
     internal static ICanGetByName? GetImageSettingsByName(IExecutionContext? exCtxOrNull, string strName, bool debug, ILog log)
     {
-        var l = log.Fn<ICanGetByName?>($"{strName}; code root: {exCtxOrNull != null}", enabled: debug);
+        using var l = log.Fn<ICanGetByName?>($"{strName}; code root: {exCtxOrNull != null}", enabled: debug);
         var settings = exCtxOrNull?.GetDataStack<ITypedStack>(ExecutionContextStateNames.AllSettings);
         var imageSettings = settings?.Get($"Settings.Images.{strName}");
         // imageSettings is a ListTypedItems<ITyped> because it's a child-list of entities
@@ -135,7 +135,7 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
 
     internal ResizeSettings BuildCoreSettings(ResizeParams resP, object? width, object? height, object? factor, object? aspectRatio, string? format, ICanGetByName? settingsOrNull)
     {
-        var l = (Debug ? Log : null).Fn<ResizeSettings>();
+        using var l = (Debug ? Log : null).Fn<ResizeSettings>();
 
         // Try to pre-process parameters and prefer them
         // The manually provided values must remember Zeros because they deactivate presets

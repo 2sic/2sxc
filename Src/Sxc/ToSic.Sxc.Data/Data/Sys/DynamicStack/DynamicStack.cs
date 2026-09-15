@@ -75,7 +75,7 @@ public class DynamicStack: DynamicObject,
     [PrivateApi("Never published in docs")]
     public dynamic GetStack(params string[] names)
     {
-        var l = GetHelper.LogOrNull.Fn<object>();
+        using var l = GetHelper.LogOrNull.Fn<object>();
         var newStack = _stack.GetStack(GetHelper.LogOrNull, names);
         var newDynStack = new DynamicStack("New", Cdf, newStack.Sources);
         return l.Return(newDynStack);

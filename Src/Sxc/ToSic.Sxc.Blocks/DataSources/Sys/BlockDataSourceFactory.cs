@@ -9,13 +9,13 @@ namespace ToSic.Sxc.DataSources.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFactory, Generator<Query> queryLazy)
-    : ServiceBase("Sxc.BDsFct", connect: [dataSourceFactory, queryLazy])
+    : ServiceBase("Sxc.BDsFct")
 {
 
     internal IDataSource GetContextDataSourceFromView(BlockSpecs block, ILookUpEngine? configLookUp)
     {
         var view = block.View;
-        var l = Log.Fn<IDataSource>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.Permissions.IsContentAdmin}, view:{view?.Name}");
+        using var l = Log.Fn<IDataSource>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.Permissions.IsContentAdmin}, view:{view?.Name}");
 
         l.A("Will get Default data source");
         var dsFactory = dataSourceFactory.Value;

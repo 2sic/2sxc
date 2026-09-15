@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Dnn.Context;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [PrivateApi("this is just internal, external users don't really have anything to do with this")]
 public class DnnModule(IAppsCatalog appsCatalog, LazySvc<AppFinder> appFinderLazy, ISite site)
-    : Module<ModuleInfo>("Dnn.Contnr", connect: [appsCatalog, appFinderLazy, site])
+    : Module<ModuleInfo>("Dnn.Contnr")
 {
     #region Constructors and DI
 
@@ -27,7 +27,7 @@ public class DnnModule(IAppsCatalog appsCatalog, LazySvc<AppFinder> appFinderLaz
     /// </summary>
     public new DnnModule Init(ModuleInfo item)
     {
-        var l = Log.Fn<DnnModule>($"{item?.ModuleID}");
+        using var l = Log.Fn<DnnModule>($"{item?.ModuleID}");
         base.Init(item);
         return l.ReturnAsOk(this);
     }
@@ -38,7 +38,7 @@ public class DnnModule(IAppsCatalog appsCatalog, LazySvc<AppFinder> appFinderLaz
     /// </summary>
     public override IModule Init(int moduleId)
     {
-        var l = Log.Fn<IModule>($"{moduleId}");
+        using var l = Log.Fn<IModule>($"{moduleId}");
         var mod = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, false);
         Init(mod);
         return l.ReturnAsOk(this);
@@ -87,7 +87,7 @@ public class DnnModule(IAppsCatalog appsCatalog, LazySvc<AppFinder> appFinderLaz
 
     private (int AppId, string AppNameId) GetInstanceAppIdAndName(int zoneId)
     {
-        var l = Log.Fn<(int, string)>($"{zoneId}");
+        using var l = Log.Fn<(int, string)>($"{zoneId}");
         var module = UnwrappedModule ?? throw new("instance is not ModuleInfo");
         var msg = $"get appid from instance for Z:{zoneId} Mod:{module.ModuleID}";
         if (IsContent)

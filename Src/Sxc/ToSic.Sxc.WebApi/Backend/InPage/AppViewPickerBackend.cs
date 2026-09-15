@@ -16,7 +16,7 @@ public class AppViewPickerBackend(
     AppWorkContextService appWorkCtxService,
     LazySvc<WorkEntityPublish> workPublish,
     LazySvc<WorkViewsContentTypes> workViewsContentTypes)
-    : ServiceBase("Bck.ViwApp", connect: [multiPermissionsApp, ctxService, blockEditorSelectorLazy, workBlockViews, appWorkCtxService, workPublish, workViewsContentTypes])
+    : ServiceBase("Bck.ViwApp")
 {
     public void SetAppId(int? appId)
         => blockEditorSelectorLazy.Value
@@ -49,7 +49,7 @@ public class AppViewPickerBackend(
 
     public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
     {
-        var l = Log.Fn<Guid?>($"{templateId}, {forceCreateContentGroup}");
+        using var l = Log.Fn<Guid?>($"{templateId}, {forceCreateContentGroup}");
         multiPermissionsApp.ThrowIfNotAllowedInApp(Block.Context, GrantSets.WriteSomething);
         var result = blockEditorSelectorLazy.Value.GetEditor(Block)
             .SaveTemplateId(templateId, forceCreateContentGroup);
@@ -58,7 +58,7 @@ public class AppViewPickerBackend(
 
     public bool Publish(int id)
     {
-        var l = Log.Fn<bool>($"{id}");
+        using var l = Log.Fn<bool>($"{id}");
         multiPermissionsApp.ThrowIfNotAllowedInApp(Block.Context, GrantSets.WritePublished);
         workPublish.Value.Publish(AppCtx, [id]);
         return l.ReturnTrue("ok");

@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.Raw;
+using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 
@@ -32,7 +32,7 @@ public class ToolbarButtonActions : CustomDataSource
 
     private IEnumerable<IRawEntity> Generators()
     {
-        var l = Log.Fn<IEnumerable<IRawEntity>>();
+        using var l = Log.Fn<IEnumerable<IRawEntity>>();
         var list = new[]
             {
                 "app",

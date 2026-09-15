@@ -13,14 +13,14 @@ internal class DnnModuleAndBlockBuilder(
     Generator<IModule> moduleGenerator,
     Generator<IContextOfBlock> contextGenerator,
     Generator<BlockOfModule> blockGenerator)
-    : ModuleAndBlockBuilder(blockGenerator, DnnConstants.LogName, connect: [moduleGenerator, contextGenerator])
+    : ModuleAndBlockBuilder(blockGenerator, DnnConstants.LogName)
 {
     private ILog ParentLog => (Log as Log)?.Parent ?? Log;
 
 
     public override IModule GetModule(int pageId, int moduleId)
     {
-        var l = Log.Fn<IModule>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
+        using var l = Log.Fn<IModule>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
         var moduleInfo = new ModuleController().GetModule(moduleId, pageId, false);
 
         l.A($"Page Id on DNN Module: {moduleInfo.TabID} - should be {pageId}");
@@ -47,7 +47,7 @@ internal class DnnModuleAndBlockBuilder(
 
     private IContextOfBlock InitDnnSiteModuleAndBlockContext(ModuleInfo dnnModule, int? pageId)
     {
-        var l = Log.Fn<IContextOfBlock>($"{nameof(pageId)}: {pageId}, {nameof(dnnModule.ModuleID)}: {dnnModule.ModuleID}");
+        using var l = Log.Fn<IContextOfBlock>($"{nameof(pageId)}: {pageId}, {nameof(dnnModule.ModuleID)}: {dnnModule.ModuleID}");
         var context = contextGenerator.New();
         l.A($"Will try-swap module info of {dnnModule.ModuleID} into site");
         ((DnnSite)context.Site).TryInitModule(dnnModule, ParentLog);
@@ -58,7 +58,7 @@ internal class DnnModuleAndBlockBuilder(
 
     private IContextOfBlock InitPageOnly(IContextOfBlock context, int? pageId)
     {
-        var l = Log.Fn<IContextOfBlock>($"{nameof(pageId)}: {pageId}");
+        using var l = Log.Fn<IContextOfBlock>($"{nameof(pageId)}: {pageId}");
         // Collect / assemble page information
         var activeTab = (context.Site as Site<PortalSettings>)?.GetContents()?.ActiveTab;
         var page = (DnnPage)context.Page;

@@ -12,7 +12,7 @@ public class CodeDataPoCoWrapperService(
     LazySvc<ICodeDataFactory> cdf,
     Generator<WrapObjectTyped> wrapTypeGenerator,
     Generator<WrapObjectTypedItem> wrapItemGenerator)
-    : ServiceBase("Sxc.DWrpFk", connect: [wrapTypeGenerator, wrapItemGenerator, cdf]), ICodeDataPoCoWrapperService
+    : ServiceBase("Sxc.DWrpFk"), ICodeDataPoCoWrapperService
 {
     /*DynamicFromDictionary<TKey, TValue>*/object ICodeDataPoCoWrapperService.FromDictionary<TKey, TValue>(IDictionary<TKey, TValue> original)
         => new DynamicFromDictionary<TKey, TValue>(original, this);

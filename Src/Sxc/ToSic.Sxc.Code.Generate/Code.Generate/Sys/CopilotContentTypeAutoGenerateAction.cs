@@ -14,13 +14,13 @@ namespace ToSic.Sxc.Code.Generate.Sys;
 internal class CopilotContentTypeAutoGenerateAction(
     CopilotCodeGenerateService codeGenerate,
     IAppReaderFactory appReaders)
-    : ServiceBase(SxcLogName + ".AutoGen.CT", connect: [codeGenerate, appReaders]),
+    : ServiceBase(SxcLogName + ".AutoGen.CT"),
         IWork<ContentTypeChange, ContentTypeChange>
 {
     public Task<Package<ContentTypeChange>> Handle(WorkContext mainCtx, Package<ContentTypeChange> package)
     {
         var change = package.Data;
-        var l = Log.Fn<Package<ContentTypeChange>>($"change:{change}");
+        using var l = Log.Fn<Package<ContentTypeChange>>($"change:{change}");
 
         var errors = package.Exceptions.ToList();
         var appReader = appReaders.Get(change.AppId);

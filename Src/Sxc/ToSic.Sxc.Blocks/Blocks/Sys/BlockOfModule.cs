@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Blocks.Sys;
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public sealed class BlockOfModule(BlockGeneratorHelpers helpers) : ServiceBase("CB.Mod", connect: [helpers])
+public sealed class BlockOfModule(BlockGeneratorHelpers helpers) : ServiceBase("CB.Mod")
 {
     /// <summary>
     /// Create a module-content block
@@ -16,7 +16,7 @@ public sealed class BlockOfModule(BlockGeneratorHelpers helpers) : ServiceBase("
     ///// <param name="overrideParams">optional override parameters</param>
     public IBlock GetBlockOfModule(IContextOfBlock ctx)
     {
-        var l = Log.Fn<BlockSpecs>(timer: true);
+        using var l = Log.Fn<BlockSpecs>(timer: true);
         var appIdentity = ctx.Module.BlockIdentifier;
         var specs = new BlockSpecs
         {

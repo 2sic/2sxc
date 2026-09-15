@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource;
@@ -25,8 +25,7 @@ public class AppQueryControllerReal(
     Generator<AppPermissionCheck> appPermissionCheck,
     LazySvc<QueryManager> queryManager,
     LazySvc<ILookUpEngineResolver> lookupResolver)
-    : ServiceBase("Sxc.ApiApQ",
-        connect: [oDataHelper, lookupResolver, ctxService, dataConverter, appPermissionCheck, queryManager]), IAppQueryController
+    : ServiceBase("Sxc.ApiApQ"), IAppQueryController
 {
     public const string LogSuffix = "AppQry";
 
@@ -39,7 +38,7 @@ public class AppQueryControllerReal(
 
     public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost(string name, QueryParametersDtoFromClient? more, int? appId, string? stream = null, bool? includeGuid = false)
     {
-        var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
+        using var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
         var appCtx = appId != null
             ? ctxService.GetExistingAppOrSet(appId.Value)
             : ctxService.BlockContextRequired();
@@ -70,7 +69,7 @@ public class AppQueryControllerReal(
 
     public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost(string appPath, string name, QueryParametersDtoFromClient? more, string? stream) 
     {
-        var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"path:{appPath}, name:{name}, stream: {stream}");
+        using var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"path:{appPath}, name:{name}, stream: {stream}");
         if (string.IsNullOrEmpty(name))
             throw l.Ex(HttpException.MissingParam(nameof(name)));
 
@@ -98,7 +97,7 @@ public class AppQueryControllerReal(
     {
         var modId = (context as IContextOfBlock)?.Module.Id ?? -1;
 
-        var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"name:{name}, stream:{stream}, withModule:{(context as IContextOfBlock)?.Module.Id}");
+        using var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"name:{name}, stream:{stream}, withModule:{(context as IContextOfBlock)?.Module.Id}");
 
         var lookups = preparedLookup ?? lookupResolver.Value.GetLookUpEngine(modId);
         var query = queryManager.Value.TryGetQuery(app, name, lookups, recurseParents: 3);

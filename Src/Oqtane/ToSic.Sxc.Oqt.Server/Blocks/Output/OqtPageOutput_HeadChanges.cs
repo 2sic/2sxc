@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Oqt.Shared.Models;
+using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output;
 
@@ -6,7 +6,7 @@ partial class OqtPageOutput
 {
     public IEnumerable<OqtHeadChange> GetHeadChanges()
     {
-        var l = Log.Fn<IEnumerable<OqtHeadChange>>();
+        using var l = Log.Fn<IEnumerable<OqtHeadChange>>();
 
         var changes = RenderResult.HeadChanges ?? [];
 

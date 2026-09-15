@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.WebApi.Sys.Cms;
+using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Blocks.Sys.Work;
 
 namespace ToSic.Sxc.Backend.Cms;
@@ -9,11 +9,11 @@ namespace ToSic.Sxc.Backend.Cms;
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ListActivityGetBlockHeader(AppWorkChain<WorkBlocks> appBlocks)
-    : ServiceWithSetup<IAppWorkContext>("Api.CntGrpRl", connect: [appBlocks])
+    : ServiceWithSetup<IAppWorkContext>("Api.CntGrpRl")
 {
     public List<EntityInListDto> ContentBlockHeader(Guid parent)
     {
-        var l = Log.Fn<List<EntityInListDto>>($"header for:{parent}");
+        using var l = Log.Fn<List<EntityInListDto>>($"header for:{parent}");
         //var appCtx = appBlocks.CtxSvc.ContextPlus(ctxService.BlockContextRequired().AppReaderRequired);
         var cg = appBlocks.New(MyOptions).GetBlockConfig(parent);
 

@@ -12,7 +12,7 @@ internal class ConvertService16(
     ConvertValueService cnvSvc,
     LazySvc<ConvertForCodeService> code,
     LazySvc<IJsonService> json)
-    : ServiceWithContext("Sxc.CnvSrv", connect: [cnvSvc, code, json]), IConvertService16
+    : ServiceWithContext("Sxc.CnvSrv"), IConvertService16
 {
 
 

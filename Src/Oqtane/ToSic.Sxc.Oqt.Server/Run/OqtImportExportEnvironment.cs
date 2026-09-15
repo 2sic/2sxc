@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Oqtane.Models;
 using Oqtane.Repository;
 using ToSic.Eav.Environment.Sys.ServerPaths;
@@ -29,7 +29,7 @@ internal class OqtImportExportEnvironment(
     /// <param name="destinationFolder">The portal-relative path where the files should be copied to</param>
     public override List<Message> TransferFilesToSite(string sourceFolder, string destinationFolder)
     {
-        var l = Log.Fn<List<Message>>($"{sourceFolder}, {destinationFolder}");
+        using var l = Log.Fn<List<Message>>($"{sourceFolder}, {destinationFolder}");
         var messages = new List<Message>();
         var files = IO.Directory.GetFiles(sourceFolder, "*.*");
         var siteId = Site.Id;
@@ -146,7 +146,7 @@ internal class OqtImportExportEnvironment(
 
     public override void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog) 
     {
-        var l = Log.Fn($"folders and paths: {foldersAndPath.Count}");
+        using var l = Log.Fn($"folders and paths: {foldersAndPath.Count}");
         foreach (var folder in foldersAndPath)
             try
             {
@@ -184,7 +184,7 @@ internal class OqtImportExportEnvironment(
 
     private File Add(Folder parent, IO.Stream body, string fileName, OqtSite oqtSite)
     {
-        var l = Log.Fn<File>($"Add {fileName}, folderId:{parent.FolderId}, siteId {oqtSite.Id}");
+        using var l = Log.Fn<File>($"Add {fileName}, folderId:{parent.FolderId}, siteId {oqtSite.Id}");
 
         var fullContentPath = IO.Path.Combine(oqtServerPaths.FullContentPath(oqtSite.ContentPath), parent.Path);
         IO.Directory.CreateDirectory(fullContentPath);
@@ -222,7 +222,7 @@ internal class OqtImportExportEnvironment(
     private Folder AddFolder(string path)
     {
         path = path.EnsureOqtaneFolderFormat();
-        var l = Log.Fn<Folder>(path);
+        using var l = Log.Fn<Folder>(path);
 
         if (FolderExists(path)) return l.ReturnNull("error, missing folder");
 

@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Render.Polymorphism.Sys;
 /// <param name="resolvers">Service switcher for polymorphism resolvers.</param>
 /// <param name="http">Http service to check if a cooking specifies another edition.</param>
 internal class EditionService(Generator<IPolymorphismResolver> resolvers, LazySvc<IHttp> http)
-    : ServiceBase("Plm.Managr", connect: [resolvers ]), IEditionService
+    : ServiceBase("Plm.Managr"), IEditionService
 {
     /// <inheritdoc/>
     public string? Edition(IBlock block)
@@ -25,7 +25,7 @@ internal class EditionService(Generator<IPolymorphismResolver> resolvers, LazySv
 
     private string? Edition(IAppReader appReader)
     {
-        var l = Log.Fn<string?>();
+        using var l = Log.Fn<string?>();
         
         try
         {

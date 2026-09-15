@@ -66,7 +66,7 @@ public partial class View : PortalModuleBase, IActionable
         ??= ServiceProvider.Build<Generator<HttpRequestLoggingScoped, HttpRequestLoggingScoped.Opts>>()
             .New(new() { Segment = "module", RootName = "Sxc.View" });
 
-    private ILog Log => field ??= new Log("Sxc.View", RequestLogging.RootLog);
+    private ILog Log => field ??= new Log("Sxc.View");
 
     private ILogger MicrosoftLogger => field ??= GetService<ILoggerFactory>()
         .CreateLogger(MicrosoftLoggerEventSink.Category);

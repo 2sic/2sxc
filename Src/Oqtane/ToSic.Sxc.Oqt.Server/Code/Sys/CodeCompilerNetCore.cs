@@ -10,14 +10,14 @@ internal class CodeCompilerNetCore(
     IServiceProvider serviceProvider,
     LazySvc<IServerPaths> serverPaths,
     Generator<Compiler> compiler)
-    : CodeCompiler(serviceProvider, connect: [serverPaths, compiler])
+    : CodeCompiler(serviceProvider)
 {
     protected override (Type Type, string ErrorMessage) GetCsHtmlType(string virtualPath)
         => throw new("Runtime Compile of .cshtml is Not Implemented in .net standard / core");
 
     public override AssemblyResult GetAssembly(string virtualPath, string className, HotBuildSpec spec)
     {
-        var l = Log.Fn<AssemblyResult>(
+        using var l = Log.Fn<AssemblyResult>(
             $"{nameof(virtualPath)}: '{virtualPath}'; {nameof(className)}: '{className}'; {spec}", timer: true);
         var fullContentPath = serverPaths.Value.FullContentPath(virtualPath.ToSystemPath());
         var fullPath = NormalizeFullFilePath(fullContentPath);

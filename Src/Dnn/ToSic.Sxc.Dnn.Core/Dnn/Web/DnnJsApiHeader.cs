@@ -8,7 +8,7 @@ internal class DnnJsApiHeader(IJsApiService dnnJsApiService, ILog parentLog = nu
 {
     public bool AddHeaders()
     {
-        var l = Log.Fn<bool>();
+        using var l = Log.Fn<bool>();
         // ensure we only do this once
         if (MarkAddedAndReturnIfAlreadyDone()) return l.ReturnFalse("already");
 

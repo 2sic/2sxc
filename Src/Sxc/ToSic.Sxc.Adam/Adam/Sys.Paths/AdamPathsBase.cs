@@ -11,7 +11,7 @@ public class AdamPathsBase : ServiceBase, IAdamPaths
     public AdamPathsBase(IServerPaths serverPaths) : this(serverPaths, LogScopes.Base)
     { }
 
-    protected AdamPathsBase(IServerPaths serverPaths, string logPrefix) : base($"{logPrefix}.AdmPth", connect: [serverPaths])
+    protected AdamPathsBase(IServerPaths serverPaths, string logPrefix) : base($"{logPrefix}.AdmPth")
     {
         _serverPaths = serverPaths;
     }

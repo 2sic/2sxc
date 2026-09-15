@@ -36,7 +36,7 @@ public class ItemMetadata : CustomDataSource
         LazySvc<MetadataControllerReal> metadata,
         IAppReaderFactory appReaders,
         Generator<IConvertToEavLight> converters)
-        : base(services, "Sxc.ItemMd", connect: [metadata, appReaders, converters])
+        : base(services, "Sxc.ItemMd")
     {
         ProvideOutRaw(() => Recommendations(metadata), name: "Recommendations", options: Options);
         ProvideOutRaw(() => Items(appReaders, converters), name: "Items", options: Options);

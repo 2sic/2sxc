@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using ToSic.Eav.Data.ContentTypes.Sys;
 using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.ImportExport.Json.V1;
@@ -17,8 +17,7 @@ public class EditLoadActivitySettingsHelper(
     IEnumerable<ILoadSettingsProvider> loadSettingsProviders,
     IEnumerable<ILoadSettingsContentTypesProvider> loadSettingsTypesProviders,
     AppWorkChain<WorkEntities> appEntities)
-    : ServiceBase(SxcLogName + ".LodSet",
-        connect: [jsonSerializerGenerator, loadSettingsProviders, appEntities]),
+    : ServiceBase(SxcLogName + ".LodSet"),
         IWork<EditLoadDto, EditLoadDto>
 {
     public record ActionContext(List<IContentType> UsedTypes);
@@ -44,7 +43,7 @@ public class EditLoadActivitySettingsHelper(
     /// <returns></returns>
     private EditSettingsDto GetSettings(IContextOfApp contextOfApp, List<IContentType> contentTypes, List<JsonContentType> jsonTypes, IAppWorkContext appWorkCtx)
     {
-        var l = Log.Fn<EditSettingsDto>();
+        using var l = Log.Fn<EditSettingsDto>();
         var allInputTypes = jsonTypes
             .SelectMany(ct => ct.AttributesSafe()
                 .Select(at => at.InputType! /* never null here, only on very old imports */)
@@ -70,7 +69,7 @@ public class EditLoadActivitySettingsHelper(
 
     private TList GetOrEmptyOnError<TList>(Func<TList> getList, Func<string> errMessage) where TList : class, IEnumerable, new()
     {
-        var l = Log.Fn<TList>();
+        using var l = Log.Fn<TList>();
         try
         {
             return l.ReturnAsOk(getList());
@@ -85,12 +84,12 @@ public class EditLoadActivitySettingsHelper(
 
     private Dictionary<string, object> GetValues(LoadSettingsProviderParameters lspParameters)
     {
-        var l = Log.Fn<Dictionary<string, object>>();
+        using var l = Log.Fn<Dictionary<string, object>>();
 
         // Get all settings from all providers
         var settingsFromProviders = loadSettingsProviders
             .Select(lsp => GetOrEmptyOnError(
-                () => lsp.LinkLog(Log).GetSettings(lspParameters),
+                () => lsp.GetSettings(lspParameters),
                 () => $"Error on {lsp.GetType().Name}")
             )
             .ToList();
@@ -104,12 +103,12 @@ public class EditLoadActivitySettingsHelper(
 
     private List<JsonContentTypeWithTitleWip> GetContentTypes(LoadSettingsProviderParameters parameters)
     {
-        var l = Log.Fn<List<JsonContentTypeWithTitleWip>>();
+        using var l = Log.Fn<List<JsonContentTypeWithTitleWip>>();
 
         // Load all types from the providers
         var typesFromProviders = loadSettingsTypesProviders
             .SelectMany(lsp => GetOrEmptyOnError(
-                () => lsp.LinkLog(Log).GetContentTypes(parameters),
+                () => lsp.GetContentTypes(parameters),
                 () => $"Error GetContentTypes of {lsp.GetType().Name}")
             )
             .ToList();
@@ -150,7 +149,7 @@ public class EditLoadActivitySettingsHelper(
 
     private List<JsonEntity> GetSettingsEntities(IAppWorkContext appWorkCtx, IEnumerable<string> allInputTypes)
     {
-        var l = Log.Fn<List<JsonEntity>>();
+        using var l = Log.Fn<List<JsonEntity>>();
         try
         {
             var hasWysiwyg = allInputTypes.Any(it => it.ContainsInsensitive("wysiwyg"));

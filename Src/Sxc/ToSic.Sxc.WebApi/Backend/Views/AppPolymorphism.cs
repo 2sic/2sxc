@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Models;
 using ToSic.Sxc.Render.Polymorphism.Sys;
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Backend.Views;
 public class AppPolymorphism : CustomDataSource
 {
     public AppPolymorphism(Dependencies services, IAppReaderFactory appReaders)
-        : base(services, logName: "Sxc.PolyMo", connect: [appReaders])
+        : base(services, logName: "Sxc.PolyMo")
     {
         ProvideOut(() => AppConfig(appReaders));
     }
@@ -26,7 +26,7 @@ public class AppPolymorphism : CustomDataSource
 
     private IEnumerable<IEntity> AppConfig(IAppReaderFactory appReaders)
     {
-        var l = Log.Fn<IEnumerable<IEntity>>($"App: {AppId}");
+        using var l = Log.Fn<IEnumerable<IEntity>>($"App: {AppId}");
 
         var poly = appReaders.Get(AppId).List
             .FirstModel<PolymorphismConfigurationModel>(options: new() { NullHandling = NullHandling.ReturnModel })!;

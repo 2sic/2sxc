@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Code.Sys.HotBuild;
 #pragma warning disable CS9113 // Parameter is unread.
 public class AssemblyDiskCache(NoParamOrder npo = default, object[]? connect = default)
 #pragma warning restore CS9113 // Parameter is unread.
-    : ServiceBase("Sxc.AsmDskCch", connect: connect)
+    : ServiceBase("Sxc.AsmDskCch")
 {
     /// <summary>
     /// Attempts to load a cached assembly from disk.
@@ -34,7 +34,7 @@ public class AssemblyDiskCache(NoParamOrder npo = default, object[]? connect = d
         Func<string, Assembly> loadAssembly,
         Func<bool>? featureFlagCheck = null)
     {
-        var l = Log.Fn<Assembly?>($"path:{cachePath}", timer: true);
+        using var l = Log.Fn<Assembly?>($"path:{cachePath}", timer: true);
 
         // Check feature flag if provided
         if (featureFlagCheck != null && !featureFlagCheck())
@@ -96,7 +96,7 @@ public class AssemblyDiskCache(NoParamOrder npo = default, object[]? connect = d
         string cachePath,
         Func<bool>? featureFlagCheck = null)
     {
-        var l = Log.Fn<bool>($"source:{sourceAssemblyPath} -> cache:{cachePath}", timer: true);
+        using var l = Log.Fn<bool>($"source:{sourceAssemblyPath} -> cache:{cachePath}", timer: true);
 
         // Check feature flag if provided
         if (featureFlagCheck != null && !featureFlagCheck())
@@ -170,7 +170,7 @@ public class AssemblyDiskCache(NoParamOrder npo = default, object[]? connect = d
         int retryDelayMs = 100,
         int timeoutMs = 3000)
     {
-        var l = Log.Fn<Assembly>($"path:{assemblyPath}", timer: true);
+        using var l = Log.Fn<Assembly>($"path:{assemblyPath}", timer: true);
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();
         var attempt = 0;
         Exception? lastError = null;
@@ -221,7 +221,7 @@ public class AssemblyDiskCache(NoParamOrder npo = default, object[]? connect = d
     /// <returns>Number of files deleted</returns>
     public int InvalidateCache(string cacheDirectory, string searchPattern, SearchOption searchOption = SearchOption.TopDirectoryOnly)
     {
-        var l = Log.Fn<int>($"dir:{cacheDirectory}, pattern:{searchPattern}");
+        using var l = Log.Fn<int>($"dir:{cacheDirectory}, pattern:{searchPattern}");
 
         try
         {

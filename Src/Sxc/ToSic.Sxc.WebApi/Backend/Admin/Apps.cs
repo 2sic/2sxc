@@ -19,7 +19,7 @@ public class Apps : CustomDataSource
     public Apps(
         Dependencies services,
         LazySvc<AppsBackend> appsBackend)
-        : base(services, logName: "Sxc.Apps", connect: [appsBackend])
+        : base(services, logName: "Sxc.Apps")
     {
         ProvideOutRaw(appsBackend.Value.Apps);
     }

@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Render.Engines.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class EngineCheckTemplate(LazySvc<AppPermissionCheck> appPermCheckLazy)
-    : ServiceBase("Sxc.EngChk", connect: [appPermCheckLazy])
+    : ServiceBase("Sxc.EngChk")
 {
     /// <summary>
     /// Template Exceptions like missing configuration or defined type not found

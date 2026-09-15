@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Configuration;
@@ -14,14 +14,14 @@ public class ReferencedAssembliesProvider(
     DependenciesLoader dependenciesLoader,
     AssemblyResolver assemblyResolver,
     LazySvc<ExtensionCompileReferenceService> extensionReference)
-    : ServiceBase("Sxc.RefAP", connect: [dependenciesLoader, assemblyResolver, extensionReference]), IReferencedAssembliesProvider
+    : ServiceBase("Sxc.RefAP"), IReferencedAssembliesProvider
 {
     // cache of referenced assemblies per virtual path
     private static readonly ConcurrentDictionary<string, List<string>> ReferencedAssembliesCache = new(InvariantCultureIgnoreCase);
 
     public List<string> Locations(string virtualPath, HotBuildSpec spec)
     {
-        var l = Log.Fn<List<string>>($"for: '{virtualPath}'");
+        using var l = Log.Fn<List<string>>($"for: '{virtualPath}'");
 
         // never reuse the cache for AppCode folder, because finding this references was not time-consuming,
         // and it may contain Extensions which are not yet in the cache,
@@ -30,23 +30,23 @@ public class ReferencedAssembliesProvider(
         if (notAppCodeFolder && ReferencedAssembliesCache.TryGetValue(virtualPath, out var cachedResult))
             return l.Return([..cachedResult], "cached, re-wrapped in new list");
 
-        var lTimer = Log.Fn("timer for AppRef", timer: true);
+        using var lTimer = Log.Fn("timer for AppRef", timer: true);
         var referencedAssemblies = new List<string>(AppReferencedAssemblies());
         lTimer.Done();
 
         // include assemblies from compilation section in web.config hierarchy
-        lTimer = Log.Fn("timer for Web Configuration Manager", timer: true);
+        using var configurationTimer = Log.Fn("timer for Web Configuration Manager", timer: true);
         var compilationSection = (CompilationSection)WebConfigurationManager.GetSection("system.web/compilation", virtualPath);
         foreach (AssemblyInfo assembly in compilationSection.Assemblies)
             ReferenceAssembly(referencedAssemblies, assembly.Assembly);
-        lTimer.Done();
+        configurationTimer.Done();
 
         // include assemblies from `\AppCode\Extensions\[extension-name]\compile.json`
-        lTimer = Log.Fn("timer for Extensions Reference Assemblies", timer: true);
+        using var extensionsTimer = Log.Fn("timer for Extensions Reference Assemblies", timer: true);
         EnsureExtensionsReferenceAssemblies(referencedAssemblies, virtualPath);
-        lTimer.Done();
+        extensionsTimer.Done();
 
-        lTimer = Log.Fn("timer for Dependencies", timer: true);
+        using var dependenciesTimer = Log.Fn("timer for Dependencies", timer: true);
         if (spec != null)
         {
             // TODO: need to invalidate this cache (_referencedAssembliesCache, _assemblyResolver, ...) if there is change in Dependencies folder
@@ -58,7 +58,7 @@ public class ReferencedAssembliesProvider(
                 foreach (var dependency in dependencies)
                     referencedAssemblies.Add(dependency.Location);
         }
-        lTimer.Done();
+        dependenciesTimer.Done();
         
         // deduplicate referencedAssemblies by filename, keep last duplicate
         referencedAssemblies = referencedAssemblies

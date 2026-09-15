@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Lib.Logging;
@@ -100,7 +100,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Adam
         [HttpGet("items")]
         public IEnumerable<AdamItemDto> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
         {
-            var callLog = Log.Fn<IEnumerable<AdamItemDto>>($"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
+            using var callLog = Log.Fn<IEnumerable<AdamItemDto>>($"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
             var results = _adamItems
                 .Init(appId, contentType, guid, field, usePortalRoot, Log)
                 .ItemsInField(subfolder);

@@ -16,8 +16,7 @@ internal class OqtModuleAndBlockBuilder(
     Generator<BlockOfModule> blockGenerator,
     Generator<IModuleRepository> moduleRepositoryGenerator,
     RequestHelper requestHelper)
-    : ModuleAndBlockBuilder(blockGenerator, OqtConstants.OqtLogPrefix,
-        connect: [moduleGenerator, contextGenerator, moduleRepositoryGenerator, requestHelper])
+    : ModuleAndBlockBuilder(blockGenerator, OqtConstants.OqtLogPrefix)
 {
     /// <summary>
     /// 
@@ -38,7 +37,7 @@ internal class OqtModuleAndBlockBuilder(
 
     protected override IContextOfBlock GetContextOfBlock<TPlatformModule>(TPlatformModule module, int? pageId)
     {
-        var l = Log.Fn<IContextOfBlock>();
+        using var l = Log.Fn<IContextOfBlock>();
         if (module == null) throw new ArgumentNullException(nameof(module));
 
         var oqtModule = module switch
@@ -56,7 +55,7 @@ internal class OqtModuleAndBlockBuilder(
 
     private IContextOfBlock InitOqtSiteModuleAndBlockContext(Module oqtModule, int? pageId)
     {
-        var l = Log.Fn<IContextOfBlock>();
+        using var l = Log.Fn<IContextOfBlock>();
         var context = contextGenerator.New();
         l.A("Will init module");
         ((OqtModule) context.Module).Init(oqtModule);
@@ -66,7 +65,7 @@ internal class OqtModuleAndBlockBuilder(
     private IContextOfBlock InitPageOnly(IContextOfBlock context, int? pageId)
     {
         // TODO: try to use the pageId if given, would usually only be used in inner-content / IRenderService scenarios
-        var l = Log.Fn<IContextOfBlock>();
+        using var l = Log.Fn<IContextOfBlock>();
         // Collect / assemble page information
         context.Page.Init(requestHelper.TryGetId(ContextConstants.PageIdKey));
         var url = context.Page.Url;

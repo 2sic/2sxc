@@ -145,7 +145,7 @@ internal record CacheSpecsContextAndTools : HelperRecordBase
 
     private CacheKeyParts ReplayByModel(CacheKeyParts keyParts, string? names, bool caseSensitive)
     {
-        var l = Log.Fn<CacheKeyParts>($"{nameof(names)}: '{names}', {nameof(caseSensitive)}: {caseSensitive}");
+        using var l = Log.Fn<CacheKeyParts>($"{nameof(names)}: '{names}', {nameof(caseSensitive)}: {caseSensitive}");
         var model = Model;
         if (model == null)
         {

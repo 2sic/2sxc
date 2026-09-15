@@ -94,7 +94,7 @@ public class DnnBusinessController : ModuleSearchBase, IHasLog
     /// <returns></returns>
     public string UpgradeModule(string version)
     {
-        var l = Log.Fn<string>($"upgrade module - start for v:{version}");
+        using var l = Log.Fn<string>($"upgrade module - start for v:{version}");
         var installer = ServiceProvider.Build<DnnEnvironmentInstaller>(Log);
         var res = installer.UpgradeModule(version, true);
         Log.A($"result:{res}");

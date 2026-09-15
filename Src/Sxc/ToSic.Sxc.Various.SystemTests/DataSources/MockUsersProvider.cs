@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Cms.Users;
+using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Cms.Users.Sys;
 
 // ReSharper disable once CheckNamespace
@@ -20,7 +20,7 @@ public class MockUsersProvider() : ServiceBase("DS.MockUsers"), IUsersProvider
 
     public IEnumerable<UserModelRaw> GetUsers(UsersGetSpecs specs)
     {
-        var l = Log.Fn<IEnumerable<UserModelRaw>>();
+        using var l = Log.Fn<IEnumerable<UserModelRaw>>();
         var siteId = 0;
         l.A($"Portal Id {siteId}");
         var users = new List<UserModelRaw>();

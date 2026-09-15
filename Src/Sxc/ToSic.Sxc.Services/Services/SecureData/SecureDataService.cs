@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Data;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Secret;
 using ToSic.Sys.Security.Encryption;
 using static System.StringComparison;
@@ -26,7 +26,7 @@ internal class SecureDataService(AesCryptographyService aes)
 
     public ISecureData<string> Parse(string value)
     {
-        var l = Log.Fn<ISecureData<string>>(enabled: Debug);
+        using var l = Log.Fn<ISecureData<string>>(enabled: Debug);
         if (string.IsNullOrWhiteSpace(value))
             return l.Return(new SecureData<string>(value, false), $"{nameof(value)} null/empty");
 
@@ -61,7 +61,7 @@ internal class SecureDataService(AesCryptographyService aes)
 
     public string? Create(string value)
     {
-        var l = Log.Fn<string>(enabled: Debug);
+        using var l = Log.Fn<string>(enabled: Debug);
         if (string.IsNullOrWhiteSpace(value))
             return l.ReturnNull("null/empty");
 
@@ -84,13 +84,13 @@ internal class SecureDataService(AesCryptographyService aes)
 
     public string HashSha256(string value)
     {
-        var l = Log.Fn<string>(enabled: Debug);
+        using var l = Log.Fn<string>(enabled: Debug);
         return l.Return(Sha256.Hash(value ?? ""));
     }
 
     public string HashSha512(string value)
     {
-        var l = Log.Fn<string>(enabled: Debug);
+        using var l = Log.Fn<string>(enabled: Debug);
         return l.Return(Sha512.Hash(value ?? ""));
     }
 

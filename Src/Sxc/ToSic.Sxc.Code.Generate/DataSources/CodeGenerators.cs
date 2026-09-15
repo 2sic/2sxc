@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.Raw;
+using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Sxc.Code.Generate.Sys;
@@ -20,7 +20,7 @@ namespace ToSic.Sxc.DataSources;
 public class CodeGenerators: CustomDataSource
 {
     public CodeGenerators(Dependencies services, LazySvc<IEnumerable<IFileGenerator>> generators)
-        : base(services, logName: "CDS.Generators", connect: [generators])
+        : base(services, logName: "CDS.Generators")
     {
         ProvideOutRaw(
             () => Generators(generators.Value),
@@ -45,7 +45,7 @@ public class CodeGenerators: CustomDataSource
 
     private IEnumerable<IRawEntity> Generators(IEnumerable<IFileGenerator> fileGenerators)
     {
-        var l = Log.Fn<IEnumerable<IRawEntity>>();
+        using var l = Log.Fn<IEnumerable<IRawEntity>>();
         var list = fileGenerators
             .Select(g => new RawEntity
             {
@@ -67,7 +67,7 @@ public class CodeGenerators: CustomDataSource
 
     private IEnumerable<IRawEntity> OutputTypes(IEnumerable<IFileGenerator> fileGenerators)
     {
-        var l = Log.Fn<IEnumerable<IRawEntity>>();
+        using var l = Log.Fn<IEnumerable<IRawEntity>>();
         var list = fileGenerators
             .GroupBy(g => g.OutputType)
             .Select(g => new RawEntity

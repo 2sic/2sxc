@@ -17,8 +17,6 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
 
     public NetCoreWebApiContextHelper(ControllerBase owner, ICanGetService helper) : base("Oqt.ApiHlp")
     {
-        if (owner is IHasLog ownerWithLog)
-            this.LinkLog(ownerWithLog.Log);
         _owner = owner;
         _helper = helper;
     }
@@ -120,7 +118,7 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
     /// <returns></returns>
     private IApp LoadAppOnly(int appId, ISite site)
     {
-        var l = Log.Fn<IApp>($"{appId}");
+        using var l = Log.Fn<IApp>($"{appId}");
         var app = _helper.GetService<Apps.App>();
         app.Init(site, new AppIdentityPure(site.ZoneId, appId), new());
         return l.Return(app);

@@ -8,7 +8,7 @@ using ToSic.Sxc.Apps.Sys.Ui;
 namespace ToSic.Sxc.Apps.Sys.Work;
 
 public class WorkViewsContentTypes(AppWorkChain<WorkViews> workViews, IConvertToEavLight dataToFormatLight, LazySvc<IValueConverter> valConverterLazy, IAppWorkContext appWorkCtx)
-    : ServiceBase("Viw.Cts", connect: [workViews, dataToFormatLight, valConverterLazy, appWorkCtx])
+    : ServiceBase("Viw.Cts")
 {
     public IList<ContentTypeUiInfo> GetContentTypesWithStatus(IAppWorkContext appWorkCtx, string appPath, string appPathShared)
     {

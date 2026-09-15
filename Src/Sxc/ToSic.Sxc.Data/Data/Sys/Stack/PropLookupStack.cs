@@ -13,7 +13,7 @@ internal class PropLookupStack(IPropertyStack stack, Func<bool> getDebug) : IPro
         specs = specs.SubLog("Sxc.DynStk", getDebug());
         path = path.Add("DynStack", specs.Field);
 
-        var l = specs.LogOrNull.Fn<PropReqResult?>(specs.Dump(), nameof(PropLookupStack));
+        using var l = specs.LogOrNull.Fn<PropReqResult?>(specs.Dump(), nameof(PropLookupStack));
         if (!specs.Field.HasValue())
             return l.Return(PropReqResult.Null(path), "no key");
 

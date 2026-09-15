@@ -12,7 +12,7 @@ public class AssetEditor(
     LazySvc<AppFolderInitializer> appFolderInitializer,
     ISite site,
     IAppPathsMicroSvc appPaths)
-    : ServiceWithSetup<IAppWorkContext>("Sxc.AstEdt", connect: [user, appFolderInitializer, workViews, site, appPaths])
+    : ServiceWithSetup<IAppWorkContext>("Sxc.AstEdt")
 {
 
     #region Constructor / DI

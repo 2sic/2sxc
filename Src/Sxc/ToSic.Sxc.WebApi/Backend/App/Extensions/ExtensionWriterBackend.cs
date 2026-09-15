@@ -11,12 +11,12 @@ public class ExtensionWriterBackend(
     LazySvc<IAppReaderFactory> appReadersLazy,
     ISite site,
     IAppPathsMicroSvc appPathSvc)
-    : ServiceBase("Bck.ExtWrite", connect: [appReadersLazy, site, appPathSvc])
+    : ServiceBase("Bck.ExtWrite")
 {
     // Remove previous local serializer & use shared helper
     public bool SaveConfiguration(int appId, string name, ExtensionManifest manifest)
     {
-        var l = Log.Fn<bool>($"a:{appId}, f:'{name}'");
+        using var l = Log.Fn<bool>($"a:{appId}, f:'{name}'");
         if (name.IsEmpty())
             return l.ReturnFalse("no folder");
         name = name.Trim();

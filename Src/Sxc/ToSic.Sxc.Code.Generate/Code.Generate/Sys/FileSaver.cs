@@ -11,11 +11,11 @@ namespace ToSic.Sxc.Code.Generate.Sys;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class FileSaver(ISite site, IAppReaderFactory appReadFac, IAppPathsMicroSvc appPaths)
-    : ServiceBase(SxcLogName + ".GenFSv", connect: [site, appReadFac, appPaths])
+    : ServiceBase(SxcLogName + ".GenFSv")
 {
     public void GenerateAndSaveFiles(IFileGenerator generator, IFileGeneratorSpecs specs)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
 
         var bundle = generator.Generate(specs).First();
         var physicalPath = GetAppCodeDataPhysicalPath(bundle.Path, specs);

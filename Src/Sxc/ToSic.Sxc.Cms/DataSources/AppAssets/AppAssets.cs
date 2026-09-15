@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using ToSic.Eav.DataSource;
 
 using ToSic.Eav.DataSource.Sys;
@@ -86,7 +86,7 @@ public class AppAssets: CustomDataSourceAdvanced
     #region Constructor
 
     [PrivateApi]
-    public AppAssets(Dependencies services, AppAssetsDataSourceProvider appAssetsSource) : base(services, "CDS.AppFiles", connect: [appAssetsSource])
+    public AppAssets(Dependencies services, AppAssetsDataSourceProvider appAssetsSource) : base(services, "CDS.AppFiles")
     {
         _appAssetsSource = appAssetsSource;
 
@@ -139,7 +139,7 @@ public class AppAssets: CustomDataSourceAdvanced
     /// <returns></returns>
     private (IImmutableList<IEntity> folders, IImmutableList<IEntity> files) GetInternal()
     {
-        var l = Log.Fn<(IImmutableList<IEntity> folders, IImmutableList<IEntity> files)>(timer: true);
+        using var l = Log.Fn<(IImmutableList<IEntity> folders, IImmutableList<IEntity> files)>(timer: true);
 
         var specs = Specs with
         {

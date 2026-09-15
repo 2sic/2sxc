@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Data.Sys.Entities.Sources;
 using ToSic.Eav.DataSource;
 
@@ -142,7 +142,7 @@ public class Users : CustomDataSourceAdvanced
     /// </summary>
     [PrivateApi]
     public Users(Dependencies services, IUsersProvider provider, IDataSourceGenerator<UserRoles> rolesGenerator)
-        : base(services, "SDS.Users", connect: [provider, rolesGenerator])
+        : base(services, "SDS.Users")
     {
         _provider = provider;
         _rolesGenerator = rolesGenerator;
@@ -158,7 +158,7 @@ public class Users : CustomDataSourceAdvanced
 
     private (IEnumerable<IEntity> Users, IEnumerable<IEntity> UserRoles) GetUsersAndRoles()
     {
-        var l = Log.Fn<(IEnumerable<IEntity> Users, IEnumerable<IEntity> UserRoles)>();
+        using var l = Log.Fn<(IEnumerable<IEntity> Users, IEnumerable<IEntity> UserRoles)>();
 
         // Get raw users from provider, then generate entities
         var usersRaw = GetUsersAndFilter();
@@ -201,7 +201,7 @@ public class Users : CustomDataSourceAdvanced
 
     private List<UserModelRaw> GetUsersAndFilter()
     {
-        var l = Log.Fn<List<UserModelRaw>>();
+        using var l = Log.Fn<List<UserModelRaw>>();
         var users = _provider.GetUsers(Specs)?.ToList();
         if (users == null || users.Count == 0)
             return l.Return([], "null/empty");

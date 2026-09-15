@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.Models.Sys;
 using ToSic.Sxc.Data.Sys.Factory;
@@ -110,7 +110,7 @@ partial class CodeDataFactory
 
     private IEnumerable<ITypedItem> AsItemList(object list, IEnumerable<ITypedItem>? fallback, int recursions, ModelSettings settings)
     {
-        var l = Log.Fn<IEnumerable<ITypedItem>>($"{nameof(list)}: '{list}'; Settings: {settings}");
+        using var l = Log.Fn<IEnumerable<ITypedItem>>($"{nameof(list)}: '{list}'; Settings: {settings}");
 
         if (recursions <= 0)
             return FallbackOrErrorAndLog("max recursions", $"Max recursions {MaxRecursions} reached.");

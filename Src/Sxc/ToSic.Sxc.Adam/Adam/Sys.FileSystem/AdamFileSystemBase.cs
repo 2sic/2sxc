@@ -10,12 +10,10 @@ public abstract class AdamFileSystemBase : ServiceBase, IAdamFileSystem
     #region Setup
 
     protected AdamFileSystemBase(IAdamPaths adamPaths, string logPrefix, object[]? connect = default)
-        : base($"{logPrefix}.FilSys", connect: [adamPaths, ..connect ?? []])
+        : base($"{logPrefix}.FilSys")
     {
         AdamPaths = adamPaths;
-        ConnectLogs([
-            FsHelpers = new(adamPaths)
-        ]);
+        FsHelpers = new(adamPaths);
     }
 
     protected readonly AdamFileSystemHelpers FsHelpers;
@@ -23,7 +21,7 @@ public abstract class AdamFileSystemBase : ServiceBase, IAdamFileSystem
 
     public void Init(AdamManager adamManager)
     {
-        var l = Log.Fn();
+        using var l = Log.Fn();
         AdamManager = adamManager;
         AdamPaths.Init(adamManager);
         l.Done();

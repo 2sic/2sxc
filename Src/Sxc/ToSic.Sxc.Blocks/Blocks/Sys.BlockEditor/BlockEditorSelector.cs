@@ -2,11 +2,11 @@
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockEditorSelector(LazySvc<BlockEditorForModule> blkEdtForMod, LazySvc<BlockEditorForEntity> blkEdtForEnt)
-    : ServiceBase($"{SxcLogName}.BlEdSl", connect: [blkEdtForMod, blkEdtForEnt])
+    : ServiceBase($"{SxcLogName}.BlEdSl")
 {
     public BlockEditorBase GetEditor(IBlock block)
     {
-        var l = Log.Fn<BlockEditorBase>();
+        using var l = Log.Fn<BlockEditorBase>();
         var editor = GetEditorInternal(block);
         editor.Init(block);
         return l.Return(editor);

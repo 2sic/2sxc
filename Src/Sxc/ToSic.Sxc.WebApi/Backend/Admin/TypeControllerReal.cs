@@ -14,8 +14,7 @@ public class TypeControllerReal(
     AppWorkQuick<WorkContentTypesMod> typeMod,
     LazySvc<IUser> userLazy,
     Generator<ImportContent> importContent)
-    : Services_ServiceBase("Api.TypesRl",
-        connect: [context, contentExportLazy, userLazy, typeMod, importContent]), ITypeController
+    : Services_ServiceBase("Api.TypesRl"), ITypeController
 {
     public const string LogSuffix = "Types";
 
@@ -36,7 +35,7 @@ public class TypeControllerReal(
     // in the future, the JS front-end should send something clearer and not the whole object
     public bool Save(int appId, Dictionary<string, object?>? item)
     {
-        var l = Log.Fn<bool>();
+        using var l = Log.Fn<bool>();
             
         if (item == null)
             return l.ReturnFalse("item was null, will cancel");
@@ -90,7 +89,7 @@ public class TypeControllerReal(
     /// <exception cref="ArgumentException"></exception>
     public ImportResultDto Import(HttpUploadedFile uploadInfo, int zoneId, int appId)
     {
-        var l = Log.Fn<ImportResultDto>();
+        using var l = Log.Fn<ImportResultDto>();
 
         if (!uploadInfo.HasFiles())
             return l.Return(new(false, "no file uploaded", Message.MessageTypes.Error), "no file uploaded");

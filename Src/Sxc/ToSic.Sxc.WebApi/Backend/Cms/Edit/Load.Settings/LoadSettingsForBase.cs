@@ -1,10 +1,10 @@
-﻿using ToSic.Eav.Data.Sys;
+using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Models;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Settings;
 
 internal abstract class LoadSettingsForBase(string logName, object[]? connect = default)
-    : ServiceBase(logName, connect: connect), ILoadSettingsProvider
+    : ServiceBase(logName), ILoadSettingsProvider
 {
     public abstract Dictionary<string, object> GetSettings(LoadSettingsProviderParameters parameters);
 
@@ -17,7 +17,7 @@ internal abstract class LoadSettingsForBase(string logName, object[]? connect = 
         Func<TModel, TData> modelConverter)
         where TModel : class, IModelFromEntity
     {
-        var l = Log.Fn<Dictionary<string, object>>();
+        using var l = Log.Fn<Dictionary<string, object>>();
         var data = defaults;
 
         if (!forceDefaults)

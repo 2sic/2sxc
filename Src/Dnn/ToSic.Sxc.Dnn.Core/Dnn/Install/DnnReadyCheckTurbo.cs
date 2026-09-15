@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Dnn.Install;
 /// It will have to do various file accesses - so once it knows a module is ready, it will cache the result.
 /// </summary>
 internal class DnnReadyCheckTurbo(LazySvc<AppFolderInitializer> appFolderInitializerLazy)
-    : ServiceBase("Dnn.PreChk", connect: [appFolderInitializerLazy])
+    : ServiceBase("Dnn.PreChk")
 {
     /// <summary>
     /// Fast static check to see if the check had previously completed. 
@@ -20,7 +20,7 @@ internal class DnnReadyCheckTurbo(LazySvc<AppFolderInitializer> appFolderInitial
     /// <param name="log"></param>
     public static bool QuickCheckSiteAndAppFoldersAreReady(PortalModuleBase module, ILog log)
     {
-        var l = log.Fn<bool>($"module: {module.ModuleId}; page: {module.TabId}");
+        using var l = log.Fn<bool>($"module: {module.ModuleId}; page: {module.TabId}");
         return CachedModuleResults.TryGetValue(module.ModuleId, out var exists) && exists
             ? l.ReturnTrue("quick-check: ready")
             : l.ReturnFalse("deep-check: not ready, must do extensive check");
@@ -31,7 +31,7 @@ internal class DnnReadyCheckTurbo(LazySvc<AppFolderInitializer> appFolderInitial
     /// </summary>
     public bool EnsureSiteAndAppFoldersAreReady(PortalModuleBase module, IBlock block)
     {
-        var l = Log.Fn<bool>(timer: true, message: $"module {module.ModuleId} on page {module.TabId}");
+        using var l = Log.Fn<bool>(timer: true, message: $"module {module.ModuleId} on page {module.TabId}");
         if (CachedModuleResults.TryGetValue(module.ModuleId, out var exists) && exists)
             return l.ReturnTrue("Previous check completed, will skip");
 
@@ -67,7 +67,7 @@ internal class DnnReadyCheckTurbo(LazySvc<AppFolderInitializer> appFolderInitial
     /// </summary>
     private void EnsureSiteIsConfiguredAndTemplateFolderExists(PortalModuleBase module, IBlock block)
     {
-        var l = Log.Fn($"module {module.ModuleId} on page {module.TabId}");
+        using var l = Log.Fn($"module {module.ModuleId} on page {module.TabId}");
         var sxcFolder = new DirectoryInfo(block.Context.Site.AppsRootPhysicalFull);
         var contentFolder = new DirectoryInfo(Path.Combine(sxcFolder.FullName, KnownAppsConstants.ContentAppFolder));
         if (!(sxcFolder.Exists && contentFolder.Exists))

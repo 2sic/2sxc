@@ -18,7 +18,7 @@ public class ListControllerReal(
     LazySvc<ListActivitySave> actSave,
     AppWorkChain<ListActivityGetBlockHeader> actGetBlockHeader
         )
-    : ServiceBase("Api.LstRl", connect: [workFieldList, publishing, ctxService, appCtxSvc, actReplace, actReplaceOptions, actGetItems, actSave, actGetBlockHeader]),
+    : ServiceBase("Api.LstRl"),
         IListController
 {
     public const string LogSuffix = "Lst";
@@ -43,7 +43,7 @@ public class ListControllerReal(
 
     public void Move(Guid? parent, string fields, int index, int toIndex) 
     {
-        var l = Log.Fn($"parent:{parent}, fields:{fields}, index:{index}, toIndex:{toIndex}");
+        using var l = Log.Fn($"parent:{parent}, fields:{fields}, index:{index}, toIndex:{toIndex}");
         var fList = workFieldList.New(GetCtx());
         ModifyList(FindOrThrow(parent), fields,
             (entity, fieldList, versioning) => fList.FieldListMove(entity, fieldList, index, toIndex, versioning));
@@ -53,7 +53,7 @@ public class ListControllerReal(
 
     public void Delete(Guid? parent, string part, int index) 
     {
-        var l = Log.Fn($"parent:{parent}, fields:{part}, index:{index}");
+        using var l = Log.Fn($"parent:{parent}, fields:{part}, index:{index}");
         var fList = workFieldList.New(GetCtx());
         ModifyList(FindOrThrow(parent), part,
             (entity, fieldList, versioning) => fList.FieldListRemove(entity, fieldList, index, versioning));

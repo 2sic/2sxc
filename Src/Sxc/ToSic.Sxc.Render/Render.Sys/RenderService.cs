@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Render.Sys;
 /// </summary>
 [PrivateApi("Hide Implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class RenderService(RenderService.Dependencies services) : ServiceWithContext("Sxc.RndSvc", connect: [services]),
+public class RenderService(RenderService.Dependencies services) : ServiceWithContext("Sxc.RndSvc"),
     IRenderService
 {
     #region Constructor & ConnectToRoot
@@ -29,7 +29,7 @@ public class RenderService(RenderService.Dependencies services) : ServiceWithCon
         Generator<InTextContentBlockRenderer> InTextRenderer,
         Generator<IBlockRenderer> BlockBuilderGenerator,
         LazySvc<ILogStore> LogStore)
-        : DependenciesBase(connect: [EditGenerator, Builder, SimpleRenderer, InTextRenderer, LogStore, BlockBuilderGenerator]);
+        : DependenciesBase();
 
     // ReSharper disable once InconsistentNaming
 
@@ -102,7 +102,7 @@ public class RenderService(RenderService.Dependencies services) : ServiceWithCon
     /// <inheritdoc />
     public virtual IRenderResult Module(int pageId, int moduleId, NoParamOrder npo = default, object? data = null)
     {
-        var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
+        using var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
 
         // This service is often used from a theme/skin, in which case it doesn't have a ExecutionContext,
         // which also means that it was not logged - which we're doing here.

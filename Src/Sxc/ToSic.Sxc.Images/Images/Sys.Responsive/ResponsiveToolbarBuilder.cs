@@ -14,7 +14,7 @@ internal class ResponsiveToolbarBuilder(ILog parentLog) : HelperBase(parentLog, 
     // still implemented as a method, so we could add future parameters if necessary
     public IToolbarBuilder? Toolbar(ImageService imgService, ResponsiveSpecsOfTarget target, TweakMedia tweaker, ResizeSettings? settings, string src)
     {
-        var l = Log.Fn<IToolbarBuilder?>();
+        using var l = Log.Fn<IToolbarBuilder?>();
         switch (tweaker.ToolbarObj)
         {
             case false:

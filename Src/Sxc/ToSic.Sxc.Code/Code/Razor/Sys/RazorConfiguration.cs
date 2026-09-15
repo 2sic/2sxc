@@ -24,7 +24,7 @@ public class RazorConfiguration(RenderSpecs renderSpecs, ILog parentLog): Helper
         if (Parent == null)
             return null;
 
-        var l = Log.Fn<string?>($"{nameof(seconds)}: '{seconds}', {nameof(watch)}: '{watch}', {nameof(varyBy)}: '{varyBy}', {nameof(url)}: '{url}', {nameof(model)}: '{model}'");
+        using var l = Log.Fn<string?>($"{nameof(seconds)}: '{seconds}', {nameof(watch)}: '{watch}', {nameof(varyBy)}: '{varyBy}', {nameof(url)}: '{url}', {nameof(model)}: '{model}'");
         var hasParams = new[] { seconds as object, watch, varyBy, url, model }.Any(x => x != null);
         if (hasParams)
         {

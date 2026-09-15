@@ -10,11 +10,11 @@ public class ListActivitySave(
     AppWorkQuick<WorkFieldList> workFieldList,
     LazySvc<IPagePublishing> publishing,
     ISxcCurrentContextService ctxService
-    ) : ServiceBase("Api.CntGrpRl", connect: [workFieldList, ctxService, publishing])
+    ) : ServiceBase("Api.CntGrpRl")
 {
     public bool ItemList(Guid parent, List<EntityInListDto>? list,  string part)
     {
-        var l = Log.Fn<bool>($"list for:{parent}, items:{list?.Count}");
+        using var l = Log.Fn<bool>($"list for:{parent}, items:{list?.Count}");
         if (list == null)
             throw l.Done(new ArgumentNullException(nameof(list)));
 

@@ -21,8 +21,7 @@ internal class OqtZoneMapper(
     OqtSiteGroup oqtSiteGroup,
     IAppsCatalog appsCat,
     LazySvc<ITenantManager> tenantManager)
-    : ZoneMapperBase(appsCat, $"{OqtConstants.OqtLogPrefix}.ZoneMp",
-        connect: [siteRepository, settingRepository, site, zoneCreatorLazy, oqtCulture, oqtSiteGroup, tenantManager])
+    : ZoneMapperBase(appsCat, $"{OqtConstants.OqtLogPrefix}.ZoneMp")
 {
     public override int GetZoneId(int siteId)
     {

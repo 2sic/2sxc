@@ -18,7 +18,7 @@ internal partial class DnnEnvironmentInstaller : ServiceBase, IEnvironmentInstal
     /// Instance initializers...
     /// </summary>
     public DnnEnvironmentInstaller(ILogStore logStore, DnnInstallLogger installLogger, LazySvc<IGlobalConfiguration> globalConfiguration, LazySvc<IAppJsonConfigurationService> appJsonService, IHostSettingsService hostSettingsService)
-        : base("Dnn.InstCo", connect: [appJsonService, installLogger, globalConfiguration])
+        : base("Dnn.InstCo")
     {
         _appJsonService = appJsonService;
         _installLogger = installLogger;
