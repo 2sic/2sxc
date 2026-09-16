@@ -113,7 +113,7 @@ public class NetCoreControllersHelperTests
         private static LogStoreLive CreateStore()
         {
             var store = new LogStoreLive();
-            store.Configure("ILogger", bridgeEnabled: true);
+            store.Configure(null);
             return store;
         }
 

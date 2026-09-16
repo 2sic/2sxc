@@ -93,15 +93,16 @@ public class StartupDnn : IServiceRouteMapper
     {
         var isEnabled = bool.TryParse(ConfigurationManager.AppSettings[LogEventBridge.EnabledConfigurationKey], out var enabled)
             && enabled;
-        var loggerFactory = isEnabled ? serviceProvider.GetService<ILoggerFactory>() : null;
-        LogEventBridge.SetSink(loggerFactory == null ? null : new MicrosoftLoggerEventSink(loggerFactory));
-        var storeStatus = serviceProvider.GetService<ILogStoreLive>()?.Configure(
-            ConfigurationManager.AppSettings[LogStoreLive.StoreConfigurationKey], loggerFactory != null);
-
+        var store = serviceProvider.GetService<ILogStoreLive>();
+        var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
         if (loggerFactory != null)
-            log.A($"{nameof(LogEventBridge)} enabled using {loggerFactory.GetType().Name}; {storeStatus}");
-        else if (isEnabled)
-            log.W($"{nameof(LogEventBridge)} is enabled, but DNN has no {nameof(ILoggerFactory)} registered.");
+            LogEventBridge.SetSink(new MicrosoftLoggerEventSink(loggerFactory, isEnabled));
+        var storeStatus = store?.Configure(ConfigurationManager.AppSettings[LogStoreLive.StoreConfigurationKey]);
+
+        log.A($"{nameof(LogEventBridge)} local capture enabled; external forwarding " +
+              $"{(isEnabled ? "enabled" : "disabled")}; {storeStatus}");
+        if (loggerFactory == null)
+            log.W($"DNN has no {nameof(ILoggerFactory)} registered; using the direct local Insights sink.");
     }
 
     /// <summary>

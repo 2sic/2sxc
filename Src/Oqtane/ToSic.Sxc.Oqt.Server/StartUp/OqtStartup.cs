@@ -96,18 +96,17 @@ public class OqtStartup : IServerStartup
         var serviceProvider = app.ApplicationServices;
 
         var isLogBridgeEnabled = Configuration.GetValue<bool>(LogEventBridge.EnabledConfigurationKey);
-        var loggerFactory = isLogBridgeEnabled
-            ? serviceProvider.GetService<ILoggerFactory>()
-            : null;
-        LogEventBridge.SetSink(loggerFactory == null ? null : new MicrosoftLoggerEventSink(loggerFactory));
-        var storeStatus = serviceProvider.GetService<ILogStoreLive>()?.Configure(
-            Configuration[LogStoreLive.StoreConfigurationKey], loggerFactory != null);
+        var store = serviceProvider.GetService<ILogStoreLive>();
+        var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+        if (loggerFactory != null)
+            LogEventBridge.SetSink(new MicrosoftLoggerEventSink(loggerFactory, isLogBridgeEnabled));
+        var storeStatus = store?.Configure(Configuration[LogStoreLive.StoreConfigurationKey]);
 
         var bridgeLog = new global::ToSic.Sys.Logging.Log("Sys.Boot", null, nameof(OqtStartup));
-        if (loggerFactory != null)
-            bridgeLog.A($"{nameof(LogEventBridge)} enabled using {loggerFactory.GetType().Name}; {storeStatus}");
-        else if (isLogBridgeEnabled)
-            bridgeLog.W($"{nameof(LogEventBridge)} is enabled, but Oqtane has no {nameof(ILoggerFactory)} registered.");
+        bridgeLog.A($"{nameof(LogEventBridge)} local capture enabled; external forwarding " +
+                    $"{(isLogBridgeEnabled ? "enabled" : "disabled")}; {storeStatus}");
+        if (loggerFactory == null)
+            bridgeLog.W($"Oqtane has no {nameof(ILoggerFactory)} registered; using the direct local Insights sink.");
 
         var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
         globalConfig.ConnectionString(Configuration.GetConnectionString("DefaultConnection"));
