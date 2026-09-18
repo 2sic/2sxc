@@ -7,6 +7,7 @@ using ToSic.Sxc.Render.Issues.Sys;
 
 namespace ToSic.Sxc.Render.Engines.Sys;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class EngineSpecsService(
     IServerPaths serverPaths,
     EnginePolymorphism enginePolymorphism,

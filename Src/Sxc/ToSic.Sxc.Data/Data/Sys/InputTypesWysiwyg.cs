@@ -1,5 +1,6 @@
 ﻿namespace ToSic.Sxc.Data.Sys;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class InputTypesWysiwyg
 {
     /// <summary>

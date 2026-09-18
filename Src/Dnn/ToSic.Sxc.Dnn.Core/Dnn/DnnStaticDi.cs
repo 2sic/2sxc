@@ -7,6 +7,7 @@ namespace ToSic.Sxc.Dnn;
 /// This is a temporary helper for Dnn 7+ to help with dependency injection which is
 /// patched unto Dnn.
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class DnnStaticDi
 {
     private static Func<IServiceProvider> _getGlobalDnnServiceProvider;

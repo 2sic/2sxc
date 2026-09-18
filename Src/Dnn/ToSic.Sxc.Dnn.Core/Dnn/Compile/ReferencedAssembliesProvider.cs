@@ -10,6 +10,7 @@ using static System.StringComparer;
 namespace ToSic.Sxc.Dnn.Compile;
 
 [PrivateApi]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ReferencedAssembliesProvider(
     DependenciesLoader dependenciesLoader,
     AssemblyResolver assemblyResolver,

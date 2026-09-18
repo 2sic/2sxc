@@ -8,6 +8,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys;
 /// <summary>
 /// Handles reuse of existing assemblies when the compiler cannot overwrite locked files.
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class RoslynCacheFallbackHandler(
     IAssemblyDiskCacheService diskCacheService,
     TemplateCacheService cacheService,

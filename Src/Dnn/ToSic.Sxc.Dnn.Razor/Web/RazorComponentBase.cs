@@ -14,7 +14,8 @@ namespace ToSic.Sxc.Web;
 /// It only contains internal wiring stuff, so not to be published
 /// </summary>
 [PrivateApi("internal class only!")]
-[ShowApiWhenReleased(ShowApiMode.Never)]
+// Do not do this, as derived classes would not be visible in Intellisense
+//[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract partial class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHasLog, IDnnRazorCompatibility, ICompatibilityLevel
 {
     #region Constructor / Setup

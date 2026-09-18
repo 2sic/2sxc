@@ -13,6 +13,7 @@ namespace ToSic.Sxc.DataSources;
     Audience = Audience.System,
     DataConfidentiality = DataConfidentiality.System,
     UiHint = "App Editions")]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppEditions : CustomDataSource
 {
     public AppEditions(Dependencies services, IAppJsonConfigurationService appJsonService)
@@ -51,6 +52,7 @@ public class AppEditions : CustomDataSource
             return l.Return(list, $"{list.Count}");
         }
 
+        // TODO: @2rb - fix this and the case above to use a record/auto-convert
         // default data
         var rootEdition = new RawEntity
         {

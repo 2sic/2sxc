@@ -3,6 +3,7 @@
 /// <summary>
 /// Contract for WebApi controllers supporting ADAM calls
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IAdamController<in TId>
 {
     /// <summary>

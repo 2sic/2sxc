@@ -16,7 +16,9 @@ namespace Custom.Hybrid;
 /// The base class for Hybrid Razor-Components in 2sxc 12 <br/>
 /// Provides context objects like CmsContext, helpers like Edit and much more. <br/>
 /// </summary>
-[PublicApi]
+[PrivateApi("Made private in v22, going obsolete")]
+[Obsolete]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHelp, ICreateInstance
 {
     internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();

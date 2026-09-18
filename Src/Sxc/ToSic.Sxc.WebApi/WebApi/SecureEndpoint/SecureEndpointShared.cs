@@ -35,6 +35,7 @@ internal class SecureEndpointShared
 /// If the data is encrypted, it would need to be required. But because we're test-deserializing this to do duck-checking, it cannot be required.
 /// See also <see cref="EncryptedData"/>
 /// </remarks>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class EncryptedDataRaw
 {
     public int Version { get; init; } = 1;

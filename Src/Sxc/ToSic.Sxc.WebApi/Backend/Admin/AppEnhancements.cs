@@ -20,6 +20,7 @@ namespace ToSic.Eav.WebApi.Sys.Admin;
     DataConfidentiality = DataConfidentiality.Internal,
     UiHint = "Settings, resources and metadata of the current app"
 )]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 // ReSharper disable once UnusedMember.Global
 public class AppEnhancements : CustomDataSource
 {

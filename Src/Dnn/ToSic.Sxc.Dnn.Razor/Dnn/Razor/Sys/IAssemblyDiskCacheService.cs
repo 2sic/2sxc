@@ -6,6 +6,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys;
 /// <summary>
 /// Abstraction for persisting compiled assemblies for Razor/code files.
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IAssemblyDiskCacheService
 {
     /// <summary>

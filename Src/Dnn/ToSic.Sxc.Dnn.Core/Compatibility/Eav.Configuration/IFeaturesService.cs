@@ -11,6 +11,8 @@ namespace ToSic.Eav.Configuration;
 /// This replaces the older static Features accessor - please only use this from now on
 /// </remarks>
 [PrivateApi("was published in previous versions of 2sxc, so we must keep this available, but don't plan on providing it any more")]
+[ShowApiWhenReleased(ShowApiMode.Never)]
+[Obsolete]
 public interface IFeaturesService
 {
     /// <summary>

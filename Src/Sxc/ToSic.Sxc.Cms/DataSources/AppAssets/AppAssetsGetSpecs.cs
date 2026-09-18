@@ -3,6 +3,7 @@ using ToSic.Sys.Work;
 
 namespace ToSic.Sxc.DataSources;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public record AppAssetsGetSpecs: IWorkSpecs
 {
     public int AppId { get; init; } = int.MinValue;

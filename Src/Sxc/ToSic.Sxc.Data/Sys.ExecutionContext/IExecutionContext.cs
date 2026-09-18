@@ -13,6 +13,7 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 ///
 /// The initial interface has none or few properties, so that we can pass it around without all projects being tied to each other.
 /// </remarks>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IExecutionContext: ICanGetService, IHasPiggyBack, IHasLog
 {
     /// <summary>

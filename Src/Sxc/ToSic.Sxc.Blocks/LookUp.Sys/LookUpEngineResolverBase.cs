@@ -6,6 +6,7 @@ using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.LookUp.Sys;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> builtInSources, string logName, NoParamOrder npo = default, object[]? connect = default)
     : ServiceBase(logName, npo, connect), ILookUpEngineResolver
 {

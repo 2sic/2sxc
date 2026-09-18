@@ -13,6 +13,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys;
 /// <summary>
 /// Service responsible for compiling Razor templates (.cshtml) into assemblies.
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class RazorCompilerService(
     MemoryCacheService memoryCacheService,
     IAssemblyDiskCacheService diskCacheService)

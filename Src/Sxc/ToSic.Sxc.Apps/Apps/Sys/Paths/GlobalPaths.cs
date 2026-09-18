@@ -3,6 +3,7 @@ using ToSic.Sys.Configuration;
 
 namespace ToSic.Sxc.Apps.Sys.Paths;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class GlobalPaths(LazySvc<IServerPaths> serverPaths, LazySvc<IGlobalConfiguration> config)
     : ServiceBase("Viw.Help", connect: [serverPaths, config])
 {

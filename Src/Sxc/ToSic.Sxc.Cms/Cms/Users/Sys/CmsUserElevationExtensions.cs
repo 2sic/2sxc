@@ -4,6 +4,7 @@ using ToSic.Sys.Wrappers;
 
 namespace ToSic.Sxc.Cms.Users.Sys;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class CmsUserElevationExtensions
 {
     public static UserElevation GetElevation(this ICmsUser user)

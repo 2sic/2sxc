@@ -3,6 +3,7 @@ namespace ToSic.Sxc.ImportExport.Package.Sys;
 /// <summary>
 /// Header / compatibility information about the package.
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public record PackageInstallHeader
 {
     private const string CurrentPackageFormatVersion = "00.00.01";
@@ -13,6 +14,8 @@ public record PackageInstallHeader
 
 
 }
+
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public enum PackageTypes
 {
     /// <summary>

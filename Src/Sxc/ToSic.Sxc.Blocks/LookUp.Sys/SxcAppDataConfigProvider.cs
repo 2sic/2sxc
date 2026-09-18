@@ -19,7 +19,7 @@ namespace ToSic.Sxc.LookUp.Sys;
 /// </summary>
 /// <param name="getEngineLazy"></param>
 /// <param name="httpLazy"></param>
-public class SxcAppDataConfigProvider(LazySvc<ILookUpEngineResolver> getEngineLazy, LazySvc<IHttp> httpLazy)
+internal class SxcAppDataConfigProvider(LazySvc<ILookUpEngineResolver> getEngineLazy, LazySvc<IHttp> httpLazy)
     : ServiceBase("Sxc.CnfPrv", connect: [getEngineLazy, httpLazy]), IAppDataConfigProvider
 {
     public IAppDataConfiguration GetDataConfiguration(SxcAppBase app, AppDataConfigSpecs specs)

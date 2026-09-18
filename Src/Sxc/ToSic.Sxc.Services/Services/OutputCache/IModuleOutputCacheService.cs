@@ -9,6 +9,7 @@
 /// It allows enabling/disabling the cache, configuring cache settings, and adding named dependencies
 /// that LightSpeed should watch for this render.
 /// </remarks>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IModuleOutputCacheService
 {
     /// <summary>

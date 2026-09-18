@@ -2,6 +2,7 @@
 
 namespace ToSic.Sxc.DataSources;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public record UsersGetSpecsParsed(UsersGetSpecs Specs)
 {
     #region Configuration

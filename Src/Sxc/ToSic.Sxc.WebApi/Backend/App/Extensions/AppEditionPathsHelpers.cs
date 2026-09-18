@@ -2,6 +2,7 @@ using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.App;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class AppEditionPathsHelpers
 {
     internal static string GetEditionRoot(this IAppPaths appPaths, string edition)

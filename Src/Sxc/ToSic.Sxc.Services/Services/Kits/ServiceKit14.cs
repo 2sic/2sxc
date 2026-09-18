@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Services;
 /// </remarks>
 [PublicApi]
 [method: PrivateApi("Public constructor for DI")]
-public class ServiceKit14() : ServiceKit("Sxc.Kit14") // , IServiceKitForTypedData /* probably not needed, since typed data is always newer base classes */
+public class ServiceKit14() : ServiceKit("Sxc.Kit14")
 {
     /// <summary>
     /// The ADAM Service, used to retrieve files and maybe more. 

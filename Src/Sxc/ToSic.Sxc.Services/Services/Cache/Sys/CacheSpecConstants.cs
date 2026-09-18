@@ -1,4 +1,6 @@
 ﻿namespace ToSic.Sxc.Services.Cache.Sys;
+
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CacheSpecConstants
 {
     public const string ByModule = "Module";

@@ -5,6 +5,7 @@ namespace ToSic.Sxc.Data.Sys.Wrappers;
 /// <summary>
 /// Service to create dynamic or typed objects from non Entity objects.
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICodeDataPoCoWrapperService
 {
     /// <summary>

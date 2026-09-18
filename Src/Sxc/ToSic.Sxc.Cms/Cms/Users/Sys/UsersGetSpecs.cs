@@ -1,5 +1,6 @@
 ﻿namespace ToSic.Sxc.Cms.Users.Sys;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public record UsersGetSpecs
 {
     /// <summary>

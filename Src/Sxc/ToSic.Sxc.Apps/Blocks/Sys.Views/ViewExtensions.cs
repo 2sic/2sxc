@@ -1,8 +1,8 @@
 ﻿namespace ToSic.Sxc.Blocks.Sys.Views;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class ViewExtensions
 {
-    [PrivateApi]
     internal static string GetTypeStaticName(this IView view, string groupPart)
         => groupPart.ToLowerInvariant() switch
         {

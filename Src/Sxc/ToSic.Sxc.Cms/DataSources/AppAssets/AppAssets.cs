@@ -9,7 +9,6 @@ using ToSic.Eav.Data.Sys.Entities.Sources;
 using ToSic.Sxc.Cms.Assets;
 using ToSic.Sxc.Cms.Assets.Sys;
 using ToSic.Sxc.DataSources.Sys.AppAssets;
-using static System.StringComparer;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform
@@ -47,7 +46,6 @@ namespace ToSic.Sxc.DataSources;
     Audience = Audience.Advanced,
     UiHint = "Files and folders in the App folder")]
 [PublicApi]
-[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppAssets: CustomDataSource
 {
     private readonly AppAssetsDataSourceProvider _appAssetsSource;

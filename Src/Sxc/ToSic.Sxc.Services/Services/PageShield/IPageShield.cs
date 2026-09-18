@@ -4,6 +4,7 @@ using ToSic.Sxc.Context;
 namespace ToSic.Sxc.Services.PageShield;
 
 [PrivateApi]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IPageShield
 {
     /// <summary>

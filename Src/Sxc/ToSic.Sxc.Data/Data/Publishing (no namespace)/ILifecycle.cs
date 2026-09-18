@@ -9,6 +9,7 @@
 /// See IVersion / ILifecycle - not yet in use.
 /// </summary>
 [PrivateApi]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ILifecycle
 {
     /// <summary>

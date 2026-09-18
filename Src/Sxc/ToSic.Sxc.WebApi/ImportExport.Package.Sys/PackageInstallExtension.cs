@@ -7,6 +7,7 @@ namespace ToSic.Sxc.ImportExport.Package.Sys;
 /// <param name="DefinitionFile">Path to the extension definition file</param>
 /// <param name="IndexFile">Path to the index file</param>
 /// <param name="IndexFileHash">Hash of the index file for verification</param>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public record PackageInstallExtension(
     string Name,
     string DefinitionFile,

@@ -1,6 +1,8 @@
 ﻿using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
+
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class ExecutionContextExtensions
 {
     /// <summary>

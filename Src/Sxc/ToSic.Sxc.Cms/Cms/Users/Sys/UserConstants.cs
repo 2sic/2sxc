@@ -2,6 +2,7 @@
 
 namespace ToSic.Sxc.Cms.Users.Sys;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class UserConstants
 {
     #region Constant user objects for Unknown/Anonymous

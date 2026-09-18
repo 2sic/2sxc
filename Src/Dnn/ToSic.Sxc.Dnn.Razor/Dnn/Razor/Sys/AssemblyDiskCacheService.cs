@@ -14,8 +14,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys;
 /// Implements disk-based caching layer below memory cache for improved restart performance.
 /// Delegates to shared AssemblyDiskCache for platform-neutral file operations.
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AssemblyDiskCacheService(
+internal class AssemblyDiskCacheService(
     LazySvc<IFeaturesService> featureService,
     IGlobalConfiguration globalConfiguration,
     AssemblyDiskCache diskCache,

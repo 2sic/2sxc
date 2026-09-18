@@ -9,7 +9,8 @@ namespace ToSic.Sxc.Dnn;
 /// If you create a class file for dynamic use and inherit from this, then the compiler will automatically add objects like Link, Dnn, etc.
 /// The class then also has AsDynamic(...) and AsList(...) commands like a normal razor page.
 /// </summary>
-[PublicApi]
+[PrivateApi("Was public, made private in v22 as we're moving away from dynamic. Will probably be removed in ca. 2 years")]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class DynamicCode : Sxc.Code.DynamicCode, IHasDnn
 {
     /// <inheritdoc />

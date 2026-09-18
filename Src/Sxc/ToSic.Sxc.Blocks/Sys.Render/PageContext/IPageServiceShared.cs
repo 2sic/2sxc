@@ -4,6 +4,7 @@ using ToSic.Sxc.Web.Sys.ClientAssets;
 
 namespace ToSic.Sxc.Sys.Render.PageContext;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IPageServiceShared: IChangeQueue
 {
     List<ClientAsset> GetAssetsAndFlush();

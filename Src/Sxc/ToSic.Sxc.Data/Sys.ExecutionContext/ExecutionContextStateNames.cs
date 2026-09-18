@@ -6,6 +6,7 @@
 /// <remarks>
 /// This is for the <see cref="IExecutionContext.GetDataStack{TState}"/>
 /// </remarks>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ExecutionContextStateNames
 {
     /// <summary>

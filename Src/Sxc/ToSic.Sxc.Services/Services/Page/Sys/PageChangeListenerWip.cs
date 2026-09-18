@@ -5,6 +5,7 @@ using ToSic.Sxc.Sys.Render.PageFeatures;
 
 namespace ToSic.Sxc.Services.Page.Sys;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class PageChangeListenerManagerWip
 {
     public List<RenderResult> RenderListeners = [];

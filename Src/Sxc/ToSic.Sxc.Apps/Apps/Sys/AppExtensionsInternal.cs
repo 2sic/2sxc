@@ -1,6 +1,8 @@
 ﻿using ToSic.Eav.LookUp.Sys.Engines;
 
 namespace ToSic.Sxc.Apps.Sys;
+
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class AppExtensionsInternal
 {
     public static ILookUpEngine? TryGetAppLookUpEngineOrNull(this IApp? app)

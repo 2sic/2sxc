@@ -1,5 +1,6 @@
 ﻿namespace ToSic.Sxc.Adam.Sys.Work;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public record AdamWorkOptions
 {
     public /*required*/ bool UsePortalRoot { get; init; }// = UsePortalRoot;

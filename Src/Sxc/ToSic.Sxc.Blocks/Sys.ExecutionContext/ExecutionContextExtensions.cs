@@ -3,6 +3,7 @@ using ToSic.Sxc.Context.Sys;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class ExecutionContextExtensions
 {
     public static IBlock GetBlock(this IExecutionContext exCtx)

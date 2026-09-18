@@ -14,6 +14,7 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.Dnn.dist;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CachedPageBase(
     IPortalController portalController,
     IApplicationStatusInfo applicationStatusInfo,

@@ -5,6 +5,7 @@ namespace ToSic.Sxc.ImportExport.Package.Sys;
 /// <summary>
 /// This is for a file which contains the index of a set of files, and also the lock/hashes,
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public record PackageIndexFile
 {
     /// <summary>

@@ -13,6 +13,7 @@ namespace ToSic.Sxc.Dnn;
 /// This is the connector-class which DNN consults when it needs to know things about a module
 /// It's used in the background, not when the page is loading
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class DnnBusinessController : ModuleSearchBase, IHasLog
 {
     #region Constructor (not DI)

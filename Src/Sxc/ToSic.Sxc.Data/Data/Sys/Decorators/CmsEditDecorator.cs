@@ -5,6 +5,7 @@ namespace ToSic.Sxc.Data.Sys.Decorators;
 /// <summary>
 /// Decorator for demo entities and similar, to disable editing so that the demo data isn't accidentally changed.
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public record CmsEditDecorator(bool DisableEdit)
     : IDecorator<IEntity>
 {

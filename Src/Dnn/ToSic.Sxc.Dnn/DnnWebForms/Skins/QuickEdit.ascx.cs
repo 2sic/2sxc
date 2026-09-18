@@ -1,9 +1,15 @@
-﻿using ToSic.Sxc.Dnn.Web;
+﻿using ToSic.Razor.Internals.Documentation;
+using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Services;
 // ReSharper disable UnusedMember.Global
 
 namespace ToSic.Sxc.Dnn.DnnWebForms.Skins;
 
+/// <summary>
+/// Simple control to add to Dnn Skins to enable the 2sxc quick-edit mode
+/// before any 2sxc module was added to the page.
+/// </summary>
+[PublicApi]
 public partial class QuickEdit : System.Web.UI.UserControl
 {
     private bool _isEdit;

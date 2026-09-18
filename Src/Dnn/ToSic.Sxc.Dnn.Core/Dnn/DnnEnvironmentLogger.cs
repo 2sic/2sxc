@@ -5,6 +5,7 @@ using ToSic.Sxc.Dnn.Search;
 
 namespace ToSic.Sxc.Dnn;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class DnnEnvironmentLogger: IEnvironmentLogger
 {
     public void LogException(Exception ex)

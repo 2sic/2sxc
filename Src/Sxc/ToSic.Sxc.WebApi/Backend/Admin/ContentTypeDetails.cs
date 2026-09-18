@@ -13,6 +13,7 @@ namespace ToSic.Eav.WebApi.Sys.Admin;
     DataConfidentiality = DataConfidentiality.Internal,
     UiHint = "Details of a single content type"
 )]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentTypeDetails : CustomDataSource
 {
     #region Configuration Properties

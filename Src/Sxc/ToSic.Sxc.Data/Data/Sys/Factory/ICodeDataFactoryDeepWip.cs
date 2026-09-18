@@ -6,6 +6,7 @@ namespace ToSic.Sxc.Data.Sys.Factory;
 /// Temporary interface so that `DynamicEntity` and `Field` can access specific data without
 /// needing to know the IBlockContext, which should not be available in those APIs
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICodeDataFactoryDeepWip
 {
     IAppReader? AppReaderOrNull { get; }

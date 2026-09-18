@@ -1,5 +1,6 @@
 ﻿namespace ToSic.Sxc.Dnn;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class DnnConstants
 {
     public const string LogName = "Dnn";

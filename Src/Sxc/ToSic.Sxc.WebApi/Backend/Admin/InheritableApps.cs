@@ -22,6 +22,8 @@ namespace ToSic.Eav.WebApi.Sys.Admin;
     DataConfidentiality = DataConfidentiality.System,
     UiHint = "Apps from other sites which the current site can inherit"
 )]
+[ShowApiWhenReleased(ShowApiMode.Never)]
+// ReSharper disable once UnusedMember.Global
 public class InheritableApps : CustomDataSource
 {
     private readonly WorkApps _workApps;

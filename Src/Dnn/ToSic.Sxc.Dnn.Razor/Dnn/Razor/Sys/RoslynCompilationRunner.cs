@@ -9,6 +9,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys;
 /// Handles the heavy lifting of compiling Razor templates and managing cache fallbacks.
 /// Keeps <see cref="RoslynBuildManager"/> small and focused on orchestration.
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class RoslynCompilationRunner(
     TemplateCacheService cacheService,
     RazorCompilerService razorCompiler,

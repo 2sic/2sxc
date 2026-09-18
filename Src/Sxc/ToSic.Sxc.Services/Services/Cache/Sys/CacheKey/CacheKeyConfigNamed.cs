@@ -3,6 +3,7 @@
 /// <summary>
 /// Describes a cache configuration for named parameters.
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public record CacheKeyConfigNamed
 {
     public required string? Names { get; init; }

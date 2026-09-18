@@ -1,6 +1,8 @@
 ﻿using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Services.Cache.Sys.CacheKey;
+
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class ForElevationExtensions
 {
     //public static int GetSlidingAny(this CacheKeyConfig keyConfig)

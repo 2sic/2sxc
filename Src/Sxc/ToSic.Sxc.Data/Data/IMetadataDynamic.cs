@@ -4,6 +4,7 @@ using ToSic.Eav.Metadata;
 namespace ToSic.Sxc.Data;
 
 [PrivateApi("old, should not be promoted any more")]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IMetadataDynamic : IHasMetadata, ICanDebug, ISxcDynamicObject, IEntityWrapper
 {
     /// <inheritdoc cref="ITypedMetadata.HasType"/>

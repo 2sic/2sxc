@@ -1,6 +1,8 @@
 ﻿using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.Cache.Sys.CacheKey;
+
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class CacheKeyConfigExtensions
 {
     public static CacheKeyConfig Updated(this CacheKeyConfig keyConfig, string name, string? keys, bool caseSensitive) =>

@@ -8,6 +8,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys;
 /// Helper utilities for working with assemblies and class names.
 /// </summary>
 [PrivateApi]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AssemblyUtilities() : ServiceBase("Dnn.RzAmUt")
 {
     internal const string DefaultNamespace = "RazorHost";

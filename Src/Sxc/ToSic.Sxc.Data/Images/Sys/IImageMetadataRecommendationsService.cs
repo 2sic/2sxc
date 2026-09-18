@@ -2,6 +2,7 @@
 
 namespace ToSic.Sxc.Images.Sys;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IImageMetadataRecommendationsService
 {
     /// <summary>

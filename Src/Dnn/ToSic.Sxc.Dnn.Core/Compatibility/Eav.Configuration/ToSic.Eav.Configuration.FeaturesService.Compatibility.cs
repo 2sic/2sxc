@@ -7,6 +7,7 @@ namespace ToSic.Eav.Configuration;
 /// Implementation for an old API which was used in some Dnn Apps
 /// Once it works, we will move it do Dnn only, so it won't work in Oqtane.
 /// </summary>
+[Obsolete]
 internal class FeaturesServiceCompatibility(ISysFeaturesService featsInternal) : IFeaturesService
 {
     public bool Enabled(Guid guid) => featsInternal.IsEnabled(guid);

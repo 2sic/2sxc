@@ -11,6 +11,7 @@ using ToSic.Sys.Code.InfoSystem;
 
 namespace ToSic.Sxc.Data.Sys.Factory;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICodeDataFactory: ICanGetService, IHasLog
 {
     /// <remarks>
