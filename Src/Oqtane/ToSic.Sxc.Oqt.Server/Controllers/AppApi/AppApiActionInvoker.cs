@@ -13,7 +13,7 @@ internal class AppApiActionInvoker : IHasLog
 {
     public AppApiActionInvoker(ILogStore logStore)
     {
-        Log = new Log(HistoryLogName, null, "AppApiActionInvoker");
+        Log = LogFactory.Create(HistoryLogName, null, "AppApiActionInvoker");
         logStore.Add(HistoryLogGroup, Log);
     }
 

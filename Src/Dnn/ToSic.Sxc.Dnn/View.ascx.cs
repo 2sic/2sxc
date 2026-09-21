@@ -62,7 +62,8 @@ public partial class View : PortalModuleBase, IActionable
         ??= ServiceProvider.Build<Generator<HttpRequestLoggingScoped, HttpRequestLoggingScoped.Opts>>()
             .New(new() { Segment = "module", RootName = "Sxc.View" });
 
-    private ILog Log => field ??= new Log("Sxc.View", RequestLogging.RootLog);
+    // The request root decides Legacy or MEL for the complete module log family.
+    private ILog Log => field ??= LogFactory.Create("Sxc.View", RequestLogging.RootLog);
 
     /// <summary>
     /// Log Timer to use everywhere we want to track the cumulative time.

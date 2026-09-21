@@ -22,7 +22,7 @@ public class DnnBusinessController : ModuleSearchBase, IHasLog
     /// Constructor overload for DotNetNuke
     /// (BusinessController needs a parameterless constructor)
     /// </summary>
-    public DnnBusinessController() => Log = new Log("DNN.BusCon", null, "starting");
+    public DnnBusinessController() => Log = LogFactory.Create("DNN.BusCon", null, "starting");
 
     public ILog Log { get; }
 
