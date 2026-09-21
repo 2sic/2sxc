@@ -15,7 +15,6 @@ using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Sys;
-using Log = ToSic.Sys.Logging.Log;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
@@ -36,7 +35,7 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
         OqtSiteGroup oqtSiteGroup,
         ILogStore logStore)
     {
-        Log = new Log(HistoryLogName, null, nameof(AppApiDynamicRouteValueTransformer));
+        Log = LogFactory.Create(HistoryLogName, null, nameof(AppApiDynamicRouteValueTransformer));
         logStore.Add(HistoryLogGroup, Log);
         this.ConnectLogs([
             _tenantResolver = tenantResolver,

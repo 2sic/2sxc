@@ -14,7 +14,7 @@ public abstract class DnnSxcControllerRoot : DnnApiController, IHasLog
 
     protected DnnSxcControllerRoot(string logSuffix, string insightsGroup = default, string firstMessage = default)
     {
-        Log = new Log("Api." + logSuffix);
+        Log = LogFactory.Create("Api." + logSuffix);
         // ReSharper disable once VirtualMemberCallInConstructor
         SysHlp = new(this, insightsGroup ?? HistoryLogGroup, firstMessage);
     }

@@ -38,7 +38,7 @@ public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, ITo
 
     protected Dependencies Services { get; init; }
 
-    public ILog Log { get; } = new Log(SxcLogName + ".TlbBld");
+    public ILog Log { get; } = LogFactory.Create(SxcLogName + ".TlbBld");
     
 
     public void ConnectToRoot(IExecutionContext? exCtx)

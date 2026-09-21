@@ -54,7 +54,7 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
 
         // Log this lookup and add to history for insights
         var uriToLog = request?.RequestUri?.AbsoluteUri;
-        var log = new Log("Sxc.Http", null, uriToLog);
+        var log = LogFactory.Create("Sxc.Http", null, uriToLog);
         AddToInsightsHistory(sp, uriToLog, log);
 
         var l = log.Fn<HttpControllerDescriptor>();

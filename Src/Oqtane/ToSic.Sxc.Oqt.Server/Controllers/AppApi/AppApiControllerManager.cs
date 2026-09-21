@@ -10,7 +10,6 @@ using ToSic.Sxc.Oqt.Server.Code.Sys;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Render.Polymorphism.Sys;
 using ToSic.Sys.Utils;
-using Log = ToSic.Sys.Logging.Log;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 
@@ -27,7 +26,7 @@ internal class AppApiControllerManager : IHasLog
         _webApiContextBuilder = webApiContextBuilder;
         _editionSvc = editionSvc;
         _appCodeLoader = appCodeLoader;
-        Log = new Log(HistoryLogName, null, "AppApiControllerManager");
+        Log = LogFactory.Create(HistoryLogName, null, "AppApiControllerManager");
         logStore.Add(HistoryLogGroup, Log);
     }
     private readonly ApplicationPartManager _partManager;

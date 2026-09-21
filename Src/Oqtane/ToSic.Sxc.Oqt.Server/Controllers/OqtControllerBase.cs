@@ -4,7 +4,6 @@ using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.WebApi.Sys;
 using ToSic.Sxc.WebApi.Sys.ActionFilters;
-using Log = ToSic.Sys.Logging.Log;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers;
 
@@ -25,7 +24,7 @@ public abstract class OqtControllerBase : ControllerBase, IHasLog, IActionFilter
     protected OqtControllerBase(bool withBlockContext, string logSuffix)
     {
         _withBlockContext = withBlockContext;
-        Log = new Log($"Api.{logSuffix}", null, GetType().Name);
+        Log = LogFactory.Create($"Api.{logSuffix}", null, GetType().Name);
         _helper = new(this);
 
         if (withBlockContext)

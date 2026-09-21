@@ -8,12 +8,12 @@ public abstract record HybridHtmlStringLog: HybridHtmlString, IHasLog
 {
     protected HybridHtmlStringLog(string logName)
     {
-        Log = new Log(logName);
+        Log = LogFactory.Create(logName);
     }
 
     protected HybridHtmlStringLog(ILog parentLog, string logName)
     {
-        Log = new Log(logName, parentLog);
+        Log = LogFactory.Create(logName, parentLog);
     }
 
 
