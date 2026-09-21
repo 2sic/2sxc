@@ -2,6 +2,9 @@
 
   <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-Nullable.props" />
 
+  <!-- Activating docs for this DLL in v22.01 -->
+  <Import Project="../../SharedImports/CsProj.Props/CreateXDocsOnRelease.props" />
+
   <PropertyGroup>
     <AssemblyName>ToSic.Sxc.Images</AssemblyName>
   </PropertyGroup>
