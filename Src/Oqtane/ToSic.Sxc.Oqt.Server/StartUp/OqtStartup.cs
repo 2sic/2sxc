@@ -18,6 +18,8 @@ using ToSic.Sxc.Run.Startup;
 using ToSic.Sys.Boot;
 using ToSic.Sys.Configuration;
 using ToSic.Sys.Security.Encryption;
+using ToSic.Sys.Logging;
+using ToSic.Sys.Run.Startup;
 using static ToSic.Sxc.Oqt.Server.WebApi.OqtWebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;
@@ -81,6 +83,7 @@ public class OqtStartup : IServerStartup
             .AddSxcAppsFallbacks()
             .AddSxcCoreFallbacks()
             .AddEavAll()             // Core EAV services
+            .AddSysCoreMelLogging()
             .AddEavAllFallbacks()
             .AddEavWebApiTypedAfterEav()
             .AddOqtAppWebApi()              // Oqtane App WebAPI stuff
@@ -93,6 +96,8 @@ public class OqtStartup : IServerStartup
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         var serviceProvider = app.ApplicationServices;
+        // Select before resolving normal 2sxc services, otherwise one app could mix log implementations.
+        LogFactory.Select(serviceProvider.GetRequiredService<ILogFactory>());
 
         var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
         globalConfig.ConnectionString(Configuration.GetConnectionString("DefaultConnection"));
