@@ -4,9 +4,10 @@
 
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <Import Project="MSBuild.Community.Tasks.Targets" />
-  <UsingTask TaskName="CopyNewerFileVersion" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net48\ToSic.Sxc.BuildTasks.dll" />
-  <UsingTask TaskName="ModifyXmlDocumentation" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net48\ToSic.Sxc.BuildTasks.dll" />
+  <UsingTask TaskName="CopyNewerFileVersion" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net9.0\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' == 'Core'" />
+  <UsingTask TaskName="CopyNewerFileVersion" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net48\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' != 'Core'" />
+  <UsingTask TaskName="ModifyXmlDocumentation" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net9.0\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' == 'Core'" />
+  <UsingTask TaskName="ModifyXmlDocumentation" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net48\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' != 'Core'" />
 
   <!-- The Dnn Build Package - Should only run after release compile -->
   <Target Name="PackageModule" AfterTargets="Build" DependsOnTargets="BuildConfigTarget" Condition=" '$(Configuration)|$(Platform)|$(SourceExist)' == 'Release|AnyCPU|true' ">
@@ -17,9 +18,9 @@
     </PropertyGroup>
 
     <!-- Get the Version out of the DNN Manifest for this release -->
-    <XmlRead Prefix="n" Namespace="http://schemas.microsoft.com/developer/msbuild/2003" XPath="dotnetnuke/packages/package[1]/@version" XmlFileName="$(DnnManifestFile)">
-      <Output TaskParameter="Value" PropertyName="Version" />
-    </XmlRead>
+    <XmlPeek XmlInputPath="$(DnnManifestFile)" Query="dotnetnuke/packages/package[1]/@version">
+      <Output TaskParameter="Result" PropertyName="Version" />
+    </XmlPeek>
 
     <Message Text="DnnBuild: Starting DNN Build version $(Version)" Importance="high" />
 
@@ -245,22 +246,13 @@
     <Copy SourceFiles="@(InstallIncludeJsExtensions)" DestinationFolder="$(TempPackageResourcesFolder)\extensions\%(RecursiveDir)" />
     <Copy SourceFiles="@(InstallIncludeJsDist)" DestinationFolder="$(TempPackageResourcesFolder)\dist\%(RecursiveDir)" />
 
-    <CreateItem Include="$(TempPackageResourcesFolder)\**\*.*">
-      <Output TaskParameter="Include" ItemName="ResourcesContent" />
-    </CreateItem>
-    <Zip Files="@(ResourcesContent)" WorkingDirectory="$(TempPackageResourcesFolder)" ZipFileName="$(TempPackageFolder)\Resources.zip" />
+    <ZipDirectory SourceDirectory="$(TempPackageResourcesFolder)" DestinationFile="$(TempPackageFolder)\Resources.zip" Overwrite="true" />
 
-    <CreateItem Include="$(TempPackagePdbFolder)\**\*.*">
-      <Output TaskParameter="Include" ItemName="AssemblyHelperContent" />
-    </CreateItem>
-    <Zip Files="@(AssemblyHelperContent)" WorkingDirectory="$(TempPackagePdbFolder)" ZipFileName="$(TempPackageFolder)\tosic.bin.debug-helpers.zip" />
+    <ZipDirectory SourceDirectory="$(TempPackagePdbFolder)" DestinationFile="$(TempPackageFolder)\tosic.bin.debug-helpers.zip" Overwrite="true" />
 
     <!-- Create the Install package -->
     <Message Text="DnnBuild: Creating final Zip file $(FinalZipFileName) in $(DnnInstallPackage)" Importance="high" />
-    <CreateItem Include="$(TempPackageFolder)\**\*.*">
-      <Output TaskParameter="Include" ItemName="OutputContent" />
-    </CreateItem>
-    <Zip Files="@(OutputContent)" WorkingDirectory="$(TempPackageFolder)" ZipFileName="$(DnnInstallPackage)/$(FinalZipFileName)" />
+    <ZipDirectory SourceDirectory="$(TempPackageFolder)" DestinationFile="$(DnnInstallPackage)\$(FinalZipFileName)" Overwrite="true" />
 
     <!-- Cleanup -->
     <Message Text="DnnBuild: Clean-up temporary folders" Importance="high" />
