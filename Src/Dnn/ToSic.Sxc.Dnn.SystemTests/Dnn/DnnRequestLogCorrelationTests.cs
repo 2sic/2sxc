@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
+using ToSic.Sys.Logging;
 
 namespace ToSic.Sxc.Dnn;
 
@@ -77,6 +79,60 @@ public class DnnRequestLogCorrelationTests
         Null(owned);
         Same(external, Activity.Current);
         Equal(0, registrations);
+    }
+
+    [Fact]
+    public void Ensure_ReactivatesOwnedActivityInSiblingContextsForMelWrites()
+    {
+        var items = new Hashtable();
+        Action<IDictionary>? completed = null;
+        var registrations = 0;
+        var store = new InsightsLogStore();
+        using var loggerFactory = LoggerFactory.Create(builder => builder.SetMinimumLevel(LogLevel.Trace).AddProvider(new InsightsLoggerProvider(store)));
+        var log = new MelLogFactory(loggerFactory).Create("Dnn.Request", null, new());
+        var firstContext = ExecutionContext.Capture();
+        var secondContext = ExecutionContext.Capture();
+        var externalContext = ExecutionContext.Capture();
+        Activity? first = null;
+        Activity? second = null;
+        var externalPreserved = false;
+
+        try
+        {
+            ExecutionContext.Run(firstContext!, _ =>
+            {
+                first = DnnRequestLogCorrelation.Ensure(items, callback =>
+                {
+                    registrations++;
+                    completed = callback;
+                });
+                log.A("first context");
+            }, null);
+            ExecutionContext.Run(secondContext!, _ =>
+            {
+                second = DnnRequestLogCorrelation.Ensure(items, _ => registrations++);
+                Same(first, second);
+                Same(second, Activity.Current);
+                log.A("second context");
+            }, null);
+            ExecutionContext.Run(externalContext!, _ =>
+            {
+                using var external = new Activity("external").SetIdFormat(ActivityIdFormat.W3C).Start();
+                Same(first, DnnRequestLogCorrelation.Ensure(items, _ => registrations++));
+                externalPreserved = ReferenceEquals(external, Activity.Current);
+            }, null);
+
+            Equal(1, registrations);
+            True(externalPreserved);
+            Equal(2, store.List().Length);
+            All(store.List(), entry => Equal(first!.TraceId.ToString(), entry.TraceId));
+        }
+        finally
+        {
+            completed?.Invoke(items);
+        }
+
+        Null(Activity.Current);
     }
 
     [Fact]
