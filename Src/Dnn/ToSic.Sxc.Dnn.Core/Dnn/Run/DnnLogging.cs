@@ -36,7 +36,7 @@ internal static class DnnLogging
             else
                 // MEL has no retained Entries, so read detached events for the current request trace.
                 foreach (var entry in CurrentTraceEvents(DnnStaticDi.GetPageScopedServiceProvider().GetService<IInsightsLogSnapshotReader>(), Activity.Current?.TraceId.ToString()))
-                    logInfo.AddProperty(entry.Category, entry.Message);
+                    logInfo.AddProperty(Source(entry), Format(entry));
 
             DnnStaticDi.GetPageScopedServiceProvider().GetRequiredService<IEventLogger>().AddLog(logInfo);
         }
@@ -51,7 +51,17 @@ internal static class DnnLogging
         => string.IsNullOrEmpty(traceId) ? [] : reader?.ListGroups().FirstOrDefault(group => group.TraceId == traceId)?.Events ?? [];
 
     internal static string DumpCurrentTrace(IInsightsLogSnapshotReader? reader, string? traceId)
-        => string.Concat(CurrentTraceEvents(reader, traceId).Select(entry => " - " + entry.Category + ": " + entry.Message + "\n"));
+        => string.Concat(CurrentTraceEvents(reader, traceId).Select(entry => " - " + Source(entry) + " - " + Format(entry) + "\n"));
+
+    // Exception.Details is the detached Exception.ToString(); include it because MEL Message is only the short text.
+    internal static string Format(InsightsLogEventSnapshot entry)
+        => entry.Message
+           + (entry.Result != null ? "=>" + entry.Result : "")
+           + (entry.DurationMilliseconds is > 0 ? $" ⌚ {TimeSpan.FromMilliseconds(entry.DurationMilliseconds.Value).TotalSeconds}s " : "")
+           + (!string.IsNullOrEmpty(entry.Exception?.Message) ? " " + entry.Exception.Message : "")
+           + (!string.IsNullOrEmpty(entry.Exception?.Details) ? " " + entry.Exception.Details : "");
+
+    private static string Source(InsightsLogEventSnapshot entry) => entry.FullSource ?? entry.Category;
 
     /// <summary>
     /// try to at least report, that something failed
