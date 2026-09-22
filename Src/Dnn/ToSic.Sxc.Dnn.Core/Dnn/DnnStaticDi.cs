@@ -103,7 +103,12 @@ internal static class DnnRequestLogCorrelation
         lock (items.SyncRoot)
         {
             if (items[OwnedActivityKey] is Activity owned)
+            {
+                // Request Items cross sibling execution contexts, but Activity.Current does not.
+                if (Activity.Current == null)
+                    Activity.Current = owned;
                 return owned;
+            }
             // ASP.NET Core already starts a request Activity; classic DNN needs this fallback for equivalent correlation.
             // Never replace or later stop an Activity owned by DNN or another integration.
             if (Activity.Current != null)
