@@ -83,7 +83,8 @@ public class OqtStartup : IServerStartup
             .AddSxcAppsFallbacks()
             .AddSxcCoreFallbacks()
             .AddEavAll()             // Core EAV services
-            .AddSysCoreMelLogging()
+            // AddEavAll installs the safe Legacy defaults; Oqtane replaces the complete stack here.
+            .AddSysCoreMelInsightsLogging()
             .AddEavAllFallbacks()
             .AddEavWebApiTypedAfterEav()
             .AddOqtAppWebApi()              // Oqtane App WebAPI stuff

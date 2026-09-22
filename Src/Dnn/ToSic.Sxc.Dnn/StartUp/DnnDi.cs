@@ -81,7 +81,8 @@ public static class DnnDi
             .AddEavAll()
             .AddEavAllFallbacks()
             .AddEavWebApiTypedAfterEav()
-            .AddSysCoreMelLogging();
+            // AddEavAll installs the safe Legacy defaults; DNN replaces the complete stack here.
+            .AddSysCoreMelInsightsLogging();
 
         // Remember this for later, when we must start the Static Dependency Injection
         OriginalServiceCollection = services;
