@@ -92,25 +92,34 @@ internal static class DnnRequestLogCorrelation
 
     internal static Activity Ensure(IDictionary items, Action<Action<IDictionary>> addOnRequestCompleted)
     {
-        if (items[OwnedActivityKey] is Activity owned)
-            return owned;
-        // ASP.NET Core already starts a request Activity; classic DNN needs this fallback for equivalent correlation.
-        // Never replace or later stop an Activity owned by DNN or another integration.
-        if (Activity.Current != null)
-            return null;
+        // Multiple modules can initialize logging in parallel for the same request.
+        lock (items.SyncRoot)
+        {
+            if (items[OwnedActivityKey] is Activity owned)
+                return owned;
+            // ASP.NET Core already starts a request Activity; classic DNN needs this fallback for equivalent correlation.
+            // Never replace or later stop an Activity owned by DNN or another integration.
+            if (Activity.Current != null)
+                return null;
 
-        var activity = new Activity("ToSic.Dnn.Request").SetIdFormat(ActivityIdFormat.W3C).Start();
-        items[OwnedActivityKey] = activity;
-        addOnRequestCompleted(Complete);
-        return activity;
+            var activity = new Activity("ToSic.Dnn.Request").SetIdFormat(ActivityIdFormat.W3C).Start();
+            items[OwnedActivityKey] = activity;
+            addOnRequestCompleted(Complete);
+            return activity;
+        }
     }
 
     internal static void Complete(IDictionary items)
     {
-        if (items[OwnedActivityKey] is not Activity owned)
-            return;
-        // Remove first so request completion can only stop the owned Activity once.
-        items.Remove(OwnedActivityKey);
+        // Remove under the request lock, then stop outside it so completion can only happen once.
+        Activity owned;
+        lock (items.SyncRoot)
+        {
+            if (items[OwnedActivityKey] is not Activity activity)
+                return;
+            items.Remove(OwnedActivityKey);
+            owned = activity;
+        }
         owned.Stop();
     }
 }
