@@ -9,6 +9,7 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.Dnn.Startup;
 using ToSic.Sxc.Run.Startup;
+using ToSic.Sys.Run.Startup;
 
 
 namespace ToSic.Sxc.Dnn.StartUp;
@@ -79,7 +80,8 @@ public static class DnnDi
         services
             .AddEavAll()
             .AddEavAllFallbacks()
-            .AddEavWebApiTypedAfterEav();
+            .AddEavWebApiTypedAfterEav()
+            .AddSysCoreMelLogging();
 
         // Remember this for later, when we must start the Static Dependency Injection
         OriginalServiceCollection = services;
