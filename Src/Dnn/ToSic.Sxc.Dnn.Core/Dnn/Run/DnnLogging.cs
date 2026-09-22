@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Web.Http;
 using DotNetNuke.Abstractions.Logging;
 using DotNetNuke.Services.Log.EventLog;
@@ -30,7 +31,12 @@ internal static class DnnLogging
 
             AttachDnnStateIfPossible(dnnContext, logInfo);
 
-            (log as Log)?.Entries.ForEach(e => logInfo.AddProperty(e.Source, e.Message));
+            if (log is Log legacy)
+                legacy.Entries.ForEach(e => logInfo.AddProperty(e.Source, e.Message));
+            else
+                // MEL has no retained Entries, so read detached events for the current request trace.
+                foreach (var entry in CurrentTraceEvents(DnnStaticDi.GetPageScopedServiceProvider().GetService<IInsightsLogSnapshotReader>(), Activity.Current?.TraceId.ToString()))
+                    logInfo.AddProperty(entry.Category, entry.Message);
 
             DnnStaticDi.GetPageScopedServiceProvider().GetRequiredService<IEventLogger>().AddLog(logInfo);
         }
@@ -39,6 +45,13 @@ internal static class DnnLogging
             TryToReportLoggingFailure("logging");
         }
     }
+
+    // Do not fall back by category: parallel requests use the same log names.
+    internal static IEnumerable<InsightsLogEventSnapshot> CurrentTraceEvents(IInsightsLogSnapshotReader? reader, string? traceId)
+        => string.IsNullOrEmpty(traceId) ? [] : reader?.ListGroups().FirstOrDefault(group => group.TraceId == traceId)?.Events ?? [];
+
+    internal static string DumpCurrentTrace(IInsightsLogSnapshotReader? reader, string? traceId)
+        => string.Concat(CurrentTraceEvents(reader, traceId).Select(entry => " - " + entry.Category + ": " + entry.Message + "\n"));
 
     /// <summary>
     /// try to at least report, that something failed
