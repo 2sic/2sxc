@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System.Collections;
+using System.Diagnostics;
 using System.Web;
 
 namespace ToSic.Sxc.Dnn;
@@ -56,6 +58,9 @@ public static class DnnStaticDi
         if (httpCtx == null)
             return GetGlobalServiceProvider().CreateScope().ServiceProvider;
 
+        DnnRequestLogCorrelation.Ensure(httpCtx.Items,
+            completed => httpCtx.AddOnRequestCompleted(context => completed(context.Items)));
+
         // This only runs in Dnn 7.4.2 - Dnn 9.3, because Dnn 9.4 provides this in the http context
         if (!httpCtx.Items.Contains(ServiceScopeKey))
         {
@@ -78,5 +83,34 @@ public static class DnnStaticDi
         // This is necessary for it to be able to give page-scoped objects
         moduleSp.Build<PageScopeAccessor>().InitPageOfModule(pageSp);
         return moduleSp;
+    }
+}
+
+internal static class DnnRequestLogCorrelation
+{
+    private static readonly object OwnedActivityKey = typeof(DnnRequestLogCorrelation);
+
+    internal static Activity Ensure(IDictionary items, Action<Action<IDictionary>> addOnRequestCompleted)
+    {
+        if (items[OwnedActivityKey] is Activity owned)
+            return owned;
+        // ASP.NET Core already starts a request Activity; classic DNN needs this fallback for equivalent correlation.
+        // Never replace or later stop an Activity owned by DNN or another integration.
+        if (Activity.Current != null)
+            return null;
+
+        var activity = new Activity("ToSic.Dnn.Request").SetIdFormat(ActivityIdFormat.W3C).Start();
+        items[OwnedActivityKey] = activity;
+        addOnRequestCompleted(Complete);
+        return activity;
+    }
+
+    internal static void Complete(IDictionary items)
+    {
+        if (items[OwnedActivityKey] is not Activity owned)
+            return;
+        // Remove first so request completion can only stop the owned Activity once.
+        items.Remove(OwnedActivityKey);
+        owned.Stop();
     }
 }
