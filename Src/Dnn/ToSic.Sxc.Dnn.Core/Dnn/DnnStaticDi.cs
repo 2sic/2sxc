@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Diagnostics;
 using System.Web;
+using ToSic.Sys.Logging;
 
 namespace ToSic.Sxc.Dnn;
 
@@ -42,7 +43,13 @@ public static class DnnStaticDi
 
     [PrivateApi("Very internal, to use at startup, so singletons are not lost")]
     private static IServiceProvider GetGlobalServiceProvider()
-        => Sp.Get(() => _getGlobalDnnServiceProvider?.Invoke() ?? throw new("can't access global DNN service provider"));
+        => Sp.Get(() =>
+        {
+            var serviceProvider = _getGlobalDnnServiceProvider?.Invoke() ?? throw new("can't access global DNN service provider");
+            // This is the first real DNN container access, so select logging before any scoped service is built.
+            LogFactory.Select(serviceProvider.GetRequiredService<ILogFactory>());
+            return serviceProvider;
+        });
     private static readonly LazyGet<IServiceProvider> Sp = new();
 
     [PrivateApi("This is just a temporary solution - shouldn't be used long term")]
