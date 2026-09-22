@@ -24,14 +24,45 @@ public class DnnRequestLogCorrelationTests
             completed = callback;
         });
 
-        Same(first, second);
-        Same(first, Activity.Current);
-        Equal("ToSic.Dnn.Request", first.OperationName);
-        Equal(ActivityIdFormat.W3C, first.IdFormat);
-        Equal(1, registrations);
-        NotNull(completed);
-        completed(items);
+        try
+        {
+            Same(first, second);
+            Same(first, Activity.Current);
+            Equal("ToSic.Dnn.Request", first.OperationName);
+            Equal(ActivityIdFormat.W3C, first.IdFormat);
+            Equal(1, registrations);
+            NotNull(completed);
+        }
+        finally
+        {
+            completed?.Invoke(items);
+        }
         Null(Activity.Current);
+    }
+
+    [Fact]
+    public void Ensure_UsesOneActivityForConcurrentSameRequest()
+    {
+        var items = new Hashtable();
+        var activities = new ConcurrentBag<Activity>();
+        Action<IDictionary>? completed = null;
+        var registrations = 0;
+
+        try
+        {
+            Parallel.For(0, 8, _ => activities.Add(DnnRequestLogCorrelation.Ensure(items, callback =>
+            {
+                Interlocked.Increment(ref registrations);
+                completed = callback;
+            })));
+
+            Single(activities.Distinct());
+            Equal(1, registrations);
+        }
+        finally
+        {
+            completed?.Invoke(items);
+        }
     }
 
     [Fact]
@@ -89,9 +120,15 @@ public class DnnRequestLogCorrelationTests
     {
         var items = new Hashtable();
         Action<IDictionary>? completed = null;
-        var activity = DnnRequestLogCorrelation.Ensure(items, callback => completed = callback);
-        traceIds.Add(activity!.TraceId.ToString());
-        completed!(items);
-        cleared.Add(Activity.Current == null);
+        try
+        {
+            var activity = DnnRequestLogCorrelation.Ensure(items, callback => completed = callback);
+            traceIds.Add(activity!.TraceId.ToString());
+        }
+        finally
+        {
+            completed?.Invoke(items);
+            cleared.Add(Activity.Current == null);
+        }
     }
 }
