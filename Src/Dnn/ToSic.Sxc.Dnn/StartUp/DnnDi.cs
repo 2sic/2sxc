@@ -21,18 +21,17 @@ public static class DnnDi
 
     public static IServiceCollection RegisterServices(IServiceCollection services)
     {
+        // Select before the first BootLog access; repeated DNN registration must confirm the same mode.
+        var (useMel, logFactory) = DnnLoggingBootstrap.Initialize();
         var l = BootLog.Log.Fn("Dnn: Registering Services", timer: true);
 
         if (_alreadyRegistered)
             return OriginalServiceCollection;
 
-        // Select the complete logging stack once at startup: true enables MEL; missing, invalid or false uses Legacy.
-        // Changing this setting requires an application restart.
-        var useMel = bool.TryParse(ConfigurationManager.AppSettings["Logging:2sxc:UseMel"], out var enabled) && enabled;
-
         // If this is called from Dnn 7 - 9.3 it won't have services, so we must create our own
         // This is because the old Dnn wasn't DI aware
         services ??= new ServiceCollection();
+        services.TryAddSingleton<ILogFactory>(logFactory);
 
         l.A("Will start with DNN parts");
         services
@@ -103,4 +102,13 @@ public static class DnnDi
         return services;
     }
 
+}
+
+internal static class DnnLoggingBootstrap
+{
+    internal static (bool UseMel, ILogFactory Factory) Initialize()
+    {
+        var useMel = bool.TryParse(ConfigurationManager.AppSettings["Logging:2sxc:UseMel"], out var enabled) && enabled;
+        return (useMel, LogFactory.Initialize(useMel));
+    }
 }

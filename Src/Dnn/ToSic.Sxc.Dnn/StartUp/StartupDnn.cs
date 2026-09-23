@@ -37,6 +37,8 @@ public class StartupDnn : IServiceRouteMapper
     /// </summary>
     public bool Configure()
     {
+        // Route setup can run before service registration, so it must make the same early selection.
+        DnnLoggingBootstrap.Initialize();
         var l = BootLog.Log.Fn<bool>("Dnn: Configuring WebApi Routes", timer: true);
 
         // In some cases this may be called 2x - so we must avoid doing it again

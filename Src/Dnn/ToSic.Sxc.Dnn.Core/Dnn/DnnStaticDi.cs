@@ -46,8 +46,8 @@ public static class DnnStaticDi
         => Sp.Get(() =>
         {
             var serviceProvider = _getGlobalDnnServiceProvider?.Invoke() ?? throw new("can't access global DNN service provider");
-            // This is the first real DNN container access, so select logging before any scoped service is built.
-            LogFactory.Select(serviceProvider.GetRequiredService<ILogFactory>());
+            // Connect pre-DI MEL events to DNN's logger factory before scoped services are built.
+            LogFactory.Bind(serviceProvider);
             return serviceProvider;
         });
     private static readonly LazyGet<IServiceProvider> Sp = new();
