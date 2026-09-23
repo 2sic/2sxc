@@ -37,7 +37,7 @@ internal class AppDetailsServiceExtended(AppDetailsService baseSvc, Generator<IA
         return fromBase with
         {
             Thumbnail = thumbnail,
-            Lightspeed = lightspeed,
+            LightSpeed = lightspeed,
         };
 
     }
