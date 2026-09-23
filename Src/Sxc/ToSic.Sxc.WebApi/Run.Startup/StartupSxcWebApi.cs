@@ -2,7 +2,9 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Sys.Insights;
 using ToSic.Eav.WebApi.Sys.Admin;
+using ToSic.Eav.WebApi.Sys.App.Details;
 using ToSic.Eav.WebApi.Sys.ImportExport;
+using ToSic.Sxc.Apps.Sys.DataSources;
 using ToSic.Sxc.Apps.Sys.EditAssets;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Backend.Admin;
@@ -25,8 +27,7 @@ using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.WebApi.Sys;
 using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Backend;
+namespace ToSic.Sxc.Run.Startup;
 
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 public static class StartupSxcWebApi
@@ -42,7 +43,7 @@ public static class StartupSxcWebApi
         // Real Controllers
 
         // Backends
-        services.TryAddTransient<AppsBackend>();
+        services.TryAddTransient<IAppDetailsService, AppDetailsServiceExtended>(); // v22 - replace underlying service with Sxc version
         services.TryAddTransient<ExtensionExportService>();
         services.TryAddTransient<ExtensionReaderBackend>();
         services.TryAddTransient<ExtensionWriterBackend>();

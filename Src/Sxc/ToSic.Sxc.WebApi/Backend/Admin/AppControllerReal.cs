@@ -4,7 +4,6 @@ using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.ImportExport;
 using ToSic.Sys.HookUp;
-using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 
 namespace ToSic.Sxc.Backend.Admin;
 
@@ -22,7 +21,7 @@ public class AppControllerReal(
     LazySvc<AppStateSyncRestore> appStateSyncRestore,
     AppWorkQuick<WorkViews> workViews,
     LazySvc<AppCachePurger> systemManagerLazy)
-    : Services_ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
+    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
         connect:
         [
             workAppsRemove, exportAppLazy, importAppLazy, appBuilderLazy, appStateSyncRestore, appStateSyncSave,
@@ -30,14 +29,6 @@ public class AppControllerReal(
         ])
 {
     public const string LogSuffix = "AppCon";
-
-    // Replayed by DataSource System.Apps
-    //public ICollection<AppDto> List(int zoneId)
-    //    => appsBackendLazy.Value.Apps();
-
-    // Replaced by DataSource System.InheritableApps
-    //public ICollection<AppDto> InheritableApps()
-    //    => appsBackendLazy.Value.GetInheritableApps();
 
     public void App(int zoneId, int appId, bool fullDelete = true)
         => workAppsRemove.Value.RemoveAppInSiteAndEav(zoneId, appId, fullDelete);

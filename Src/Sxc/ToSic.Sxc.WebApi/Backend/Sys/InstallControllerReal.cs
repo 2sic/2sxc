@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.Apps.Sys.AppStack;
 using ToSic.Eav.Data.Sys.PropertyLookup;
 using ToSic.Eav.Data.Sys.PropertyStack;
@@ -25,13 +26,13 @@ public class InstallControllerReal(
     LazySvc<ImportFromRemote> impFromRemoteLazy,
     IResponseMaker responseMaker,
     LazySvc<IFeaturesService> featureService,
-    LazySvc<AppsBackend> appsBackend,
+    LazySvc<WorkApps> workApps,
     LazySvc<AppDataStackService> appSettingsStack)
     : Services_ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
         connect:
         [
             context, envInstallerLazy, platformAppInstaller, impFromRemoteLazy, responseMaker, featureService,
-            appSettingsStack, appsBackend
+            appSettingsStack,  workApps,
         ])
 {
     public const string LogSuffix = "Install";
@@ -58,12 +59,12 @@ public class InstallControllerReal(
             .GetAutoInstallPackagesUiUrl(site, module, isContentApp);
 
         // Get list of already installed Apps
-        var appsOfThisSite = appsBackend.Value.Apps()
+        var appsOfThisSite = workApps.Value.GetApps(site)
             .Select(a => new AppDtoLight
             {
-                name = a.Name,
-                guid = a.Guid,
-                version = a.Version,
+                name = a.Specs.Name,
+                guid = a.Specs.NameId,
+                version = a.Specs.VersionSafe(),
             })
             .ToListOpt();
 

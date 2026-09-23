@@ -19,27 +19,6 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     private RealController Real => SysHlp.GetService<RealController>();
 
     /// <inheritdoc />
-    /// Replayed by DataSource System.Apps
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[SupportedModules(DnnSupportedModuleNames)]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    //public ICollection<AppDto> List(int zoneId) => Real.List(zoneId);
-
-    // TODO: @2rb #next
-    // Info: used in Apps-Admin (list of apps)
-    // To work, you must enable the patron feature to share an app (on another site)
-    // ...then it should appear in the list of InheritableApps
-    // Make sure you have a working setup, before you make changes
-    /// <inheritdoc />
-    /// Replaced by DataSource System.InheritableApps
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[SupportedModules(DnnSupportedModuleNames)]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    //public ICollection<AppDto> InheritableApps() => Real.InheritableApps();
-
-    /// <inheritdoc />
     [HttpDelete]
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
