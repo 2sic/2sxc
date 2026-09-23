@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Configuration;
 using ToSic.Eav;
 using ToSic.Eav.Run.Startup;
 using ToSic.Razor.StartUp;
@@ -9,7 +10,6 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.Dnn.Startup;
 using ToSic.Sxc.Run.Startup;
-using ToSic.Sys.Run.Startup;
 
 
 namespace ToSic.Sxc.Dnn.StartUp;
@@ -25,6 +25,10 @@ public static class DnnDi
 
         if (_alreadyRegistered)
             return OriginalServiceCollection;
+
+        // Select the complete logging stack once at startup: true enables MEL; missing, invalid or false uses Legacy.
+        // Changing this setting requires an application restart.
+        var useMel = bool.TryParse(ConfigurationManager.AppSettings["Logging:2sxc:UseMel"], out var enabled) && enabled;
 
         // If this is called from Dnn 7 - 9.3 it won't have services, so we must create our own
         // This is because the old Dnn wasn't DI aware
@@ -78,11 +82,9 @@ public static class DnnDi
 
         l.A("Will start with EAV and WebApi Typed parts");
         services
-            .AddEavAll()
+            .AddEavAll(useMel)
             .AddEavAllFallbacks()
-            .AddEavWebApiTypedAfterEav()
-            // AddEavAll installs the safe Legacy defaults; DNN replaces the complete stack here.
-            .AddSysCoreMelInsightsLogging();
+            .AddEavWebApiTypedAfterEav();
 
         // Remember this for later, when we must start the Static Dependency Injection
         OriginalServiceCollection = services;

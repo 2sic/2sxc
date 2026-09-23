@@ -18,8 +18,6 @@ using ToSic.Sxc.Run.Startup;
 using ToSic.Sys.Boot;
 using ToSic.Sys.Configuration;
 using ToSic.Sys.Security.Encryption;
-using ToSic.Sys.Logging;
-using ToSic.Sys.Run.Startup;
 using static ToSic.Sxc.Oqt.Server.WebApi.OqtWebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;
@@ -39,6 +37,10 @@ public class OqtStartup : IServerStartup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        // Select the complete logging stack once at startup: true enables MEL; missing, invalid or false uses Legacy.
+        // Changing this setting requires an application restart.
+        var useMel = bool.TryParse(Configuration["Logging:2sxc:UseMel"], out var enabled) && enabled;
+
         // 1. Enable dynamic razor compiling
         services.AddRazorPages()
             .AddRazorRuntimeCompilation(options =>
@@ -82,9 +84,7 @@ public class OqtStartup : IServerStartup
             .AddSxcCore()
             .AddSxcAppsFallbacks()
             .AddSxcCoreFallbacks()
-            .AddEavAll()             // Core EAV services
-            // AddEavAll installs the safe Legacy defaults; Oqtane replaces the complete stack here.
-            .AddSysCoreMelInsightsLogging()
+            .AddEavAll(useMel)              // Core EAV services, including the selected logging stack
             .AddEavAllFallbacks()
             .AddEavWebApiTypedAfterEav()
             .AddOqtAppWebApi()              // Oqtane App WebAPI stuff
