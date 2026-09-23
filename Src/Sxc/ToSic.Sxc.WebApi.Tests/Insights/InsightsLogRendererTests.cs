@@ -19,7 +19,7 @@ public class InsightsLogRendererTests
             logging.SetMinimumLevel(LogLevel.Trace);
             logging.AddProvider(provider);
         });
-        var log = new MelLogFactory(factory).Create(category["ToSic.".Length..], null, new());
+        var log = new MelLogFactory(factory).Create(category.Substring("ToSic.".Length), null, new());
         var unrelated = new MelLogFactory(factory).Create("Unrelated", null, new());
 
         log.A($"message-{consumer}", cPath: $"source-{consumer}");
@@ -52,7 +52,8 @@ public class InsightsLogRendererTests
         // Exercise the internal EAV renderer without widening its production API.
         var assembly = typeof(InsightsProvider).Assembly;
         var type = assembly.GetType("ToSic.Eav.Sys.Insights.Logs.InsightsLogsHelper", throwOnError: true)!;
-        var helper = Activator.CreateInstance(type, BindingFlags.Instance | BindingFlags.NonPublic, binder: null, [snapshot], culture: null)!;
+        // The helper's constructor is public even though the type is internal.
+        var helper = Activator.CreateInstance(type, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, binder: null, [snapshot], culture: null)!;
         var method = type.GetMethod("DumpTree", BindingFlags.Instance | BindingFlags.NonPublic, binder: null, [typeof(string), typeof(ILog)], modifiers: null)!;
 
         return (string)method.Invoke(helper, ["test log", log])!;
