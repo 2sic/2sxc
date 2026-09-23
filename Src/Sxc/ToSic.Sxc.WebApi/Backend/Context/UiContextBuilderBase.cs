@@ -3,12 +3,12 @@ using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys.Cms;
-using ToSic.Eav.WebApi.Sys.Languages;
 using ToSic.Sxc.Apps.Sys.Assets;
 using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Services;
 using ToSic.Sys.Capabilities.Features;
 using static ToSic.Sys.Capabilities.Features.BuiltInFeatures;
+using ContextLanguageDto = ToSic.Eav.WebApi.Sys.Dto.ContextLanguageDto;
 
 namespace ToSic.Sxc.Backend.Context;
 
@@ -22,7 +22,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
         IContextOfSite SiteCtx,
         LazySvc<ISysFeaturesService> Features,
         LazySvc<IUiData> UiDataLazy,
-        LazySvc<LanguagesBackend> LanguagesBackend,
+        LazySvc<ContextLanguageDtoService> LanguagesBackend,
         IAppPathsMicroSvc AppPaths,
         LazySvc<GlobalPaths> GlobalPaths,
         IAppsCatalog AppsCatalog,
@@ -67,7 +67,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
         return ctx;
     }
 
-    protected virtual ContextLanguageDto? GetLanguage()
+    protected ContextLanguageDto? GetLanguage()
     {
         if (ZoneId == 0)
             return null;

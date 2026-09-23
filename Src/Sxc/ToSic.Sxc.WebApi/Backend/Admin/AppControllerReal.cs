@@ -1,14 +1,8 @@
 ﻿using ToSic.Eav.Apps.Sys.Caching;
-using ToSic.Eav.Data.Processing;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
-using ToSic.Eav.WebApi.Sys.Languages;
-using ToSic.Sxc.Backend.App;
-using ToSic.Sxc.Backend.AppStack;
 using ToSic.Sxc.Backend.ImportExport;
-using ToSic.Sxc.Services;
-using ToSic.Sys.Configuration;
 using ToSic.Sys.HookUp;
 using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 
@@ -20,7 +14,6 @@ namespace ToSic.Sxc.Backend.Admin;
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppControllerReal(
-    LazySvc<AppsBackend> appsBackendLazy,
     LazySvc<WorkAppsRemove> workAppsRemove,
     LazySvc<ExportApp> exportAppLazy,
     LazySvc<ImportApp> importAppLazy,
@@ -28,17 +21,12 @@ public class AppControllerReal(
     LazySvc<AppStateSyncSave> appStateSyncSave,
     LazySvc<AppStateSyncRestore> appStateSyncRestore,
     AppWorkQuick<WorkViews> workViews,
-    LazySvc<AppCachePurger> systemManagerLazy,
-    LazySvc<LanguagesBackend> languagesBackendLazy,
-    LazySvc<IAppReaderFactory> appReadersLazy,
-    LazySvc<AppStackBackend> appStackBackendLazy,
-    LazySvc<IJsonService> json,
-    IGlobalConfiguration globalConfiguration)
+    LazySvc<AppCachePurger> systemManagerLazy)
     : Services_ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
         connect:
         [
-            appsBackendLazy, workAppsRemove, exportAppLazy, importAppLazy, appBuilderLazy, appStateSyncRestore, appStateSyncSave,
-            workViews, systemManagerLazy, languagesBackendLazy, appReadersLazy, appStackBackendLazy, json, globalConfiguration
+            workAppsRemove, exportAppLazy, importAppLazy, appBuilderLazy, appStateSyncRestore, appStateSyncSave,
+            workViews, systemManagerLazy
         ])
 {
     public const string LogSuffix = "AppCon";
@@ -61,9 +49,6 @@ public class AppControllerReal(
         appBuilderLazy.Value.Init(zoneId).Create(name, null, inheritAppId);
         l.Done("ok");
     }
-    // Replaced by DataSource System.AppLanguages
-    //public List<SiteLanguageDto> Languages(int appId)
-    //    => languagesBackendLazy.Value.GetLanguagesOfApp(appReadersLazy.Value.Get(appId), true);
 
     // Replaced by DataSource System.AppStatistics through query System.SysData.
     // Use app/auto/query/System.SysData/Default with SysDataSource=System.AppStatistics.
@@ -140,19 +125,20 @@ public class AppControllerReal(
         return l.ReturnAsOk(result);
     }
 
-    /// <summary>
-    /// List all app folders in the 2sxc which:
-    /// - are not installed as apps yet
-    /// - have a App_Data/app.xml
-    /// </summary>
-    /// <param name="zoneId"></param>
-    /// <returns></returns>
-    public IEnumerable<PendingAppDto> GetPendingApps(int zoneId)
-    {
-        var l = Log.Fn<IEnumerable<PendingAppDto>>();
-        var result = importAppLazy.Value.GetPendingApps(zoneId);
-        return l.ReturnAsOk(result);
-    }
+    // Replaced with System.AppsPendingInitialization
+    ///// <summary>
+    ///// List all app folders in the 2sxc which:
+    ///// - are not installed as apps yet
+    ///// - have a App_Data/app.xml
+    ///// </summary>
+    ///// <param name="zoneId"></param>
+    ///// <returns></returns>
+    //public IEnumerable<PendingAppDto> GetPendingApps(int zoneId)
+    //{
+    //    var l = Log.Fn<IEnumerable<PendingAppDto>>();
+    //    var result = importAppLazy.Value.GetPendingApps(zoneId);
+    //    return l.ReturnAsOk(result);
+    //}
 
     /// <summary>
     /// Install pending apps

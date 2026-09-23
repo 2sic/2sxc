@@ -52,14 +52,6 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
     [Authorize(Roles = RoleNames.Admin)]
     public void App(int zoneId, string name, int? inheritAppId = null) => Real.App(zoneId, name, inheritAppId);
 
-    /// <inheritdoc />
-    /// Replaced by DataSource System.AppLanguages
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[Authorize(Roles = RoleNames.Admin)]
-    //public ICollection<SiteLanguageDto> Languages(int appId)
-    //    => Real.Languages(appId);
-
     // Replaced by DataSource System.AppStatistics through query System.SysData.
     // Use app/auto/query/System.SysData/Default with SysDataSource=System.AppStatistics.
     ///// <inheritdoc />
