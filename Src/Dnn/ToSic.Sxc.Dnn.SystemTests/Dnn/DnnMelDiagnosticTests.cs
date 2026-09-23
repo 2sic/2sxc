@@ -20,13 +20,14 @@ public class DnnMelDiagnosticTests
             TraceId = "trace-one",
             Exception = new("TestException", "custom message", null, "full detached exception details", ImmutableDictionary<string, string?>.Empty)
         });
-        store.Append(new() { Sequence = 2, Category = "ToSic.Other", Message = "other", TraceId = "trace-two" });
+        store.Append(new() { Sequence = 2, Category = "ToSic.Selected", Message = "selected second module", TraceId = "trace-one", LogGroupId = "other-module" });
+        store.Append(new() { Sequence = 3, Category = "ToSic.Other", Message = "other", TraceId = "trace-two" });
         var reader = new MelInsightsLogSnapshotReader(store);
 
         var events = DnnLogging.CurrentTraceEvents(reader, "trace-one").ToArray();
         var dump = DnnLogging.DumpCurrentTrace(reader, "trace-one");
 
-        Equal("selected", Single(events).Message);
+        Equal(["selected", "selected second module"], events.Select(entry => entry.Message));
         Contains("ToSic.Selected - selected", dump);
         Contains("=>result", dump);
         Contains($"⌚ {TimeSpan.FromMilliseconds(1500).TotalSeconds}s", dump);
