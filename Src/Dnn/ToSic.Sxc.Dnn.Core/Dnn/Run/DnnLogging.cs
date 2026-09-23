@@ -47,8 +47,16 @@ internal static class DnnLogging
     }
 
     // Do not fall back by category: parallel requests use the same log names.
+    // A request can now have several module histories, so collect events from each one.
     internal static IEnumerable<InsightsLogEventSnapshot> CurrentTraceEvents(IInsightsLogSnapshotReader? reader, string? traceId)
-        => string.IsNullOrEmpty(traceId) ? [] : reader?.ListGroups().FirstOrDefault(group => group.TraceId == traceId)?.Events ?? [];
+    {
+        if (string.IsNullOrEmpty(traceId) || reader == null)
+            return [];
+        return reader.ListGroups()
+            .SelectMany(group => group.Events)
+            .Where(entry => entry.TraceId == traceId)
+            .OrderBy(entry => entry.Sequence);
+    }
 
     internal static string DumpCurrentTrace(IInsightsLogSnapshotReader? reader, string? traceId)
         => string.Concat(CurrentTraceEvents(reader, traceId).Select(entry => " - " + Source(entry) + " - " + Format(entry) + "\n"));
