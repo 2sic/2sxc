@@ -81,14 +81,6 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
         => Real.Reset(zoneId, appId, CtxHlp.BlockOptional.Context.Site.DefaultCultureCode, withPortalFiles);
 
 
-    // Replaced by DataSource System.SystemStack through query System.SysData.
-    // Use app/auto/query/System.SysData/Default with SysDataSource=System.SystemStack.
-    ///// <inheritdoc />
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[Authorize(Roles = RoleNames.Admin)]
-    //public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null)
-    //    => Real.GetStack(appId, part, key, view);
 
     /// <inheritdoc />
     [HttpPost]
@@ -101,13 +93,6 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
         return Real.Import(new(Request), zoneId, Request.Form["Name"]);
     }
 
-    // Replaced by DataSource System.AppsPendingInitialization through query System.SysData.
-    ///// <inheritdoc />
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[Authorize(Roles = RoleNames.Admin)]
-    //public IEnumerable<PendingAppDto> GetPendingApps(int zoneId)
-    //    => Real.GetPendingApps(zoneId);
 
     /// <inheritdoc />
     [HttpPost]

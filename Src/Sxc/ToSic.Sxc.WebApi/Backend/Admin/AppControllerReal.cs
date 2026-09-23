@@ -85,10 +85,6 @@ public class AppControllerReal(
         return l.Return(result);
     }
 
-    // Replaced by DataSource System.SystemStack through query System.SysData.
-    // Use app/auto/query/System.SysData/Default with SysDataSource=System.SystemStack.
-    //public List<AppStackDataRaw> GetStack(int appId, string? part, string? key = null, Guid? view = null)
-    //    => appStackBackendLazy.Value.GetAll(appId, part ?? AppStackConstants.RootNameSettings, key, view);
 
     public async Task<ImportResultDto> Reset(int zoneId, int appId, string defaultLanguage, bool withPortalFiles)
         => (await appStateSyncRestore.Value.Handle(new(), new(new(zoneId, appId, defaultLanguage, withPortalFiles)))).Data;
@@ -116,20 +112,7 @@ public class AppControllerReal(
         return l.ReturnAsOk(result);
     }
 
-    // Replaced with System.AppsPendingInitialization
-    ///// <summary>
-    ///// List all app folders in the 2sxc which:
-    ///// - are not installed as apps yet
-    ///// - have a App_Data/app.xml
-    ///// </summary>
-    ///// <param name="zoneId"></param>
-    ///// <returns></returns>
-    //public IEnumerable<PendingAppDto> GetPendingApps(int zoneId)
-    //{
-    //    var l = Log.Fn<IEnumerable<PendingAppDto>>();
-    //    var result = importAppLazy.Value.GetPendingApps(zoneId);
-    //    return l.ReturnAsOk(result);
-    //}
+
 
     /// <summary>
     /// Install pending apps

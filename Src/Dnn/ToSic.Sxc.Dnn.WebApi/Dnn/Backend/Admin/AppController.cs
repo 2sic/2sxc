@@ -81,14 +81,6 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
         return Real.Reset(zoneId, appId, PortalSettings.DefaultLanguage, withPortalFiles);
     }
 
-    // Replaced by DataSource System.SystemStack through query System.SysData.
-    ///// <inheritdoc />
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    //public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null)
-    //    => Real.GetStack(appId, part, key, view);
-
     /// <inheritdoc />
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -99,14 +91,6 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
         return Real.Import(new(Request, HttpContext.Current.Request), zoneId, HttpContext.Current.Request["Name"]);
     }
 
-    // Replaced by DataSource System.AppsPendingInitialization through query System.SysData.
-    ///// <inheritdoc />
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[SupportedModules(DnnSupportedModuleNames)]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    //public IEnumerable<PendingAppDto> GetPendingApps(int zoneId)
-    //    => Real.GetPendingApps(zoneId);
 
     /// <inheritdoc />
     [HttpPost]
