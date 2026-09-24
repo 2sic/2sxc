@@ -19,8 +19,9 @@ internal class AppApiFileSystemWatcher : IDisposable, IHasLog
 
     public AppApiFileSystemWatcher(IHostEnvironment hostingEnvironment, ILogStore logStore)
     {
-        Log = LogFactory.Create(HistoryLogName, null, "new AppApiFileSystemWatcher()");
+        Log = LogFactory.Create(HistoryLogName);
         logStore.Add(HistoryLogGroup, Log);
+        Log.A("new AppApiFileSystemWatcher()");
 
         var appApiSource = Path.Combine(hostingEnvironment.ContentRootPath, OqtConstants.AppRoot, OqtConstants.TenantsFolderName);
 

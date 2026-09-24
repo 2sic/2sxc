@@ -14,8 +14,9 @@ internal class AppApiActionContext : IHasLog
 {
     public AppApiActionContext(ILogStore logStore)
     {
-        Log = LogFactory.Create(HistoryLogName, null, "AppApiActionContext");
+        Log = LogFactory.Create(HistoryLogName);
         logStore.Add(HistoryLogGroup, Log);
+        Log.A("AppApiActionContext");
     }
 
     public ILog Log { get; }

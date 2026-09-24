@@ -26,8 +26,9 @@ internal class AppApiControllerManager : IHasLog
         _webApiContextBuilder = webApiContextBuilder;
         _editionSvc = editionSvc;
         _appCodeLoader = appCodeLoader;
-        Log = LogFactory.Create(HistoryLogName, null, "AppApiControllerManager");
+        Log = LogFactory.Create(HistoryLogName);
         logStore.Add(HistoryLogGroup, Log);
+        Log.A("AppApiControllerManager");
     }
     private readonly ApplicationPartManager _partManager;
     private readonly Generator<Compiler> _compiler;

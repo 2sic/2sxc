@@ -35,8 +35,9 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
         OqtSiteGroup oqtSiteGroup,
         ILogStore logStore)
     {
-        Log = LogFactory.Create(HistoryLogName, null, nameof(AppApiDynamicRouteValueTransformer));
+        Log = LogFactory.Create(HistoryLogName);
         logStore.Add(HistoryLogGroup, Log);
+        Log.A(nameof(AppApiDynamicRouteValueTransformer));
         this.ConnectLogs([
             _tenantResolver = tenantResolver,
             _hostingEnvironment = hostingEnvironment,
