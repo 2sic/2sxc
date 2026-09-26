@@ -9,5 +9,5 @@
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IUrlParam
 {
-    public string GetSerialized();
+    public string GetSerialized(ObjectToUrlOptions options);
 }

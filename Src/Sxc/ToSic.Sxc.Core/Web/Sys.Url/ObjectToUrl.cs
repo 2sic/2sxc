@@ -6,21 +6,6 @@ using ToSic.Sys.Utils.Types;
 
 namespace ToSic.Sxc.Web.Sys.Url;
 
-public record ObjectToUrlOptions
-{
-    public string ArrayBoxStart { get; set; } = "";
-    public string ArrayBoxEnd { get; set; } = "";
-    public string ArraySeparator { get; set; } = ",";
-    public string DepthSeparator { get; set; } = ":";
-    public string PairSeparator { get; set; } = UrlParts.ValuePairSeparator.ToString();
-
-    public string KeyValueSeparator { get; set; } = "=";
-
-    public string? Prefix { get; init; }
-    internal IEnumerable<IUrlParameterInGroupOperation>? PreProcessors { get; init; }
-
-}
-
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ObjectToUrl
 {
@@ -84,34 +69,38 @@ public class ObjectToUrl
                 // Get all properties on the object
                 var properties = objectList
                     .Cast<object>()
-                    .SelectMany(d => PropsOfOne(d, prefix))
+                    .Select(d => PropsOfOne(d, prefix))
                     .ToList();
 
                 // Concat all key/value pairs into a string separated by ampersand
-                return string.Join(MyOptions.PairSeparator, properties.Select(p => p.GetSerialized()));
+                return string.Join(MyOptions.PairSeparator, properties); //.Select(p => p.GetSerialized(MyOptions)));
             }
         }
     }
 
     // https://ole.michelsen.dk/blog/serialize-object-into-a-query-string-with-reflection/
     // https://stackoverflow.com/questions/6848296/how-do-i-serialize-an-object-into-query-string-format
-    private IEnumerable<IUrlParam> PropsOfOne(object data, string? prefix) =>
+    //private IEnumerable<IUrlParam> PropsOfOne(object data, string? prefix) =>
+    private string? PropsOfOne(object data, string? prefix) =>
         data switch
         {
             // Case #1: Null, return that; should never happen
-            null => [],
+            //null => [],
             // Case #2: Already a string, return that
-            string str => (IEnumerable<IUrlParam>)(str.HasValue()
-                ? [new UrlParamPrepared(str)]
-                : []),
+            string str => str.HasValue()
+                ? new UrlParamPrepared(str).GetSerialized(MyOptions)
+                : null,
             // Case #3: It's an object or an array of objects (but not a string)
-            _ => data.GetType()
-                // Get all properties on the object
-                .GetProperties()
-                .Where(x => x.CanRead)
-                .Select(x => ValueSerialize(new(x.Name, x.GetValue(data, null)) { Prefix = prefix }))
-                .OfType<IUrlParam>()
-                .ToListOpt()
+            _ => string.Join(
+                MyOptions.PairSeparator,
+                data.GetType()
+                    // Get all properties on the object
+                    .GetProperties()
+                    .Where(x => x.CanRead)
+                    .Select(x => ValueSerialize(new(x.Name, x.GetValue(data, null)) { Prefix = prefix }))
+                    .OfType<IUrlParam>()
+                    .ToListOpt()
+            )
         };
 
     private IUrlParam? ValueSerialize(UrlParameter set)
@@ -157,7 +146,7 @@ public class ObjectToUrl
                 : set.Value.ToString()
             );
 
-        var maybeValue = Serialize(set.Value, prefix: set.FullName + MyOptions.DepthSeparator);
+        var maybeValue = Serialize(set.Value, prefix: $"{set.FullName}{MyOptions.DepthSeparator}");
         return new UrlParamPrepared(maybeValue);
     }
 }

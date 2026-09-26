@@ -13,11 +13,12 @@ internal sealed record UrlParamKvp(string? Name, string? Value): IUrlParam
     /// <summary>
     /// Converts the UrlParameter to a URL fragment string.
     /// </summary>
+    /// <param name="options"></param>
     /// <returns>A string representation of the URL parameter.</returns>
-    public string GetSerialized()
+    public string GetSerialized(ObjectToUrlOptions options)
     {
         var start = Name != null
-            ? Name + "="
+            ? Name + options.KeyValueSeparator
             : null;
         var val = Value == null
             ? null
@@ -31,5 +32,5 @@ internal sealed record UrlParamKvp(string? Name, string? Value): IUrlParam
 
 internal record UrlParamPrepared(string Fragment): IUrlParam
 {
-    public string GetSerialized() => Fragment;
+    public string GetSerialized(ObjectToUrlOptions options) => Fragment;
 }
