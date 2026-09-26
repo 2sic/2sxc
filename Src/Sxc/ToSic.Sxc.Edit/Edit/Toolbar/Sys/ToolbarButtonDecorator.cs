@@ -17,10 +17,10 @@ public record ToolbarButtonDecorator : ModelFromEntity
     public const string TypeName = "ToolbarButtonDecorator";
     public const string ContentTypeNameId = "acc185a7-f300-4468-bce8-d6a64038989d";
 
-    public static string KeyColor = "color";
-    public static string KeyIcon = "icon";
-    public static string KeyData = "data";
-    public static string KeyNote = "note";
+    public const string KeyColor = "color";
+    //public const string KeyIcon = "icon";
+    public const string KeyData = "data";
+    public const string KeyNote = "note";
 
     public string Command => GetThis("");
 
@@ -32,7 +32,7 @@ public record ToolbarButtonDecorator : ModelFromEntity
 
     public string UiColor=> GetThis("").Trim('#');
 
-    public string AllRules()
+    internal string UiRuleParams()
     {
         var addOns = new
         {

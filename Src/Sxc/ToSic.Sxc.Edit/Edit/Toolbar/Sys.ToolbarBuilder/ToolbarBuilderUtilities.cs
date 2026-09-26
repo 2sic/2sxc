@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Web.Sys.Url;
+﻿using System.Runtime.ConstrainedExecution;
+using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
@@ -19,17 +20,27 @@ internal class ToolbarBuilderUtilities
     /// Helper to process 'parameters' to url, ensuring lower-case etc. 
     /// </summary>
     [field: AllowNull, MaybeNull]
-    public ObjectToUrl Par2Url => field ??= new(null, [new UrlValueCamelCase()]);
+    public ObjectToUrl Par2Url => field ??= new()//null, [new UrlValueCamelCase()])
+    {
+        MyOptions = new()
+        {
+            PreProcessors = [new UrlValueCamelCase()],
+        }
+    };
 
 
     /// <summary>
     /// Helper to process 'filter' to url - should not change the case of the properties and auto-fix some special scenarios
     /// </summary>
     [field: AllowNull, MaybeNull]
-    public ObjectToUrl Filter2Url => field ??= new(null, [new FilterValueProcessor()])
+    public ObjectToUrl Filter2Url => field ??= new()
     {
-        ArrayBoxStart = "[",
-        ArrayBoxEnd = "]"
+        MyOptions = new()
+        {
+            ArrayBoxStart = "[",
+            ArrayBoxEnd = "]",
+            PreProcessors = [new FilterValueProcessor()],
+        }
     };
 
 
@@ -38,7 +49,7 @@ internal class ToolbarBuilderUtilities
     /// Helper to process 'prefill' - should not change the case of the properties
     /// </summary>
     [field: AllowNull, MaybeNull]
-    public ObjectToUrl Prefill2Url => field ??= new(null);
+    public ObjectToUrl Prefill2Url => field ??= new();
 
     public string? PrepareParams(object? parameters, ITweakButton? tweaks = null)
     {
@@ -51,10 +62,19 @@ internal class ToolbarBuilderUtilities
 
     #region UI Processing
 
-    internal static ObjectToUrl GetUi2Url() => new(null, [
-        new UrlValueCamelCase(),
-        new UiValueProcessor()
-    ]);
+    internal static ObjectToUrl GetUi2Url() => new() //null, [
+    //    new UrlValueCamelCase(),
+    //    new UiValueProcessor()
+    //])
+    {
+        MyOptions = new()
+        {
+            PreProcessors = [
+                new UrlValueCamelCase(),
+                new UiValueProcessor()
+            ]
+        }
+    };
 
 
     public string? PrepareUi(

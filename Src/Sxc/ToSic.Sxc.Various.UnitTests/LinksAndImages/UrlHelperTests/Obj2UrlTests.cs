@@ -96,7 +96,7 @@ public class Obj2UrlTests
     public void BasicWithPrefix()
     {
         var prefix = "prefix:";
-        Equal($"{prefix}test=7&{prefix}name=daniel", new ObjectToUrl(prefix: prefix).Serialize(TestCase1));
+        Equal($"{prefix}test=7&{prefix}name=daniel", new ObjectToUrl(/*prefix: prefix*/){ MyOptions = new(){ Prefix = prefix}}.Serialize(TestCase1));
     }
 
     [Fact]

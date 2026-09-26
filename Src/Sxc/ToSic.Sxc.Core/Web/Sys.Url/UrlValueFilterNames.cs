@@ -4,7 +4,7 @@
 /// Helper to process url values - and keep or skip certain properties.
 /// Note that it is case-insensitive
 /// </summary>
-internal class UrlValueFilterNames: UrlValueProcess
+internal class UrlValueFilterNames: IUrlParameterInGroupOperation
 {
     /// <summary>
     /// Determine names of properties to preserve in the final parameters
@@ -25,13 +25,15 @@ internal class UrlValueFilterNames: UrlValueProcess
     internal Dictionary<string, bool> PropSerializeMap = new(StringComparer.InvariantCultureIgnoreCase);
 
 
-    public override NameObjectSet? Process(NameObjectSet? set)
+    public UrlParameter? Process(UrlParameter? set)
     {
         if (set?.Name == null)
             return null;
 
-        return PropSerializeMap.TryGetValue(set.Name, out var reallyUse)
-            ? new(set, keep: reallyUse) 
-            : new NameObjectSet(set, keep: PropSerializeDefault); 
+        var keep = PropSerializeMap.TryGetValue(set.Name, out var reallyUse)
+            ? reallyUse
+            : PropSerializeDefault;
+
+        return keep ? set : null;
     }
 }
