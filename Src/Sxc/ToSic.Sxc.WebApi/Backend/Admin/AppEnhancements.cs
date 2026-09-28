@@ -7,6 +7,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.WebApi.Sys.Admin.Metadata;
+using ToSic.Eav.WebApi.Sys.Dto;
 
 namespace ToSic.Eav.WebApi.Sys.Admin;
 
@@ -49,18 +50,14 @@ public class AppEnhancements : CustomDataSource
         ProvideOut(() => GetEntities(AppStackConstants.Settings.SystemType), AppStackConstants.Settings.SystemType);
         ProvideOut(() => GetEntities(AppStackConstants.Resources.SystemType), AppStackConstants.Resources.SystemType);
 
-        // TODO: @2rb - this should be "AppConfig" to be consistent with the other names.
-        // TODO: pls fix and update the UI which uses this.
-        ProvideOut(() => GetEntities(AppLoadConstants.TypeAppConfig), "ToSxcContentApp");
+        ProvideOut(() => GetEntities(AppLoadConstants.TypeAppConfig), "AppConfig");
 
         ProvideOutRaw(() => GetFields(TypeNames.Settings), name: "AppSettingFields", options: () => new()
         {
             TitleField = nameof(ContentTypeFieldDto.StaticName), TypeName = "ContentTypeField", AllowUnknownValueTypes = true,
         });
 
-        // TODO: @2rb - this should be AppResourcesFields (with an "s" at the end) to be consistent with the other names.
-        // TODO: pls fix, and update the UI to use the corrected name.
-        ProvideOutRaw(() => GetFields(TypeNames.Resources), name: "AppResourceFields", options: () => new()
+        ProvideOutRaw(() => GetFields(TypeNames.Resources), name: "AppResourcesFields", options: () => new()
         {
             TitleField = nameof(ContentTypeFieldDto.StaticName), TypeName = "ContentTypeField", AllowUnknownValueTypes = true,
         });
@@ -76,16 +73,12 @@ public class AppEnhancements : CustomDataSource
             .Where(entity => entity.AppId == AppId && entity.Type.Name == typeName);
     }
 
-    private IEnumerable<IRawEntity> GetFields(string? typeName)
+    private IEnumerable<ContentTypeFieldDto> GetFields(string? typeName)
     {
         if (typeName == null)
             return [];
         var fields = _workAttributes.Value.GetFields(typeName);
-        return _convertAttributeToDto.Value
-            .Convert(fields)
-            // TODO: @2rb - I'm quite certain to the ToRawEntity is not needed any more
-            // TODO: @2rb pls verify and probably skip and delete the method which almost certainly is irrelevant
-            .Select(field => field.ToRawEntity()); 
+        return _convertAttributeToDto.Value.Convert(fields);
     }
 
     private IEnumerable<IRawEntity> GetMetadata(MetadataControllerReal metadataController)
