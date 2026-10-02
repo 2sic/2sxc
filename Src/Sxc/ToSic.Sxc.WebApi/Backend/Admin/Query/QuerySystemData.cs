@@ -63,9 +63,5 @@ public class DataSources : CustomDataSource
 
     public DataSources(Dependencies services, LazySvc<QueryControllerReal> query)
         : base(services, "Sxc.DataSources", connect: [query])
-        => ProvideOutRaw(
-            () => query.Value.DataSources(new AppIdentity(OfZoneId, AppId)),
-            options: Options);
-
-    private static DataFactoryOptions Options() => new() { TypeName = "DataSource", AllowUnknownValueTypes = true };
+        => ProvideOutRaw(() => query.Value.DataSources(new AppIdentity(OfZoneId, AppId)));
 }

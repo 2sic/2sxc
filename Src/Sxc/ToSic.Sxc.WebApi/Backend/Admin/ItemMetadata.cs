@@ -38,9 +38,9 @@ public class ItemMetadata : CustomDataSource
         Generator<IConvertToEavLight> converters)
         : base(services, "Sxc.ItemMd", connect: [metadata, appReaders, converters])
     {
-        ProvideOutRaw(() => Recommendations(metadata), name: "Recommendations", options: Options);
-        ProvideOutRaw(() => Items(appReaders, converters), name: "Items", options: Options);
-        ProvideOutRaw(() => Target(metadata), name: "For", options: Options);
+        ProvideOutRaw(() => Recommendations(metadata), name: "Recommendations");
+        ProvideOutRaw(() => Items(appReaders, converters), name: "Items", options: DynamicOptions);
+        ProvideOutRaw(() => Target(metadata), name: "For");
     }
 
     private MetadataListDto Result(LazySvc<MetadataControllerReal> metadata)
@@ -97,7 +97,7 @@ public class ItemMetadata : CustomDataSource
     }
     private IEnumerable<MetadataForRaw> Target(LazySvc<MetadataControllerReal> metadata)
         => [new(Result(metadata).For)];
-    private static DataFactoryOptions Options() => new() { AllowUnknownValueTypes = true };
+    private static DataFactoryOptions DynamicOptions() => new() { AllowUnknownValueTypes = true };
 
     private sealed class MetadataRecommendationRaw(MetadataRecommendation recommendation) : IRawEntityAutoConvert
     {
