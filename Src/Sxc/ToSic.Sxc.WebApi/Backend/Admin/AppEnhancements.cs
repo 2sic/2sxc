@@ -64,7 +64,7 @@ public class AppEnhancements : CustomDataSource
         ProvideOutRaw(() => GetMetadata(metadataController.Value), name: "Metadata", options: () => new() { AllowUnknownValueTypes = true });
     }
 
-    private IEnumerable<IEntity> GetEntities(string? typeName)
+    protected virtual IEnumerable<IEntity> GetEntities(string? typeName)
     {
         // For primary/global apps the name might be null, if there is no data for that type, so we return an empty list in that case
         if (typeName == null)
