@@ -77,7 +77,7 @@ public static class StartupSxcWebApi
         services.TryAddTransient<SxcPagePublishing>();
         services.TryAddTransient<ExportApp>();
         services.TryAddTransient<ExportAppInfo>();
-        //services.TryAddTransient<ImportApp>(); // v22 moved to eav.WebApi
+        // App import services moved to EAV WebApi in v22.
         services.TryAddTransient<ImportContent>();
         services.TryAddTransient<ExportContent>();
         services.TryAddTransient<AppStateSyncSave>();   // new separate in v21.06

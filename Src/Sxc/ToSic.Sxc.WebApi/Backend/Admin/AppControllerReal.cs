@@ -15,7 +15,8 @@ namespace ToSic.Sxc.Backend.Admin;
 public class AppControllerReal(
     LazySvc<WorkAppsRemove> workAppsRemove,
     LazySvc<ExportApp> exportAppLazy,
-    LazySvc<ImportApp> importAppLazy,
+    LazySvc<ImportAppService> importAppServiceLazy,
+    LazySvc<PendingAppInstall> pendingAppInstallLazy,
     LazySvc<AppCreator> appBuilderLazy,
     LazySvc<AppStateSyncSave> appStateSyncSave,
     LazySvc<AppStateSyncRestore> appStateSyncRestore,
@@ -24,8 +25,8 @@ public class AppControllerReal(
     : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
         connect:
         [
-            workAppsRemove, exportAppLazy, importAppLazy, appBuilderLazy, appStateSyncRestore, appStateSyncSave,
-            workViews, systemManagerLazy
+            workAppsRemove, exportAppLazy, importAppServiceLazy, pendingAppInstallLazy, appBuilderLazy,
+            appStateSyncRestore, appStateSyncSave, workViews, systemManagerLazy
         ])
 {
     public const string LogSuffix = "AppCon";
@@ -107,7 +108,7 @@ public class AppControllerReal(
         if (stream == null!)
             throw new NullReferenceException("File Stream is null, upload canceled");
 
-        var result = importAppLazy.Value.Import(stream, zoneId, renameApp);
+        var result = importAppServiceLazy.Value.Import(stream, zoneId, renameApp);
 
         return l.ReturnAsOk(result);
     }
@@ -123,7 +124,7 @@ public class AppControllerReal(
     public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppDto> pendingApps)
     {
         var l = Log.Fn<ImportResultDto>();
-        var result = importAppLazy.Value.InstallPendingApps(zoneId, pendingApps);
+        var result = pendingAppInstallLazy.Value.InstallPendingApps(zoneId, pendingApps);
         return l.ReturnAsOk(result);
     }
 }
