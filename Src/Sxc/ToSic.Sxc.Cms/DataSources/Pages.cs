@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using ToSic.Eav.DataSource;
 
+using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Sxc.Cms.Pages;
@@ -37,7 +38,8 @@ namespace ToSic.Sxc.DataSources;
     NiceName = "Pages",
     Type = DataSourceType.Source,
     UiHint = "Pages in this site")]
-public class Pages: CustomDataSource
+public class Pages(CustomDataSource.Dependencies services, PagesDataSourceProvider provider)
+    : CustomDataSource(services, "CDS.Pages", connect: [provider])
 {
     #region Configuration properties
 
@@ -120,16 +122,7 @@ public class Pages: CustomDataSource
 
     #endregion
 
-    #region Constructor
-
-    [PrivateApi]
-    public Pages(Dependencies services, PagesDataSourceProvider provider) : base(services, "CDS.Pages", connect: [provider])
-    {
-        ProvideOutRaw(() => GetPages(provider));
-    }
-    #endregion
-
-    private IImmutableList<PageModelRaw> GetPages(PagesDataSourceProvider provider)
+    protected override IEnumerable<IRawData> GetDefault()
     {
         var l = Log.Fn<IImmutableList<PageModelRaw>>();
         Configuration.Parse();
