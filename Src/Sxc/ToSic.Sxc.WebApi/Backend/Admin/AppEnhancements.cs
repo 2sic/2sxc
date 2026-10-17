@@ -52,15 +52,9 @@ public class AppEnhancements : CustomDataSource
 
         ProvideOut(() => GetEntities(AppLoadConstants.TypeAppConfig), "AppConfig");
 
-        ProvideOutRaw(() => GetFields(TypeNames.Settings), name: "AppSettingFields", options: () => new()
-        {
-            TitleField = nameof(ContentTypeFieldDto.StaticName), TypeName = "ContentTypeField", AllowUnknownValueTypes = true,
-        });
+        ProvideOutRaw(() => GetFields(TypeNames.Settings), name: "AppSettingFields");
 
-        ProvideOutRaw(() => GetFields(TypeNames.Resources), name: "AppResourcesFields", options: () => new()
-        {
-            TitleField = nameof(ContentTypeFieldDto.StaticName), TypeName = "ContentTypeField", AllowUnknownValueTypes = true,
-        });
+        ProvideOutRaw(() => GetFields(TypeNames.Resources), name: "AppResourcesFields");
         ProvideOutRaw(() => GetMetadata(metadataController.Value), name: "Metadata", options: () => new() { AllowUnknownValueTypes = true });
     }
 

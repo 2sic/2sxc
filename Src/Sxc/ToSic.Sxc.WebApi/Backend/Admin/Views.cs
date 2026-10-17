@@ -23,7 +23,7 @@ public class Views : CustomDataSource
     public Views(Dependencies services, LazySvc<ViewsBackend> views)
         : base(services, "Sxc.Views", connect: [views])
         => ProvideOutRaw(() => views.Value.GetAll(AppId), options: Options);
-    private static DataFactoryOptions Options() => new() { AutoId = false, TypeName = "View", AllowUnknownValueTypes = true };
+    private static DataFactoryOptions Options() => new() { AutoId = false };
 }
 
 [PrivateApi]
@@ -42,7 +42,7 @@ public class ViewUsage : CustomDataSource
 
     public ViewUsage(Dependencies services, LazySvc<UsageBackend> usage, IViewUsageDataProvider provider, ISxcCurrentContextService context)
         : base(services, "Sxc.ViewUsage", connect: [usage, provider, context])
-        => ProvideOutRaw(() => Get(usage, provider, context), options: Options);
+        => ProvideOutRaw(() => Get(usage, provider, context));
 
     private IEnumerable<ViewUsageRaw> Get(LazySvc<UsageBackend> usage, IViewUsageDataProvider provider, ISxcCurrentContextService context)
         => usage.Value.ViewUsage(
@@ -51,8 +51,7 @@ public class ViewUsage : CustomDataSource
                 (views, blocks) => provider.Build(views, blocks, context.GetExistingAppOrSet(AppId).Site.Id))
             .Select(view => new ViewUsageRaw(view));
 
-    private static DataFactoryOptions Options() => new() { TypeName = "ViewUsage", AllowUnknownValueTypes = true };
-
+    [ContentType(Name = "ViewUsage", Guid = "0a095e44-7f00-4d36-8425-274c7ee7277a", Scope = "System")]
     private sealed class ViewUsageRaw(ViewDto view) : IRawEntityAutoConvert
     {
         public int Id => view.Id;
@@ -62,6 +61,7 @@ public class ViewUsage : CustomDataSource
         public string Name => view.Name;
 
         public string? Path => view.Path;
+        [ContentTypeField(Type = ValueTypes.Object)]
         public IEnumerable<ContentBlockDto> Blocks => view.Blocks;
     }
 }

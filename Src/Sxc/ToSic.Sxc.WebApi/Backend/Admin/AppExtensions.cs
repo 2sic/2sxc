@@ -1,4 +1,3 @@
-using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
@@ -19,9 +18,7 @@ public class AppExtensions : CustomDataSource
 {
     public AppExtensions(Dependencies services, LazySvc<ExtensionReaderBackend> reader)
         : base(services, "Sxc.AppExts", connect: [reader])
-        => ProvideOutRaw(() => reader.Value.GetExtensions(AppId), options: Options);
-
-    private static DataFactoryOptions Options() => new() { TypeName = "AppExtension", AllowUnknownValueTypes = true };
+        => ProvideOutRaw(() => reader.Value.GetExtensions(AppId));
 }
 
 [PrivateApi]

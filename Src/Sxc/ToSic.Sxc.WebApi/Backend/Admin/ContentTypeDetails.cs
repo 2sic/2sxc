@@ -35,15 +35,9 @@ public class ContentTypeDetails : CustomDataSource
         : base(services, logName: "Eav.CtDetails", connect: [workEntities, convTypeDto, workAttributes, convAttrDto])
     {
 
-        ProvideOutRaw(() => GetContentTypeDetails(workEntities.New(AppId), convTypeDto), options: () => new()
-        {
-            AllowUnknownValueTypes = true,
-        });
+        ProvideOutRaw(() => GetContentTypeDetails(workEntities.New(AppId), convTypeDto));
 
-        ProvideOutRaw(() => GetFields(workAttributes.New(AppId), convAttrDto), name: "Fields", options: () => new()
-        {
-            AllowUnknownValueTypes = true,
-        });
+        ProvideOutRaw(() => GetFields(workAttributes.New(AppId), convAttrDto), name: "Fields");
     }
 
     private IEnumerable<ContentTypeDto> GetContentTypeDetails(WorkEntities workEntities,
