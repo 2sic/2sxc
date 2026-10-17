@@ -23,10 +23,12 @@ public partial class DynamicCodeService(CodeApiServiceBase.Dependencies services
     /// It's important to understand that everything in here will use the scoped service provider.
     /// </summary>
     [field: AllowNull, MaybeNull]
-    protected IServiceProvider ScopedServiceProvider => field ??= Services.ServiceProvider.CreateScope().ServiceProvider;
+    protected IServiceProvider ScopedServiceProvider => field
+        ??= Services.ServiceProvider.CreateScope().ServiceProvider;
 
     [field: AllowNull, MaybeNull]
-    private ScopedDependencies ServicesScoped => field ??= ScopedServiceProvider.Build<ScopedDependencies>().ConnectServices(Log);
+    private ScopedDependencies ServicesScoped => field
+        ??= ScopedServiceProvider.Build<ScopedDependencies>().ConnectServices(Log);
 
 
     protected void ActivateEditUi() => EditUiRequired = true;

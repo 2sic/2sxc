@@ -2,7 +2,6 @@
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
-using ToSic.Sxc.Code.Sys.CodeApiService;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Sys.Factory;
@@ -22,7 +21,7 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 /// Note that other DynamicCode objects like RazorComponent or ApiController reference this object for all the interface methods of <see cref="IDynamicCode"/>.
 /// </summary>
 /// <remarks>
-/// It can usually not be created directly, but through the <see cref="ExecutionContextUnknown"/> which would return a <see cref="IExecutionContextFactory"/>.
+/// It can usually not be created directly, but through the <see cref="IExecutionContextFactory"/>.
 /// </remarks>
 [PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -39,7 +38,7 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
         LazySvc<IClassCompiler> CodeCompilerLazy,
         AppDataStackService DataStackService,
         LazySvc<IConvertService> ConvertService,
-        LazySvc<CodeCreateDataSourceSvc> DataSources,
+        LazySvc<ExCtxDataSourceService> DataSources,
         ICodeDataFactory Cdf,
         IEditionService EditionSvc)
         : DependenciesBase(connect:

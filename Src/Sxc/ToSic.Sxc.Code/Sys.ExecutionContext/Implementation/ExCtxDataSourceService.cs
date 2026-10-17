@@ -4,16 +4,16 @@ using ToSic.Eav.DataSource.Sys.Catalog;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Eav.Services;
 
-namespace ToSic.Sxc.Code.Sys.CodeApiService;
+namespace ToSic.Sxc.Sys.ExecutionContext;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class CodeCreateDataSourceSvc(LazySvc<IDataSourcesService> dataSources, LazySvc<DataSourceCatalog> catalog)
+public class ExCtxDataSourceService(LazySvc<IDataSourcesService> dataSources, LazySvc<DataSourceCatalog> catalog)
 {
     public readonly LazySvc<IDataSourcesService> DataSources = dataSources;
     public readonly LazySvc<DataSourceCatalog> Catalog = catalog;
 
-    public CodeCreateDataSourceSvc Setup(IAppIdentity appIdentity, Func<ILookUpEngine> getLookup)
+    public ExCtxDataSourceService Setup(IAppIdentity appIdentity, Func<ILookUpEngine> getLookup)
     {
         AppIdentity = appIdentity;
         _getLookup = getLookup;

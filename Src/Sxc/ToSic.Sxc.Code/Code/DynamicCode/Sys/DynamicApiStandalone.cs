@@ -7,9 +7,14 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Code.Sys.CodeApiService;
+namespace ToSic.Sxc.Code.Sys;
 
-internal class DynamicCodeStandalone(IExecutionContext exCtx, ICodeDynamicApiHelper apiHelper): IDynamicCode12
+/// <summary>
+/// Object returned by the (old) DynamicCodeService when a standalone API object is requested.
+/// </summary>
+/// <param name="exCtx"></param>
+/// <param name="apiHelper"></param>
+internal class DynamicApiStandalone(IExecutionContext exCtx, ICodeDynamicApiHelper apiHelper): IDynamicCode12
 {
     public ILog Log => exCtx.Log!;
 

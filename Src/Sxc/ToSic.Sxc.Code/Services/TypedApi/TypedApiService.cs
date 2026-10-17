@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Services.Sys.TypedApiService;
 /// Not sure how to get this to work, since normally we always start with a code-file, and here we don't have one!
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class TypedApiService(CodeApiServiceBase.Dependencies services, string? logName = null /* must be nullable for DI */)
+internal class TypedApiService(CodeApiServiceBase.Dependencies services, string? logName = null /* must be nullable for DI */)
     : CodeApiServiceBase(services, logName ?? $"{SxcLogName}.TypeCS"),
         ITypedApiService
 {

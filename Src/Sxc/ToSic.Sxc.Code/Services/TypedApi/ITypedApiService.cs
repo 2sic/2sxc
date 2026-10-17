@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Services;
 /// 
 /// History
 /// 
-/// * New in v20
+/// * New in v20, as a replacement for the <see cref="IDynamicCodeService"/>
 /// </remarks>
 [PublicApi]
 public interface ITypedApiService

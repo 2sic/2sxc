@@ -1,13 +1,15 @@
 ﻿using ToSic.Sxc.Services.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Utils.Types;
 
-namespace ToSic.Sxc.Code.Sys.CodeApiService;
+namespace ToSic.Sxc.Sys.ExecutionContext;
 
 /// <summary>
 /// Special helper which will create the code-root based on the parent class requesting it.
-/// If the parent is generic supporting IDynamicModel[Model, Kit] it will create the generic root
 /// </summary>
+/// <remarks>
+/// If the parent is generic supporting IHasKit[Kit] it will create the generic root
+/// Note that there is currently not IHasKit[Model, Kit] - so the model is always `object` for now.
+/// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ExecutionContextFactory(IServiceProvider serviceProvider)
     : ServiceBase($"{SxcLogName}.ExCtxF", connect: [/* never! serviceProvider */]), IExecutionContextFactory
@@ -45,7 +47,7 @@ public class ExecutionContextFactory(IServiceProvider serviceProvider)
         {
             var requiredDynCode = typeof(IHasKit<>);
 
-            // 1. Detect if it's an IDynamicCode<TModel, TServiceKit>
+            // 1. Detect if it's an IHasKit<TServiceKit>
             var interfaceOnCode = customType
                 .GetInterfaces()
                 .FirstOrDefault(x => x.IsGenericTypeOf(requiredDynCode));

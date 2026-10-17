@@ -2,7 +2,6 @@
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Code.Sys;
-using ToSic.Sxc.Code.Sys.CodeApiService;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
 
@@ -23,7 +22,7 @@ public partial class ExecutionContext: IExCtxLookUpEngine
 
     [PrivateApi]
     [field: AllowNull, MaybeNull]
-    public CodeCreateDataSourceSvc DataSources => field
+    public ExCtxDataSourceService DataSources => field
         ??= Services.DataSources.Value.Setup(App, () => LookUpForDataSources);
 
 
@@ -34,7 +33,7 @@ public partial class ExecutionContext: IExCtxLookUpEngine
     /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataStream)" />
     public T CreateSource<T>(IDataStream source) where T : IDataSource
     {
-        // if it has a source, then use this, otherwise it's null and then it uses the App-Default
+        // if it has a source, then use this, otherwise it's null, and then it uses the App-Default
         // Reason: some sources like DataTable or SQL won't have an upstream source
         var src = CreateSource<T>(source.Source);
         src.Attach(DataSourceConstants.StreamDefaultName, source);

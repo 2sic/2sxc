@@ -4,5 +4,5 @@
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
 
-internal class ExecutionContextUnknown<TModel, TServiceKit>(ExecutionContext.Dependencies services, WarnUseOfUnknown<ExecutionContextUnknown> _)
+internal class ExecutionContextUnknownObjKit(ExecutionContext.Dependencies services, WarnUseOfUnknown<ExecutionContextUnknownObjKit> _)
     : ExecutionContext<object, ServiceKit>(services, LogScopes.Base);

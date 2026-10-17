@@ -1,13 +1,16 @@
-﻿#if NETFRAMEWORK
-using ToSic.Eav.DataSource;
+﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Code.Sys.CodeApiService;
+namespace ToSic.Sxc.Dnn.Code;
 
+/// <summary>
+/// Obsolete implementation of old CreateSource() method, only used in DNN.
+/// </summary>
+/// <param name="dynCode"></param>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class CodeApiServiceObsolete(IExecutionContext dynCode)
+public class DnnExecutionContextCreateSourceObsolete(IExecutionContext dynCode)
 {
     [PrivateApi("obsolete")]
     [Obsolete("you should use the CreateSource<T> instead. Deprecated ca. v4 (but not sure), changed to error in v15.")]
@@ -17,7 +20,7 @@ public class CodeApiServiceObsolete(IExecutionContext dynCode)
         // Completely rewrote this, because I got rid of some old APIs in v15 on the DataFactory
         // This has never been tested but probably works, but we won't invest time to be certain.
 
-        var dataSources = ((ExecutionContext)dynCode).DataSources;
+        var dataSources = ((Sys.ExecutionContext.ExecutionContext)dynCode).DataSources;
 
         try
         {
@@ -56,5 +59,3 @@ public class CodeApiServiceObsolete(IExecutionContext dynCode)
 
 
 }
-
-#endif
