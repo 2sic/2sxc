@@ -1,7 +1,6 @@
 ﻿using System.Web;
 using ToSic.Eav.Web.Sys;
 using ToSic.Eav.WebApi.Sys;
-using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Dnn.Integration;
@@ -47,9 +46,6 @@ internal class DnnWebApiHelper : CodeHelperBase
             ?? _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>(Log);
     // Must cache it, to be really sure we use the same ServiceProvider in the same request
     private readonly LazyGet<IServiceProvider> _serviceProvider = new();
-
-    public void SetupResponseMaker(System.Web.Http.ApiController apiController)
-        => GetService<IResponseMaker>().Init(apiController);
 
     #endregion
 

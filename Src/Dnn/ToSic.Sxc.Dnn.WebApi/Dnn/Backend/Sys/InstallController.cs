@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.WebApi.Sys.Install;
+﻿using ToSic.Eav.WebApi.Sys.Helpers.Response;
+using ToSic.Eav.WebApi.Sys.Install;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.WebApi.Sys;
@@ -41,7 +42,7 @@ public class InstallController()
     {
         SysHlp.PreventServerTimeout600();
         // Make sure the Scoped ResponseMaker has this controller context
-        SysHlp.SetupResponseMaker(this);
-        return Real.RemotePackage(packageUrl, ((DnnModule)SysHlp.GetService<IModule>()).Init(ActiveModule), newName);
+        using (this.InitializedResponseMaker())
+            return Real.RemotePackage(packageUrl, ((DnnModule)SysHlp.GetService<IModule>()).Init(ActiveModule), newName);
     }
 }

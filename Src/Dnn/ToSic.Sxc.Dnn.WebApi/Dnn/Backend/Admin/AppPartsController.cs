@@ -1,6 +1,7 @@
 ﻿using System.Web;
 using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Eav.WebApi.Sys.Dto;
+using ToSic.Eav.WebApi.Sys.Helpers.Response;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using RealController = ToSic.Sxc.Backend.Admin.AppPartsControllerReal;
 
@@ -27,10 +28,9 @@ public class AppPartsController() : DnnSxcControllerRoot(RealController.LogSuffi
     public HttpResponseMessage Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
     {
         // Make sure the Scoped ResponseMaker has this controller context
-        SysHlp.SetupResponseMaker(this);
-
-        return Real.Export(zoneId: zoneId, appId: appId, contentTypeIdsString: contentTypeIdsString,
-            entityIdsString: entityIdsString, templateIdsString: templateIdsString);
+        using (this.InitializedResponseMaker())
+            return Real.Export(zoneId: zoneId, appId: appId, contentTypeIdsString: contentTypeIdsString,
+                entityIdsString: entityIdsString, templateIdsString: templateIdsString);
     }
 
 
