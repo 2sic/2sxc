@@ -14,7 +14,7 @@ namespace Custom.DataSource.Sys;
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class DataSourceConvertAnything(Generator<IDataFactory, DataFactoryOptions> genDataFactory) : ServiceBase("Ds.Conv")
+public class DataSourceConvertAnything(DataFactoryGenerator genDataFactory) : ServiceBase("Ds.Conv")
 {
 
     internal IImmutableList<IEntity> ConvertAny(IDataSource parent, Func<object>? source, Func<DataFactoryOptions>? options)

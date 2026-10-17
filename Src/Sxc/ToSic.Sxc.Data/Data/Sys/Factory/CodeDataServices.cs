@@ -15,7 +15,7 @@ public record CodeDataServices(
     LazySvc<IValueConverter> ValueConverter,
     LazySvc<IScrub> Scrub,
     LazySvc<ConvertForCodeService> ForCode,
-    Generator<IDataFactory, DataFactoryOptions> DataFactory,
+    DataFactoryGenerator DataFactory,
     LazySvc<IUser> User
 )
     : DependenciesBase(connect: [ValueConverter, Scrub, ForCode, DataFactory]);
