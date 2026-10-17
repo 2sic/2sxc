@@ -2,6 +2,7 @@
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.DataSource.VisualQuery;
+using ToSic.Eav.Data.Raw;
 using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Cms.Users.Sys;
 
@@ -35,10 +36,9 @@ namespace ToSic.Sxc.DataSources;
     Type = DataSourceType.Source,
     ConfigurationType = "1b9fd9d1-dde0-40ad-bb66-5cd7f30de18d"
 )]
-public class UserRoles : CustomDataSource
+public class UserRoles(CustomDataSource.Dependencies services, IUserRolesProvider provider)
+    : CustomDataSource(services, "SDS.Roles", connect: [provider])
 {
-    private readonly IUserRolesProvider _provider;
-
     #region Other Constants
 
     private const char Separator = ',';
@@ -72,26 +72,10 @@ public class UserRoles : CustomDataSource
     #endregion
 
 
-    #region Constructor
-
-    /// <summary>
-    /// Constructor to tell the system what out-streams we have
-    /// </summary>
-    [PrivateApi]
-    public UserRoles(Dependencies services, IUserRolesProvider provider)
-        : base(services, "SDS.Roles", connect: [provider])
-    {
-        _provider = provider;
-
-        ProvideOutRaw(GetList);
-    }
-
-    #endregion
-
-    private IImmutableList<UserRoleModelRaw> GetList()
+    protected override IEnumerable<IRawData> GetDefault()
     {
         var l = Log.Fn<IImmutableList<UserRoleModelRaw>>();
-        var roles = _provider.GetRoles()?.ToList();
+        var roles = provider.GetRoles()?.ToList();
         l.A($"found {roles?.Count} roles");
 
         if (roles.SafeNone()) 
