@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.WebApi.Sys.Helpers.Response;
-using ToSic.Eav.WebApi.Sys.Install;
+﻿using ToSic.Eav.WebApi.Sys.Install;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.WebApi.Sys;
@@ -40,7 +39,7 @@ public class InstallController()
     [ValidateAntiForgeryToken] // Now with RVT as it's post now. Previously not, because this was a GET and could not include the RVT
     public HttpResponseMessage RemotePackage(string packageUrl, string newName = null)
     {
-        SysHlp.PreventServerTimeout600();
+        this.PreventServerTimeout600();
         // Make sure the Scoped ResponseMaker has this controller context
         using (this.InitializedResponseMaker())
             return Real.RemotePackage(packageUrl, ((DnnModule)SysHlp.GetService<IModule>()).Init(ActiveModule), newName);

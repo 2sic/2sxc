@@ -25,7 +25,7 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public void App(int zoneId, int appId, bool fullDelete = true)
     {
-        SysHlp.PreventServerTimeout600();
+        this.PreventServerTimeout600();
         Real.App(zoneId, appId, fullDelete);
     }
 
@@ -77,7 +77,7 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
     public Task<ImportResultDto> Reset(int zoneId, int appId, bool withPortalFiles = false)
     {
-        SysHlp.PreventServerTimeout600();
+        this.PreventServerTimeout600();
         return Real.Reset(zoneId, appId, PortalSettings.DefaultLanguage, withPortalFiles);
     }
 
@@ -87,7 +87,7 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public ImportResultDto Import(int zoneId)
     {
-        SysHlp.PreventServerTimeout600();
+        this.PreventServerTimeout600();
         return Real.Import(new(Request, HttpContext.Current.Request), zoneId, HttpContext.Current.Request["Name"]);
     }
 
@@ -98,7 +98,7 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppDto> pendingApps)
     {
-        SysHlp.PreventServerTimeout600();
+        this.PreventServerTimeout600();
         return Real.InstallPendingApps(zoneId, pendingApps);
     }
 }

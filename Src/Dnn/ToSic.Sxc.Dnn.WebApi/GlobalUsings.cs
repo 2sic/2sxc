@@ -6,6 +6,7 @@ global using System.Net.Http;
 global using System.Web.Http;
 global using DotNetNuke.Security;
 global using DotNetNuke.Web.Api;
+global using ToSic.Eav.WebApi.Sys.Helpers.Response;
 global using ToSic.Sys.Coding;
 global using ToSic.Sys.DI;
 global using ToSic.Sys.Documentation;

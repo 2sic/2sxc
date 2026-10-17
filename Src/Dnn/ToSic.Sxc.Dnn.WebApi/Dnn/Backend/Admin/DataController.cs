@@ -1,6 +1,5 @@
 ﻿using System.Web;
 using ToSic.Eav.WebApi.Sys.Dto;
-using ToSic.Eav.WebApi.Sys.Helpers.Response;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 
@@ -40,7 +39,7 @@ public class DataController() : DnnSxcControllerBase(DataControllerReal.LogSuffi
     [ValidateAntiForgeryToken]
     public ImportResultDto BundleImport(int zoneId, int appId)
     {
-        SysHlp.PreventServerTimeout600();
+        this.PreventServerTimeout600();
         return Real.BundleImport(new(Request, HttpContext.Current.Request), zoneId, appId);
     }
 
