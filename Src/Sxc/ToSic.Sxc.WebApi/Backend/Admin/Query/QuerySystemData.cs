@@ -23,8 +23,8 @@ public class QueryDefinition : CustomDataSource
     public QueryDefinition(Dependencies services, LazySvc<QueryControllerReal> query)
         : base(services, "Sxc.QueryDef", connect: [query])
     {
-        ProvideOutRaw(() => Definition(query), name: "Definition", options: Options);
-        ProvideOutRaw(() => Parts(query), name: "DataSources", options: Options);
+        ProvideOutRaw(() => Definition(query), name: "Definition", options: () => new() { AllowUnknownValueTypes = true });
+        ProvideOutRaw(() => Parts(query), name: "DataSources", options: () => new() { AllowUnknownValueTypes = true });
     }
 
     private IEnumerable<IRawEntity> Definition(LazySvc<QueryControllerReal> query)
@@ -34,34 +34,14 @@ public class QueryDefinition : CustomDataSource
             {
                 Values = query.Value.Get(AppId, QueryId)
                     .Pipeline
-                    .ToDictionary(p => p.Key, p => (object?)p.Value)
+                    .ToDictionary(p => p.Key, object? (p) => p.Value)
             }
         ];
     private IEnumerable<IRawEntity> Parts(LazySvc<QueryControllerReal> query)
         => query.Value.Get(AppId, QueryId)
             .DataSources
-            .Select(x => (IRawEntity)new RawEntity
+            .Select(IRawEntity (x) => new RawEntity
             {
-                Values = x.ToDictionary(p => p.Key, p => (object?)p.Value)
+                Values = x.ToDictionary(p => p.Key, object? (p) => p.Value)
             });
-    private static DataFactoryOptions Options() => new() { AllowUnknownValueTypes = true };
-}
-
-[PrivateApi]
-[VisualQuery(
-    NiceName = "Data Sources",
-    NameId = "2de41d89-3cb9-480a-ac3c-40f77fd3af4e",
-    NameIds = ["System.DataSources"],
-    Type = DataSourceType.System,
-    Audience = Audience.System,
-    DataConfidentiality = DataConfidentiality.Internal,
-    UiHint = "Data sources available to visual query")]
-public class DataSources : CustomDataSource
-{
-    [Configuration(Field = "ZoneId")]
-    public int OfZoneId => Configuration.GetThis(ZoneId);
-
-    public DataSources(Dependencies services, LazySvc<QueryControllerReal> query)
-        : base(services, "Sxc.DataSources", connect: [query])
-        => ProvideOutRaw(() => query.Value.DataSources(new AppIdentity(OfZoneId, AppId)));
 }

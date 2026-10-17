@@ -4,7 +4,6 @@ using System.Collections.Immutable;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Data.Sys;
@@ -101,12 +100,13 @@ public class DnnUserProfile(DnnUserProfile.Dependencies services)
 
         var portalId = realTenant.Id;
 
-        // read all user Profiles
+        // Results list - a special DNN type
         ArrayList users;
-        if (!UserIds.HasValue() ||
-            UserIds == "disabled") // note: 'disabled' was the default text in <v15. can probably be removed, but not sure
+
+        // Option 1: read all user Profiles
+        if (!UserIds.HasValue() || UserIds == "disabled") // note: 'disabled' was the default text in <v15. can probably be removed, but not sure
             users = UserController.GetUsers(portalId);
-        // read user Profiles of specified UserIds
+        // Option 2: read user Profiles of specified UserIds
         else
         {
             var userIds = UserIds.CsvToArrayWithoutEmpty().Select(int.Parse).ToArray();
@@ -120,20 +120,29 @@ public class DnnUserProfile(DnnUserProfile.Dependencies services)
         var properties = Properties.CsvToArrayWithoutEmpty();
         var results = users
             .OfType<UserInfo>()
-            .Select(user =>
+            .Select(IRawEntity (user) =>
             {
-                var dnnUserProfile = new DnnUserProfileDataRaw
+                var name = GetDnnProfileValue(user, TitleField.ToLowerInvariant());
+
+                // add Profile-Properties
+                var userProps = properties
+                    .ToDictionary(
+                        property => property,
+                        object (property) => GetDnnProfileValue(user, property)
+                    );
+
+                // TODO: This is copied from some older code, not sure if it's actually relevant to add these names
+                // ...as they are probably auto-added (especially the title...?)
+                userProps.Add(AttributeNames.TitleNiceName, Name);
+                userProps.Add(nameof(DnnUserProfileDataRaw.Name), name);
+
+                return new DnnUserProfileDataRaw
                 {
                     Id = user.UserID,
                     Guid = services.DnnSecurity.Value.UserGuid(user),
-                    Name = GetDnnProfileValue(user, TitleField.ToLowerInvariant())
+                    Name = name,
+                    Values = userProps,
                 };
-
-                // add Profile-Properties
-                foreach (var property in properties)
-                    dnnUserProfile.Properties.Add(property, GetDnnProfileValue(user, property));
-
-                return (IRawEntity)dnnUserProfile;
             })
             .ToImmutableList();
         l.A($"results: {results.Count}");
@@ -174,24 +183,20 @@ public class DnnUserProfile(DnnUserProfile.Dependencies services)
 )]
 public class DnnUserProfileDataRaw : IRawEntity
 {
-    internal const string TypeName = "UserProfile";
+    private const string TypeName = "UserProfile";
   
-    public int Id { get; set; }
-    public Guid Guid { get; set; }
+    public int Id { get; init; }
+    public Guid Guid { get; init; }
 
+    /// <summary>
+    /// Also known as `DisplayName`
+    /// </summary>
     [ContentTypeTitle]
-    public string Name { get; set; } // aka DisplayName
+    public string Name { get; init; }
 
-    public DateTime Created { get; set; }
-    public DateTime Modified { get; set; }
+    public DateTime Created { get; init; }
+    public DateTime Modified { get; init; }
 
     [PrivateApi]
-    public IDictionary<string, object> Values => field ??= new Dictionary<string, object>(Properties)
-    {
-        { AttributeNames.TitleNiceName, Name },
-        { nameof(Name), Name },
-    };
-
-    public Dictionary<string, object> Properties { get; } = new();
-
+    public required IDictionary<string, object> Values { get; init; }
 }
