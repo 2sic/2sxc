@@ -17,12 +17,13 @@ public abstract class CodeApiServiceBase(CodeApiServiceBase.Dependencies service
     public record Dependencies(
         IServiceProvider ServiceProvider,
         LazySvc<ILogStore> LogStore,
-        LazySvc<IUser> User,
+        IUser User,
         // Dependencies to get primary app
-        LazySvc<ISite> Site,
+        // #DropLazySite 2026-10-18 2dm
+        ISite Site,
         LazySvc<IZoneMapper> ZoneMapper,
         LazySvc<IAppsCatalog> AppsCatalog)
-        : DependenciesBase(connect: [/* never! serviceProvider */ LogStore, User, Site, ZoneMapper, AppsCatalog]);
+        : DependenciesBase(connect: [/* never! serviceProvider */ LogStore, /* not needed: User,*/ /* not needed: Site,*/ ZoneMapper, AppsCatalog]);
 
     public record ScopedDependencies(
         Generator<IExecutionContextFactory> ExCtxGenerator,
@@ -45,7 +46,7 @@ public abstract class CodeApiServiceBase(CodeApiServiceBase.Dependencies service
 
     protected IAppIdentityPure GetPrimaryAppIdentity(int? siteId, ISite? site = default)
     {
-        siteId ??= site?.Id ?? Services.Site.Value.Id;
+        siteId ??= site?.Id ?? Services.Site.Id;
         var zoneId = Services.ZoneMapper.Value.GetZoneId(siteId.Value);
         var primaryApp = Services.AppsCatalog.Value.PrimaryAppIdentity(zoneId);
         return primaryApp;

@@ -22,9 +22,10 @@ namespace ToSic.Sxc.Images.Sys;
 public class ImgResizeLinker(
     LazySvc<ISysFeaturesService> features,
     LazySvc<ICss> koi,
-    LazySvc<ISite> siteLazy,
+    // #DropLazySite 2026-10-18 2dm
+    ISite siteLazy,
     ResizeDimensionGenerator dimGen)
-    : ServiceBase($"{SxcLogName}.ImgRes", connect: [features, koi, dimGen, siteLazy]), ICanDebug
+    : ServiceBase($"{SxcLogName}.ImgRes", connect: [features, koi, dimGen/*, siteLazy*/]), ICanDebug
 {
     public bool Debug { get; set; }
 
@@ -120,7 +121,7 @@ public class ImgResizeLinker(
 
         var imgDecorator = fieldForMd == null
             ? null 
-            : _imgDecCache.GetOrAdd(fieldForMd, f => GetOrNull(f, siteLazy.Value.SafeLanguagePriorityCodes()));
+            : _imgDecCache.GetOrAdd(fieldForMd, f => GetOrNull(f, siteLazy.SafeLanguagePriorityCodes()));
 
         var resizeMode = resizeSettings.ResizeMode;
         if (imgDecorator?.CropBehavior == NoCrop)

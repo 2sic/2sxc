@@ -34,18 +34,17 @@ internal class DnnDynamicCodeService: DynamicCodeService
     }
 
     private readonly MyScopedServices _scopedServices;
-    private readonly LazySvc<IUser> _user;
+    private readonly IUser _user;
 
 
     private void Page_PreRender(object sender, EventArgs e)
     {
         var l = Log.Fn();
-        var user = _user.Value;
         var changes = _scopedServices.PageChangeSummary.Value.FinalizeAndGetAllChanges(
             moduleId: 0, // ignore module Id, we don't expect any caching info here
             _scopedServices.PageServiceShared.Value,
             new(),
-            user.IsContentAdmin
+            _user.IsContentAdmin
         );
         _scopedServices.DnnPageChanges.Value.Apply(Page, changes);
 

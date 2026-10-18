@@ -14,7 +14,8 @@ namespace ToSic.Sxc.Web.Sys.LightSpeed;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class LightSpeed(
     ISysFeaturesService features,
-    LazySvc<ISite> site,
+    // #DropLazySite 2026-10-18 2dm
+    ISite site,
     LazySvc<OutputCacheManager> outputCacheManager,
     LazySvc<INamedCacheDependencyService> namedDependencies
 ) : ServiceBase(SxcLogName + ".Lights", connect: [features, outputCacheManager, namedDependencies]), IOutputCache
@@ -169,7 +170,7 @@ internal class LightSpeed(
     );
     private readonly LazyGet<(bool CachingAllowed, string Extension)> _urlParams = new();
 
-    private string CurrentCulture => field ??= site.Value.SafeCurrentCultureCode();
+    private string CurrentCulture => field ??= site.SafeCurrentCultureCode();
 
 
     private string CacheKey => field ??= Log.Quick(()

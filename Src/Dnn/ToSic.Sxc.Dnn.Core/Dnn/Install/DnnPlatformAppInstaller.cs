@@ -19,8 +19,9 @@ internal class DnnPlatformAppInstaller(
     {
         var l = Log.Fn<string>();
         var moduleInfo = (module as DnnModule)?.GetContents();
-        var portal = (site as DnnSite)?.GetContents();
-        if (moduleInfo == null || portal == null)
+        // 2026-10-18 2dm - reworking DnnSite to have a factory, the portal check seems useless.
+        // var portal = (site as DnnSiteFactory)?.GetContents();
+        if (moduleInfo == null/* || portal == null*/)
             throw l.Done(new ArgumentException("missing portal/module"));
 
         // new: check if it should allow this
