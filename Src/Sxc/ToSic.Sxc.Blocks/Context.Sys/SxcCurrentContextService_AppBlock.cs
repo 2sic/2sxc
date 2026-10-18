@@ -22,11 +22,11 @@ partial class SxcCurrentContextService
     {
         var l = Log.Fn<IContextOfApp>($"a#{appId}");
         // get the current block context
-        var moduleCtx = this.BlockContextOrNull();
+        var blockCtx = this.BlockContextOrNull();
 
         // If there is no block context, then just use a "blank" app context
         // This way security checks can only verify the App but not any module permissions
-        if (moduleCtx == null)
+        if (blockCtx == null)
             return l.Return(SetApp(SiteAppIdentity()));
 
         // if there is a block context, make sure it's of the requested app (or no app was specified)
@@ -37,8 +37,8 @@ partial class SxcCurrentContextService
         // If the app in the request matches the app in the context, everything is fine
         // This is necessary when you come from a module which doesn't have an app yet (all apps menu).
         // Then you access an app, so the underlying AppReader is still null. 
-        if (appId == moduleCtx.AppReaderOrNull?.AppId)
-            return l.Return(moduleCtx);
+        if (appId == blockCtx.AppReaderOrNull?.AppId)
+            return l.Return(blockCtx);
         
         // If the app in the request doesn't match the app in the context
         // Set the app in the context to the real one to be sure about security check
@@ -50,8 +50,8 @@ partial class SxcCurrentContextService
             // so that module permissions will not allow editing of apps which are really in the current one.
             return l.Return(SetApp(SiteAppIdentity()));
 
-        moduleCtx.ResetApp(SiteAppIdentity());
-        return l.Return(moduleCtx);
+        blockCtx.ResetApp(SiteAppIdentity());
+        return l.Return(blockCtx);
 
         // Old implementation
         //AppIdentity SiteAppIdentity() => new(Site().Site.ZoneId, appId);
