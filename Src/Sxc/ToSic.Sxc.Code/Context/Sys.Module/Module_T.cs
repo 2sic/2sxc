@@ -16,13 +16,12 @@ public abstract class Module<T>(string logName, object[]? connect = null) : Serv
     public T GetContents() => UnwrappedModule;
     [PrivateApi] protected T UnwrappedModule = null!;
 
-    public IModule Init(T item)
+    public void Init(T item)
     {
         UnwrappedModule = item;
-        return this;
     }
 
-    public abstract IModule Init(int id);
+    public abstract void Init(int id);
     #endregion
 
     /// <inheritdoc />

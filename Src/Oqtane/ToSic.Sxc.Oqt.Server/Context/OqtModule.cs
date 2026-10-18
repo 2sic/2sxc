@@ -6,7 +6,6 @@ using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys.Module;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared;
@@ -50,11 +49,8 @@ internal class OqtModule(
     }
 
     // Temp implementation, don't support im MVC
-    public override IModule Init(int id)
-    {
-        var module = moduleRepository.GetModule(id);
-        return Init(module);
-    }
+    public override void Init(int id)
+        => Init(moduleRepository.GetModule(id));
 
     /// <inheritdoc />
     public override int Id => _id;

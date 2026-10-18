@@ -5,7 +5,6 @@ using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys.Module;
 using ISite = ToSic.Eav.Context.ISite;
 
@@ -36,12 +35,12 @@ public class DnnModule(IAppsCatalog appsCatalog, LazySvc<AppFinder> appFinderLaz
     /// We don't use a Constructor because of DI
     /// So you must always call Init
     /// </summary>
-    public override IModule Init(int moduleId)
+    public override void Init(int moduleId)
     {
-        var l = Log.Fn<IModule>($"{moduleId}");
+        var l = Log.Fn($"{moduleId}");
         var mod = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, false);
         Init(mod);
-        return l.ReturnAsOk(this);
+        l.Done();
     }
 
     #endregion

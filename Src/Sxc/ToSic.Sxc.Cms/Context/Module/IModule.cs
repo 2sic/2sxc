@@ -11,7 +11,7 @@ public interface IModule
 {
     [PrivateApi("Workaround till we have DI to inject the current container")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    IModule Init(int id);
+    void Init(int id);
 
     int Id { get; }
 

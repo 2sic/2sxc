@@ -14,7 +14,7 @@ internal class ModuleUnknown: IModule, IIsUnknown
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public IModule Init(int id) => this;
+    public void Init(int id) { }
 
     public int Id => EavConstants.NullId;
     public bool IsContent => true;
