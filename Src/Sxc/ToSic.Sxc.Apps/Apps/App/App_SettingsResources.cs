@@ -11,13 +11,29 @@ public partial class App
     /// <inheritdoc />
     public IAppConfiguration Configuration => AppReaderInt.Specs.Configuration;
 
+    private ICodeDataFactory Cdf
+    {
+        get => field ??= cdfLazy.SetInit(obj => obj.SetFallbacks(MySite)).Value;
+        set;
+    }
+
+    /// <summary>
+    /// Replace the Cdf with one provided from outside.
+    /// Not quite sure why we're doing this, was rediscovered during a refactoring 2026-10-18 2dm.
+    /// My guess is that it's needed (or optimized) for the <see cref="MakeDynProperty"/>.
+    /// </summary>
+    /// <param name="cdf"></param>
+    internal void SetupCodeDataFactory(ICodeDataFactory cdf)
+        // 2026-10-18 2dm: Replaced the Inject here, so we don't actually use the inject in production code.
+        //=> cdfLazy.Inject(cdf);
+        => Cdf = cdf;
+
     private dynamic MakeDynProperty(IEntity contents, bool propsRequired)
     {
         var wrapped = CmsEditDecorator.Wrap(contents, false);
         return Cdf.AsDynamic(wrapped, new() { ItemIsStrict = propsRequired });
     }
 
-    internal void SetupCodeDataFactory(ICodeDataFactory cdf) => cdfLazy.Inject(cdf);
 
     /// <inheritdoc cref="Eav.ImportExport.Sys.Settings" />
     public dynamic? Settings => AppSettings == null ? null : _settings.Get(() => MakeDynProperty(AppSettings, propsRequired: false));

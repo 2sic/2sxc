@@ -28,8 +28,6 @@ public partial class App(
 
     IAppReader IAppWithInternal.AppReader => AppReaderInt;
 
-    private ICodeDataFactory Cdf => field ??= cdfLazy.SetInit(obj => obj.SetFallbacks(MySite)).Value;
-
 
     private IAppPaths AppPaths => field ??= pathFactoryTemp.Get(AppReaderInt, MySite);
 
