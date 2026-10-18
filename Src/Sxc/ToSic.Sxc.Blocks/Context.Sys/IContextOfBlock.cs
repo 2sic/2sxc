@@ -38,5 +38,5 @@ public interface IContextOfBlock: IContextOfApp
     IContextOfBlock Clone(ILog newParentLog, IAppIdentity appIdentity);
 
 
-    IContextOfBlock ResetWip(ILog parentLog, ISite site, IModule module);
+    IContextOfBlock ResetWip(ISite site, IPage page, IModule module);
 }

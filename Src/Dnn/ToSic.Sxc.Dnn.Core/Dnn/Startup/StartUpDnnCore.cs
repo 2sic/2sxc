@@ -61,7 +61,12 @@ internal static class StartUpDnnCore
 
         // Module cannot yet be scoped, until we have a per-module scope at some time
         services.TryAddTransient<IModule, DnnModule>();
-        services.TryAddTransient<IPage, DnnPage>(); // The page is transient, which seems wrong, but it has very little initialization and is deterministic, so this is fine ATM
+
+        // The page is transient, which seems wrong, but it has very little initialization and is deterministic, so this is fine ATM
+        services.TryAddTransient<DnnPageFactory>(); // new v22
+        services.TryAddTransient<IPage>(sp => sp.GetRequiredService<DnnPageFactory>().Create()); // new v22
+        //services.TryAddTransient<IPage, DnnPage>(); // old
+
         services.TryAddTransient<IValueConverter, DnnValueConverter>();
 
         services.TryAddTransient<XmlExporter, DnnXmlExporter>();

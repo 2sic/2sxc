@@ -6,11 +6,6 @@ namespace ToSic.Sxc.Context.Sys.Page;
 
 internal class PageUnknown(WarnUseOfUnknown<PageUnknown> _) : IPage, IIsUnknown
 {
-    public void Init(int id)
-    {
-        Id = id;
-    }
-        
     public int Id { get; private set; } = EavConstants.NullId;
 
     public string Url => EavConstants.UrlNotInitialized;

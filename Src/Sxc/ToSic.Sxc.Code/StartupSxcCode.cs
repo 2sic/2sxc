@@ -61,11 +61,6 @@ public static class StartupSxcCode
 
         // CmsContext / MyContext
         services.TryAddTransient<ICmsContext, CmsContext>();
-        // Module fallback context
-        services.TryAddTransient<IModule, ModuleUnknown>();
-        services.TryAddTransient<IPage, Page>();
-        services.TryAddTransient<Page>();
-        services.TryAddSingleton<IPlatform, PlatformUnknown>();
 
         // v15
         services.TryAddTransient<ExCtxDataSourceService>();
@@ -73,6 +68,11 @@ public static class StartupSxcCode
         return services;
     }
 
-
-        
+    public static IServiceCollection AddSxcCodeFallback(this IServiceCollection services)
+    {
+        services.TryAddTransient<IModule, ModuleUnknown>();
+        services.TryAddTransient<IPage, PageUnknown>();
+        services.TryAddSingleton<IPlatform, PlatformUnknown>();
+        return services;
+    }
 }

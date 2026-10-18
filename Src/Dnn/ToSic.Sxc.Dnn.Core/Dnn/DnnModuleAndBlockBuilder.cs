@@ -1,11 +1,9 @@
 ﻿using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Dnn.Context;
-using ToSic.Sys.Wrappers;
 
 namespace ToSic.Sxc.Dnn;
 
@@ -13,8 +11,9 @@ internal class DnnModuleAndBlockBuilder(
     Generator<IModule> moduleGenerator,
     Generator<IContextOfBlock> contextGenerator,
     DnnSiteFactory siteFactory,
+    DnnPageFactory pageFactory,
     Generator<BlockOfModule> blockGenerator)
-    : ModuleAndBlockBuilder(blockGenerator, DnnConstants.LogName, connect: [moduleGenerator, contextGenerator, siteFactory])
+    : ModuleAndBlockBuilder(blockGenerator, DnnConstants.LogName, connect: [moduleGenerator, contextGenerator, siteFactory, pageFactory])
 {
     private ILog ParentLog => (Log as Log)?.Parent ?? Log;
 
@@ -51,23 +50,21 @@ internal class DnnModuleAndBlockBuilder(
     private IContextOfBlock InitDnnSiteModuleAndBlockContext(ModuleInfo dnnModule, int? pageId)
     {
         var l = Log.Fn<IContextOfBlock>($"{nameof(pageId)}: {pageId}, {nameof(dnnModule.ModuleID)}: {dnnModule.ModuleID}");
-        var context = contextGenerator.New();
+
         l.A($"Will try-swap module info of {dnnModule.ModuleID} into site");
         var newSite = siteFactory.CreateFromModuleAndShare(dnnModule, ParentLog);
+
+        l.A($"Page with pageOverride: {pageId}");
+        var page = pageFactory.Create(newSite.GetContents()?.ActiveTab, pageId);
+
         l.A("Will init module");
+        // This is still a bit buggy, retrieving module first...
+        // TODO: split into factory
+        var context = contextGenerator.New();
         ((DnnModule)context.Module).Init(dnnModule);
-        var contextWithModuleAndSite = context.ResetWip(ParentLog, newSite, context.Module);
-        return l.ReturnAsOk(InitPageOnly(contextWithModuleAndSite, pageId));
-    }
 
-    private IContextOfBlock InitPageOnly(IContextOfBlock context, int? pageId)
-    {
-        var l = Log.Fn<IContextOfBlock>($"{nameof(pageId)}: {pageId}");
-        // Collect / assemble page information
-        var activeTab = (context.Site as IWrapper<PortalSettings>)?.GetContents()?.ActiveTab;
-        var page = (DnnPage)context.Page;
-        var url = page.InitPageIdAndUrl(activeTab, pageId);
-        return l.Return(context, url);
+        // Assemble the final context
+        var contextWithModuleAndSite = context.ResetWip(newSite, page, context.Module);
+        return l.ReturnAsOk(contextWithModuleAndSite);
     }
-
 }

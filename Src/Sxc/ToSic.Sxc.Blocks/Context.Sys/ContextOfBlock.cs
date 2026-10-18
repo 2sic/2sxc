@@ -81,12 +81,11 @@ internal class ContextOfBlock(
         return newCtx;
     }
 
-    public IContextOfBlock ResetWip(ILog parentLog, ISite site, IModule module)
-    {
-        // #ReworkingResetApp - this one could use a generator
-        var newCtx = new ContextOfBlock(Page, module, pagePubSettings, PageServiceShared, AppServices with {SiteServices = AppServices.SiteServices with { Site = site }})
-            .LinkLog(parentLog);
-        //newCtx.ResetApp(appIdentity);
-        return newCtx;
-    }
+    public IContextOfBlock ResetWip(ISite site, IPage page, IModule module) =>
+        new ContextOfBlock(
+            page ?? Page, module,
+            pagePubSettings,
+            PageServiceShared,
+            AppServices with { SiteServices = AppServices.SiteServices with { Site = site } }
+        );
 }
