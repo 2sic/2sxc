@@ -99,6 +99,10 @@ public class AppContent(
 
     #region CreateOrUpdate
 
+    /// <summary>
+    /// Data controller, can be reused...
+    /// </summary>
+    private SimpleDataEditService DataController => field ??= dataControllerLazy.Value.Init(AppReader.ZoneId, AppReader.AppId);
 
     public IDictionary<string, object> CreateOrUpdate(string contentType, Dictionary<string, object?> newContentItem, int? id = null, string? appPath = null)
     {
@@ -129,7 +133,6 @@ public class AppContent(
         if (!cleanedNewItem.ContainsKey(AttributeNames.EntityFieldOwner))
             cleanedNewItem.Add(AttributeNames.EntityFieldOwner, Context.User.IdentityToken);
 
-        var dataController = DataController(AppReader);
         if (id == null)
         {
             // Get Metadata - not sure why we're using the raw values, but maybe there were removed in cleaned?
@@ -137,7 +140,7 @@ public class AppContent(
             var metadata = GetMetadata(rawValuesCaseInsensitive);
             Log.A($"metadata: {metadata}");
 
-            var ids = dataController.Create(contentType, new List<Dictionary<string, object?>> { cleanedNewItem! }, metadata);
+            var ids = DataController.Create(contentType, new List<Dictionary<string, object?>> { cleanedNewItem! }, metadata);
             id = ids.FirstOrDefault();
 
             Log.A($"new entity id: {id}");
@@ -145,7 +148,7 @@ public class AppContent(
             var added = AddParentRelationship(rawValuesCaseInsensitive!, id.Value);
         }
         else
-            dataController.Update(id.Value, cleanedNewItem!);
+            DataController.Update(id.Value, cleanedNewItem!);
 
         return InitEavAndSerializer(AppReader.AppId, Context.Permissions.IsContentAdmin, null)
             .Convert(AppReader.List.GetOne(id.Value)!)!;
@@ -220,8 +223,6 @@ public class AppContent(
                 @"Value is not 'int' or TargetTypes 'string'.")
         };
 
-    private SimpleDataEditService DataController(IAppIdentity app) => _dataController ??= dataControllerLazy.Value.Init(app.ZoneId, app.AppId);
-    private SimpleDataEditService? _dataController;
 
     #endregion
 

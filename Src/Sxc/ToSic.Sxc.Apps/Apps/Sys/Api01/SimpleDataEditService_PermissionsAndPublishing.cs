@@ -56,12 +56,12 @@ partial class SimpleDataEditService
         var appStateReader = _ctxWithDb.AppReader;
 
         // 1.1. app permissions 
-        if (appPermissionCheckGenerator.New().ForAppInInstance(ctx, appStateReader)
+        if (appPermissionCheckGenerator.New().ForAppInInstance(CtxForPermissionCheck, appStateReader)
             .UserMay(GrantSets.WritePublished).Allowed)
             return l.ReturnAndLog((true, true), "App check - all ok");
 
         // 1.2. type permissions
-        if (appPermissionCheckGenerator.New().ForType(ctx, appStateReader, targetType)
+        if (appPermissionCheckGenerator.New().ForType(CtxForPermissionCheck, appStateReader, targetType)
             .UserMay(GrantSets.WritePublished).Allowed)
             return l.ReturnAndLog((true, true), "Type check, all ok");
 
@@ -69,12 +69,12 @@ partial class SimpleDataEditService
         // 2. Find if user may write DRAFT:
 
         // 2.1. app permissions 
-        if (appPermissionCheckGenerator.New().ForAppInInstance(ctx, appStateReader)
+        if (appPermissionCheckGenerator.New().ForAppInInstance(CtxForPermissionCheck, appStateReader)
             .UserMay(GrantSets.WriteDraft).Allowed)
             return l.ReturnAndLog((false, true), "App check draft - f/t");
 
         // 2.2. type permissions
-        if (appPermissionCheckGenerator.New().ForType(ctx, appStateReader, targetType)
+        if (appPermissionCheckGenerator.New().ForType(CtxForPermissionCheck, appStateReader, targetType)
             .UserMay(GrantSets.WriteDraft).Allowed)
             return l.ReturnAndLog((false, true), "Type check draft - f/t");
 

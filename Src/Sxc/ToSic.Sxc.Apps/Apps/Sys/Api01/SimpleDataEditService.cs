@@ -31,14 +31,14 @@ namespace ToSic.Sxc.Apps.Sys.Api01;
 public partial class SimpleDataEditService(
     DataAssembler dataAssembler,
     IZoneMapper zoneMapper,
-    IContextOfSite ctx,
+    Generator<IContextOfSite> ctxForPermissionCheck,
     AppWorkContextService appWorkCtxSvc,
     AppWorkChain<WorkEntitySave> entSave,
     AppWorkChain<WorkEntityUpdate> entUpdate,
     AppWorkChain<WorkEntityDelete> entDelete,
     LazySvc<IValueConverter> valueConverter,
     Generator<AppPermissionCheck> appPermissionCheckGenerator
-) : ServiceBase("Dta.Simple", connect: [appWorkCtxSvc, entSave, entUpdate, entDelete, zoneMapper, dataAssembler, ctx, appPermissionCheckGenerator, valueConverter])
+) : ServiceBase("Dta.Simple", connect: [appWorkCtxSvc, entSave, entUpdate, entDelete, zoneMapper, dataAssembler, ctxForPermissionCheck, appPermissionCheckGenerator, valueConverter])
 {
 
     #region Constructor / DI
@@ -49,6 +49,11 @@ public partial class SimpleDataEditService(
     private int _appId;
     private bool _checkWritePermissions = true; // default behavior is to check write publish/draft permissions (that should happen for REST, but not for c# API)
     private IAppWorkContext _ctxWithDb = null!;
+    private IContextOfSite CtxForPermissionCheck
+    {
+        get => field ??= ctxForPermissionCheck.New();
+        set;
+    }
 
     /// <param name="zoneId">Zone ID</param>
     /// <param name="appId">App ID</param>
@@ -59,8 +64,8 @@ public partial class SimpleDataEditService(
         _appId = appId;
 
         // when zoneId is not that same as in current context, we need to set right site for provided zoneId
-        if (ctx.Site.ZoneId != zoneId)
-            ctx.Site = zoneMapper.SiteOfZone(zoneId);
+        if (CtxForPermissionCheck.Site.ZoneId != zoneId)
+            CtxForPermissionCheck = CtxForPermissionCheck.CloneFullContext(Log, zoneMapper.SiteOfZone(zoneId));
 
         _defaultLanguageCode = GetDefaultLanguage(zoneId);
         var appIdentity = new AppIdentity(zoneId, appId);
