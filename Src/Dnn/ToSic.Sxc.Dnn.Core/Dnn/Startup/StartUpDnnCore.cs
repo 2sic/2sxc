@@ -50,7 +50,8 @@ internal static class StartUpDnnCore
     public static IServiceCollection AddDnnCore(this IServiceCollection services)
     {
         // Core Runtime Context Objects
-        services.TryAddScoped<IUser, DnnUser>();
+        services.TryAddTransient<DnnUserFactory>();
+        services.TryAddScoped<IUser>(sp => sp.GetRequiredService<DnnUserFactory>().GetUser());
         services.TryAddScoped<DnnSecurity>();
         // Make sure that ISite and IZoneCultureResolver use the same singleton!
         services.TryAddScoped<ISite, DnnSite>();    // this must come first!

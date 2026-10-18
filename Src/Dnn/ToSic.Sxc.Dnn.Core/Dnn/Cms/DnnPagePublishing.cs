@@ -30,7 +30,7 @@ internal partial class DnnPagePublishing(
         var possibleContextOfBlock = context as IContextOfBlock;
         var enabled = possibleContextOfBlock?.Publishing.ForceDraft ?? false;
         var instanceId = possibleContextOfBlock?.Module.Id ?? EavConstants.IdNotInitialized;
-        var userId = (context.User as DnnUser)?.GetContents().UserID ?? EavConstants.IdNotInitialized;
+        var userId = context.User.Id;
         Log.A($"DoInsidePublishing(module:{instanceId}, user:{userId}, enabled:{enabled})");
 
         if (enabled)
