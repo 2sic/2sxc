@@ -1,9 +1,6 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
-using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.DataSources.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Sys.Http;
@@ -11,6 +8,16 @@ using ToSic.Sys.Users.Permissions;
 
 namespace ToSic.Sxc.Context.Sys;
 
+/// <summary>
+/// Main context resolver - provides context information about the site, app, block, permissions etc.
+/// </summary>
+/// <param name="appIdResolverLazy"></param>
+/// <param name="siteCtxGenerator"></param>
+/// <param name="appCtxGenerator"></param>
+/// <param name="featuresService"></param>
+/// <param name="appReaderFactory"></param>
+/// <param name="bdsFactoryLazy"></param>
+/// <param name="http"></param>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal partial class SxcCurrentContextService(
     LazySvc<AppIdResolver> appIdResolverLazy,
@@ -20,12 +27,14 @@ internal partial class SxcCurrentContextService(
     LazySvc<IAppReaderFactory> appReaderFactory,
     LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
     LazySvc<IHttp> http)
-    : ContextResolverBase(siteCtxGenerator, appCtxGenerator, "Sxc.CtxRes",
+    : ServiceBase("Sxc.CtxRes",
         connect: [appIdResolverLazy, siteCtxGenerator, appCtxGenerator, featuresService, http, appReaderFactory, bdsFactoryLazy]),
         ISxcCurrentContextService
 {
     private const string CookieTemplate = "app-{0}-data-preview";
     private const string CookieLive = "live";
+
+    public IContextOfSite SiteContext => field ??= siteCtxGenerator.New();
 
     /// <summary>
     /// Get the best possible context which can give us insights about the user permissions.
@@ -43,7 +52,7 @@ internal partial class SxcCurrentContextService(
     /// <returns></returns>
     private EffectivePermissions GetUserPermissions()
     {
-        var perms = (BlockContextOrNull() ?? AppOrNull() ?? Site())?.Permissions;
+        var perms = (this.BlockContextOrNull() ?? AppContextOrNull() ?? SiteContext)?.Permissions;
         if (perms == null)
             return new(false);
         if (!perms.ShowDraftData)
@@ -65,56 +74,9 @@ internal partial class SxcCurrentContextService(
         bool CookieExpectsLive(string app) => http?.Value.GetCookie(string.Format(CookieTemplate, app)) == CookieLive;
     }
 
-    public IContextOfApp? SetAppOrNull(string? nameOrPath)
-    {
-        if (string.IsNullOrWhiteSpace(nameOrPath))
-            return null;
-        var zoneId = Site().Site.ZoneId;
-        var appId = appIdResolverLazy.Value.GetAppIdFromPath(zoneId, nameOrPath!, false);
-        return appId <= KnownAppsConstants.AppIdEmpty
-            ? null
-            : SetApp(new AppIdentity(zoneId, appId));
-    }
 
-    #region Blocks
-
-    public void AttachBlock(IBlock block)
-    {
-        _block = block;
-        AppContextFromAppOrBlock = _block?.Context;
-    }
-    private IBlock? _block;
-
-    public IBlock SwapBlockView(IView newView)
-    {
-        var blockSpecs = _block as BlockSpecs
-                    ?? throw new NullReferenceException("Block is not attached, cannot swap view.");
-
-        var newSpecs = blockSpecs with
-        {
-            ViewOrNull = newView,
-        };
-
-        // This call must be after set-view, since it needs the view to get the data-source
-        newSpecs = newSpecs with
-        {
-            Data = bdsFactoryLazy.Value.GetContextDataSourceFromView(newSpecs, newSpecs.AppOrNull.TryGetAppLookUpEngineOrNull())
-        };
-        _block = newSpecs;
-        return _block;
-    }
 
     public IBlock? BlockOrNull() => _block;
+    private IBlock? _block;
 
-    public IBlock BlockRequired() => BlockOrNull()
-                                     ?? throw new("Block required but missing. It was not attached");
-
-    public IContextOfBlock BlockContextRequired() => BlockContextOrNull()
-                                                     ?? throw new("Block context required but not known. It was not attached.");
-
-    public IContextOfBlock? BlockContextOrNull() => _block?.Context;
-
-
-
-    #endregion
 }

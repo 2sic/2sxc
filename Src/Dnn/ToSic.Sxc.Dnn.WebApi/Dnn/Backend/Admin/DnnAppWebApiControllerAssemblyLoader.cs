@@ -39,7 +39,7 @@ internal class DnnAppWebApiControllerAssemblyLoader(
             throw new($"Error: can't find controller file: {controllerVirtualPath}");
 
         var block = ctxService.BlockOrNull();
-        var appSpecs = block?.Context.AppReaderRequired.Specs ?? ctxService.AppOrNull()?.AppReaderRequired.Specs;
+        var appSpecs = block?.Context.AppReaderRequired.Specs ?? ctxService.AppContextOrNull()?.AppReaderRequired.Specs;
         var codeFileInfo = sourceAnalyzer.TypeOfVirtualPath(controllerVirtualPath);
         var useRoslyn = (block != null && appJson.DnnCompilerAlwaysUseRoslyn(block.AppId)) || codeFileInfo.AppCode || FileInAppCode(path);
 

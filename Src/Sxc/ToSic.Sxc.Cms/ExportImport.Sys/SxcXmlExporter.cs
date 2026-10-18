@@ -28,7 +28,7 @@ public abstract class SxcXmlExporter(XmlSerializer xmlSerializer, IAppsCatalog a
     public override XmlExporter Init(AppExportSpecs specs, IAppReader appRuntime, bool appExport, string[] attrSetIds, string[] entityIds)
     {
         CurrentContextService.SetApp(new AppIdentity(specs.ZoneId, specs.AppId));
-        var ctxOfApp = CurrentContextService.AppRequired();
+        var ctxOfApp = CurrentContextService.AppContextRequired();
         PostContextInit(ctxOfApp);
         Constructor(specs, appRuntime, ctxOfApp.AppReaderRequired.Specs.NameId, appExport, attrSetIds, entityIds, ctxOfApp.Site.DefaultCultureCode);
 

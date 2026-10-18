@@ -105,7 +105,7 @@ internal class DynamicApiCompileCodeHelpers: CompileCodeHelper
             if (appReader == default)
                 return l.ReturnNull("no app detected");
             
-            var siteCtx = SharedCurrentContextService.Site();
+            var siteCtx = SharedCurrentContextService.SiteContext;
             // Look up if page publishing is enabled - if module context is not available, always false
             l.A($"AppId: {appReader.AppId}");
             var app = services.AppOverrideLazy.Value;

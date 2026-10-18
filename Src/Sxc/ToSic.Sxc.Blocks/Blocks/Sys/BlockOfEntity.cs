@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
-using ToSic.Sxc.Context.Sys;
 
 namespace ToSic.Sxc.Blocks.Sys;
 
@@ -19,8 +18,7 @@ public sealed class BlockOfEntity(BlockGeneratorHelpers helpers, LazySvc<AppFind
         blockEntity ??= parentBlock.App.Data.List.GetOne(Math.Abs(contentBlockId))!;
 
         var (isContentApp, blockId) = LoadBlockDefinition(appFinderLazy, parentBlock.ZoneId, blockEntity);
-        var ctx = (IContextOfBlock)parentBlock.Context.Clone(Log);
-        ctx.ResetApp(blockId);
+        var ctx = parentBlock.Context.Clone(Log, blockId);
 
         // Must override previous AppId, as that was of the container-block
         // but the current instance can be of another block

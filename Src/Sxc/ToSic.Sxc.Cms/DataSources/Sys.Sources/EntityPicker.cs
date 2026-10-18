@@ -126,7 +126,7 @@ public class EntityPicker : DataSourceBase
 
         // Get the context - must be pre-set by the caller
 
-        var context = _ctxService.AppOrNull();
+        var context = _ctxService.AppContextOrNull();
         if (context == null)
         {
             l.E("No App context");

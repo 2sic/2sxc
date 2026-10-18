@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Context;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sxc.Sys.Render.PageContext;
 
@@ -29,5 +30,12 @@ public interface IContextOfBlock: IContextOfApp
     /// WIP
     /// </summary>
     IPageServiceShared PageServiceShared { get; }
+
+    /// <summary>
+    /// Create a clone of the context, usually for then making a slightly different context
+    /// </summary>
+    /// <returns></returns>
+    IContextOfBlock Clone(ILog newParentLog, IAppIdentity appIdentity);
+
 
 }

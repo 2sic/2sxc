@@ -12,13 +12,13 @@ public interface ICurrentContextService: IHasLog, ICurrentContextUserPermissions
     /// but we want to introduce the capability of giving a static site or something
     /// without having to write code implementing IContextOfSite
     /// </summary>
-    /// <returns></returns>
-    IContextOfSite Site();
+    /// <value></value>
+    IContextOfSite SiteContext { get; }
 
     IContextOfApp SetApp(IAppIdentity appIdentity);
 
-    IContextOfApp AppRequired();
+    IContextOfApp AppContextRequired();
 
-    IContextOfApp? AppOrNull();
+    IContextOfApp? AppContextOrNull();
 
 }

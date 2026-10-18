@@ -11,22 +11,9 @@ namespace ToSic.Sxc.Context.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ISxcCurrentContextService: ICurrentContextService, ISxcAppCurrentContextService
 {
-    /// <summary>
-    /// Return the block or throw an error
-    /// </summary>
-    IContextOfBlock BlockContextRequired();
-
-    /// <summary>
-    /// Return the block if known, or null if not
-    /// </summary>
-    /// <returns>The current block or null</returns>
-    IContextOfBlock? BlockContextOrNull();
-
     void AttachBlock(IBlock block);
 
     IBlock? BlockOrNull();
-
-    IBlock BlockRequired();
 
     IBlock SwapBlockView(IView newView);
 }

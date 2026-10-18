@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.Sys;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
 using ToSic.Sxc.Sys.Configuration;
 
@@ -6,11 +7,22 @@ namespace ToSic.Sxc.Context.Sys;
 
 partial class SxcCurrentContextService
 {
+    public IContextOfApp AppContextRequired()
+        => AppContextOrNull() ?? throw new($"To call {nameof(AppContextRequired)} first call {nameof(SetApp)}");
+
+    public IContextOfApp? AppContextOrNull() => AppContextFromAppOrBlock;
+
+    /// <summary>
+    /// This is set whenever an App Context or Block Context are set.
+    /// </summary>
+    private IContextOfApp? AppContextFromAppOrBlock { get; set; }
+
+
     public IContextOfApp GetExistingAppOrSet(int appId)
     {
         var l = Log.Fn<IContextOfApp>($"a#{appId}");
         // get the current block context
-        var moduleCtx = BlockContextOrNull();
+        var moduleCtx = this.BlockContextOrNull();
 
         // If there is no block context, then just use a "blank" app context
         // This way security checks can only verify the App but not any module permissions
@@ -53,7 +65,7 @@ partial class SxcCurrentContextService
 
 
     public IContextOfApp SetAppOrGetBlock(string nameOrPath)
-        => SetAppOrNull(nameOrPath) ?? BlockContextRequired();
+        => SetAppOrNull(nameOrPath) ?? this.BlockContextRequired();
 
 
     public IContextOfApp AppNameRouteBlock(string? nameOrPath)
@@ -66,7 +78,7 @@ partial class SxcCurrentContextService
         if (identity != null)
             return SetApp(identity);
 
-        ctx = BlockContextOrNull();
+        ctx = this.BlockContextOrNull();
         return ctx ?? throw new($"Tried to auto detect app by name '{nameOrPath}', url params or block context, all failed.");
     }
 

@@ -70,9 +70,20 @@ internal class ContextOfBlock(
             .Data;
     }
 
+    // Note: this allows a clone pretending to be a SiteContext
+    // but it can also preserve the block information, for deeper security checks
+    // Code should be improved so the intent is clearer
 
     /// <inheritdoc />
     public override IContextOfSite Clone(ILog parentLog)
         => new ContextOfBlock(Page, Module, /*publishingResolver,*/ pagePubSettings, PageServiceShared, AppServices)
             .LinkLog(parentLog);
+
+    public IContextOfBlock Clone(ILog parentLog, IAppIdentity appIdentity)
+    {
+        var newCtx = new ContextOfBlock(Page, Module, /*publishingResolver,*/ pagePubSettings, PageServiceShared, AppServices)
+            .LinkLog(parentLog);
+        newCtx.ResetApp(appIdentity);
+        return newCtx;
+    }
 }
