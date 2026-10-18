@@ -9,7 +9,8 @@ using ToSic.Sxc.Web.Sys.Http;
 using ToSic.Sxc.Web.Sys.Parameters;
 using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Utils;
-using Page_Page = ToSic.Sxc.Context.Sys.Page.Page;
+using SxcPage = ToSic.Sxc.Context.Sys.Page.Page;
+using OqtanePage = Oqtane.Models.Page;
 
 namespace ToSic.Sxc.Oqt.Server.Context;
 
@@ -19,18 +20,18 @@ internal class OqtPage(
     LazySvc<AliasResolver> aliasResolver,
     LazySvc<IPageRepository> pages,
     LazySvc<ILinkPaths> linkPathsLazy)
-    : Page_Page(httpBlazor), IWrapper<Oqtane.Models.Page>
+    : SxcPage(httpBlazor), IWrapper<OqtanePage>
 {
     // ReSharper disable once InconsistentNaming
     private readonly LazySvc<IHttp> httpBlazor = httpBlazor;
 
     public Alias Alias { get; set; }
 
-    protected Oqtane.Models.Page UnwrappedPage;
-    public Oqtane.Models.Page GetContents() => UnwrappedPage;
-    public new OqtPage Init(int id)
+    protected OqtanePage UnwrappedPage;
+    public OqtanePage GetContents() => UnwrappedPage;
+    public OqtPage OqtInit(int id)
     {
-        base.Init(id);
+        Id = id;
 
         UnwrappedPage = pages.Value.GetPage(id);
 

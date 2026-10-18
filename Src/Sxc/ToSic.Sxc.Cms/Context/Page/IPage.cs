@@ -23,10 +23,6 @@ public interface IPage
     /// </summary>
     IParameters Parameters { get; }
 
-
-    IPage Init(int id);
-
-
     // unsure if used
     /// <summary>
     /// The resource specific url, like the one to this page or portal

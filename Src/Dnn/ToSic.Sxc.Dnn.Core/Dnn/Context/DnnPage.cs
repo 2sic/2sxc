@@ -19,7 +19,7 @@ internal class DnnPage: Page
 
     internal string InitPageIdAndUrl(TabInfo activeTab, int? pageId)
     {
-        Init(pageId ?? activeTab?.TabID ?? EavConstants.NullId);
+        Id = pageId ?? activeTab?.TabID ?? EavConstants.NullId;
 
         // the FullUrl will throw an error in DNN search scenarios
         try

@@ -7,7 +7,7 @@ internal static class OqtContextOfBlockExtensions
 {
     public static IContextOfBlock Init(this IContextOfBlock context, int pageId, Module oqtModule)
     {
-        ((OqtPage)context.Page).Init(pageId);
+        ((OqtPage)context.Page).OqtInit(pageId);
         ((OqtModule)context.Module).Init(oqtModule);
         return context;
     }

@@ -68,7 +68,7 @@ internal class OqtModuleAndBlockBuilder(
         // TODO: try to use the pageId if given, would usually only be used in inner-content / IRenderService scenarios
         var l = Log.Fn<IContextOfBlock>();
         // Collect / assemble page information
-        context.Page.Init(requestHelper.TryGetId(ContextConstants.PageIdKey));
+        ((OqtPage)context.Page).OqtInit(requestHelper.TryGetId(ContextConstants.PageIdKey));
         var url = context.Page.Url;
         return l.Return(context, url);
     }

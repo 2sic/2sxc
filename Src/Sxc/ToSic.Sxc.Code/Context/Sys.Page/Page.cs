@@ -10,13 +10,7 @@ namespace ToSic.Sxc.Context.Sys.Page;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class Page(LazySvc<IHttp> httpLazy) : IPage
 {
-    public IPage Init(int id)
-    {
-        Id = id;
-        return this;
-    }
-
-    public int Id { get; private set; } = EavConstants.NullId;
+    public int Id { get; protected set; } = EavConstants.NullId;
 
     [field: AllowNull, MaybeNull]
     public virtual IParameters Parameters => field ??= new Parameters { Nvc = OriginalParameters.GetOverrideParams(httpLazy.Value?.QueryStringParams!) };
