@@ -13,7 +13,6 @@ using ToSic.Sxc.Sys.Integration.Paths;
 using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Capabilities.Features;
 using static ToSic.Eav.Context.Sys.ZoneCulture.IZoneCultureResolverExtensions;
-using ISite = ToSic.Eav.Context.ISite;
 
 namespace ToSic.Sxc.Dnn.Context;
 
@@ -42,9 +41,10 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     private readonly LazySvc<ISysFeaturesService> _featuresSvc;
     private ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
-    /// <inheritdoc />
-    public override ISite Init(int siteId, ILog parentLogOrNull)
-        => TryInitPortal(new(siteId), parentLogOrNull);
+    // 2026-10-18 2dm: #DropSiteInitSeemsUnused
+    ///// <inheritdoc />
+    //public override ISite Init(int siteId, ILog parentLogOrNull)
+    //    => TryInitPortal(new(siteId), parentLogOrNull);
 
     #endregion
 
@@ -249,10 +249,9 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     /// but the current one. Just keep this in mind in case anything ever breaks.
     /// </remarks>
     public override string UrlRoot
-        => _urlRoot ??= (UnwrappedSite?.PortalAlias as IPortalAliasInfo)?.HttpAlias
-                        ?? (PortalSettings.Current?.PortalAlias as IPortalAliasInfo)?.HttpAlias
-                        ?? "err-portal-alias-not-loaded";
-    private string _urlRoot;
+        => field ??= (UnwrappedSite?.PortalAlias as IPortalAliasInfo)?.HttpAlias
+                     ?? (PortalSettings.Current?.PortalAlias as IPortalAliasInfo)?.HttpAlias
+                     ?? "err-portal-alias-not-loaded";
 
     [PrivateApi]
     public override string AppsRootPhysical
@@ -284,4 +283,30 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
         }
     }
     private int? _zoneId;
+}
+
+internal class DnnSite2() : Site<PortalSettings>("Dnn.Site")
+{
+    //public DnnSite2(/*LazySvc<IZoneMapper> zoneMapperLazy, LazySvc<ILinkPaths> linkPathsLazy, LazySvc<ISysFeaturesService> featuresSvc*/)
+    //    : base("Dnn.Site")
+    //{
+    //}
+
+    ///// <inheritdoc />
+    //public override ISite Init(int siteId, ILog parentLogOrNull)
+    //{
+    //    throw new NotImplementedException();
+    //}
+
+    public override int Id { get; }
+    public override string Name { get; }
+    public override string AppsRootPhysical { get; }
+    public override string AppsRootPhysicalFull { get; }
+    public override string AppAssetsLinkTemplate { get; }
+    public override string ContentPath { get; }
+    public override int ZoneId { get; }
+    public override string Url { get; }
+    public override string UrlRoot { get; }
+    public override string CurrentCultureCode { get; }
+    public override string DefaultCultureCode { get; }
 }

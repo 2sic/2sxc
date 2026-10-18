@@ -54,7 +54,7 @@ internal static class StartUpDnnCore
         services.TryAddScoped<IUser>(sp => sp.GetRequiredService<DnnUserFactory>().GetUser());
         services.TryAddScoped<DnnSecurity>();
         // Make sure that ISite and IZoneCultureResolver use the same singleton!
-        services.TryAddScoped<ISite, DnnSite>();    // this must come first!
+        services.TryAddScoped<ISite, DnnSite>();    // this must come before the IZoneCultureResolver!
         services.TryAddScoped<IZoneCultureResolver>(x => x.GetRequiredService<ISite>());
 
         // Module cannot yet be scoped, until we have a per-module scope at some time
