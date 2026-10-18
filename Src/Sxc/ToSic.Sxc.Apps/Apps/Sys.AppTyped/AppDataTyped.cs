@@ -7,9 +7,9 @@ namespace ToSic.Sxc.Apps.Sys.AppTyped;
 
 internal class AppDataTyped(
     Eav.DataSources.App.Dependencies services,
-    LazySvc<SimpleDataEditService> dataController,
+    Generator<SimpleDataEditService, SimpleDataEditService.Options> dataEditSvcGen,
     LazySvc<IDataSourceCacheService> dsCacheSvc)
-    : AppDataWithCrud(services, dataController, dsCacheSvc), IAppDataTyped
+    : AppDataWithCrud(services, dataEditSvcGen, dsCacheSvc), IAppDataTyped
 {
     #region Get Content Types - explicit implementation to ensure it's only available in Typed APIs
 

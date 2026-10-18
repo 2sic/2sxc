@@ -5,6 +5,15 @@ using ToSic.Sxc.Apps.Sys.Api01;
 
 namespace ToSic.Sxc.Apps.Sys;
 
+#region Constructor stuff
+
+// NOTE: not connecting Logs at the moment, and probably never needed
+// as we're reworking it
+// Remove the comment if it's finalized, otherwise if connecting is still needed, ensure it happens.
+// #ToDoReviewConnectLogs
+
+#endregion
+
 /// <summary>
 /// The Data object on an App. It's also a data-source of type <see cref="Eav.DataSources.App"/>,
 /// so it has many streams, one for each content-type so you can use it in combination with other DataSources. <br/>
@@ -13,21 +22,12 @@ namespace ToSic.Sxc.Apps.Sys;
 /// </summary>
 [PrivateApi("May have been visible before v17, but probably not really, name was also different. Published through the IAppData interface.")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class AppDataWithCrud : Eav.DataSources.App, IAppData
+internal class AppDataWithCrud(
+    Eav.DataSources.App.Dependencies services,
+    Generator<SimpleDataEditService, SimpleDataEditService.Options> dataEditSvcGen,
+    LazySvc<IDataSourceCacheService> dsCacheSvc)
+    : Eav.DataSources.App(services), IAppData
 {
-    private readonly LazySvc<IDataSourceCacheService> _dsCacheSvc;
-
-    #region Constructor stuff
-
-    public AppDataWithCrud(Dependencies services, LazySvc<SimpleDataEditService> dataController, LazySvc<IDataSourceCacheService> dsCacheSvc) : base(services)
-    {
-        ConnectLogs([
-            DataController = dataController.SetInit(dc => dc.Init(ZoneId, AppId, false)),
-            _dsCacheSvc = dsCacheSvc
-        ]);
-    }
-
-    #endregion
 
     #region Get Content Type (added in v20 to better fix Mobius compatbility)
 
@@ -44,8 +44,7 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
     /// <summary>
     /// Get a correctly instantiated instance of the simple data controller once needed.
     /// </summary>
-    /// <returns>A data controller to create, update and delete entities</returns>
-    private LazySvc<SimpleDataEditService> DataController { get; }
+    private SimpleDataEditService DataEditSvc => field ??= dataEditSvcGen.New(new(ZoneId, AppId, false));
 
     /// <inheritdoc />
     public IEntity Create(string contentTypeName, Dictionary<string, object?> values, string? userName = default, ITarget? target = default)
@@ -56,7 +55,7 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
 
         if (!string.IsNullOrEmpty(userName))
             ProvideOwnerInValues(values, userName!); // userName should be in 2sxc user IdentityToken format (like 'dnn:user=N')
-        var ids = DataController.Value.Create(contentTypeName, new List<Dictionary<string, object?>> { values! }, target);
+        var ids = DataEditSvc.Create(contentTypeName, new List<Dictionary<string, object?>> { values! }, target);
         var id = ids.FirstOrDefault();
         FlushDataSnapshot();
         // try to find it again (AppState.List contains also draft items)
@@ -87,7 +86,7 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
             foreach (var values in multiValues)
                 ProvideOwnerInValues(values, userName!); // userName should be in 2sxc user IdentityToken format (like 'dnn:user=N')
 
-        var ids = DataController.Value.Create(contentTypeName, multiValues);
+        var ids = DataEditSvc.Create(contentTypeName, multiValues);
         FlushDataSnapshot();
         var created = List
             .Where(e => ids.Contains(e.EntityId))
@@ -100,7 +99,7 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
     {
         var l = Log.Fn($"app update i:{entityId}");
         // FYI: userName is not used (to change owner of updated entity).
-        DataController.Value.Update(entityId, values);
+        DataEditSvc.Update(entityId, values);
         FlushDataSnapshot();
         l.Done();
     }
@@ -111,7 +110,7 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
     {
         var l = Log.Fn($"app delete i:{entityId}");
         // FYI: userName is not used (to change owner of deleted entity).
-        DataController.Value.Delete(entityId);
+        DataEditSvc.Delete(entityId);
         FlushDataSnapshot();
         l.Done();
     }
@@ -124,7 +123,7 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
     private void FlushDataSnapshot()
     {
         // Purge the list and parent lists - must happen first, as otherwise the list-access will be interrupted
-        _dsCacheSvc.Value.Flush(this, true);
+        dsCacheSvc.Value.Flush(this, true);
         Reset();
     }
 

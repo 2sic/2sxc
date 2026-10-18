@@ -38,42 +38,32 @@ public partial class SimpleDataEditService(
     AppWorkChain<WorkEntityDelete> entDelete,
     LazySvc<IValueConverter> valueConverter,
     Generator<AppPermissionCheck> appPermissionCheckGenerator
-) : ServiceBase("Dta.Simple", connect: [appWorkCtxSvc, entSave, entUpdate, entDelete, zoneMapper, dataAssembler, ctxForPermissionCheck, appPermissionCheckGenerator, valueConverter])
+) : ServiceWithSetup<SimpleDataEditService.Options>("Dta.Simple", connect: [appWorkCtxSvc, entSave, entUpdate, entDelete, zoneMapper, dataAssembler, ctxForPermissionCheck, appPermissionCheckGenerator, valueConverter])
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="ZoneId"></param>
+    /// <param name="AppId"></param>
+    /// <param name="CheckWritePermissions">default behavior is to check write publish/draft permissions (that should happen for REST, but not for c# API)</param>
+    public record Options(int ZoneId, int AppId, bool CheckWritePermissions = true);
 
     #region Constructor / DI
 
 
-    private string _defaultLanguageCode = null!;
+    private string DefaultLanguageCode => field
+        ??= GetDefaultLanguage(MyOptions.ZoneId);
 
-    private int _appId;
-    private bool _checkWritePermissions = true; // default behavior is to check write publish/draft permissions (that should happen for REST, but not for c# API)
-    private IAppWorkContext _ctxWithDb = null!;
-    private IContextOfSite CtxForPermissionCheck
-    {
-        get => field ??= ctxForPermissionCheck.New();
-        set;
-    }
+    private IAppWorkContext CtxWithDb => field
+        ??= appWorkCtxSvc.ContextNew(new AppIdentity(MyOptions.ZoneId, MyOptions.AppId));
 
-    /// <param name="zoneId">Zone ID</param>
-    /// <param name="appId">App ID</param>
-    /// <param name="checkWritePermissions"></param>
-    public SimpleDataEditService Init(int zoneId, int appId, bool checkWritePermissions = true)
-    {
-        var l = Log.Fn<SimpleDataEditService>($"{zoneId}, {appId}");
-        _appId = appId;
-
-        // when zoneId is not that same as in current context, we need to set right site for provided zoneId
-        if (CtxForPermissionCheck.Site.ZoneId != zoneId)
-            CtxForPermissionCheck = CtxForPermissionCheck.CloneFullContext(Log, zoneMapper.SiteOfZone(zoneId));
-
-        _defaultLanguageCode = GetDefaultLanguage(zoneId);
-        var appIdentity = new AppIdentity(zoneId, appId);
-        _ctxWithDb = appWorkCtxSvc.ContextNew(appIdentity);
-        _checkWritePermissions = checkWritePermissions;
-        l.A($"Default language:{_defaultLanguageCode}");
-        return l.Return(this);
-    }
+    private IContextOfSite CtxForPermissionCheck => field
+        ??= ctxForPermissionCheck.New()
+            .Map(tempCtx => tempCtx.Site.ZoneId == MyOptions.ZoneId
+                ? tempCtx
+                // when zoneId is not that same as in current context, we need to set right site for provided zoneId
+                : tempCtx.CloneFullContext(Log, zoneMapper.SiteOfZone(MyOptions.ZoneId))
+            );
 
     private string GetDefaultLanguage(int zoneId)
     {
@@ -107,7 +97,7 @@ public partial class SimpleDataEditService(
             return l.Return([],"attributes were null");
 
         // ensure the type really exists - will throw if not
-        var type = _ctxWithDb.AppReader.GetContentType(contentTypeName);
+        var type = CtxWithDb.AppReader.GetContentType(contentTypeName);
 
         l.A($"Type {contentTypeName} found. Will build entities to save...");
 
@@ -176,10 +166,10 @@ public partial class SimpleDataEditService(
         // Prepare attributes to add
         var preparedValues = ConvertRelationsToNullArray(type, values);
         var preparedIAttributes = dataAssembler.AttributeList.Finalize(preparedValues);
-        var attributes = BuildNewEntityValues(type, preparedIAttributes, _defaultLanguageCode);
+        var attributes = BuildNewEntityValues(type, preparedIAttributes, DefaultLanguageCode);
 
         var newEntity = dataAssembler.Entity.Create(
-            appId: _appId,
+            appId: MyOptions.AppId,
             guid: eGuid,
             contentType: type,
             attributes: dataAssembler.AttributeList.Finalize(attributes),
@@ -207,7 +197,7 @@ public partial class SimpleDataEditService(
     public void Update(int entityId, Dictionary<string, object?> values)
     {
         var l = Log.Fn($"update i:{entityId}");
-        var original = _ctxWithDb.AppReader.List.FindRepoId(entityId)
+        var original = CtxWithDb.AppReader.List.FindRepoId(entityId)
             ?? throw new NullReferenceException($"Can't Update, original not found with ID {entityId}");
         var (entity, publishing) = BuildNewEntity(original.Type, values, null, original.IsPublished);
         entUpdate.New(NewAppWorkContextWithDbForOperation())
@@ -246,7 +236,7 @@ public partial class SimpleDataEditService(
     /// reuse DbStorage/DbContext between separate Create, Update, or Delete calls.
     /// </summary>
     private IAppWorkContext NewAppWorkContextWithDbForOperation()
-        => appWorkCtxSvc.ContextNew(_ctxWithDb.AppReader);
+        => appWorkCtxSvc.ContextNew(CtxWithDb.AppReader);
 
 
     private IDictionary<string, object?> ConvertRelationsToNullArray(IContentType contentType, IDictionary<string, object?> values)

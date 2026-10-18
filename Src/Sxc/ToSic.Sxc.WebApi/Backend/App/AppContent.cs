@@ -27,8 +27,8 @@ public class AppContent(
     Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> typesPermissions,
     Generator<MultiPermissionsItems, MultiPermissionsItems.Options> itemsPermissions,
     AppWorkQuick<WorkFieldList> workFieldList,
-    LazySvc<SimpleDataEditService> dataControllerLazy)
-    : ServiceBase("Sxc.ApiApC",
+    Generator<SimpleDataEditService, SimpleDataEditService.Options> dataControllerLazy)
+    : ServiceWithSetup<AppContent.Options>("Sxc.ApiApC",
         connect:
         [
             workFieldList, api, entToDicLazy, ctxService, typesPermissions, itemsPermissions, dataControllerLazy
@@ -36,17 +36,12 @@ public class AppContent(
 {
     #region Constructor / DI
 
-    public AppContent Init(string? appName)
-    {
-        // if app-path specified, use that app, otherwise use from context
-        Context = ctxService.AppNameRouteBlock(appName);
-        return this;
-    }
+    public record Options(string? AppName);
 
-    protected IContextOfApp Context = null!;
+    protected IContextOfApp Context => field ??= ctxService.AppNameRouteBlock(MyOptions.AppName);
 
-    protected IAppReader AppReader => Context?.AppReaderRequired ??
-                                   throw new("Can't access AppState before Context is ready. Did you forget to call Init(...)?");
+    protected IAppReader AppReader => Context.AppReaderOrNull ??
+                                   throw new("Can't access AppState before Context is ready. Did you forget to call Setup(...)?");
 
     #endregion
 
@@ -102,7 +97,7 @@ public class AppContent(
     /// <summary>
     /// Data controller, can be reused...
     /// </summary>
-    private SimpleDataEditService DataController => field ??= dataControllerLazy.Value.Init(AppReader.ZoneId, AppReader.AppId);
+    private SimpleDataEditService DataController => field ??= dataControllerLazy.New(new(AppReader.ZoneId, AppReader.AppId, false));
 
     public IDictionary<string, object> CreateOrUpdate(string contentType, Dictionary<string, object?> newContentItem, int? id = null, string? appPath = null)
     {
