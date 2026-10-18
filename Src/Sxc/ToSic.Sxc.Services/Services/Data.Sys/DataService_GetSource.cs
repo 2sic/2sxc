@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Services.Data.Sys;
 partial class DataService
 {
 
-    // IMPORTANT - this is different! from the _DynCodeRoot - as it should NOT auto attach!
+    // IMPORTANT - this is different! from the ExecutionContext - as it should NOT auto attach!
     public T GetSource<T>(
         NoParamOrder npo = default,
         IDataSourceLinkable? attach = default,

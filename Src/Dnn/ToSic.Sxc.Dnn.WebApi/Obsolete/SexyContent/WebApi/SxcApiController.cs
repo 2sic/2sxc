@@ -201,12 +201,6 @@ public abstract partial class SxcApiController() :
     /// <inheritdoc cref="IDynamicCodeDocs.CmsContext" />
     public ICmsContext CmsContext => CodeApi.CmsContext;
 
-    ///// <inheritdoc />
-    //public dynamic Resources => _DynCodeRoot.Resources;
-
-    ///// <inheritdoc />
-    //public dynamic Settings => _DynCodeRoot.Settings;
-
     #endregion
 
     #region IHasLog

@@ -28,7 +28,7 @@ partial class CodeDataFactory
     /// <exception cref="Exception"></exception>
     private AdamManager GetAdamManager()
     {
-        // If we don't even have a _DynCodeRoot (like when exporting from a neutral WebAPI)
+        // Throw if we don't even have an ExecutionContext (like when exporting from a neutral WebAPI)
         if (ExCtxOrNull is null)
             throw new($"Can't create App Context for {nameof(AdamManager)} in {nameof(ICodeDataFactory)} - no block, no App");
 

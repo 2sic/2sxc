@@ -63,7 +63,7 @@ public class ServiceKit14() : ServiceKit("Sxc.Kit14")
     /// <summary>
     /// The Edit service, same as the main Edit service
     /// </summary>
-    // Important: must share the Edit from the _DynCodeRoot for scenarios where Enable was set manually
+    // Important: must share the Edit from the ExecutionContext for scenarios where Enable was set manually
     [field: AllowNull, MaybeNull]
     public IEditService Edit => field ??= GetKitService<IEditService>();
 
