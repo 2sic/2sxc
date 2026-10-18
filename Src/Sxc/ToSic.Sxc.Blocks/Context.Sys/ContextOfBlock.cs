@@ -80,6 +80,7 @@ internal class ContextOfBlock(
 
     public IContextOfBlock Clone(ILog parentLog, IAppIdentity appIdentity)
     {
+        // #ReworkingResetApp - this one could use a generator
         var newCtx = new ContextOfBlock(Page, Module, pagePubSettings, PageServiceShared, AppServices)
             .LinkLog(parentLog);
         newCtx.ResetApp(appIdentity);

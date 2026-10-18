@@ -11,6 +11,7 @@ partial class SxcCurrentContextService
 {
     public IContextOfApp SetApp(IAppIdentity appIdentity)
     {
+        // #ReworkingResetApp - this one could use a generator
         var appCtx = appCtxGenerator.New();
         appCtx.ResetApp(appIdentity);
         AppContextFromAppOrBlock = appCtx;

@@ -38,6 +38,7 @@ partial class CodeDataFactory
         {
             var app = ExCtx.GetApp()
                       ?? throw new("Can't create App Context for ADAM - no block, no App");
+            // #ReworkingResetApp - this one could use a generator
             contextOfApp = contextOfAppLazy.Value;
             contextOfApp.ResetApp(app);
         }
