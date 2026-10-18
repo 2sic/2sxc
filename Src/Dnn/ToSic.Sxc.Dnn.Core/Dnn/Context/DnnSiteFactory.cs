@@ -48,10 +48,17 @@ internal sealed class DnnSiteFactory(LazySvc<IZoneMapper> zoneMapperLazy, LazySv
         var portalSettings = KeepBestPortalSettings(settingsOrNull);
 
         var zoneId = portalSettings?.PortalId ?? EavConstants.NullId;
+
+        // Important special case: if the PortalSettings are not from the PortalSettings.Current, then the
+        // PortalAlias are null!!!
+        // I believe this should only matter in very special cases
+        // Like when showing a module from another portal - in which case we don't need that alias
+        // but the current one. Just keep this in mind in case anything ever breaks.
         var urlRoot = (portalSettings?.PortalAlias as IPortalAliasInfo)?.HttpAlias
                       ?? (PortalSettings.Current?.PortalAlias as IPortalAliasInfo)?.HttpAlias
                       ?? "err-portal-alias-not-loaded";
         var url = $"{new UrlParts(linkPathsLazy.Value.GetCurrentRequestUrl()).Protocol}{urlRoot}";
+
         var currentCultureCode = cultureResolver.GetCurrentCultureCode(portalSettings);
         var defaultCultureCode = portalSettings?.DefaultLanguage?.ToLowerInvariant() ?? string.Empty;
         var cultureCodesWithFallbacks = cultureResolver.GetCultureCodesWithFallbacks(zoneId, currentCultureCode, defaultCultureCode);
