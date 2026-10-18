@@ -2,7 +2,6 @@
 using ToSic.Eav.Context;
 using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sxc.Sys.Render.PageContext;
-using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Context.Sys;
 
@@ -54,26 +53,20 @@ internal class ContextOfBlock(
     public BlockPublishingSettings Publishing => field
         ??= GetPublishing();
     
-    private BlockPublishingSettings GetPublishing()
-    {
-        var package = new Package<BlockPublishingSettings>(new() { ModuleId = Module?.Id ?? -1 });
-        var fromNew = pagePubSettings.Value.Handle(new(), package);
-        
-        //var fromOld = publishingResolver.Value.Value.Handle(new(), package)
-        //    .GetAwaiter()
-        //    .GetResult()
-        //    .Data.Settings!;
-
-        return fromNew.GetAwaiter()
+    private BlockPublishingSettings GetPublishing() =>
+        pagePubSettings.Value
+            .Handle(new(), new(new() { ModuleId = Module?.Id ?? -1 }))
+            .GetAwaiter()
             .GetResult()
             .Data;
-    }
 
-    // Note: this allows a clone pretending to be a SiteContext
-    // but it can also preserve the block information, for deeper security checks
-    // Code should be improved so the intent is clearer
 
     /// <inheritdoc />
+    /// <remarks>
+    /// Note: this allows a clone pretending to be a SiteContext
+    /// but, it can also preserve the block information, for deeper security checks
+    /// Code should be improved so the intent is clearer
+    /// </remarks>
     public override IContextOfSite CloneFullContext(ILog parentLog, ISite site)
         => new ContextOfBlock(Page, Module, pagePubSettings, PageServiceShared, AppServices with { SiteServices = AppServices.SiteServices with { Site = site } })
             .LinkLog(parentLog);
