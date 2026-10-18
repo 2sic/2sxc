@@ -12,7 +12,10 @@ using ToSic.Sys.Locking;
 
 namespace ToSic.Sxc.Dnn.Run;
 
-internal class DnnZoneMapper(Generator<ISite> siteFactory, LazySvc<ZoneCreator> zoneCreatorLazy, IAppsCatalog appsCatalog)
+internal class DnnZoneMapper(
+    LazySvc<DnnSiteFactory> siteFactory /*must be lazy, very important, otherwise we get cyclical logs attached */,
+    LazySvc<ZoneCreator> zoneCreatorLazy,
+    IAppsCatalog appsCatalog)
     : ZoneMapperBase(appsCatalog, "DNN.ZoneMp", connect: [siteFactory, zoneCreatorLazy])
 {
     /// <inheritdoc />
@@ -83,9 +86,12 @@ internal class DnnZoneMapper(Generator<ISite> siteFactory, LazySvc<ZoneCreator> 
             })
             .FirstOrDefault(f => f != null);
 
+        // 2026-10-18 2dm: must check the consequences of this
+        // It may have had a side effect till now, updating the site
+        // scoped TODO: #VerifySiteFactorySplitIsOk
         return found == null
             ? l.ReturnNull("not found")
-            : l.Return(((DnnSiteFactory)siteFactory.New()).TryInitPortal(found, Log), $"found {found.PortalId}");
+            : l.Return(siteFactory.Value.CreateFromPortal(found), $"found {found.PortalId}");
     }
 
     /// <inheritdoc />

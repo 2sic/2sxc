@@ -54,8 +54,10 @@ internal static class StartUpDnnCore
         services.TryAddScoped<IUser>(sp => sp.GetRequiredService<DnnUserFactory>().GetUser());
         services.TryAddScoped<DnnSecurity>();
         // Make sure that ISite and IZoneCultureResolver use the same singleton!
-        services.TryAddScoped<ISite, DnnSite>();    // this must come before the IZoneCultureResolver!
-        services.TryAddScoped<IZoneCultureResolver>(x => x.GetRequiredService<ISite>());
+        services.TryAddTransient<DnnCultureResolver>();
+        services.TryAddScoped<DnnSiteFactory>(); // WIP v22 - separate factory job from the ISite itself - TODO: later should become transient!
+        services.TryAddScoped<ISite>(sp => sp.GetRequiredService<DnnSiteFactory>().TempSite);    // this must come before the IZoneCultureResolver!
+        services.TryAddScoped<IZoneCultureResolver>(x => x.GetRequiredService<DnnSiteFactory>().TempSite);
 
         // Module cannot yet be scoped, until we have a per-module scope at some time
         services.TryAddTransient<IModule, DnnModule>();

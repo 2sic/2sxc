@@ -5,6 +5,10 @@ using ToSic.Sxc.Sys.Render.PageContext;
 
 namespace ToSic.Sxc.Context.Sys;
 
+// Notes 2026-10-18 2dm
+// This seems to never be injected, but always passed around
+// So changing things here should be fairly easy, with little side effects.
+
 /// <remarks>
 /// Important: this is the third inheritance, so it cannot create
 /// another MyServices to inherit again, as it's not supported across three level
@@ -74,6 +78,15 @@ internal class ContextOfBlock(
         var newCtx = new ContextOfBlock(Page, Module, pagePubSettings, PageServiceShared, AppServices)
             .LinkLog(parentLog);
         newCtx.ResetApp(appIdentity);
+        return newCtx;
+    }
+
+    public IContextOfBlock ResetWip(ILog parentLog, ISite site, IModule module)
+    {
+        // #ReworkingResetApp - this one could use a generator
+        var newCtx = new ContextOfBlock(Page, module, pagePubSettings, PageServiceShared, AppServices with {SiteServices = AppServices.SiteServices with { Site = site }})
+            .LinkLog(parentLog);
+        //newCtx.ResetApp(appIdentity);
         return newCtx;
     }
 }
