@@ -51,9 +51,6 @@ public partial class SimpleDataEditService(
     #region Constructor / DI
 
 
-    private string DefaultLanguageCode => field
-        ??= GetDefaultLanguage(MyOptions.ZoneId);
-
     private IAppWorkContext CtxWithDb => field
         ??= appWorkCtxSvc.ContextNew(new AppIdentity(MyOptions.ZoneId, MyOptions.AppId));
 
@@ -65,8 +62,11 @@ public partial class SimpleDataEditService(
                 : tempCtx.CloneFullContext(Log, zoneMapper.SiteOfZone(MyOptions.ZoneId))
             );
 
-    private string GetDefaultLanguage(int zoneId)
+    private string DefaultLanguageCode => field ??= GetDefaultLanguage();
+
+    private string GetDefaultLanguage()
     {
+        var zoneId = MyOptions.ZoneId;
         var l = Log.Fn<string>($"{zoneId}");
         var site = zoneMapper.SiteOfZone(zoneId);
         if (site == null! /* paranoid */)
