@@ -18,7 +18,7 @@ internal class ContextOfBlock(
     LazySvc<BlockPublishingSettingsService> pagePubSettings,
     IPageServiceShared pageServiceShared,
     ContextOfApp.Dependencies appServices)
-    : ContextOfApp(appServices, "Sxc.CtxBlk", connect: [module, pageServiceShared, pagePubSettings]), IContextOfBlock
+    : ContextOfApp(appServices, "Sxc.CtxBlk", connect: [module, pageServiceShared, pagePubSettings]), IContextOfBlock, IContextOfSiteOrMoreCloneable
 {
 
     #region Override AppIdentity based on module information
@@ -51,10 +51,7 @@ internal class ContextOfBlock(
     /// <inheritdoc />
     [field: AllowNull, MaybeNull]
     public BlockPublishingSettings Publishing => field
-        ??= GetPublishing();
-    
-    private BlockPublishingSettings GetPublishing() =>
-        pagePubSettings.Value
+        ??= pagePubSettings.Value
             .Handle(new(), new(new() { ModuleId = Module?.Id ?? -1 }))
             .GetAwaiter()
             .GetResult()
@@ -67,7 +64,7 @@ internal class ContextOfBlock(
     /// but, it can also preserve the block information, for deeper security checks
     /// Code should be improved so the intent is clearer
     /// </remarks>
-    public override IContextOfSite CloneFullContext(ILog parentLog, ISite site)
+    IContextOfSite IContextOfSiteOrMoreCloneable.CloneFullContext(ILog parentLog, ISite site)
         => new ContextOfBlock(Page, Module, pagePubSettings, PageServiceShared, AppServices with { SiteServices = AppServices.SiteServices with { Site = site } })
             .LinkLog(parentLog);
 
