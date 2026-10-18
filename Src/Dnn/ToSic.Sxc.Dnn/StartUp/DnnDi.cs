@@ -71,6 +71,7 @@ public static class DnnDi
 
         l.A("Will start with 2sxc Fallbacks and RazorBlade parts");
         services
+            .AddSxcCodeFallbacks()
             .AddSxcAppsFallbacks()
             .AddSxcCoreFallbacks()
             .AddRazorBlade();

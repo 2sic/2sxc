@@ -68,7 +68,7 @@ public static class StartupSxcCode
         return services;
     }
 
-    public static IServiceCollection AddSxcCodeFallback(this IServiceCollection services)
+    public static IServiceCollection AddSxcCodeFallbacks(this IServiceCollection services)
     {
         services.TryAddTransient<IModule, ModuleUnknown>();
         services.TryAddTransient<IPage, PageUnknown>();

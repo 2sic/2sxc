@@ -78,8 +78,11 @@ public class OqtStartup : IServerStartup
             .AddSxcLightSpeed()             // LightSpeed services
             .AddSxcCodeGen()                // Code generation services
             .AddSxcCore()
+
+            .AddSxcCodeFallbacks()
             .AddSxcAppsFallbacks()
             .AddSxcCoreFallbacks()
+
             .AddEavAll()             // Core EAV services
             .AddEavAllFallbacks()
             .AddEavWebApiTypedAfterEav()

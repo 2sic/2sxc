@@ -40,7 +40,10 @@ public class StartupSxcWithDb
             .AddSxcImages()
             .AddSxcWeb()
             .AddSxcLightSpeed()
+
+            .AddSxcCodeFallbacks()
             .AddSxcAppsFallbacks()
+            .AddSxcCoreFallbacks()
 
             .AddEavAll()
             .AddEavAllFallbacks();
