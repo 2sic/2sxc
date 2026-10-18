@@ -4,7 +4,7 @@ using LookUpConstants = ToSic.Sxc.LookUp.Sys.LookUpConstants;
 
 namespace ToSic.Sxc.DataSources;
 
-public sealed partial class CmsBlock
+partial class CmsBlock
 {
     /// <summary>
     /// The block for which this DataSource is needed - provides context and configuration

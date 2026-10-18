@@ -6,7 +6,7 @@ using static ToSic.Eav.DataSource.DataSourceConstants;
 
 namespace ToSic.Sxc.DataSources;
 
-public sealed partial class CmsBlock
+partial class CmsBlock
 {
     private IImmutableList<IEntity> GetStream(
         IView? view,
