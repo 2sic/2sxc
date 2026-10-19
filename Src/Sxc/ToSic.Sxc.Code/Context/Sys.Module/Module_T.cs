@@ -32,10 +32,10 @@ public abstract class Module<T>(string logName, object[]? connect = null) : Serv
     public abstract bool IsContent { get; }
 
     /// <inheritdoc />
-    public abstract IBlockIdentifier BlockIdentifier { get; }
+    public abstract IBlockIdentifier? BlockIdentifier { get; }
 }
 
-public record ModuleRecord<T>(int Id, bool IsContent, IBlockIdentifier BlockIdentifier) : IModule, IWrapper<T>
+public record ModuleRecord<T>(int Id, bool IsContent, IBlockIdentifier? BlockIdentifier) : IModule, IWrapper<T>
     where T : class
 {
     public void Init(int id)

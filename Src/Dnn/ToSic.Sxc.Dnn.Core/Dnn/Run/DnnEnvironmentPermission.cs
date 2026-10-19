@@ -4,6 +4,7 @@ using DotNetNuke.Security.Permissions;
 using ToSic.Eav.Environment.Sys.Permissions;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Context.Sys.Module;
+using ToSic.Sys.Wrappers;
 
 namespace ToSic.Sxc.Dnn.Run;
 
@@ -18,7 +19,7 @@ internal class DnnEnvironmentPermission() : EnvironmentPermission(DnnConstants.L
     /// In some cases the container is a ContainerNull object without ModuleInfo, so we must really do null-checks
     /// </remarks>
     protected ModuleInfo Module => _module.Get(
-        () => ((ContextOfSiteOrBlock as IContextOfBlock)?.Module as Module<ModuleInfo>)?.GetContents());
+        () => ((ContextOfSiteOrBlock as IContextOfBlock)?.Module as IWrapper<ModuleInfo>)?.GetContents());
     private readonly LazyGet<ModuleInfo> _module = new();
 
     public override bool VerifyConditionOfEnvironment(string condition)

@@ -34,8 +34,9 @@ internal class SxcAppDataConfigProvider(LazySvc<ILookUpEngineResolver> getEngine
     // will probably move again some day
     internal LookUpEngine GetLookupEngineForContext(IContextOfSite? context, IApp? appForLookup, IBlock? blockForLookupOrNull)
     {
-        var l = Log.Fn<LookUpEngine>($"module: {(context as ContextOfBlock)?.Module.Id}, app: {appForLookup?.AppId} ..., ...");
-        var modId = (context as ContextOfBlock)?.Module.Id ?? 0;
+        var maybeModuleId = (context as ContextOfBlockRecord)?.Module.Id;
+        var l = Log.Fn<LookUpEngine>($"module: {maybeModuleId}, app: {appForLookup?.AppId} ..., ...");
+        var modId = maybeModuleId ?? 0;
 
         // Find the standard DNN property sources if PortalSettings object is available
         var envLookups = getEngineLazy.Value.GetLookUpEngine(modId);

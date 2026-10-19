@@ -9,6 +9,6 @@ public class BlockFeaturesHelpers
     public static List<IPageFeature> BlockFeatures(IBlock block, ILog log)
         => !block.BlockFeatureKeys.Any()
             ? []
-            : ((ContextOfBlock)block.Context).PageServiceShared.PageFeatures.GetWithDependents(block.BlockFeatureKeys, log);
+            : ((ContextOfBlockRecord)block.Context).PageServiceShared.PageFeatures.GetWithDependents(block.BlockFeatureKeys, log);
 
 }

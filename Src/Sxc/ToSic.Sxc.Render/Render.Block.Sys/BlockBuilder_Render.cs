@@ -41,7 +41,7 @@ public partial class BlockRenderer
             // So only the top-level should get them
             var changeSummary = topLevel
                 ? Services.PageChangeSummary.Value
-                    .FinalizeAndGetAllChanges(Block.ParentId, ((ContextOfBlock)Block.Context).PageServiceShared, specs, Block.Context.Permissions.IsContentAdmin)
+                    .FinalizeAndGetAllChanges(Block.ParentId, ((ContextOfBlockRecord)Block.Context).PageServiceShared, specs, Block.Context.Permissions.IsContentAdmin)
                 : new();
 
 
@@ -161,7 +161,7 @@ public partial class BlockRenderer
                         if (errorCode == null && body?.Contains(ErrorHtmlMarker) == true) 
                             errorCode = ErrorGeneral;
 
-                        var pageServiceShared = ((ContextOfBlock)Block.Context).PageServiceShared;
+                        var pageServiceShared = ((ContextOfBlockRecord)Block.Context).PageServiceShared;
 
                         // Activate-js-api is true, if the html has some <script> tags which tell it to load the 2sxc
                         // only set if true, because otherwise we may accidentally overwrite the previous setting

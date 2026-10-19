@@ -41,7 +41,7 @@ public static class StartupSxcBlocks
         services.TryAddTransient<IAppDataConfigProvider, SxcAppDataConfigProvider>(); // new v17
 
         // Context stuff in general
-        services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
+        //services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
 
 
 

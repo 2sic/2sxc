@@ -49,7 +49,7 @@ public class DnnModuleFactory(IAppsCatalog appsCatalog, LazySvc<AppFinder> appFi
     /// <summary>
     /// Figure out the block identifier
     /// </summary>
-    public IBlockIdentifier BlockIdentifier(ModuleInfo moduleInfo, bool isContent)
+    public IBlockIdentifier? BlockIdentifier(ModuleInfo moduleInfo, bool isContent)
     {
         if (moduleInfo == null!)
             return null;
