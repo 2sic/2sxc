@@ -11,9 +11,18 @@ namespace ToSic.Sxc.Context.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ISxcCurrentContextService: ICurrentContextService, ISxcAppCurrentContextService
 {
+    /// <summary>
+    /// Attach a prepared block to the context.
+    /// </summary>
     void AttachBlock(IBlock block);
 
+    /// <summary>
+    /// Retrieve the current block - or return null if none.
+    /// </summary>
     IBlock? BlockOrNull();
 
+    /// <summary>
+    /// Swap in a dynamic view into the context, to render the block differently (for preview)
+    /// </summary>
     IBlock SwapBlockView(IView newView);
 }

@@ -30,17 +30,16 @@ public class BlockCachingHelper(
         if (myAppId == 0)
             return l.ReturnFalse("no app");
 
-        // make sure we have the app reader
+        // make sure we have the app reader, if we don't have it, we can't do anything
         var appReader = currentBlock.Context.AppReaderOrNull;
-        // if we don't have an app reader, we can't do anything
         if (appReader == null)
             return l.ReturnFalse("no app reader");
 
-        // Cast to current object type to access internal APIs
+        // Check if we have a root block, if not, we can't do anything
         if (currentBlock.RootBlock is not { } rootBlock)
             return l.ReturnFalse("no root block");
 
-        // add dependent appId only once
+        // Add my dependent appId, only if it hasn't been added yet
         var rootList = rootBlock.DependentApps;
         if (rootList.All(a => a.AppId != myAppId))
         {

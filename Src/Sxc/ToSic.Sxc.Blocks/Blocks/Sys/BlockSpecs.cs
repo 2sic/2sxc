@@ -90,11 +90,14 @@ public record BlockSpecs : IBlock
     /// <summary>
     /// The root block of this block - can be the same as `this`.
     /// </summary>
+    /// <remarks>
+    /// Since we don't update the field even when returning `this`,
+    /// a clone operation will preserve the null.
+    /// </remarks>
     [PrivateApi]
     public IBlock RootBlock
     {
-        get => field ??
-               this; // never store the result, as the fallback should still return me-object in future if never set.
+        get => field ?? this; // never store the result in the field, as the fallback on clone should still return me-object in future if never set.
         init;
     }
 
