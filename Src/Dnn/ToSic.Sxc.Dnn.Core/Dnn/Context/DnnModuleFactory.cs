@@ -17,11 +17,10 @@ namespace ToSic.Sxc.Dnn.Context;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [PrivateApi("this is just internal, external users don't really have anything to do with this")]
 public class DnnModuleFactory(IAppsCatalog appsCatalog, LazySvc<AppFinder> appFinderLazy, ISite site)
-    : ServiceBase("Dnn.Contnr", connect: [appsCatalog, appFinderLazy, site]), IModuleFactory
+    : ServiceBase("Dnn.ModFac", connect: [appsCatalog, appFinderLazy, site]), IModuleFactory
 {
     /// <summary>
-    /// We don't use a Constructor because of DI
-    /// So you must always call Init
+    /// Get using id.
     /// </summary>
     public IModule Get(int moduleId)
     {
@@ -31,13 +30,11 @@ public class DnnModuleFactory(IAppsCatalog appsCatalog, LazySvc<AppFinder> appFi
     }
 
     /// <summary>
-    /// We don't use a Constructor because of DI
-    /// So you must always call Init
+    /// Get using Dnn ModuleInfo
     /// </summary>
     public IModule Get(ModuleInfo moduleInfo)
     {
         var l = Log.Fn<IModule>($"moduleId: {moduleInfo?.ModuleID}");
-        //Init(moduleInfo);
 
         var id = moduleInfo?.ModuleID ?? EavConstants.NullId;
         var isContent = (moduleInfo?.DesktopModule.ModuleName ?? "2sxc") == "2sxc";
@@ -49,39 +46,11 @@ public class DnnModuleFactory(IAppsCatalog appsCatalog, LazySvc<AppFinder> appFi
         return l.ReturnAsOk(modResult);
     }
 
-    #region Constructors and DI
-
-    //public new DnnModule Init(ModuleInfo moduleInfo)
-    //{
-    //    var l = Log.Fn<DnnModule>($"moduleId: {moduleInfo?.ModuleID}");
-    //    base.Init(moduleInfo);
-    //    return l.ReturnAsOk(this);
-    //}
-
-    //public /*override*/ void Init(int moduleId)
-    //{
-    //    var l = Log.Fn($"{moduleId}");
-    //    var mod = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, false);
-    //    Init(mod);
-    //    l.Done();
-    //}
-
-    #endregion
-
-
-    ///// <inheritdoc />
-    //public override int Id => UnwrappedModule?.ModuleID ?? EavConstants.NullId;
-
-
-    ///// <inheritdoc />
-    //public override bool IsContent => (UnwrappedModule?.DesktopModule.ModuleName ?? "2sxc") == "2sxc";
-
-
-    ///// <inheritdoc />
-    public /*override*/ IBlockIdentifier BlockIdentifier(ModuleInfo moduleInfo, bool isContent)
+    /// <summary>
+    /// Figure out the block identifier
+    /// </summary>
+    public IBlockIdentifier BlockIdentifier(ModuleInfo moduleInfo, bool isContent)
     {
-        //if (field != null)
-        //    return field;
         if (moduleInfo == null!)
             return null;
 
@@ -101,9 +70,12 @@ public class DnnModuleFactory(IAppsCatalog appsCatalog, LazySvc<AppFinder> appFi
             : new();
 
         // Create identifier
-        return /*field =*/ new BlockIdentifier(zoneId, appId, appNameId, blockGuid, overrideView);
+        return new BlockIdentifier(zoneId, appId, appNameId, blockGuid, overrideView);
     }
 
+    /// <summary>
+    /// Figure out AppId and AppName
+    /// </summary>
     private (int AppId, string AppNameId) GetInstanceAppIdAndName(ModuleInfo moduleInfo, int zoneId, bool isContent)
     {
         var l = Log.Fn<(int, string)>($"{zoneId}");
@@ -122,7 +94,7 @@ public class DnnModuleFactory(IAppsCatalog appsCatalog, LazySvc<AppFinder> appFi
             return l.Return((appId, guid), $"{msg} AppG:{guid} = app:{appId}");
         }
 
-        Log.A($"{msg} not found = null");
+        l.A($"{msg} not found = null");
         return l.Return((KnownAppsConstants.AppIdEmpty, KnownAppsConstants.AppNameIdEmpty), "not found");
     }
 
