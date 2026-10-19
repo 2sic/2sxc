@@ -60,7 +60,9 @@ internal static class StartUpDnnCore
         services.TryAddScoped<IZoneCultureResolver>(x => x.GetRequiredService<DnnSiteFactory>().TempSite);
 
         // Module cannot yet be scoped, until we have a per-module scope at some time
-        services.TryAddTransient<IModule, DnnModule>();
+        //services.TryAddTransient<IModule, DnnModule>();
+        services.TryAddTransient<DnnModuleFactory>(); // new v22 TODO: MUST RENAME TO DnnModuleFactory
+        services.TryAddTransient<IModuleFactory, DnnModuleFactory>(); // new v22
 
         // The page is transient, which seems wrong, but it has very little initialization and is deterministic, so this is fine ATM
         services.TryAddTransient<DnnPageFactory>(); // new v22

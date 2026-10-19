@@ -18,11 +18,11 @@ namespace ToSic.Sxc.Context.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class ContextOfBlock(
     IPage page,
-    IModule module,
+    //IModule module,
     LazySvc<BlockPublishingSettingsService> pagePubSettings,
     IPageServiceShared pageServiceShared,
     ContextOfApp.Dependencies appServices)
-    : ContextOfApp(appServices, "Sxc.CtxBlk", connect: [module, pageServiceShared, pagePubSettings]), IContextOfBlock, IContextOfSiteOrMoreCloneable
+    : ContextOfApp(appServices, "Sxc.CtxBlk", connect: [/*module,*/ pageServiceShared, pagePubSettings]), IContextOfBlock, IContextOfSiteOrMoreCloneable
 {
 
     #region Override AppIdentity based on module information
@@ -48,7 +48,7 @@ internal class ContextOfBlock(
     public IPage Page { get; } = page;
 
     /// <inheritdoc />
-    public IModule Module { get; } = module;
+    public IModule Module { get; init; } = null!; //module;
 
     public IPageServiceShared PageServiceShared { get; } = pageServiceShared;
 
@@ -69,13 +69,20 @@ internal class ContextOfBlock(
     /// Code should be improved so the intent is clearer
     /// </remarks>
     IContextOfSite IContextOfSiteOrMoreCloneable.CloneFullContext(ILog parentLog, ISite site)
-        => new ContextOfBlock(Page, Module, pagePubSettings, PageServiceShared, AppServices with { SiteServices = AppServices.SiteServices with { Site = site } })
+        => new ContextOfBlock(Page, /*Module,*/ pagePubSettings, PageServiceShared,
+                AppServices with { SiteServices = AppServices.SiteServices with { Site = site } })
+            {
+                Module = Module,
+            }
             .LinkLog(parentLog);
 
     public IContextOfBlock Clone(ILog parentLog, IAppIdentity appIdentity)
     {
         // #ReworkingResetApp - this one could use a generator
-        var newCtx = new ContextOfBlock(Page, Module, pagePubSettings, PageServiceShared, AppServices)
+        var newCtx = new ContextOfBlock(Page, /*Module,*/ pagePubSettings, PageServiceShared, AppServices)
+            {
+                Module = Module,
+            }
             .LinkLog(parentLog);
         newCtx.ResetApp(appIdentity);
         return newCtx;
@@ -83,9 +90,13 @@ internal class ContextOfBlock(
 
     public IContextOfBlock ResetWip(ISite site, IPage page, IModule module) =>
         new ContextOfBlock(
-            page ?? Page, module,
+            page ?? Page,
+            //module,
             pagePubSettings,
             PageServiceShared,
             AppServices with { SiteServices = AppServices.SiteServices with { Site = site } }
-        );
+        )
+        {
+            Module = module,
+        };
 }

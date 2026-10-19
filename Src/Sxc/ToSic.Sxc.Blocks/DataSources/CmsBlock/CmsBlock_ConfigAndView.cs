@@ -38,8 +38,8 @@ partial class CmsBlock
                 Error.Create(title: $"{nameof(CmsBlock)} cannot find Block Configuration",
                     message: $"Neither InstanceContext nor {nameof(ModuleId)} found")), "Error, no module-id");
 
-        var container = _services.ModuleLazy.Value;
-        container.Init(ModuleId.Value);
+        var container = _services.ModuleLazy.Value.Get(ModuleId.Value);
+        // container.Init(ModuleId.Value);
         var blockId = container.BlockIdentifier;
         var ctx = _services.AppCtxSvc.Value.ContextNew(this.PureIdentity());
         var blockConfig = _services.AppBlocks.New(ctx).GetOrGeneratePreviewConfig(blockId);

@@ -105,15 +105,18 @@ public class DnnBusinessController : ModuleSearchBase, IHasLog
 
     public override IList<SearchDocument> GetModifiedSearchDocuments(ModuleInfo moduleInfo, DateTime beginDate)
     {
+        var l = Log.Fn<IList<SearchDocument>>($"m#{moduleInfo.ModuleID}, begin:{beginDate}");
         try
         {
-            return ServiceProvider.Build<SearchController>(Log)
-                .GetModifiedSearchDocuments(((DnnModule)ServiceProvider.Build<IModule>(Log)).Init(moduleInfo), beginDate);
+            var searchController = ServiceProvider.Build<SearchController>(Log);
+            var mod = ServiceProvider.Build<DnnModuleFactory>(Log).Get(moduleInfo);
+            return searchController.GetModifiedSearchDocuments(mod, beginDate);
         }
         catch (Exception e)
         {
             DnnEnvironmentLogger.AddSearchExceptionToLog(moduleInfo, e, nameof(DnnBusinessController));
-            return new List<SearchDocument>();
+            l.Ex(e);
+            return l.Return([], "error");
         }
     }
 

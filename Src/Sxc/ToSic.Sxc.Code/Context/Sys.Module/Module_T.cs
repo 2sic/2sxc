@@ -1,4 +1,5 @@
 ﻿using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Context.Sys.Platform;
 
 namespace ToSic.Sxc.Context.Sys.Module;
 
@@ -21,7 +22,7 @@ public abstract class Module<T>(string logName, object[]? connect = null) : Serv
         UnwrappedModule = item;
     }
 
-    public abstract void Init(int id);
+    //public abstract void Init(int id);
     #endregion
 
     /// <inheritdoc />
@@ -32,4 +33,16 @@ public abstract class Module<T>(string logName, object[]? connect = null) : Serv
 
     /// <inheritdoc />
     public abstract IBlockIdentifier BlockIdentifier { get; }
+}
+
+public record ModuleRecord<T>(int Id, bool IsContent, IBlockIdentifier BlockIdentifier) : IModule, IWrapper<T>
+    where T : class
+{
+    public void Init(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public T? GetContents() => Contents;
+    public required T? Contents { get; init; }
 }

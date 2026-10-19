@@ -42,6 +42,6 @@ public class InstallController()
         this.PreventServerTimeout600();
         // Make sure the Scoped ResponseMaker has this controller context
         using (this.InitializedResponseMaker())
-            return Real.RemotePackage(packageUrl, ((DnnModule)SysHlp.GetService<IModule>()).Init(ActiveModule), newName);
+            return Real.RemotePackage(packageUrl, SysHlp.GetService<DnnModuleFactory>().Get(ActiveModule), newName);
     }
 }

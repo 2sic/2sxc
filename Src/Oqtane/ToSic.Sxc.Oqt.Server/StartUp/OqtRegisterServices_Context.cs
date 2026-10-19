@@ -27,6 +27,7 @@ partial class OqtRegisterServices
         services.TryAddScoped<IUser, OqtUser>();
 
         services.TryAddTransient<IModule, OqtModule>();
+        services.TryAddTransient<IModuleFactory, OqtModule>(); // new v22
 
         // TODO: @STV - this could cause a bug - maybe better not to mix this? OqtSite transient?
         services.TryAddTransient<IZoneCultureResolver, OqtSite>();

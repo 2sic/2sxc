@@ -3,12 +3,11 @@ using ToSic.Sxc.Blocks.Sys;
 
 namespace ToSic.Sxc.Context.Sys.Module;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
-internal class ModuleUnknown: IModule, IIsUnknown
-{
-    // ReSharper disable once UnusedParameter.Local
-    public ModuleUnknown(WarnUseOfUnknown<ModuleUnknown> _) { }
+// ReSharper disable UnusedParameter.Local
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
+internal class ModuleUnknown(WarnUseOfUnknown<ModuleUnknown> _) : IModule, IIsUnknown
+{
     /// <summary>
     /// Dummy init, don't do anything
     /// </summary>

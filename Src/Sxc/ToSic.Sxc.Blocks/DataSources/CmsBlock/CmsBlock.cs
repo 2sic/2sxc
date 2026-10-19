@@ -53,7 +53,7 @@ public sealed partial class CmsBlock : DataSourceBase, IDataSourceLinkable
 
     public new record Dependencies(
         DataSourceBase.Dependencies ParentServices,
-        LazySvc<IModule> ModuleLazy,
+        LazySvc<IModuleFactory> ModuleLazy,
         LazySvc<IDataSourcesService> DataSourceFactory,
         LazySvc<AppWorkContextService> AppCtxSvc,
         AppWorkChain<WorkBlocks> AppBlocks)

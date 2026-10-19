@@ -73,6 +73,7 @@ public static class StartupSxcCode
         services.TryAddTransient<IModule, ModuleUnknown>();
         services.TryAddTransient<IPage, PageUnknown>();
         services.TryAddSingleton<IPlatform, PlatformUnknown>();
+        services.TryAddTransient<IModuleFactory, ModuleFactoryUnknown>();
         return services;
     }
 }

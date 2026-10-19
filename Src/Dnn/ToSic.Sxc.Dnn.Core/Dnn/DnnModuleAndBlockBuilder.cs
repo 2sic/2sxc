@@ -4,16 +4,17 @@ using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Dnn.Context;
+using ToSic.Sys.Wrappers;
 
 namespace ToSic.Sxc.Dnn;
 
 internal class DnnModuleAndBlockBuilder(
-    Generator<IModule> moduleGenerator,
     Generator<IContextOfBlock> contextGenerator,
     DnnSiteFactory siteFactory,
     DnnPageFactory pageFactory,
+    DnnModuleFactory moduleFactory,
     Generator<BlockOfModule> blockGenerator)
-    : ModuleAndBlockBuilder(blockGenerator, DnnConstants.LogName, connect: [moduleGenerator, contextGenerator, siteFactory, pageFactory])
+    : ModuleAndBlockBuilder(blockGenerator, DnnConstants.LogName, connect: [contextGenerator, siteFactory, pageFactory, moduleFactory])
 {
     private ILog ParentLog => (Log as Log)?.Parent ?? Log;
 
@@ -26,13 +27,13 @@ internal class DnnModuleAndBlockBuilder(
         l.A($"Page Id on DNN Module: {moduleInfo.TabID} - should be {pageId}");
 
         ThrowIfModuleIsNull(pageId, moduleId, moduleInfo);
-        var module = ((DnnModule)moduleGenerator.New()).Init(moduleInfo);
+        var module = moduleFactory.Get(moduleInfo);
 
         return l.Return(module, $"Page Id on IModule: {module.BlockIdentifier} - should be {pageId}");
     }
 
     protected override IContextOfBlock GetContextOfBlock(IModule module, int? pageId)
-        => GetContextOfBlock((module as DnnModule)?.GetContents(), pageId);
+        => GetContextOfBlock((module as IWrapper<ModuleInfo>)?.GetContents(), pageId);
 
 
     protected override IContextOfBlock GetContextOfBlock<TPlatformModule>(TPlatformModule module, int? pageId)
@@ -58,13 +59,11 @@ internal class DnnModuleAndBlockBuilder(
         var page = pageFactory.Create(newSite.GetContents()?.ActiveTab, pageId);
 
         l.A("Will init module");
-        // This is still a bit buggy, retrieving module first...
-        // TODO: split into factory
+        var module = moduleFactory.Get(dnnModule);
         var context = contextGenerator.New();
-        ((DnnModule)context.Module).Init(dnnModule);
 
         // Assemble the final context
-        var contextWithModuleAndSite = context.ResetWip(newSite, page, context.Module);
+        var contextWithModuleAndSite = context.ResetWip(newSite, page, module);
         return l.ReturnAsOk(contextWithModuleAndSite);
     }
 }

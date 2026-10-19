@@ -6,6 +6,7 @@ using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys.Module;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared;
@@ -19,8 +20,15 @@ internal class OqtModule(
     LazySvc<AppFinder> appFinderLazy,
     ISite site)
     : Module<Module>($"{OqtConstants.OqtLogPrefix}.Cont",
-        connect: [settingsHelper, moduleRepository, appsCatalog, appFinderLazy, site])
+        connect: [settingsHelper, moduleRepository, appsCatalog, appFinderLazy, site]),
+        IModuleFactory
 {
+    public IModule Get(int moduleId)
+    {
+        Init(moduleId);
+        return this;
+    }
+
     private Dictionary<string, string> _settings;
 
     public new OqtModule Init(Module module)
@@ -49,7 +57,7 @@ internal class OqtModule(
     }
 
     // Temp implementation, don't support im MVC
-    public override void Init(int id)
+    public /*override*/ void Init(int id)
         => Init(moduleRepository.GetModule(id));
 
     /// <inheritdoc />
@@ -103,4 +111,5 @@ internal class OqtModule(
         return l.ReturnAsOk((appId, guid));
 
     }
+
 }
