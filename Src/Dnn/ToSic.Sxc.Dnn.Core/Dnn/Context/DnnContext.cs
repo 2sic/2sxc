@@ -5,6 +5,7 @@ using DotNetNuke.Entities.Users;
 using ToSic.Sxc.Context.Sys.Module;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sys.Wrappers;
 
 namespace ToSic.Sxc.Dnn.Context;
 
@@ -17,7 +18,7 @@ internal class DnnContext : IDnnContext, INeedsExecutionContext
     public void ConnectToRoot(IExecutionContext exCtx)
     {
         var moduleContext = exCtx.GetContextOfBlock()?.Module;
-        Module = (moduleContext as Module<ModuleInfo>)?.GetContents();
+        Module = (moduleContext as IWrapper<ModuleInfo>)?.GetContents();
         // note: this may be a bug, I assume it should be Module.OwnerPortalId
         Portal = PortalSettings.Current ?? 
                  (Module != null ? new PortalSettings(Module.PortalID): null);

@@ -28,7 +28,7 @@ public interface IModule
     /// </summary>
     [PrivateApi("still experimental")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    IBlockIdentifier BlockIdentifier { get; }
+    IBlockIdentifier? BlockIdentifier { get; }
 }
 
 public interface IModuleFactory

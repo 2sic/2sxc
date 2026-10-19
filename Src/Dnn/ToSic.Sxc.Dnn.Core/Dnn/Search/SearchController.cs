@@ -22,6 +22,7 @@ using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Render.Polymorphism.Sys;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sys.Wrappers;
 using static System.StringComparer;
 
 namespace ToSic.Sxc.Dnn.Search;
@@ -57,9 +58,10 @@ internal class SearchController(
     {
         var l = Log.Fn<string>();
         // Start by getting the module info
-        DnnModule = (module as Module<ModuleInfo>)?.GetContents();
+        DnnModule = (module as IWrapper<ModuleInfo>)?.GetContents();
         l.A($"start search for mod#{DnnModule?.ModuleID}");
-        if (DnnModule == null) return l.ReturnAsOk("no module");
+        if (DnnModule == null)
+            return l.ReturnAsOk("no module");
 
         // This changes site in whole scope
         DnnSite = siteGenerator.CreateFromModuleAndShare(DnnModule, Log);
