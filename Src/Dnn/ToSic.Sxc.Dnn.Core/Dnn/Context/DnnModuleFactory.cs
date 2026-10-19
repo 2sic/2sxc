@@ -39,7 +39,7 @@ public class DnnModuleFactory(IAppsCatalog appsCatalog, LazySvc<AppFinder> appFi
         var id = moduleInfo?.ModuleID ?? EavConstants.NullId;
         var isContent = (moduleInfo?.DesktopModule.ModuleName ?? "2sxc") == "2sxc";
         var blockIdentifier = BlockIdentifier(moduleInfo, isContent);
-        var modResult = new ModuleRecord<ModuleInfo>(Id: id, IsContent: isContent, BlockIdentifier: blockIdentifier)
+        var modResult = new Module<ModuleInfo>(Id: id, IsContent: isContent, BlockIdentifier: blockIdentifier)
         {
             Contents = moduleInfo,
         };

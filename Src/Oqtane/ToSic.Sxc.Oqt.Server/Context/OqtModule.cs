@@ -7,7 +7,6 @@ using ToSic.Eav.Context;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Context.Sys.Module;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared;
 
@@ -19,7 +18,7 @@ internal class OqtModule(
     IAppsCatalog appsCatalog,
     LazySvc<AppFinder> appFinderLazy,
     ISite site)
-    : Module<Module>($"{OqtConstants.OqtLogPrefix}.Cont",
+    : ModuleBaseOld<Module>($"{OqtConstants.OqtLogPrefix}.Cont",
         connect: [settingsHelper, moduleRepository, appsCatalog, appFinderLazy, site]),
         IModuleFactory
 {
@@ -112,4 +111,39 @@ internal class OqtModule(
 
     }
 
+}
+
+// OLD code - before 2026-10-19 it was used in dnn / Oqtane, now only oqtane
+// When Oqtane moves to separating state and factory, this will become obsolete
+// as the Oqtane Factory should also return the simple records.
+
+/// <summary>
+/// A base implementation of the block information wrapping the CMS specific object along with it.
+/// </summary>
+/// <typeparam name="T"></typeparam>
+[PrivateApi("this is just fyi")]
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public abstract class ModuleBaseOld<T>(string logName, object[]? connect = null) : ServiceBase(logName, connect: connect), IModule, IWrapper<T>
+    where T : class
+{
+    #region Constructors and DI
+
+    public T GetContents() => UnwrappedModule;
+    [PrivateApi] protected T UnwrappedModule = null!;
+
+    public void Init(T item)
+    {
+        UnwrappedModule = item;
+    }
+
+    #endregion
+
+    /// <inheritdoc />
+    public abstract int Id { get; }
+
+    /// <inheritdoc />
+    public abstract bool IsContent { get; }
+
+    /// <inheritdoc />
+    public abstract IBlockIdentifier? BlockIdentifier { get; }
 }
