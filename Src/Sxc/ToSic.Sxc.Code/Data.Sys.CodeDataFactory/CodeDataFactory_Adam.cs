@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Context;
+﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Context;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Sys;
@@ -32,15 +33,14 @@ partial class CodeDataFactory
         if (ExCtxOrNull is null)
             throw new($"Can't create App Context for {nameof(AdamManager)} in {nameof(ICodeDataFactory)} - no block, no App");
 
+        // Try to use the block context, as it would allow for more permission checks
         IContextOfApp contextOfApp = ExCtx.GetContextOfBlock();
         // TODO: @2dm - find out / document why this could even be null
         if (contextOfApp == null)
         {
             var app = ExCtx.GetApp()
                       ?? throw new("Can't create App Context for ADAM - no block, no App");
-            // #ReworkingResetApp - this one could use a generator
-            contextOfApp = contextOfAppLazy.Value;
-            contextOfApp.ResetApp(app);
+            contextOfApp = appCtxFactory.Value.Create(app.PureIdentity());
         }
 
         return adamManager.Value.Init(contextOfApp, CompatibilityLevel, this);

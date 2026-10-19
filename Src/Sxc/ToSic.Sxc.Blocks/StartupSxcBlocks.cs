@@ -46,7 +46,10 @@ public static class StartupSxcBlocks
 
 
         // Context stuff, which is explicitly scoped
-        services.TryAddTransient<IContextOfApp, ContextOfApp>();
+        services.TryAddTransient<IContextOfAppFactory, ContextOfApp>(); // new v22 WIP
+        //services.TryAddTransient<IContextOfApp, ContextOfApp>();
+        services.TryAddTransient<IContextOfBlockFactory, ContextOfBlock>(); // new v22 WIP
+
         services.TryAddTransient<ContextOfApp.Dependencies>();
         services.TryAddScoped<ISxcCurrentContextService, SxcCurrentContextService>();
         // must be the same instance, so it must get the original, scoped SxcContextResolver

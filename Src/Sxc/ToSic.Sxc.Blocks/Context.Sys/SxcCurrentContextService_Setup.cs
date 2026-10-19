@@ -9,41 +9,70 @@ namespace ToSic.Sxc.Context.Sys;
 
 partial class SxcCurrentContextService
 {
+    /// <summary>
+    /// Basic inject app.
+    /// </summary>
     public IContextOfApp SetApp(IAppIdentity appIdentity)
     {
         // #ReworkingResetApp - this one could use a generator
-        var appCtx = appCtxGenerator.New();
-        appCtx.ResetApp(appIdentity);
+        var appCtx = appCtxGenerator.New().Create(appIdentity);
         AppContextFromAppOrBlock = appCtx;
         return appCtx;
     }
 
+
+    #region Inject App using Name
+
+    // TODO: RENAME TO SetAppFromPathOrNull
     public IContextOfApp? SetAppOrNull(string? nameOrPath)
     {
         if (string.IsNullOrWhiteSpace(nameOrPath))
             return null;
         var zoneId = SiteContext.Site.ZoneId;
-        var appId = appIdResolverLazy.Value.GetAppIdFromPath(zoneId, nameOrPath!, false);
+        var appId = appIdResolverLazy.Value.GetAppIdFromAppPathOrName(zoneId, nameOrPath!, throwIfNotFound: false);
         return appId <= KnownAppsConstants.AppIdEmpty
             ? null
             : SetApp(new AppIdentity(zoneId, appId));
     }
 
-    #region Blocks
+    // TODO: RENAME TO SetAppFromPathOrGetExistingBlock
+    public IContextOfApp SetAppOrGetBlock(string nameOrPath)
+        => SetAppOrNull(nameOrPath) ?? this.BlockContextRequired();
+
+    // TODO: RENAME TO SetAppFromNameOrUrlParamsOrGetExistingBlock
+    public IContextOfApp AppNameRouteBlock(string? nameOrPath)
+    {
+        var ctx = SetAppOrNull(nameOrPath);
+        if (ctx != null)
+            return ctx;
+
+        var identity = appIdResolverLazy.Value.GetAppIdFromUrlParams();
+        if (identity != null)
+            return SetApp(identity);
+
+        return this.BlockContextOrNull()
+               ?? throw new($"Tried to auto detect app by name '{nameOrPath}', url params or block context, all failed.");
+    }
+
+
+    #endregion
+
+
+    #region Block Setup
 
     public void AttachBlock(IBlock block)
     {
-        _block = block;
-        AppContextFromAppOrBlock = _block?.Context;
+        _blockOrNull = block;
+        AppContextFromAppOrBlock = _blockOrNull?.Context;
     }
 
     #endregion
 
-    #region View
+    #region View Setup / Swap
 
     public IBlock SwapBlockView(IView newView)
     {
-        var blockSpecs = _block as BlockSpecs
+        var blockSpecs = _blockOrNull as BlockSpecs
                          ?? throw new NullReferenceException("Block is not attached, cannot swap view.");
 
         var newSpecs = blockSpecs with
@@ -51,13 +80,12 @@ partial class SxcCurrentContextService
             ViewOrNull = newView,
         };
 
-        // This call must be after set-view, since it needs the view to get the data-source
+        // This call must be after set-view, since it needs the view to get the underlying data-source
         newSpecs = newSpecs with
         {
             Data = bdsFactoryLazy.Value.GetContextDataSourceFromView(newSpecs, newSpecs.AppOrNull.TryGetAppLookUpEngineOrNull())
         };
-        _block = newSpecs;
-        return _block;
+        return _blockOrNull = newSpecs;
     }
 
     #endregion

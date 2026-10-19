@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Sxc.Web.Sys.Http;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Context.Sys;
 
@@ -9,19 +10,20 @@ namespace ToSic.Sxc.Context.Sys;
 /// It does not perform security checks ATM and maybe never will
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class AppIdResolver(IHttp http, AppFinder appFinder) : ServiceBase("Api.FindAp", connect: [http, appFinder])
+internal class AppIdResolver(LazySvc<IHttp> http, LazySvc<AppFinder> appFinder) : ServiceBase("Api.FindAp", connect: [http, appFinder])
 {
     /// <summary>
-    /// New implementation to replace previous
+    /// Try to find the AppId based on the apps path or name.
+    /// Optionally throw an exception if not found (as of 2026-10 this is not used).
     /// </summary>
     /// <returns></returns>
-    internal int GetAppIdFromPath(int zoneId, string appPath, bool required)
+    internal int GetAppIdFromAppPathOrName(int zoneId, string appPathOrName, bool throwIfNotFound)
     {
-        var l = Log.Fn<int>($"{zoneId}, {appPath}, {required}");
+        var l = Log.Fn<int>($"{zoneId}, {appPathOrName}, {throwIfNotFound}");
         // get app from AppName
-        var aid = appFinder/* _zoneRuntime.Init(zoneId, Log)*/.FindAppId(zoneId, appPath, true);
-        if (aid <= KnownAppsConstants.AppIdEmpty && required)
-            throw new($"App required but can't find App based on the name '{appPath}'");
+        var aid = appFinder.Value.FindAppId(zoneId, appPathOrName, alsoCheckFolderName: true);
+        if (aid <= KnownAppsConstants.AppIdEmpty && throwIfNotFound)
+            throw new($"App required but can't find App based on the name '{appPathOrName}'");
 
         return l.Return(aid, $"found app:{aid}");
     }
@@ -32,21 +34,23 @@ internal class AppIdResolver(IHttp http, AppFinder appFinder) : ServiceBase("Api
     /// It's a temporary solution, because normally we want the control flow to be more obvious
     /// </summary>
     /// <returns></returns>
-    internal IAppIdentity? GetAppIdFromRoute()
+    internal IAppIdentity? GetAppIdFromUrlParams()
     {
-        var allUrlKeyValues = http.QueryStringKeyValuePairs();
-        var ok1 = int.TryParse(allUrlKeyValues.FirstOrDefault(
-                x => x.Key.Equals(ContextConstants.ZoneIdKey, StringComparison.InvariantCultureIgnoreCase)).Value, 
-            out var zoneId);
-        var ok2 = int.TryParse(allUrlKeyValues.FirstOrDefault(
-                x => x.Key.Equals(ContextConstants.AppIdKey, StringComparison.InvariantCultureIgnoreCase)).Value, 
-            out var appId);
+        var l = Log.Fn<IAppIdentity?>();
+        var allUrlKeyValues = http.Value.QueryStringKeyValuePairs();
+        var zoneIdOk = int.TryParse(
+            allUrlKeyValues.FirstOrDefault(x => x.Key.EqualsInsensitive(ContextConstants.ZoneIdKey)).Value,
+            out var zoneId
+        );
+        var appIdOk = int.TryParse(
+            allUrlKeyValues.FirstOrDefault(x => x.Key.EqualsInsensitive(ContextConstants.AppIdKey)).Value,
+            out var appId
+        );
 
-        if (!ok1 || !ok2)
-            return null;
+        if (!zoneIdOk || !appIdOk)
+            return l.ReturnNull("either zoneId or appId not valid");
 
-        Log.A($"Params in URL detected - will use appId:{appId}, zoneId:{zoneId}");
-        return new AppIdentity(zoneId, appId);
+        return l.Return(new AppIdentity(zoneId, appId), $"Params in URL detected - will use appId:{appId}, zoneId:{zoneId}");
     }
 
 }

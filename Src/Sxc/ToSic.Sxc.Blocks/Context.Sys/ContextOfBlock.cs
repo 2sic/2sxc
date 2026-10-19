@@ -21,7 +21,7 @@ internal class ContextOfBlock(
     LazySvc<BlockPublishingSettingsService> pagePubSettings,
     IPageServiceShared pageServiceShared,
     ContextOfApp.Dependencies appServices)
-    : ContextOfApp(appServices, "Sxc.CtxBlk", connect: [pageServiceShared, pagePubSettings]), IContextOfBlock, IContextOfSiteOrMoreCloneable
+    : ContextOfApp(appServices, "Sxc.CtxBlk", connect: [pageServiceShared, pagePubSettings]), IContextOfBlock, IContextOfSiteOrMoreCloneable, IContextOfBlockFactory
 {
 
     #region Override AppIdentity based on module information
@@ -82,7 +82,7 @@ internal class ContextOfBlock(
                 Module = Module,
             }
             .LinkLog(parentLog);
-        newCtx.ResetApp(appIdentity);
+        newCtx.Create(appIdentity);
         return newCtx;
     }
 
@@ -91,4 +91,9 @@ internal class ContextOfBlock(
         {
             Module = module,
         };
+
+    public IContextOfBlock Update(IContextOfBlock contextOfBlock, IAppIdentity appIdentity)
+    {
+        return contextOfBlock.Clone(Log, appIdentity);
+    }
 }

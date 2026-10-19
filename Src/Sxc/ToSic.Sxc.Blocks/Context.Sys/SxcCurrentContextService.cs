@@ -22,13 +22,14 @@ namespace ToSic.Sxc.Context.Sys;
 internal partial class SxcCurrentContextService(
     LazySvc<AppIdResolver> appIdResolverLazy,
     Generator<IContextOfSite> siteCtxGenerator,
-    Generator<IContextOfApp> appCtxGenerator,
+    Generator<IContextOfAppFactory> appCtxGenerator,
+    LazySvc<IContextOfBlockFactory> blockCtxFactory,
     LazySvc<IFeaturesService> featuresService,
     LazySvc<IAppReaderFactory> appReaderFactory,
     LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
     LazySvc<IHttp> http)
     : ServiceBase("Sxc.CtxRes",
-        connect: [appIdResolverLazy, siteCtxGenerator, appCtxGenerator, featuresService, http, appReaderFactory, bdsFactoryLazy]),
+        connect: [appIdResolverLazy, siteCtxGenerator, appCtxGenerator, blockCtxFactory, featuresService, http, appReaderFactory, bdsFactoryLazy]),
         ISxcCurrentContextService
 {
     private const string CookieTemplate = "app-{0}-data-preview";
@@ -76,7 +77,5 @@ internal partial class SxcCurrentContextService(
 
 
 
-    public IBlock? BlockOrNull() => _block;
-    private IBlock? _block;
 
 }

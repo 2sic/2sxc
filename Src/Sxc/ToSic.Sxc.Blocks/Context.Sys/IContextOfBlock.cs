@@ -40,3 +40,8 @@ public interface IContextOfBlock: IContextOfApp
 
     IContextOfBlock ResetWip(ISite site, IPage page, IModule module);
 }
+
+public interface IContextOfBlockFactory
+{
+    IContextOfBlock Update(IContextOfBlock contextOfBlock, IAppIdentity appIdentity);
+}
