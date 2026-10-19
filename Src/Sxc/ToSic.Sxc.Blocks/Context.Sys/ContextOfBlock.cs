@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Eav.Context.Sys.Site;
 using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sxc.Sys.Render.PageContext;
 
@@ -22,7 +21,7 @@ internal class ContextOfBlock(
     LazySvc<BlockPublishingSettingsService> pagePubSettings,
     IPageServiceShared pageServiceShared,
     ContextOfApp.Dependencies appServices)
-    : ContextOfApp(appServices, "Sxc.CtxBlk", connect: [pageServiceShared, pagePubSettings]), IContextOfBlock, /*IContextOfSiteOrMoreCloneable,*/ IContextOfBlockFactory
+    : ContextOfApp(appServices, "Sxc.CtxBlk", connect: [pageServiceShared, pagePubSettings]), IContextOfBlock, IContextOfBlockFactory
 {
 
     #region Override AppIdentity based on module information
@@ -61,32 +60,18 @@ internal class ContextOfBlock(
             .GetResult()
             .Data;
 
-
-    ///// <inheritdoc />
-    ///// <remarks>
-    ///// Note: this allows a clone pretending to be a SiteContext
-    ///// but, it can also preserve the block information, for deeper security checks
-    ///// Code should be improved so the intent is clearer
-    ///// </remarks>
-    //IContextOfSite IContextOfSiteOrMoreCloneable.CloneFullContext(ISite site)
-    //    => new ContextOfBlock(Page, pagePubSettings, PageServiceShared, Services with { Site = site })
-    //        {
-    //            Module = Module,
-    //        };
-
-    //public IContextOfBlock Clone(IAppIdentity appIdentity)
-    //{
-    //    // #ReworkingResetApp - this one could use a generator
-    //    var newCtx = new ContextOfBlock(Page, pagePubSettings, PageServiceShared, Services)
-    //    {
-    //        Module = Module,
-    //    };
-    //    newCtx.ResetApp(appIdentity);
-    //    return newCtx;
-    //}
+    
+    public override IContextOfSite WithSwappedSite(ISite site)
+    {
+        // If it's a block context, we want to preserve the block information, so we return a ContextOfBlock
+        return new ContextOfBlock(Page, pagePubSettings, PageServiceShared, Services with { Site = site })
+            {
+                Module = Module,
+            };
+    }
 
 
-
+    #region Factory work
 
     public IContextOfBlock Create(ISite site, IPage page, IModule module) =>
         new ContextOfBlock(page, pagePubSettings, PageServiceShared, Services with { Site = site })
@@ -106,12 +91,6 @@ internal class ContextOfBlock(
         return newCtx;
     }
 
-    public override IContextOfSite WithSwappedSite(ISite site)
-    {
-        // If it's a block context, we want to preserve the block information, so we return a ContextOfBlock
-        return new ContextOfBlock(Page, pagePubSettings, PageServiceShared, Services with { Site = site })
-            {
-                Module = Module,
-            };
-    }
+    #endregion
+
 }
