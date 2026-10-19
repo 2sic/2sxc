@@ -17,7 +17,8 @@ namespace ToSic.Sxc.Context.Sys;
 [PrivateApi("Internal stuff, not for public use")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class ContextOfBlockFactory(LazySvc<BlockPublishingSettingsService> pagePubSettings, IPageServiceShared pageServiceShared, IContextOfAppFactory appCtxFactory)
-    : ServiceBase("Sxc.CtxBlk", connect: [pageServiceShared, pagePubSettings, appCtxFactory]), IContextOfBlockFactory
+    : ServiceBase("Sxc.CtxBlk", connect: [pageServiceShared, pagePubSettings, appCtxFactory]),
+        IContextOfBlockFactory
 {
 
     #region Factory work

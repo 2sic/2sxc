@@ -15,6 +15,9 @@ internal record ContextOfBlock(
     IPageServiceShared PageServiceShared
 ) : ContextOfApp(Site, User, AppReaderOrNull), IContextOfBlock
 {
+    /// <summary>
+    /// Helper to lazy-retrieve publishing state if ever needed.
+    /// </summary>
     internal required LazySvc<BlockPublishingSettingsService> PagePubSettings { get; init; }
 
     /// <inheritdoc />
