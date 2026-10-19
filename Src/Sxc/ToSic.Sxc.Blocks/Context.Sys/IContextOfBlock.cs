@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Context;
+﻿using ToSic.Eav.Context;
 using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sxc.Sys.Render.PageContext;
 
@@ -30,11 +29,4 @@ public interface IContextOfBlock: IContextOfApp
     /// WIP
     /// </summary>
     IPageServiceShared PageServiceShared { get; }
-}
-
-public interface IContextOfBlockFactory
-{
-    IContextOfBlock Update(IContextOfBlock contextOfBlock, IAppIdentity appIdentity);
-    IContextOfBlock Create(ISite site, IPage page, IModule module);
-    //IContextOfSite Update(IContextOfSite contextOfSite, ISite site);
 }
