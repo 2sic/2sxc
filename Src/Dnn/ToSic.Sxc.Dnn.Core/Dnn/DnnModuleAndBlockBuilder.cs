@@ -9,12 +9,12 @@ using ToSic.Sys.Wrappers;
 namespace ToSic.Sxc.Dnn;
 
 internal class DnnModuleAndBlockBuilder(
-    Generator<IContextOfBlock> contextGenerator,
+    LazySvc<IContextOfBlockFactory> blockCtxFactory,
     DnnSiteFactory siteFactory,
     DnnPageFactory pageFactory,
     DnnModuleFactory moduleFactory,
     Generator<BlockOfModule> blockGenerator)
-    : ModuleAndBlockBuilder(blockGenerator, DnnConstants.LogName, connect: [contextGenerator, siteFactory, pageFactory, moduleFactory])
+    : ModuleAndBlockBuilder(blockGenerator, DnnConstants.LogName, connect: [blockCtxFactory, siteFactory, pageFactory, moduleFactory])
 {
     private ILog ParentLog => (Log as Log)?.Parent ?? Log;
 
@@ -60,10 +60,9 @@ internal class DnnModuleAndBlockBuilder(
 
         l.A("Will init module");
         var module = moduleFactory.Get(dnnModule);
-        var context = contextGenerator.New();
 
         // Assemble the final context
-        var contextWithModuleAndSite = context.ResetWip(newSite, page, module);
+        var contextWithModuleAndSite = blockCtxFactory.Value.Create(newSite, page, module);
         return l.ReturnAsOk(contextWithModuleAndSite);
     }
 }

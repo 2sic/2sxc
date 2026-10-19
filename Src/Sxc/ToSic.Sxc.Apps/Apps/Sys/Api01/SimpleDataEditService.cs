@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.Context;
+using ToSic.Eav.Context.Sys.Site;
 using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.Data.Build.Sys;
 using ToSic.Eav.Data.Sys;
@@ -31,14 +32,14 @@ namespace ToSic.Sxc.Apps.Sys.Api01;
 public partial class SimpleDataEditService(
     DataAssembler dataAssembler,
     IZoneMapper zoneMapper,
-    Generator<IContextOfSite> ctxForPermissionCheck,
+    Generator<IContextOfSite> siteCtxForPermissionCheck,
     AppWorkContextService appWorkCtxSvc,
     AppWorkChain<WorkEntitySave> entSave,
     AppWorkChain<WorkEntityUpdate> entUpdate,
     AppWorkChain<WorkEntityDelete> entDelete,
     LazySvc<IValueConverter> valueConverter,
     Generator<AppPermissionCheck> appPermissionCheckGenerator
-) : ServiceWithSetup<SimpleDataEditService.Options>("Dta.Simple", connect: [appWorkCtxSvc, entSave, entUpdate, entDelete, zoneMapper, dataAssembler, ctxForPermissionCheck, appPermissionCheckGenerator, valueConverter])
+) : ServiceWithSetup<SimpleDataEditService.Options>("Dta.Simple", connect: [appWorkCtxSvc, entSave, entUpdate, entDelete, zoneMapper, dataAssembler, siteCtxForPermissionCheck, appPermissionCheckGenerator, valueConverter])
 {
     /// <summary>
     /// 
@@ -55,11 +56,11 @@ public partial class SimpleDataEditService(
         ??= appWorkCtxSvc.ContextNew(new AppIdentity(MyOptions.ZoneId, MyOptions.AppId));
 
     private IContextOfSite CtxForPermissionCheck => field
-        ??= ctxForPermissionCheck.New()
+        ??= siteCtxForPermissionCheck.New()
             .Map(tempCtx => tempCtx.Site.ZoneId == MyOptions.ZoneId
                 ? tempCtx
                 // when zoneId is not that same as in current context, we need to set right site for provided zoneId
-                : tempCtx.CloneFullContext(Log, zoneMapper.SiteOfZone(MyOptions.ZoneId))
+                : new ContextOfSite(new(zoneMapper.SiteOfZone(MyOptions.ZoneId), tempCtx.User))
             );
 
     private string DefaultLanguageCode => field ??= GetDefaultLanguage();

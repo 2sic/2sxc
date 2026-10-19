@@ -30,18 +30,11 @@ public interface IContextOfBlock: IContextOfApp
     /// WIP
     /// </summary>
     IPageServiceShared PageServiceShared { get; }
-
-    /// <summary>
-    /// Create a clone of the context, usually for then making a slightly different context
-    /// </summary>
-    /// <returns></returns>
-    IContextOfBlock Clone(ILog newParentLog, IAppIdentity appIdentity);
-
-
-    IContextOfBlock ResetWip(ISite site, IPage page, IModule module);
 }
 
 public interface IContextOfBlockFactory
 {
     IContextOfBlock Update(IContextOfBlock contextOfBlock, IAppIdentity appIdentity);
+    IContextOfBlock Create(ISite site, IPage page, IModule module);
+    //IContextOfSite Update(IContextOfSite contextOfSite, ISite site);
 }

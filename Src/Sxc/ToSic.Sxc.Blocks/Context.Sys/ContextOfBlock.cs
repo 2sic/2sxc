@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
+using ToSic.Eav.Context.Sys.Site;
 using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sxc.Sys.Render.PageContext;
 
@@ -21,7 +22,7 @@ internal class ContextOfBlock(
     LazySvc<BlockPublishingSettingsService> pagePubSettings,
     IPageServiceShared pageServiceShared,
     ContextOfApp.Dependencies appServices)
-    : ContextOfApp(appServices, "Sxc.CtxBlk", connect: [pageServiceShared, pagePubSettings]), IContextOfBlock, IContextOfSiteOrMoreCloneable, IContextOfBlockFactory
+    : ContextOfApp(appServices, "Sxc.CtxBlk", connect: [pageServiceShared, pagePubSettings]), IContextOfBlock, /*IContextOfSiteOrMoreCloneable,*/ IContextOfBlockFactory
 {
 
     #region Override AppIdentity based on module information
@@ -61,32 +62,33 @@ internal class ContextOfBlock(
             .Data;
 
 
-    /// <inheritdoc />
-    /// <remarks>
-    /// Note: this allows a clone pretending to be a SiteContext
-    /// but, it can also preserve the block information, for deeper security checks
-    /// Code should be improved so the intent is clearer
-    /// </remarks>
-    IContextOfSite IContextOfSiteOrMoreCloneable.CloneFullContext(ILog parentLog, ISite site)
-        => new ContextOfBlock(Page, pagePubSettings, PageServiceShared, Services with { Site = site })
-            {
-                Module = Module,
-            }
-            .LinkLog(parentLog);
+    ///// <inheritdoc />
+    ///// <remarks>
+    ///// Note: this allows a clone pretending to be a SiteContext
+    ///// but, it can also preserve the block information, for deeper security checks
+    ///// Code should be improved so the intent is clearer
+    ///// </remarks>
+    //IContextOfSite IContextOfSiteOrMoreCloneable.CloneFullContext(ISite site)
+    //    => new ContextOfBlock(Page, pagePubSettings, PageServiceShared, Services with { Site = site })
+    //        {
+    //            Module = Module,
+    //        };
 
-    public IContextOfBlock Clone(ILog parentLog, IAppIdentity appIdentity)
-    {
-        // #ReworkingResetApp - this one could use a generator
-        var newCtx = new ContextOfBlock(Page, pagePubSettings, PageServiceShared, Services)
-            {
-                Module = Module,
-            }
-            .LinkLog(parentLog);
-        newCtx.Create(appIdentity);
-        return newCtx;
-    }
+    //public IContextOfBlock Clone(IAppIdentity appIdentity)
+    //{
+    //    // #ReworkingResetApp - this one could use a generator
+    //    var newCtx = new ContextOfBlock(Page, pagePubSettings, PageServiceShared, Services)
+    //    {
+    //        Module = Module,
+    //    };
+    //    newCtx.ResetApp(appIdentity);
+    //    return newCtx;
+    //}
 
-    public IContextOfBlock ResetWip(ISite site, IPage page, IModule module) =>
+
+
+
+    public IContextOfBlock Create(ISite site, IPage page, IModule module) =>
         new ContextOfBlock(page, pagePubSettings, PageServiceShared, Services with { Site = site })
         {
             Module = module,
@@ -94,6 +96,22 @@ internal class ContextOfBlock(
 
     public IContextOfBlock Update(IContextOfBlock contextOfBlock, IAppIdentity appIdentity)
     {
-        return contextOfBlock.Clone(Log, appIdentity);
+        //return contextOfBlock.Clone(appIdentity);
+        // #ReworkingResetApp - this one could use a generator
+        var newCtx = new ContextOfBlock(contextOfBlock.Page, pagePubSettings, contextOfBlock.PageServiceShared, Services)
+        {
+            Module = contextOfBlock.Module,
+        };
+        newCtx.ResetApp(appIdentity);
+        return newCtx;
+    }
+
+    public override IContextOfSite WithSwappedSite(ISite site)
+    {
+        // If it's a block context, we want to preserve the block information, so we return a ContextOfBlock
+        return new ContextOfBlock(Page, pagePubSettings, PageServiceShared, Services with { Site = site })
+            {
+                Module = Module,
+            };
     }
 }
