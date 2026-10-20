@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.Adam.Sys.Manager;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Adam.Sys.Work;
 
@@ -13,19 +13,20 @@ public abstract class AdamWorkBase(AdamWorkBase.Dependencies services, string lo
 
     public record Dependencies(
         LazySvc<AdamContext> AdamContext,
-        ISxcAppCurrentContextService CtxService,
+        IContextOfAppFactory AppCtxFactory,
         AdamGenericHelper AdamGenericHelper)
-        : DependenciesBase(connect: [AdamContext, CtxService, AdamGenericHelper]);
+        : DependenciesBase(connect: [AdamContext, AppCtxFactory, AdamGenericHelper]);
 
     public void Setup(AdamWorkOptions options)
     {
-        var context = options.AppId > 0
-            ? Services.CtxService.GetExistingAppOrSet(options.AppId)
-            // 2026-10-20 2dm: Believe that the AppId should always have a valid value, so no magic find-it-yourself
-            // Turned this off for now, keep till early 2027 then clean up.
-            // If something does explode, try to ensure that the calling path sets a proper AppId
-            //: Services.CtxService.SetAppFromNameOrUrlParamsOrGetExistingBlock(null);
-            : throw new ArgumentException(@"Invalid AppId, triggered by refactoring 2026-10-20, should never happen; pls report to the iJungleboy", nameof(options.AppId));
+        var context = Services.AppCtxFactory.Create(options.AppId);
+
+        // 2026-10-20 2dm: Believe that the AppId should always have a valid value, so no magic find-it-yourself
+        // Turned this off for now, keep till early 2027 then clean up.
+        // If something does explode, try to ensure that the calling path sets a proper AppId _before_ calling this
+        //var context = options.AppId > 0
+        //    ? Services.CtxService.GetExistingAppOrSet(options.AppId)
+        //    : Services.CtxService.SetAppFromNameOrUrlParamsOrGetExistingBlock(null);
 
         var o = options;
         var l = Log.Fn($"app: {context.AppReaderRequired.Show()}, type: {o.ContentType}, itemGuid: {o.ItemGuid}, field: {o.Field}, portalRoot: {o.UsePortalRoot}");

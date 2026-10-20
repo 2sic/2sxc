@@ -2,7 +2,6 @@
 using ToSic.Eav.Metadata;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Sys.Manager;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.DataSources;
 
@@ -17,13 +16,21 @@ public class AdamDataSourceProvider<TFolderId, TFileId>(AdamDataSourceProvider<T
 {
     private IContextOfApp _context = null!;
 
-    public record Dependencies(LazySvc<AdamContext> AdamContext, ISxcAppCurrentContextService CtxService)
-        : DependenciesBase(connect: [AdamContext, CtxService]);
+    public record Dependencies(LazySvc<AdamContext> AdamContext, IContextOfAppFactory AppCtxFactory)
+        : DependenciesBase(connect: [AdamContext, AppCtxFactory]);
 
     public AdamDataSourceProvider<TFolderId, TFileId> Configure(NoParamOrder npo = default, int appId = default)
     {
         var l = Log.Fn<AdamDataSourceProvider<TFolderId, TFileId>>($"a:{appId}");
-        _context = Services.CtxService.GetExistingAppOrSet(appId);
+
+        // 2026-10-20 2dm: Believe that the AppId should always have a valid value, so no magic find-it-yourself
+        // Turned this off for now, keep till early 2027 then clean up.
+        // If something does explode, try to ensure that the calling path sets a proper AppId _before_ calling this
+        //_context = appId > 0
+        //    ? Services.CtxService.GetExistingAppOrSet(appId)
+        //    : Services.CtxService.AppNameRouteBlock(null);
+
+        _context = Services.AppCtxFactory.Create(appId);
         return l.Return(this);
     }
 

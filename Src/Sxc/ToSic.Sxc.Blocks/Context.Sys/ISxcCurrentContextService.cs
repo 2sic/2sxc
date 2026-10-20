@@ -1,6 +1,7 @@
-﻿using ToSic.Sxc.Blocks.Sys;
+﻿using ToSic.Eav.Context;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
-using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sys.Users.Permissions;
 
 namespace ToSic.Sxc.Context.Sys;
 
@@ -9,8 +10,39 @@ namespace ToSic.Sxc.Context.Sys;
 /// Note that it's important to always make this **Scoped**, not transient, as there is some re-use after initialization
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface ISxcCurrentContextService: ICurrentContextService, ISxcAppCurrentContextService
+public interface ISxcCurrentContextService: ICurrentContextUserPermissionsService
 {
+    #region previously ICurrentContextService
+
+    /// <summary>
+    /// This is the most basic kind of context. ATM you could also inject it directly,
+    /// but we want to introduce the capability of giving a static site or something
+    /// without having to write code implementing IContextOfSite
+    /// </summary>
+    /// <value></value>
+    IContextOfSite SiteContext { get; }
+
+    IContextOfApp? AppContextOrNull();
+
+    #endregion
+
+    #region Preiously ISxcAppCurrentContextService
+
+    /// <summary>
+    /// Return the block if known, or an app context if not
+    /// </summary>
+    /// <param name="appId"></param>
+    /// <returns></returns>
+    IContextOfApp GetExistingAppOrSet(int appId);
+
+    IContextOfApp SetAppFromPathOrGetExistingBlock(string nameOrPath);
+
+    IContextOfApp? SetAppFromPathOrNull(string? nameOrPath);
+
+    IContextOfApp SetAppFromNameOrUrlParamsOrGetExistingBlock(string? nameOrPath);
+
+    #endregion
+
     /// <summary>
     /// Attach a prepared block to the context.
     /// </summary>

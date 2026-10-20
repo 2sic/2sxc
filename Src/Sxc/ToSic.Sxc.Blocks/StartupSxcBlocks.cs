@@ -40,25 +40,18 @@ public static class StartupSxcBlocks
 
         services.TryAddTransient<IAppDataConfigProvider, SxcAppDataConfigProvider>(); // new v17
 
-        // Context stuff in general
-        //services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
-
-
-
         // Context stuff, which is explicitly scoped
         services.TryAddTransient<IContextOfAppFactory, ContextOfAppFactory>(); // new v22 WIP
-        //services.TryAddTransient<IContextOfApp, ContextOfApp>();
         services.TryAddTransient<IContextOfBlockFactory, ContextOfBlockFactory>(); // new v22 WIP
 
         services.TryAddTransient<ContextOfAppFactory.Dependencies>();
+        
+        // v22.01 2dm 2026-10-20 - only one service left, as we're trying to clean state sharing...
         services.TryAddScoped<ISxcCurrentContextService, SxcCurrentContextService>();
-        // must be the same instance, so it must get the original, scoped SxcContextResolver
-        services.TryAddTransient<ISxcAppCurrentContextService>(sp => sp.GetRequiredService<ISxcCurrentContextService>());
-
-
-        // New v15.04 WIP
-        services.TryAddScoped<ICurrentContextService>(x => x.GetRequiredService<ISxcCurrentContextService>());
         services.TryAddScoped<ICurrentContextUserPermissionsService>(x => x.GetRequiredService<ISxcCurrentContextService>());
+        // must be the same instance, so it must get the original, scoped SxcContextResolver
+        //services.TryAddTransient<ISxcAppCurrentContextService>(sp => sp.GetRequiredService<ISxcCurrentContextService>());
+        //services.TryAddScoped<ICurrentContextService>(x => x.GetRequiredService<ISxcCurrentContextService>());
         services.TryAddScoped<AppIdResolver>();
 
         // Integration stuff - must be implemented by each platform

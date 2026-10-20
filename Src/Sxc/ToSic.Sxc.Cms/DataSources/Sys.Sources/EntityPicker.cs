@@ -2,11 +2,11 @@
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.Apps.Sys.Work;
+using ToSic.Eav.Context;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.DataSource.Sys.Streams;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Users;
 using static ToSic.Eav.DataSource.DataSourceConstants;
@@ -33,14 +33,13 @@ namespace ToSic.Sxc.DataSources.Sys.Sources;
 // ReSharper disable once UnusedMember.Global
 public class EntityPicker(
     AppWorkQuick<WorkEntities> workEntities,
-    ICurrentContextService ctxService,
+    IContextOfAppFactory appCtxFactory,
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions,
     Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> typePermissions,
     IUser user,
     IAppReaderFactory appReaders,
     DataSourceBase.Dependencies services)
-    : DataSourceBase(services, "Api.EntPck",
-        connect: [workEntities, appPermissions, typePermissions, ctxService, appReaders])
+    : DataSourceBase(services, "Api.EntPck", connect: [workEntities, appCtxFactory, appPermissions, typePermissions, appReaders])
 {
     #region Configuration-properties
 
@@ -110,12 +109,7 @@ public class EntityPicker(
 
         // Get the context - must be pre-set by the caller
 
-        var ctxForPermissions = ctxService.AppContextOrNull();
-        if (ctxForPermissions == null)
-        {
-            l.E("No App context");
-            return l.Return(Error.Create(title: "No App context", message: "No context found, cannot continue"), "no context");
-        }
+        var ctxForPermissions = appCtxFactory.Create(this.PureIdentity());
 
         // Case 1: No Type Names - return all entities in the Content-Scope
         if (TypeNames.IsEmptyOrWs())
