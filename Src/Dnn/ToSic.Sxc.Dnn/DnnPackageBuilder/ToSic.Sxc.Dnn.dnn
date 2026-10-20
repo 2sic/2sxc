@@ -332,24 +332,6 @@
               <!-- v2.1.1.0 -->
               <version>2.1.1.18157</version>
             </assembly>
-            <!-- Microsoft.Extensions.Configuration transitive dependency -->
-            <assembly>
-              <name>Microsoft.Extensions.Configuration.Abstractions.dll</name>
-              <!-- v2.1.1.0 -->
-              <version>2.1.1.18157</version>
-            </assembly>
-            <!-- Microsoft.Extensions.Logging transitive dependency -->
-            <assembly>
-              <name>Microsoft.Extensions.Configuration.Binder.dll</name>
-              <!-- v2.1.1.0 -->
-              <version>2.1.1.18157</version>
-            </assembly>
-            <!-- Microsoft.Extensions.Configuration.Binder transitive dependency -->
-            <assembly>
-              <name>Microsoft.Extensions.Configuration.dll</name>
-              <!-- v2.1.1.0 -->
-              <version>2.1.1.18157</version>
-            </assembly>
             <!-- Microsoft.Extensions.Logging transitive dependency -->
             <assembly>
               <name>Microsoft.Extensions.Logging.Abstractions.dll</name>
@@ -380,15 +362,6 @@
               <name>Remotion.Linq.dll</name>
               <!-- v2.2.0.0 -->
               <version>2.2.0.30000</version>
-            </assembly>
-            <!-- Microsoft.Extensions.Logging.Abstractions transitive dependency -->
-            <!-- System.Memory transitive dependency -->
-            <!-- System.Text.Json transitive dependency -->
-            <!-- System.Text.Encodings.Web transitive dependency -->
-            <assembly>
-              <name>System.Buffers.dll</name>
-              <!-- v4.0.4.0 -->
-              <version>4.600.24.56208</version>
             </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
