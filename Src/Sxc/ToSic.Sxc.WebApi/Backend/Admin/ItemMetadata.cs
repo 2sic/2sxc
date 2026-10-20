@@ -49,9 +49,7 @@ public class ItemMetadata : CustomDataSource
             return _result;
 
         _ = Refresh; // Ensure refresh participates in configuration/cache identity.
-        // Items use the dedicated tolerant conversion below. Avoid converting them a second time
-        // here, since a conversion error must not also break the independent For/Recommendations streams.
-        var result = metadata.Value.Get(AppId, TargetType, KeyType, Key, ContentType, includeItems: false);
+        var result = metadata.Value.Get(AppId, TargetType, KeyType, Key, ContentType);
         return _result = new MetadataListDto
         {
             For = result.For,
