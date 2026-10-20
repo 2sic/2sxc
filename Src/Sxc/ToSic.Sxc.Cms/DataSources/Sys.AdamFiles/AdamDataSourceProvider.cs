@@ -12,15 +12,13 @@ namespace ToSic.Sxc.DataSources;
 /// Must be overriden in each platform.
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSourceProvider<TFolderId, TFileId>.Dependencies>
+public class AdamDataSourceProvider<TFolderId, TFileId>(AdamDataSourceProvider<TFolderId, TFileId>.Dependencies services)
+    : ServiceBase<AdamDataSourceProvider<TFolderId, TFileId>.Dependencies>(services, $"{SxcLogName}.AdamDs")
 {
     private IContextOfApp _context = null!;
 
     public record Dependencies(LazySvc<AdamContext> AdamContext, ISxcAppCurrentContextService CtxService)
         : DependenciesBase(connect: [AdamContext, CtxService]);
-
-    public AdamDataSourceProvider(Dependencies services) : base(services, $"{SxcLogName}.AdamDs")
-    { }
 
     public AdamDataSourceProvider<TFolderId, TFileId> Configure(
         NoParamOrder npo = default,
@@ -35,17 +33,8 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
         _context = appId > 0
             ? Services.CtxService.GetExistingAppOrSet(appId)
             : Services.CtxService.AppNameRouteBlock(null);
-        _entityIds = entityIds;
-        _entityGuids = entityGuids;
-        _fields = fields;
-        _filter = filter;
         return l.Return(this);
     }
-
-    private string? _entityIds;
-    private string? _entityGuids;
-    private string? _fields;
-    private string? _filter;
 
 
     public Func<IEntity, IEnumerable<AdamItemDataRaw>> GetInternal()
