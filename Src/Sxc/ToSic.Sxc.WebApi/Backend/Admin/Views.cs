@@ -48,7 +48,7 @@ public class ViewUsage : CustomDataSource
         => usage.Value.ViewUsage(
                 AppId,
                 ViewGuid,
-                (views, blocks) => provider.Build(views, blocks, context.GetExistingAppOrSet(AppId).Site.Id))
+                (views, blocks) => provider.Build(views, blocks, context.ShareAppStateOptimized(AppId).Site.Id))
             .Select(view => new ViewUsageRaw(view));
 
     [ContentType(Name = "ViewUsage", Guid = "0a095e44-7f00-4d36-8425-274c7ee7277a", Scope = "System")]

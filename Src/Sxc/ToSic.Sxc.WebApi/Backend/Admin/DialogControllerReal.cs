@@ -22,7 +22,7 @@ public class DialogControllerReal(
             appId = KnownAppsConstants.AppIdEmpty;
 
         var appContext = appId != KnownAppsConstants.AppIdEmpty
-            ? ctxService.GetExistingAppOrSet(appId)
+            ? ctxService.ShareAppStateOptimized(appId)
             : null;
 
         // if we have an appid (we don't have it in an install-new-apps-scenario) check permissions

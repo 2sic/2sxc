@@ -26,7 +26,7 @@ public class HyperlinkBackend(
             if (string.IsNullOrEmpty(hyperlink))
                 return new() { Value = hyperlink };
 
-            var context = ctxService.GetExistingAppOrSet(appId);
+            var context = ctxService.ShareAppStateOptimized(appId);
             // different security checks depending on the link-type
             var lookupPage = hyperlink.Trim().StartsWith(ValueConverterBase.PrefixPage, StringComparison.OrdinalIgnoreCase);
 

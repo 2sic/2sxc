@@ -31,7 +31,7 @@ public class EditSaveBackend(
 
         // The context should be from the block if there is one, because it affects saving/publishing
         // Basically it can result in things being saved draft or titles being updated
-        var context = ctxService.GetExistingAppOrSet(appId);
+        var context = ctxService.ShareAppStateOptimized(appId);
 
 
         // perform some basic validation checks

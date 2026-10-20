@@ -42,7 +42,7 @@ public class EditLoadBackend(
     {
         var l = Log.Fn<EditLoadDto>($"load many a#{appId}, items⋮{items.Count}");
 
-        var appContext = ctxService.GetExistingAppOrSet(appId);
+        var appContext = ctxService.ShareAppStateOptimized(appId);
 
         // Note 2026-02-26 2dm - changed this to use from context, should be identical, but maybe it's not? keep an eye on this till 2026-Q2
         var appReader = appContext.AppReaderRequired;

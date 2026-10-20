@@ -33,7 +33,7 @@ public interface ISxcCurrentContextService: ICurrentContextUserPermissionsServic
     /// </summary>
     /// <param name="appId"></param>
     /// <returns></returns>
-    IContextOfApp GetExistingAppOrSet(int appId);
+    IContextOfApp ShareAppStateOptimized(int appId);
 
     // 2026-10-20 2dm after refactoring doesn't seem needed any more
     //IContextOfApp SetAppFromPathOrGetExistingBlock(string nameOrPath);

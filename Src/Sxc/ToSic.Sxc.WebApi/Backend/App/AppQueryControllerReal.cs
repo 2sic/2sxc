@@ -41,7 +41,7 @@ public class AppQueryControllerReal(
     {
         var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
         var appCtx = appId != null
-            ? ctxService.GetExistingAppOrSet(appId.Value)
+            ? ctxService.ShareAppStateOptimized(appId.Value)
             : ctxService.BlockContextRequired();
 
         // If the appId wasn't specified or == to the Block-AppId, then also include block info to enable more data-sources like CmsBlock

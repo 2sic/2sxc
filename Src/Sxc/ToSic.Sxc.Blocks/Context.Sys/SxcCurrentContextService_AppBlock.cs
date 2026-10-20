@@ -35,7 +35,7 @@ partial class SxcCurrentContextService
     public IContextOfApp? AppContextOrNull() => AppContextFromAppOrBlock;
 
 
-    public IContextOfApp GetExistingAppOrSet(int appId)
+    public IContextOfApp ShareAppStateOptimized(int appId)
     {
         var l = Log.Fn<IContextOfApp>($"a#{appId}");
         // Get the current block context - but for clarity, get the block first, as we'll update it later
