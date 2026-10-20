@@ -44,7 +44,8 @@ internal static partial class OqtRegisterServices
         services.TryAddTransient<IEnvironmentPermission, OqtEnvironmentPermission>();
 
         // Import / Export
-        services.TryAddTransient<XmlExporter, OqtXmlExporter>();
+        //services.TryAddTransient<XmlExporter, OqtXmlExporter>();
+        services.TryAddTransient<IXmlExporterIntegration, OqtXmlExporterIntegration>(); // new v22
         services.TryAddTransient<IImportExportEnvironment, OqtImportExportEnvironment>();
 
         return services;

@@ -71,7 +71,8 @@ internal static class StartUpDnnCore
 
         services.TryAddTransient<IValueConverter, DnnValueConverter>();
 
-        services.TryAddTransient<XmlExporter, DnnXmlExporter>();
+        //services.TryAddTransient<XmlExporter, DnnXmlExporter>();
+        services.TryAddTransient<IXmlExporterIntegration, DnnXmlExporterIntegration>();  // new v22
         services.TryAddTransient<IImportExportEnvironment, DnnImportExportEnvironment>();
 
         services.TryAddTransient<IZoneMapper, DnnZoneMapper>();
