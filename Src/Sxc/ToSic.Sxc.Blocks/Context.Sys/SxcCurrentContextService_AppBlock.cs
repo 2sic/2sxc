@@ -35,6 +35,7 @@ partial class SxcCurrentContextService
     public IContextOfApp? AppContextOrNull() => AppContextFromAppOrBlock;
 
 
+    /// <inheritdoc/>
     public IContextOfApp ShareAppStateOptimized(int appId)
     {
         var l = Log.Fn<IContextOfApp>($"a#{appId}");
