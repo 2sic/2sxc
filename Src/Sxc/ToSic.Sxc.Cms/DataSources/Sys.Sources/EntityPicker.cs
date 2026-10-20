@@ -28,10 +28,19 @@ namespace ToSic.Sxc.DataSources.Sys.Sources;
     DynamicOut = true,
     // ConfigurationType = "not yet defined", // ATM we don't expect a configuration
     HelpLink = "https://go.2sxc.org/todo")]
-
 [ShowApiWhenReleased(ShowApiMode.Never)]
+[method: PrivateApi]
 // ReSharper disable once UnusedMember.Global
-public class EntityPicker : DataSourceBase
+public class EntityPicker(
+    AppWorkQuick<WorkEntities> workEntities,
+    ICurrentContextService ctxService,
+    Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions,
+    Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> typePermissions,
+    IUser user,
+    IAppReaderFactory appReaders,
+    DataSourceBase.Dependencies services)
+    : DataSourceBase(services, "Api.EntPck",
+        connect: [workEntities, appPermissions, typePermissions, ctxService, appReaders])
 {
     #region Configuration-properties
 
@@ -52,37 +61,6 @@ public class EntityPicker : DataSourceBase
 
     #endregion
 
-    /// <inheritdoc />
-    /// <summary>
-    /// Constructs a new EntityTypeFilter
-    /// </summary>
-    [PrivateApi]
-    public EntityPicker(
-        AppWorkQuick<WorkEntities> workEntities,
-        ICurrentContextService ctxService,
-        Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions,
-        Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> typePermissions,
-        IUser user,
-        IAppReaderFactory appReaders,
-        Dependencies services
-    ) : base(services, "Api.EntPck", connect: [workEntities, appPermissions, typePermissions, ctxService, appReaders])
-    {
-        _workEntities = workEntities;
-        _ctxService = ctxService;
-        _appPermissions = appPermissions;
-        _typePermissions = typePermissions;
-        _user = user;
-        _appReaders = appReaders;
-        ProvideOut(GetList);
-    }
-
-    private readonly AppWorkQuick<WorkEntities> _workEntities;
-    private readonly ICurrentContextService _ctxService;
-    private readonly IUser _user;
-    private readonly IAppReaderFactory _appReaders;
-    private readonly Generator<MultiPermissionsApp, MultiPermissionsApp.Options> _appPermissions;
-    private readonly Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> _typePermissions;
-
     #region Dynamic Out
 
     /// <summary>
@@ -92,6 +70,10 @@ public class EntityPicker : DataSourceBase
 
     private IReadOnlyDictionary<string, IDataStream> GenerateOut()
     {
+        // Special: put ProvideOut here, so we don't need a constructor
+        // it's usually in the constructor though.
+        ProvideOut(GetList);
+
         // 0. If no names specified, then out is same as base out
         if (TypeNames.IsEmptyOrWs())
             return base.Out;
@@ -103,10 +85,12 @@ public class EntityPicker : DataSourceBase
 
         // 1. Create a new StreamDictionary with the Default
         var outList = new StreamDictionary(this, Services.CacheService);
-        outList.Add(StreamDefaultName, base.Out[StreamDefaultName]);
+        var defaultStream = base.Out[StreamDefaultName];
+        outList.Add(StreamDefaultName, defaultStream);
 
         // 2. Generate additional streams based on the content-types requested
-        var list = base.Out[StreamDefaultName].List;
+        // basically just split the default stream into multiple streams, one for each content-type
+        var list = defaultStream.List;
         foreach (var contentType in typesWithoutDefault)
         {
             var name = contentType.Name;
@@ -126,7 +110,7 @@ public class EntityPicker : DataSourceBase
 
         // Get the context - must be pre-set by the caller
 
-        var ctxForPermissions = _ctxService.AppContextOrNull();
+        var ctxForPermissions = ctxService.AppContextOrNull();
         if (ctxForPermissions == null)
         {
             l.E("No App context");
@@ -137,7 +121,7 @@ public class EntityPicker : DataSourceBase
         if (TypeNames.IsEmptyOrWs())
         {
             // App permission checker
-            var permCheckApp = _appPermissions.New(new() { SiteContext = ctxForPermissions, App = this.PureIdentity() });
+            var permCheckApp = appPermissions.New(new() { SiteContext = ctxForPermissions, App = this.PureIdentity() });
 
             // First do security check with no-type name
             if (!permCheckApp.EnsureAll(GrantSets.ReadSomething, out _))
@@ -146,8 +130,8 @@ public class EntityPicker : DataSourceBase
             // Check if we provide drafts as well
             var withDrafts = permCheckApp.EnsureAny(GrantSets.ReadDraft);
 
-            var entitiesSvc = _workEntities.New(this, showDrafts: withDrafts);
-            var entities = entitiesSvc.OnlyContent(withConfiguration: _user.IsSystemAdmin).ToList();
+            var entitiesSvc = workEntities.New(this, showDrafts: withDrafts);
+            var entities = entitiesSvc.OnlyContent(withConfiguration: user.IsSystemAdmin).ToList();
             entities = FilterByIds(entities);
             return l.Return(entities, $"no type filter: {entities.Count}");
         }
@@ -167,12 +151,12 @@ public class EntityPicker : DataSourceBase
             {
                 var lType = l.Fn($"Adding all of '{type.Name}'");
 
-                var permCheckType = _typePermissions.New(new() { SiteContext = ctxForPermissions, App = ctxForPermissions.AppReaderRequired, ContentTypes = [type.Name] });
+                var permCheckType = typePermissions.New(new() { SiteContext = ctxForPermissions, App = ctxForPermissions.AppReaderRequired, ContentTypes = [type.Name] });
 
                 if (permCheckType.EnsureAll(GrantSets.ReadSomething, out _))
                 {
                     var withDrafts = permCheckType.EnsureAny(GrantSets.ReadDraft);
-                    var entitiesSvc = _workEntities.New(this, showDrafts: withDrafts);
+                    var entitiesSvc = workEntities.New(this, showDrafts: withDrafts);
                     var ofType = entitiesSvc.MyOptions.Data.List.GetAll(type).ToList();
                     result.AddRange(ofType);
                     lType.Done($"{ofType.Count}");
@@ -225,7 +209,7 @@ public class EntityPicker : DataSourceBase
             if (!typeNames.Any())
                 return l.Return([]);
 
-            var appReader = _appReaders.Get(this.PureIdentity());
+            var appReader = appReaders.Get(this.PureIdentity());
 
             var types = typeNames
                 .Select(appReader.TryGetContentType)
