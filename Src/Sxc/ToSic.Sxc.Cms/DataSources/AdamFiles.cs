@@ -79,8 +79,7 @@ public class AdamFiles : CustomDataSource
 
     private DataFactoryOptions Options() => new() { AppId = AppId };
 
-    private StreamResults Streams => _streams ??= BuildStreams();
-    private StreamResults? _streams;
+    private StreamResults Streams => field ??= BuildStreams();
 
     private StreamResults BuildStreams()
     {
@@ -95,8 +94,7 @@ public class AdamFiles : CustomDataSource
             return l.Return(new(failed, failed, failed), "error");
         }
 
-        _provider.Configure(appId: AppId, entityIds: EntityIds, entityGuids: EntityGuids, fields: Fields,
-            filter: Filter);
+        _provider.Configure(appId: AppId);
         var find = _provider.GetInternal();
 
         var items = source.SelectMany(o => find(o)).ToImmutableOpt();

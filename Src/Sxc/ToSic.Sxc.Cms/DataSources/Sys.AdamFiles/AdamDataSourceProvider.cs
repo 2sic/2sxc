@@ -20,19 +20,10 @@ public class AdamDataSourceProvider<TFolderId, TFileId>(AdamDataSourceProvider<T
     public record Dependencies(LazySvc<AdamContext> AdamContext, ISxcAppCurrentContextService CtxService)
         : DependenciesBase(connect: [AdamContext, CtxService]);
 
-    public AdamDataSourceProvider<TFolderId, TFileId> Configure(
-        NoParamOrder npo = default,
-        int appId = default,
-        string? entityIds = default,
-        string? entityGuids = default,
-        string? fields = default,
-        string? filter = default
-    )
+    public AdamDataSourceProvider<TFolderId, TFileId> Configure(NoParamOrder npo = default, int appId = default)
     {
-        var l = Log.Fn<AdamDataSourceProvider<TFolderId, TFileId>>($"a:{appId}; entityIds:{entityIds}, entityGuids:{entityGuids}, fields:{fields}, filter:{filter}");
-        _context = appId > 0
-            ? Services.CtxService.GetExistingAppOrSet(appId)
-            : Services.CtxService.AppNameRouteBlock(null);
+        var l = Log.Fn<AdamDataSourceProvider<TFolderId, TFileId>>($"a:{appId}");
+        _context = Services.CtxService.GetExistingAppOrSet(appId);
         return l.Return(this);
     }
 
@@ -43,8 +34,6 @@ public class AdamDataSourceProvider<TFolderId, TFileId>(AdamDataSourceProvider<T
     private IEnumerable<AdamItemDataRaw> GetAdamListOfItems(IEntity entity)
     {
         var l = Log.Fn<IEnumerable<AdamItemDataRaw>>();
-        // This will contain the list of items
-        var list = new List<AdamItemDataRaw>();
 
         // TODO: this is just tmp code to get some data...
         Services.AdamContext.Value
@@ -57,6 +46,10 @@ public class AdamDataSourceProvider<TFolderId, TFileId>(AdamDataSourceProvider<T
         if (root == null)
             return l.Return([], "null/empty");
 
+        // This will contain the list of items
+        var list = new List<AdamItemDataRaw>();
+
+        // Call add recursively to add all items from the root folder and its subfolders
         AddAdamItemsFromFolder(root, list);
 
         return l.Return(list, $"found:{list.Count}");

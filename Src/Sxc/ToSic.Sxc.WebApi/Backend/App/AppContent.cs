@@ -40,7 +40,7 @@ public class AppContent(
 
     protected IContextOfApp Context => field ??= ctxService.AppNameRouteBlock(MyOptions.AppName);
 
-    protected IAppReader AppReader => Context.AppReaderOrNull ??
+    private IAppReader AppReader => Context.AppReaderOrNull ??
                                    throw new("Can't access AppState before Context is ready. Did you forget to call Setup(...)?");
 
     #endregion
@@ -276,15 +276,14 @@ public class AppContent(
 
     #region Permission Checks
 
-    protected MultiPermissionsTypes ThrowIfNotAllowedInType(string contentType, List<Grants> requiredGrants, IAppIdentity appIdentity)
+    private void ThrowIfNotAllowedInType(string contentType, List<Grants> requiredGrants, IAppIdentity appIdentity)
     {
         var permCheck = typesPermissions.New(new() { SiteContext = Context, App = appIdentity, ContentTypes = [contentType] });
         if (!permCheck.EnsureAll(requiredGrants, out var error))
             throw HttpException.PermissionDenied(error);
-        return permCheck;
     }
 
-    protected MultiPermissionsItems ThrowIfNotAllowedInItem(IEntity itm, List<Grants> requiredGrants, IAppIdentity appIdentity)
+    private MultiPermissionsItems ThrowIfNotAllowedInItem(IEntity itm, List<Grants> requiredGrants, IAppIdentity appIdentity)
     {
         if (itm == null)
             throw new ArgumentNullException(nameof(itm), @"Item must not be null to check it's security.");
