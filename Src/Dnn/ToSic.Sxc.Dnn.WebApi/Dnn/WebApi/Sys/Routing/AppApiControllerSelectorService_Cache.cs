@@ -1,4 +1,5 @@
 ﻿using System.Web.Http.Controllers;
+using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.HotBuild;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys;
@@ -21,7 +22,8 @@ internal partial class AppApiControllerSelectorService
 
         Log.A($"Descriptor not found in cache, will try to build it ({nameof(descriptorCacheKey)}:'{descriptorCacheKey}')");
 
-        var (data, cacheKeys, filePaths) = BuildDescriptorIfExists(appFolder, editionPath, controllerTypeName, shared, spec);
+        var (data, cacheKeys, filePaths) = apiCompilerLazy.Value
+            .BuildDescriptorIfExists(Configuration, appFolder, editionPath, controllerTypeName, shared, spec);
 
         memoryCacheService.Set(key: descriptorCacheKey, value: data, func: p => p
             .SetSlidingExpiration(new TimeSpan(1, 0, 0))
@@ -33,4 +35,13 @@ internal partial class AppApiControllerSelectorService
 
         return data.Descriptor;
     }
+
+    private void PreservePathForGetCodeInController(string controllerFolder, string controllerPath)
+    {
+        if (Request == null)
+            return;
+        Request.Properties.Add(SourceCodeConstants.SharedCodeRootPathKeyInCache, controllerFolder);
+        Request.Properties.Add(SourceCodeConstants.SharedCodeRootFullPathKeyInCache, controllerPath);
+    }
+
 }

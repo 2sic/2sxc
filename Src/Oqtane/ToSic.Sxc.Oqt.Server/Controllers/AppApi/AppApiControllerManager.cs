@@ -153,7 +153,8 @@ internal class AppApiControllerManager : IHasLog
 
         // Prepare / Get App State, while possibly also initializing the App...
         var ctxResolver = _webApiContextBuilder.PrepareContextResolverForApiRequest();
-        var appReader = ctxResolver.SetAppFromPathOrGetExistingBlock(appFolder)?.AppReaderRequired;
+        var appReader = ctxResolver.TryFindAppFromPath(appFolder)?.AppReaderRequired
+            ?? throw new ArgumentException($"App not found for folder '{appFolder}'. Can't build specs.");
 
         // Figure out the current edition
         var edition = FigureEdition(ctxResolver).TrimLastSlash();

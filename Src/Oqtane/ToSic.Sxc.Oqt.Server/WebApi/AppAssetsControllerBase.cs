@@ -38,7 +38,7 @@ public abstract class AppAssetsControllerBase : OqtControllerBase
         var l = Log.Fn<IActionResult>($"{nameof(appName)}: {appName}; {nameof(filePath)}: {filePath}");
         try
         {
-            if (appName == OqtWebApiConstants.Auto) appName = Deps.AppFolder.Value.GetAppFolder();
+            if (appName == OqtWebApiConstants.Auto) appName = Deps.AppFolder.Value.FindAppFolderFromScopeOrThrow();
 
             var alias = Deps.SiteState.Alias;
             var fullFilePath = Deps.FileHelper.Value.GetFilePath(Deps.HostingEnvironment.ContentRootPath, alias, Route, appName, filePath);

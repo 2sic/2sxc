@@ -26,7 +26,7 @@ partial class SxcCurrentContextService
 
     #region Inject App using Name
 
-    public IContextOfApp? FindAppFromPathOrNull(string? nameOrPath)
+    public IContextOfApp? TryFindAppFromPath(string? nameOrPath)
     {
         if (string.IsNullOrWhiteSpace(nameOrPath))
             return null;
@@ -38,13 +38,28 @@ partial class SxcCurrentContextService
     }
 
     public IContextOfApp? SetAppFromPathOrNull(string? nameOrPath)
-        => ShareAppState(FindAppFromPathOrNull(nameOrPath));
+        => ShareAppState(TryFindAppFromPath(nameOrPath));
 
-    public IContextOfApp SetAppFromPathOrGetExistingBlock(string nameOrPath)
-        => SetAppFromPathOrNull(nameOrPath)
-           ?? _blockOrNull?.Context ?? throw new($"Tried to get app by name '{nameOrPath}', but no existing block context is available.");
+    // 2026-10-20 2dm after refactoring doesn't seem needed any more
+    //public IContextOfApp SetAppFromPathOrGetExistingBlock(string nameOrPath)
+    //    => SetAppFromPathOrNull(nameOrPath)
+    //       ?? _blockOrNull?.Context ?? throw new($"Tried to get app by name '{nameOrPath}', but no existing block context is available.");
 
-    public IContextOfApp SetAppFromNameOrUrlParamsOrGetExistingBlock(string? nameOrPath)
+    public IContextOfApp FindAppFromPathNameUrlIdsOrSharedBlock(string? nameOrPath)
+    {
+        var ctx = TryFindAppFromPath(nameOrPath);
+        if (ctx != null)
+            return ctx;
+
+        var identity = appIdResolverLazy.Value.GetAppIdFromUrlParams();
+        if (identity != null)
+            return appCtxGenerator.New().Create(identity);
+
+        return _blockOrNull?.Context
+               ?? throw new($"Tried to auto detect app by name '{nameOrPath}', url params or block context, all failed.");
+    }
+
+    public IContextOfApp SetAppFromNameOrUrlParamsOrUseExistingBlockRequired(string? nameOrPath)
     {
         var ctx = SetAppFromPathOrNull(nameOrPath);
         if (ctx != null)
@@ -64,10 +79,10 @@ partial class SxcCurrentContextService
 
     #region Block Setup
 
-    public void ShareBlockSpecs(IBlock block)
+    public void ShareBlockSpecs(IBlock? block)
     {
         _blockOrNull = block;
-        AppContextFromAppOrBlock = _blockOrNull?.Context;
+        AppContextFromAppOrBlock = block?.Context;
     }
 
     #endregion

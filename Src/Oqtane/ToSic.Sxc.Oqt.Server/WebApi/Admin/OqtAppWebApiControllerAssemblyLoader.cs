@@ -33,7 +33,7 @@ internal class OqtAppWebApiControllerAssemblyLoader(
         var alias = siteState?.Alias ?? aliasResolver.Alias;
         var siteId = alias.SiteId;
         var tenantId = alias.TenantId;
-        var appFolder = appFolderLookup.GetAppFolder();
+        var appFolder = appFolderLookup.FindAppFolderFromScopeOrThrow();
         var pathFromRoot = OqtServerPaths.GetAppApiPath(tenantId, siteId, appFolder, path);
 
         var blockOrNull = ctxService.BlockOrNull();

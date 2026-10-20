@@ -10,8 +10,9 @@ public class CacheControllerReal(
 {
     public const string LogSuffix = "AppCac";
 
+    // 2026-10-20 2dm - previously used ctxService.SetAppFromPathOrGetExistingBlock
     public bool Flush(string appPath, AppCacheFlushSpecs? request)
-        => FlushInternal(ctxService.SetAppFromPathOrGetExistingBlock(appPath).AppReaderRequired.AppId, request);
+        => FlushInternal((ctxService.TryFindAppFromPath(appPath) ?? throw new ArgumentException($"App not found for folder '{appPath}'. Can't flush cache.")).AppReaderRequired.AppId, request);
 
     public bool FlushAuto(int? appId, AppCacheFlushSpecs? request)
         => FlushInternal(

@@ -15,6 +15,9 @@ using ToSic.Sxc.WebApi.Sys;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
+/// <summary>
+/// Assembly loader for the data source which lists all the ApiControllers to the admin ui.
+/// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class DnnAppWebApiControllerAssemblyLoader(
     AppFolderLookupForWebApi appFolderLookup,
@@ -32,7 +35,7 @@ internal class DnnAppWebApiControllerAssemblyLoader(
         var className = Path.GetFileNameWithoutExtension(path);
         Log.A($"Class name: {className}");
 
-        var controllerVirtualPath = Path.Combine(site.AppsRootPhysical, appFolderLookup.GetAppFolder(), path).ForwardSlash();
+        var controllerVirtualPath = Path.Combine(site.AppsRootPhysical, appFolderLookup.FindAppFolderFromScopeOrThrow(), path).ForwardSlash();
         Log.A($"Controller Virtual Path: {controllerVirtualPath}");
 
         if (!File.Exists(HostingEnvironment.MapPath(controllerVirtualPath)))

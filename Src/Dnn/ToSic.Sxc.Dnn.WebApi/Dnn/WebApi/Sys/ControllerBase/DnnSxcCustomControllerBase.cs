@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys;
 // [ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
 public abstract class DnnSxcCustomControllerBase(string logSuffix, string insightsGroup = default)
-    : DnnSxcControllerBase(logSuffix, insightsGroup)
+    : DnnSxcControllerRoot(logSuffix, insightsGroup)
 {
     #region Constructor & DI / Setup
 
@@ -37,15 +37,17 @@ public abstract class DnnSxcCustomControllerBase(string logSuffix, string insigh
     protected override void Initialize(HttpControllerContext controllerContext)
     {
         base.Initialize(controllerContext);
-        var init = DynHlp.Initialize(controllerContext);
+        var (rootExecutionContext, folder) = CustomCodeHlp.InitExCtxWithBlockSpecOrApp(controllerContext);
         if (this is IGetCodePath thisWithPath)
-            thisWithPath.CreateInstancePath = init.Folder;
-        ExCtx = init.Root;
+            thisWithPath.CreateInstancePath = folder;
+        ExCtx = rootExecutionContext;
     }
 
     #endregion
 
     #region Internal / Plumbing / Obsolete
+
+    internal DnnCustomWebApiHelper CustomCodeHlp => field ??= new(this, SysHlp);
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]

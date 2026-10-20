@@ -74,7 +74,9 @@ public class AppQueryControllerReal(
         if (string.IsNullOrEmpty(name))
             throw l.Ex(HttpException.MissingParam(nameof(name)));
 
-        var appCtx = ctxService.SetAppFromPathOrGetExistingBlock(appPath);
+        // 2026-10-20 2dm - previously used ctxService.SetAppFromPathOrGetExistingBlock
+        var appCtx = ctxService.TryFindAppFromPath(appPath)
+                     ?? throw new ArgumentException($"App not found for folder '{appPath}'. Can't run query.");
 
         var blockLookupOrNull = ctxService.BlockOrNull()?.Data?.Configuration?.LookUpEngine;
 

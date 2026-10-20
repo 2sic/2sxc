@@ -35,11 +35,12 @@ public interface ISxcCurrentContextService: ICurrentContextUserPermissionsServic
     /// <returns></returns>
     IContextOfApp GetExistingAppOrSet(int appId);
 
-    IContextOfApp SetAppFromPathOrGetExistingBlock(string nameOrPath);
+    // 2026-10-20 2dm after refactoring doesn't seem needed any more
+    //IContextOfApp SetAppFromPathOrGetExistingBlock(string nameOrPath);
 
     IContextOfApp? SetAppFromPathOrNull(string? nameOrPath);
 
-    IContextOfApp SetAppFromNameOrUrlParamsOrGetExistingBlock(string? nameOrPath);
+    IContextOfApp SetAppFromNameOrUrlParamsOrUseExistingBlockRequired(string? nameOrPath);
 
     #endregion
 
@@ -57,4 +58,7 @@ public interface ISxcCurrentContextService: ICurrentContextUserPermissionsServic
     /// Swap in a dynamic view into the context, to render the block differently (for preview)
     /// </summary>
     IBlock SwapBlockView(IView newView);
+
+    IContextOfApp? TryFindAppFromPath(string? nameOrPath);
+    IContextOfApp FindAppFromPathNameUrlIdsOrSharedBlock(string? nameOrPath);
 }

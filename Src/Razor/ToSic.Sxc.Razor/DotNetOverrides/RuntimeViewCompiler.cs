@@ -466,6 +466,19 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
         }
         
         var sp = _httpContextAccessor.HttpContext.RequestServices;
+
+        // TODO: @STV
+        // 2026-10-20 2dm for @STV
+        // I'm reworking the ISxcCurrentContextService since in DNN it's only used in WebAPI
+        // and I believe that's also the case for Oqtane.
+        // Because of this I'm moving that interface and the services to ToSic.Sxc.WebApi.
+        // Before it was in ToSic.Sxc.Blocks.
+        // What's confusing here is that this compiler seems to rely on it,
+        // but I assume that various render-modes don't use WebApi - but I'm not sure.
+        // 
+        // For now, I was forced to make this DLL also reference ToSic.Sxc.WebApi, but I think we should remove that dependency.
+        // Once you test it, consider creating a separate mini-service
+        // to share the current block with this RuntimeViewCompiler, so we can drop the dependency on ToSic.Sxc.WebApi.
         var ctxResolver = sp.GetService<ISxcCurrentContextService>();
 
         var block = ctxResolver?.BlockOrNull();
