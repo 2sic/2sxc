@@ -14,15 +14,8 @@ namespace ToSic.Sxc.Oqt.Server.StartUp;
 internal static partial class OqtRegisterServices
 {
 
-
     private static IServiceCollection AddOqtaneLookUpsAndSources(this IServiceCollection services)
     {
-        // 2023-11-28 This looks faulty - they are already registered as ILookup elsewhere
-        //services.TryAddTransient<OqtSiteLookUp>();
-        //services.TryAddTransient<OqtPageLookUp>();
-        //services.TryAddTransient<OqtModuleLookUp>();
-        //services.TryAddScoped<OqtUserLookUp>();
-
         // New v15 for better DI/Logging
         services.TryAddTransient<OqtAssetsFileHelper>();
         return services;
@@ -40,11 +33,9 @@ internal static partial class OqtRegisterServices
     private static IServiceCollection AddSxcOqtAppPermissionsAndImportExport(this IServiceCollection services)
     {
         // Permissions
-        //services.TryAddTransient<AppPermissionCheck, OqtPermissionCheck>();
         services.TryAddTransient<IEnvironmentPermission, OqtEnvironmentPermission>();
 
         // Import / Export
-        //services.TryAddTransient<XmlExporter, OqtXmlExporter>();
         services.TryAddTransient<IXmlExporterIntegration, OqtXmlExporterIntegration>(); // new v22
         services.TryAddTransient<IImportExportEnvironment, OqtImportExportEnvironment>();
 

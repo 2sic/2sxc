@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Backend.ImportExport;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ExportContent(
-    XmlExporter xmlExporter,
+    Generator<XmlExporter, XmlExporter.Options> xmlExporter,
     AppWorkContextService appCtxSvc,
     AppWorkChain<WorkViews> workViews,
     AppWorkChain<WorkEntities> workEntities,
@@ -72,10 +72,10 @@ public class ExportContent(
         var currentApp = impExpHelpers.New().GetReaderAfterZoneSwitchPermissionCheck(specs);
 
         var fileName = $"2sxcContentExport_{currentApp.Specs.ToFileNameWithVersion()}.xml";
-        var fileXml = xmlExporter.Init(specs, currentApp, false,
+        var fileXml = xmlExporter.New(new(specs, currentApp, false,
             contentTypeIdsString?.Split(';') ?? [],
             entityIdsString?.Split(';') ?? []
-        ).GenerateNiceXml();
+        )).GenerateNiceXml();
 
         var result = responseMaker.File(fileXml, fileName, "text/xml");
         return l.Return(result);
