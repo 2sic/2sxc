@@ -50,7 +50,7 @@ internal class DnnWebApiHelper : CodeHelperBase
     #endregion
 
     public IBlock GetBlockAndContext(HttpRequestMessage request) 
-        => _blcCtx.Get(() => GetService<DnnGetBlock>().GetCmsBlock(request));
+        => _blcCtx.Get(() => GetService<DnnGetBlock>().GetBlockSpecsUsingModuleAndContentBlockHeaders(request));
     private readonly LazyGet<IBlock> _blcCtx = new();
 
 

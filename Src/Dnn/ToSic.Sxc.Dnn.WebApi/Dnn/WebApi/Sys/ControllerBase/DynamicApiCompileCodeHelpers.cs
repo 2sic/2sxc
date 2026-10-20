@@ -37,8 +37,8 @@ internal class DynamicApiCompileCodeHelpers: CompileCodeHelper
         if (_blockContextInitialized)
             return;
         _blockContextInitialized = true;
-        SharedCurrentContextService = _sysHlp.GetService<ISxcCurrentContextService>();
-        SharedCurrentContextService.AttachBlock(_sysHlp.GetBlockAndContext(request));
+        _sharedCurrentContextService = _sysHlp.GetService<ISxcCurrentContextService>();
+        _sharedCurrentContextService.AttachBlock(_sysHlp.GetBlockAndContext(request));
     }
 
     private bool _blockContextInitialized;
@@ -81,9 +81,7 @@ internal class DynamicApiCompileCodeHelpers: CompileCodeHelper
         // must run this after creating AppAndDataHelpers
         reqProperties.Add(DnnConstants.DnnContextKey, (exCtx as IHasDnn)?.Dnn);
 
-        /*if (*/
         reqProperties.TryGetTyped(SourceCodeConstants.SharedCodeRootPathKeyInCache, out string path);
-        /*) CreateInstancePath = path; */
 
         // 16.02 - try to log more details about the current API call
         var currentPath = reqProperties.TryGetTyped(SourceCodeConstants.SharedCodeRootFullPathKeyInCache, out string p2) ? p2.AfterLast("/") : null;
@@ -99,13 +97,13 @@ internal class DynamicApiCompileCodeHelpers: CompileCodeHelper
         var l = Log.Fn<IApp>();
         try
         {
-            var routeAppPath = services.AppFolderUtilities.Setup(request).GetAppFolder(false);
-            var appReader = SharedCurrentContextService.SetAppOrNull(routeAppPath)?.AppReaderRequired;
+            var routeAppPath = services.WebApiAppFolderUtilities.New(request).GetAppFolder(false);
+            var appReader = _sharedCurrentContextService.SetAppOrNull(routeAppPath)?.AppReaderRequired;
 
             if (appReader == default)
                 return l.ReturnNull("no app detected");
             
-            var siteCtx = SharedCurrentContextService.SiteContext;
+            var siteCtx = _sharedCurrentContextService.SiteContext;
             // Look up if page publishing is enabled - if module context is not available, always false
             l.A($"AppId: {appReader.AppId}");
             var app = services.AppOverrideLazy.Value;
@@ -121,7 +119,7 @@ internal class DynamicApiCompileCodeHelpers: CompileCodeHelper
 
     #endregion
 
-    public ISxcCurrentContextService SharedCurrentContextService;
+    private ISxcCurrentContextService _sharedCurrentContextService;
 
     #region Adam
 

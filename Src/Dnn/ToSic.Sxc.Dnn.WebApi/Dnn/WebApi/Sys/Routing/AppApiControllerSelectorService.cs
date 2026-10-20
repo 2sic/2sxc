@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys;
 /// It's in a separate class, so DI etc. works properly
 /// </summary>
 internal partial class AppApiControllerSelectorService(
-    DnnAppFolderUtilities folderUtilities,
+    Generator<DnnWebApiAppFolderUtilities, HttpRequestMessage> folderUtilities,
     ISite site,
     LazySvc<IRoslynBuildManager> roslynLazy,
     LazySvc<DnnGetBlock> getBlockLazy,
@@ -77,11 +77,11 @@ internal partial class AppApiControllerSelectorService(
 
 
             // Try to get block - will only work, if the request has all headers
-            var block = getBlockLazy.Value.GetCmsBlock(request);
+            var block = getBlockLazy.Value.GetBlockSpecsUsingModuleAndContentBlockHeaders(request);
             l.A($"has block: {block != null}");
 
             // Figure out the Path, or show error for that
-            var appFolder = folderUtilities.Setup(request).GetAppFolder(true, block);
+            var appFolder = folderUtilities.New(request).GetAppFolder(true, block);
             l.A($"AppFolder: {appFolder}");
 
             // Specs for HotBuild - may not be available, but should be retrieved from the block or App-Path

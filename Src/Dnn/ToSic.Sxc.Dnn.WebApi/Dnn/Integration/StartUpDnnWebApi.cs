@@ -29,7 +29,7 @@ public static class StartUpDnnWebApi
 
         services.TryAddTransient<DnnGetBlock>();
 
-        services.TryAddTransient<DnnAppFolderUtilities>(); // v14.12-01
+        services.TryAddTransient<DnnWebApiAppFolderUtilities>(); // v14.12-01
 
         // new v15
         services.TryAddTransient<ApiControllerDependencies>();

@@ -8,29 +8,13 @@ using ToSic.Sxc.WebApi.Sys;
 namespace ToSic.Sxc.Dnn.Integration;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class DnnAppFolderUtilities(
+public class DnnWebApiAppFolderUtilities(
     Generator<AppFolderLookupForWebApi> folder,
     Generator<DnnGetBlock> dnnGetBlock,
     LazySvc<CodeErrorHelpService> errorHelp)
-    : ServiceBase($"{DnnConstants.LogName}.AppFld", connect: [errorHelp, folder, dnnGetBlock])
+    : ServiceWithSetup<HttpRequestMessage>($"{LogName}.AppFld", connect: [errorHelp, folder, dnnGetBlock])
 {
-    private HttpRequestMessage _request;
-
-    private HttpRequestMessage Request => _request ?? throw new("Request not available - call Setup(...) first!");
-
-    public DnnAppFolderUtilities Setup(HttpRequestMessage request)
-    {
-        _request = request;
-        return this;
-    }
-
-    //internal string GetAppFolderVirtualPath(ISite site)
-    //{
-    //    var l = Log.Fn<string>();
-    //    var appFolder = GetAppFolder(true);
-    //    var appFolderVirtualPath = Path.Combine(site.AppsRootPhysical, appFolder).ForwardSlash();
-    //    return l.Return(appFolderVirtualPath, $"Ok, AppFolder Virtual Path: {appFolderVirtualPath}");
-    //}
+    private HttpRequestMessage Request => MyOptions ?? throw new("Request not available - call Setup(...) first!");
 
     internal string GetAppFolder(bool errorIfNotFound, IBlock block = null)
     {
@@ -50,9 +34,8 @@ public class DnnAppFolderUtilities(
             if (appFolder == null)
             {
                 l.A("no folder found in url, will auto-detect");
-                appFolder = folder.New()
-                    .Init(block ?? dnnGetBlock.New().GetCmsBlock(Request))
-                    .GetAppFolder();
+                var blockToCheck = block ?? dnnGetBlock.New().GetBlockSpecsUsingModuleAndContentBlockHeaders(Request);
+                appFolder = folder.New().Init(blockToCheck).GetAppFolder();
             }
 
             l.A($"App Folder: {appFolder}");
@@ -60,15 +43,19 @@ public class DnnAppFolderUtilities(
         catch (Exception getBlockException)
         {
             return errorIfNotFound
-                ? throw l.Done(DnnHttpErrors.LogAndReturnException(Request,
-                    HttpStatusCode.BadRequest,
-                    getBlockException,
-                    $"{errPrefix}Trying to find app name, unexpected error - possibly bad/invalid headers. {errSuffix}",
-                    errorHelp.Value)
+                ? throw l.Done(
+                    DnnHttpErrors.LogAndReturnException(
+                        Request,
+                        HttpStatusCode.BadRequest,
+                        getBlockException,
+                        $"{errPrefix}Trying to find app name, unexpected error - possibly bad/invalid headers. {errSuffix}",
+                        errorHelp.Value
+                    )
                 )
-                : l.Return(null, "not found, maybe error");
+                : l.Return(null, "not found, got exception but caller said to ignore");
         }
 
+        // Found or silent, done.
         if (!string.IsNullOrWhiteSpace(appFolder) || !errorIfNotFound)
             return l.ReturnAsOk(appFolder);
         
