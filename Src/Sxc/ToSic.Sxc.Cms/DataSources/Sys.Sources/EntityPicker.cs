@@ -126,8 +126,8 @@ public class EntityPicker : DataSourceBase
 
         // Get the context - must be pre-set by the caller
 
-        var context = _ctxService.AppContextOrNull();
-        if (context == null)
+        var ctxForPermissions = _ctxService.AppContextOrNull();
+        if (ctxForPermissions == null)
         {
             l.E("No App context");
             return l.Return(Error.Create(title: "No App context", message: "No context found, cannot continue"), "no context");
@@ -137,7 +137,7 @@ public class EntityPicker : DataSourceBase
         if (TypeNames.IsEmptyOrWs())
         {
             // App permission checker
-            var permCheckApp = _appPermissions.New(new() { SiteContext = context, App = this.PureIdentity() });
+            var permCheckApp = _appPermissions.New(new() { SiteContext = ctxForPermissions, App = this.PureIdentity() });
 
             // First do security check with no-type name
             if (!permCheckApp.EnsureAll(GrantSets.ReadSomething, out _))
@@ -152,6 +152,7 @@ public class EntityPicker : DataSourceBase
             return l.Return(entities, $"no type filter: {entities.Count}");
         }
 
+        // Case 2: Type Names specified - return all entities of those types, if allowed by permissions
         try
         {
             var types = ContentTypes;
@@ -166,7 +167,7 @@ public class EntityPicker : DataSourceBase
             {
                 var lType = l.Fn($"Adding all of '{type.Name}'");
 
-                var permCheckType = _typePermissions.New(new() { SiteContext = context, App = context.AppReaderRequired, ContentTypes = [type.Name] });
+                var permCheckType = _typePermissions.New(new() { SiteContext = ctxForPermissions, App = ctxForPermissions.AppReaderRequired, ContentTypes = [type.Name] });
 
                 if (permCheckType.EnsureAll(GrantSets.ReadSomething, out _))
                 {
