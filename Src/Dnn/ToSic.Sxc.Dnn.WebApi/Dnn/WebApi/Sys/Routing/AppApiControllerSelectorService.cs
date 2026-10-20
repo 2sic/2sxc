@@ -77,26 +77,26 @@ internal partial class AppApiControllerSelectorService(
 
 
             // Try to get block - will only work, if the request has all headers
-            var block = getBlockLazy.Value.GetBlockSpecsUsingModuleAndContentBlockHeaders(request);
-            l.A($"has block: {block != null}");
+            var blockOrNull = getBlockLazy.Value.TryGetBlockSpecsUsingModuleAndContentBlockHeaders(request);
+            l.A($"has block: {blockOrNull != null}");
 
             // Figure out the Path, or show error for that
-            var appFolder = folderUtilities.New(request).GetAppFolder(true, block);
+            var appFolder = folderUtilities.New(request).GetAppFolder(true, blockOrNull);
             l.A($"AppFolder: {appFolder}");
 
             // Specs for HotBuild - may not be available, but should be retrieved from the block or App-Path
             HotBuildSpec spec;
-            if (block != null)
+            if (blockOrNull != null)
             {
                 // TODO: HAD TO trim last slash, because it was added in the get-call, but causes trouble here
                 // must ensure it's improved and done the same way in Oqtane!!!
-                spec = new(block.AppId, edition: edition.TrimLastSlash(), block.AppOrNull?.Name);
+                spec = new(blockOrNull.AppId, edition: edition.TrimLastSlash(), blockOrNull.AppOrNull?.Name);
                 l.A($"{nameof(spec)} from Block: {spec}");
             }
             else
             {
                 // find AppId based on path - otherwise we don't have a proper spec, and things fail
-                var appSpecs = sxcContextResolver.Value.SetAppOrNull(appFolder)?.AppReaderRequired.Specs ?? throw new("App not found");
+                var appSpecs = sxcContextResolver.Value.SetAppFromPathOrNull(appFolder)?.AppReaderRequired.Specs ?? throw new("App not found");
                 spec = new(appSpecs.AppId, edition: edition.TrimLastSlash(), appSpecs.Name);
                 l.A($"{nameof(spec)} from App based on path: {spec}");
             }

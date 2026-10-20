@@ -38,7 +38,7 @@ public class AppContent(
 
     public record Options(string? AppName);
 
-    protected IContextOfApp Context => field ??= ctxService.AppNameRouteBlock(MyOptions.AppName);
+    private IContextOfApp Context => field ??= ctxService.SetAppFromNameOrUrlParamsOrGetExistingBlock(MyOptions.AppName);
 
     private IAppReader AppReader => Context.AppReaderOrNull ??
                                    throw new("Can't access AppState before Context is ready. Did you forget to call Setup(...)?");

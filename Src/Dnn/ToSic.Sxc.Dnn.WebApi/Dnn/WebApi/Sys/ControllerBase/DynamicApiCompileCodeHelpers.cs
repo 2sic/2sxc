@@ -38,7 +38,7 @@ internal class DynamicApiCompileCodeHelpers: CompileCodeHelper
             return;
         _blockContextInitialized = true;
         _sharedCurrentContextService = _sysHlp.GetService<ISxcCurrentContextService>();
-        _sharedCurrentContextService.AttachBlock(_sysHlp.GetBlockAndContext(request));
+        _sharedCurrentContextService.ShareBlockSpecs(_sysHlp.GetBlockAndContext(request));
     }
 
     private bool _blockContextInitialized;
@@ -98,7 +98,7 @@ internal class DynamicApiCompileCodeHelpers: CompileCodeHelper
         try
         {
             var routeAppPath = services.WebApiAppFolderUtilities.New(request).GetAppFolder(false);
-            var appReader = _sharedCurrentContextService.SetAppOrNull(routeAppPath)?.AppReaderRequired;
+            var appReader = _sharedCurrentContextService.SetAppFromPathOrNull(routeAppPath)?.AppReaderRequired;
 
             if (appReader == default)
                 return l.ReturnNull("no app detected");

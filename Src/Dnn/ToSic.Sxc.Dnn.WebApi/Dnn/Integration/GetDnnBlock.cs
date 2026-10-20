@@ -15,7 +15,7 @@ public class DnnGetBlock(
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    internal IBlock GetBlockSpecsUsingModuleAndContentBlockHeaders(HttpRequestMessage request)
+    internal IBlock? TryGetBlockSpecsUsingModuleAndContentBlockHeaders(HttpRequestMessage request)
     {
         var l = Log.Fn<IBlock>(timer: true);
 

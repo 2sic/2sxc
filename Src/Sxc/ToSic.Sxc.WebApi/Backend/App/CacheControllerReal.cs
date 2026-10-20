@@ -11,7 +11,7 @@ public class CacheControllerReal(
     public const string LogSuffix = "AppCac";
 
     public bool Flush(string appPath, AppCacheFlushSpecs? request)
-        => FlushInternal(ctxService.SetAppOrGetBlock(appPath).AppReaderRequired.AppId, request);
+        => FlushInternal(ctxService.SetAppFromPathOrGetExistingBlock(appPath).AppReaderRequired.AppId, request);
 
     public bool FlushAuto(int? appId, AppCacheFlushSpecs? request)
         => FlushInternal(

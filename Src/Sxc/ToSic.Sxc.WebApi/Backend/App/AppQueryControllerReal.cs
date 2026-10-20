@@ -74,7 +74,7 @@ public class AppQueryControllerReal(
         if (string.IsNullOrEmpty(name))
             throw l.Ex(HttpException.MissingParam(nameof(name)));
 
-        var appCtx = ctxService.SetAppOrGetBlock(appPath);
+        var appCtx = ctxService.SetAppFromPathOrGetExistingBlock(appPath);
 
         var blockLookupOrNull = ctxService.BlockOrNull()?.Data?.Configuration?.LookUpEngine;
 

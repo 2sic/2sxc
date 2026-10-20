@@ -2,6 +2,9 @@
 
 namespace ToSic.Sxc.Context.Sys;
 
+/// <summary>
+/// Current-Context Extensions, only used in WebAPIs
+/// </summary>
 [PrivateApi]
 public static class ISxcCurrentContextServiceExtensions
 {
@@ -15,7 +18,7 @@ public static class ISxcCurrentContextServiceExtensions
         /// Return the block or throw an error
         /// </summary>
         public IContextOfBlock BlockContextRequired()
-            => ctx.BlockContextOrNull()
+            => ctx.BlockOrNull()?.Context
                ?? throw new("Block context required but not known. It was not attached.");
 
         /// <summary>

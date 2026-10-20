@@ -19,10 +19,15 @@ public abstract class AdamWorkBase(AdamWorkBase.Dependencies services, string lo
 
     public void Setup(AdamWorkOptions options)
     {
-        var o = options;
         var context = options.AppId > 0
             ? Services.CtxService.GetExistingAppOrSet(options.AppId)
-            : Services.CtxService.AppNameRouteBlock(null);
+            // 2026-10-20 2dm: Believe that the AppId should always have a valid value, so no magic find-it-yourself
+            // Turned this off for now, keep till early 2027 then clean up.
+            // If something does explode, try to ensure that the calling path sets a proper AppId
+            //: Services.CtxService.SetAppFromNameOrUrlParamsOrGetExistingBlock(null);
+            : throw new ArgumentException(@"Invalid AppId, triggered by refactoring 2026-10-20, should never happen; pls report to the iJungleboy", nameof(options.AppId));
+
+        var o = options;
         var l = Log.Fn($"app: {context.AppReaderRequired.Show()}, type: {o.ContentType}, itemGuid: {o.ItemGuid}, field: {o.Field}, portalRoot: {o.UsePortalRoot}");
         AdamContext.Init(context, o.ContentType, o.Field, o.ItemGuid, o.UsePortalRoot);
         l.Done();

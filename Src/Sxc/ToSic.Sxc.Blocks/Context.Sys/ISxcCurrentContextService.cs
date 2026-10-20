@@ -14,7 +14,7 @@ public interface ISxcCurrentContextService: ICurrentContextService, ISxcAppCurre
     /// <summary>
     /// Attach a prepared block to the context.
     /// </summary>
-    void AttachBlock(IBlock block);
+    void ShareBlockSpecs(IBlock block);
 
     /// <summary>
     /// Retrieve the current block - or return null if none.

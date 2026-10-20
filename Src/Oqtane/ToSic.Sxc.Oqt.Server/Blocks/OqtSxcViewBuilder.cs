@@ -148,7 +148,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
         // Special for Oqtane - normally the IContextResolver is only used in WebAPIs
         // But the ModuleLookUp and PageLookUp also rely on this, so the IContextResolver must know about this for now
         // In future, we should find a better way for this, so that IContextResolver is really only used on WebApis
-        _currentContextServiceForLookUps.AttachBlock(block);
+        _currentContextServiceForLookUps.ShareBlockSpecs(block);
         return block;
     }));
     private readonly LazyGet<IBlock> _blockGetOnce = new();

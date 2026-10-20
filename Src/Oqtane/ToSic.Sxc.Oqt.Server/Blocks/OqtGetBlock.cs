@@ -28,7 +28,7 @@ internal class OqtGetBlock(
         _alreadyTriedToLoad = true;
 
         var block = InitializeBlock();
-        currentContextServiceToInit.AttachBlock(block);
+        currentContextServiceToInit.ShareBlockSpecs(block);
         return currentContextServiceToInit;
     }
     private bool _alreadyTriedToLoad;

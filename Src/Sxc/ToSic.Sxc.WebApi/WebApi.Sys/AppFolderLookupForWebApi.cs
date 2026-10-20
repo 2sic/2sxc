@@ -13,13 +13,13 @@ public class AppFolderLookupForWebApi(ISxcCurrentContextService ctxService) : Se
     /// <returns></returns>
     public AppFolderLookupForWebApi Init(IBlock block)
     {
-        ctxService.AttachBlock(block);
+        ctxService.ShareBlockSpecs(block);
         return this;
     }
 
     public string GetAppFolder()
     {
-        var ctx = ctxService.AppNameRouteBlock("");
+        var ctx = ctxService.SetAppFromNameOrUrlParamsOrGetExistingBlock("");
         return ctx.AppReaderRequired.Specs.Folder;
     }
 }
