@@ -27,9 +27,9 @@ partial class SxcCurrentContextService
     /// <inheritdoc/>
     public IBlock? BlockOrNull() => _blockOrNull;
 
-    /// <inheritdoc/>
-    public IContextOfApp AppContextRequired()
-        => AppContextOrNull() ?? throw new($"To call {nameof(AppContextRequired)} first call {nameof(SetApp)}");
+    ///// <inheritdoc/>
+    //public IContextOfApp AppContextRequired()
+    //    => AppContextOrNull() ?? throw new($"To call {nameof(AppContextRequired)} first call {nameof(SetApp)}");
 
     /// <inheritdoc/>
     public IContextOfApp? AppContextOrNull() => AppContextFromAppOrBlock;

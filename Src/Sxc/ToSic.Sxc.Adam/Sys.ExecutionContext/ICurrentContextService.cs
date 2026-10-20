@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Context;
+﻿using ToSic.Eav.Context;
 using ToSic.Sys.Users.Permissions;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
@@ -15,9 +14,8 @@ public interface ICurrentContextService: IHasLog, ICurrentContextUserPermissions
     /// <value></value>
     IContextOfSite SiteContext { get; }
 
-    IContextOfApp SetApp(IAppIdentity appIdentity);
-
-    IContextOfApp AppContextRequired();
+    // 2026-10-20 not used anymore
+    //IContextOfApp AppContextRequired();
 
     IContextOfApp? AppContextOrNull();
 

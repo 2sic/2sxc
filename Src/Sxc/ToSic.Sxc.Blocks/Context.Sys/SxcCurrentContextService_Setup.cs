@@ -12,7 +12,7 @@ partial class SxcCurrentContextService
     /// <summary>
     /// Basic inject app.
     /// </summary>
-    public IContextOfApp SetApp(IAppIdentity appIdentity)
+    private IContextOfApp SetApp(IAppIdentity appIdentity)
     {
         // #ReworkingResetApp - this one could use a generator
         var appCtx = appCtxGenerator.New().Create(appIdentity);

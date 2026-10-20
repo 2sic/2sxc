@@ -10,6 +10,13 @@ public sealed class BlockOfEntity(BlockGeneratorHelpers helpers, LazySvc<AppFind
 {
     #region Init
 
+    /// <summary>
+    /// Get a block from an entity-ID.
+    /// </summary>
+    /// <param name="parentBlock"></param>
+    /// <param name="blockEntity"></param>
+    /// <param name="contentBlockId">The block ID, can be negative (like is usually passed around in requests for innner-content)</param>
+    /// <returns></returns>
     public IBlock GetBlockOfEntity(IBlock parentBlock, IEntity? blockEntity, int contentBlockId = -1)
     {
         var l = Log.Fn<BlockSpecs>($"{nameof(contentBlockId)}:{contentBlockId}; {nameof(blockEntity)}:{blockEntity?.EntityId}", timer: true);
