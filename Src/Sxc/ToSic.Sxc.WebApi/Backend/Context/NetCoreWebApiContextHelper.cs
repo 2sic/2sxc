@@ -95,7 +95,7 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
             }
             var routeAppPath = routeAppPathObj.ToString();
 
-            var appId = CtxService.SetAppFromPathOrNull(routeAppPath)
+            var appId = CtxService.TryFindAppFromPath(routeAppPath)
                             ?.AppReaderRequired.AppId
                         ?? Eav.Sys.EavConstants.NullId;
 

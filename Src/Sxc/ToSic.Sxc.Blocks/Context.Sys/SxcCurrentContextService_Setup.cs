@@ -12,11 +12,11 @@ partial class SxcCurrentContextService
     /// <summary>
     /// Basic inject app.
     /// </summary>
-    private IContextOfApp ShareAppState(IAppIdentity appIdentity)
-        => ShareAppState(appCtxGenerator.New().Create(appIdentity));
+    private IContextOfApp ShareAppContext(IAppIdentity appIdentity)
+        => ShareAppContext(appCtxGenerator.New().Create(appIdentity));
 
     [return: NotNullIfNotNull(nameof(appContext))]
-    private IContextOfApp? ShareAppState(IContextOfApp? appContext)
+    private IContextOfApp? ShareAppContext(IContextOfApp? appContext)
     {
         if (appContext == null)
             return null;
@@ -37,8 +37,8 @@ partial class SxcCurrentContextService
             : appCtxGenerator.New().Create(new AppIdentity(zoneId, appId));
     }
 
-    public IContextOfApp? SetAppFromPathOrNull(string? nameOrPath)
-        => ShareAppState(TryFindAppFromPath(nameOrPath));
+    //public IContextOfApp? SetAppFromPathOrNull(string? nameOrPath)
+    //    => ShareAppContext(TryFindAppFromPath(nameOrPath));
 
     // 2026-10-20 2dm after refactoring doesn't seem needed any more
     //public IContextOfApp SetAppFromPathOrGetExistingBlock(string nameOrPath)

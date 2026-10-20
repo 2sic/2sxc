@@ -38,7 +38,8 @@ public interface ISxcCurrentContextService: ICurrentContextUserPermissionsServic
     // 2026-10-20 2dm after refactoring doesn't seem needed any more
     //IContextOfApp SetAppFromPathOrGetExistingBlock(string nameOrPath);
 
-    IContextOfApp? SetAppFromPathOrNull(string? nameOrPath);
+    // Note 2026-10-18 2dm: #NoLookupSideEffects
+    //IContextOfApp? SetAppFromPathOrNull(string? nameOrPath);
 
     // Note 2026-10-18 2dm: #NoLookupSideEffects
     //IContextOfApp SetAppFromNameOrUrlParamsOrUseExistingBlockRequired(string? nameOrPath);
@@ -62,4 +63,5 @@ public interface ISxcCurrentContextService: ICurrentContextUserPermissionsServic
 
     IContextOfApp? TryFindAppFromPath(string? nameOrPath);
     IContextOfApp FindAppFromPathNameUrlIdsOrSharedBlock(string? nameOrPath);
+    // IContextOfApp? ShareAppContext(IContextOfApp? appContext);
 }

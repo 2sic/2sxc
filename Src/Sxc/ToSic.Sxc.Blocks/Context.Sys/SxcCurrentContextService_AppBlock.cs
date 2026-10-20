@@ -44,7 +44,7 @@ partial class SxcCurrentContextService
         // Option 1: No block context found, create a lightweight app context
         // This way security checks can only verify the App but not any module permissions
         if (blockSpecs?.Context is not { } blockCtx)
-            return l.Return(ShareAppState(appReaderFactory.Value.AppIdentity(appId)));
+            return l.Return(ShareAppContext(appReaderFactory.Value.AppIdentity(appId)));
 
         // if there is a block context, make sure it's of the requested app (or no app was specified)
         // then return that
@@ -65,7 +65,7 @@ partial class SxcCurrentContextService
         if (!featuresService.Value.IsEnabled(SxcFeatures.PermissionPrioritizeModuleContext.NameId))
             // Get a simpler App-Context without the module context
             // so that module permissions will not allow editing of apps which are really in the current one.
-            return l.Return(ShareAppState(appReaderFactory.Value.AppIdentity(appId)));
+            return l.Return(ShareAppContext(appReaderFactory.Value.AppIdentity(appId)));
 
         // Option 4: The block context exists, but the app is different.
         // Note that this is what was here before 2026-10-19 so we preserved it,

@@ -1,4 +1,5 @@
-﻿using System.Web.Http.Controllers;
+﻿using System.CodeDom;
+using System.Web.Http.Controllers;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Backend.Adam;
@@ -116,8 +117,10 @@ internal class DnnCustomWebApiHelper: CompileCodeHelper
         var l = Log.Fn<IApp>();
         try
         {
-            var routeAppPath = services.WebApiAppFolderUtilities.New(request).GetAppFolder(errorIfNotFound: false, blockOrNull: blockOrNull);
-            var appReader = SharedCurrentContextService.SetAppFromPathOrNull(routeAppPath)?.AppReaderRequired;
+            var routeAppPath = services.WebApiAppFolderUtilities.New(request)
+                .GetAppFolder(errorIfNotFound: false, blockOrNull: blockOrNull);
+            var appCtx = SharedCurrentContextService.TryFindAppFromPath(routeAppPath);
+            var appReader = appCtx?.AppReaderRequired;
 
             if (appReader == default)
                 return l.ReturnNull("no app detected");
