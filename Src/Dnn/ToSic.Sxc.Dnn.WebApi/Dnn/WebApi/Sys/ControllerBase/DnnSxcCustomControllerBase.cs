@@ -5,10 +5,16 @@ using ToSic.Sxc.Sys.ExecutionContext;
 namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
 /// <summary>
-/// This is the foundation for both the old SxcApiController and the new Dnn.ApiController.
-/// incl. the current App, DNN, Data, etc.
-/// For others, please use the SxiApiControllerBase, which doesn't have all that, and is usually then
-/// safer because it can't accidentally mix the App with a different appId in the params
+/// This is the foundation for API controllers using the **Block Context** such as:
+/// 
+/// 1. the old ToSic.SexyContent.SxcApiController (which is still the default based on the web.config)
+/// 2. the old ToSic.Sxc.Dnn.ApiController (was the recommended version for a while)
+/// 3. the old Custom.Dnn.Api12
+/// 4. the new Custom.Hybrid.Api12, Api14, ApiTyped
+/// 5. the current App, DNN, Data, etc.
+/// 
+/// The class itself has never been published and can be assumed that it is not used anywhere,
+/// so rename etc. should never be a problem.
 /// </summary>
 [PrivateApi("This is an internal base class used for the App ApiControllers. Make sure the implementations don't break")]
 // Note: 2022-02 2dm I'm not sure if this was ever published as the official api controller, but it may have been?

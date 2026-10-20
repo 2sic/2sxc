@@ -3,10 +3,15 @@
 namespace ToSic.Sxc.Dnn.WebApi.Sys.Compatibility;
 
 /// <summary>
+/// Template Code to copy/paste into new .NET Framework WebApi Controllers
+/// so they mimic the .NET Core WebApi behavior, and can be used in both environments.
+///
+/// This file doesn't do anything and is not used, it's really just a template for copy/paste into new WebApi Controllers.
 /// </summary>
 [DnnLogExceptions]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal abstract class ApiTempShimmed : DnnSxcCustomControllerBase, IDynamicWebApi, INetCoreCompatibility
+internal abstract class ApiTempShimmed : DnnSxcCustomControllerBase, // fake inheritance, just so the code below can compile
+    IDynamicWebApi, INetCoreCompatibility
 {
 
     #region Net Core Compatibility Shims - Copy this entire section to WebApi Files
