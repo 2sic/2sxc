@@ -24,7 +24,8 @@ internal class OqtGetBlock(
 {
     public ISxcCurrentContextService PrepareContextResolverForApiRequest()
     {
-        if (_alreadyTriedToLoad) return currentContextServiceToInit;
+        if (_alreadyTriedToLoad)
+            return currentContextServiceToInit;
         _alreadyTriedToLoad = true;
 
         var block = InitializeBlock();

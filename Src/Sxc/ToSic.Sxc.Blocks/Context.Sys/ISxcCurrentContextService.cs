@@ -40,7 +40,8 @@ public interface ISxcCurrentContextService: ICurrentContextUserPermissionsServic
 
     IContextOfApp? SetAppFromPathOrNull(string? nameOrPath);
 
-    IContextOfApp SetAppFromNameOrUrlParamsOrUseExistingBlockRequired(string? nameOrPath);
+    // Note 2026-10-18 2dm: #NoLookupSideEffects
+    //IContextOfApp SetAppFromNameOrUrlParamsOrUseExistingBlockRequired(string? nameOrPath);
 
     #endregion
 

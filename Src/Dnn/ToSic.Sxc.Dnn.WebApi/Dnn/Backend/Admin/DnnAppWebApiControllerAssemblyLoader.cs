@@ -20,14 +20,13 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class DnnAppWebApiControllerAssemblyLoader(
-    AppFolderLookupForWebApi appFolderLookup,
     ISite site,
     ISxcCurrentContextService ctxService,
     IAppJsonConfigurationService appJson,
     SourceAnalyzer sourceAnalyzer,
     IRoslynBuildManager roslynBuildManager,
     IEditionService editionSvc)
-    : ServiceBase($"{DnnConstants.LogName}.ApiCtlAsm", connect: [appFolderLookup, site, ctxService, appJson, sourceAnalyzer, roslynBuildManager, editionSvc]),
+    : ServiceBase($"{DnnConstants.LogName}.ApiCtlAsm", connect: [site, ctxService, appJson, sourceAnalyzer, roslynBuildManager, editionSvc]),
         IAppWebApiControllerAssemblyLoader
 {
     public Assembly GetAssembly(string path)
@@ -35,7 +34,10 @@ internal class DnnAppWebApiControllerAssemblyLoader(
         var className = Path.GetFileNameWithoutExtension(path);
         Log.A($"Class name: {className}");
 
-        var controllerVirtualPath = Path.Combine(site.AppsRootPhysical, appFolderLookup.FindAppFolderFromScopeOrThrow(), path).ForwardSlash();
+        // Note 2026-10-18 2dm: #NoLookupSideEffects
+        // the next line used to have a side effect of sharing the found app-context
+        // This has been removed; it may break something, which would then need to be corrected "upstream", but not here
+        var controllerVirtualPath = Path.Combine(site.AppsRootPhysical, ctxService.FindAppFolderFromScopeOrThrow(), path).ForwardSlash();
         Log.A($"Controller Virtual Path: {controllerVirtualPath}");
 
         if (!File.Exists(HostingEnvironment.MapPath(controllerVirtualPath)))

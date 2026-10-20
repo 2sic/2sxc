@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi.Sys;
@@ -16,10 +17,10 @@ public abstract class AppAssetsControllerBase : OqtControllerBase
 
     public record Dependencies(
         IWebHostEnvironment HostingEnvironment,
-        LazySvc<AppFolderLookupForWebApi> AppFolder,
+        LazySvc<ISxcCurrentContextService> SxcContextSvc,
         SiteState SiteState,
         LazySvc<OqtAssetsFileHelper> FileHelper)
-        : DependenciesBase(connect: [HostingEnvironment, AppFolder, SiteState, FileHelper]);
+        : DependenciesBase(connect: [HostingEnvironment, SxcContextSvc, SiteState, FileHelper]);
 
     #endregion
 
@@ -38,7 +39,12 @@ public abstract class AppAssetsControllerBase : OqtControllerBase
         var l = Log.Fn<IActionResult>($"{nameof(appName)}: {appName}; {nameof(filePath)}: {filePath}");
         try
         {
-            if (appName == OqtWebApiConstants.Auto) appName = Deps.AppFolder.Value.FindAppFolderFromScopeOrThrow();
+            // Note 2026-10-18 2dm: #NoLookupSideEffects
+            // the next line used to have a side effect of sharing the found app-context
+            // ...but it should already be handled in the previous PrepareContextResolverForApiRequest() call
+            // This has been removed; it may break something, in which case sharing must be added explicitly
+            if (appName == OqtWebApiConstants.Auto)
+                appName = Deps.SxcContextSvc.Value.FindAppFolderFromScopeOrThrow();
 
             var alias = Deps.SiteState.Alias;
             var fullFilePath = Deps.FileHelper.Value.GetFilePath(Deps.HostingEnvironment.ContentRootPath, alias, Route, appName, filePath);

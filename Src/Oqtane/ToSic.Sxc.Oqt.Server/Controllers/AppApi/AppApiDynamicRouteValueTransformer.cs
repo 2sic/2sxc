@@ -9,6 +9,7 @@ using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.Backend;
 using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
@@ -92,7 +93,11 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
                 // but as a transient dependencies from the request service provider
                 var blockInitializer = httpContext.RequestServices.Build<IWebApiContextBuilder>();
                 blockInitializer.PrepareContextResolverForApiRequest();
-                appFolder = httpContext.RequestServices.Build<AppFolderLookupForWebApi>().FindAppFolderFromScopeOrThrow();
+                // Note 2026-10-18 2dm: #NoLookupSideEffects
+                // the next line used to have a side effect of sharing the found app-context
+                // ...but it should already be handled in the previous PrepareContextResolverForApiRequest() call
+                // This has been removed; it may break something, in which case sharing must be added explicitly
+                appFolder = httpContext.RequestServices.Build<ISxcCurrentContextService>().FindAppFolderFromScopeOrThrow();
             }
 
             if (!values.ContainsKey("controller"))

@@ -47,10 +47,12 @@ partial class SxcCurrentContextService
 
     public IContextOfApp FindAppFromPathNameUrlIdsOrSharedBlock(string? nameOrPath)
     {
+        // Priority 1: Try to find app by name or path
         var ctx = TryFindAppFromPath(nameOrPath);
         if (ctx != null)
             return ctx;
 
+        // Priority 2: Try to find app by URL params (appId=x;zoneId=y) - not used much AFAIK
         var identity = appIdResolverLazy.Value.GetAppIdFromUrlParams();
         if (identity != null)
             return appCtxGenerator.New().Create(identity);
@@ -59,19 +61,20 @@ partial class SxcCurrentContextService
                ?? throw new($"Tried to auto detect app by name '{nameOrPath}', url params or block context, all failed.");
     }
 
-    public IContextOfApp SetAppFromNameOrUrlParamsOrUseExistingBlockRequired(string? nameOrPath)
-    {
-        var ctx = SetAppFromPathOrNull(nameOrPath);
-        if (ctx != null)
-            return ctx;
+    // Note 2026-10-18 2dm: #NoLookupSideEffects
+    //public IContextOfApp SetAppFromNameOrUrlParamsOrUseExistingBlockRequired(string? nameOrPath)
+    //{
+    //    var ctx = SetAppFromPathOrNull(nameOrPath);
+    //    if (ctx != null)
+    //        return ctx;
 
-        var identity = appIdResolverLazy.Value.GetAppIdFromUrlParams();
-        if (identity != null)
-            return ShareAppState(identity);
+    //    var identity = appIdResolverLazy.Value.GetAppIdFromUrlParams();
+    //    if (identity != null)
+    //        return ShareAppState(identity);
 
-        return this._blockOrNull?.Context
-               ?? throw new($"Tried to auto detect app by name '{nameOrPath}', url params or block context, all failed.");
-    }
+    //    return _blockOrNull?.Context
+    //           ?? throw new($"Tried to auto detect app by name '{nameOrPath}', url params or block context, all failed.");
+    //}
 
 
     #endregion

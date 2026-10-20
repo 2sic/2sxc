@@ -21,11 +21,10 @@ internal class OqtAppWebApiControllerAssemblyLoader(
     Generator<Compiler> compiler,
     SiteState siteState,
     AliasResolver aliasResolver,
-    AppFolderLookupForWebApi appFolderLookup,
     ISxcCurrentContextService ctxService,
     IEditionService editionSvc,
     IServerPaths serverPaths)
-    : ServiceBase($"{OqtConstants.OqtLogPrefix}.ApiCtlAsm", connect: [compiler, siteState, aliasResolver, appFolderLookup, ctxService, editionSvc, serverPaths]),
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.ApiCtlAsm", connect: [compiler, siteState, aliasResolver, ctxService, editionSvc, serverPaths]),
         IAppWebApiControllerAssemblyLoader
 {
     public Assembly GetAssembly(string path)
@@ -33,7 +32,10 @@ internal class OqtAppWebApiControllerAssemblyLoader(
         var alias = siteState?.Alias ?? aliasResolver.Alias;
         var siteId = alias.SiteId;
         var tenantId = alias.TenantId;
-        var appFolder = appFolderLookup.FindAppFolderFromScopeOrThrow();
+        // Note 2026-10-18 2dm: #NoLookupSideEffects
+        // the next line used to have a side effect of sharing the found app-context
+        // This has been removed; it may break something, which would then need to be corrected "upstream", but not here
+        var appFolder = ctxService.FindAppFolderFromScopeOrThrow();
         var pathFromRoot = OqtServerPaths.GetAppApiPath(tenantId, siteId, appFolder, path);
 
         var blockOrNull = ctxService.BlockOrNull();

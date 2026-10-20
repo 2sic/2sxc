@@ -38,7 +38,9 @@ public class AppContent(
 
     public record Options(string? AppName);
 
-    private IContextOfApp Context => field ??= ctxService.FindAppFromPathNameUrlIdsOrSharedBlock(MyOptions.AppName);
+    private IContextOfApp Context => field
+        ??= ctxService.FindAppFromPathNameUrlIdsOrSharedBlock(MyOptions.AppName)
+            ?? throw new($"Tried to auto detect app by name '{MyOptions.AppName}', url params or block context, all failed.");
 
     private IAppReader AppReader => Context.AppReaderOrNull ??
                                    throw new("Can't access AppState before Context is ready. Did you forget to call Setup(...)?");

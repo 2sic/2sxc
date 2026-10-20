@@ -2,15 +2,16 @@
 using ToSic.Eav.WebApi.Sys.Routing;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.WebApi.Sys;
 
 namespace ToSic.Sxc.Dnn.Integration;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class DnnWebApiAppFolderUtilities(
-    Generator<AppFolderLookupForWebApi> folder,
+    LazySvc<ISxcCurrentContextService> ctxService,
     LazySvc<CodeErrorHelpService> errorHelp)
-    : ServiceWithSetup<HttpRequestMessage>($"{LogName}.AppFld", connect: [errorHelp, folder])
+    : ServiceWithSetup<HttpRequestMessage>($"{LogName}.AppFld", connect: [errorHelp, ctxService])
 {
     /// <summary>
     /// Request object - throwing if not properly initialized
@@ -41,7 +42,7 @@ public class DnnWebApiAppFolderUtilities(
             if (appFolder == null)
             {
                 l.A("no folder found in url, will auto-detect");
-                appFolder = folder.New().FindAppFolderFromScopeOrThrow();
+                appFolder = ctxService.Value.FindAppFolderFromScopeOrThrow();
             }
 
             l.A($"App Folder: {appFolder}");

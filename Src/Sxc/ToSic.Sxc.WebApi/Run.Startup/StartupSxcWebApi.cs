@@ -83,7 +83,6 @@ public static class StartupSxcWebApi
         services.TryAddTransient<AppStateSyncSave>();   // new separate in v21.06
         services.TryAddTransient<AppStateSyncRestore>();
         services.TryAddTransient<AppStackBackend>();
-        services.TryAddTransient<AppFolderLookupForWebApi>();
         services.TryAddTransient<ViewsExportImport>();
 
         // Small WebApi Helpers

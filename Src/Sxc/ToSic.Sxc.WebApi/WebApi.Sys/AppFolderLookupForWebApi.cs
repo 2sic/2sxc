@@ -1,11 +1,10 @@
 ﻿namespace ToSic.Sxc.WebApi.Sys;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppFolderLookupForWebApi(ISxcCurrentContextService ctxService) : ServiceBase("AppFld")
+public static class ISxcCurrentContextServiceExtensions
 {
-    public string FindAppFolderFromScopeOrThrow() =>
+    public static string FindAppFolderFromScopeOrThrow(this ISxcCurrentContextService ctxService) =>
         ctxService
-            .SetAppFromNameOrUrlParamsOrUseExistingBlockRequired("")
+            .FindAppFromPathNameUrlIdsOrSharedBlock("")
             .AppReaderRequired
             .Specs
             .Folder;
