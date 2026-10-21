@@ -8,6 +8,7 @@ using ToSic.Sxc.Backend.Usage;
 using ToSic.Sxc.Dnn.Backend;
 using ToSic.Sxc.Dnn.Backend.Admin;
 using ToSic.Sxc.Dnn.WebApi.Context;
+using ToSic.Sxc.Dnn.WebApi.Custom.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 
@@ -35,8 +36,8 @@ public static class StartUpDnnWebApi
         services.TryAddTransient<ApiControllerDependencies>();
 
         // new v17
-        services.TryAddTransient<AppApiControllerSelectorService>();
-        services.TryAddTransient<AppApiControllerCompiler>(); // v22 extracting this part
+        services.TryAddTransient<DnnAppApiControllerService>();
+        services.TryAddTransient<DnnAppApiCompiler>(); // v22 extracting this part
 
         return services;
     }

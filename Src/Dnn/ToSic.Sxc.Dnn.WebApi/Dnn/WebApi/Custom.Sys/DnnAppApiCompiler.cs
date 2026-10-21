@@ -10,12 +10,23 @@ using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Compile.Sys;
 using ToSic.Sxc.Dnn.Context;
 
-namespace ToSic.Sxc.Dnn.WebApi.Sys;
+namespace ToSic.Sxc.Dnn.WebApi.Custom.Sys;
 
 /// <summary>
-/// It's in a separate class, so DI etc. works properly
+/// Compiles c# code inside 2sxc Apps which are used as WebApi controllers.
 /// </summary>
-internal class AppApiControllerCompiler(
+/// <remarks>
+/// The code for these services can be in various combinations of places:
+///
+/// 1. The app DLL (from AppCode) or in a classic standalone XyzController.cs files inside the app/api folder.
+/// 2. The app root folder or inside an edition.
+/// 3. The app folder of the site, or the shared app folder (shared apps are in a different folder).
+/// 
+/// This service will check all these locations and compile the code if necessary.
+/// </remarks>
+[InternalApi_DoNotUse_MayChangeWithoutNotice("only made public for docs")]
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public class DnnAppApiCompiler(
     ISite site,
     LazySvc<AppCodeLoader> appCodeLoader,
     LazySvc<SourceAnalyzer> analyzerLazy,
@@ -36,10 +47,10 @@ internal class AppApiControllerCompiler(
         var controllerFolder = Path.Combine(
             shared ? site.SharedAppsRootRelative() : site.AppsRootPhysical,
             appFolder,
-            edition + "api/"
+            $"{edition}api/"
         ).ForwardSlash();
 
-        // 1. Check AppCode Dll
+        // 1. First check inside the HotBuilt AppCode Dll
         if (spec != null)
         {
             var appCodeAssemblyResult = appCodeLoader.Value.GetAppCode(spec).AssemblyResult;
@@ -58,7 +69,7 @@ internal class AppApiControllerCompiler(
             }
         }
 
-        // 2. Normal Api, compiled on the fly
+        // 2. It must be a classic Api file, compiled on the fly
         var controllerPath = Path.Combine(controllerFolder, $"{controllerTypeName}.cs");
         l.A($"Controller Folder: '{controllerFolder}' Path: '{controllerPath}'");
 
@@ -72,8 +83,7 @@ internal class AppApiControllerCompiler(
             $"normal Api controller from '{controllerPath}'"); 
     }
 
-    private (HttpControllerDescriptor HttpControllerDescriptor, List<string> CacheDependecyKeys)
-        BuildDescriptorOrThrow(HttpConfiguration configuration, string fullPath, string typeName, HotBuildSpec spec)
+    private (HttpControllerDescriptor Descriptor, List<string> CacheKeys) BuildDescriptorOrThrow(HttpConfiguration configuration, string fullPath, string typeName, HotBuildSpec spec)
     {
         var l = Log.Fn<(HttpControllerDescriptor, List<string>)>($"{nameof(fullPath)}:'{fullPath}'; {nameof(typeName)}:'{typeName}'; {spec}", timer: true);
         Assembly assembly;

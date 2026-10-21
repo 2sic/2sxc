@@ -9,7 +9,7 @@ using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using ToSic.Sxc.Context.Sys;
 
-namespace ToSic.Sxc.Dnn.WebApi.Sys.Providers;
+namespace ToSic.Sxc.Dnn.WebApi.Routing.Sys;
 
 internal sealed class ModifiedTabAndModuleInfoProvider : ITabAndModuleInfoProvider
 {
