@@ -3,7 +3,6 @@ using ToSic.Sxc.Backend.Usage;
 using ToSic.Sxc.Backend.Views;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
-using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 
 namespace ToSic.Sxc.Backend.Admin;
 
@@ -13,7 +12,7 @@ public class ViewControllerReal(
     LazySvc<ViewsBackend> viewsBackend,
     LazySvc<ViewsExportImport> viewExportImport,
     LazySvc<UsageBackend> usageBackend)
-    : Services_ServiceBase("Api.ViewRl", connect: [context, usageBackend, viewsBackend, viewExportImport]),
+    : ServiceBase("Api.ViewRl", connect: [context, usageBackend, viewsBackend, viewExportImport]),
         IViewController
 {
     public const string LogSuffix = "View";

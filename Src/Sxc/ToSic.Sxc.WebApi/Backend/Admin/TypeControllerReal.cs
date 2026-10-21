@@ -3,7 +3,6 @@ using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.ImportExport;
 using ToSic.Sys.Users;
-using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 
 namespace ToSic.Sxc.Backend.Admin;
 
@@ -14,7 +13,7 @@ public class TypeControllerReal(
     AppWorkQuick<WorkContentTypesMod> typeMod,
     LazySvc<IUser> userLazy,
     Generator<ImportContent> importContent)
-    : Services_ServiceBase("Api.TypesRl",
+    : ServiceBase("Api.TypesRl",
         connect: [context, contentExportLazy, userLazy, typeMod, importContent]), ITypeController
 {
     public const string LogSuffix = "Types";

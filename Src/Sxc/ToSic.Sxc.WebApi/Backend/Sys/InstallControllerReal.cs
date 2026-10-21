@@ -14,7 +14,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Sys.Integration.Installation;
 using ToSic.Sys.Capabilities.Features;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
-using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 
 namespace ToSic.Sxc.Backend.Sys;
 
@@ -28,7 +27,7 @@ public class InstallControllerReal(
     LazySvc<IFeaturesService> featureService,
     LazySvc<WorkApps> workApps,
     LazySvc<AppDataStackService> appSettingsStack)
-    : Services_ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
+    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
         connect:
         [
             context, envInstallerLazy, platformAppInstaller, impFromRemoteLazy, responseMaker, featureService,

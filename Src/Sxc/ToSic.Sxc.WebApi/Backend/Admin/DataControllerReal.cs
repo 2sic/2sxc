@@ -7,7 +7,6 @@ using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Eav.WebApi.Sys.Security;
 using ToSic.Sxc.Backend.ImportExport;
 using ToSic.Sys.Users;
-using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 
 namespace ToSic.Sxc.Backend.Admin;
 
@@ -21,7 +20,7 @@ public class DataControllerReal(
     Generator<ImportContent> importContent,
     LazySvc<IUser> userLazy,
     AppWorkQuick<WorkEntityRecycle> recycle)
-    : Services_ServiceBase("Api.DtaCtlRl",
+    : ServiceBase("Api.DtaCtlRl",
         connect: [site, appPathSvc, appReaders, context, contentExportLazy, importContent, userLazy, recycle])
 {
     public const string LogSuffix = "DataCtrl";

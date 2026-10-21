@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Sxc.Backend.ImportExport;
-using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 
 namespace ToSic.Sxc.Backend.Admin;
 
@@ -9,7 +8,7 @@ public class AppPartsControllerReal(
     LazySvc<IContextOfSite> context,
     LazySvc<ExportContent> exportContent,
     Generator<ImportContent> importContent)
-    : Services_ServiceBase("Api.APartsRl", connect: [context, exportContent, importContent]), IAppPartsController
+    : ServiceBase("Api.APartsRl", connect: [context, exportContent, importContent]), IAppPartsController
 {
     public const string LogSuffix = "AParts";
 
