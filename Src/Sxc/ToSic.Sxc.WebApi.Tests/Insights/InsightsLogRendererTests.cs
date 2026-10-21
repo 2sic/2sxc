@@ -150,6 +150,59 @@ public class InsightsLogRendererTests
     }
 
     [Fact]
+    public void DumpTree_PreservesLegacyTimingAndLabels_WhenRenderingSnapshot()
+    {
+        var store = new LogStoreLive();
+        var segment = "renderer-" + Guid.NewGuid();
+        var log = new Log("Legacy");
+        var outer = log.Fn("outer", timer: true)!;
+        var child = new Log("Child", parent: log);
+        var inner = child.Fn("inner", timer: true)!;
+        child.A("inside <&>");
+        inner.Done("inner result");
+        log.A("after inner");
+        outer.Done();
+        log.A("after outer");
+        outer.Entry!.Elapsed = TimeSpan.FromSeconds(2);
+        inner.Entry!.Elapsed = TimeSpan.FromMilliseconds(500);
+        log.Entries.Last().Elapsed = TimeSpan.FromSeconds(4);
+        store.ForceAdd(segment, log);
+        try
+        {
+            var group = Single(new LegacyInsightsLogSnapshotReader(store).ListGroups(), item => item.Segments.Contains(segment));
+
+            var original = DumpTree(log, new(false, []));
+            var retained = Render(new(false, [group]), "DumpTree", typeof(InsightsLogGroupSnapshot), group);
+            XElement[] Spans(string html, string cssClass) => XElement.Parse("<root>" + html + "</root>")
+                .Descendants("span").Where(element => (string?)element.Attribute("class") == cssClass).ToArray();
+
+            Equal(Spans(original, "time").Select(element => element.ToString()), Spans(retained, "time").Select(element => element.ToString()));
+            Equal(Spans(original, "logIds").Select(element => element.ToString()), Spans(retained, "logIds").Select(element => element.ToString()));
+        }
+        finally
+        {
+            store.FlushSegment(segment);
+        }
+    }
+
+    [Fact]
+    public void DumpTree_RendersLegacyIncrementalTimer_WithGrayProgressBackground()
+    {
+        var group = Single(TimingSnapshot(null, null).Groups);
+        var first = group.Events[0] with { Depth = 0 };
+        var later = group.Events[1] with { Depth = 0, TimestampUtc = group.TimestampUtc.AddSeconds(3), StartedUtc = null };
+        var last = later with { Sequence = 3, TimestampUtc = group.TimestampUtc.AddSeconds(4) };
+        group = group with { Events = [first, later, last] };
+
+        var html = Render(new(false, [group]), "DumpTree", typeof(InsightsLogGroupSnapshot), group);
+        var timing = XElement.Parse("<root>" + html + "</root>").Descendants("span")
+            .Where(element => (string?)element.Attribute("class") == "time").ElementAt(1);
+
+        Equal($"{3:F} since ▶️", timing.Value);
+        Equal("background: linear-gradient(90deg, #bbbbbb 75%, #b9b8ff 75%, #b9b8ff 75%, #eeeeee 75%)", (string?)timing.Attribute("style"));
+    }
+
+    [Fact]
     public void DumpTree_LegacySnapshotShowsRelativeTimeAndPreciseDuration()
     {
         var store = new LogStoreLive();
@@ -170,7 +223,7 @@ public class InsightsLogRendererTests
             string Timing(int index) => Single(lines[index].Elements("span"), element => (string?)element.Attribute("class") == "time").Value.Trim();
 
             Equal(2, lines.Length);
-            StartsWith($"⌚ {0.13:0.####}ms | ", Timing(0));
+            StartsWith($"⌚ {0.13:0.####}ms ", Timing(0));
             EndsWith(" since ▶️", Timing(1));
             DoesNotContain(":", Timing(0));
         }
