@@ -21,16 +21,16 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
 
     public OqtSxcViewBuilder(
         Output.OqtPageOutput pageOutput,
-        IContextOfBlock contextOfBlockEmpty,
+        OqtContextOfBlockFactory contextOfBlockFactory,
         BlockOfModule blockModuleEmpty,
         ISxcCurrentContextService currentContextServiceForLookUps,
         ILogStore logStore,
         GlobalTypesCheck globalTypesCheck,
         IOutputCache outputCache,
         Generator<IBlockRenderer> blockBuilderGenerator)
-        : base($"{OqtConstants.OqtLogPrefix}.Buildr", connect: [pageOutput, contextOfBlockEmpty, blockModuleEmpty, currentContextServiceForLookUps, globalTypesCheck, outputCache, pageOutput, blockBuilderGenerator])
+        : base($"{OqtConstants.OqtLogPrefix}.Buildr", connect: [pageOutput, contextOfBlockFactory, blockModuleEmpty, currentContextServiceForLookUps, globalTypesCheck, outputCache, pageOutput, blockBuilderGenerator])
     {
-        _contextOfBlockEmpty = contextOfBlockEmpty;
+        _contextOfBlockFactory = contextOfBlockFactory;
         _blockModuleEmpty = blockModuleEmpty;
         _currentContextServiceForLookUps = currentContextServiceForLookUps;
         _globalTypesCheck = globalTypesCheck;
@@ -41,7 +41,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
     }
 
     public Output.OqtPageOutput PageOutput { get; }
-    private readonly IContextOfBlock _contextOfBlockEmpty;
+    private readonly OqtContextOfBlockFactory _contextOfBlockFactory;
     private readonly BlockOfModule _blockModuleEmpty;
     private readonly ISxcCurrentContextService _currentContextServiceForLookUps;
     private readonly GlobalTypesCheck _globalTypesCheck;
@@ -142,7 +142,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
 
     private IBlock Block => _blockGetOnce.Get(() => LogTimer.DoInTimer(() =>
     {
-        var ctx = _contextOfBlockEmpty.Init(Page.PageId, Module);
+        var ctx = _contextOfBlockFactory.Create(Page.PageId, Module);
         var block = _blockModuleEmpty.GetBlockOfModule(ctx);
 
         // Special for Oqtane - normally the IContextResolver is only used in WebAPIs
