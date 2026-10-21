@@ -162,6 +162,7 @@ public interface ITypedCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IHas
     /// 
     /// In older code there was a similar `CreateInstance` method
     /// </remarks>
+    [PrivateApi("Hidden, as not supported any more going forward")]
     dynamic? GetCode(string path, NoParamOrder npo = default, string? className = default);
 
     #endregion

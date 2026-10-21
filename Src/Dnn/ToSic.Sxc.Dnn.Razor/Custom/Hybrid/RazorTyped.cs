@@ -105,8 +105,9 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
     /// <inheritdoc />
     public override IHtmlHelper Html => RzrHlp.Html;
     private DnnRazorGetCodeHelper RzrGetCodeHlp => field ??= new(this, ExCtx);
-    
+
     /// <inheritdoc cref="ITypedCode16.GetCode"/>
+    [PrivateApi("Hidden, as not supported any more going forward")]
     public dynamic GetCode(string path, NoParamOrder npo = default, string className = default)
         => RzrGetCodeHlp.GetCode(path: path, className: className);
 

@@ -115,6 +115,7 @@ public abstract class RazorTyped<TModel>()
 
     // #DropOqtaneGetCodeV22
     /// <inheritdoc cref="ITypedCode16.GetCode"/>
+    [PrivateApi("Hidden, as not supported")]
     public dynamic? GetCode(string path, NoParamOrder npo = default, string? className = default)
         => throw new NotSupportedException("GetCode() is not supported any more in Oqtane. Use AppCode instead.");
 

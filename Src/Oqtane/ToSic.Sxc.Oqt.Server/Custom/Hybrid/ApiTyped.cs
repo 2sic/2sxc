@@ -169,6 +169,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     private CompileCodeHelper CompileCodeHlp => field ??= GetService<CompileCodeHelper>().Init(this);
 
     /// <inheritdoc cref="ITypedCode16.GetCode"/>
+    [PrivateApi("Hidden, as not supported any more going forward")]
     public dynamic GetCode(string path, NoParamOrder npo = default, string className = default)
         => CompileCodeHlp.CreateInstance(path /*relativePath: (this as IGetCodePath).CreateInstancePath*/, name: className);
 
