@@ -3,5 +3,5 @@
 // ReSharper disable once CheckNamespace
 namespace Custom.Oqtane;
 
-[PublicApi]
+[PrivateApi("Deprecated, hidden in v22")]
 public abstract class Code12: ToSic.Sxc.Code.DynamicCode12;
