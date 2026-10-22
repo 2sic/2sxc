@@ -38,8 +38,8 @@ public partial class SimpleDataEditService(
     AppWorkChain<WorkEntityUpdate> entUpdate,
     AppWorkChain<WorkEntityDelete> entDelete,
     LazySvc<IValueConverter> valueConverter,
-    Generator<AppPermissionCheck> appPermissionCheckGenerator
-) : ServiceWithSetup<SimpleDataEditService.Options>("Dta.Simple", connect: [appWorkCtxSvc, entSave, entUpdate, entDelete, zoneMapper, dataAssembler, siteCtxForPermissionCheck, appPermissionCheckGenerator, valueConverter])
+    LazySvc<PermissionCheckFactory> permCheckFactory
+) : ServiceWithSetup<SimpleDataEditService.Options>("Dta.Simple", connect: [appWorkCtxSvc, entSave, entUpdate, entDelete, zoneMapper, dataAssembler, siteCtxForPermissionCheck, permCheckFactory, valueConverter])
 {
     /// <summary>
     /// 

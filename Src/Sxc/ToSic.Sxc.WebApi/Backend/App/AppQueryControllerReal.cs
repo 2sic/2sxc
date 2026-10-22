@@ -22,11 +22,11 @@ public class AppQueryControllerReal(
     LazySvc<AppQueryODataHelper> oDataHelper,
     ISxcCurrentContextService ctxService,
     Generator<IConvertToEavLight> dataConverter,
-    Generator<AppPermissionCheck> appPermissionCheck,
+    LazySvc<PermissionCheckFactory> permCheckFactory,
     LazySvc<QueryManager> queryManager,
     LazySvc<ILookUpEngineResolver> lookupResolver)
     : ServiceBase("Sxc.ApiApQ",
-        connect: [oDataHelper, lookupResolver, ctxService, dataConverter, appPermissionCheck, queryManager]), IAppQueryController
+        connect: [oDataHelper, lookupResolver, ctxService, dataConverter, permCheckFactory, queryManager]), IAppQueryController
 {
     public const string LogSuffix = "AppQry";
 
@@ -112,8 +112,7 @@ public class AppQueryControllerReal(
         }
 
         l.A($"Check permission on query {query.Definition.Id}");
-        var permissionChecker = appPermissionCheck.New()
-            .ForItem(context, app, (query.Definition as ICanBeEntity).Entity);
+        var permissionChecker = permCheckFactory.Value.ForItem(context, app, (query.Definition as ICanBeEntity).Entity);
         var readExplicitlyAllowed = permissionChecker.UserMay(GrantSets.ReadSomething).Allowed;
 
         var isAdmin = context.User.IsContentAdmin;

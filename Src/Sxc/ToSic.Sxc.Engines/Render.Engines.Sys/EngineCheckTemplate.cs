@@ -9,8 +9,8 @@ using ToSic.Sys.Security.Permissions;
 namespace ToSic.Sxc.Render.Engines.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class EngineCheckTemplate(LazySvc<AppPermissionCheck> appPermCheckLazy)
-    : ServiceBase("Sxc.EngChk", connect: [appPermCheckLazy])
+public class EngineCheckTemplate(LazySvc<PermissionCheckFactory> permCheckFactory)
+    : ServiceBase("Sxc.EngChk", connect: [permCheckFactory])
 {
     /// <summary>
     /// Template Exceptions like missing configuration or defined type not found
@@ -50,7 +50,7 @@ public class EngineCheckTemplate(LazySvc<AppPermissionCheck> appPermCheckLazy)
     {
         // do security check IF security exists
         // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
-        var templatePermissions = appPermCheckLazy.Value
+        var templatePermissions = permCheckFactory.Value
             .ForItem(appContext, appContext.AppReaderRequired, view.Entity);
 
         // Views only use permissions to prevent access, so only check if there are any configured permissions
