@@ -4,9 +4,9 @@
 
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <UsingTask TaskName="CopyNewerFileVersion" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net9.0\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' == 'Core'" />
+  <UsingTask TaskName="CopyNewerFileVersion" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net10.0\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' == 'Core'" />
   <UsingTask TaskName="CopyNewerFileVersion" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net48\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' != 'Core'" />
-  <UsingTask TaskName="ModifyXmlDocumentation" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net9.0\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' == 'Core'" />
+  <UsingTask TaskName="ModifyXmlDocumentation" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net10.0\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' == 'Core'" />
   <UsingTask TaskName="ModifyXmlDocumentation" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net48\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' != 'Core'" />
 
   <!-- The Dnn Build Package - Should only run after release compile -->

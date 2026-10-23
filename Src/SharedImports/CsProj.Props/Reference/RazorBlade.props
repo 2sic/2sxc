@@ -3,7 +3,6 @@
   <ItemGroup>
     <Reference Include="ToSic.Razor">
       <HintPath Condition="'$(TargetFramework)' == 'net48'">..\..\..\Dependencies\RazorBlade\Release\net48\ToSic.Razor.dll</HintPath>
-      <HintPath Condition="'$(TargetFramework)' == 'net9.0'">..\..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.dll</HintPath>
       <HintPath Condition="'$(TargetFramework)' == 'net10.0'">..\..\..\Dependencies\RazorBlade\Release\net7.0\ToSic.Razor.dll</HintPath>
     </Reference>
   </ItemGroup>

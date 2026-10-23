@@ -18,6 +18,21 @@ public class OqtAssetsFileHelperTests : IDisposable
 {
     private readonly string _contentRoot = Path.Combine(Path.GetTempPath(), $"{nameof(OqtAssetsFileHelperTests)}-{Guid.NewGuid():N}");
 
+    [Theory]
+    [InlineData("photo.png", "image/png")]
+    [InlineData("photo.jpg", "image/jpeg")]
+    [InlineData("styles.css", "text/css")]
+    [InlineData("document.pdf", "application/pdf")]
+    public void GetMimeType_ReturnsContentType_ForKnownExtension(string fileName, string expected)
+        => Equal(expected, OqtAssetsFileHelper.GetMimeType(fileName));
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("file")]
+    [InlineData("file.unknown-extension")]
+    public void GetMimeType_ReturnsFallback_ForUnknownExtension(string fileName)
+        => Equal(OqtAssetsFileHelper.FallbackMimeType, OqtAssetsFileHelper.GetMimeType(fileName));
+
     [Fact]
     public void GetFilePath_UsesPrimarySite_ForLocalizationGroup()
     {

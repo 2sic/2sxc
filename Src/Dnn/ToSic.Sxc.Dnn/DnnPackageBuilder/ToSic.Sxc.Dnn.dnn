@@ -458,7 +458,7 @@
                   <node path="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[
                           ab:assemblyIdentity/@name='Microsoft.Bcl.AsyncInterfaces'
                           and ab:bindingRedirect/@newVersion='9.0.0.0'
-                          and not(ab:codeBase/@version='9.0.0.0'/@href='bin\2sxc\Microsoft.Bcl.AsyncInterfaces')
+                          and not(ab:codeBase[@version='9.0.0.0' and @href='bin\2sxc\Microsoft.Bcl.AsyncInterfaces.dll'])
                         ]"
                         action="add"
                         collision="overwrite"
@@ -725,11 +725,11 @@
             </assembly>
             <assembly>
               <name>Microsoft.Extensions.Logging.Abstractions.dll</name>
-              <version>2.2.0.18315</version>
+              <version>8.0.23.53103</version>
             </assembly>
             <assembly>
               <name>Microsoft.Extensions.Primitives.dll</name>
-              <version>2.2.0.18315</version>
+              <version>8.0.23.53103</version>
             </assembly>
             <assembly>
               <name>Microsoft.IO.RecyclableMemoryStream.dll</name>
