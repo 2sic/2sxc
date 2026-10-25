@@ -22,8 +22,8 @@ public class UsageBackend(
 
         // extra security to only allow zone change if host user
         var permCheck = appPermissions.New(new() { SiteContext = context, App = context.AppReaderRequired });
-        if (!permCheck.EnsureAllWithError(GrantSets.ReadSomething, out var error))
-            throw HttpException.PermissionDenied(error);
+        if (permCheck.EnsureAll(GrantSets.ReadSomething) is { Allowed: false } pcResult)
+            throw HttpException.PermissionDenied(pcResult.ErrorMessage);
 
         var appWorkCtxPlus = appCtxSvc.ContextNew(appId);
         var appViews = workViews.New(appWorkCtxPlus);

@@ -39,7 +39,7 @@ public class HyperlinkBackend(
                 // page link - only resolve if the user has edit-permissions
                 // only people who have some full edit permissions may actually look up pages
                 var permCheckPage = appPermissions.New(new() { SiteContext = context, App = context.AppReaderRequired });
-                var userMay= permCheckPage.UserMayOnAll(GrantSets.WritePublished);
+                var userMay= permCheckPage.EnsureAll(GrantSets.WritePublished).Allowed;
                 return new() {Value = userMay ? resolved : hyperlink};
             }
 

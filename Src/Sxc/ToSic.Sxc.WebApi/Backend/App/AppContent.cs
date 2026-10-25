@@ -85,7 +85,7 @@ public class AppContent(
         var permCheck = ThrowIfNotAllowedInItem(itm, GrantSets.ReadSomething, AppReader);
 
         // in case draft wasn't allow, get again with more restricted permissions 
-        if (!permCheck.EnsureAny(GrantSets.ReadDraft))
+        if (!permCheck.EnsureAnyReadDraft().Allowed)
             itm = getOne(AppReader.GetListPublished());
 
         return InitEavAndSerializer(AppReader.AppId, Context.Permissions.IsContentAdmin, uri).Convert(itm)!;
@@ -281,8 +281,8 @@ public class AppContent(
     private void ThrowIfNotAllowedInType(string contentType, List<Grants> requiredGrants, IAppIdentity appIdentity)
     {
         var permCheck = typesPermissions.New(new() { SiteContext = Context, App = appIdentity, ContentTypes = [contentType] });
-        if (!permCheck.EnsureAllWithError(requiredGrants, out var error))
-            throw HttpException.PermissionDenied(error);
+        if (permCheck.EnsureAll(requiredGrants) is { Allowed: false } result)
+            throw HttpException.PermissionDenied(result.ErrorMessage);
     }
 
     private MultiPermissionsItems ThrowIfNotAllowedInItem(IEntity itm, List<Grants> requiredGrants, IAppIdentity appIdentity)
@@ -290,8 +290,8 @@ public class AppContent(
         if (itm == null)
             throw new ArgumentNullException(nameof(itm), @"Item must not be null to check it's security.");
         var permCheck = itemsPermissions.New(new() { SiteContext = Context, App = appIdentity, Entities = [itm] });
-        if (!permCheck.EnsureAllWithError(requiredGrants, out var error))
-            throw HttpException.PermissionDenied(error);
+        if (permCheck.EnsureAll(requiredGrants) is { Allowed: false } result)
+            throw HttpException.PermissionDenied(result.ErrorMessage);
         return permCheck;
     }
 

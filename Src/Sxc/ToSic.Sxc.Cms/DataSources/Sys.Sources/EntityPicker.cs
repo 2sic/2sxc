@@ -118,11 +118,11 @@ public class EntityPicker(
             var permCheckApp = appPermissions.New(new() { SiteContext = ctxForPermissions, App = this.PureIdentity() });
 
             // First do security check with no-type name
-            if (!permCheckApp.UserMayOnAll(GrantSets.ReadSomething))
-                return l.ReturnAsError(Error.Create(title: "No permissions on App, get all entities denied"));
+            if (permCheckApp.EnsureAll(GrantSets.ReadSomething) is { Allowed: false } pcResult)
+                return l.ReturnAsError(Error.Create(title: $"No permissions on App, get all entities denied: {pcResult.ErrorMessage}"));
 
             // Check if we provide drafts as well
-            var withDrafts = permCheckApp.EnsureAny(GrantSets.ReadDraft);
+            var withDrafts = permCheckApp.EnsureAnyReadDraft().Allowed;
 
             var entitiesSvc = workEntities.New(this, showDrafts: withDrafts);
             var entities = entitiesSvc.OnlyContent(withConfiguration: user.IsSystemAdmin).ToList();
@@ -147,9 +147,9 @@ public class EntityPicker(
 
                 var permCheckType = typePermissions.New(new() { SiteContext = ctxForPermissions, App = ctxForPermissions.AppReaderRequired, ContentTypes = [type.Name] });
 
-                if (permCheckType.UserMayOnAll(GrantSets.ReadSomething))
+                if (permCheckType.EnsureAll(GrantSets.ReadSomething).Allowed)
                 {
-                    var withDrafts = permCheckType.EnsureAny(GrantSets.ReadDraft);
+                    var withDrafts = permCheckType.EnsureAnyReadDraft().Allowed;
                     var entitiesSvc = workEntities.New(this, showDrafts: withDrafts);
                     var ofType = entitiesSvc.MyOptions.Data.List.GetAll(type).ToList();
                     result.AddRange(ofType);

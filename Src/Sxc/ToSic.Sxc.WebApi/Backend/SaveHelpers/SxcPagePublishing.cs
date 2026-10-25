@@ -20,7 +20,7 @@ public class SxcPagePublishing(AppWorkChain<ContentGroupList> contentGroupList, 
     )
     {
         var l = Log.Fn<Dictionary<Guid, int>>();
-        var allowWriteLive = permCheck.UserMayOnAll(GrantSets.WritePublished);
+        var allowWriteLive = permCheck.EnsureAll(GrantSets.WritePublished).Allowed;
         var forceDraft = !allowWriteLive;
         l.A($"allowWrite: {allowWriteLive} forceDraft: {forceDraft}");
 

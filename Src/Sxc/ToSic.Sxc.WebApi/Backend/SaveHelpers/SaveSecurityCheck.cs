@@ -26,10 +26,10 @@ public class SaveSecurity(Generator<MultiPermissionsTypes, MultiPermissionsTypes
             )
         });
         
-        if (!permCheck.EnsureAllWithError(GrantSets.WriteSomething, out var error))
-            throw HttpException.PermissionDenied(error);
+        if (permCheck.EnsureAll(GrantSets.WriteSomething) is { Allowed: false } pcResult)
+            throw HttpException.PermissionDenied(pcResult.ErrorMessage);
         
-        if (!permCheck.UserCanWriteAndPublicFormsEnabled(sysFeatSvc, out _, out error))
+        if (!permCheck.UserCanWriteAndPublicFormsEnabled(sysFeatSvc, out _, out var error))
             throw HttpException.PermissionDenied(error);
 
         return l.Return(permCheck, "passed security checks");
