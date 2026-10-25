@@ -6,10 +6,10 @@ namespace ToSic.Sxc.Backend.Admin;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class DialogControllerReal(
+    ZoneSwitchPermissionCheck zoneSwitchPermissionCheck,
     ISxcCurrentContextService ctxService,
-    IUiContextBuilder uiContextBuilder,
-    Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions)
-    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [ctxService, uiContextBuilder, appPermissions]),
+    IUiContextBuilder uiContextBuilder)
+    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [zoneSwitchPermissionCheck, ctxService, uiContextBuilder]),
         IDialogController
 {
     public const string LogSuffix = "Dialog";
@@ -24,22 +24,24 @@ public class DialogControllerReal(
         var appContext = appId != KnownAppsConstants.AppIdEmpty
             ? ctxService.ShareAppStateOptimized(appId)
             : null;
+        var appReader = appContext?.AppReaderRequired;
 
-        // if we have an appid (we don't have it in an install-new-apps-scenario) check permissions
-        if (appContext != null)
+        // If we have an appid check permissions
+        // This will be missing in install-app scenarios and other calls where the app is not set yet
+        if (appReader != null)
         {
-            var appAndPerms = appPermissions.New(new() { SiteContext = appContext, App = appContext.AppReaderRequired });
-            if (!appAndPerms.ZoneIsOfCurrentContextOrUserIsSuper(out var error))
+            if (!zoneSwitchPermissionCheck.Check(appReader, out var error))
                 throw HttpException.PermissionDenied(error);
         }
 
-        var cb = uiContextBuilder.InitApp(appContext?.AppReaderRequired);
+        var cb = uiContextBuilder.InitApp(appReader);
 
         return new()
         {
             Context = cb.Get(Ctx.General, CtxEnable.All),
         };
     }
+
 
 }
 
