@@ -281,7 +281,7 @@ public class AppContent(
     private void ThrowIfNotAllowedInType(string contentType, List<Grants> requiredGrants, IAppIdentity appIdentity)
     {
         var permCheck = typesPermissions.New(new() { SiteContext = Context, App = appIdentity, ContentTypes = [contentType] });
-        if (!permCheck.EnsureAll(requiredGrants, out var error))
+        if (!permCheck.EnsureAllWithError(requiredGrants, out var error))
             throw HttpException.PermissionDenied(error);
     }
 
@@ -290,7 +290,7 @@ public class AppContent(
         if (itm == null)
             throw new ArgumentNullException(nameof(itm), @"Item must not be null to check it's security.");
         var permCheck = itemsPermissions.New(new() { SiteContext = Context, App = appIdentity, Entities = [itm] });
-        if (!permCheck.EnsureAll(requiredGrants, out var error))
+        if (!permCheck.EnsureAllWithError(requiredGrants, out var error))
             throw HttpException.PermissionDenied(error);
         return permCheck;
     }

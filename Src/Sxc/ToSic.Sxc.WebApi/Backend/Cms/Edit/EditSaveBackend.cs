@@ -68,7 +68,7 @@ public class EditSaveBackend(
                     ? appEntities.Get(i.Entity.Guid) // prefer guid access if available
                     : appEntities.Get(i.Entity.Id) // otherwise id
             );
-        if (foundItems.Any(i => i != null) && !permCheck.EnsureAll(GrantSets.UpdateSomething, out var error))
+        if (foundItems.Any(i => i != null) && !permCheck.EnsureAllWithError(GrantSets.UpdateSomething, out var error))
             throw HttpException.PermissionDenied(error);
 
         #endregion

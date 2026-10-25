@@ -75,7 +75,7 @@ public class EditLoadBackend(
             App = appReader,
             ContentTypes = usedContentTypes,
         });
-        if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
+        if (!permCheck.EnsureAllWithError(GrantSets.WriteSomething, out var error))
             throw HttpException.PermissionDenied(error);
 
         // load items - similar
@@ -103,7 +103,7 @@ public class EditLoadBackend(
         // this is to ensure that if public forms only have "create" permissions, they can't access existing data
         // important, this code is shared/duplicated in the EntitiesController.GetManyForEditing
         if (list.Any(set => set.Entity != null))
-            if (!permCheck.EnsureAll(GrantSets.ReadSomething, out error))
+            if (!permCheck.EnsureAllWithError(GrantSets.ReadSomething, out error))
                 throw l.Ex(HttpException.PermissionDenied(error));
 
 

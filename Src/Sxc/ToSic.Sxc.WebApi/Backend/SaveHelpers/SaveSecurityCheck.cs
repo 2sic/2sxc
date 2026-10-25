@@ -26,7 +26,7 @@ public class SaveSecurity(Generator<MultiPermissionsTypes, MultiPermissionsTypes
             )
         });
         
-        if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
+        if (!permCheck.EnsureAllWithError(GrantSets.WriteSomething, out var error))
             throw HttpException.PermissionDenied(error);
         
         if (!permCheck.UserCanWriteAndPublicFormsEnabled(sysFeatSvc, out _, out error))
