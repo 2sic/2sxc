@@ -3,13 +3,26 @@ using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
 using ToSic.Eav.Environment.Sys.Permissions;
 using ToSic.Sxc.Context.Sys;
+using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Wrappers;
 
 namespace ToSic.Sxc.Dnn.Run;
 
-internal class DnnEnvironmentPermission() : EnvironmentPermission(DnnConstants.LogName)
+internal class DnnEnvironmentPermission() : ServiceWithSetup<EnvironmentPermissionOptions>(DnnConstants.LogName), IEnvironmentPermission
 {
     public string CustomPermissionKey = ""; // "CONTENT";
+
+    public void Setup(EnvironmentPermissionOptionsBase options)
+        => base.Setup(options as EnvironmentPermissionOptions ?? throw new InvalidCastException("Must convert the options, but not compatible."));
+
+    /// <inheritdoc/>
+    public PermissionCheckInfo EnvironmentAllows(List<Grants> grants)
+    {
+        var ok = new EnvironmentPermissionsLogic(parentLog: Log)
+            .EnvironmentAllows(grants: grants, options: MyOptions, userIsModuleAdmin: UserIsModuleAdmin, userIsModuleEditor: UserIsModuleEditor);
+        return new(ok, ok ? Conditions.EnvironmentGlobal : Conditions.Undefined);
+    }
+
 
     /// <summary>
     /// The DNN module on the container
@@ -17,11 +30,11 @@ internal class DnnEnvironmentPermission() : EnvironmentPermission(DnnConstants.L
     /// <remarks>
     /// In some cases the container is a ContainerNull object without ModuleInfo, so we must really do null-checks
     /// </remarks>
-    protected ModuleInfo Module => _module.Get(
-        () => ((ContextOfSiteOrBlock as IContextOfBlock)?.Module as IWrapper<ModuleInfo>)?.GetContents());
+    private ModuleInfo Module => _module.Get(
+        () => ((MyOptions?.ContextOfSiteOrBlock as IContextOfBlock)?.Module as IWrapper<ModuleInfo>)?.GetContents());
     private readonly LazyGet<ModuleInfo> _module = new();
 
-    public override bool VerifyConditionOfEnvironment(string condition)
+    public bool VerifyConditionOfEnvironment(string condition)
     {
         var l = Log.Fn<bool>($"condition: {condition}");
         var fullPrefix = (EnvironmentPermissionConstants.SalPrefix + ".").ToLowerInvariant();
@@ -47,25 +60,25 @@ internal class DnnEnvironmentPermission() : EnvironmentPermission(DnnConstants.L
         return l.ReturnFalse("can't verify: false");
     }
 
-    protected override bool UserIsModuleAdmin()
+    private bool UserIsModuleAdmin()
     {
         var l = Log.Fn<bool>();
         return l.ReturnAsOk(Module != null && ModulePermissionController.CanAdminModule(Module));
     }
  
 
-    protected override bool UserIsModuleEditor()
+    private bool UserIsModuleEditor()
     {
         var l = Log.Fn<bool>();
         if (Module == null)
-            return false;
+            return l.ReturnFalse("no module");
 
         // This seems to throw errors during search :(
         try
         {
             // skip during search (usual HttpContext is missing for search)
             if (System.Web.HttpContext.Current == null)
-                return l.ReturnFalse();
+                return l.ReturnFalse("no HttpContext");
 
             var isEditor = ModulePermissionController.HasModuleAccess(SecurityAccessLevel.Edit, "", Module)
                            || ModulePermissionController.CanEditModuleContent(Module);

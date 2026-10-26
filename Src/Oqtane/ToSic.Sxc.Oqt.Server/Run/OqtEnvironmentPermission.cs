@@ -6,6 +6,7 @@ using ToSic.Eav.Environment.Sys.Permissions;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Users;
 using ToSic.Sys.Utils;
 
@@ -15,16 +16,29 @@ internal class OqtEnvironmentPermission(
     IHttpContextAccessor httpContextAccessor,
     LazySvc<IUserPermissions> userPermissions,
     LazySvc<IUser> oqtUser)
-    : EnvironmentPermission(OqtConstants.OqtLogPrefix, connect: [httpContextAccessor, userPermissions, oqtUser])
+    : ServiceWithSetup<EnvironmentPermissionOptions>(OqtConstants.OqtLogPrefix, connect: [httpContextAccessor, userPermissions, oqtUser]),
+        IEnvironmentPermission
 {
+
+    public void Setup(EnvironmentPermissionOptionsBase options)
+        => base.Setup(options as EnvironmentPermissionOptions ?? throw new InvalidCastException("Must convert the options, but not compatible."));
+
+    /// <inheritdoc/>
+    public PermissionCheckInfo EnvironmentAllows(List<Grants> grants)
+    {
+        var ok = new EnvironmentPermissionsLogic(parentLog: Log)
+            .EnvironmentAllows(grants: grants, options: MyOptions, userIsModuleAdmin: UserIsModuleAdmin, userIsModuleEditor: UserIsModuleEditor);
+        return new(ok, ok ? Conditions.EnvironmentGlobal : Conditions.Undefined);
+    }
+
     /// <summary>
     /// Gets the <see cref="ClaimsPrincipal"/> for user associated with the executing action.
     /// </summary>
     private ClaimsPrincipal ClaimsPrincipal => httpContextAccessor.HttpContext?.User;
 
-    private IModule Module => field ??= (ContextOfSiteOrBlock as IContextOfBlock)?.Module;
+    private IModule Module => field ??= (MyOptions?.ContextOfSiteOrBlock as IContextOfBlock)?.Module;
 
-    public override bool VerifyConditionOfEnvironment(string condition)
+    public bool VerifyConditionOfEnvironment(string condition)
     {
         // This terms are historic from DNN
         if (condition.EqualsInsensitive(EnvironmentPermissionConstants.SalAnonymous))
@@ -47,13 +61,13 @@ internal class OqtEnvironmentPermission(
         return false;
     }
 
-    protected override bool UserIsModuleAdmin()
+    private bool UserIsModuleAdmin()
     {
         var l = Log.Fn<bool>($"{nameof(Module)}: {Module?.Id}.");
         return l.ReturnAsOk(UserIsModuleEditor());
     }
 
-    protected override bool UserIsModuleEditor()
+    private bool UserIsModuleEditor()
     {
         return _userIsModuleEditor ??= IsModuleEditor();
         bool IsModuleEditor()
