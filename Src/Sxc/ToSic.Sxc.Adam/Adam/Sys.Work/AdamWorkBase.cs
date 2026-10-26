@@ -19,7 +19,8 @@ public abstract class AdamWorkBase(AdamWorkBase.Dependencies services, string lo
 
     public void Setup(AdamWorkOptions options)
     {
-        var context = Services.AppCtxFactory.Create(options.AppId);
+        // Keep the caller's module context so module editors retain their ADAM permissions.
+        var context = options.Context ?? Services.AppCtxFactory.Create(options.AppId);
 
         // 2026-10-20 2dm: Believe that the AppId should always have a valid value, so no magic find-it-yourself
         // Turned this off for now, keep till early 2027 then clean up.

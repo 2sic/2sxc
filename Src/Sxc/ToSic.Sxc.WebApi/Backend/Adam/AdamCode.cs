@@ -41,6 +41,7 @@ public class AdamCode(Generator<AdamWorkUpload, AdamWorkOptions> adamUploadGener
         var adamUploader = adamUploadGenerator.New(new()
             {
                 AppId = appId,
+                Context = ExCtx.GetContextOfBlock(),
                 ContentType = contentType,
                 ItemGuid = guid.Value,
                 Field = field,

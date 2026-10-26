@@ -7,7 +7,10 @@ namespace ToSic.Sxc.Backend.Adam;
 /// Is meant to be transaction based - so create a new one for each thing as the initializers set everything for the transaction
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamPrefetchHelper(Generator<AdamWorkGet, AdamWorkOptions> adamGet, Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> dtoMaker)
+public class AdamPrefetchHelper(
+    Generator<AdamWorkGet, AdamWorkOptions> adamGet,
+    Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> dtoMaker,
+    ISxcCurrentContextService ctxService)
     : ServiceWithSetup<AdamWorkOptions>("Adm.TrnItm"),
         IAdamPrefetchHelper
 {
@@ -19,7 +22,10 @@ public class AdamPrefetchHelper(Generator<AdamWorkGet, AdamWorkOptions> adamGet,
     public ICollection<AdamItemDto> GetAdamItemsForPrefetch(string subFolderName, bool autoCreate = true)
     {
         var l = Log.Fn<ICollection<AdamItemDto>>($"subFolderName:{subFolderName}, autoCreate:{autoCreate}");
-        var adamGetReady = adamGet.New(MyOptions);
+        var adamGetReady = adamGet.New(MyOptions with
+        {
+            Context = MyOptions.Context ?? ctxService.ShareAppStateOptimized(MyOptions.AppId),
+        });
         var items = adamGetReady.ItemsInField(subFolderName, autoCreate);
         
         if (items == null)

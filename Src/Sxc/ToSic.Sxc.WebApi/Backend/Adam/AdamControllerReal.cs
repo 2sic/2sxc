@@ -10,7 +10,8 @@ public class AdamControllerReal<TIdentifier>(
     Generator<AdamWorkFolderCreate, AdamWorkOptions> adamFolders,
     Generator<AdamWorkDelete, AdamWorkOptions> adamDelete,
     Generator<AdamWorkRename, AdamWorkOptions> adamRename,
-    Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> dtoMaker)
+    Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> dtoMaker,
+    ISxcCurrentContextService ctxService)
     : ServiceBase("Api.Adam", connect: [adamUpload, adamWorkGet, adamFolders, adamDelete, adamRename])
 {
     public AdamItemDto Upload(HttpUploadedFile uploadInfo, int appId, string contentType, Guid guid, string field, string subFolder = "", bool usePortalRoot = false)
@@ -33,6 +34,7 @@ public class AdamControllerReal<TIdentifier>(
             var uploader = adamUpload.New(new()
             {
                 AppId = appId,
+                Context = ctxService.ShareAppStateOptimized(appId),
                 ContentType = contentType,
                 ItemGuid = guid,
                 Field = field,
@@ -61,6 +63,7 @@ public class AdamControllerReal<TIdentifier>(
         var adamGet = adamWorkGet.New(new()
         {
             AppId = appId,
+            Context = ctxService.ShareAppStateOptimized(appId),
             ContentType = contentType,
             ItemGuid = guid,
             Field = field,
@@ -84,6 +87,7 @@ public class AdamControllerReal<TIdentifier>(
         adamFolders.New(new()
             {
                 AppId = appId,
+                Context = ctxService.ShareAppStateOptimized(appId),
                 ContentType = contentType,
                 ItemGuid = guid,
                 Field = field,
@@ -94,6 +98,7 @@ public class AdamControllerReal<TIdentifier>(
         var adamGet = adamWorkGet.New(new()
         {
             AppId = appId,
+            Context = ctxService.ShareAppStateOptimized(appId),
             ContentType = contentType,
             ItemGuid = guid,
             Field = field,
@@ -114,6 +119,7 @@ public class AdamControllerReal<TIdentifier>(
         => adamDelete.New(new()
         {
             AppId = appId,
+            Context = ctxService.ShareAppStateOptimized(appId),
             ContentType = contentType,
             ItemGuid = guid,
             Field = field,
@@ -125,6 +131,7 @@ public class AdamControllerReal<TIdentifier>(
         => adamRename.New(new()
             {
                 AppId = appId,
+                Context = ctxService.ShareAppStateOptimized(appId),
                 ContentType = contentType,
                 ItemGuid = guid,
                 Field = field,

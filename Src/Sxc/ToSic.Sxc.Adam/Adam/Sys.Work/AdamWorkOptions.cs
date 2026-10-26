@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Adam.Sys.Work;
+﻿using ToSic.Eav.Context;
+
+namespace ToSic.Sxc.Adam.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public record AdamWorkOptions
@@ -8,4 +10,9 @@ public record AdamWorkOptions
     public Guid ItemGuid { get; init; }
     public string ContentType { get; init; } = "";
     public int AppId { get; init; }
+
+    /// <summary>
+    /// Prepared server-side context for this app, including module permissions when available.
+    /// </summary>
+    public IContextOfApp? Context { get; init; }
 }
