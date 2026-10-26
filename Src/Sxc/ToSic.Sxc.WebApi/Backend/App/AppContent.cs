@@ -254,7 +254,7 @@ public class AppContent(
 
         var entityApi = api.Init(AppReader.AppId);
         var itm = AppReader.List.GetOrThrow(contentType, id);
-        ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppReader);
+        ThrowIfNotAllowedInItem(itm, [Grants.Delete], AppReader);
         entityApi.Delete(itm.Type.Name, id);
         l.Done();
     }
@@ -267,7 +267,7 @@ public class AppContent(
         var entityApi = api.Init(AppReader.AppId);
         var itm = AppReader.List.GetOrThrow(contentType == "any" ? null : contentType, guid);
 
-        ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppReader);
+        ThrowIfNotAllowedInItem(itm, [Grants.Delete], AppReader);
 
         entityApi.Delete(itm.Type.Name, guid);
         l.Done();
