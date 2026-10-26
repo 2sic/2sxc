@@ -22,9 +22,8 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.Dependencies
         AdamContext = adamContext;
 
         var firstChecker = AdamContext.Permissions.PermissionCheckers.First().Value;
-        var permissionInfo = firstChecker.UserMay(GrantSets.WritePublished);
-        var userMayAdminSomeFiles = permissionInfo.Allowed;
-        var userMayAdminSiteFiles = permissionInfo.Condition is Conditions.EnvironmentGlobal or Conditions.EnvironmentInstance;
+        var (userMayAdminSomeFiles, conditions, _) = firstChecker.UserMay(GrantSets.WritePublished);
+        var userMayAdminSiteFiles = conditions is Conditions.EnvironmentGlobal or Conditions.EnvironmentInstance;
 
         UserIsRestricted = !(usePortalRoot
             ? userMayAdminSiteFiles
@@ -125,7 +124,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.Dependencies
     public bool FieldPermissionOk(List<Grants> requiredGrant)
     {
         var fieldPermissions = Services.PermCheckFactory.Value
-            .For("Field", AdamContext.Permissions.MyOptions.SiteContext, AdamContext.Context.AppReaderRequired, AdamContext.Attribute?.Permissions);
+            .For(AdamContext.Permissions.MyOptions.SiteContext, AdamContext.Context.AppReaderRequired, AdamContext.Attribute?.Permissions, "Field");
 
         return fieldPermissions.UserMay(requiredGrant).Allowed;
     }

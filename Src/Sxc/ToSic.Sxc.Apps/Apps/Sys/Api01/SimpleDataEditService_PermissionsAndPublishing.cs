@@ -56,7 +56,7 @@ partial class SimpleDataEditService
         var appStateReader = CtxWithDb.AppReader;
 
         // 1.1. app permissions 
-        if (permCheckFactory.Value.ForAppInInstance(CtxForPermissionCheck, appStateReader)
+        if (permCheckFactory.Value.ForApp(CtxForPermissionCheck, appStateReader)
             .UserMay(GrantSets.WritePublished).Allowed)
             return l.ReturnAndLog((true, true), "App check - all ok");
 
@@ -69,7 +69,7 @@ partial class SimpleDataEditService
         // 2. Find if user may write DRAFT:
 
         // 2.1. app permissions 
-        if (permCheckFactory.Value.ForAppInInstance(CtxForPermissionCheck, appStateReader)
+        if (permCheckFactory.Value.ForApp(CtxForPermissionCheck, appStateReader)
             .UserMay(GrantSets.WriteDraft).Allowed)
             return l.ReturnAndLog((false, true), "App check draft - f/t");
 
