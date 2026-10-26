@@ -24,6 +24,12 @@ public interface ISxcCurrentContextService: ICurrentContextUserPermissionsServic
 
     IContextOfApp? AppContextOrNull();
 
+    /// <summary>
+    /// Evaluate the supplied context's permissions, including the live/draft preference,
+    /// without reading or changing the cached ambient permissions.
+    /// </summary>
+    EffectivePermissions UserPermissions(IContextOfSite context);
+
     #endregion
 
     #region Preiously ISxcAppCurrentContextService

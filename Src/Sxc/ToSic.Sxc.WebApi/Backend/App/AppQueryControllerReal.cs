@@ -106,7 +106,12 @@ public class AppQueryControllerReal(
         // Pass the context after app/module permission policy has been applied.
         // Recreating an app-only context in EntityPicker would lose module edit rights.
         var lookups = new LookUpEngine(preparedLookup ?? lookupResolver.Value.GetLookUpEngine(modId), Log,
-            sources: [new EntityPickerContext(context)]);
+            sources:
+            [
+                new EntityPickerContext(context),
+                // Draft readers must use the same app as the query permission check, including the live cookie.
+                new QueryUserPermissions(app, ctxService.UserPermissions(context)),
+            ]);
         var query = queryManager.Value.TryGetQuery(app, name, lookups, recurseParents: 3);
 
         if (query == null)

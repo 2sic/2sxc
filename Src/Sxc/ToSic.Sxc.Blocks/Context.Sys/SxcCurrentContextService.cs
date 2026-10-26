@@ -51,8 +51,12 @@ internal partial class SxcCurrentContextService(
     /// </summary>
     /// <returns></returns>
     private EffectivePermissions GetUserPermissions()
+        => UserPermissions(_blockOrNull?.Context ?? AppContextFromAppOrBlock ?? SiteContext);
+
+    /// <inheritdoc />
+    public EffectivePermissions UserPermissions(IContextOfSite context)
     {
-        var perms = (_blockOrNull?.Context ?? AppContextFromAppOrBlock ?? SiteContext)?.Permissions;
+        var perms = context.Permissions;
         if (perms == null)
             return new(false);
         if (!perms.ShowDraftData)
