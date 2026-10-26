@@ -98,6 +98,8 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
                 // ...but it should already be handled in the previous PrepareContextResolverForApiRequest() call
                 // This has been removed; it may break something, in which case sharing must be added explicitly
                 appFolder = httpContext.RequestServices.Build<ISxcCurrentContextService>().FindAppFolderFromScopeOrThrow();
+                // Compilation needs the resolved app folder, not the original "auto" route value.
+                values["appFolder"] = appFolder;
             }
 
             if (!values.ContainsKey("controller"))
