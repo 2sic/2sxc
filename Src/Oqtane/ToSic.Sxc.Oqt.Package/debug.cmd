@@ -37,6 +37,8 @@ XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\%ModuleTargetFramework%\Microso
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\%ModuleTargetFramework%\Microsoft.CodeAnalys*.*" "%OqtaneBin%\" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\%ModuleTargetFramework%\Microsoft.Extensions.DependencyModel.dll" "%OqtaneBin%\" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\%ModuleTargetFramework%\System.Runtime.Caching.dll" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\%ModuleTargetFramework%\System.Configuration.ConfigurationManager.dll" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\%ModuleTargetFramework%\System.Security.Cryptography.ProtectedData.dll" "%OqtaneBin%\" /Y
 
 ECHO(
 ECHO 2sxc Oqtane - 3rd party deps

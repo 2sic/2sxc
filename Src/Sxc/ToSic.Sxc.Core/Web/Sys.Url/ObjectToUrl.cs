@@ -70,22 +70,22 @@ public class ObjectToUrl
                 var properties = objectList
                     .Cast<object>()
                     .Select(d => PropsOfOne(d, prefix))
+                    .Where(p => p.HasValue())
                     .ToList();
 
                 // Concat all key/value pairs into a string separated by ampersand
-                return string.Join(MyOptions.PairSeparator, properties); //.Select(p => p.GetSerialized(MyOptions)));
+                return string.Join(MyOptions.PairSeparator, properties);
             }
         }
     }
 
     // https://ole.michelsen.dk/blog/serialize-object-into-a-query-string-with-reflection/
     // https://stackoverflow.com/questions/6848296/how-do-i-serialize-an-object-into-query-string-format
-    //private IEnumerable<IUrlParam> PropsOfOne(object data, string? prefix) =>
-    private string? PropsOfOne(object data, string? prefix) =>
+    private string? PropsOfOne(object? data, string? prefix) =>
         data switch
         {
-            // Case #1: Null, return that; should never happen
-            //null => [],
+            // Case #1: Ignore null elements in a parameter collection
+            null => null,
             // Case #2: Already a string, return that
             string str => str.HasValue()
                 ? new UrlParamPrepared(str).GetSerialized(MyOptions)
@@ -99,6 +99,7 @@ public class ObjectToUrl
                     .Where(x => x.CanRead)
                     .Select(x => ValueSerialize(new(x.Name, x.GetValue(data, null)) { Prefix = prefix }))
                     .OfType<IUrlParam>()
+                    .Select(p => p.GetSerialized(MyOptions))
                     .ToListOpt()
             )
         };

@@ -57,6 +57,8 @@ internal class OqtAppWebApiControllerAssemblyLoader(
         var controllerFolder = pathFromRoot.Substring(0, pathFromRoot.LastIndexOf(@"\", StringComparison.Ordinal));
         var dllName = AppApiDynamicRouteValueTransformer.GetDllName(controllerFolder, apiFile);
 
-        return compiler.New().Compile(apiFile, dllName, spec).Assembly;
+        var result = compiler.New().Compile(apiFile, dllName, spec);
+        return result.Assembly
+            ?? throw new InvalidOperationException($"Error: can't compile controller file: {path}.\n{result.ErrorMessages}");
     }
 }

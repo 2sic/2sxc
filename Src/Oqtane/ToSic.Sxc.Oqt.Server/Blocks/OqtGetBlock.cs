@@ -15,11 +15,11 @@ internal class OqtGetBlock(
     LazySvc<IModuleRepository> modRepoLazy,
     RequestHelper requestHelper,
     ISxcCurrentContextService currentContextServiceToInit,
-    Generator<IContextOfBlock> cntOfBlkGen,
+    OqtContextOfBlockFactory contextOfBlockFactory,
     Generator<BlockOfModule> blkFromModGen,
     Generator<BlockOfEntity> blkFromEntGen)
     : ServiceBase("Sxc.GetBlk",
-            connect: [modRepoLazy, requestHelper, currentContextServiceToInit, cntOfBlkGen, blkFromModGen, blkFromEntGen]),
+            connect: [modRepoLazy, requestHelper, currentContextServiceToInit, contextOfBlockFactory, blkFromModGen, blkFromEntGen]),
         IWebApiContextBuilder
 {
     public ISxcCurrentContextService PrepareContextResolverForApiRequest()
@@ -49,7 +49,7 @@ internal class OqtGetBlock(
             return l.ReturnNull("missing block because PageId not found in request");
 
         var module = modRepoLazy.Value.GetModule(moduleId);
-        var ctx = cntOfBlkGen.New().Init(pageId, module);
+        var ctx = contextOfBlockFactory.Create(pageId, module);
         var block = blkFromModGen.New().GetBlockOfModule(ctx);
 
         // only if it's negative, do we load the inner block

@@ -1,5 +1,7 @@
 <Project>
 
+  <!-- Legacy MSTest configuration. No project imports this file, and its intended purpose is unclear. It is likely a candidate for deletion because it is not used anywhere. -->
+
   <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
     <PackageReference Include="MSTest.TestAdapter" Version="3.4.3" />
     <PackageReference Include="MSTest.TestFramework" Version="3.4.3" />
@@ -7,7 +9,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.4.3" />
     <PackageReference Include="MSTest.TestFramework" Version="3.4.3" />

@@ -38,7 +38,7 @@
     <Reference Include="System.IO.Compression.FileSystem" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
