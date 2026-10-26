@@ -19,13 +19,15 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 internal class AppApiControllerManager : IHasLog
 {
     public AppApiControllerManager(ApplicationPartManager partManager, ILogStore logStore, Generator<Compiler> compiler, IWebApiContextBuilder webApiContextBuilder, IEditionService editionSvc,
-        AppCodeLoader appCodeLoader)
+        AppCodeLoader appCodeLoader, AppApiFileSystemWatcher appApiFileSystemWatcher)
     {
         _partManager = partManager;
         _compiler = compiler;
         _webApiContextBuilder = webApiContextBuilder;
         _editionSvc = editionSvc;
         _appCodeLoader = appCodeLoader;
+        // Keep this dependency: creating the singleton starts API source-change monitoring.
+        _ = appApiFileSystemWatcher;
         Log = LogFactory.Create(HistoryLogName);
         logStore.Add(HistoryLogGroup, Log);
         Log.A("AppApiControllerManager");
