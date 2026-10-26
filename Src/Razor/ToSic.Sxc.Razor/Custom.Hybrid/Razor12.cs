@@ -3,5 +3,5 @@
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
 
-[PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
+[PrivateApi("Old; hidden in v22, previously public")]
 public abstract class Razor12: Razor12<object>;

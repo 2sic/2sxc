@@ -21,7 +21,7 @@ namespace Custom.Hybrid;
 /// This is the base class for all custom API Controllers. <br/>
 /// With this, your code receives the full context  incl. the current App, DNN, Data, etc.
 /// </summary>
-[PublicApi("This is the official base class for v12+")]
+[PrivateApi("Deprecated; hidden in v22; previously public")]
 [DnnLogExceptions]
 [DefaultToNewtonsoftForHttpJson]
 public abstract partial class Api12(string logSuffix) : DnnSxcCustomControllerBase(logSuffix), IDynamicCode12,
