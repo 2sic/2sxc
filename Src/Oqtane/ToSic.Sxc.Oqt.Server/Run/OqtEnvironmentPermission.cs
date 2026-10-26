@@ -7,7 +7,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sys.Users;
-using static System.StringComparison;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
@@ -22,27 +22,26 @@ internal class OqtEnvironmentPermission(
     /// </summary>
     private ClaimsPrincipal ClaimsPrincipal => httpContextAccessor.HttpContext?.User;
 
-    private IModule Module => _module ??= (ContextOfSiteOrBlock as IContextOfBlock)?.Module;
-    private IModule _module;
+    private IModule Module => field ??= (ContextOfSiteOrBlock as IContextOfBlock)?.Module;
 
     public override bool VerifyConditionOfEnvironment(string condition)
     {
         // This terms are historic from DNN
-        if (condition.Equals(SalAnonymous, InvariantCultureIgnoreCase))
+        if (condition.EqualsInsensitive(EnvironmentPermissionConstants.SalAnonymous))
             return true;
 
         var m = Module;
 
-        if (condition.Equals(SalView, InvariantCultureIgnoreCase))
+        if (condition.EqualsInsensitive(EnvironmentPermissionConstants.SalView))
             return m != null && userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, m.Id, PermissionNames.View);
 
-        if (condition.Equals(SalEdit, InvariantCultureIgnoreCase))
+        if (condition.EqualsInsensitive(EnvironmentPermissionConstants.SalEdit))
             return m != null && userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, m.Id, PermissionNames.Edit);
 
-        if (condition.Equals(SalSiteAdmin, InvariantCultureIgnoreCase))
+        if (condition.EqualsInsensitive(EnvironmentPermissionConstants.SalSiteAdmin))
             return oqtUser.Value.IsSiteAdmin;
 
-        if (condition.Equals(SalSystemUser, InvariantCultureIgnoreCase))
+        if (condition.EqualsInsensitive(EnvironmentPermissionConstants.SalSystemUser))
             return oqtUser.Value.IsSystemAdmin;
 
         return false;

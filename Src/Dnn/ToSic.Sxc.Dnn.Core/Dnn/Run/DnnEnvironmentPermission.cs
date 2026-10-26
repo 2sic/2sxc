@@ -3,7 +3,6 @@ using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
 using ToSic.Eav.Environment.Sys.Permissions;
 using ToSic.Sxc.Context.Sys;
-using ToSic.Sxc.Context.Sys.Module;
 using ToSic.Sys.Wrappers;
 
 namespace ToSic.Sxc.Dnn.Run;
@@ -25,7 +24,7 @@ internal class DnnEnvironmentPermission() : EnvironmentPermission(DnnConstants.L
     public override bool VerifyConditionOfEnvironment(string condition)
     {
         var l = Log.Fn<bool>($"condition: {condition}");
-        var fullPrefix = (SalPrefix + ".").ToLowerInvariant();
+        var fullPrefix = (EnvironmentPermissionConstants.SalPrefix + ".").ToLowerInvariant();
         if (!condition.StartsWith(fullPrefix, StringComparison.InvariantCultureIgnoreCase))
             return l.ReturnFalse("unknown condition: false");
 
