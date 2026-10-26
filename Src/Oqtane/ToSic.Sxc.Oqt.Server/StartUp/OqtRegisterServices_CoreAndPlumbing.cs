@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Environment.Sys.ServerPaths;
@@ -58,6 +59,10 @@ partial class OqtRegisterServices
 
         // Site State Initializer for APIs etc. to ensure that the SiteState exists and is correctly preloaded
         services.TryAddTransient<AliasResolver>();
+
+        // Add our filter alongside Oqtane's own startup filters. TryAddTransient would skip ours
+        // if any other IStartupFilter is already registered.
+        services.AddTransient<IStartupFilter, OqtEditUiStartupFilter>();
 
         // Views / Templates / Razor: Get url params in the request
         services.TryAddTransient<IHttp, HttpBlazor>();
