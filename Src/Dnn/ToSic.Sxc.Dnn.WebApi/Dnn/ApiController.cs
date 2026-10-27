@@ -44,7 +44,7 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
     /// </remarks>
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public IBlock Block => SysHlp.GetBlockAndContext(Request);
+    public IBlock? Block => SysHlp.GetBlockAndContext(Request);
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
