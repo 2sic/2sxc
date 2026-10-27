@@ -44,8 +44,6 @@ public static class StartupSxcBlocks
         services.TryAddTransient<IContextOfAppFactory, ContextOfAppFactory>(); // new v22 WIP
         services.TryAddTransient<IContextOfBlockFactory, ContextOfBlockFactory>(); // new v22 WIP
 
-        services.TryAddTransient<ContextOfAppFactory.Dependencies>();
-        
         // v22.01 2dm 2026-10-20 - only one service left, as we're trying to clean state sharing...
         services.TryAddScoped<ISxcCurrentContextService, SxcCurrentContextService>();
         services.TryAddScoped<IContextService>(x => x.GetRequiredService<ISxcCurrentContextService>());

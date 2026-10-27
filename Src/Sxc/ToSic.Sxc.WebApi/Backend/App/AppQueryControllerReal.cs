@@ -8,7 +8,6 @@ using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Eav.WebApi.Sys.Admin.App;
 using ToSic.Eav.WebApi.Sys.Admin.Query;
 using ToSic.Sxc.Data.Sys.Convert;
-using ToSic.Sxc.DataSources.Sys.Sources;
 using ToSic.Sys.OData;
 using ToSic.Sys.Security.Permissions;
 
@@ -104,15 +103,7 @@ public class AppQueryControllerReal(
 
         var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"name:{name}, stream:{stream}, withModule:{(context as IContextOfBlock)?.Module.Id}");
 
-        // Pass the context after app/module permission policy has been applied.
-        // Recreating an app-only context in EntityPicker would lose module edit rights.
-        var lookups = new LookUpEngine(preparedLookup ?? lookupResolver.Value.GetLookUpEngine(modId), Log,
-            sources:
-            [
-                new EntityPickerContext(context),
-                // Draft readers must use the same app as the query permission check, including the live cookie.
-                new QueryUserPermissions(app, ctxService.UserPermissions(context)),
-            ]);
+        var lookups = preparedLookup ?? lookupResolver.Value.GetLookUpEngine(modId);
         var query = queryManager.Value.TryGetQuery(app, name, lookups, recurseParents: 3);
 
         if (query == null)

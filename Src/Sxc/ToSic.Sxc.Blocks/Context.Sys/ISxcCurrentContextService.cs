@@ -2,7 +2,6 @@
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sys.Context;
-using ToSic.Sys.Users.Permissions;
 
 namespace ToSic.Sxc.Context.Sys;
 
@@ -15,11 +14,11 @@ public interface ISxcCurrentContextService: IContextCompleteService, IContextOfS
 {
     #region previously ICurrentContextService
 
-    /// <summary>
-    /// Evaluate the supplied context's permissions, including the live/draft preference,
-    /// without reading or changing the cached ambient permissions.
-    /// </summary>
-    EffectivePermissions UserPermissions(IContextOfSite context);
+    ///// <summary>
+    ///// Evaluate the supplied context's permissions, including the live/draft preference,
+    ///// without reading or changing the cached ambient permissions.
+    ///// </summary>
+    //EffectivePermissions UserPermissions(IContextOfSite context);
 
     #endregion
 

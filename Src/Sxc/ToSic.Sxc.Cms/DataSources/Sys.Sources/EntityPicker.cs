@@ -109,11 +109,8 @@ public class EntityPicker(
 
         // Preserve module permissions from the context prepared by the WebApi.
         // A nested query targeting another app must not inherit those permissions.
-        var preparedContext = (Configuration.LookUpEngine.FindSource(EntityPickerContext.SourceName) as EntityPickerContext)?.Context;
-        var ctxForPermissions = preparedContext?.AppReaderOrNull is { } app
-                                && app.AppId == AppId && app.ZoneId == ZoneId
-            ? preparedContext
-            : appCtxFactory.Create(this.PureIdentity());
+        // Get the context - must be pre-set by the caller
+        var ctxForPermissions = appCtxFactory.Create(this.PureIdentity());
 
         // Case 1: No Type Names - return all entities in the Content-Scope
         if (TypeNames.IsEmptyOrWs())
