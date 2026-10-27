@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Backend.Cms;
 public class ListActivitySave(
     AppWorkQuick<WorkFieldList> workFieldList,
     LazySvc<IPagePublishing> publishing,
-    ISxcCurrentContextService ctxService
+    IContextCompleteService ctxService
     ) : ServiceBase("Api.CntGrpRl", connect: [workFieldList, ctxService, publishing])
 {
     public bool ItemList(Guid parent, List<EntityInListDto>? list,  string part)

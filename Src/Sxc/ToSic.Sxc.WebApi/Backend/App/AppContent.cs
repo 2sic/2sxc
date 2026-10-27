@@ -23,7 +23,8 @@ namespace ToSic.Sxc.Backend.App;
 public class AppContent(
     EntityApi api,
     LazySvc<IConvertToEavLight> entToDicLazy,
-    ISxcCurrentContextService ctxService,
+    IContextCompleteService ctxService,
+    IContextBuilderService ctxBuilder,
     Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> typesPermissions,
     Generator<MultiPermissionsItems, MultiPermissionsItems.Options> itemsPermissions,
     AppWorkQuick<WorkFieldList> workFieldList,
@@ -31,7 +32,7 @@ public class AppContent(
     : ServiceWithSetup<AppContent.Options>("Sxc.ApiApC",
         connect:
         [
-            workFieldList, api, entToDicLazy, ctxService, typesPermissions, itemsPermissions, dataControllerLazy
+            workFieldList, api, entToDicLazy, ctxService, ctxBuilder, typesPermissions, itemsPermissions, dataControllerLazy
         ])
 {
     #region Constructor / DI
@@ -39,7 +40,9 @@ public class AppContent(
     public record Options(string? AppName);
 
     private IContextOfApp Context => field
-        ??= ctxService.FindAppFromPathNameUrlIdsOrSharedBlock(MyOptions.AppName)
+        ??= ctxBuilder.TryFindAppFromPath(MyOptions.AppName)
+            ?? ctxBuilder.TryFindAppFromUrlIds()
+            ?? ctxService.BlockContextOrNull()
             ?? throw new($"Tried to auto detect app by name '{MyOptions.AppName}', url params or block context, all failed.");
 
     private IAppReader AppReader => Context.AppReaderOrNull ??

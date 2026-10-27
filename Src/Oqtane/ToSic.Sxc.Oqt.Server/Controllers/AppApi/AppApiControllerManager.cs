@@ -19,12 +19,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 internal class AppApiControllerManager : IHasLog
 {
     public AppApiControllerManager(ApplicationPartManager partManager, ILogStore logStore, Generator<Compiler> compiler, IWebApiContextBuilder webApiContextBuilder, IEditionService editionSvc,
-        AppCodeLoader appCodeLoader, AppApiFileSystemWatcher appApiFileSystemWatcher)
+        AppCodeLoader appCodeLoader, AppApiFileSystemWatcher appApiFileSystemWatcher, IContextBuilderService ctxBuilder)
     {
         _partManager = partManager;
         _compiler = compiler;
         _webApiContextBuilder = webApiContextBuilder;
         _editionSvc = editionSvc;
+        _ctxBuilder = ctxBuilder;
         _appCodeLoader = appCodeLoader;
         // Keep this dependency: creating the singleton starts API source-change monitoring.
         _ = appApiFileSystemWatcher;
@@ -37,6 +38,7 @@ internal class AppApiControllerManager : IHasLog
     private readonly IWebApiContextBuilder _webApiContextBuilder;
     private readonly IEditionService _editionSvc;
     private readonly AppCodeLoader _appCodeLoader;
+    private readonly IContextBuilderService _ctxBuilder;
 
     public ILog Log { get; }
 
@@ -155,7 +157,7 @@ internal class AppApiControllerManager : IHasLog
 
         // Prepare / Get App State, while possibly also initializing the App...
         var ctxResolver = _webApiContextBuilder.PrepareContextResolverForApiRequest();
-        var appReader = ctxResolver.TryFindAppFromPath(appFolder)?.AppReaderRequired
+        var appReader = _ctxBuilder.TryFindAppFromPath(appFolder)?.AppReaderRequired
             ?? throw new ArgumentException($"App not found for folder '{appFolder}'. Can't build specs.");
 
         // Figure out the current edition
@@ -170,12 +172,11 @@ internal class AppApiControllerManager : IHasLog
     /// Figure out the current edition for HotBuildSpec.
     /// </summary>
     /// <returns></returns>
-    private string FigureEdition(ISxcCurrentContextService ctxService)
+    private string FigureEdition(IContextCompleteService ctxService)
     {
         var l = Log.Fn<string>(timer: true);
 
-        var block = ctxService.BlockOrNull();
-        var edition = block.NullOrGetWith(_editionSvc.Edition);
+        var edition = ctxService.BlockOrNull.NullOrGetWith(_editionSvc.Edition);
 
         return l.Return(edition);
     }

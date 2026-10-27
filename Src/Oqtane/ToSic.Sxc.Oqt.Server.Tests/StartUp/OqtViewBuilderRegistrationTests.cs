@@ -34,7 +34,7 @@ public class OqtViewBuilderRegistrationTests
         services.AddScoped<IPage>(_ => throw new NotSupportedException());
         services.AddTransient<OqtPageOutput>(_ => throw new NotSupportedException());
         services.AddTransient<BlockOfModule>(_ => throw new NotSupportedException());
-        services.AddScoped<ISxcCurrentContextService>(_ => throw new NotSupportedException());
+        // services.AddScoped<ISxcCurrentContextService>(_ => throw new NotSupportedException());
         services.AddTransient<ILogStore>(_ => throw new NotSupportedException());
         services.AddTransient<GlobalTypesCheck>(_ => throw new NotSupportedException());
         services.AddTransient<IOutputCache>(_ => throw new NotSupportedException());

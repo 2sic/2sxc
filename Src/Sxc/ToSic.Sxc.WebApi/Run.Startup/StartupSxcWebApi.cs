@@ -135,6 +135,8 @@ public static class StartupSxcWebApi
         services.TryAddTransient<ListActivitySave>();
         services.TryAddTransient<ListActivityGetBlockHeader>();
 
+        services.TryAddTransient<IContextBuilderService, ContextBuilderService>();
+
         services.AddLoadSettingsProviders();
 
         services.AddSxcInsights();

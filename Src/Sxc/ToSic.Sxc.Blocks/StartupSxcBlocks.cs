@@ -11,12 +11,11 @@ using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.DataSources.Sys;
 using ToSic.Sxc.Integration.Modules;
 using ToSic.Sxc.LookUp.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Context;
-using ToSic.Sys.Users.Permissions;
 
-// ReSharper disable once CheckNamespace
+#pragma warning disable IDE0130
 namespace ToSic.Sxc.Run.Startup;
+#pragma warning restore IDE0130
 
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 public static class StartupSxcBlocks
@@ -51,7 +50,7 @@ public static class StartupSxcBlocks
         services.TryAddScoped<ISxcCurrentContextService, SxcCurrentContextService>();
         services.TryAddScoped<IContextService>(x => x.GetRequiredService<ISxcCurrentContextService>());
         services.TryAddScoped<IContextOfSiteService>(x => x.GetRequiredService<ISxcCurrentContextService>());
-        services.TryAddScoped<AppIdResolver>();
+        services.TryAddScoped<IContextCompleteService>(x => x.GetRequiredService<ISxcCurrentContextService>());
 
         // Integration stuff - must be implemented by each platform
         services.TryAddTransient<IPlatformModuleUpdater, BasicModuleUpdater>();

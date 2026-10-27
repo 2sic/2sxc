@@ -17,10 +17,11 @@ public abstract class AppAssetsControllerBase : OqtControllerBase
 
     public record Dependencies(
         IWebHostEnvironment HostingEnvironment,
-        LazySvc<ISxcCurrentContextService> SxcContextSvc,
+        LazySvc<IContextCompleteService> SxcContextSvc,
+        LazySvc<IContextBuilderService> CtxBuilder,
         SiteState SiteState,
         LazySvc<OqtAssetsFileHelper> FileHelper)
-        : DependenciesBase(connect: [HostingEnvironment, SxcContextSvc, SiteState, FileHelper]);
+        : DependenciesBase(connect: [HostingEnvironment, SxcContextSvc, CtxBuilder, SiteState, FileHelper]);
 
     #endregion
 
@@ -44,7 +45,7 @@ public abstract class AppAssetsControllerBase : OqtControllerBase
             // ...but it should already be handled in the previous PrepareContextResolverForApiRequest() call
             // This has been removed; it may break something, in which case sharing must be added explicitly
             if (appName == OqtWebApiConstants.Auto)
-                appName = Deps.SxcContextSvc.Value.FindAppFolderFromScopeOrThrow();
+                appName = Deps.SxcContextSvc.Value.FindAppFolderFromScopeOrThrow(Deps.CtxBuilder.Value);
 
             var alias = Deps.SiteState.Alias;
             var fullFilePath = Deps.FileHelper.Value.GetFilePath(Deps.HostingEnvironment.ContentRootPath, alias, Route, appName, filePath);

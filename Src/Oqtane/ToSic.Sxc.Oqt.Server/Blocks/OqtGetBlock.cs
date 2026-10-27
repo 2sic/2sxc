@@ -22,7 +22,7 @@ internal class OqtGetBlock(
             connect: [modRepoLazy, requestHelper, currentContextServiceToInit, contextOfBlockFactory, blkFromModGen, blkFromEntGen]),
         IWebApiContextBuilder
 {
-    public ISxcCurrentContextService PrepareContextResolverForApiRequest()
+    public IContextCompleteService PrepareContextResolverForApiRequest()
     {
         if (_alreadyTriedToLoad)
             return currentContextServiceToInit;

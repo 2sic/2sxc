@@ -8,17 +8,17 @@ namespace ToSic.Sxc.Context.Sys;
 [PrivateApi]
 public static class ISxcCurrentContextServiceExtensions
 {
-    extension(ISxcCurrentContextService ctx)
+    extension(IContextCompleteService ctx)
     {
         public IBlock BlockRequired()
-            => ctx.BlockOrNull()
+            => ctx.BlockOrNull
                ?? throw new("Block required but missing. It was not attached");
 
         /// <summary>
         /// Return the block or throw an error
         /// </summary>
         public IContextOfBlock BlockContextRequired()
-            => ctx.BlockOrNull()?.Context
+            => ctx.BlockOrNull?.Context
                ?? throw new("Block context required but not known. It was not attached.");
 
         /// <summary>
@@ -26,6 +26,6 @@ public static class ISxcCurrentContextServiceExtensions
         /// </summary>
         /// <returns>The current block or null</returns>
         public IContextOfBlock? BlockContextOrNull()
-            => ctx.BlockOrNull()?.Context;
+            => ctx.BlockOrNull?.Context;
     }
 }

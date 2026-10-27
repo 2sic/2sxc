@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Context;
 using ToSic.Sxc.Web.Sys.Http;
 using ToSic.Sys.Utils;
 
@@ -10,14 +11,40 @@ namespace ToSic.Sxc.Context.Sys;
 /// It does not perform security checks ATM and maybe never will
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class AppIdResolver(LazySvc<IHttp> http, LazySvc<AppFinder> appFinder) : ServiceBase("Api.FindAp", connect: [http, appFinder])
+internal class ContextBuilderService(ISite site, LazySvc<IHttp> http, LazySvc<AppFinder> appFinder, Generator<IContextOfAppFactory> appCtxGenerator)
+    : ServiceBase("Api.FindAp", connect: [http, appFinder, appCtxGenerator]), IContextBuilderService
 {
+    #region Inject App using Name
+
+    public IContextOfApp? TryFindAppFromPath(string? nameOrPath)
+    {
+        if (string.IsNullOrWhiteSpace(nameOrPath))
+            return null;
+        var zoneId = site.ZoneId;
+        var appId = GetAppIdFromAppPathOrName(zoneId, nameOrPath!, throwIfNotFound: false);
+        return appId <= KnownAppsConstants.AppIdEmpty
+            ? null
+            : appCtxGenerator.New().Create(new AppIdentity(zoneId, appId));
+    }
+
+
+    public IContextOfApp? TryFindAppFromUrlIds()
+    {
+        // Priority 2: Try to find app by URL params (appId=x;zoneId=y) - not used much AFAIK
+        var identity = GetAppIdFromUrlParams();
+        return identity != null
+            ? appCtxGenerator.New().Create(identity)
+            : null;
+    }
+
+    #endregion
+
     /// <summary>
     /// Try to find the AppId based on the apps path or name.
     /// Optionally throw an exception if not found (as of 2026-10 this is not used).
     /// </summary>
     /// <returns></returns>
-    internal int GetAppIdFromAppPathOrName(int zoneId, string appPathOrName, bool throwIfNotFound)
+    private int GetAppIdFromAppPathOrName(int zoneId, string appPathOrName, bool throwIfNotFound)
     {
         var l = Log.Fn<int>($"{zoneId}, {appPathOrName}, {throwIfNotFound}");
         // get app from AppName
@@ -34,7 +61,7 @@ internal class AppIdResolver(LazySvc<IHttp> http, LazySvc<AppFinder> appFinder) 
     /// It's a temporary solution, because normally we want the control flow to be more obvious
     /// </summary>
     /// <returns></returns>
-    internal IAppIdentity? GetAppIdFromUrlParams()
+    private IAppIdentity? GetAppIdFromUrlParams()
     {
         var l = Log.Fn<IAppIdentity?>();
         var allUrlKeyValues = http.Value.QueryStringKeyValuePairs();

@@ -6,7 +6,7 @@ using static ToSic.Sxc.LookUp.Sys.LookUpConstants;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps;
 
-internal class OqtModuleLookUp(ISxcCurrentContextService ctxService) : LookUpBase(SourceModule, "LookUp in Oqtane Module")
+internal class OqtModuleLookUp(IContextCompleteService ctxService) : LookUpBase(SourceModule, "LookUp in Oqtane Module")
 {
     private Module Module { get; set; }
 

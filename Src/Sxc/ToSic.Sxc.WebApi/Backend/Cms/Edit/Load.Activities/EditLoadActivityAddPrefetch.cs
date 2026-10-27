@@ -11,7 +11,7 @@ public partial class EditLoadActivityAddPrefetch(
     Generator<HyperlinkBackend> hyperlinkBackend,
     Generator<IAdamPrefetchHelper, AdamWorkOptions> adamTransGetItems,
     EntityPickerApi entityPickerBackend,
-    ISxcCurrentContextService ctxService)
+    IContextCompleteService ctxService)
     : ServiceBase(SxcLogName + ".Prefetch", connect: [adamTransGetItems, hyperlinkBackend, entityPickerBackend, ctxService]),
         IWork<EditLoadDto, EditLoadDto>
 {

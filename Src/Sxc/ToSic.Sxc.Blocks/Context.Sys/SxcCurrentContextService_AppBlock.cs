@@ -8,31 +8,27 @@ partial class SxcCurrentContextService
 {
     #region State as has been initialized.
 
-    /// <summary>
-    /// The simpler app context, can be App only or app with block.
-    /// </summary>
-    /// <remarks>
-    /// This is set whenever an App Context or Block Context are set.
-    /// </remarks>
-    private IContextOfApp? AppContextFromAppOrBlock { get; set; }
+    ///// <summary>
+    ///// The simpler app context, can be App only or app with block.
+    ///// </summary>
+    ///// <remarks>
+    ///// This is set whenever an App Context or Block Context are set.
+    ///// </remarks>
+    //private IContextOfApp? AppContextFromAppOrBlock { get; set; }
 
 
-    /// <summary>
-    /// The block as is stored, or null; if no block is known.
-    /// </summary>
-    private IBlock? _blockOrNull;
+    ///// <summary>
+    ///// The block as is stored, or null; if no block is known.
+    ///// </summary>
+    //private IBlock? _blockOrNull { get; set; }
 
     #endregion
 
     /// <inheritdoc/>
-    public IBlock? BlockOrNull() => _blockOrNull;
-
-    ///// <inheritdoc/>
-    //public IContextOfApp AppContextRequired()
-    //    => AppContextOrNull() ?? throw new($"To call {nameof(AppContextRequired)} first call {nameof(SetApp)}");
+    public IBlock? BlockOrNull { get; private set; }
 
     /// <inheritdoc/>
-    public IContextOfApp? AppContextOrNull() => AppContextFromAppOrBlock;
+    public IContextOfApp? AppContextOrNull { get; private set; }
 
 
     /// <inheritdoc/>
@@ -40,7 +36,7 @@ partial class SxcCurrentContextService
     {
         var l = Log.Fn<IContextOfApp>($"a#{appId}");
         // Get the current block context - but for clarity, get the block first, as we'll update it later
-        var blockSpecs = _blockOrNull as BlockSpecs;
+        var blockSpecs = BlockOrNull as BlockSpecs;
 
         // Option 1: No block context found, create a lightweight app context
         // This way security checks can only verify the App but not any module permissions
@@ -76,9 +72,9 @@ partial class SxcCurrentContextService
 
         var updatedBlockCtx = blockCtxFactory.Value.Update(blockCtx, appReaderFactory.Value.AppIdentity(appId));
         
-        _blockOrNull = blockSpecs with { Context = updatedBlockCtx };
+        var result = ShareAndPatchBlockSpecs(blockSpecs with { Context = updatedBlockCtx });
 
-        return l.Return(updatedBlockCtx);
+        return l.Return(result.Context);
 
         //// Helper function for re-use.
         //// New implementation 2025-03-31

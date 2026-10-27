@@ -30,7 +30,9 @@ internal class DnnCustomWebApiHelper: CompileCodeHelper
     private ISxcCurrentContextService SharedCurrentContextService
         => (_sysHlp ?? throw new InvalidOperationException("System helper is not initialized"))
             .GetService<ISxcCurrentContextService>();
-
+    private IContextBuilderService CtxBuilder
+        => (_sysHlp ?? throw new InvalidOperationException("System helper is not initialized"))
+            .GetService<IContextBuilderService>();
     #region Init
 
     /// <summary>
@@ -47,7 +49,8 @@ internal class DnnCustomWebApiHelper: CompileCodeHelper
             return null;
         _blockContextInitialized = true;
         var block = _sysHlp.GetBlockAndContext(request);
-        SharedCurrentContextService.ShareBlockSpecs(block);
+        if (block != null)
+            SharedCurrentContextService.ShareBlockSpecs(block);
         return block;
     }
 
@@ -62,7 +65,7 @@ internal class DnnCustomWebApiHelper: CompileCodeHelper
 
         // 1. Make sure we have the block (if it exists for this request)
         var request = controllerContext.Request;
-        var block = SharedCurrentContextService.BlockOrNull(); // InitBlockSpecs(request);
+        var block = SharedCurrentContextService.BlockOrNull; // InitBlockSpecs(request);
         l.A($"HasBlock: {block != null}");
 
         // 2.1 Prepare Services for further initialization
@@ -119,13 +122,13 @@ internal class DnnCustomWebApiHelper: CompileCodeHelper
         {
             var routeAppPath = services.WebApiAppFolderUtilities.New(request)
                 .GetAppFolder(errorIfNotFound: false, blockOrNull: blockOrNull);
-            var appCtx = SharedCurrentContextService.TryFindAppFromPath(routeAppPath);
+            var appCtx = CtxBuilder.TryFindAppFromPath(routeAppPath);
             var appReader = appCtx?.AppReaderRequired;
 
             if (appReader == default)
                 return l.ReturnNull("no app detected");
             
-            var siteCtx = SharedCurrentContextService.SiteContext;
+            var siteCtx = SharedCurrentContextService.Context;
             // Look up if page publishing is enabled - if module context is not available, always false
             l.A($"AppId: {appReader.AppId}");
             var app = services.AppOverrideLazy.Value;

@@ -9,9 +9,10 @@ namespace ToSic.Sxc.Dnn.Integration;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class DnnWebApiAppFolderUtilities(
-    LazySvc<ISxcCurrentContextService> ctxService,
+    LazySvc<IContextCompleteService> ctxService,
+    LazySvc<IContextBuilderService> ctxBuilder,
     LazySvc<CodeErrorHelpService> errorHelp)
-    : ServiceWithSetup<HttpRequestMessage>($"{LogName}.AppFld", connect: [errorHelp, ctxService])
+    : ServiceWithSetup<HttpRequestMessage>($"{LogName}.AppFld", connect: [errorHelp, ctxService, ctxBuilder])
 {
     /// <summary>
     /// Request object - throwing if not properly initialized
@@ -42,7 +43,7 @@ public class DnnWebApiAppFolderUtilities(
             if (appFolder == null)
             {
                 l.A("no folder found in url, will auto-detect");
-                appFolder = ctxService.Value.FindAppFolderFromScopeOrThrow();
+                appFolder = ctxService.Value.FindAppFolderFromScopeOrThrow(ctxBuilder.Value);
             }
 
             l.A($"App Folder: {appFolder}");

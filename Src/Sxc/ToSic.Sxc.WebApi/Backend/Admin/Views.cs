@@ -40,15 +40,18 @@ public class ViewUsage : CustomDataSource
     [Configuration]
     public Guid ViewGuid => Configuration.GetThis(Guid.Empty);
 
-    public ViewUsage(Dependencies services, LazySvc<UsageBackend> usage, IViewUsageDataProvider provider, ISxcCurrentContextService context)
+    // TODO: @2dm - verify it still works
+    public ViewUsage(Dependencies services, LazySvc<UsageBackend> usage, IViewUsageDataProvider provider, IContextOfSiteService context)
         : base(services, "Sxc.ViewUsage", connect: [usage, provider, context])
-        => ProvideOutRaw(() => Get(usage, provider, context));
+        => ProvideOutRaw(() => Get(usage, provider, context.Context.Site));
 
-    private IEnumerable<ViewUsageRaw> Get(LazySvc<UsageBackend> usage, IViewUsageDataProvider provider, ISxcCurrentContextService context)
+    private IEnumerable<ViewUsageRaw> Get(LazySvc<UsageBackend> usage, IViewUsageDataProvider provider, ISite site)
         => usage.Value.ViewUsage(
                 AppId,
                 ViewGuid,
-                (views, blocks) => provider.Build(views, blocks, context.ShareAppStateOptimized(AppId).Site.Id))
+                // TODO: @2dm - verify it still works
+                //(views, blocks) => provider.Build(views, blocks, context.ShareAppStateOptimized(AppId).Site.Id))
+            (views, blocks) => provider.Build(views, blocks, site.Id))
             .Select(view => new ViewUsageRaw(view));
 
     [ContentType(Name = "ViewUsage", Guid = "0a095e44-7f00-4d36-8425-274c7ee7277a", Scope = "System")]

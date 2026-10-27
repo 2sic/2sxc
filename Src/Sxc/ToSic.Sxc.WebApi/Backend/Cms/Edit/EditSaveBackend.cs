@@ -5,7 +5,6 @@ using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.Services;
 using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Backend.SaveHelpers;
-using ToSic.Sys.HookUp;
 using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Utils;
 
@@ -157,15 +156,15 @@ public class EditSaveBackend(
         if (isUniqueValidationException != null)
             throw isUniqueValidationException;
 
-        var result = pagePublishing.New(appCtxNew)
+        var result = pagePublishing.New(options: appCtxNew)
             .SaveInPagePublishing(
-                context,
-                ctxService.BlockOrNull(),
-                appId,
-                itemsWithoutProcessor,
-                partOfPage,
-                forceSaveAsDraft => DoSave(appEntities, itemsWithoutProcessor, package.DraftShouldBranch || forceSaveAsDraft),
-                permCheck
+                context: context,
+                blockOrNull: ctxService.BlockOrNull,
+                appId: appId,
+                items: itemsWithoutProcessor,
+                partOfPage: partOfPage,
+                internalSaveMethod: forceSaveAsDraft => DoSave(appEntities, itemsWithoutProcessor, package.DraftShouldBranch || forceSaveAsDraft),
+                permCheck: permCheck
             );
 
         var itemsWithProcessor = items

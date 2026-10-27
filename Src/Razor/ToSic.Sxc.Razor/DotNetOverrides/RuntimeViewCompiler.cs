@@ -481,9 +481,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
         //
         // Update: I found most cases where the state is set in Oqtane, so I assume for now
         // it's the desired state. So best leave it for now, but keep an eye on it.
-        var ctxResolver = sp.GetService<ISxcCurrentContextService>();
-
-        var block = ctxResolver?.BlockOrNull();
+        var block = sp.GetRequiredService<IContextCompleteService>().BlockOrNull;
         if (block == null)
         {
             var fallback = GetSxcAppRelativePathWithEditionFallback(relativePath);

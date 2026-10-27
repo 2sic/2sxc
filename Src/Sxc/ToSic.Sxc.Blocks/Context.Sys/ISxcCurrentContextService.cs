@@ -11,19 +11,9 @@ namespace ToSic.Sxc.Context.Sys;
 /// Note that it's important to always make this **Scoped**, not transient, as there is some re-use after initialization
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface ISxcCurrentContextService: IContextService
+public interface ISxcCurrentContextService: IContextCompleteService, IContextOfSiteService, IContextService
 {
     #region previously ICurrentContextService
-
-    /// <summary>
-    /// This is the most basic kind of context. ATM you could also inject it directly,
-    /// but we want to introduce the capability of giving a static site or something
-    /// without having to write code implementing IContextOfSite
-    /// </summary>
-    /// <value></value>
-    IContextOfSite SiteContext { get; }
-
-    IContextOfApp? AppContextOrNull();
 
     /// <summary>
     /// Evaluate the supplied context's permissions, including the live/draft preference,
@@ -33,7 +23,7 @@ public interface ISxcCurrentContextService: IContextService
 
     #endregion
 
-    #region Preiously ISxcAppCurrentContextService
+    #region Previously ISxcAppCurrentContextService
 
     /// <summary>
     /// Return the block if known, or an app context if not
@@ -42,15 +32,6 @@ public interface ISxcCurrentContextService: IContextService
     /// <returns></returns>
     IContextOfApp ShareAppStateOptimized(int appId);
 
-    // 2026-10-20 2dm after refactoring doesn't seem needed any more
-    //IContextOfApp SetAppFromPathOrGetExistingBlock(string nameOrPath);
-
-    // Note 2026-10-18 2dm: #NoLookupSideEffects
-    //IContextOfApp? SetAppFromPathOrNull(string? nameOrPath);
-
-    // Note 2026-10-18 2dm: #NoLookupSideEffects
-    //IContextOfApp SetAppFromNameOrUrlParamsOrUseExistingBlockRequired(string? nameOrPath);
-
     #endregion
 
     /// <summary>
@@ -58,17 +39,29 @@ public interface ISxcCurrentContextService: IContextService
     /// </summary>
     void ShareBlockSpecs(IBlock block);
 
-    /// <summary>
-    /// Retrieve the current block - or return null if none.
-    /// </summary>
-    IBlock? BlockOrNull();
 
     /// <summary>
     /// Swap in a dynamic view into the context, to render the block differently (for preview)
     /// </summary>
     IBlock SwapBlockView(IView newView);
 
-    IContextOfApp? TryFindAppFromPath(string? nameOrPath);
-    IContextOfApp FindAppFromPathNameUrlIdsOrSharedBlock(string? nameOrPath);
-    // IContextOfApp? ShareAppContext(IContextOfApp? appContext);
+}
+
+/// <summary>
+/// Service to provide the complete context.
+/// </summary>
+public interface IContextCompleteService: IContextOfSiteService
+{
+    /// <summary>
+    /// Retrieve the current app with reader etc. or null if not available.
+    /// </summary>
+    /// <remarks>
+    /// Can be standalone (App only) or with a block (App + Block).
+    /// </remarks>
+    IContextOfApp? AppContextOrNull { get; }
+
+    /// <summary>
+    /// Retrieve the current block - or return null if block is not known.
+    /// </summary>
+    IBlock? BlockOrNull { get; }
 }

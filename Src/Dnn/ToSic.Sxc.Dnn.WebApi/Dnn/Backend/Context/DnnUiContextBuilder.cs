@@ -12,7 +12,7 @@ using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 namespace ToSic.Sxc.Dnn.WebApi.Context;
 
 internal sealed class DnnUiContextBuilder(
-    ISxcCurrentContextService ctxService,
+    IContextCompleteService ctxService,
     ExternalLinksService externalLinksService,
     UiContextBuilderBase.Dependencies deps)
     : UiContextBuilderBase(deps)

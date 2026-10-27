@@ -21,8 +21,9 @@ public partial class DnnAppApiControllerService(
     LazySvc<DnnGetBlock> getBlock,
     LazySvc<CodeErrorHelpService> codeErrorSvc,
     LazySvc<ISxcCurrentContextService> currentCtxSvc,
+    LazySvc<IContextBuilderService> ctxBuilder,
     MemoryCacheService cacheSvc)
-    : ServiceBase("Dnn.ApiSSv", connect: [dnnApiFolderUtils, apiCompilerLazy, getBlock, codeErrorSvc, currentCtxSvc, cacheSvc])
+    : ServiceBase("Dnn.ApiSSv", connect: [dnnApiFolderUtils, apiCompilerLazy, getBlock, codeErrorSvc, currentCtxSvc, ctxBuilder, cacheSvc])
 {
     /// <summary>
     /// Find and build the controller descriptor referencing the correct WebApi controller class.
@@ -73,7 +74,7 @@ public partial class DnnAppApiControllerService(
             else
             {
                 // find AppId based on path - otherwise we don't have a proper spec, and things fail
-                var appCtx = currentCtxSvc.Value.TryFindAppFromPath(appFolder);
+                var appCtx = ctxBuilder.Value.TryFindAppFromPath(appFolder);
                 var appSpecs = appCtx?.AppReaderRequired.Specs
                                ?? throw new("App not found; nothing in the request suffices to find it.");
                 spec = new(appSpecs.AppId, edition: edition.TrimLastSlash(), appSpecs.Name);

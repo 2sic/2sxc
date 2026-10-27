@@ -21,10 +21,11 @@ internal class OqtAppWebApiControllerAssemblyLoader(
     Generator<Compiler> compiler,
     SiteState siteState,
     AliasResolver aliasResolver,
-    ISxcCurrentContextService ctxService,
+    IContextBuilderService ctxBuilder,
+    IContextCompleteService ctxService,
     IEditionService editionSvc,
     IServerPaths serverPaths)
-    : ServiceBase($"{OqtConstants.OqtLogPrefix}.ApiCtlAsm", connect: [compiler, siteState, aliasResolver, ctxService, editionSvc, serverPaths]),
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.ApiCtlAsm", connect: [compiler, siteState, aliasResolver, ctxBuilder, ctxService, editionSvc, serverPaths]),
         IAppWebApiControllerAssemblyLoader
 {
     public Assembly GetAssembly(string path)
@@ -35,10 +36,10 @@ internal class OqtAppWebApiControllerAssemblyLoader(
         // Note 2026-10-18 2dm: #NoLookupSideEffects
         // the next line used to have a side effect of sharing the found app-context
         // This has been removed; it may break something, which would then need to be corrected "upstream", but not here
-        var appFolder = ctxService.FindAppFolderFromScopeOrThrow();
+        var appFolder = ctxService.FindAppFolderFromScopeOrThrow(ctxBuilder);
         var pathFromRoot = OqtServerPaths.GetAppApiPath(tenantId, siteId, appFolder, path);
 
-        var blockOrNull = ctxService.BlockOrNull();
+        var blockOrNull = ctxService.BlockOrNull;
         var edition = blockOrNull.NullOrGetWith(editionSvc.Edition);
 
         var runtimeKey = blockOrNull?.Context.AppReaderRequired?.Specs.CacheKey;
