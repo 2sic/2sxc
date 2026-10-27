@@ -2,9 +2,9 @@
 using ToSic.Sxc.Web.Sys.Http;
 using ToSic.Sys.Users.Permissions;
 
-namespace ToSic.Sxc.Context.Sys;
+namespace ToSic.Sxc.Apps.Sys.Permissions;
 
-public class DraftOverrideFromCookieService(LazySvc<IHttp> http) : ServiceBase("Sxc.CtxCookPerm"), IDraftOverrideService
+internal class DraftOverrideFromCookieService(LazySvc<IHttp> http) : ServiceBase("Sxc.CtxCookPerm"), IDraftOverrideService
 {
     private const string CookieTemplate = "app-{0}-data-preview";
     private const string CookieLive = "live";

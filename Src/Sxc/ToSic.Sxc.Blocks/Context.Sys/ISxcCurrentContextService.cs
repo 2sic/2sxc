@@ -12,26 +12,12 @@ namespace ToSic.Sxc.Context.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ISxcCurrentContextService: IContextCompleteService, IContextOfSiteService, IContextService
 {
-    #region previously ICurrentContextService
-
-    ///// <summary>
-    ///// Evaluate the supplied context's permissions, including the live/draft preference,
-    ///// without reading or changing the cached ambient permissions.
-    ///// </summary>
-    //EffectivePermissions UserPermissions(IContextOfSite context);
-
-    #endregion
-
-    #region Previously ISxcAppCurrentContextService
-
     /// <summary>
     /// Return the block if known, or an app context if not
     /// </summary>
     /// <param name="appId"></param>
     /// <returns></returns>
     IContextOfApp ShareAppStateOptimized(int appId);
-
-    #endregion
 
     /// <summary>
     /// Attach a prepared block to the context.
@@ -44,23 +30,4 @@ public interface ISxcCurrentContextService: IContextCompleteService, IContextOfS
     /// </summary>
     IBlock SwapBlockView(IView newView);
 
-}
-
-/// <summary>
-/// Service to provide the complete context.
-/// </summary>
-public interface IContextCompleteService: IContextOfSiteService
-{
-    /// <summary>
-    /// Retrieve the current app with reader etc. or null if not available.
-    /// </summary>
-    /// <remarks>
-    /// Can be standalone (App only) or with a block (App + Block).
-    /// </remarks>
-    IContextOfApp? AppContextOrNull { get; }
-
-    /// <summary>
-    /// Retrieve the current block - or return null if block is not known.
-    /// </summary>
-    IBlock? BlockOrNull { get; }
 }

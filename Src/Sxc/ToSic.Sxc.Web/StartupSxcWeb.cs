@@ -5,6 +5,7 @@ using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Apps.Sys.Installation;
+using ToSic.Sxc.Apps.Sys.Permissions;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Data.Sys.Convert;
 using ToSic.Sxc.LookUp;
