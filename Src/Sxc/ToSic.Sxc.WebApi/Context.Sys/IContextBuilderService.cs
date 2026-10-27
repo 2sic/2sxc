@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.Context;
-
-namespace ToSic.Sxc.Context.Sys;
+﻿namespace ToSic.Sxc.Context.Sys;
 
 public interface IContextBuilderService
 {
