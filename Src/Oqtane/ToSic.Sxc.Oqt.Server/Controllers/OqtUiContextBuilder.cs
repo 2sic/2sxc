@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers;
 
 internal class OqtUiContextBuilder(
     ILinkPaths linkPaths,
-    IContextOfSite ctx,
+    IContextOfSiteService ctxSvc,
     SiteState siteState,
     ExternalLinksService externalLinksService,
     UiContextBuilderBase.Dependencies deps)
@@ -28,15 +28,15 @@ internal class OqtUiContextBuilder(
     {
         var result = base.GetSite(flags);
 
-        result.Id = ctx.Site.Id;
-        result.Url = "//" + ctx.Site.UrlRoot;
+        result.Id = ctxSvc.Context.Site.Id;
+        result.Url = "//" + ctxSvc.Context.Site.UrlRoot;
         return result;
     }
 
     protected override WebResourceDto GetPage() =>
         new()
         {
-            Id = (ctx as IContextOfBlock)?.Page.Id ?? Eav.Sys.EavConstants.NullId,
+            Id = (ctxSvc as IContextOfBlock)?.Page.Id ?? Eav.Sys.EavConstants.NullId,
         };
 
     protected override ContextAppDto GetApp(Ctx flags)
@@ -48,11 +48,11 @@ internal class OqtUiContextBuilder(
 
     protected override string GetGettingStartedUrl()
     {
-        var blockCtx = ctx as IContextOfBlock; // may be null!
+        var blockCtx = ctxSvc as IContextOfBlock; // may be null!
 
         var gsUrl = externalLinksService.LinkToDestination(
             ExternalSxcDestinations.GettingStarted,
-            Services.SiteCtx.Site,
+            Services.SiteCtxSvc.Context.Site,
             blockCtx?.Module.Id ?? 0,
             AppSpecsOrNull,
             true

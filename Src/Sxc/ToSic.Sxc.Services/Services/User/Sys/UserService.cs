@@ -9,15 +9,15 @@ using static System.StringComparison;
 namespace ToSic.Sxc.Services.User.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class UserService(LazySvc<IContextOfSite> context, LazySvc<IUsersProvider> usersSvc, LazySvc<IUserRolesProvider> rolesSvc)
-    : ServiceWithContext($"{SxcLogName}.UsrSrv", connect: [context, usersSvc]), IUserService
+public class UserService(LazySvc<IContextOfSiteService> ctxSvc, LazySvc<IUsersProvider> usersSvc, LazySvc<IUserRolesProvider> rolesSvc)
+    : ServiceWithContext($"{SxcLogName}.UsrSrv", connect: [ctxSvc, usersSvc]), IUserService
 {
     #region GetCurrentUser
 
     public IUserModel GetCurrentUser()
     {
         var l = Log.Fn<IUserModel>();
-        var user = context.Value.User;
+        var user = ctxSvc.Value.Context.User;
         if (user == null! /* paranoid */ || user.IsAnonymous)
             return l.Return(UserConstants.AnonymousUser, "no user/anonymous");
 
@@ -54,7 +54,7 @@ public class UserService(LazySvc<IContextOfSite> context, LazySvc<IUsersProvider
         if (userId == unknown.Id)
             return l.Return(unknown, "unknown");
 
-        var userDto = usersSvc.Value.GetUser(userId, context.Value.Site.Id);
+        var userDto = usersSvc.Value.GetUser(userId, ctxSvc.Value.Context.Site.Id);
 
         return userDto != null
             ? l.ReturnAsOk(userDto)

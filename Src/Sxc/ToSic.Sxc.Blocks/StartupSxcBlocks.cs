@@ -12,6 +12,7 @@ using ToSic.Sxc.DataSources.Sys;
 using ToSic.Sxc.Integration.Modules;
 using ToSic.Sxc.LookUp.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sys.Context;
 using ToSic.Sys.Users.Permissions;
 
 // ReSharper disable once CheckNamespace
@@ -48,10 +49,8 @@ public static class StartupSxcBlocks
         
         // v22.01 2dm 2026-10-20 - only one service left, as we're trying to clean state sharing...
         services.TryAddScoped<ISxcCurrentContextService, SxcCurrentContextService>();
-        services.TryAddScoped<ICurrentContextUserPermissionsService>(x => x.GetRequiredService<ISxcCurrentContextService>());
-        // must be the same instance, so it must get the original, scoped SxcContextResolver
-        //services.TryAddTransient<ISxcAppCurrentContextService>(sp => sp.GetRequiredService<ISxcCurrentContextService>());
-        //services.TryAddScoped<ICurrentContextService>(x => x.GetRequiredService<ISxcCurrentContextService>());
+        services.TryAddScoped<IContextService>(x => x.GetRequiredService<ISxcCurrentContextService>());
+        services.TryAddScoped<IContextOfSiteService>(x => x.GetRequiredService<ISxcCurrentContextService>());
         services.TryAddScoped<AppIdResolver>();
 
         // Integration stuff - must be implemented by each platform

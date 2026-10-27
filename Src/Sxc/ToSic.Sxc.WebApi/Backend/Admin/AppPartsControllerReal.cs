@@ -5,10 +5,10 @@ namespace ToSic.Sxc.Backend.Admin;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppPartsControllerReal(
-    LazySvc<IContextOfSite> context,
+    LazySvc<IContextOfSiteService> ctxSvc,
     LazySvc<ExportContent> exportContent,
     Generator<ImportContent> importContent)
-    : ServiceBase("Api.APartsRl", connect: [context, exportContent, importContent]), IAppPartsController
+    : ServiceBase("Api.APartsRl", connect: [ctxSvc, exportContent, importContent]), IAppPartsController
 {
     public const string LogSuffix = "AParts";
 
@@ -55,7 +55,7 @@ public class AppPartsControllerReal(
         var (fileName, stream) = uploadInfo.GetStream(0);
 
         var result = importContent.New()
-            .Import(zoneId: zoneId, appId: appId, fileName: fileName, stream: stream!, defaultLanguage: context.Value.Site.DefaultCultureCode);
+            .Import(zoneId: zoneId, appId: appId, fileName: fileName, stream: stream!, defaultLanguage: ctxSvc.Value.Context.Site.DefaultCultureCode);
 
         return l.ReturnAsOk(result);
     }

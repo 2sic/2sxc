@@ -3,6 +3,7 @@ using ToSic.Eav.Context;
 using ToSic.Sxc.DataSources.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Sys.Http;
+using ToSic.Sys.Context;
 using ToSic.Sys.Users.Permissions;
 
 namespace ToSic.Sxc.Context.Sys;
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.Context.Sys;
 /// Main context resolver - provides context information about the site, app, block, permissions etc.
 /// </summary>
 /// <param name="appIdResolverLazy"></param>
-/// <param name="siteCtxGenerator"></param>
+/// <param name="ctxSvcGen"></param>
 /// <param name="appCtxGenerator"></param>
 /// <param name="featuresService"></param>
 /// <param name="appReaderFactory"></param>
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.Context.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal partial class SxcCurrentContextService(
     LazySvc<AppIdResolver> appIdResolverLazy,
-    Generator<IContextOfSite> siteCtxGenerator,
+    Generator<IContextOfSiteService> ctxSvcGen,
     Generator<IContextOfAppFactory> appCtxGenerator,
     LazySvc<IContextOfBlockFactory> blockCtxFactory,
     LazySvc<IFeaturesService> featuresService,
@@ -28,13 +29,15 @@ internal partial class SxcCurrentContextService(
     LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
     LazySvc<IHttp> http)
     : ServiceBase("Sxc.CtxRes",
-        connect: [appIdResolverLazy, siteCtxGenerator, appCtxGenerator, blockCtxFactory, featuresService, http, appReaderFactory, bdsFactoryLazy]),
+        connect: [appIdResolverLazy, ctxSvcGen, appCtxGenerator, blockCtxFactory, featuresService, http, appReaderFactory, bdsFactoryLazy]),
         ISxcCurrentContextService
 {
     private const string CookieTemplate = "app-{0}-data-preview";
     private const string CookieLive = "live";
 
-    public IContextOfSite SiteContext => field ??= siteCtxGenerator.New();
+    public IContextOfUser Context => SiteContext;
+
+    public IContextOfSite SiteContext => field ??= ctxSvcGen.New().Context;
 
     /// <summary>
     /// Get the best possible context which can give us insights about the user permissions.
@@ -57,8 +60,8 @@ internal partial class SxcCurrentContextService(
     public EffectivePermissions UserPermissions(IContextOfSite context)
     {
         var perms = context.Permissions;
-        if (perms == null)
-            return new(false);
+        //if (perms == null)
+        //    return new(false);
         if (!perms.ShowDraftData)
             return perms;
 
@@ -77,8 +80,5 @@ internal partial class SxcCurrentContextService(
 
         bool CookieExpectsLive(string app) => http?.Value.GetCookie(string.Format(CookieTemplate, app)) == CookieLive;
     }
-
-
-
 
 }

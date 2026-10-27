@@ -16,11 +16,11 @@ namespace ToSic.Sxc.Context.Sys.CmsContext;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CmsContext(
     IPlatform platform,
-    IContextOfSite siteCtxFallback,
+    IContextOfSiteService ctxSvcFallback,
     LazySvc<IPage> pageLazy,
     IAppReaderFactory appReaders)
     : ServiceWithContext(SxcLogName + ".CmsCtx",
-        connect: [siteCtxFallback, pageLazy, appReaders, platform]), ICmsContext
+        connect: [ctxSvcFallback, pageLazy, appReaders, platform]), ICmsContext
 {
     #region Internal context
 
@@ -35,7 +35,7 @@ internal class CmsContext(
     internal IContextOfBlock? CtxBlockOrNull => _ctxBlock.Get(() => BlockInternal?.Context);
     private readonly LazyGet<IContextOfBlock?> _ctxBlock = new();
 
-    internal IContextOfSite CtxSite => CtxBlockOrNull ?? siteCtxFallback;
+    internal IContextOfSite CtxSite => CtxBlockOrNull ?? ctxSvcFallback.Context;
 
     [field: AllowNull, MaybeNull]
     private IAppReader SiteAppReader => field ??= appReaders.GetZonePrimary(CtxSite.Site.ZoneId);

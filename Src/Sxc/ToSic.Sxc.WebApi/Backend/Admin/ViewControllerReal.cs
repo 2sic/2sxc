@@ -8,11 +8,11 @@ namespace ToSic.Sxc.Backend.Admin;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ViewControllerReal(
-    LazySvc<IContextOfSite> context,
+    LazySvc<IContextOfSiteService> ctxSvc,
     LazySvc<ViewsBackend> viewsBackend,
     LazySvc<ViewsExportImport> viewExportImport,
     LazySvc<UsageBackend> usageBackend)
-    : ServiceBase("Api.ViewRl", connect: [context, usageBackend, viewsBackend, viewExportImport]),
+    : ServiceBase("Api.ViewRl", connect: [ctxSvc, usageBackend, viewsBackend, viewExportImport]),
         IViewController
 {
     public const string LogSuffix = "View";
@@ -56,7 +56,7 @@ public class ViewControllerReal(
             var (fileName, stream) = uploadInfo.GetStream(i);
             streams.Add(new() { Name = fileName, Stream = stream! });
         }
-        var result = viewExportImport.Value.ImportView(zoneId, appId, streams, context.Value.Site.DefaultCultureCode);
+        var result = viewExportImport.Value.ImportView(zoneId, appId, streams, ctxSvc.Value.Context.Site.DefaultCultureCode);
 
         return l.ReturnAsOk(result);
     }
@@ -81,5 +81,5 @@ public class ViewControllerReal(
     /// <summary>
     /// Helper method to get SiteId for ControllerReal proxy class.
     /// </summary>
-    public int SiteId => context.Value.Site.Id;
+    public int SiteId => ctxSvc.Value.Context.Site.Id;
 }

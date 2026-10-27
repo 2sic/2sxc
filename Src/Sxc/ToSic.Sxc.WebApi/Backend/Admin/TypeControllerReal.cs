@@ -8,13 +8,13 @@ namespace ToSic.Sxc.Backend.Admin;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class TypeControllerReal(
-    LazySvc<IContextOfSite> context,
+    LazySvc<IContextOfSiteService> ctxSvc,
     LazySvc<ContentExportApi> contentExportLazy,
     AppWorkQuick<WorkContentTypesMod> typeMod,
     LazySvc<IUser> userLazy,
     Generator<ImportContent> importContent)
     : ServiceBase("Api.TypesRl",
-        connect: [context, contentExportLazy, userLazy, typeMod, importContent]), ITypeController
+        connect: [ctxSvc, contentExportLazy, userLazy, typeMod, importContent]), ITypeController
 {
     public const string LogSuffix = "Types";
 
@@ -101,7 +101,7 @@ public class TypeControllerReal(
             streams.Add(new() { Name = fileName, Stream = stream! });
         }
         var result = importContent.New()
-            .ImportJsonFiles(zoneId, appId, streams, context.Value.Site.DefaultCultureCode);
+            .ImportJsonFiles(zoneId, appId, streams, ctxSvc.Value.Context.Site.DefaultCultureCode);
 
         return l.ReturnAsOk(result);
     }

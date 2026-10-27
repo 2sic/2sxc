@@ -32,14 +32,14 @@ namespace ToSic.Sxc.Apps.Sys.Api01;
 public partial class SimpleDataEditService(
     DataAssembler dataAssembler,
     IZoneMapper zoneMapper,
-    Generator<IContextOfSite> siteCtxForPermissionCheck,
+    Generator<IContextOfSiteService> ctxSvc,
     AppWorkContextService appWorkCtxSvc,
     AppWorkChain<WorkEntitySave> entSave,
     AppWorkChain<WorkEntityUpdate> entUpdate,
     AppWorkChain<WorkEntityDelete> entDelete,
     LazySvc<IValueConverter> valueConverter,
     LazySvc<PermissionCheckFactory> permCheckFactory
-) : ServiceWithSetup<SimpleDataEditService.Options>("Dta.Simple", connect: [appWorkCtxSvc, entSave, entUpdate, entDelete, zoneMapper, dataAssembler, siteCtxForPermissionCheck, permCheckFactory, valueConverter])
+) : ServiceWithSetup<SimpleDataEditService.Options>("Dta.Simple", connect: [appWorkCtxSvc, entSave, entUpdate, entDelete, zoneMapper, dataAssembler, ctxSvc, permCheckFactory, valueConverter])
 {
     /// <summary>
     /// 
@@ -56,11 +56,11 @@ public partial class SimpleDataEditService(
         ??= appWorkCtxSvc.ContextNew(new AppIdentity(MyOptions.ZoneId, MyOptions.AppId));
 
     private IContextOfSite CtxForPermissionCheck => field
-        ??= siteCtxForPermissionCheck.New()
-            .Map(tempCtx => tempCtx.Site.ZoneId == MyOptions.ZoneId
-                ? tempCtx
+        ??= ctxSvc.New()
+            .Map(tempCtx => tempCtx.Context.Site.ZoneId == MyOptions.ZoneId
+                ? tempCtx.Context
                 // when zoneId is not that same as in current context, we need to set right site for provided zoneId
-                : new ContextOfSite(new(zoneMapper.SiteOfZone(MyOptions.ZoneId), tempCtx.User))
+                : new ContextOfSite(zoneMapper.SiteOfZone(MyOptions.ZoneId), tempCtx.Context.User)
             );
 
     private string DefaultLanguageCode => field ??= GetDefaultLanguage();

@@ -7,11 +7,11 @@ namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockControllerReal(
-    LazySvc<IContextOfSite> context,
+    LazySvc<IContextOfSiteService> ctxSvc,
     LazySvc<ContentBlockBackend> blockBackend,
     LazySvc<AppViewPickerBackend> viewsBackend,
     LazySvc<WorkApps> workApps)
-    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [context, blockBackend, viewsBackend, workApps]),
+    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [ctxSvc, blockBackend, viewsBackend, workApps]),
         IBlockController
 {
     public const string LogSuffix = "Block";
@@ -55,7 +55,7 @@ public class BlockControllerReal(
     public IEnumerable<AppUiInfo> Apps(string? apps = null)
     {
         // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
-        var site = context.Value.Site;
+        var site = ctxSvc.Value.Context.Site;
         return [.. workApps.Value.GetSelectableApps(site, apps)];
     }
 

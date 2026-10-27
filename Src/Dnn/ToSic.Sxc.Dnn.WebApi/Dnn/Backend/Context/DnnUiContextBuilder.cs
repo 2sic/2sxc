@@ -78,7 +78,7 @@ internal sealed class DnnUiContextBuilder(
 
         var gsUrl = externalLinksService.LinkToDestination(
             ExternalSxcDestinations.GettingStarted,
-            Services.SiteCtx.Site,
+            Services.SiteCtxSvc.Context.Site,
             Module.ModuleID,
             app,
             Module.DesktopModule.ModuleName == "2sxc");

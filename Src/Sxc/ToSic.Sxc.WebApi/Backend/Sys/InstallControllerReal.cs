@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Backend.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class InstallControllerReal(
-    LazySvc<IContextOfSite> context,
+    LazySvc<IContextOfSiteService> ctxSvc,
     LazySvc<IEnvironmentInstaller> envInstallerLazy,
     LazySvc<IPlatformAppInstaller> platformAppInstaller,
     LazySvc<ImportFromRemote> impFromRemoteLazy,
@@ -30,7 +30,7 @@ public class InstallControllerReal(
     : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
         connect:
         [
-            context, envInstallerLazy, platformAppInstaller, impFromRemoteLazy, responseMaker, featureService,
+            ctxSvc, envInstallerLazy, platformAppInstaller, impFromRemoteLazy, responseMaker, featureService,
             appSettingsStack,  workApps,
         ])
 {
@@ -53,7 +53,7 @@ public class InstallControllerReal(
         var l = Log.Fn<InstallAppsDto>();
         
         // Get Remote Install URL
-        var site = context.Value.Site;
+        var site = ctxSvc.Value.Context.Site;
         var url = platformAppInstaller.Value
             .GetAutoInstallPackagesUiUrl(site, module, isContentApp);
 

@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
+using ToSic.Sys.Context;
 using ToSic.Sys.Users.Permissions;
 
 namespace ToSic.Sxc.Context.Sys;
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.Context.Sys;
 /// Note that it's important to always make this **Scoped**, not transient, as there is some re-use after initialization
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface ISxcCurrentContextService: ICurrentContextUserPermissionsService
+public interface ISxcCurrentContextService: IContextService
 {
     #region previously ICurrentContextService
 
