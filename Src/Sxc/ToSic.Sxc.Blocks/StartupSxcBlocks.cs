@@ -44,11 +44,12 @@ public static class StartupSxcBlocks
         services.TryAddTransient<IContextOfAppFactory, ContextOfAppFactory>(); // new v22 WIP
         services.TryAddTransient<IContextOfBlockFactory, ContextOfBlockFactory>(); // new v22 WIP
 
-        // v22.01 2dm 2026-10-20 - only one service left, as we're trying to clean state sharing...
-        services.TryAddScoped<ISxcCurrentContextService, SxcCurrentContextService>();
-        services.TryAddScoped<IContextService>(x => x.GetRequiredService<ISxcCurrentContextService>());
-        services.TryAddScoped<IContextOfSiteService>(x => x.GetRequiredService<ISxcCurrentContextService>());
-        services.TryAddScoped<IContextCompleteService>(x => x.GetRequiredService<ISxcCurrentContextService>());
+        // moved to WebApi
+        //// v22.01 2dm 2026-10-20 - only one service left, as we're trying to clean state sharing...
+        //services.TryAddScoped<ISxcCurrentContextService, SxcCurrentContextService>();
+        //services.TryAddScoped<IContextService>(x => x.GetRequiredService<ISxcCurrentContextService>());
+        //services.TryAddScoped<IContextOfSiteService>(x => x.GetRequiredService<ISxcCurrentContextService>());
+        //services.TryAddScoped<IContextCompleteService>(x => x.GetRequiredService<ISxcCurrentContextService>());
 
         // Integration stuff - must be implemented by each platform
         services.TryAddTransient<IPlatformModuleUpdater, BasicModuleUpdater>();

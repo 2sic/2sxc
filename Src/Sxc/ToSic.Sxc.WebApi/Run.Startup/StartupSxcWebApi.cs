@@ -24,8 +24,8 @@ using ToSic.Sxc.Backend.Sys;
 using ToSic.Sxc.Backend.Usage;
 using ToSic.Sxc.Backend.Views;
 using ToSic.Sxc.Render.StaticAssets.Sys;
-using ToSic.Sxc.WebApi.Sys;
 using ToSic.Sxc.WebApi.Sys.ExternalLinks;
+using ToSic.Sys.Context;
 
 namespace ToSic.Sxc.Run.Startup;
 
@@ -137,11 +137,26 @@ public static class StartupSxcWebApi
 
         services.TryAddTransient<IContextBuilderService, ContextBuilderService>();
 
+        // v22 moved here from Sxc.Blocks
+        services.AddContextProviders();
+
         services.AddLoadSettingsProviders();
 
         services.AddSxcInsights();
 
         services.AddFallbacks();
+
+        return services;
+    }
+
+
+    public static IServiceCollection AddContextProviders(this IServiceCollection services)
+    {
+        // v22.01 2dm 2026-10-20 - only one service left, as we're trying to clean state sharing...
+        services.TryAddScoped<ISxcCurrentContextService, SxcCurrentContextService>();
+        services.TryAddScoped<IContextService>(x => x.GetRequiredService<ISxcCurrentContextService>());
+        services.TryAddScoped<IContextOfSiteService>(x => x.GetRequiredService<ISxcCurrentContextService>());
+        services.TryAddScoped<IContextCompleteService>(x => x.GetRequiredService<ISxcCurrentContextService>());
 
         return services;
     }
