@@ -9,23 +9,14 @@ namespace ToSic.Sxc.Backend.Adam;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamPrefetchHelper(
     Generator<AdamWorkGet, AdamWorkOptions> adamGet,
-    Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> dtoMaker,
-    ISxcCurrentContextService ctxService)
+    Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> dtoMaker)
     : ServiceWithSetup<AdamWorkOptions>("Adm.TrnItm"),
         IAdamPrefetchHelper
 {
-    /// <summary>
-    /// This service must work without options, as it usually uses default options.
-    /// </summary>
-    protected override AdamWorkOptions GetDefaultOptions() => new();
-
     public ICollection<AdamItemDto> GetAdamItemsForPrefetch(string subFolderName, bool autoCreate = true)
     {
         var l = Log.Fn<ICollection<AdamItemDto>>($"subFolderName:{subFolderName}, autoCreate:{autoCreate}");
-        var adamGetReady = adamGet.New(MyOptions with
-        {
-            Context = MyOptions.Context ?? ctxService.ShareAppStateOptimized(MyOptions.AppId),
-        });
+        var adamGetReady = adamGet.New(MyOptions);
         var items = adamGetReady.ItemsInField(subFolderName, autoCreate);
         
         if (items == null)
