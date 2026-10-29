@@ -136,9 +136,9 @@ public class ImportContent(
 
             // 2.1 Reset serializer to use the new app
             var appState = appReaders.Get(new AppIdentity(zoneId, appId));
-            serializer = jsonSerializerGenerator.New().SetApp(appState);
+            serializer = jsonSerializerGenerator.New().Setup(new(appState) { PreferLocalAppTypes = true });
             // Since we're importing directly into this app, we prefer local content-types
-            serializer.PreferLocalAppTypes = true;
+            //serializer.PreferLocalAppTypes = true;
             l.A("Load items");
 
             // 2.2. Build content types

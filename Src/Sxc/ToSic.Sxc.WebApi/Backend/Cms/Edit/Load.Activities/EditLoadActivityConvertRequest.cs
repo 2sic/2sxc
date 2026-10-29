@@ -2,14 +2,15 @@
 using ToSic.Eav.Data.Build.Sys;
 using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.ImportExport.Json.V1;
+using ToSic.Eav.Metadata.Targets;
 using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
-public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerializerGenerator, DataAssembler entityAssemblerKit)
-    : ServiceBase("UoW.AddCtx", connect: [jsonSerializerGenerator, entityAssemblerKit]),
+public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerializerGenerator, DataAssembler entityAssemblerKit, ITargetTypeService metadataTargets)
+    : ServiceBase("UoW.AddCtx", connect: [jsonSerializerGenerator, entityAssemblerKit, metadataTargets]),
         IWork<List<BundleWithHeaderOptional<IEntity>>, EditLoadDto>
 {
     // Note: reworked this 2026-05-15 2dm to make the objects immutable, hope no side effects #ImmutableIsTheNewBlack
@@ -78,7 +79,7 @@ public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerial
             // #TargetTypeIdInsteadOfTarget
             var targetType = eFor.TargetType != 0
                 ? eFor.TargetType
-                : jsonSerializer.MetadataTargets.GetId(eFor.Target!);
+                : metadataTargets.GetId(eFor.Target!);
             var newTitle = appReader.FindTargetTitle(targetType, eFor.String ?? eFor.Guid?.ToString() ?? eFor.Number?.ToString());
             ent = ent with { For = eFor with { Title = newTitle } };
         }

@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Data.Build.Sys;
+﻿using ToSic.Eav.Apps.AppReader.Sys;
+using ToSic.Eav.Data.Build.Sys;
 using ToSic.Eav.Data.Processing;
 using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.Serialization.Sys;
@@ -52,9 +53,9 @@ public class EditSaveBackend(
         var appEntities = workEntities.New(appCtxNew);
         //var appCtx = appEntities.AppWorkCtx;
 
-        var ser = jsonSerializer.SetApp(appCtxNew.AppReader);
+        var ser = jsonSerializer.Setup(new(appCtxNew.AppReader) { PreferLocalAppTypes = true });//.SetApp(appCtxNew.AppReader);
         // Since we're importing directly into this app, we would prefer local content-types
-        ser.PreferLocalAppTypes = true;
+        //ser.PreferLocalAppTypes = true;
 
         #region check if it's an update, and do more security checks then - shared with EntitiesController.Save
 
