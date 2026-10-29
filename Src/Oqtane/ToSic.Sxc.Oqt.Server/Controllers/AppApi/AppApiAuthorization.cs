@@ -16,8 +16,9 @@ internal class AppApiAuthorization: IHasLog
 {
     public AppApiAuthorization(ILogStore logStore)
     {
-        Log = new Log(HistoryLogName, null, "AppApiAuthorization");
+        Log = LogFactory.Create(HistoryLogName);
         logStore.Add(HistoryLogGroup, Log);
+        Log.A("AppApiAuthorization");
     }
 
     public AppApiAuthorization Init(RequestDelegate next)

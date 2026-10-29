@@ -5,6 +5,7 @@
 /// Can then be converted to a key using the GetKey() extension method.
 /// </summary>
 [PrivateApi]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public record CacheKeyParts
 {
     /// <summary>

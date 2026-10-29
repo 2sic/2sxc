@@ -2,6 +2,7 @@
 
 namespace ToSic.Sxc.Images;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class RecipeHelpers
 {
     internal static ReadOnlyDictionary<string, object?> MergeDics(IDictionary<string, object?>? parentOrNull, IDictionary<string, object?>? myOrNull)

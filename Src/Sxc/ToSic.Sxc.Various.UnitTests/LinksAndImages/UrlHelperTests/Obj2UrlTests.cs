@@ -59,6 +59,51 @@ public class Obj2UrlTests
     {
         Equal(TestCase1Str, O2uSerialize(TestCase1));
     }
+
+    [Fact]
+    public void Serialize_ReturnsEncodedParameters_ToolbarItem()
+    {
+        var item = new
+        {
+            sortOrder = 0,
+            useModuleList = true,
+            isPublished = false,
+            title = "Demo & content=one?",
+            entityGuid = new Guid("620aa5d9-e5c5-42b3-8279-51fe5e71e645")
+        };
+
+        var result = O2uSerialize(item);
+
+        Equal("sortOrder=0&useModuleList=true&isPublished=false&title=Demo%20%26%20content%3Done%3F&entityGuid=620aa5d9-e5c5-42b3-8279-51fe5e71e645", result);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    public void Serialize_IgnoresNullWithoutExtraSeparators_ParameterCollection(int nullIndex)
+    {
+        var items = new List<object?> { TestCase1, TestCase2 };
+        items.Insert(nullIndex, null);
+
+        var result = O2uSerialize(items);
+
+        Equal($"{TestCase1Str}&{TestCase2Str}", result);
+    }
+
+    [Fact]
+    public void Serialize_UsesConfiguredSeparators_ObjectParameters()
+    {
+        var serializer = new ObjectToUrl
+        {
+            MyOptions = new() { PairSeparator = ";", KeyValueSeparator = ":" }
+        };
+
+        var result = serializer.Serialize(TestCase1);
+
+        Equal("test:7;name:daniel", result);
+    }
+
     [Fact]
     public void WithSubArray()
     {
@@ -96,7 +141,7 @@ public class Obj2UrlTests
     public void BasicWithPrefix()
     {
         var prefix = "prefix:";
-        Equal($"{prefix}test=7&{prefix}name=daniel", new ObjectToUrl(prefix: prefix).Serialize(TestCase1));
+        Equal($"{prefix}test=7&{prefix}name=daniel", new ObjectToUrl(/*prefix: prefix*/){ MyOptions = new(){ Prefix = prefix}}.Serialize(TestCase1));
     }
 
     [Fact]

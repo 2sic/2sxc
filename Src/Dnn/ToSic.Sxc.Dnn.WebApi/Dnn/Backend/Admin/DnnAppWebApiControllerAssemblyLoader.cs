@@ -15,16 +15,19 @@ using ToSic.Sxc.WebApi.Sys;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
+/// <summary>
+/// Assembly loader for the data source which lists all the ApiControllers to the admin ui.
+/// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class DnnAppWebApiControllerAssemblyLoader(
-    AppFolderLookupForWebApi appFolderLookup,
     ISite site,
-    ISxcCurrentContextService ctxService,
+    IContextBuilderService ctxBuilder,
+    IContextCompleteService ctxService,
     IAppJsonConfigurationService appJson,
     SourceAnalyzer sourceAnalyzer,
     IRoslynBuildManager roslynBuildManager,
     IEditionService editionSvc)
-    : ServiceBase($"{DnnConstants.LogName}.ApiCtlAsm", connect: [appFolderLookup, site, ctxService, appJson, sourceAnalyzer, roslynBuildManager, editionSvc]),
+    : ServiceBase($"{DnnConstants.LogName}.ApiCtlAsm", connect: [site, ctxBuilder, ctxService, appJson, sourceAnalyzer, roslynBuildManager, editionSvc]),
         IAppWebApiControllerAssemblyLoader
 {
     public Assembly GetAssembly(string path)
@@ -32,14 +35,17 @@ internal class DnnAppWebApiControllerAssemblyLoader(
         var className = Path.GetFileNameWithoutExtension(path);
         Log.A($"Class name: {className}");
 
-        var controllerVirtualPath = Path.Combine(site.AppsRootPhysical, appFolderLookup.GetAppFolder(), path).ForwardSlash();
+        // Note 2026-10-18 2dm: #NoLookupSideEffects
+        // the next line used to have a side effect of sharing the found app-context
+        // This has been removed; it may break something, which would then need to be corrected "upstream", but not here
+        var controllerVirtualPath = Path.Combine(site.AppsRootPhysical, ctxService.FindAppFolderFromScopeOrThrow(ctxBuilder), path).ForwardSlash();
         Log.A($"Controller Virtual Path: {controllerVirtualPath}");
 
         if (!File.Exists(HostingEnvironment.MapPath(controllerVirtualPath)))
             throw new($"Error: can't find controller file: {controllerVirtualPath}");
 
-        var block = ctxService.BlockOrNull();
-        var appSpecs = block?.Context.AppReaderRequired.Specs ?? ctxService.AppOrNull()?.AppReaderRequired.Specs;
+        var block = ctxService.BlockOrNull;
+        var appSpecs = block?.Context.AppReaderRequired.Specs ?? ctxService.AppContextOrNull?.AppReaderRequired.Specs;
         var codeFileInfo = sourceAnalyzer.TypeOfVirtualPath(controllerVirtualPath);
         var useRoslyn = (block != null && appJson.DnnCompilerAlwaysUseRoslyn(block.AppId)) || codeFileInfo.AppCode || FileInAppCode(path);
 

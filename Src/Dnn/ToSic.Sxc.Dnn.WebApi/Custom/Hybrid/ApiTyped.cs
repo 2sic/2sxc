@@ -104,34 +104,12 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     #endregion
 
 
-    #region AsDynamic implementations + AsList - all killed in v16
-
-    ///// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(string, string)" />
-    //public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot.Cdf.AsDynamicFromJson(json, fallback);
-
-    ///// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(IEntity)" />
-    //public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.Cdf.AsDynamic(entity);
-
-    ///// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(object)" />
-    //public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.Cdf.AsDynamicInternal(dynamicEntity);
-
-    ///// <inheritdoc cref="IDynamicCode12Docs.AsDynamic(object[])" />
-    //public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.Cdf.MergeDynamic(entities);
-
-    ///// <inheritdoc cref="IDynamicCodeDocs.AsEntity" />
-    //public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot.Cdf.AsEntity(dynamicEntity);
-
-    ///// <inheritdoc cref="IDynamicCodeDocs.AsList" />
-    //public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.Cdf.AsDynamicList(list);
-
-    #endregion
-
     #region Adam
 
     /// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
     public IFile SaveInAdam(NoParamOrder npo = default, Stream stream = null, string fileName = null, string contentType = null,
         Guid? guid = null, string field = null, string subFolder = "")
-        => DynHlp.SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
+        => CustomCodeHlp.SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
 
     #endregion
 
@@ -156,6 +134,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     string IGetCodePath.CreateInstancePath { get; set; }
 
     /// <inheritdoc cref="ITypedCode16.GetCode"/>
+    [PrivateApi("Hidden, as not supported any more going forward")]
     public dynamic GetCode(string path, NoParamOrder npo = default, string className = default)
         => CompileCodeHlp.GetCode(path, className: className);
 

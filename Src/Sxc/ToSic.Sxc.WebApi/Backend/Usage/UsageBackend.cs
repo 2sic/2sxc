@@ -18,12 +18,12 @@ public class UsageBackend(
     public IEnumerable<ViewDto> ViewUsage(int appId, Guid guid, Func<ICollection<IView>, ICollection<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
     {
         var l = Log.Fn<IEnumerable<ViewDto>>($"{appId}, {guid}");
-        var context = ctxService.GetExistingAppOrSet(appId);
+        var context = ctxService.ShareAppStateOptimized(appId);
 
         // extra security to only allow zone change if host user
         var permCheck = appPermissions.New(new() { SiteContext = context, App = context.AppReaderRequired });
-        if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
-            throw HttpException.PermissionDenied(error);
+        if (permCheck.EnsureAll(GrantSets.ReadSomething) is { Allowed: false } pcResult)
+            throw HttpException.PermissionDenied(pcResult.ErrorMessage);
 
         var appWorkCtxPlus = appCtxSvc.ContextNew(appId);
         var appViews = workViews.New(appWorkCtxPlus);

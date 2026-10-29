@@ -11,6 +11,7 @@ using ToSic.Sys.Code.InfoSystem;
 
 namespace ToSic.Sxc.Data.Sys.Factory;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICodeDataFactory: ICanGetService, IHasLog
 {
     /// <remarks>
@@ -66,7 +67,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// List of dimensions for value lookup, incl. priorities etc. and null-trailing.
     /// lower case safe guaranteed. 
     /// </summary>
-    // If we don't have a DynCodeRoot, try to generate the language codes and compatibility
+    // If we don't have an ExecutionContext, try to generate the language codes and compatibility
     // There are cases where these were supplied using SetFallbacks, but in some cases none of this is known
     string?[] Dimensions { get; }
 

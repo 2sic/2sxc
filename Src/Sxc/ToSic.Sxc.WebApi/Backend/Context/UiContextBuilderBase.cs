@@ -3,12 +3,12 @@ using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys.Cms;
-using ToSic.Eav.WebApi.Sys.Languages;
 using ToSic.Sxc.Apps.Sys.Assets;
 using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Services;
 using ToSic.Sys.Capabilities.Features;
 using static ToSic.Sys.Capabilities.Features.BuiltInFeatures;
+using ContextLanguageDto = ToSic.Eav.WebApi.Sys.Dto.ContextLanguageDto;
 
 namespace ToSic.Sxc.Backend.Context;
 
@@ -19,21 +19,22 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
     #region Dependencies 
 
     public record Dependencies(
-        IContextOfSite SiteCtx,
+        IContextOfSiteService SiteCtxSvc,
         LazySvc<ISysFeaturesService> Features,
         LazySvc<IUiData> UiDataLazy,
-        LazySvc<LanguagesBackend> LanguagesBackend,
+        LazySvc<ContextLanguageDtoService> LanguagesBackend,
         IAppPathsMicroSvc AppPaths,
         LazySvc<GlobalPaths> GlobalPaths,
         IAppsCatalog AppsCatalog,
         LazySvc<IUserService> UsersSvc
-    ) : DependenciesBase(connect: [SiteCtx, Features, UiDataLazy, AppPaths, LanguagesBackend, GlobalPaths, AppsCatalog, UsersSvc]);
+    ) : DependenciesBase(connect: [SiteCtxSvc, Features, UiDataLazy, AppPaths, LanguagesBackend, GlobalPaths, AppsCatalog, UsersSvc]);
 
     #endregion
 
     #region Constructor / DI
 
-    protected int ZoneId => Services.SiteCtx.Site.ZoneId;
+    private ISite Site => field ??= Services.SiteCtxSvc.Context.Site;
+    protected int ZoneId => Services.SiteCtxSvc.Context.Site.ZoneId;
     protected IAppSpecs? AppSpecsOrNull;
     private IAppReader? _appReaderOrNull;
 
@@ -67,11 +68,11 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
         return ctx;
     }
 
-    protected virtual ContextLanguageDto? GetLanguage()
+    protected ContextLanguageDto? GetLanguage()
     {
         if (ZoneId == 0)
             return null;
-        var site = Services.SiteCtx.Site;
+        var site = Site;
 
         var converted = Services.LanguagesBackend.Value.GetLanguagesOfApp(_appReaderOrNull);
 
@@ -102,14 +103,14 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
     {
         var result = new ContextResourceWithApp
         {
-            Id = Services.SiteCtx.Site.Id,
-            Url = "//" + Services.SiteCtx.Site.UrlRoot + "/",
+            Id = Site.Id,
+            Url = "//" + Site.UrlRoot + "/",
         };
         // Stop now if we don't need advanced infos
         if (!flags.HasFlag(Ctx.AppAdvanced)) return result;
 
         // Otherwise also add the global appId
-        var zoneId = Services.SiteCtx.Site.ZoneId;
+        var zoneId = Site.ZoneId;
         result.DefaultApp = (AppIdentity)Services.AppsCatalog.DefaultAppIdentity(zoneId);
         result.PrimaryApp = (AppIdentity)Services.AppsCatalog.PrimaryAppIdentity(zoneId);
         return result;
@@ -124,7 +125,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
     protected virtual ContextEnableDto GetEnable(CtxEnable ctx)
     {
         var isRealApp = AppSpecsOrNull != null && ! AppSpecsOrNull.IsContentApp();
-        var user = Services.SiteCtx.User;
+        var user = Services.SiteCtxSvc.Context.User;
         var dto = new ContextEnableDto
         {
             DebugMode = user.IsSystemAdmin ||
@@ -151,7 +152,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
             return null;
         var appReader = _appReaderOrNull;
         var appSpecs = appReader.Specs;
-        var paths = Services.AppPaths.Get(appReader, Services.SiteCtx.Site);
+        var paths = Services.AppPaths.Get(appReader, Site);
         var result = new ContextAppDto
         {
             Id = appSpecs.AppId,
@@ -196,7 +197,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
 
     protected virtual ContextUserDto GetUser(Ctx flags)
     {
-        var user = Services.SiteCtx.User;
+        var user = Services.SiteCtxSvc.Context.User;
         var userDto = new ContextUserDto
         {
             Email = user.Email,
@@ -219,5 +220,5 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
     /// </summary>
     /// <returns></returns>
     protected virtual IList<FeatureDto> GetFeatures(Ctx flags)
-        => Services.UiDataLazy.Value.FeaturesDto(Services.SiteCtx.Permissions.IsContentAdmin, flags.HasFlag(Ctx.FeaturesForSystemTypes));
+        => Services.UiDataLazy.Value.FeaturesDto(Services.SiteCtxSvc.Context.Permissions.IsContentAdmin, flags.HasFlag(Ctx.FeaturesForSystemTypes));
 }

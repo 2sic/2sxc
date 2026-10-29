@@ -22,6 +22,7 @@ using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Render.Polymorphism.Sys;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sys.Wrappers;
 using static System.StringComparer;
 
 namespace ToSic.Sxc.Dnn.Search;
@@ -39,7 +40,7 @@ internal class SearchController(
     AppsCacheSwitch appsCache,
     Generator<CodeCompiler> codeCompiler,
     Generator<IExecutionContextFactory> exCtxFactory,
-    Generator<ISite> siteGenerator,
+    DnnSiteFactory siteGenerator,
     LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder,
     LazySvc<ILookUpEngineResolver> dnnLookUpEngineResolver,
     LazySvc<ILogStore> logStore,
@@ -57,12 +58,13 @@ internal class SearchController(
     {
         var l = Log.Fn<string>();
         // Start by getting the module info
-        DnnModule = (module as Module<ModuleInfo>)?.GetContents();
+        DnnModule = (module as IWrapper<ModuleInfo>)?.GetContents();
         l.A($"start search for mod#{DnnModule?.ModuleID}");
-        if (DnnModule == null) return l.ReturnAsOk("no module");
+        if (DnnModule == null)
+            return l.ReturnAsOk("no module");
 
         // This changes site in whole scope
-        DnnSite = ((DnnSite)siteGenerator.New()).TryInitModule(DnnModule, Log);
+        DnnSite = siteGenerator.CreateFromModuleAndShare(DnnModule, Log);
 
         // New Context because Portal-Settings.Current is null
         var appId = module.BlockIdentifier.AppId;
@@ -145,15 +147,6 @@ internal class SearchController(
                 customizeSearch.CustomizeSearch(SearchItems, Block.Context.Module, beginDate);
                 l.A("Executed CustomizeSearch");
             }
-            // 2026-01-27 2dm v21 - old search implementation has been deprecated in v20
-            //else
-            //{
-            //    /* Old mode v06.02 - 12.01 using the Engine or Razor which customizes */
-            //    // Build the engine, as that's responsible for calling inner search stuff
-            //    var engine = engineFactory.CreateEngine(view);
-            //    engine.Init(Block);
-
-            //}
         }
         catch (Exception e)
         {
@@ -195,7 +188,8 @@ internal class SearchController(
         foreach (var searchInfoList in searchInfoDictionary)
         {
             // Filter by Date - take only SearchDocuments that changed since beginDate
-            var searchDocumentsToAdd = searchInfoList.Value.Where(p => p.ModifiedTimeUtc >= beginDate.ToUniversalTime())
+            var searchDocumentsToAdd = searchInfoList.Value
+                .Where(p => p.ModifiedTimeUtc >= beginDate.ToUniversalTime())
                 .Select(p => (SearchDocument) p);
             searchDocuments.AddRange(searchDocumentsToAdd);
         }
@@ -335,7 +329,7 @@ internal class SearchController(
     {
         return string.Join(", ",
             entity.Attributes
-                .Where(x => x.Value.Type == ValueTypes.String || x.Value.Type == ValueTypes.Number)
+                .Where(x => x.Value.Type is ValueTypes.String or ValueTypes.Number)
                 .Select(x => x.Value[language])
                 .Where(a => a != null)
                 .Select(a => StripHtmlAndHtmlDecode(a.ToString()))

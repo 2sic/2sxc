@@ -9,7 +9,6 @@ using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Sys.PageServiceShared;
 using ToSic.Sys.Requirements;
 using static ToSic.Sxc.Render.StaticAssets.Sys.ClientAssetConstants;
-using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 
 namespace ToSic.Sxc.Web.Sys.PageService;
 
@@ -22,7 +21,7 @@ public class PageChangeSummary(
     LazySvc<IAssetsExtractor> resourceExtractor,
     LazySvc<IRequirementsService> requirements,
     IModulesOutputService modulesOutputService)
-    : Services_ServiceBase(SxcLogName + "PgChSm", connect: [requirements, resourceExtractor, modulesOutputService])
+    : ServiceBase(SxcLogName + "PgChSm", connect: [requirements, resourceExtractor, modulesOutputService])
 {
     /// <summary>
     /// Finalize the page and get all changes such as header modifications etc.

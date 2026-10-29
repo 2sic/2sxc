@@ -1,36 +1,32 @@
 ﻿using DotNetNuke.Services.FileSystem;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.ImportExport.Sys;
-using ToSic.Eav.ImportExport.Sys.Xml;
+using ToSic.Eav.ImportExport.Sys.XmlExport;
 using ToSic.Sxc.Adam.Sys;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Code.Sys;
-using ToSic.Sxc.Context.Sys;
-using ToSic.Sxc.ExportImport.Sys;
 using FileManager = DotNetNuke.Services.FileSystem.FileManager;
 
 namespace ToSic.Sxc.Dnn.ImportExport;
 
-internal class DnnXmlExporter(
-    AdamManager adamManager,
-    ISxcCurrentContextService ctxService,
-    XmlSerializer xmlSerializer,
-    IAppsCatalog appsCat)
-    : SxcXmlExporter(xmlSerializer, appsCat, ctxService, DnnConstants.LogName, connect: [adamManager])
+public class DnnXmlExporterIntegration(AdamManager adamManager) : IXmlExporterIntegration
 {
-    #region Constructor / DI
-
-    private readonly IFileManager _dnnFiles = FileManager.Instance;
-
-    protected override void PostContextInit(IContextOfApp appContext)
+    /// <summary>
+    /// Post context init the caller must be able to init Adam, which is not part of this project, so we're handling it as a callback
+    /// </summary>
+    /// <param name="appContext"></param>
+    public void Setup(IContextOfApp appContext)
     {
         adamManager.Init(appCtx: appContext, compatibility: CompatibilityLevels.CompatibilityLevel10);
     }
 
-    #endregion
+    private readonly IFileManager _dnnFiles = FileManager.Instance;
+    private readonly IFolderManager _dnnFolders = FolderManager.Instance;
 
-    public override void AddFilesToExportQueue()
+    public List<int> ReferencedFileIds { get; } = [];
+    public List<int> ReferencedFolderIds { get; } = [];
+
+    public void AddFilesToExportQueue()
     {
         // Add Adam Files To Export Queue
         var exportList = new AdamExportListHelper<int, int>(adamManager);
@@ -40,9 +36,10 @@ internal class DnnXmlExporter(
         // also add folders in adam - because empty folders may also have metadata assigned
         var adamFolders = exportList.AppFolders;
         adamFolders.ForEach(ReferencedFolderIds.Add);
+
     }
 
-    protected override void AddFileAndFolderToQueue(int fileNum)
+    public void AddFileAndFolderToQueue(int fileNum)
     {
         try
         {
@@ -65,14 +62,13 @@ internal class DnnXmlExporter(
         }
     }
 
-    protected override string ResolveFolderId(int folderId)
+    public string ResolveFolderId(int folderId)
     {
-        var folderController = FolderManager.Instance;
-        var folder = folderController.GetFolder(folderId);
+        var folder = _dnnFolders.GetFolder(folderId);
         return folder?.FolderPath;
     }
 
-    protected override TenantFileItem ResolveFile(int fileId)
+    public TenantFileItem ResolveFile(int fileId)
     {
         var fileController = FileManager.Instance;
         var file = fileController.GetFile(fileId);
@@ -83,5 +79,4 @@ internal class DnnXmlExporter(
             Path = file?.PhysicalPath
         };
     }
-
 }

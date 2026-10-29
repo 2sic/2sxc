@@ -21,12 +21,13 @@ namespace ToSic.Sxc.Backend.App;
 public class AppQueryControllerReal(
     LazySvc<AppQueryODataHelper> oDataHelper,
     ISxcCurrentContextService ctxService,
+    IContextBuilderService ctxBuilder,
     Generator<IConvertToEavLight> dataConverter,
-    Generator<AppPermissionCheck> appPermissionCheck,
+    LazySvc<PermissionCheckFactory> permCheckFactory,
     LazySvc<QueryManager> queryManager,
     LazySvc<ILookUpEngineResolver> lookupResolver)
     : ServiceBase("Sxc.ApiApQ",
-        connect: [oDataHelper, lookupResolver, ctxService, dataConverter, appPermissionCheck, queryManager]), IAppQueryController
+        connect: [oDataHelper, lookupResolver, ctxService, ctxBuilder, dataConverter, permCheckFactory, queryManager]), IAppQueryController
 {
     public const string LogSuffix = "AppQry";
 
@@ -41,12 +42,12 @@ public class AppQueryControllerReal(
     {
         var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
         var appCtx = appId != null
-            ? ctxService.GetExistingAppOrSet(appId.Value)
+            ? ctxService.ShareAppStateOptimized(appId.Value)
             : ctxService.BlockContextRequired();
 
         // If the appId wasn't specified or == to the Block-AppId, then also include block info to enable more data-sources like CmsBlock
         var maybeBlock = appId == null || appId == appCtx.AppReaderRequired.AppId
-            ? ctxService.BlockOrNull()
+            ? ctxService.BlockOrNull
             : null;
 
         // If no app available from context, check if an app-id was supplied in url
@@ -74,9 +75,11 @@ public class AppQueryControllerReal(
         if (string.IsNullOrEmpty(name))
             throw l.Ex(HttpException.MissingParam(nameof(name)));
 
-        var appCtx = ctxService.SetAppOrGetBlock(appPath);
+        // 2026-10-20 2dm - previously used ctxService.SetAppFromPathOrGetExistingBlock
+        var appCtx = ctxBuilder.TryFindAppFromPath(appPath)
+                     ?? throw new ArgumentException($"App not found for folder '{appPath}'. Can't run query.");
 
-        var blockLookupOrNull = ctxService.BlockOrNull()?.Data?.Configuration?.LookUpEngine;
+        var blockLookupOrNull = ctxService.BlockOrNull?.Data?.Configuration?.LookUpEngine;
 
         // now just run the default query check and serializer
         var result = BuildQueryAndRun(appCtx.AppReaderRequired, name, stream, false, appCtx, more, blockLookupOrNull);
@@ -110,8 +113,7 @@ public class AppQueryControllerReal(
         }
 
         l.A($"Check permission on query {query.Definition.Id}");
-        var permissionChecker = appPermissionCheck.New()
-            .ForItem(context, app, (query.Definition as ICanBeEntity).Entity);
+        var permissionChecker = permCheckFactory.Value.ForItem(context, app, (query.Definition as ICanBeEntity).Entity);
         var readExplicitlyAllowed = permissionChecker.UserMay(GrantSets.ReadSomething).Allowed;
 
         var isAdmin = context.User.IsContentAdmin;

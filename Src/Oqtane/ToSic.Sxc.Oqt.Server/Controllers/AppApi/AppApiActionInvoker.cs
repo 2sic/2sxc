@@ -11,10 +11,11 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 /// </summary>
 internal class AppApiActionInvoker : IHasLog
 {
-    public AppApiActionInvoker(ILogStore logStore)
+    public AppApiActionInvoker(ILogStore logStore, ILogFactory logFactory)
     {
-        Log = new Log(HistoryLogName, null, "AppApiActionInvoker");
+        Log = logFactory.Create(HistoryLogName, null, new CodeRef());
         logStore.Add(HistoryLogGroup, Log);
+        Log.A("AppApiActionInvoker");
     }
 
     public ILog Log { get; }

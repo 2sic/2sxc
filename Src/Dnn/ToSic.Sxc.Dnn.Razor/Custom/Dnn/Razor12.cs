@@ -10,7 +10,9 @@ namespace Custom.Dnn;
 /// The base class for Razor-Components in 2sxc 12+ <br/>
 /// Provides context infos like the Dnn object, helpers like Edit and much more. <br/>
 /// </summary>
-[PublicApi]
+[PrivateApi("Made private in v22, going obsolete")]
+[Obsolete]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class Razor12 : Hybrid.Razor12, IHasDnn, IRazor12, IDnnRazorCompatibility
 {
     /// <inheritdoc />

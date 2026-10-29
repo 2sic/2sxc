@@ -1,19 +1,20 @@
 ﻿using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
-using ToSic.Eav.Context.Sys.Site;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Dnn.Context;
+using ToSic.Sys.Wrappers;
 
 namespace ToSic.Sxc.Dnn;
 
 internal class DnnModuleAndBlockBuilder(
-    Generator<IModule> moduleGenerator,
-    Generator<IContextOfBlock> contextGenerator,
+    LazySvc<IContextOfBlockFactory> blockCtxFactory,
+    DnnSiteFactory siteFactory,
+    DnnPageFactory pageFactory,
+    DnnModuleFactory moduleFactory,
     Generator<BlockOfModule> blockGenerator)
-    : ModuleAndBlockBuilder(blockGenerator, DnnConstants.LogName, connect: [moduleGenerator, contextGenerator])
+    : ModuleAndBlockBuilder(blockGenerator, DnnConstants.LogName, connect: [blockCtxFactory, siteFactory, pageFactory, moduleFactory])
 {
     private ILog ParentLog => (Log as Log)?.Parent ?? Log;
 
@@ -26,19 +27,21 @@ internal class DnnModuleAndBlockBuilder(
         l.A($"Page Id on DNN Module: {moduleInfo.TabID} - should be {pageId}");
 
         ThrowIfModuleIsNull(pageId, moduleId, moduleInfo);
-        var module = ((DnnModule)moduleGenerator.New()).Init(moduleInfo);
+        var module = moduleFactory.Get(moduleInfo);
 
         return l.Return(module, $"Page Id on IModule: {module.BlockIdentifier} - should be {pageId}");
     }
 
     protected override IContextOfBlock GetContextOfBlock(IModule module, int? pageId)
-        => GetContextOfBlock((module as DnnModule)?.GetContents(), pageId);
+        => GetContextOfBlock((module as IWrapper<ModuleInfo>)?.GetContents(), pageId);
 
 
     protected override IContextOfBlock GetContextOfBlock<TPlatformModule>(TPlatformModule module, int? pageId)
     {
-        if (module == null) throw new ArgumentNullException(nameof(module));
-        if (module is not ModuleInfo dnnModule) throw new ArgumentException("Given data is not a module");
+        if (module == null)
+            throw new ArgumentNullException(nameof(module));
+        if (module is not ModuleInfo dnnModule)
+            throw new ArgumentException("Given data is not a module");
         Log.A($"Module: {dnnModule.ModuleID}");
 
         var initializedCtx = InitDnnSiteModuleAndBlockContext(dnnModule, pageId);
@@ -48,22 +51,18 @@ internal class DnnModuleAndBlockBuilder(
     private IContextOfBlock InitDnnSiteModuleAndBlockContext(ModuleInfo dnnModule, int? pageId)
     {
         var l = Log.Fn<IContextOfBlock>($"{nameof(pageId)}: {pageId}, {nameof(dnnModule.ModuleID)}: {dnnModule.ModuleID}");
-        var context = contextGenerator.New();
+
         l.A($"Will try-swap module info of {dnnModule.ModuleID} into site");
-        ((DnnSite)context.Site).TryInitModule(dnnModule, ParentLog);
+        var newSite = siteFactory.CreateFromModuleAndShare(dnnModule, ParentLog);
+
+        l.A($"Page with pageOverride: {pageId}");
+        var page = pageFactory.Create(newSite.GetContents()?.ActiveTab, pageId);
+
         l.A("Will init module");
-        ((DnnModule)context.Module).Init(dnnModule);
-        return l.ReturnAsOk(InitPageOnly(context, pageId));
-    }
+        var module = moduleFactory.Get(dnnModule);
 
-    private IContextOfBlock InitPageOnly(IContextOfBlock context, int? pageId)
-    {
-        var l = Log.Fn<IContextOfBlock>($"{nameof(pageId)}: {pageId}");
-        // Collect / assemble page information
-        var activeTab = (context.Site as Site<PortalSettings>)?.GetContents()?.ActiveTab;
-        var page = (DnnPage)context.Page;
-        var url = page.InitPageIdAndUrl(activeTab, pageId);
-        return l.Return(context, url);
+        // Assemble the final context
+        var contextWithModuleAndSite = blockCtxFactory.Value.Create(newSite, page, module);
+        return l.ReturnAsOk(contextWithModuleAndSite);
     }
-
 }

@@ -3,6 +3,7 @@ using ToSic.Sxc.Code.Sys.SourceCode;
 
 namespace ToSic.Sxc.Dnn.Compile;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IRoslynBuildManager
 {
     AssemblyResult GetCompiledAssembly(CodeFileInfo codeFileInfo, string className, HotBuildSpec spec);

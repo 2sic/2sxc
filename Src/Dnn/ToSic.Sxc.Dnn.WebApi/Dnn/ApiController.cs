@@ -22,9 +22,9 @@ namespace ToSic.Sxc.Dnn;
 /// This is the base class for all custom API Controllers. <br/>
 /// With this, your code receives the full context  incl. the current App, DNN, Data, etc.
 /// </summary>
-[PublicApi("This was the official base class before v12. Try to move away from it, go to the latest base class on Custom.Hybrid.ApiTyped")]
+[InternalApi_DoNotUse_MayChangeWithoutNotice("This was the official base class before v12. Try to move away from it, go to the latest base class on Custom.Hybrid.ApiTyped")]
 [DnnLogExceptions]
-[Obsolete("This will continue to work, but you should use the Custom.Hybrid.Api14 or Custom.Dnn.Api12 instead.")]
+[Obsolete("This will continue to work, but you should use the Custom.Hybrid.ApiTyped instead.")]
 [DefaultToNewtonsoftForHttpJson]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class ApiController : DnnSxcCustomControllerBase,
@@ -34,7 +34,7 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
     IDynamicWebApi, 
     IHasCodeLog
 {
-    internal const string ErrRecommendedNamespaces = "To use it, use the new base class from Custom.Hybrid.Api14 or Custom.Dnn.Api12 instead.";
+    internal const string ErrRecommendedNamespaces = "To use it, use the new base class from Custom.Hybrid.ApiTyped instead.";
 
     internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
 
@@ -44,7 +44,7 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
     /// </remarks>
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public IBlock Block => SysHlp.GetBlockAndContext(Request);
+    public IBlock? Block => SysHlp.GetBlockAndContext(Request);
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -120,7 +120,7 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
     /// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
     public IFile SaveInAdam(NoParamOrder npo = default, Stream stream = null, string fileName = null, string contentType = null,
         Guid? guid = null, string field = null, string subFolder = "")
-        => DynHlp.SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
+        => CustomCodeHlp.SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
 
     #endregion
 

@@ -22,7 +22,7 @@ public partial class CodeDataFactory(
     IServiceProvider serviceProvider,
     LazySvc<CodeDataServices> codeDataServices,
     LazySvc<AdamManager> adamManager,
-    LazySvc<IContextOfApp> contextOfAppLazy,
+    LazySvc<IContextOfAppFactory> appCtxFactory,
     LazySvc<DataAssembler> dataBuilderLazy,
     Generator<ContentTypeAssembler, DataAssemblerOptions> contentTypeAssembler,
     LazySvc<ICodeDataPoCoWrapperService> codeDataWrapper,
@@ -30,7 +30,7 @@ public partial class CodeDataFactory(
     LazySvc<CodeInfoService> codeInfoSvc,
     LazySvc<IZoneMapper> zoneMapper)
     : ServiceWithContext("Sxc.AsConv",
-        connect: [/* never: serviceProvider */codeDataServices, adamManager, contextOfAppLazy, dataBuilderLazy, contentTypeAssembler, codeDataWrapper, wrapJsonGenerator, codeInfoSvc, zoneMapper]),
+        connect: [/* never: serviceProvider */codeDataServices, adamManager, appCtxFactory, dataBuilderLazy, contentTypeAssembler, codeDataWrapper, wrapJsonGenerator, codeInfoSvc, zoneMapper]),
         ICodeDataFactory
 {
     public CodeInfoService CodeInfo => codeInfoSvc.Value;
@@ -76,7 +76,7 @@ public partial class CodeDataFactory(
     /// List of dimensions for value lookup, incl. priorities etc. and null-trailing.
     /// lower case safe guaranteed. 
     /// </summary>
-    // If we don't have a DynCodeRoot, try to generate the language codes and compatibility
+    // If we don't have an ExecutionContext, try to generate the language codes and compatibility
     // There are cases where these were supplied using SetFallbacks, but in some cases none of this is known
     [field: AllowNull, MaybeNull]
     public string?[] Dimensions => field ??=

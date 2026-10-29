@@ -7,6 +7,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.WebApi.Sys.Admin.Metadata;
+using ToSic.Eav.WebApi.Sys.Dto;
 
 namespace ToSic.Eav.WebApi.Sys.Admin;
 
@@ -20,10 +21,11 @@ namespace ToSic.Eav.WebApi.Sys.Admin;
     DataConfidentiality = DataConfidentiality.Internal,
     UiHint = "Settings, resources and metadata of the current app"
 )]
+[ShowApiWhenReleased(ShowApiMode.Never)]
+// ReSharper disable once UnusedMember.Global
 public class AppEnhancements : CustomDataSource
 {
     private readonly IAppsCatalog _appsCatalog;
-    private readonly LazySvc<MetadataControllerReal> _metadataController;
 
     private readonly Lazy<IAppWorkContext> _workContext;
     private readonly Lazy<WorkAttributes> _workAttributes;
@@ -42,82 +44,78 @@ public class AppEnhancements : CustomDataSource
         _workAttributes = new(() => workAttributes.New(_workContext.Value));
         _convertAttributeToDto = new(() => convertAttribute.New().Init(AppId, false));
         _appsCatalog = appsCatalog;
-        _metadataController = metadataController;
 
-        ProvideOut(GetAppSettings, "AppSettings");
-        ProvideOut(GetAppResources, "AppResources");
-        ProvideOut(() => GetEntities(AppStackConstants.Settings.SystemType), "SettingsSystem");
-        ProvideOut(() => GetEntities(AppStackConstants.Resources.SystemType), "ResourcesSystem");
-        ProvideOut(() => GetEntities(AppLoadConstants.TypeAppConfig), "ToSxcContentApp");
-        ProvideOutRaw(() => GetFields(true), name: "AppSettingFields", options: () => new()
-        {
-            TitleField = nameof(ContentTypeFieldDto.StaticName), TypeName = "ContentTypeField", AllowUnknownValueTypes = true,
-        });
-        ProvideOutRaw(() => GetFields(false), name: "AppResourceFields", options: () => new()
-        {
-            TitleField = nameof(ContentTypeFieldDto.StaticName), TypeName = "ContentTypeField", AllowUnknownValueTypes = true,
-        });
-        ProvideOutRaw(GetMetadata, name: "Metadata", options: () => new() { AllowUnknownValueTypes = true });
+        ProvideOut(() => GetEntities(TypeNames.Settings), "AppSettings");
+        ProvideOut(() => GetEntities(TypeNames.Resources), "AppResources");
+        ProvideOut(() => GetEntities(AppStackConstants.Settings.SystemType), AppStackConstants.Settings.SystemType);
+        ProvideOut(() => GetEntities(AppStackConstants.Resources.SystemType), AppStackConstants.Resources.SystemType);
+
+        ProvideOut(() => GetEntities(AppLoadConstants.TypeAppConfig), "AppConfig");
+
+        ProvideOutRaw(() => GetFields(TypeNames.Settings), name: "AppSettingFields");
+
+        ProvideOutRaw(() => GetFields(TypeNames.Resources), name: "AppResourcesFields");
+        ProvideOutRaw(() => GetMetadata(metadataController.Value), name: "Metadata", options: () => new() { AllowUnknownValueTypes = true });
     }
 
-    private IEnumerable<IEntity> GetAppSettings() => GetEntities(Types.Settings);
-    private IEnumerable<IEntity> GetAppResources() => GetEntities(Types.Resources);
-
-    private IEnumerable<IEntity> GetEntities(string? typeName)
+    protected virtual IEnumerable<IEntity> GetEntities(string? typeName)
     {
-        if (typeName == null) return [];
-        var appReader = _workContext.Value.AppReader;
-        return appReader.List.Where(entity => entity.AppId == AppId && entity.Type.Name == typeName);
+        // For primary/global apps the name might be null, if there is no data for that type, so we return an empty list in that case
+        if (typeName == null)
+            return [];
+        return _workContext.Value.AppReader.List
+            .Where(entity => entity.AppId == AppId && entity.Type.Name == typeName);
     }
 
-    private IEnumerable<IRawEntity> GetFields(bool settings)
+    private IEnumerable<ContentTypeFieldDto> GetFields(string? typeName)
     {
-        var typeName = settings
-            ? Types.Settings
-            : Types.Resources;
         if (typeName == null)
             return [];
         var fields = _workAttributes.Value.GetFields(typeName);
-        return _convertAttributeToDto.Value
-            .Convert(fields)
-            .Select(field => field.ToRawEntity());
+        return _convertAttributeToDto.Value.Convert(fields);
     }
 
-    private IEnumerable<IRawEntity> GetMetadata()
+    private IEnumerable<IRawEntity> GetMetadata(MetadataControllerReal metadataController)
     {
-        var items = _metadataController.Value
-            .Get(AppId, (int)TargetTypes.App, "number", AppId.ToString()).Items
+        var items = metadataController
+                        .Get(AppId, (int)TargetTypes.App, "number", AppId.ToString())
+                        .Items
                     ?? [];
-        return items.Select(item => new RawEntity
-        {
-            Id = item.TryGetValue("Id", out var id) ? Convert.ToInt32(id) : 0,
-            Values = item.ToDictionary(pair => pair.Key, pair => pair.Value),
-        });
+        return items
+            .Select(item => new RawEntity
+            {
+                Id = item.TryGetValue("Id", out var id) ? Convert.ToInt32(id) : 0,
+                Values = item.ToDictionary(pair => pair.Key, pair => pair.Value),
+            });
     }
 
-    private (string? Settings, string? Resources) Types => _types ??= GetTypes();
-    private (string? Settings, string? Resources)? _types;
-    private (string? Settings, string? Resources) GetTypes()
+    /// <summary>
+    /// Settings/Resources ContentType Names
+    /// They vary based on the app type (normal, primary, global) and if the special content-types exist.
+    /// </summary>
+    private (string? Settings, string? Resources) TypeNames => _typeNames ??= BuildTypes();
+    private (string? Settings, string? Resources)? _typeNames;
+    private (string? Settings, string? Resources) BuildTypes()
     {
-        if (_types != null)
-            return _types.Value;
+        // Check if it's the global app or the primary app, which would be a bit special
+        var app = _appsCatalog.AppIdentity(AppId);
+        var isGlobalOrPrimary = app.IsGlobalSettingsApp() || app.AppId == _appsCatalog.PrimaryAppIdentity(app.ZoneId).AppId;
 
+        // If it's a normal app (Content, Blog, etc.) just return the default type names
+        if (!isGlobalOrPrimary)
+            return (AppLoadConstants.TypeAppSettings, AppLoadConstants.TypeAppResources);
+
+        // If it's the global or primary app, check if the special content-types exist,
+        // and if so, return those instead of the default ones. If not, return null for that type.
         var appReader = _workContext.Value.AppReader;
         var hasSettingsCustom = appReader.ContentTypes
             .Any(type => type.Scope == ScopeConstants.SystemConfiguration && type.Name == AppStackConstants.Settings.CustomType);
         var hasResourcesCustom = appReader.ContentTypes
             .Any(type => type.Scope == ScopeConstants.SystemConfiguration && type.Name == AppStackConstants.Resources.CustomType);
-        var app = _appsCatalog.AppIdentity(AppId);
-        var isGlobalOrPrimary = app.IsGlobalSettingsApp() || app.AppId == _appsCatalog.PrimaryAppIdentity(app.ZoneId).AppId;
-        return isGlobalOrPrimary
-            ? (
-                hasSettingsCustom ? AppStackConstants.Settings.CustomType : null,
-                hasResourcesCustom ? AppStackConstants.Resources.CustomType : null
-            )
-            : (
-                AppLoadConstants.TypeAppSettings,
-                AppLoadConstants.TypeAppResources
-            );
+        return (
+            hasSettingsCustom ? AppStackConstants.Settings.CustomType : null,
+            hasResourcesCustom ? AppStackConstants.Resources.CustomType : null
+        );
     }
 
 }

@@ -47,8 +47,7 @@ namespace ToSic.Sxc.Data.Models;
 /// - Released in v19.01 (BETA)
 /// - Stabilizing in v21 (now first class citizen, part of ToSic.Eav.Models)
 /// </remarks>
-[PrivateApi]
-[ShowApiWhenReleased(ShowApiMode.Never)]
+[WorkInProgressApi("WIP v22")]
 public abstract partial class ModelFromItem : IModelSetupWithFactory<ITypedItem>, ICanBeItem, ICanBeEntity
 {
     #region Explicit Interfaces for internal use - Setup, etc.

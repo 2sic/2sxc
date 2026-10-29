@@ -2,8 +2,6 @@
 
   <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-NetFramework.props" />
 
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props"
-          Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="BuildScripts\LoadBuildConfig.Targets" />
 
   <!-- As of 2026-06-28 2dm this should not be exported ATM -->
@@ -12,29 +10,14 @@
   <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
 
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ToSic.Sxc.Dnn</RootNamespace>
-    <AssemblyName>ToSic.Sxc.Dnn</AssemblyName>
-    <!--For reasons unknown, this is relevant, even though we import the specs with the correct moniker-->
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
-
     <!-- This places the EAV DLLs here, for the copy-deploy during Dev to work -->
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <OutputPath>bin\</OutputPath>
   </PropertyGroup>
 
-  <!--not sure if we must specify the docs file!-->
-  <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <DocumentationFile>bin\ToSic.Sxc.Dnn.xml</DocumentationFile>
-  </PropertyGroup>
-
   <PropertyGroup>
-    <NoWarn>$(NoWarn);MSB3277;</NoWarn>
-    <!-- ignore warning that Dnn was loaded 2x - ATM necessary for MS build? @STV -->
-    <NoWarn>$(NoWarn);MSB4011</NoWarn>
+    <NoWarn>$(NoWarn);MSB3277</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -62,10 +45,19 @@
     <PackageReference Include="Microsoft.AspNet.WebApi.WebHost" Version="5.3.0">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="MSBuildTasks">
-      <Version>1.5.0.235</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
+    <!--
+      DNN 10.1 supplies System.Buffers 4.6.0. Declare that compile-time minimum explicitly;
+      otherwise NuGet can resolve the older transitive minimum (4.5.1).
+      ExcludeAssets=runtime keeps the NuGet DLL out of runtime copy assets. DNN owns the
+      deployed DLL and binding redirect; 2sxc must also keep it out of the install manifest
+      and the Release/Debug copy lists, so newer host versions are preserved.
+      Update this version when the minimum supported DNN version provides a newer baseline,
+      or a dependency requires a newer version. In the latter case, first verify that all
+      supported DNN hosts supply that version, or revise the minimum DNN requirement.
+      Do not raise it just because one development host has a newer DLL.
+    -->
+    <PackageReference Include="System.Buffers" Version="4.6.0">
+      <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.11" />
   </ItemGroup>
@@ -84,7 +76,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Xml" />
     <Reference Include="ToSic.Imageflow.Dnn">
@@ -123,10 +114,6 @@
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="App_LocalResources\View.ascx.resx" />
     <Content Include="App_LocalResources\View.ascx.de-DE.resx" />
     <Content Include="BuildScripts\ModulePackage.Targets">
@@ -147,69 +134,28 @@
     <Content Include="DnnPackageBuilder\SqlDataProvider\RequireMinimal.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="web.config" />
-    <None Include="web.Debug.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
-    <None Include="web.DebugDnn.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
-    <None Include="web.DebugOqtane.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
-    <None Include="web.Release.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets"
-          Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
-  <PropertyGroup>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-  </PropertyGroup>
-  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets')" />
-
-  <ProjectExtensions>
-    <VisualStudio>
-      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
-        <WebProjectProperties>
-          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
-        </WebProjectProperties>
-      </FlavorProperties>
-    </VisualStudio>
-  </ProjectExtensions>
-
   <!-- Run the DNN Package Builder after every build -->
   <Import Project="BuildScripts\ModulePackage.Targets" />
   <Import Project="BuildScripts\AfterBuild.Targets" />
+
   <Target Name="TestMessages" BeforeTargets="PrepareForBuild">
-    <Message Text="Debug Messages created by 2dm" Importance="High">
-    </Message>
-    <Message Text="Configuration=$(Configuration)" Importance="High">
-    </Message>
-    <Message Text="Platform=$(Platform)" Importance="High">
-    </Message>
-    <Message Text="Configuration|Platform='$(Configuration)|$(Platform)'" Importance="High">
-    </Message>
-    <Message Text="OutputPath=$(OutputPath)" Importance="High">
-    </Message>
+    <Message Text="Debug Messages created by 2dm" Importance="High" />
+    <Message Text="Configuration=$(Configuration)" Importance="High" />
+    <Message Text="Platform=$(Platform)" Importance="High" />
+    <Message Text="Configuration|Platform='$(Configuration)|$(Platform)'" Importance="High" />
+    <Message Text="OutputPath=$(OutputPath)" Importance="High" />
   </Target>
 
   <Target Name="TestMessages2" BeforeTargets="Build">
-    <Message Text="Debug Messages created by 2dm" Importance="High">
-    </Message>
-    <Message Text="Configuration=$(Configuration)" Importance="High">
-    </Message>
-    <Message Text="Platform=$(Platform)" Importance="High">
-    </Message>
-    <Message Text="Configuration|Platform='$(Configuration)|$(Platform)'" Importance="High">
-    </Message>
-    <Message Text="OutputPath=$(OutputPath)" Importance="High">
-    </Message>
+    <Message Text="Debug Messages created by 2dm" Importance="High" />
+    <Message Text="Configuration=$(Configuration)" Importance="High" />
+    <Message Text="Platform=$(Platform)" Importance="High" />
+    <Message Text="Configuration|Platform='$(Configuration)|$(Platform)'" Importance="High" />
+    <Message Text="OutputPath=$(OutputPath)" Importance="High" />
   </Target>
 
   <Target Name="BuildConfigTarget2" AfterTargets="Build" DependsOnTargets="BuildConfigTarget">
-
     <Message Text="------------------------------------------------------------------------------" Importance="high" />
     <Message Text="$(BuildConfigPath)" Importance="high" />
     <Message Text="------------------------------------------------------------------------------" Importance="high" />
@@ -220,6 +166,5 @@
     <Message Text="DnnInstallPackage:" Importance="high" />
     <Message Text="$(DnnInstallPackage)" Importance="high" />
     <Message Text="------------------------------------------------------------------------------" Importance="high" />
-
   </Target>
 </Project>

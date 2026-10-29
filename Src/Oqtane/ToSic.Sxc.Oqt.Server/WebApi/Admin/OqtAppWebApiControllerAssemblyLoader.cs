@@ -21,11 +21,11 @@ internal class OqtAppWebApiControllerAssemblyLoader(
     Generator<Compiler> compiler,
     SiteState siteState,
     AliasResolver aliasResolver,
-    AppFolderLookupForWebApi appFolderLookup,
-    ISxcCurrentContextService ctxService,
+    IContextBuilderService ctxBuilder,
+    IContextCompleteService ctxService,
     IEditionService editionSvc,
     IServerPaths serverPaths)
-    : ServiceBase($"{OqtConstants.OqtLogPrefix}.ApiCtlAsm", connect: [compiler, siteState, aliasResolver, appFolderLookup, ctxService, editionSvc, serverPaths]),
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.ApiCtlAsm", connect: [compiler, siteState, aliasResolver, ctxBuilder, ctxService, editionSvc, serverPaths]),
         IAppWebApiControllerAssemblyLoader
 {
     public Assembly GetAssembly(string path)
@@ -33,10 +33,13 @@ internal class OqtAppWebApiControllerAssemblyLoader(
         var alias = siteState?.Alias ?? aliasResolver.Alias;
         var siteId = alias.SiteId;
         var tenantId = alias.TenantId;
-        var appFolder = appFolderLookup.GetAppFolder();
+        // Note 2026-10-18 2dm: #NoLookupSideEffects
+        // the next line used to have a side effect of sharing the found app-context
+        // This has been removed; it may break something, which would then need to be corrected "upstream", but not here
+        var appFolder = ctxService.FindAppFolderFromScopeOrThrow(ctxBuilder);
         var pathFromRoot = OqtServerPaths.GetAppApiPath(tenantId, siteId, appFolder, path);
 
-        var blockOrNull = ctxService.BlockOrNull();
+        var blockOrNull = ctxService.BlockOrNull;
         var edition = blockOrNull.NullOrGetWith(editionSvc.Edition);
 
         var runtimeKey = blockOrNull?.Context.AppReaderRequired?.Specs.CacheKey;
@@ -55,6 +58,8 @@ internal class OqtAppWebApiControllerAssemblyLoader(
         var controllerFolder = pathFromRoot.Substring(0, pathFromRoot.LastIndexOf(@"\", StringComparison.Ordinal));
         var dllName = AppApiDynamicRouteValueTransformer.GetDllName(controllerFolder, apiFile);
 
-        return compiler.New().Compile(apiFile, dllName, spec).Assembly;
+        var result = compiler.New().Compile(apiFile, dllName, spec);
+        return result.Assembly
+            ?? throw new InvalidOperationException($"Error: can't compile controller file: {path}.\n{result.ErrorMessages}");
     }
 }

@@ -1,4 +1,6 @@
 ﻿namespace ToSic.Sxc.Web.Sys.LightSpeed;
+
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class OutputCacheKeys
 {
     internal const string GlobalCacheKeyModuleRoot = "Sxc-LightSpeed.Module.";

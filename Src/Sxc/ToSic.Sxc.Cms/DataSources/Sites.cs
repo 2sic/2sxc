@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.DataSource;
 
+using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Sxc.Cms.Sites;
@@ -36,11 +37,9 @@ namespace ToSic.Sxc.DataSources;
     NiceName = "Sites",
     Type = DataSourceType.Source,
     UiHint = "Sites in this system")]
-public class Sites: CustomDataSource
+public class Sites(CustomDataSource.Dependencies services, SitesDataSourceProvider sitesProvider)
+    : CustomDataSource(services, logName: "CDS.Sites", connect: [sitesProvider])
 {
-    [PrivateApi]
-    public Sites(Dependencies services, SitesDataSourceProvider sitesProvider) : base(services, logName: "CDS.Sites", connect: [sitesProvider])
-    {
-        ProvideOutRaw(sitesProvider.GetSitesInternal);
-    }
+    protected override IEnumerable<IRawData> GetDefault()
+        => sitesProvider.GetSitesInternal();
 }

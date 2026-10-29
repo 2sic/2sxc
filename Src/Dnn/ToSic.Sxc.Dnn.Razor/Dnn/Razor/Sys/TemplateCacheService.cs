@@ -8,6 +8,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys;
 /// <summary>
 /// Service responsible for managing template cache operations (memory and disk).
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class TemplateCacheService(
     AssemblyCacheManager assemblyCacheManager,
     IAssemblyDiskCacheService diskCacheService,

@@ -1,19 +1,14 @@
-﻿using ToSic.Eav.Data.Build;
+﻿using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw;
 
 namespace ToSic.Sxc.DataSources;
 
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
+[ContentType(Guid = "7f3f0fcf-9186-4c16-9e10-88f785ec5062", Name = TypeName)]
 public class AdamItemDataRaw: IRawEntity
 {
     public const string TypeName = "AdamItem";
-
-    public static DataFactoryOptions Options = new()
-    {
-        TypeName = TypeName,
-        TitleField = nameof(Name)
-    };
 
     public int Id { get; set; }
     public Guid Guid { get; set; }
@@ -21,6 +16,7 @@ public class AdamItemDataRaw: IRawEntity
     /// <summary>
     /// The file name
     /// </summary>
+    [ContentTypeTitle]
     public string? Name { get; set; }
 
     /// <summary>

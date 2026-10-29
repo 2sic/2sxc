@@ -12,7 +12,7 @@ using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 namespace ToSic.Sxc.Dnn.WebApi.Context;
 
 internal sealed class DnnUiContextBuilder(
-    ISxcCurrentContextService ctxService,
+    IContextCompleteService ctxService,
     ExternalLinksService externalLinksService,
     UiContextBuilderBase.Dependencies deps)
     : UiContextBuilderBase(deps)
@@ -78,7 +78,7 @@ internal sealed class DnnUiContextBuilder(
 
         var gsUrl = externalLinksService.LinkToDestination(
             ExternalSxcDestinations.GettingStarted,
-            Services.SiteCtx.Site,
+            Services.SiteCtxSvc.Context.Site,
             Module.ModuleID,
             app,
             Module.DesktopModule.ModuleName == "2sxc");

@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.DataSource;
@@ -32,7 +32,8 @@ namespace ToSic.Sxc.Dnn.DataSources;
         "ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource, ToSic.SexyContent"
     ]
 )]
-public class DnnUserProfile : CustomDataSourceAdvanced
+public class DnnUserProfile(DnnUserProfile.Dependencies services)
+    : CustomDataSource(services.ParentServices, "Dnn.Profile", connect: [services])
 {
     #region Configuration-properties
 
@@ -42,10 +43,9 @@ public class DnnUserProfile : CustomDataSourceAdvanced
     [Configuration]
     public string UserIds
     {
-        get => _userIds ?? Configuration.GetThis();
-        set => _userIds = value;
+        get => field ?? Configuration.GetThis();
+        set;
     }
-    private string _userIds;
 
     /// <summary>
     /// List of profile-properties to retrieve, comma-separated
@@ -53,21 +53,20 @@ public class DnnUserProfile : CustomDataSourceAdvanced
     [Configuration(Fallback = "DisplayName,Email,FirstName,LastName,Username")]
     public string Properties
     {
-        get => _properties ?? Configuration.GetThis();
-        set => _properties = value;
+        get => field ?? Configuration.GetThis();
+        set;
     }
-    private string _properties;
 
-    /// <summary>
-    /// Gets or sets the Name of the ContentType to simulate
-    /// </summary>
-    [Configuration(Field = "ContentTypeName", Fallback = DnnUserProfileDataRaw.TypeName)]
-    public string ContentType
-    {
-        get => _contentType ?? Configuration.GetThis();
-        set => _contentType = value;
-    }
-    private string _contentType;
+    ///// <summary>
+    ///// Gets or sets the Name of the ContentType to simulate
+    ///// </summary>
+    //[Configuration(Field = "ContentTypeName", Fallback = DnnUserProfileDataRaw.TypeName)]
+    //public string ContentType
+    //{
+    //    get => _contentType ?? Configuration.GetThis();
+    //    set => _contentType = value;
+    //}
+    //private string _contentType;
 
     /// <summary>
     /// Gets or sets the Name of the Title Attribute of the DNN-UserInfo
@@ -84,38 +83,30 @@ public class DnnUserProfile : CustomDataSourceAdvanced
 
     #region Constructor / DI
 
-    public new record Dependencies(CustomDataSourceAdvanced.Dependencies ParentServices, ISite Site, IZoneMapper ZoneMapper, LazySvc<DnnSecurity> DnnSecurity)
+    public new record Dependencies(CustomDataSource.Dependencies ParentServices, ISite Site, IZoneMapper ZoneMapper, LazySvc<DnnSecurity> DnnSecurity)
         : DependenciesBase(connect: [Site, ZoneMapper, DnnSecurity]);
-
-    public DnnUserProfile(Dependencies services) : base(services.ParentServices, "Dnn.Profile", connect: [services])
-    {
-        _services = services;
-        ProvideOut(GetList);
-    }
-
-    private readonly Dependencies _services;
 
     #endregion
 
-    private IImmutableList<IEntity> GetList()
+    protected override IEnumerable<IRawData> GetDefault()
     {
-        var l = Log.Fn<IImmutableList<IEntity>>();
+        var l = Log.Fn<IImmutableList<IRawEntity>>();
         Configuration.Parse();
 
-        var realTenant = _services.Site.Id != EavConstants.NullId
-            ? _services.Site
-            : _services.ZoneMapper.SiteOfApp(AppId);
+        var realTenant = services.Site.Id != EavConstants.NullId
+            ? services.Site
+            : services.ZoneMapper.SiteOfApp(AppId);
         l.A($"realTenant {realTenant.Id}");
 
-        var properties = Properties.CsvToArrayWithoutEmpty();
         var portalId = realTenant.Id;
 
-        // read all user Profiles
+        // Results list - a special DNN type
         ArrayList users;
-        if (!UserIds.HasValue() ||
-            UserIds == "disabled") // note: 'disabled' was the default text in <v15. can probably be removed, but not sure
+
+        // Option 1: read all user Profiles
+        if (!UserIds.HasValue() || UserIds == "disabled") // note: 'disabled' was the default text in <v15. can probably be removed, but not sure
             users = UserController.GetUsers(portalId);
-        // read user Profiles of specified UserIds
+        // Option 2: read user Profiles of specified UserIds
         else
         {
             var userIds = UserIds.CsvToArrayWithoutEmpty().Select(int.Parse).ToArray();
@@ -126,25 +117,36 @@ public class DnnUserProfile : CustomDataSourceAdvanced
         l.A($"users: {users.Count}");
 
         // convert Profiles to Entities
-        var results = new List<DnnUserProfileDataRaw>();
-        foreach (UserInfo user in users)
-        {
-            var dnnUserProfile = new DnnUserProfileDataRaw
+        var properties = Properties.CsvToArrayWithoutEmpty();
+        var results = users
+            .OfType<UserInfo>()
+            .Select(IRawEntity (user) =>
             {
-                Id = user.UserID,
-                Guid = _services.DnnSecurity.Value.UserGuid(user),
-                Name = GetDnnProfileValue(user, TitleField.ToLowerInvariant())
-            };
+                var name = GetDnnProfileValue(user, TitleField.ToLowerInvariant());
 
-            // add Profile-Properties
-            foreach (var property in properties)
-                dnnUserProfile.Properties.Add(property, GetDnnProfileValue(user, property));
+                // add Profile-Properties
+                var userProps = properties
+                    .ToDictionary(
+                        property => property,
+                        object (property) => GetDnnProfileValue(user, property)
+                    );
 
-            results.Add(dnnUserProfile);
-        }
+                // TODO: This is copied from some older code, not sure if it's actually relevant to add these names
+                // ...as they are probably auto-added (especially the title...?)
+                userProps.Add(AttributeNames.TitleNiceName, Name);
+                userProps.Add(nameof(DnnUserProfileDataRaw.Name), name);
+
+                return new DnnUserProfileDataRaw
+                {
+                    Id = user.UserID,
+                    Guid = services.DnnSecurity.Value.UserGuid(user),
+                    Name = name,
+                    Values = userProps,
+                };
+            })
+            .ToImmutableList();
         l.A($"results: {results.Count}");
-        var userProfileDataFactory = DataFactory.SpawnNew(options: DnnUserProfileDataRaw.Options with { TypeName = ContentType?.NullIfNoValue() });
-        return l.Return(userProfileDataFactory.Create(results), "ok");
+        return l.Return(results, "ok");
     }
 
     private static string GetDnnProfileValue(UserInfo user, string property) =>
@@ -175,30 +177,26 @@ public class DnnUserProfile : CustomDataSourceAdvanced
 /// Make sure the property names never change, as they are critical for the created Entity.
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
+[ContentType(
+    Name = TypeName,
+    Guid = "8c72d18b-41a9-451c-905e-dd32ec953567"
+)]
 public class DnnUserProfileDataRaw : IRawEntity
 {
-    internal const string TypeName = "UserProfile";
+    private const string TypeName = "UserProfile";
+  
+    public int Id { get; init; }
+    public Guid Guid { get; init; }
 
-    internal static DataFactoryOptions Options = new()
-    {
-        TypeName = TypeName,
-        TitleField = nameof(Name)
-    };
-    
-    public int Id { get; set; }
-    public Guid Guid { get; set; }
-    public string Name { get; set; } // aka DisplayName
+    /// <summary>
+    /// Also known as `DisplayName`
+    /// </summary>
+    [ContentTypeTitle]
+    public string Name { get; init; }
 
-    public DateTime Created { get; set; }
-    public DateTime Modified { get; set; }
+    public DateTime Created { get; init; }
+    public DateTime Modified { get; init; }
 
     [PrivateApi]
-    public IDictionary<string, object> Values => field ??= new Dictionary<string, object>(Properties)
-    {
-        { AttributeNames.TitleNiceName, Name },
-        { nameof(Name), Name },
-    };
-
-    public Dictionary<string, object> Properties { get; } = new();
-
+    public required IDictionary<string, object> Values { get; init; }
 }

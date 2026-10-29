@@ -1,5 +1,6 @@
 ﻿namespace ToSic.Sxc.Web.Sys.ClientAssets;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public record ClientAsset
 {
     /// <summary>

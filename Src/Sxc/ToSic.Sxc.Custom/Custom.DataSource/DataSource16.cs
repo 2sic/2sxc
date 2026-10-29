@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using Custom.DataSource.Sys;
+using System.Collections.Immutable;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Data.Build;
@@ -23,27 +24,25 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.Dependencie
     /// <remarks>
     /// This ensures that all users must have this in the constructor, so we can be sure we can add more dependencies as we need them.
     ///
-    /// Note that this used to be called `MyServices` and that term will still work, but it's deprecated as of v20.
+    /// Note that this used to be called `MyServices` and that will still work, but it's deprecated as of v20.
     ///
     /// See [](xref:NetCode.Conventions.Dependencies).
     /// </remarks>
     [PublicApi]
     [method: PrivateApi]
-    public record Dependencies(CustomDataSource.Dependencies ParentServices, ServiceKitLight16 Kit)
-        : DependenciesBase(connect: [Kit])
-    {
-        [PrivateApi]
-        public CustomDataSource.Dependencies ParentServices { get; } = ParentServices;
-        [PrivateApi]
-        public ServiceKitLight16 Kit { get; } = Kit;
-    }
+    public record Dependencies(
+        [PrivateApi] CustomDataSource.Dependencies ParentServices,
+        [PrivateApi] DataSourceConvertAnything ConvertAnything,
+        [PrivateApi] ServiceKitLight16 Kit)
+        : DependenciesBase(connect: [ConvertAnything, Kit]);
 
     /// <summary>
     /// This is just for compatibility for any custom data sources which may have used the term `MyServices` since v16.
     /// </summary>
     [PrivateApi]
-    public record MyServices(CustomDataSource.Dependencies ParentServices, ServiceKitLight16 Kit)
-        : Dependencies(ParentServices, Kit);
+    [Obsolete("Use 'Dependencies' instead")]
+    public record MyServices(CustomDataSource.Dependencies ParentServices, DataSourceConvertAnything ConvertAnything, ServiceKitLight16 Kit)
+        : Dependencies(ParentServices, ConvertAnything, Kit);
 
     /// <summary>
     /// Constructor with the option to provide a log name.
@@ -53,10 +52,10 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.Dependencie
     protected DataSource16(Dependencies services, string? logName = default): base(services, logName ?? "Cus.HybDs")
     {
         _inner = BreachExtensions.CustomDataSourceLight(services.ParentServices, this, logName: logName ?? "Cus.HybDs");
-        _inner.BreachProvideOut(GetDefault);
+        _inner.BreachProvideOut(() => Services.ConvertAnything.ConvertAny(this, GetDefault, options: null));
         Kit = services.Kit.Setup(this, () => Configuration.LookUpEngine);
     }
-    private readonly CustomDataSource _inner;
+    private readonly DataSourceBase _inner;
 
     /// <summary>
     /// A simplified (light) Kit containing a bunch of helpers.
@@ -90,7 +89,7 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.Dependencie
         NoParamOrder npo = default,
         string name = DataSourceConstants.StreamDefaultName,
         Func<DataFactoryOptions>? options = default
-    ) => _inner.BreachProvideOut(getList, name: name, options: options);
+    ) => _inner.BreachProvideOut(() => Services.ConvertAnything.ConvertAny(_inner, getList, options), name: name);
 
 
     #region CodeLog

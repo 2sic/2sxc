@@ -23,30 +23,30 @@ namespace ToSic.Sxc.Backend.App;
 public class AppContent(
     EntityApi api,
     LazySvc<IConvertToEavLight> entToDicLazy,
-    ISxcCurrentContextService ctxService,
+    IContextCompleteService ctxService,
+    IContextBuilderService ctxBuilder,
     Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> typesPermissions,
     Generator<MultiPermissionsItems, MultiPermissionsItems.Options> itemsPermissions,
     AppWorkQuick<WorkFieldList> workFieldList,
-    LazySvc<SimpleDataEditService> dataControllerLazy)
-    : ServiceBase("Sxc.ApiApC",
+    Generator<SimpleDataEditService, SimpleDataEditService.Options> dataControllerLazy)
+    : ServiceWithSetup<AppContent.Options>("Sxc.ApiApC",
         connect:
         [
-            workFieldList, api, entToDicLazy, ctxService, typesPermissions, itemsPermissions, dataControllerLazy
+            workFieldList, api, entToDicLazy, ctxService, ctxBuilder, typesPermissions, itemsPermissions, dataControllerLazy
         ])
 {
     #region Constructor / DI
 
-    public AppContent Init(string? appName)
-    {
-        // if app-path specified, use that app, otherwise use from context
-        Context = ctxService.AppNameRouteBlock(appName);
-        return this;
-    }
+    public record Options(string? AppName);
 
-    protected IContextOfApp Context = null!;
+    private IContextOfApp Context => field
+        ??= ctxBuilder.TryFindAppFromPath(MyOptions.AppName)
+            ?? ctxBuilder.TryFindAppFromUrlIds()
+            ?? ctxService.BlockContextOrNull()
+            ?? throw new($"Tried to auto detect app by name '{MyOptions.AppName}', url params or block context, all failed.");
 
-    protected IAppReader AppReader => Context?.AppReaderRequired ??
-                                   throw new("Can't access AppState before Context is ready. Did you forget to call Init(...)?");
+    private IAppReader AppReader => Context.AppReaderOrNull ??
+                                   throw new("Can't access AppState before Context is ready. Did you forget to call Setup(...)?");
 
     #endregion
 
@@ -88,7 +88,7 @@ public class AppContent(
         var permCheck = ThrowIfNotAllowedInItem(itm, GrantSets.ReadSomething, AppReader);
 
         // in case draft wasn't allow, get again with more restricted permissions 
-        if (!permCheck.EnsureAny(GrantSets.ReadDraft))
+        if (!permCheck.EnsureAnyReadDraft().Allowed)
             itm = getOne(AppReader.GetListPublished());
 
         return InitEavAndSerializer(AppReader.AppId, Context.Permissions.IsContentAdmin, uri).Convert(itm)!;
@@ -99,6 +99,10 @@ public class AppContent(
 
     #region CreateOrUpdate
 
+    /// <summary>
+    /// Data controller, can be reused...
+    /// </summary>
+    private SimpleDataEditService DataController => field ??= dataControllerLazy.New(new(AppReader.ZoneId, AppReader.AppId, false));
 
     public IDictionary<string, object> CreateOrUpdate(string contentType, Dictionary<string, object?> newContentItem, int? id = null, string? appPath = null)
     {
@@ -129,7 +133,6 @@ public class AppContent(
         if (!cleanedNewItem.ContainsKey(AttributeNames.EntityFieldOwner))
             cleanedNewItem.Add(AttributeNames.EntityFieldOwner, Context.User.IdentityToken);
 
-        var dataController = DataController(AppReader);
         if (id == null)
         {
             // Get Metadata - not sure why we're using the raw values, but maybe there were removed in cleaned?
@@ -137,7 +140,7 @@ public class AppContent(
             var metadata = GetMetadata(rawValuesCaseInsensitive);
             Log.A($"metadata: {metadata}");
 
-            var ids = dataController.Create(contentType, new List<Dictionary<string, object?>> { cleanedNewItem! }, metadata);
+            var ids = DataController.Create(contentType, new List<Dictionary<string, object?>> { cleanedNewItem! }, metadata);
             id = ids.FirstOrDefault();
 
             Log.A($"new entity id: {id}");
@@ -145,7 +148,7 @@ public class AppContent(
             var added = AddParentRelationship(rawValuesCaseInsensitive!, id.Value);
         }
         else
-            dataController.Update(id.Value, cleanedNewItem!);
+            DataController.Update(id.Value, cleanedNewItem!);
 
         return InitEavAndSerializer(AppReader.AppId, Context.Permissions.IsContentAdmin, null)
             .Convert(AppReader.List.GetOne(id.Value)!)!;
@@ -220,8 +223,6 @@ public class AppContent(
                 @"Value is not 'int' or TargetTypes 'string'.")
         };
 
-    private SimpleDataEditService DataController(IAppIdentity app) => _dataController ??= dataControllerLazy.Value.Init(app.ZoneId, app.AppId);
-    private SimpleDataEditService? _dataController;
 
     #endregion
 
@@ -256,7 +257,7 @@ public class AppContent(
 
         var entityApi = api.Init(AppReader.AppId);
         var itm = AppReader.List.GetOrThrow(contentType, id);
-        ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppReader);
+        ThrowIfNotAllowedInItem(itm, [Grants.Delete], AppReader);
         entityApi.Delete(itm.Type.Name, id);
         l.Done();
     }
@@ -269,7 +270,7 @@ public class AppContent(
         var entityApi = api.Init(AppReader.AppId);
         var itm = AppReader.List.GetOrThrow(contentType == "any" ? null : contentType, guid);
 
-        ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppReader);
+        ThrowIfNotAllowedInItem(itm, [Grants.Delete], AppReader);
 
         entityApi.Delete(itm.Type.Name, guid);
         l.Done();
@@ -280,21 +281,20 @@ public class AppContent(
 
     #region Permission Checks
 
-    protected MultiPermissionsTypes ThrowIfNotAllowedInType(string contentType, List<Grants> requiredGrants, IAppIdentity appIdentity)
+    private void ThrowIfNotAllowedInType(string contentType, List<Grants> requiredGrants, IAppIdentity appIdentity)
     {
         var permCheck = typesPermissions.New(new() { SiteContext = Context, App = appIdentity, ContentTypes = [contentType] });
-        if (!permCheck.EnsureAll(requiredGrants, out var error))
-            throw HttpException.PermissionDenied(error);
-        return permCheck;
+        if (permCheck.EnsureAll(requiredGrants) is { Allowed: false } result)
+            throw HttpException.PermissionDenied(result.ErrorMessage);
     }
 
-    protected MultiPermissionsItems ThrowIfNotAllowedInItem(IEntity itm, List<Grants> requiredGrants, IAppIdentity appIdentity)
+    private MultiPermissionsItems ThrowIfNotAllowedInItem(IEntity itm, List<Grants> requiredGrants, IAppIdentity appIdentity)
     {
         if (itm == null)
             throw new ArgumentNullException(nameof(itm), @"Item must not be null to check it's security.");
         var permCheck = itemsPermissions.New(new() { SiteContext = Context, App = appIdentity, Entities = [itm] });
-        if (!permCheck.EnsureAll(requiredGrants, out var error))
-            throw HttpException.PermissionDenied(error);
+        if (permCheck.EnsureAll(requiredGrants) is { Allowed: false } result)
+            throw HttpException.PermissionDenied(result.ErrorMessage);
         return permCheck;
     }
 

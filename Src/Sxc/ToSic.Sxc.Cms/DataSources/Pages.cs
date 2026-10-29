@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using ToSic.Eav.DataSource;
 
+using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Sxc.Cms.Pages;
@@ -37,10 +38,9 @@ namespace ToSic.Sxc.DataSources;
     NiceName = "Pages",
     Type = DataSourceType.Source,
     UiHint = "Pages in this site")]
-public class Pages: CustomDataSourceAdvanced
+public class Pages(CustomDataSource.Dependencies services, PagesDataSourceProvider provider)
+    : CustomDataSource(services, "CDS.Pages", connect: [provider])
 {
-    private readonly PagesDataSourceProvider _provider;
-
     #region Configuration properties
 
     /// <summary>
@@ -122,24 +122,13 @@ public class Pages: CustomDataSourceAdvanced
 
     #endregion
 
-    #region Constructor
-
-    [PrivateApi]
-    public Pages(Dependencies services, PagesDataSourceProvider provider) : base(services, "CDS.Pages", connect: [provider])
+    protected override IEnumerable<IRawData> GetDefault()
     {
-        _provider = provider;
-
-        ProvideOut(GetPages);
-    }
-    #endregion
-
-    private IImmutableList<IEntity> GetPages()
-    {
-        var l = Log.Fn<IImmutableList<IEntity>>();
+        var l = Log.Fn<IImmutableList<PageModelRaw>>();
         Configuration.Parse();
 
         // Get pages from underlying system/provider
-        var pagesFromSystem = _provider.GetPagesInternal(
+        var pagesFromSystem = provider.GetPagesInternal(
             includeHidden: IncludeHidden,
             includeDeleted: IncludeDeleted,
             includeAdmin: IncludeAdmin,
@@ -152,10 +141,7 @@ public class Pages: CustomDataSourceAdvanced
         if (pagesFromSystem == null || pagesFromSystem.Count == 0)
             return l.Return([], "null/empty");
 
-        // Convert to Entity-Stream
-        var pageFactory = DataFactory.SpawnNew(options: PageModelRaw.Option);
-
-        var pages = pageFactory.Create(pagesFromSystem);
+        var pages = pagesFromSystem.ToImmutableOpt();
 
         return l.Return(pages, $"{pages.Count}");
         //// Try to add Navigation properties

@@ -10,8 +10,8 @@ internal static class ApiForBlockHelpers
         IAppIdentity? alternateApp = null)
     {
         var permCheck = multiPermissionsApp.New(new() { SiteContext = context, App = alternateApp ?? context.AppReaderRequired });
-        if (!permCheck.EnsureAll(requiredGrants, out var error))
-            throw HttpException.PermissionDenied(error);
+        if (permCheck.EnsureAll(requiredGrants) is { Allowed: false } pcResult)
+            throw HttpException.PermissionDenied(pcResult.ErrorMessage);
     }
 
 }

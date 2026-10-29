@@ -12,7 +12,8 @@
 [PrivateApi("Hidden in v17.02, previously public, but no good reason for it.")]
 // #NoEditorBrowsableBecauseOfInheritance
 // 2025-05-11 re-enabled, since it shouldn't matter anymore with the new setup
-[ShowApiWhenReleased(ShowApiMode.Never)]
+// 2026-09-18 2dm re-disabled
+//[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ServiceKit(string logName = "Sxc.Kit") : ServiceWithContext(logName)
 {
 

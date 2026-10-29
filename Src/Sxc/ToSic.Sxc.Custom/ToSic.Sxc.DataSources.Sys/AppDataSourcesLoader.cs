@@ -8,7 +8,6 @@ using ToSic.Eav.DataSource.VisualQuery.Sys;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
-using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Render.Polymorphism.Sys;
 using ToSic.Sys.Caching;
 using ToSic.Sys.Utils;
@@ -24,13 +23,14 @@ internal class AppDataSourcesLoader(
     LazySvc<IAppPathsMicroSvc> appPathsLazy,
     LazySvc<CodeCompiler> codeCompilerLazy,
     LazySvc<AppCodeLoader> appCodeLoaderLazy,
-    ISxcCurrentContextService ctxService,
+    // 2026-10-20 2dm #DontLoadDifferentCustomDataSourcesByEdition
+    //ISxcCurrentContextService ctxService,
     IEditionService editionSvc,
     MemoryCacheService memoryCacheService)
     : ServiceBase("Eav.AppDtaSrcLoad",
         connect:
         [
-            logStore, site, appReaders, appPathsLazy, codeCompilerLazy, appCodeLoaderLazy, ctxService, editionSvc,
+            logStore, site, appReaders, appPathsLazy, codeCompilerLazy, appCodeLoaderLazy, editionSvc,
             memoryCacheService
         ]), IAppDataSourcesLoader
 {
@@ -113,12 +113,24 @@ internal class AppDataSourcesLoader(
 
     private string? FigureEdition()
     {
-        var l = Log.Fn<string?>(timer: true);
+        return null;
+        // 2026-10-20 2dm #DontLoadDifferentCustomDataSourcesByEdition
+        // Dropped this functionality, my research shows it probably never worked.
+        // It appears to try to load different data sources from different editions,
+        // But the AppDataSourcesLoader seems to only be used by the DataSourceCatalog
+        // which caches the result based on AppId only (never by edition).
+        // So the loader should not load different editions by view.
+        //
+        // Reason this was started was because I need to clarify
+        // where the SxcCurrentContextServices (ctxService below) is used - and it seems to only be used in WebApi
+        // so, I'm trying to ensure that this is the case, and needed to stop using it here. 
 
-        var block = ctxService.BlockOrNull();
-        var edition = block.NullOrGetWith(editionSvc.Edition);
+        //var l = Log.Fn<string?>(timer: true);
 
-        return l.Return(edition);
+        //var block = ctxService.BlockOrNull();
+        //var edition = block.NullOrGetWith(editionSvc.Edition);
+
+        //return l.Return(edition);
     }
 
     private (string physicalPath, string relativePath) GetAppDataSourceFolderPaths(int appId)

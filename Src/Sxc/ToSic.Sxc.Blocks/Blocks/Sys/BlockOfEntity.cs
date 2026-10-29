@@ -5,11 +5,18 @@ using ToSic.Sxc.Context.Sys;
 namespace ToSic.Sxc.Blocks.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public sealed class BlockOfEntity(BlockGeneratorHelpers helpers, LazySvc<AppFinder> appFinderLazy)
-    : ServiceBase("CB.Ent", connect: [appFinderLazy, helpers])
+public sealed class BlockOfEntity(BlockGeneratorHelpers helpers, LazySvc<AppFinder> appFinderLazy, LazySvc<IContextOfBlockFactory> contextOfBlockFactoryLazy)
+    : ServiceBase("CB.Ent", connect: [appFinderLazy, helpers, contextOfBlockFactoryLazy])
 {
     #region Init
 
+    /// <summary>
+    /// Get a block from an entity-ID.
+    /// </summary>
+    /// <param name="parentBlock"></param>
+    /// <param name="blockEntity"></param>
+    /// <param name="contentBlockId">The block ID, can be negative (like is usually passed around in requests for innner-content)</param>
+    /// <returns></returns>
     public IBlock GetBlockOfEntity(IBlock parentBlock, IEntity? blockEntity, int contentBlockId = -1)
     {
         var l = Log.Fn<BlockSpecs>($"{nameof(contentBlockId)}:{contentBlockId}; {nameof(blockEntity)}:{blockEntity?.EntityId}", timer: true);
@@ -18,22 +25,21 @@ public sealed class BlockOfEntity(BlockGeneratorHelpers helpers, LazySvc<AppFind
         // The block ID. Is usually negative to mark inner-content-blocks
         blockEntity ??= parentBlock.App.Data.List.GetOne(Math.Abs(contentBlockId))!;
 
-        var (isContentApp, blockId) = LoadBlockDefinition(appFinderLazy, parentBlock.ZoneId, blockEntity);
-        var ctx = (IContextOfBlock)parentBlock.Context.Clone(Log);
-        ctx.ResetApp(blockId);
+        var (isContentApp, blockIdentifier) = LoadBlockDefinition(appFinderLazy, parentBlock.ZoneId, blockEntity);
+        var ctx = contextOfBlockFactoryLazy.Value.Update(parentBlock.Context, blockIdentifier);
 
         // Must override previous AppId, as that was of the container-block
         // but the current instance can be of another block
         var specs = new BlockSpecs
         {
             Context = ctx,
-            AppId = blockId.AppId,
+            AppId = blockIdentifier.AppId,
             ZoneId = parentBlock.ZoneId,
             IsContentApp = isContentApp,
             IsInnerBlock = true,
         };
 
-        specs = helpers.CompleteInit(specs, parentBlock, blockId, -blockEntity.EntityId);
+        specs = helpers.CompleteInit(specs, parentBlock, blockIdentifier, -blockEntity.EntityId);
 
         return l.Return(specs);
     }

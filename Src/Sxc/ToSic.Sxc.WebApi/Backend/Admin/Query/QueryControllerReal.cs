@@ -11,9 +11,9 @@ public class QueryControllerReal(
     AppWorkContextService appCtxSvc,
     QueryControllerBase.Dependencies services,
     Generator<WorkViews, IAppWorkContext> workViews,
-    ISxcCurrentContextService currentContextService,
+    IContextCompleteService ctxSvc,
     Generator<IAppDataConfigProvider> tokenEngineWithContext)
-    : QueryControllerBase(services, "Api." + LogSuffix, connect: [appCtxSvc, workViews, currentContextService, tokenEngineWithContext])
+    : QueryControllerBase(services, "Api." + LogSuffix, connect: [appCtxSvc, workViews, ctxSvc, tokenEngineWithContext])
 {
     public const string LogSuffix = "Query";
     public const string LogGroup = EavWebApiConstants.HistoryNameWebApi + "-query";
@@ -54,7 +54,7 @@ public class QueryControllerReal(
 
     private ILookUpEngine LookUpEngineWithBlockRequired()
     {
-        var block = currentContextService.BlockRequired();
+        var block = ctxSvc.BlockRequired();
         var specs = new SxcAppDataConfigSpecs { BlockForLookupOrNull = block };
         var lookUps = tokenEngineWithContext.New()
             .GetDataConfiguration((SxcAppBase)block.App, specs)

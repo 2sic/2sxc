@@ -9,6 +9,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys;
 /// Coordinates Razor compilation by delegating heavy work to <see cref="RoslynCompilationRunner"/>.
 /// Ensures caching/locking concerns stay isolated.
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class RoslynBuildManager(
     TemplateCacheService cacheService,
     RoslynCompilationRunner compilationRunner)

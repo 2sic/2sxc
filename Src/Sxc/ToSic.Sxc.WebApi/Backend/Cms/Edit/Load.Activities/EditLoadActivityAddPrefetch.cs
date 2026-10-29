@@ -10,8 +10,9 @@ namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 public partial class EditLoadActivityAddPrefetch(
     Generator<HyperlinkBackend> hyperlinkBackend,
     Generator<IAdamPrefetchHelper, AdamWorkOptions> adamTransGetItems,
-    EntityPickerApi entityPickerBackend)
-    : ServiceBase(SxcLogName + ".Prefetch", connect: [adamTransGetItems, hyperlinkBackend, entityPickerBackend]),
+    EntityPickerApi entityPickerBackend,
+    IContextCompleteService ctxService)
+    : ServiceBase(SxcLogName + ".Prefetch", connect: [adamTransGetItems, hyperlinkBackend, entityPickerBackend, ctxService]),
         IWork<EditLoadDto, EditLoadDto>
 {
     public async Task<Package<EditLoadDto>> Handle(WorkContext actionCtx, Package<EditLoadDto> package)

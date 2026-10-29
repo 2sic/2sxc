@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System.Collections;
+using System.Diagnostics;
 using System.Web;
+using ToSic.Sys.Logging;
 
 namespace ToSic.Sxc.Dnn;
 
@@ -7,6 +10,7 @@ namespace ToSic.Sxc.Dnn;
 /// This is a temporary helper for Dnn 7+ to help with dependency injection which is
 /// patched unto Dnn.
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class DnnStaticDi
 {
     private static Func<IServiceProvider> _getGlobalDnnServiceProvider;
@@ -39,7 +43,13 @@ public static class DnnStaticDi
 
     [PrivateApi("Very internal, to use at startup, so singletons are not lost")]
     private static IServiceProvider GetGlobalServiceProvider()
-        => Sp.Get(() => _getGlobalDnnServiceProvider?.Invoke() ?? throw new("can't access global DNN service provider"));
+        => Sp.Get(() =>
+        {
+            var serviceProvider = _getGlobalDnnServiceProvider?.Invoke() ?? throw new("can't access global DNN service provider");
+            // Connect pre-DI MEL events to DNN's logger factory before scoped services are built.
+            LogFactory.Bind(serviceProvider);
+            return serviceProvider;
+        });
     private static readonly LazyGet<IServiceProvider> Sp = new();
 
     [PrivateApi("This is just a temporary solution - shouldn't be used long term")]
@@ -54,6 +64,9 @@ public static class DnnStaticDi
         var httpCtx = HttpContext.Current;
         if (httpCtx == null)
             return GetGlobalServiceProvider().CreateScope().ServiceProvider;
+
+        DnnRequestLogCorrelation.Ensure(httpCtx.Items,
+            completed => httpCtx.AddOnRequestCompleted(context => completed(context.Items)));
 
         // This only runs in Dnn 7.4.2 - Dnn 9.3, because Dnn 9.4 provides this in the http context
         if (!httpCtx.Items.Contains(ServiceScopeKey))
@@ -77,5 +90,48 @@ public static class DnnStaticDi
         // This is necessary for it to be able to give page-scoped objects
         moduleSp.Build<PageScopeAccessor>().InitPageOfModule(pageSp);
         return moduleSp;
+    }
+}
+
+internal static class DnnRequestLogCorrelation
+{
+    private static readonly object OwnedActivityKey = typeof(DnnRequestLogCorrelation);
+
+    internal static Activity Ensure(IDictionary items, Action<Action<IDictionary>> addOnRequestCompleted)
+    {
+        // Multiple modules can initialize logging in parallel for the same request.
+        lock (items.SyncRoot)
+        {
+            if (items[OwnedActivityKey] is Activity owned)
+            {
+                // Request Items cross sibling execution contexts, but Activity.Current does not.
+                if (Activity.Current == null)
+                    Activity.Current = owned;
+                return owned;
+            }
+            // ASP.NET Core already starts a request Activity; classic DNN needs this fallback for equivalent correlation.
+            // Never replace or later stop an Activity owned by DNN or another integration.
+            if (Activity.Current != null)
+                return null;
+
+            var activity = new Activity("ToSic.Dnn.Request").SetIdFormat(ActivityIdFormat.W3C).Start();
+            items[OwnedActivityKey] = activity;
+            addOnRequestCompleted(Complete);
+            return activity;
+        }
+    }
+
+    internal static void Complete(IDictionary items)
+    {
+        // Remove under the request lock, then stop outside it so completion can only happen once.
+        Activity owned;
+        lock (items.SyncRoot)
+        {
+            if (items[OwnedActivityKey] is not Activity activity)
+                return;
+            items.Remove(OwnedActivityKey);
+            owned = activity;
+        }
+        owned.Stop();
     }
 }

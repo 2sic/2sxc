@@ -9,13 +9,13 @@ using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.Backend;
 using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Sys;
-using Log = ToSic.Sys.Logging.Log;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
@@ -36,8 +36,9 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
         OqtSiteGroup oqtSiteGroup,
         ILogStore logStore)
     {
-        Log = new Log(HistoryLogName, null, nameof(AppApiDynamicRouteValueTransformer));
+        Log = LogFactory.Create(HistoryLogName);
         logStore.Add(HistoryLogGroup, Log);
+        Log.A(nameof(AppApiDynamicRouteValueTransformer));
         this.ConnectLogs([
             _tenantResolver = tenantResolver,
             _hostingEnvironment = hostingEnvironment,
@@ -92,7 +93,15 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
                 // but as a transient dependencies from the request service provider
                 var blockInitializer = httpContext.RequestServices.Build<IWebApiContextBuilder>();
                 blockInitializer.PrepareContextResolverForApiRequest();
-                appFolder = httpContext.RequestServices.Build<AppFolderLookupForWebApi>().GetAppFolder();
+                // Note 2026-10-18 2dm: #NoLookupSideEffects
+                // the next line used to have a side effect of sharing the found app-context
+                // ...but it should already be handled in the previous PrepareContextResolverForApiRequest() call
+                // This has been removed; it may break something, in which case sharing must be added explicitly
+                var builder = httpContext.RequestServices.Build<IContextBuilderService>();
+                var ctxSvc = httpContext.RequestServices.Build<IContextCompleteService>();
+                appFolder = ctxSvc.FindAppFolderFromScopeOrThrow(builder);
+                // Compilation needs the resolved app folder, not the original "auto" route value.
+                values["appFolder"] = appFolder;
             }
 
             if (!values.ContainsKey("controller"))

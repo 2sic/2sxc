@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Oqtane.Infrastructure;
 using ToSic.Eav;
 using ToSic.Eav.Run.Startup;
@@ -37,6 +38,12 @@ public class OqtStartup : IServerStartup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        // Select the complete logging stack once at startup: true enables MEL; missing, invalid or false uses Legacy.
+        // Changing this setting requires an application restart.
+        var useMel = bool.TryParse(Configuration["Logging:2sxc:UseMel"], out var enabled) && enabled;
+        // DI must reuse the pre-DI factory so all logs stay in the selected stack.
+        services.TryAddSingleton<ILogFactory>(LogFactory.Initialize(useMel));
+
         // 1. Enable dynamic razor compiling
         services.AddRazorPages()
             .AddRazorRuntimeCompilation(options =>
@@ -78,9 +85,12 @@ public class OqtStartup : IServerStartup
             .AddSxcLightSpeed()             // LightSpeed services
             .AddSxcCodeGen()                // Code generation services
             .AddSxcCore()
+
+            .AddSxcCodeFallbacks()
             .AddSxcAppsFallbacks()
             .AddSxcCoreFallbacks()
-            .AddEavAll()             // Core EAV services
+
+            .AddEavAll(useMel)              // Core EAV services, including the selected logging stack
             .AddEavAllFallbacks()
             .AddEavWebApiTypedAfterEav()
             .AddOqtAppWebApi()              // Oqtane App WebAPI stuff
@@ -93,6 +103,7 @@ public class OqtStartup : IServerStartup
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         var serviceProvider = app.ApplicationServices;
+        LogFactory.Bind(serviceProvider);
 
         var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
         globalConfig.ConnectionString(Configuration.GetConnectionString("DefaultConnection"));

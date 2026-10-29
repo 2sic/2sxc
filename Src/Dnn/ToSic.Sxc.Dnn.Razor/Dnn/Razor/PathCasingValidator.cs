@@ -11,6 +11,7 @@ namespace ToSic.Sxc.Dnn.Razor;
 /// <summary>
 /// Helper to check for valid path casing.
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class PathCasingValidator
 {
     public static bool IsPathCasingExact(string path)

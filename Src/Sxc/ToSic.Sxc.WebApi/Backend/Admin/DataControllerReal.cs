@@ -7,7 +7,6 @@ using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Eav.WebApi.Sys.Security;
 using ToSic.Sxc.Backend.ImportExport;
 using ToSic.Sys.Users;
-using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 
 namespace ToSic.Sxc.Backend.Admin;
 
@@ -16,13 +15,13 @@ public class DataControllerReal(
     ISite site,
     IAppPathsMicroSvc appPathSvc,
     IAppReaderFactory appReaders,
-    LazySvc<IContextOfSite> context,
+    LazySvc<IContextOfSiteService> ctxSvc,
     LazySvc<ContentExportApi> contentExportLazy,
     Generator<ImportContent> importContent,
     LazySvc<IUser> userLazy,
     AppWorkQuick<WorkEntityRecycle> recycle)
-    : Services_ServiceBase("Api.DtaCtlRl",
-        connect: [site, appPathSvc, appReaders, context, contentExportLazy, importContent, userLazy, recycle])
+    : ServiceBase("Api.DtaCtlRl",
+        connect: [site, appPathSvc, appReaders, ctxSvc, contentExportLazy, importContent, userLazy, recycle])
 {
     public const string LogSuffix = "DataCtrl";
 
@@ -45,7 +44,7 @@ public class DataControllerReal(
             streams.Add(new() { Name = fileName, Stream = stream! });
         }
         var result = importContent.New()
-            .ImportJsonFiles(zoneId, appId, streams, context.Value.Site.DefaultCultureCode);
+            .ImportJsonFiles(zoneId, appId, streams, ctxSvc.Value.Context.Site.DefaultCultureCode);
 
         return l.ReturnAsOk(result);
     }
@@ -69,7 +68,7 @@ public class DataControllerReal(
             return l.ReturnFalse($"File not found: {filePath}");
 
         var result = importContent.New()
-            .ImportJsonFiles(zoneId, appId, [new() { Name = fileName, Stream = new FileStream(filePath, FileMode.Open, FileAccess.Read) }], context.Value.Site.DefaultCultureCode);
+            .ImportJsonFiles(zoneId, appId, [new() { Name = fileName, Stream = new FileStream(filePath, FileMode.Open, FileAccess.Read) }], ctxSvc.Value.Context.Site.DefaultCultureCode);
 
         var message = string.Join(", ", result.Messages.Select(m => m.Text));
 

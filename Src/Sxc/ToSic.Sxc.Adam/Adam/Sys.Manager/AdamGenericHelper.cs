@@ -8,6 +8,7 @@ namespace ToSic.Sxc.Adam.Sys.Manager;
 /// Helper construct so that correctly typed objects can be generated,
 /// without the user (mostly the AdamManager) having to know the exact types.
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class AdamGenericHelper
 {
     public abstract IFolder FolderOfField(AdamManager adamManager, AdamStorageOfField storage, IField? field);
@@ -22,6 +23,7 @@ public abstract class AdamGenericHelper
 /// </summary>
 /// <typeparam name="TFolderId"></typeparam>
 /// <typeparam name="TFileId"></typeparam>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamGenericHelper<TFolderId, TFileId> : AdamGenericHelper
 {
     public override IFolder FolderOfField(AdamManager adamManager, AdamStorageOfField storage, IField? field)

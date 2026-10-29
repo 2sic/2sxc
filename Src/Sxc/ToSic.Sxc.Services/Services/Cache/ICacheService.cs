@@ -28,7 +28,6 @@ namespace ToSic.Sxc.Services;
 /// * Requires the [SmartDataCache](https://patrons.2sxc.org/features/feat/DataCache) feature (Patron Perfectionist); if not enabled, will work without caching anything.
 /// </remarks>
 [PublicApi]
-[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICacheService
 {
     /// <summary>

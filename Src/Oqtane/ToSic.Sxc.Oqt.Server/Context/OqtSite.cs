@@ -37,12 +37,12 @@ internal sealed class OqtSite(
         UnwrappedSite = site;
         return this;
     }
-
-    public override ISite Init(int siteId, ILog parentLogOrNull)
-    {
-        UnwrappedSite = siteService.Value.GetSiteAsync(siteId).GetAwaiter().GetResult();
-        return this;
-    }
+    // 2026-10-18 2dm: #DropSiteInitSeemsUnused
+    //public override ISite Init(int siteId, ILog parentLogOrNull)
+    //{
+    //    UnwrappedSite = siteService.Value.GetSiteAsync(siteId).GetAwaiter().GetResult();
+    //    return this;
+    //}
 
     protected override Site UnwrappedSite => base.UnwrappedSite ??= siteService.Value.GetSiteAsync(Alias.SiteId).GetAwaiter().GetResult();
     private Alias Alias => aliasResolver.Alias;

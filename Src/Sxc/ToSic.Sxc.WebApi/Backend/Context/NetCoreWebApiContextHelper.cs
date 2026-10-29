@@ -33,16 +33,19 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
     /// </summary>
     public void InitializeBlockContext(ActionExecutingContext context)
     {
-        if (_blockContextInitialized) return;
+        if (_blockContextInitialized)
+            return;
         _blockContextInitialized = true;
         var getBlock = _helper.GetService<IWebApiContextBuilder>();
         CtxService = getBlock.PrepareContextResolverForApiRequest();
-        BlockOptional = CtxService.BlockOrNull();
+        CtxBuilder = _helper.GetService<IContextBuilderService>();
+        BlockOptional = CtxService.BlockOrNull;
     }
 
     private bool _blockContextInitialized;
 
-    private ISxcCurrentContextService CtxService { get; set; } = null!;
+    private IContextCompleteService CtxService { get; set; } = null!;
+    private IContextBuilderService CtxBuilder { get; set; } = null!;
     internal IBlock? BlockOptional { get; private set; }
 
     public void OnActionExecutingEnd(ActionExecutingContext context)
@@ -80,37 +83,43 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
     }
 
 
-    private void TryToAttachAppFromUrlParams(ActionExecutingContext context) => Log.Do(() =>
+    private void TryToAttachAppFromUrlParams(ActionExecutingContext context)
     {
-        var found = false;
+        var l = Log.Fn();
+
         try
         {
             // Handed in from the App-API Transformer
-            context.HttpContext.Items.TryGetValue(SxcWebApiConstants.HttpContextKeyForAppFolder,
-                out var routeAppPathObj);
-            if (routeAppPathObj == null) return "";
+            context.HttpContext.Items.TryGetValue(SxcWebApiConstants.HttpContextKeyForAppFolder, out var routeAppPathObj);
+            if (routeAppPathObj == null)
+            {
+                l.Done("nothing to do");
+                return;
+            }
             var routeAppPath = routeAppPathObj.ToString();
 
-            var appId = CtxService.SetAppOrNull(routeAppPath)
+            var appId = CtxBuilder.TryFindAppFromPath(routeAppPath)
                             ?.AppReaderRequired.AppId
                         ?? Eav.Sys.EavConstants.NullId;
 
-            if (appId != Eav.Sys.EavConstants.NullId)
+            if (appId == Eav.Sys.EavConstants.NullId)
             {
-                // Look up if page publishing is enabled - if module context is not available, always false
-                base.Log.A($"AppId: {appId}");
-                var app = LoadAppOnly(appId, CtxService.Site().Site);
-                ((IExCtxAttachApp)ExCtx).AttachApp(app);
-                found = true;
+                l.Done("no app detected");
+                return;
             }
+
+            // Look up if page publishing is enabled - if module context is not available, always false
+            l.A($"AppId: {appId}");
+            var app = LoadAppOnly(appId, CtxService.Context.Site);
+            ((IExCtxAttachApp)ExCtx).AttachApp(app);
+            l.Done("app initialized");
+            return;
         }
         catch
         {
-            /* ignore */
+            l.Done("error, ignore");
         }
-
-        return found.ToString();
-    });
+    }
 
     /// <summary>
     /// Only load the app in case we don't have a module context

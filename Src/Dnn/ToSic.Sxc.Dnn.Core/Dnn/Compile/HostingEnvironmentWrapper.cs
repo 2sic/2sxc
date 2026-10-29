@@ -5,6 +5,7 @@
 /// </summary>
 /// <remarks>to mock the wrapper in unit tests</remarks>
 [PrivateApi]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class HostingEnvironmentWrapper : IHostingEnvironmentWrapper
 {
     /// <summary>Maps a virtual path to a physical path on the server.</summary>

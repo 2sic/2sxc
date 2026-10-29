@@ -5,7 +5,7 @@ using ToSic.Sxc.Blocks.Sys.Views;
 
 namespace ToSic.Sxc.DataSources;
 
-public sealed partial class CmsBlock
+partial class CmsBlock
 {
     private ResultOrError<(BlockConfiguration BlockConfiguration, IView View)> ConfigAndViewOrErrors
         => field ??= new Func<ResultOrError<(BlockConfiguration BlockConfiguration, IView View)>>(() =>
@@ -38,7 +38,8 @@ public sealed partial class CmsBlock
                 Error.Create(title: $"{nameof(CmsBlock)} cannot find Block Configuration",
                     message: $"Neither InstanceContext nor {nameof(ModuleId)} found")), "Error, no module-id");
 
-        var container = _services.ModuleLazy.Value.Init(ModuleId.Value);
+        var container = _services.ModuleLazy.Value.Get(ModuleId.Value);
+        // container.Init(ModuleId.Value);
         var blockId = container.BlockIdentifier;
         var ctx = _services.AppCtxSvc.Value.ContextNew(this.PureIdentity());
         var blockConfig = _services.AppBlocks.New(ctx).GetOrGeneratePreviewConfig(blockId);

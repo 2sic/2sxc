@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Backend.InPage;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppViewPickerBackend(
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> multiPermissionsApp,
-    ISxcCurrentContextService ctxService,
+    IContextCompleteService ctxService,
     LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
     AppWorkChain<WorkBlockViewsGet> workBlockViews,
     AppWorkContextService appWorkCtxService,

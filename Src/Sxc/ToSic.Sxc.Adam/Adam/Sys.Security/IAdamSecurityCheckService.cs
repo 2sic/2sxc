@@ -4,6 +4,7 @@ using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Adam.Sys.Security;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IAdamSecurityCheckService
 {
     bool SiteAllowsExtension(string fileName);

@@ -27,10 +27,9 @@ public class AppPartsController() : DnnSxcControllerRoot(RealController.LogSuffi
     public HttpResponseMessage Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
     {
         // Make sure the Scoped ResponseMaker has this controller context
-        SysHlp.SetupResponseMaker(this);
-
-        return Real.Export(zoneId: zoneId, appId: appId, contentTypeIdsString: contentTypeIdsString,
-            entityIdsString: entityIdsString, templateIdsString: templateIdsString);
+        using (this.InitializedResponseMaker())
+            return Real.Export(zoneId: zoneId, appId: appId, contentTypeIdsString: contentTypeIdsString,
+                entityIdsString: entityIdsString, templateIdsString: templateIdsString);
     }
 
 
@@ -40,7 +39,7 @@ public class AppPartsController() : DnnSxcControllerRoot(RealController.LogSuffi
     [ValidateAntiForgeryToken]
     public ImportResultDto Import(int zoneId, int appId)
     {
-        SysHlp.PreventServerTimeout600();
+        this.PreventServerTimeout600();
         return Real.Import(uploadInfo: new(Request, HttpContext.Current.Request), zoneId: zoneId, appId: appId);
     }
 

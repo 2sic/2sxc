@@ -10,6 +10,7 @@ namespace ToSic.Sxc.ImportExport.Package.Sys;
 /// <remarks>
 /// It should be extended with additional information about version compatibility, platforms, etc.
 /// </remarks>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public record PackageInstallFile
 {
     /// <summary>

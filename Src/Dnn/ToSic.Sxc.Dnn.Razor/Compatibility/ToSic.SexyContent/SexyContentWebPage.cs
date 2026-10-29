@@ -4,7 +4,6 @@ using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
-using ToSic.Sxc.Code.Sys.CodeApiService;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Compatibility.RazorPermissions;
 using ToSic.Sxc.Compatibility.Sxc;
@@ -177,7 +176,7 @@ public abstract class SexyContentWebPage :
     /// <inheritdoc />
     [Obsolete]
     public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
-        => new CodeApiServiceObsolete(ExCtx).CreateSource(typeName, inSource, configurationProvider);
+        => new DnnExecutionContextCreateSourceObsolete(ExCtx).CreateSource(typeName, inSource, configurationProvider);
 
     /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataSource, ILookUpEngine)" />
     [Obsolete("this is the old implementation with ILookUp Engine, don't think it was ever used publicly because people couldn't create these engines")]

@@ -56,7 +56,7 @@ internal abstract class ToolbarRuleTargeted: ToolbarRule
     );
     private readonly LazyGet<ToolbarButtonDecorator?> _decorator = new();
 
-    private string UiParamsFromDecorator => field ??= Decorator?.AllRules() ?? "";
+    private string UiParamsFromDecorator => field ??= Decorator?.UiRuleParams() ?? "";
 
     #endregion
 }

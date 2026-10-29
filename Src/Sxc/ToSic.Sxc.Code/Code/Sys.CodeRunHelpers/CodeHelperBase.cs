@@ -3,6 +3,9 @@ using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Sys.CodeRunHelpers;
 
+/// <summary>
+/// Base class for helpers which support custom code etc.
+/// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeHelperBase : ServiceWithContext
 {

@@ -1,11 +1,12 @@
-﻿using ToSic.Eav.Apps;
+﻿using DotNetNuke.Entities.Modules;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.Context;
 using ToSic.Sxc.Apps.Sys.Installation;
 using ToSic.Sxc.Apps.Sys.Work;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.WebApi.Sys.ExternalLinks;
+using ToSic.Sys.Wrappers;
 
 namespace ToSic.Sxc.Dnn.Install;
 
@@ -18,9 +19,10 @@ internal class DnnPlatformAppInstaller(
     public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp)
     {
         var l = Log.Fn<string>();
-        var moduleInfo = (module as DnnModule)?.GetContents();
-        var portal = (site as DnnSite)?.GetContents();
-        if (moduleInfo == null || portal == null)
+        var moduleInfo = (module as IWrapper<ModuleInfo>)?.GetContents();
+        // 2026-10-18 2dm - reworking DnnSite to have a factory, the portal check seems useless.
+        // var portal = (site as DnnSiteFactory)?.GetContents();
+        if (moduleInfo == null/* || portal == null*/)
             throw l.Done(new ArgumentException("missing portal/module"));
 
         // new: check if it should allow this

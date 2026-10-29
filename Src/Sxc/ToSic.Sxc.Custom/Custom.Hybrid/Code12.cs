@@ -21,7 +21,7 @@ namespace Custom.Hybrid;
 /// <remarks>
 /// The constructor cannot have parameters, otherwise inheriting code will run into problems.
 /// </remarks>
-[PublicApi]
+[PrivateApi("Deprecated, hidden in v22")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
 public abstract class Code12() : CustomCodeBase("Sxc.Code12"), IHasCodeLog, IDynamicCode, IDynamicCode12

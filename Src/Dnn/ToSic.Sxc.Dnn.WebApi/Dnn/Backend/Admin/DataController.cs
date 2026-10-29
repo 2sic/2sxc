@@ -29,8 +29,8 @@ public class DataController() : DnnSxcControllerBase(DataControllerReal.LogSuffi
     public HttpResponseMessage BundleExport(int appId, Guid exportConfiguration, int indentation = 0)
     {
         // Make sure the Scoped ResponseMaker has this controller context
-        SysHlp.SetupResponseMaker(this);
-        return Real.BundleExport(appId, exportConfiguration, indentation);
+        using (this.InitializedResponseMaker())
+            return Real.BundleExport(appId, exportConfiguration, indentation);
     }
 
     /// <inheritdoc />
@@ -39,7 +39,7 @@ public class DataController() : DnnSxcControllerBase(DataControllerReal.LogSuffi
     [ValidateAntiForgeryToken]
     public ImportResultDto BundleImport(int zoneId, int appId)
     {
-        SysHlp.PreventServerTimeout600();
+        this.PreventServerTimeout600();
         return Real.BundleImport(new(Request, HttpContext.Current.Request), zoneId, appId);
     }
 

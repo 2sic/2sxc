@@ -8,6 +8,7 @@ namespace ToSic.Sxc.Services.Cache.Sys.CacheKey;
 /// Functions to generate the final cache key based on the specifications.
 /// </summary>
 [PrivateApi]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class CacheKeyPartsExtensions
 {
     /// <summary>

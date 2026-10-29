@@ -13,7 +13,6 @@ using ToSic.Sxc.Dnn.StartUp;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
 public class DnnBusinessController: ToSic.Sxc.Dnn.DnnBusinessController, IUpgradeable, IVersionable
 {
     public new string UpgradeModule(string version)

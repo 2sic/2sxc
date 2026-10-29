@@ -7,7 +7,6 @@ using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
-using ToSic.Sxc.Code.Sys.CodeApiService;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Compatibility.Sxc;
 using ToSic.Sxc.Context;
@@ -23,7 +22,9 @@ using IFolder = ToSic.Sxc.Adam.IFolder;
 // ReSharper disable InheritdocInvalidUsage
 
 // ReSharper disable once CheckNamespace
+#pragma warning disable IDE0130
 namespace ToSic.SexyContent.WebApi;
+#pragma warning restore IDE0130
 
 /// <inheritdoc cref="DnnSxcCustomControllerBase" />
 /// <summary>
@@ -62,7 +63,7 @@ public abstract partial class SxcApiController() :
     /// Old API - probably never used, but we shouldn't remove it as we could break some existing code out there
     /// </summary>
     [PrivateApi]
-    public IBlock Block => SysHlp.GetBlockAndContext(Request);
+    public IBlock? Block => SysHlp.GetBlockAndContext(Request);
 
     [PrivateApi] public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel9Old;
 
@@ -125,7 +126,7 @@ public abstract partial class SxcApiController() :
     [Obsolete]
     [PrivateApi]
     public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
-        => new CodeApiServiceObsolete(ExCtx).CreateSource(typeName, inSource, configurationProvider);
+        => new DnnExecutionContextCreateSourceObsolete(ExCtx).CreateSource(typeName, inSource, configurationProvider);
 
     /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataSource, ILookUpEngine)" />
     public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
@@ -171,7 +172,7 @@ public abstract partial class SxcApiController() :
     /// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
     public IFile SaveInAdam(NoParamOrder npo = default, Stream stream = null, string fileName = null, string contentType = null,
         Guid? guid = null, string field = null, string subFolder = "")
-        => DynHlp.SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
+        => CustomCodeHlp.SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
 
     #endregion
 
@@ -199,12 +200,6 @@ public abstract partial class SxcApiController() :
 
     /// <inheritdoc cref="IDynamicCodeDocs.CmsContext" />
     public ICmsContext CmsContext => CodeApi.CmsContext;
-
-    ///// <inheritdoc />
-    //public dynamic Resources => _DynCodeRoot.Resources;
-
-    ///// <inheritdoc />
-    //public dynamic Settings => _DynCodeRoot.Settings;
 
     #endregion
 

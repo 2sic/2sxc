@@ -40,7 +40,7 @@ internal class EditUiMiddleware
         var pageId = GetPageId(context);
         var tenantId = GetTenantId(context);
         var aliasId = GetAliasId(context);
-        var addOn = $"{HtmlDialog.TenantIdInUrl}={tenantId}&{HtmlDialog.AliasIdInUrl}={aliasId}";
+        var addOn = $"&{HtmlDialog.TenantIdInUrl}={tenantId}&{HtmlDialog.AliasIdInUrl}={aliasId}";
 
         // find siteId from pageId (if provided)
         var aliasResolver = sp.GetService<AliasResolver>();

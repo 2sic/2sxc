@@ -7,15 +7,12 @@ namespace ToSic.Sxc.Backend.Adam;
 /// Is meant to be transaction based - so create a new one for each thing as the initializers set everything for the transaction
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamPrefetchHelper(Generator<AdamWorkGet, AdamWorkOptions> adamGet, Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> dtoMaker)
+public class AdamPrefetchHelper(
+    Generator<AdamWorkGet, AdamWorkOptions> adamGet,
+    Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> dtoMaker)
     : ServiceWithSetup<AdamWorkOptions>("Adm.TrnItm"),
         IAdamPrefetchHelper
 {
-    /// <summary>
-    /// This service must work without options, as it usually uses default options.
-    /// </summary>
-    protected override AdamWorkOptions GetDefaultOptions() => new();
-
     public ICollection<AdamItemDto> GetAdamItemsForPrefetch(string subFolderName, bool autoCreate = true)
     {
         var l = Log.Fn<ICollection<AdamItemDto>>($"subFolderName:{subFolderName}, autoCreate:{autoCreate}");

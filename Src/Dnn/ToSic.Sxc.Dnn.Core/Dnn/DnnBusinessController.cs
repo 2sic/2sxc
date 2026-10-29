@@ -13,6 +13,7 @@ namespace ToSic.Sxc.Dnn;
 /// This is the connector-class which DNN consults when it needs to know things about a module
 /// It's used in the background, not when the page is loading
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class DnnBusinessController : ModuleSearchBase, IHasLog
 {
     #region Constructor (not DI)
@@ -21,7 +22,7 @@ public class DnnBusinessController : ModuleSearchBase, IHasLog
     /// Constructor overload for DotNetNuke
     /// (BusinessController needs a parameterless constructor)
     /// </summary>
-    public DnnBusinessController() => Log = new Log("DNN.BusCon", null, "starting");
+    public DnnBusinessController() => Log = LogFactory.Create("DNN.BusCon", null, "starting");
 
     public ILog Log { get; }
 
@@ -104,15 +105,18 @@ public class DnnBusinessController : ModuleSearchBase, IHasLog
 
     public override IList<SearchDocument> GetModifiedSearchDocuments(ModuleInfo moduleInfo, DateTime beginDate)
     {
+        var l = Log.Fn<IList<SearchDocument>>($"m#{moduleInfo.ModuleID}, begin:{beginDate}");
         try
         {
-            return ServiceProvider.Build<SearchController>(Log)
-                .GetModifiedSearchDocuments(((DnnModule)ServiceProvider.Build<IModule>(Log)).Init(moduleInfo), beginDate);
+            var searchController = ServiceProvider.Build<SearchController>(Log);
+            var mod = ServiceProvider.Build<DnnModuleFactory>(Log).Get(moduleInfo);
+            return searchController.GetModifiedSearchDocuments(mod, beginDate);
         }
         catch (Exception e)
         {
             DnnEnvironmentLogger.AddSearchExceptionToLog(moduleInfo, e, nameof(DnnBusinessController));
-            return new List<SearchDocument>();
+            l.Ex(e);
+            return l.Return([], "error");
         }
     }
 

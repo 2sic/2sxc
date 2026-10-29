@@ -4,6 +4,16 @@ using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
+/// <summary>
+/// Root base class for all our API controllers in DNN.
+/// 
+/// Things it does:
+/// 
+/// 1. Provide the SysHlp object for GetService(), GetBlock() and logging
+/// 2. Setup 2sxc logging in insights for this controller
+/// 3. Setup DNN logging (for exceptions etc.)
+/// 
+/// </summary>
 [DnnLogWebApi, ConfigureJsonOnlyResponse]
 [PrivateApi("This controller is never used publicly, you can rename any time you want")]
 // Can't hide in Intellisense, because that would hide it for all derived classes too
@@ -14,7 +24,7 @@ public abstract class DnnSxcControllerRoot : DnnApiController, IHasLog
 
     protected DnnSxcControllerRoot(string logSuffix, string insightsGroup = default, string firstMessage = default)
     {
-        Log = new Log("Api." + logSuffix);
+        Log = LogFactory.Create("Api." + logSuffix);
         // ReSharper disable once VirtualMemberCallInConstructor
         SysHlp = new(this, insightsGroup ?? HistoryLogGroup, firstMessage);
     }

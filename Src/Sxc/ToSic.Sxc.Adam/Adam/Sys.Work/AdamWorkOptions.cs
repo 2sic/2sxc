@@ -1,10 +1,18 @@
-﻿namespace ToSic.Sxc.Adam.Sys.Work;
+﻿using ToSic.Eav.Context;
 
-public record AdamWorkOptions
+namespace ToSic.Sxc.Adam.Sys.Work;
+
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public record AdamWorkOptions()
 {
-    public /*required*/ bool UsePortalRoot { get; init; }// = UsePortalRoot;
-    public /*required*/ string Field { get; init; } = "";// = Field;
-    public /*required*/ Guid ItemGuid { get; init; }// = ItemGuid;
-    public /*required*/ string ContentType { get; init; } = "";// = ContentType;
-    public /*required*/ int AppId { get; init; }// = AppId;
+    public bool UsePortalRoot { get; init; }
+    public string Field { get; init; } = "";
+    public Guid ItemGuid { get; init; }
+    public string ContentType { get; init; } = "";
+    public int AppId { get; init; }
+
+    /// <summary>
+    /// Prepared server-side context for this app, including module permissions when available.
+    /// </summary>
+    public required IContextOfApp? Context { get; init; }
 }

@@ -1,5 +1,6 @@
 ﻿namespace ToSic.Sxc.Images;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IResizeSettingsInternal
 {
     /// <summary>

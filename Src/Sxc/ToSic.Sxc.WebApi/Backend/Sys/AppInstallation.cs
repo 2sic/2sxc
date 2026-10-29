@@ -21,7 +21,7 @@ public class AppInstallation : CustomDataSource
     [Configuration]
     public bool IsContentApp => Configuration.GetThis(false);
 
-    public AppInstallation(Dependencies services, LazySvc<InstallControllerReal> install, ISxcCurrentContextService context)
+    public AppInstallation(Dependencies services, LazySvc<InstallControllerReal> install, IContextCompleteService context)
         : base(services, "Sxc.AppInstall", connect: [install, context])
     {
         ProvideOutRaw(() => Settings(install, context), name: "Settings", options: Options);
@@ -29,14 +29,14 @@ public class AppInstallation : CustomDataSource
         ProvideOutRaw(() => Rules(install, context), name: "Rules", options: Options);
     }
 
-    private InstallAppsDto Result(LazySvc<InstallControllerReal> install, ISxcCurrentContextService context)
+    private InstallAppsDto Result(LazySvc<InstallControllerReal> install, IContextCompleteService context)
         => install.Value.InstallSettings(IsContentApp, context.BlockRequired().Context.Module);
 
-    private IEnumerable<InstallationSettingsRaw> Settings(LazySvc<InstallControllerReal> install, ISxcCurrentContextService context)
+    private IEnumerable<InstallationSettingsRaw> Settings(LazySvc<InstallControllerReal> install, IContextCompleteService context)
         => [new(Result(install, context).remoteUrl)];
-    private IEnumerable<InstalledAppRaw> InstalledApps(LazySvc<InstallControllerReal> install, ISxcCurrentContextService context)
+    private IEnumerable<InstalledAppRaw> InstalledApps(LazySvc<InstallControllerReal> install, IContextCompleteService context)
         => Result(install, context).installedApps.Select(app => new InstalledAppRaw(app));
-    private IEnumerable<InstallRuleRaw> Rules(LazySvc<InstallControllerReal> install, ISxcCurrentContextService context)
+    private IEnumerable<InstallRuleRaw> Rules(LazySvc<InstallControllerReal> install, IContextCompleteService context)
         => Result(install, context).rules?.Select(rule => new InstallRuleRaw(rule)) ?? [];
     private static DataFactoryOptions Options() => new();
 

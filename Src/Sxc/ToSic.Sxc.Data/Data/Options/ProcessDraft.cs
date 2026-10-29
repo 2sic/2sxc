@@ -8,6 +8,7 @@
 /// <summary>
 /// WIP
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public enum ProcessDraft
 {
     /// <summary>

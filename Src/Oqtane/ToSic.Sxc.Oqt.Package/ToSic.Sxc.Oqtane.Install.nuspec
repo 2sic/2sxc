@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>ToSic.Sxc.Oqtane.Install</id>
-    <version>22.00.00</version>
+    <version>22.01.00</version>
     <authors>2sic internet solutions GmbH, Switzerland</authors>
     <owners>2sic internet solutions GmbH, Switzerland</owners>
     <title>2sxc CMS and Meta-Module for Oqtane</title>
@@ -20,7 +20,7 @@
     <summary>2sxc - CMS &amp; App-Engine for Oqtane</summary>
     <dependencies>
       <dependency id="Oqtane.Framework" version="10.2.0" />
-      <dependency id="ToSic.Imageflow.Oqtane" version="1.13.0" />
+      <dependency id="ToSic.Imageflow.Oqtane" version="1.13.1" />
     </dependencies>
   </metadata>
   <files>
@@ -40,7 +40,7 @@
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\Connect.Koi.dll" target="lib\$targetframework$" />
     <!-- ToSic.Eav.DataSources PackageReference -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\CsvHelper.dll" target="lib\$targetframework$" />
-    <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation v9.0.0 transitive dependency: Microsoft.AspNetCore.Mvc.Razor.Extensions (>= 6.0.0) -->
+    <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation 10.0.9 transitive dependency: Microsoft.AspNetCore.Mvc.Razor.Extensions -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll" target="lib\$targetframework$" />
     <!-- ToSic.Sxc.Razor PackageReference -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll" target="lib\$targetframework$" />
@@ -52,10 +52,13 @@
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\Microsoft.CodeAnalysis.dll" target="lib\$targetframework$" />
     <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency: Microsoft.CodeAnalysis.Razor (>= 6.0.0) -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\Microsoft.CodeAnalysis.Razor.dll" target="lib\$targetframework$" />
-    <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency: Microsoft.Extensions.DependencyModel (>= 9.0.0) -->
+    <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation 10.0.9 transitive dependency: Microsoft.Extensions.DependencyModel -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\Microsoft.Extensions.DependencyModel.dll" target="lib\$targetframework$" />
     <!-- ToSic.Sxc dependency -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\System.Runtime.Caching.dll" target="lib\$targetframework$" />
+    <!-- System.Runtime.Caching transitive dependencies; the host may provide an older major version -->
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\System.Configuration.ConfigurationManager.dll" target="lib\$targetframework$" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\System.Security.Cryptography.ProtectedData.dll" target="lib\$targetframework$" />
  
     <!-- ToSic.Imageflow.Oqtane -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\ToSic.Imageflow.Oqt.Server.Oqtane.dll" target="lib\$targetframework$" />
@@ -63,7 +66,8 @@
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\Imageflow.*" target="lib\$targetframework$" />
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\Imazen.*" target="lib\$targetframework$" />
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\Microsoft.IO.*" target="lib\$targetframework$" />
-    <!-- include all platform native libs; once the marketplace can better differentiate, we should split -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\runtimes\**\**\*imageflow.*" target="runtimes" />
+    <!-- Include all versioned Imageflow runtimes from the module package. Its resolver verifies these
+         against the embedded manifest; omit standard-name copies which Oqtane cannot reliably replace. -->
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\runtimes\**\*imageflow-*" target="runtimes" />
   </files>
 </package>

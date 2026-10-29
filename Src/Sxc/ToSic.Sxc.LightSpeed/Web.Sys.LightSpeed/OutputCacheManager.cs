@@ -3,6 +3,7 @@ using ToSic.Sys.Capabilities.Features;
 
 namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class OutputCacheManager(MemoryCacheService memoryCacheService, LazySvc<ISysFeaturesService> featuresDoNotConnect) : ServiceBase(SxcLogName + ".OutputCacheManager", connect: [memoryCacheService])
 {
     public string Add(string cacheKey, OutputCacheItem data, int duration, List<string> apps, IEnumerable<string>? externalDependencies, IList<string>? appPaths)

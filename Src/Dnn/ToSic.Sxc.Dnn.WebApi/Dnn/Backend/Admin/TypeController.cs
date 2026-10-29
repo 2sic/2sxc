@@ -104,8 +104,8 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     public HttpResponseMessage Json(int appId, string name)
     {
         // Make sure the Scoped ResponseMaker has this controller context
-        SysHlp.SetupResponseMaker(this);
-        return Real.Json(appId, name);
+        using (this.InitializedResponseMaker())
+            return Real.Json(appId, name);
     }
 
 
@@ -121,7 +121,7 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     [ValidateAntiForgeryToken]
     public ImportResultDto Import(int zoneId, int appId)
     {
-        SysHlp.PreventServerTimeout600();
+        this.PreventServerTimeout600();
         return Real.Import(new(Request, HttpContext.Current.Request), zoneId, appId);
     }
 
@@ -136,8 +136,8 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     public HttpResponseMessage JsonBundleExport(int appId, Guid exportConfiguration, int indentation = 0)
     {
         // Make sure the Scoped ResponseMaker has this controller context
-        SysHlp.SetupResponseMaker(this);
-        return Real.JsonBundleExport(appId, exportConfiguration, indentation);
+        using (this.InitializedResponseMaker())
+            return Real.JsonBundleExport(appId, exportConfiguration, indentation);
     }
 
 }

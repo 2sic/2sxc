@@ -1,26 +1,13 @@
-﻿using ToSic.Eav.Sys;
-using ToSic.Sxc.Web.Sys.Http;
-using ToSic.Sxc.Web.Sys.Parameters;
-
-namespace ToSic.Sxc.Context.Sys.Page;
+﻿namespace ToSic.Sxc.Context.Sys.Page;
 
 /// <summary>
-/// Constructor for DI
+/// A page state object, very minimal.
 /// </summary>
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public class Page(LazySvc<IHttp> httpLazy) : IPage
-{
-    public IPage Init(int id)
-    {
-        Id = id;
-        return this;
-    }
-
-    public int Id { get; private set; } = EavConstants.NullId;
-
-    [field: AllowNull, MaybeNull]
-    public virtual IParameters Parameters => field ??= new Parameters { Nvc = OriginalParameters.GetOverrideParams(httpLazy.Value?.QueryStringParams!) };
-
-
-    public string Url { get; set; } = EavConstants.UrlNotInitialized;
-}
+/// <remarks>
+/// Currently only returned by DNN, where we split factory from data (v22).
+/// Oqtane not updated yet.
+/// </remarks>
+/// <param name="Id"></param>
+/// <param name="Url"></param>
+/// <param name="Parameters"></param>
+public record Page(int Id, string Url, IParameters Parameters) : IPage;

@@ -12,12 +12,12 @@ namespace ToSic.Sxc.Oqt.Server.Blocks;
 
 internal class OqtModuleAndBlockBuilder(
     Generator<IModule> moduleGenerator,
-    Generator<IContextOfBlock> contextGenerator,
+    OqtContextOfBlockFactory contextOfBlockFactory,
     Generator<BlockOfModule> blockGenerator,
     Generator<IModuleRepository> moduleRepositoryGenerator,
     RequestHelper requestHelper)
     : ModuleAndBlockBuilder(blockGenerator, OqtConstants.OqtLogPrefix,
-        connect: [moduleGenerator, contextGenerator, moduleRepositoryGenerator, requestHelper])
+        connect: [moduleGenerator, contextOfBlockFactory, moduleRepositoryGenerator, requestHelper])
 {
     /// <summary>
     /// 
@@ -57,18 +57,10 @@ internal class OqtModuleAndBlockBuilder(
     private IContextOfBlock InitOqtSiteModuleAndBlockContext(Module oqtModule, int? pageId)
     {
         var l = Log.Fn<IContextOfBlock>();
-        var context = contextGenerator.New();
         l.A("Will init module");
-        ((OqtModule) context.Module).Init(oqtModule);
-        return l.Return(InitPageOnly(context, pageId));
-    }
-
-    private IContextOfBlock InitPageOnly(IContextOfBlock context, int? pageId)
-    {
         // TODO: try to use the pageId if given, would usually only be used in inner-content / IRenderService scenarios
-        var l = Log.Fn<IContextOfBlock>();
         // Collect / assemble page information
-        context.Page.Init(requestHelper.TryGetId(ContextConstants.PageIdKey));
+        var context = contextOfBlockFactory.Create(requestHelper.TryGetId(ContextConstants.PageIdKey), oqtModule);
         var url = context.Page.Url;
         return l.Return(context, url);
     }

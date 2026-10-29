@@ -1,74 +1,28 @@
-﻿using System.Web.Security;
-using DotNetNuke.Common.Utilities;
-using DotNetNuke.Entities.Portals;
-using DotNetNuke.Entities.Users;
-using DotNetNuke.Security.Roles;
-using ToSic.Sxc.Cms.Users.Sys;
-using ToSic.Sxc.Dnn.Run;
+﻿using DotNetNuke.Entities.Users;
 using ToSic.Sys.Users;
 using ToSic.Sys.Users.Permissions;
 
 namespace ToSic.Sxc.Dnn.Context;
 
-internal class DnnUser(LazySvc<DnnSecurity> dnnSecurity, IRoleController roleController)
-    : ServiceBase("dnnUsr", connect: [dnnSecurity]), IUser<UserInfo>
+internal record DnnUser(UserInfo? DnnUserInfo, EffectivePermissions? EffectivePermissions) : IUser<UserInfo>
 {
-    private string GetUserIdentityToken ()
-    {
-        var userId = Id;
-        var token = userId == -1 ? SxcUserConstants.Anonymous : $"{DnnConstants.UserTokenPrefix}{userId}";
-        return token;
-    }
+    public required int Id { get; init; }
+    public required Guid Guid { get; init; }
+    public required string IdentityToken { get; init; }
 
-    public Guid Guid => Membership.GetUser()?.ProviderUserKey is Guid realGuid ? realGuid : default;
-
-    public string IdentityToken => GetUserIdentityToken();
-
-    public List<int> Roles => field ??= BuildRoleList();
-
+    public bool IsAnonymous => Id == -1;
     public bool IsSystemAdmin => DnnUserInfo?.IsSuperUser ?? false;
-
     public bool IsSiteAdmin => EffectivePermissions?.IsSiteAdmin ?? false;
     public bool IsContentAdmin => EffectivePermissions?.IsContentAdmin ?? false;
     public bool IsContentEditor => EffectivePermissions?.IsContentEditor ?? false;
     public bool IsSiteDeveloper => IsSystemAdmin;
-
-    private EffectivePermissions EffectivePermissions => _adminPermissions
-        ??= DnnUserInfo.NullOrGetWith(userInfo => dnnSecurity.Value.UserMayAdminThis(userInfo));
-    private EffectivePermissions _adminPermissions;
-
-
-    private UserInfo DnnUserInfo => _user.Get(() => PortalSettings.Current?.UserInfo);
-    private readonly LazyGet<UserInfo> _user = new();
-
-    public UserInfo GetContents() => DnnUserInfo;
-
-    private List<int> BuildRoleList()
-    {
-        var psCurrent = PortalSettings.Current;
-        if (psCurrent == null)
-            return [];
-
-        var portalId = psCurrent.PortalId;
-        var user = psCurrent.UserInfo;
-        if (user == null)
-            return [];
-
-        return user.Roles
-            .Select(r => roleController.GetRoleByName(portalId, r))
-            .Where(r => r != null)
-            .Select(r => r.RoleID)
-            .ToList();
-    }
-
-    public int Id => DnnUserInfo?.UserID ?? Null.NullInteger;
-
-    public bool IsAnonymous => Id == -1;
 
     public string Username => DnnUserInfo?.Username ?? "";
 
     public string Name => DnnUserInfo?.DisplayName ?? "";
 
     public string Email => DnnUserInfo?.Email ?? "";
+    public required List<int> Roles { get; init; }
 
+    public UserInfo GetContents() => DnnUserInfo;
 }

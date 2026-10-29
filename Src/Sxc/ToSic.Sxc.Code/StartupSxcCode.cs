@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Customizer;
-using ToSic.Sxc.Code.Sys.CodeApiService;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Context;
@@ -40,7 +39,7 @@ public static class StartupSxcCode
 
         // Code Fallbacks if not registered by the platform
         services.TryAddTransient<ExecutionContext, ExecutionContextUnknown>();
-        services.TryAddTransient(typeof(ExecutionContext<,>), typeof(ExecutionContextUnknown<,>));
+        services.TryAddTransient(typeof(ExecutionContext<,>), typeof(ExecutionContextUnknownObjKit));
 
         // v13 DynamicCodeService
         services.TryAddTransient<CodeApiServiceBase.Dependencies>();
@@ -62,18 +61,19 @@ public static class StartupSxcCode
 
         // CmsContext / MyContext
         services.TryAddTransient<ICmsContext, CmsContext>();
-        // Module fallback context
-        services.TryAddTransient<IModule, ModuleUnknown>();
-        services.TryAddTransient<IPage, Page>();
-        services.TryAddTransient<Page>();
-        services.TryAddSingleton<IPlatform, PlatformUnknown>();
 
         // v15
-        services.TryAddTransient<CodeCreateDataSourceSvc>();
+        services.TryAddTransient<ExCtxDataSourceService>();
 
         return services;
     }
 
-
-        
+    public static IServiceCollection AddSxcCodeFallbacks(this IServiceCollection services)
+    {
+        services.TryAddTransient<IModule, ModuleUnknown>();
+        services.TryAddTransient<IPage, PageUnknown>();
+        services.TryAddSingleton<IPlatform, PlatformUnknown>();
+        services.TryAddTransient<IModuleFactory, ModuleFactoryUnknown>();
+        return services;
+    }
 }

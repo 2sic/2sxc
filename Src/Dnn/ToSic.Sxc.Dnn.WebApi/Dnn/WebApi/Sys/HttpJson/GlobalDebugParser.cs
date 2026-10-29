@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using System.Web;
 using DotNetNuke.Abstractions.Application;
-using DotNetNuke.Entities.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;

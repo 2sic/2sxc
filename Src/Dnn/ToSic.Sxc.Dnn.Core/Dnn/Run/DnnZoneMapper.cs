@@ -12,8 +12,11 @@ using ToSic.Sys.Locking;
 
 namespace ToSic.Sxc.Dnn.Run;
 
-internal class DnnZoneMapper(Generator<ISite> site, LazySvc<ZoneCreator> zoneCreatorLazy, IAppsCatalog appsCatalog)
-    : ZoneMapperBase(appsCatalog, "DNN.ZoneMp", connect: [site, zoneCreatorLazy])
+internal class DnnZoneMapper(
+    LazySvc<DnnSiteFactory> siteFactory /*must be lazy, very important, otherwise we get cyclical logs attached */,
+    LazySvc<ZoneCreator> zoneCreatorLazy,
+    IAppsCatalog appsCatalog)
+    : ZoneMapperBase(appsCatalog, "DNN.ZoneMp", connect: [siteFactory, zoneCreatorLazy])
 {
     /// <inheritdoc />
     /// <summary>
@@ -38,14 +41,8 @@ internal class DnnZoneMapper(Generator<ISite> site, LazySvc<ZoneCreator> zoneCre
         var zoneIdResult = _zoneCreateLocker.Call(
             conditionToGenerate: () => !GetExistingZoneId(siteId).HasValue,
             generator: () => CreateNewZone(siteId),
-            cacheOrFallback: () =>
-            {
-                // Retrieve existing Zone ID if it was created by another thread
-                var fallbackZoneId = GetExistingZoneId(siteId);
-                if (fallbackZoneId.HasValue)
-                    return fallbackZoneId.Value;
-                throw new InvalidOperationException("Failed to retrieve or create Zone ID.");
-            });
+            // Retrieve existing Zone ID if it was created by another thread
+            cacheOrFallback: () => GetExistingZoneId(siteId) ?? throw new InvalidOperationException("Failed to retrieve or create Zone ID."));
 
         return zoneIdResult.Result;
     }
@@ -72,22 +69,29 @@ internal class DnnZoneMapper(Generator<ISite> site, LazySvc<ZoneCreator> zoneCre
     {
         var l = Log.Fn<ISite>($"{zoneId}");
         var portalController = PortalController.Instance;
-        var portals = portalController.GetPortals();
-        l.A($"Sites/Portals Count: {portals.Count}");
-        var found = portals
+        var allPortals = portalController.GetPortals();
+        l.A($"Sites/Portals Count: {allPortals.Count}");
+        var found = allPortals
             .Cast<PortalInfo>()
             .Select(p =>
             {
                 var pSettings = portalController.GetPortalSettings(((IPortalInfo)p).PortalId);
-                if (!pSettings.TryGetValue(SiteSettingNames.SiteKeyForZoneId, out var portalZoneId)) return null;
-                if (!int.TryParse(portalZoneId, out var zid)) return null;
-                return zid == zoneId ? new PortalSettings(p) : null;
+                if (!pSettings.TryGetValue(SiteSettingNames.SiteKeyForZoneId, out var portalZoneId))
+                    return null;
+                if (!int.TryParse(portalZoneId, out var zid))
+                    return null;
+                return zid == zoneId
+                    ? new PortalSettings(p)
+                    : null;
             })
             .FirstOrDefault(f => f != null);
 
+        // 2026-10-18 2dm: must check the consequences of this
+        // It may have had a side effect till now, updating the site
+        // scoped TODO: #VerifySiteFactorySplitIsOk
         return found == null
             ? l.ReturnNull("not found")
-            : l.Return(((DnnSite)site.New()).TryInitPortal(found, Log), $"found {found.PortalId}");
+            : l.Return(siteFactory.Value.CreateFromPortal(found), $"found {found.PortalId}");
     }
 
     /// <inheritdoc />

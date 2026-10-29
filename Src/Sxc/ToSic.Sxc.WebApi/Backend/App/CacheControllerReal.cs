@@ -4,14 +4,16 @@ namespace ToSic.Sxc.Backend.App;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CacheControllerReal(
-    ISxcCurrentContextService ctxService,
+    IContextCompleteService ctxService,
+    IContextBuilderService ctxBuilder,
     LazySvc<IOutputCacheManagementService> outputCacheManagement)
-    : ServiceBase("Sxc.ApiApCac", connect: [ctxService, outputCacheManagement])
+    : ServiceBase("Sxc.ApiApCac", connect: [ctxService, ctxBuilder, outputCacheManagement])
 {
     public const string LogSuffix = "AppCac";
 
+    // 2026-10-20 2dm - previously used ctxService.SetAppFromPathOrGetExistingBlock
     public bool Flush(string appPath, AppCacheFlushSpecs? request)
-        => FlushInternal(ctxService.SetAppOrGetBlock(appPath).AppReaderRequired.AppId, request);
+        => FlushInternal((ctxBuilder.TryFindAppFromPath(appPath) ?? throw new ArgumentException($"App not found for folder '{appPath}'. Can't flush cache.")).AppReaderRequired.AppId, request);
 
     public bool FlushAuto(int? appId, AppCacheFlushSpecs? request)
         => FlushInternal(

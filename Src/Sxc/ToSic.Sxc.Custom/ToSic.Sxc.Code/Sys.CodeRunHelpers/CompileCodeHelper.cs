@@ -27,6 +27,7 @@ public class CompileCodeHelper() : CodeHelperBase("Sxc.CdHlp")
 
     #region GetCode / CreateInstance
 
+    [PrivateApi("Hidden, as not supported any more going forward")]
     public object? GetCode(string path, NoParamOrder npo = default, string? className = default) 
         => CreateInstance(path, name: className);
 

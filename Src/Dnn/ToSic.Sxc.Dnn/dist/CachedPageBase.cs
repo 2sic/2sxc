@@ -14,6 +14,7 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.Dnn.dist;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CachedPageBase(
     IPortalController portalController,
     IApplicationStatusInfo applicationStatusInfo,
@@ -37,7 +38,7 @@ public class CachedPageBase(
 
     #region Logging
 
-    private ILog Log { get; } = new Log("Sxc.Dnn.CachedPageBase");
+    private ILog Log { get; } = LogFactory.Create("Sxc.Dnn.CachedPageBase");
     private IEnvironmentLogger EnvLogger => _envLogger.Get(Log, GetService<IEnvironmentLogger>);
     private readonly LazyGetAndLog<IEnvironmentLogger> _envLogger = new();
     #endregion

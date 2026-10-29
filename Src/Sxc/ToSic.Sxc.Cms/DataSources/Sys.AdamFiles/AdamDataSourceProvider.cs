@@ -2,7 +2,6 @@
 using ToSic.Eav.Metadata;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Sys.Manager;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.DataSources;
 
@@ -12,40 +11,28 @@ namespace ToSic.Sxc.DataSources;
 /// Must be overriden in each platform.
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSourceProvider<TFolderId, TFileId>.Dependencies>
+public class AdamDataSourceProvider<TFolderId, TFileId>(AdamDataSourceProvider<TFolderId, TFileId>.Dependencies services)
+    : ServiceBase<AdamDataSourceProvider<TFolderId, TFileId>.Dependencies>(services, $"{SxcLogName}.AdamDs")
 {
     private IContextOfApp _context = null!;
 
-    public record Dependencies(LazySvc<AdamContext> AdamContext, ISxcAppCurrentContextService CtxService)
-        : DependenciesBase(connect: [AdamContext, CtxService]);
+    public record Dependencies(LazySvc<AdamContext> AdamContext, IContextOfAppFactory AppCtxFactory)
+        : DependenciesBase(connect: [AdamContext, AppCtxFactory]);
 
-    protected AdamDataSourceProvider(Dependencies services) : base(services, $"{SxcLogName}.AdamDs")
-    { }
-
-    public AdamDataSourceProvider<TFolderId, TFileId> Configure(
-        NoParamOrder npo = default,
-        int appId = default,
-        string? entityIds = default,
-        string? entityGuids = default,
-        string? fields = default,
-        string? filter = default
-    )
+    public AdamDataSourceProvider<TFolderId, TFileId> Configure(NoParamOrder npo = default, int appId = default)
     {
-        var l = Log.Fn<AdamDataSourceProvider<TFolderId, TFileId>>($"a:{appId}; entityIds:{entityIds}, entityGuids:{entityGuids}, fields:{fields}, filter:{filter}");
-        _context = appId > 0
-            ? Services.CtxService.GetExistingAppOrSet(appId)
-            : Services.CtxService.AppNameRouteBlock(null);
-        _entityIds = entityIds;
-        _entityGuids = entityGuids;
-        _fields = fields;
-        _filter = filter;
+        var l = Log.Fn<AdamDataSourceProvider<TFolderId, TFileId>>($"a:{appId}");
+
+        // 2026-10-20 2dm: Believe that the AppId should always have a valid value, so no magic find-it-yourself
+        // Turned this off for now, keep till early 2027 then clean up.
+        // If something does explode, try to ensure that the calling path sets a proper AppId _before_ calling this
+        //_context = appId > 0
+        //    ? Services.CtxService.GetExistingAppOrSet(appId)
+        //    : Services.CtxService.AppNameRouteBlock(null);
+
+        _context = Services.AppCtxFactory.Create(appId);
         return l.Return(this);
     }
-
-    private string? _entityIds;
-    private string? _entityGuids;
-    private string? _fields;
-    private string? _filter;
 
 
     public Func<IEntity, IEnumerable<AdamItemDataRaw>> GetInternal()
@@ -54,8 +41,6 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
     private IEnumerable<AdamItemDataRaw> GetAdamListOfItems(IEntity entity)
     {
         var l = Log.Fn<IEnumerable<AdamItemDataRaw>>();
-        // This will contain the list of items
-        var list = new List<AdamItemDataRaw>();
 
         // TODO: this is just tmp code to get some data...
         Services.AdamContext.Value
@@ -68,6 +53,10 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
         if (root == null)
             return l.Return([], "null/empty");
 
+        // This will contain the list of items
+        var list = new List<AdamItemDataRaw>();
+
+        // Call add recursively to add all items from the root folder and its subfolders
         AddAdamItemsFromFolder(root, list);
 
         return l.Return(list, $"found:{list.Count}");

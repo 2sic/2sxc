@@ -16,7 +16,9 @@ internal static class StartUpCompatibility
     public static IServiceCollection AddDnnCompatibility(this IServiceCollection services)
     {
         services.TryAddTransient<ILogService, LogServiceUsingOldInterface>();
+#pragma warning disable CS0612 // Type or member is obsolete
         services.TryAddTransient<Eav.Configuration.IFeaturesService, FeaturesServiceCompatibility>();
+#pragma warning restore CS0612 // Type or member is obsolete
 
         // Helper so that the old DynamicEntity can get a toolbar
         services.TryAddTransient<IOldDynamicEntityFeatures, OldDynamicEntityFeatures>();

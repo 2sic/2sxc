@@ -14,8 +14,6 @@ using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 
-using ServiceBase = ToSic.Sys.Services.ServiceBase;
-
 namespace ToSic.Sxc.Dnn.Cms;
 
 internal partial class DnnPagePublishing(
@@ -30,7 +28,7 @@ internal partial class DnnPagePublishing(
         var possibleContextOfBlock = context as IContextOfBlock;
         var enabled = possibleContextOfBlock?.Publishing.ForceDraft ?? false;
         var instanceId = possibleContextOfBlock?.Module.Id ?? EavConstants.IdNotInitialized;
-        var userId = (context.User as DnnUser)?.GetContents().UserID ?? EavConstants.IdNotInitialized;
+        var userId = context.User.Id;
         Log.A($"DoInsidePublishing(module:{instanceId}, user:{userId}, enabled:{enabled})");
 
         if (enabled)

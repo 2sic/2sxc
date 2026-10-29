@@ -5,8 +5,8 @@ namespace ToSic.Sxc.Backend.App;
 
 /// <inheritdoc cref="IAppDataController" />
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppDataControllerReal(LazySvc<AppContent> appContentLazy)
-    : ServiceBase("Api.DataRl", connect: [appContentLazy])/*, IAppDataController*/
+public class AppDataControllerReal(Generator<AppContent, AppContent.Options> appContentGen)
+    : ServiceBase("Api.DataRl", connect: [appContentGen])/*, IAppDataController*/
 {
     public const string LogSuffix = "Data";
 
@@ -15,7 +15,7 @@ public class AppDataControllerReal(LazySvc<AppContent> appContentLazy)
 
     /// <inheritdoc />
     public IEnumerable<IDictionary<string, object>> GetEntities(string contentType, string? appPath = default, Uri? uri = null)
-        => appContentLazy.Value.Init(appPath).GetItems(contentType, appPath, uri);
+        => appContentGen.New(new(appPath)).GetItems(contentType, appPath, uri);
 
     #endregion
 
@@ -49,7 +49,7 @@ public class AppDataControllerReal(LazySvc<AppContent> appContentLazy)
     /// <param name="uri"></param>
     /// <returns></returns>
     private IDictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string? appPath, Uri? uri)
-        => appContentLazy.Value.Init(appPath).GetOne(contentType, getOne, appPath, uri);
+        => appContentGen.New(new(appPath)).GetOne(contentType, getOne, appPath, uri);
 
     #endregion
 
@@ -59,7 +59,7 @@ public class AppDataControllerReal(LazySvc<AppContent> appContentLazy)
     /// <inheritdoc />
     public IDictionary<string, object> CreateOrUpdate(string contentType, Dictionary<string, object?> newContentItem, int? id = null,
         string? appPath = null)
-        => appContentLazy.Value.Init(appPath)
+        => appContentGen.New(new(appPath))
             .CreateOrUpdate(contentType, newContentItem, id, appPath);
 
     #endregion
@@ -72,13 +72,13 @@ public class AppDataControllerReal(LazySvc<AppContent> appContentLazy)
     {
         if (int.TryParse(id, out var intId))
         {
-            appContentLazy.Value.Init(appPath).Delete(contentType, intId, appPath);
+            appContentGen.New(new(appPath)).Delete(contentType, intId, appPath);
             return;
         }
 
         if (Guid.TryParse(id, out var guid))
         {
-            appContentLazy.Value.Init(appPath).Delete(contentType, guid, appPath);
+            appContentGen.New(new(appPath)).Delete(contentType, guid, appPath);
             return;
         }
 

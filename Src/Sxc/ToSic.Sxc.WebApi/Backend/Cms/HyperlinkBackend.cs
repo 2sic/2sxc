@@ -26,7 +26,7 @@ public class HyperlinkBackend(
             if (string.IsNullOrEmpty(hyperlink))
                 return new() { Value = hyperlink };
 
-            var context = ctxService.GetExistingAppOrSet(appId);
+            var context = ctxService.ShareAppStateOptimized(appId);
             // different security checks depending on the link-type
             var lookupPage = hyperlink.Trim().StartsWith(ValueConverterBase.PrefixPage, StringComparison.OrdinalIgnoreCase);
 
@@ -39,7 +39,7 @@ public class HyperlinkBackend(
                 // page link - only resolve if the user has edit-permissions
                 // only people who have some full edit permissions may actually look up pages
                 var permCheckPage = appPermissions.New(new() { SiteContext = context, App = context.AppReaderRequired });
-                var userMay= permCheckPage.UserMayOnAll(GrantSets.WritePublished);
+                var userMay= permCheckPage.EnsureAll(GrantSets.WritePublished).Allowed;
                 return new() {Value = userMay ? resolved : hyperlink};
             }
 

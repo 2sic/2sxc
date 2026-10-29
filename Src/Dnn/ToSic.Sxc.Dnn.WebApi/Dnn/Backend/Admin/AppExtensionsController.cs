@@ -1,6 +1,5 @@
 using System.Web;
 using ToSic.Eav.Apps.Sys.Extensions;
-using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.App;
@@ -40,7 +39,7 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public PreflightResultDto InstallPreflightFrom(int appId, [FromBody] string[] urls, string editions = "")
     {
-        SysHlp.PreventServerTimeout600();
+        this.PreventServerTimeout600();
         return Real.InstallPreflightFrom(urls, appId, editions);
     }
 
@@ -59,7 +58,7 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public bool InstallFrom(int zoneId, int appId, [FromBody] string[] urls, string editions = "", bool overwrite = false)
     {
-        SysHlp.PreventServerTimeout600();
+        this.PreventServerTimeout600();
         return Real.InstallFrom(urls, zoneId, appId, editions, overwrite);
     }
 

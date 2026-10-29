@@ -36,8 +36,8 @@ This is just one repo of 2sxc - the full software also has another ca. 3 for
 
 ## System Requirements for 2sxc
 
-1. DNN 9.6.1+ with .net Framework 4.8
-1. Oqtane 5.1+ with .net 8 or Oqtane 6 with .net 9
+1. DNN 10.1+ with .net Framework 4.8
+1. Oqtane 10.2+ with .NET 10
 
 Older Versions
 

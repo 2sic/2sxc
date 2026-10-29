@@ -1,39 +1,31 @@
 ﻿using System.Net;
-using System.Web.Http.Routing;
-using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Sys.Routing;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.WebApi.Sys;
 
 namespace ToSic.Sxc.Dnn.Integration;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class DnnAppFolderUtilities(
-    Generator<AppFolderLookupForWebApi> folder,
-    Generator<DnnGetBlock> dnnGetBlock,
+public class DnnWebApiAppFolderUtilities(
+    LazySvc<IContextCompleteService> ctxService,
+    LazySvc<IContextBuilderService> ctxBuilder,
     LazySvc<CodeErrorHelpService> errorHelp)
-    : ServiceBase($"{DnnConstants.LogName}.AppFld", connect: [errorHelp, folder, dnnGetBlock])
+    : ServiceWithSetup<HttpRequestMessage>($"{LogName}.AppFld", connect: [errorHelp, ctxService, ctxBuilder])
 {
-    private HttpRequestMessage _request;
+    /// <summary>
+    /// Request object - throwing if not properly initialized
+    /// </summary>
+    private HttpRequestMessage Request => MyOptions ?? throw new("Request not available - call Setup(...) first!");
 
-    private HttpRequestMessage Request => _request ?? throw new("Request not available - call Setup(...) first!");
-
-    public DnnAppFolderUtilities Setup(HttpRequestMessage request)
-    {
-        _request = request;
-        return this;
-    }
-
-    internal string GetAppFolderVirtualPath(ISite site)
-    {
-        var l = Log.Fn<string>();
-        var appFolder = GetAppFolder(true);
-        var appFolderVirtualPath = Path.Combine(site.AppsRootPhysical, appFolder).ForwardSlash();
-        return l.Return(appFolderVirtualPath, $"Ok, AppFolder Virtual Path: {appFolderVirtualPath}");
-    }
-
-    internal string GetAppFolder(bool errorIfNotFound, IBlock block = null)
+    /// <summary>
+    /// Figure out the App folder based on the Http request
+    /// </summary>
+    /// <param name="errorIfNotFound"></param>
+    /// <param name="blockOrNull"></param>
+    /// <returns></returns>
+    internal string GetAppFolder(bool errorIfNotFound, IBlock? blockOrNull)
     {
         var l = Log.Fn<string>();
         const string errPrefix = "Api Controller Finder Error: ";
@@ -42,40 +34,44 @@ public class DnnAppFolderUtilities(
         var routeData = Request.GetRouteData();
 
         // Figure out the Path, or show error for that.
-        string appFolder;
         try
         {
-            appFolder = AppPathOrNull(routeData);
+            // 1. Try to get it from the .net Routing Values
+            var appFolder = routeData.Values[VarNames.AppPath]?.ToString();
 
             // only check for app folder if we don't have a context
             if (appFolder == null)
             {
                 l.A("no folder found in url, will auto-detect");
-                appFolder = folder.New()
-                    .Init(block ?? dnnGetBlock.New().GetCmsBlock(Request))
-                    .GetAppFolder();
+                appFolder = ctxService.Value.FindAppFolderFromScopeOrThrow(ctxBuilder.Value);
             }
 
             l.A($"App Folder: {appFolder}");
+
+            // Found or silent, done.
+            if (!string.IsNullOrWhiteSpace(appFolder) || !errorIfNotFound)
+                return l.ReturnAsOk(appFolder);
+
+            // Not found, and error requested - will happen outside the try-catch, so it's not re-wrapped in the cache
         }
         catch (Exception getBlockException)
         {
-            const string msg = errPrefix + "Trying to find app name, unexpected error - possibly bad/invalid headers. " + errSuffix;
-            if (errorIfNotFound)
-                throw l.Done(DnnHttpErrors.LogAndReturnException(Request, HttpStatusCode.BadRequest, getBlockException, msg, errorHelp.Value));
-            return l.Return(null, "not found, maybe error");
+            return errorIfNotFound
+                ? throw l.Done(
+                    DnnHttpErrors.LogAndReturnException(
+                        Request,
+                        HttpStatusCode.BadRequest,
+                        getBlockException,
+                        $"{errPrefix}Trying to find app name, unexpected error - possibly bad/invalid headers. {errSuffix}",
+                        errorHelp.Value
+                    )
+                )
+                : l.Return(null, "not found, got exception but caller said to ignore");
         }
 
-        if (string.IsNullOrWhiteSpace(appFolder) && errorIfNotFound)
-        {
-            const string msg = errPrefix + "App name is unknown - tried to check name in url (.../app/[app-name]/...) " +
-                               "and tried app-detection using url-params/headers pageid/moduleid. " + errSuffix;
-            throw l.Done(DnnHttpErrors.LogAndReturnException(Request, HttpStatusCode.BadRequest, new(msg), msg, errorHelp.Value));
-        }
-
-        return l.ReturnAsOk(appFolder);
+        // No return (so no !errorIfNotFound) and no exception already raised
+        // your own - outside the try-catch, so it's not re-wrapped in the cache
+        const string errMsg = $"{errPrefix}App name is unknown - tried to check name in url (.../app/[app-name]/...) and tried app-detection using url-params/headers pageid/moduleid. {errSuffix}";
+        throw l.Done(DnnHttpErrors.LogAndReturnException(Request, HttpStatusCode.BadRequest, new(errMsg), errMsg, errorHelp.Value));
     }
-
-    public static string AppPathOrNull(IHttpRouteData route) => route.Values[VarNames.AppPath]?.ToString();
-
 }

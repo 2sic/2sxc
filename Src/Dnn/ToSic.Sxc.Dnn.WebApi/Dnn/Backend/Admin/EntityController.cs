@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.ImportExport.Sys.Options;
 using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Eav.WebApi.Sys.Dto;
+using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using Guid = System.Guid;
 using RealController = ToSic.Eav.WebApi.Sys.Admin.EntityControllerReal;
@@ -48,9 +49,8 @@ public class EntityController() : DnnSxcControllerBase(RealController.LogSuffix)
     public HttpResponseMessage Json(int appId, int id, string prefix, bool withMetadata)
     {
         // Make sure the Scoped ResponseMaker has this controller context
-        SysHlp.SetupResponseMaker(this);
-
-        return Real.Json(appId, id, prefix, withMetadata);
+        using (this.InitializedResponseMaker())
+            return Real.Json(appId, id, prefix, withMetadata);
     }
 
 
@@ -68,10 +68,9 @@ public class EntityController() : DnnSxcControllerBase(RealController.LogSuffix)
         string selectedIds = null)
     {
         // Make sure the Scoped ResponseMaker has this controller context
-        SysHlp.SetupResponseMaker(this);
-
-        return Real.Download(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
-            languageReferences, selectedIds);
+        using (this.InitializedResponseMaker())
+            return Real.Download(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
+                languageReferences, selectedIds);
     }
 
 

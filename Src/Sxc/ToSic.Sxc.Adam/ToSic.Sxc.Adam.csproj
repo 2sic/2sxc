@@ -15,4 +15,8 @@
     <ProjectReference Include="..\ToSic.Sxc.Data\ToSic.Sxc.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Sys.ExecutionContext\" />
+  </ItemGroup>
+
 </Project>

@@ -9,6 +9,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys;
 /// <summary>
 /// Service responsible for compiling C# code files into assemblies.
 /// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CSharpCompilerService(
     MemoryCacheService memoryCacheService,
     IAssemblyDiskCacheService diskCacheService)

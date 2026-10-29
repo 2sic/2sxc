@@ -1,6 +1,6 @@
-using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw;
+using ToSic.Eav.Data.Raw.Sys;
 
 namespace ToSic.Sxc.Cms.Pages.Sys;
 
@@ -14,50 +14,9 @@ namespace ToSic.Sxc.Cms.Pages.Sys;
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [ContentTypeUse(Type = typeof(IPageModel))]
-public record PageModelRaw: IRawEntity, IPageModel, IRelationshipKeys
+public record PageModelRaw: IPageModel, IRawEntityConvertible
 {
-    #region IRawEntity
-
-    internal static DataFactoryOptions Option = new()
-    {
-        TitleField = nameof(Title),
-        Type = typeof(PageModelRaw)
-    };
-
-    IDictionary<string, object?> IRawEntity.Values => field ??= new Dictionary<string, object?>
-    {
-        // v14+
-        { nameof(Title), Title },
-        { nameof(Name), Name },
-        { nameof(ParentId), ParentId },
-        { nameof(IsNavigation), IsNavigation },
-        { nameof(Path), Path },
-        { nameof(Url), Url },
-        // New in v15.01
-        { nameof(IsClickable), IsClickable },
-        { nameof(Order), Order },
-        { nameof(IsDeleted), IsDeleted },
-        { nameof(Level), Level },
-        { nameof(HasChildren), HasChildren },
-        // New in v15.02
-        { nameof(LinkTarget), LinkTarget },
-
-        { "Children", ChildrenRaw }
-    };
-
     private const string ParentPrefix = "ParentId:";
-
-    private RawRelationship ChildrenRaw => new() { Keys = [$"{ParentPrefix}{Id}"] };
-
-
-    IEnumerable<object> IRelationshipKeys.RelationshipKeys => field ??= new List<object>
-    {
-        // For relationships looking for files in this folder
-        $"{ParentPrefix}{ParentId}"
-    };
-
-    #endregion
-
 
     /// <inheritdoc cref="IPageModel.Id"/>
     public int Id { get; init; }
@@ -69,6 +28,7 @@ public record PageModelRaw: IRawEntity, IPageModel, IRelationshipKeys
     public Guid Guid { get; init; }
 
     /// <inheritdoc cref="IPageModel.Title"/>
+    [ContentTypeTitle]
     public string? Title { get; init; }
 
     /// <inheritdoc />
@@ -111,5 +71,36 @@ public record PageModelRaw: IRawEntity, IPageModel, IRelationshipKeys
 
     // Not implemented, and not sure if we should, since it would potentially introduce a lot of prefetch data
     IEnumerable<IPageModel> IPageModel.Children => throw new NotImplementedException();
+    IRawEntityConverter IRawEntityConvertible.GetConverter() => Converter;
 
+    private static IRawEntityConverter Converter { get; } =
+        new RawEntityConverterFactory<PageModelRaw>((source, _) => new PageRaw(source)
+        {
+            Id = source.Id,
+            Guid = source.Guid,
+            Created = source.Created,
+            Modified = source.Modified,
+            RelationshipKeys = [$"{ParentPrefix}{source.ParentId}"]
+        });
+
+    private sealed record PageRaw(PageModelRaw Source) : RawEntity
+    {
+        protected override IDictionary<string, object?> GetValues() =>
+            new Dictionary<string, object?>
+            {
+                { nameof(Title), Source.Title },
+                { nameof(Name), Source.Name },
+                { nameof(ParentId), Source.ParentId },
+                { nameof(IsNavigation), Source.IsNavigation },
+                { nameof(Path), Source.Path },
+                { nameof(Url), Source.Url },
+                { nameof(IsClickable), Source.IsClickable },
+                { nameof(Order), Source.Order },
+                { nameof(IsDeleted), Source.IsDeleted },
+                { nameof(Level), Source.Level },
+                { nameof(HasChildren), Source.HasChildren },
+                { nameof(LinkTarget), Source.LinkTarget },
+                { nameof(IPageModel.Children), new RawRelationship { Keys = [$"{ParentPrefix}{Source.Id}"] } }
+            };
+    }
 }

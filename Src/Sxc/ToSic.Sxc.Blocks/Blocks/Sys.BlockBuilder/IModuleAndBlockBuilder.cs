@@ -8,7 +8,7 @@ public interface IModuleAndBlockBuilder: IHasLog
 {
     IBlock BuildBlock(int pageId, int moduleId);
 
-    IBlock BuildBlock<TPlatformModule>(TPlatformModule module, int? page) where TPlatformModule : class;
+    IBlock BuildBlock<TPlatformModule>(TPlatformModule module, int? pageId) where TPlatformModule : class;
 
     /// <summary>
     /// Get the module specific to each platform.

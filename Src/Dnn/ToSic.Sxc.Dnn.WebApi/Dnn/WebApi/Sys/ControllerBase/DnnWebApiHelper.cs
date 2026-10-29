@@ -1,7 +1,6 @@
 ﻿using System.Web;
 using ToSic.Eav.Web.Sys;
 using ToSic.Eav.WebApi.Sys;
-using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Dnn.Integration;
@@ -48,20 +47,11 @@ internal class DnnWebApiHelper : CodeHelperBase
     // Must cache it, to be really sure we use the same ServiceProvider in the same request
     private readonly LazyGet<IServiceProvider> _serviceProvider = new();
 
-    public void SetupResponseMaker(System.Web.Http.ApiController apiController)
-        => GetService<IResponseMaker>().Init(apiController);
-
     #endregion
 
-    /// <summary>
-    ///  Extend Time so Web Server doesn't time out
-    /// </summary>
-    public void PreventServerTimeout600()
-        => HttpContext.Current.Server.ScriptTimeout = 600;
-
-    public IBlock GetBlockAndContext(HttpRequestMessage request) 
-        => _blcCtx.Get(() => GetService<DnnGetBlock>().GetCmsBlock(request));
-    private readonly LazyGet<IBlock> _blcCtx = new();
+    public IBlock? GetBlockAndContext(HttpRequestMessage request) 
+        => _blcCtx.Get(() => GetService<DnnGetBlock>().TryGetBlockSpecsUsingModuleAndContentBlockHeaders(request));
+    private readonly LazyGet<IBlock?> _blcCtx = new();
 
 
 }

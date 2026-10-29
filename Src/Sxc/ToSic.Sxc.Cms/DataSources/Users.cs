@@ -40,10 +40,11 @@ namespace ToSic.Sxc.DataSources;
     Type = DataSourceType.Source,
     ConfigurationType = "ac11fae7-1916-4d2d-8583-09872e1e6966"
 )]
-public class Users : CustomDataSourceAdvanced
+public class Users : CustomDataSource
 {
     private readonly IDataSourceGenerator<UserRoles> _rolesGenerator;
     private readonly IUsersProvider _provider;
+    private readonly LazyLookup<object, IEntity> _relationships = new();
 
     #region Configuration-properties
 
@@ -147,36 +148,31 @@ public class Users : CustomDataSourceAdvanced
         _provider = provider;
         _rolesGenerator = rolesGenerator;
 
-        ProvideOut(() => UsersAndRoles.Users); // default out, if accessed, will deliver GetList
+        ProvideOutRaw(
+            () => UsersAndRoles.Users,
+            options: () => new()
+            {
+                RawConvertOptions = new(addKeys: [nameof(IUserModel.Roles)]),
+                Relationships = _relationships,
+            });
         ProvideOut(() => UsersAndRoles.UserRoles, "Roles");
     }
 
     #endregion
 
-    private (IEnumerable<IEntity> Users, IEnumerable<IEntity> UserRoles) UsersAndRoles => _usersAndRoles ??= GetUsersAndRoles();
-    private (IEnumerable<IEntity> Users, IEnumerable<IEntity> UserRoles)? _usersAndRoles;
+    private (IEnumerable<UserModelRaw> Users, IEnumerable<IEntity> UserRoles) UsersAndRoles => _usersAndRoles ??= GetUsersAndRoles();
+    private (IEnumerable<UserModelRaw> Users, IEnumerable<IEntity> UserRoles)? _usersAndRoles;
 
-    private (IEnumerable<IEntity> Users, IEnumerable<IEntity> UserRoles) GetUsersAndRoles()
+    private (IEnumerable<UserModelRaw> Users, IEnumerable<IEntity> UserRoles) GetUsersAndRoles()
     {
-        var l = Log.Fn<(IEnumerable<IEntity> Users, IEnumerable<IEntity> UserRoles)>();
+        var l = Log.Fn<(IEnumerable<UserModelRaw> Users, IEnumerable<IEntity> UserRoles)>();
 
         // Get raw users from provider, then generate entities
         var usersRaw = GetUsersAndFilter();
 
-        // Figure out options to be sure we have the roles/roleids
-        var relationships = new LazyLookup<object, IEntity>();
-        var userFactory = DataFactory.SpawnNew(options: new()
-        {
-            // Option to tell the entity conversion to add the "Roles" to each user
-            RawConvertOptions = new(addKeys: ["Roles"]),
-            Relationships = relationships,
-        });
-
-        var users = userFactory.Create(usersRaw);
-
         // If we should include the roles, create them now and attach
         if (!AddRoles)
-            return l.Return((users, []), $"users {users.Count}; no roles");
+            return l.Return((usersRaw, []), $"users {usersRaw.Count}; no roles");
 
         // Process roles and add to relationships, so that the Users can map to the roles
         List<IEntity> roles = [];
@@ -186,15 +182,15 @@ public class Users : CustomDataSourceAdvanced
             roles = GetRolesStream(usersRaw);
             var roleRels = roles
                 .Select(r => new KeyValuePair<object, IEntity>($"{UserModelRaw.RoleRelationshipPrefix}{r.EntityId}", r));
-            relationships.Add(roleRels);
-            return l.Return((users, roles), $"users {users.Count}; roles {roles.Count}");
+            _relationships.Add(roleRels);
+            return l.Return((usersRaw, roles), $"users {usersRaw.Count}; roles {roles.Count}");
         }
         catch (Exception ex)
         {
             l.A("Error trying to add roles");
             l.Ex(ex);
             /* ignore for now */
-            return l.Return((users, roles), $"users {users.Count}; roles error: {roles.Count}");
+            return l.Return((usersRaw, roles), $"users {usersRaw.Count}; roles error: {roles.Count}");
         }
 
     }

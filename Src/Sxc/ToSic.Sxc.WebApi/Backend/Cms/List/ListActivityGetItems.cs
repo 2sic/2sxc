@@ -4,9 +4,7 @@ using ToSic.Eav.WebApi.Sys.Cms;
 namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ListActivityGetItems(
-    ISxcCurrentContextService ctxService
-    )
+public class ListActivityGetItems(IContextCompleteService ctxService)
     : ServiceBase("Act.LstGet", connect: [ctxService])
 {
 

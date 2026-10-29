@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Backend.Cms;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ListControllerReal(
     AppWorkChain<WorkFieldList> workFieldList,
-    ISxcCurrentContextService ctxService,
+    IContextCompleteService ctxService,
     LazySvc<AppWorkContextService> appCtxSvc,
     Generator<IPagePublishing> publishing,
     LazySvc<ListActivityReplace> actReplace,

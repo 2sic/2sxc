@@ -19,34 +19,13 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     private RealController Real => SysHlp.GetService<RealController>();
 
     /// <inheritdoc />
-    /// Replayed by DataSource System.Apps
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[SupportedModules(DnnSupportedModuleNames)]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    //public ICollection<AppDto> List(int zoneId) => Real.List(zoneId);
-
-    // TODO: @2rb #next
-    // Info: used in Apps-Admin (list of apps)
-    // To work, you must enable the patron feature to share an app (on another site)
-    // ...then it should appear in the list of InheritableApps
-    // Make sure you have a working setup, before you make changes
-    /// <inheritdoc />
-    /// Replaced by DataSource System.InheritableApps
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[SupportedModules(DnnSupportedModuleNames)]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    //public ICollection<AppDto> InheritableApps() => Real.InheritableApps();
-
-    /// <inheritdoc />
     [HttpDelete]
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public void App(int zoneId, int appId, bool fullDelete = true)
     {
-        SysHlp.PreventServerTimeout600();
+        this.PreventServerTimeout600();
         Real.App(zoneId, appId, fullDelete);
     }
 
@@ -56,14 +35,6 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public void App(int zoneId, string name, int? inheritAppId = null) => Real.App(zoneId, name, inheritAppId);
-
-    /// <inheritdoc />
-    /// Replaced by DataSource System.AppLanguages
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[SupportedModules(DnnSupportedModuleNames)]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    //public ICollection<SiteLanguageDto> Languages(int appId) => Real.Languages(appId);
 
     // Replaced by DataSource System.AppStatistics through query System.SysData.
     ///// <inheritdoc />
@@ -106,17 +77,9 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
     public Task<ImportResultDto> Reset(int zoneId, int appId, bool withPortalFiles = false)
     {
-        SysHlp.PreventServerTimeout600();
+        this.PreventServerTimeout600();
         return Real.Reset(zoneId, appId, PortalSettings.DefaultLanguage, withPortalFiles);
     }
-
-    // Replaced by DataSource System.SystemStack through query System.SysData.
-    ///// <inheritdoc />
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    //public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null)
-    //    => Real.GetStack(appId, part, key, view);
 
     /// <inheritdoc />
     [HttpPost]
@@ -124,18 +87,10 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public ImportResultDto Import(int zoneId)
     {
-        SysHlp.PreventServerTimeout600();
+        this.PreventServerTimeout600();
         return Real.Import(new(Request, HttpContext.Current.Request), zoneId, HttpContext.Current.Request["Name"]);
     }
 
-    // Replaced by DataSource System.AppsPendingInitialization through query System.SysData.
-    ///// <inheritdoc />
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[SupportedModules(DnnSupportedModuleNames)]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    //public IEnumerable<PendingAppDto> GetPendingApps(int zoneId)
-    //    => Real.GetPendingApps(zoneId);
 
     /// <inheritdoc />
     [HttpPost]
@@ -143,7 +98,7 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppDto> pendingApps)
     {
-        SysHlp.PreventServerTimeout600();
+        this.PreventServerTimeout600();
         return Real.InstallPendingApps(zoneId, pendingApps);
     }
 }

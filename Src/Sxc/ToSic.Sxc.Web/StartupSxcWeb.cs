@@ -1,9 +1,12 @@
 ﻿using Connect.Koi.Detectors;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Apps.Sys.Installation;
+using ToSic.Sxc.Apps.Sys.Permissions;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Data.Sys.Convert;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Render.Polymorphism.Sys;
@@ -56,6 +59,8 @@ public static class StartupSxcWeb
         // to move up dependencies which it has.
         services.TryAddTransient<IPlatformAppInstaller, PlatformAppInstallerUnknown>();
 
+        // v22
+        services.TryAddTransient<IDraftOverrideService, DraftOverrideFromCookieService>();
 
         return services;
     }

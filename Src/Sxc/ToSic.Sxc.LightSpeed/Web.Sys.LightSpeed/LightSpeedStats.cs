@@ -51,4 +51,5 @@ public class LightSpeedStats(MemoryCacheService memoryCacheService) : ServiceBas
 
 }
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public record LightSpeedStat(int Count, long MemoryUse, long Compressed, long Uncompressed, long Expanded, long GrandTotal);

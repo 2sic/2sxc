@@ -30,10 +30,10 @@ public abstract class ModuleAndBlockBuilder(Generator<BlockOfModule> blockGenera
         return l.ReturnAsOk(block);
     }
 
-    public IBlock BuildBlock<TPlatformModule>(TPlatformModule module, int? page) where TPlatformModule : class
+    public IBlock BuildBlock<TPlatformModule>(TPlatformModule module, int? pageId) where TPlatformModule : class
     {
-        var l = Log.Fn<IBlock>($"{module}, {page}");
-        var ctx = GetContextOfBlock(module, page);
+        var l = Log.Fn<IBlock>($"{module}, {pageId}");
+        var ctx = GetContextOfBlock(module, pageId);
         var block = blockGenerator.New().GetBlockOfModule(ctx);
         return l.Return(block);
     }

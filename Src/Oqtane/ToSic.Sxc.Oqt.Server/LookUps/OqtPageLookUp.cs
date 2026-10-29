@@ -5,7 +5,7 @@ using static ToSic.Sxc.LookUp.Sys.LookUpConstants;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps;
 
-internal class OqtPageLookUp(ISxcCurrentContextService ctxService) : LookUpBase(SourcePage, "LookUp in Oqtane Page")
+internal class OqtPageLookUp(IContextCompleteService ctxService) : LookUpBase(SourcePage, "LookUp in Oqtane Page")
 {
     protected Oqtane.Models.Page Page { get; set; }
 

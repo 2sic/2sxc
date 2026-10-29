@@ -4,6 +4,7 @@ using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Edit.EditService;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IEditServiceSetup
 {
     internal IEditService SetBlock(IExecutionContext? exCtxOrNull, IBlock block);

@@ -9,9 +9,9 @@ namespace ToSic.Sxc.Context;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IModule
 {
-    [PrivateApi("Workaround till we have DI to inject the current container")]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    IModule Init(int id);
+    //[PrivateApi("Workaround till we have DI to inject the current container")]
+    //[ShowApiWhenReleased(ShowApiMode.Never)]
+    //void Init(int id);
 
     int Id { get; }
 
@@ -28,5 +28,10 @@ public interface IModule
     /// </summary>
     [PrivateApi("still experimental")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    IBlockIdentifier BlockIdentifier { get; }
+    IBlockIdentifier? BlockIdentifier { get; }
+}
+
+public interface IModuleFactory
+{
+    public IModule Get(int moduleId);
 }

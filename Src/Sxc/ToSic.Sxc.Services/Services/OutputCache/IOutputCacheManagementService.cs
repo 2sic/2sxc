@@ -9,7 +9,6 @@ namespace ToSic.Sxc.Services.OutputCache;
 /// depend on ambient execution context.
 /// </remarks>
 [WorkInProgressApi("Still WIP v21.06")]
-[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IOutputCacheManagementService
 {
     /// <summary>

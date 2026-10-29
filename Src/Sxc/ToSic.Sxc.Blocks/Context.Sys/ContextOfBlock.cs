@@ -2,77 +2,33 @@
 using ToSic.Eav.Context;
 using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sxc.Sys.Render.PageContext;
-using ToSic.Sys.HookUp;
+using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Context.Sys;
 
-/// <remarks>
-/// Important: this is the third inheritance, so it cannot create
-/// another MyServices to inherit again, as it's not supported across three level
-/// So these dependencies must be in the constructor
-/// </remarks>
-[PrivateApi("Internal stuff, not for public use")]
-[ShowApiWhenReleased(ShowApiMode.Never)]
-internal class ContextOfBlock(
-    IPage page,
-    IModule module,
-    //LazySvc<ServiceSwitcher<IPagePublishingGetSettings>> publishingResolver,
-    LazySvc<BlockPublishingSettingsService> pagePubSettings,
-    IPageServiceShared pageServiceShared,
-    ContextOfApp.Dependencies appServices)
-    : ContextOfApp(appServices, "Sxc.CtxBlk", connect: [module, pageServiceShared, /*publishingResolver,*/ pagePubSettings]), IContextOfBlock
+internal record ContextOfBlock(
+    ISite Site,
+    IUser User,
+    IPage Page,
+    IModule Module,
+    IAppReader? AppReaderOrNull,
+    IPageServiceShared PageServiceShared
+) : ContextOfApp(Site, User, AppReaderOrNull), IContextOfBlock
 {
-
-    #region Override AppIdentity based on module information
-
-    protected override IAppIdentity? AppIdentity
-    {
-        get
-        {
-            if (base.AppIdentity != null)
-                return base.AppIdentity;
-            var l = Log.Fn<IAppIdentity?>();
-            var identifier = Module?.BlockIdentifier;
-            if (identifier == null)
-                return l.ReturnNull("no mod-block-id");
-            AppIdentity = identifier;
-            return l.Return(base.AppIdentity);
-        }
-    }
-
-    #endregion
-
-    /// <inheritdoc />
-    public IPage Page { get; } = page;
-
-    /// <inheritdoc />
-    public IModule Module { get; } = module;
-
-    public IPageServiceShared PageServiceShared { get; } = pageServiceShared;
+    /// <summary>
+    /// Helper to lazy-retrieve publishing state if ever needed.
+    /// </summary>
+    internal required LazySvc<BlockPublishingSettingsService> PagePubSettings { get; init; }
 
     /// <inheritdoc />
     [field: AllowNull, MaybeNull]
     public BlockPublishingSettings Publishing => field
-        ??= GetPublishing();
-    
-    private BlockPublishingSettings GetPublishing()
-    {
-        var package = new Package<BlockPublishingSettings>(new() { ModuleId = Module?.Id ?? -1 });
-        var fromNew = pagePubSettings.Value.Handle(new(), package);
-        
-        //var fromOld = publishingResolver.Value.Value.Handle(new(), package)
-        //    .GetAwaiter()
-        //    .GetResult()
-        //    .Data.Settings!;
-
-        return fromNew.GetAwaiter()
+        ??= PagePubSettings.Value
+            .Handle(new(), new(new() { ModuleId = Module?.Id ?? -1 }))
+            .GetAwaiter()
             .GetResult()
             .Data;
-    }
 
 
-    /// <inheritdoc />
-    public override IContextOfSite Clone(ILog parentLog)
-        => new ContextOfBlock(Page, Module, /*publishingResolver,*/ pagePubSettings, PageServiceShared, AppServices)
-            .LinkLog(parentLog);
+    IContextOfSite IContextOfSite.WithSwappedSite(ISite site) => this with { Site = site };
 }

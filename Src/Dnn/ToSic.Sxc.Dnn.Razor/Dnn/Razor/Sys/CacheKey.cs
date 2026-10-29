@@ -7,6 +7,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys;
 /// <remarks>
 /// Thread-safe by design (immutable).
 /// </remarks>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public sealed class CacheKey : IEquatable<CacheKey>
 {
     /// <summary>

@@ -16,7 +16,7 @@ using ToSic.Sxc.Render.Engines.Sys;
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
 
-[PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
+[PrivateApi("Old; hidden in v22, previously public")]
 [method: PrivateApi]
 public abstract class Razor12<TModel>() : OqtRazorBase<TModel>(CompatibilityLevels.CompatibilityLevel12, "Oqt.Rzr12"),
     IHasCodeLog, IRazor, IRazor12, ISetDynamicModel

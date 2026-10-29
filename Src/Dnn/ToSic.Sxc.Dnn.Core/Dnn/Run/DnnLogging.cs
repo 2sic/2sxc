@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Web.Http;
 using DotNetNuke.Abstractions.Logging;
 using DotNetNuke.Services.Log.EventLog;
@@ -30,7 +31,12 @@ internal static class DnnLogging
 
             AttachDnnStateIfPossible(dnnContext, logInfo);
 
-            (log as Log)?.Entries.ForEach(e => logInfo.AddProperty(e.Source, e.Message));
+            if (log is Log legacy)
+                legacy.Entries.ForEach(e => logInfo.AddProperty(e.Source, e.Message));
+            else
+                // MEL has no retained Entries, so read detached events for the current request trace.
+                foreach (var entry in CurrentTraceEvents(DnnStaticDi.GetPageScopedServiceProvider().GetService<IInsightsLogSnapshotReader>(), Activity.Current?.TraceId.ToString()))
+                    logInfo.AddProperty(Source(entry), Format(entry));
 
             DnnStaticDi.GetPageScopedServiceProvider().GetRequiredService<IEventLogger>().AddLog(logInfo);
         }
@@ -39,6 +45,31 @@ internal static class DnnLogging
             TryToReportLoggingFailure("logging");
         }
     }
+
+    // Do not fall back by category: parallel requests use the same log names.
+    // A request can now have several module histories, so collect events from each one.
+    internal static IEnumerable<InsightsLogEventSnapshot> CurrentTraceEvents(IInsightsLogSnapshotReader? reader, string? traceId)
+    {
+        if (string.IsNullOrEmpty(traceId) || reader == null)
+            return [];
+        return reader.ListGroups()
+            .SelectMany(group => group.Events)
+            .Where(entry => entry.TraceId == traceId)
+            .OrderBy(entry => entry.Sequence);
+    }
+
+    internal static string DumpCurrentTrace(IInsightsLogSnapshotReader? reader, string? traceId)
+        => string.Concat(CurrentTraceEvents(reader, traceId).Select(entry => " - " + Source(entry) + " - " + Format(entry) + "\n"));
+
+    // Exception.Details is the detached Exception.ToString(); include it because MEL Message is only the short text.
+    internal static string Format(InsightsLogEventSnapshot entry)
+        => entry.Message
+           + (entry.Result != null ? "=>" + entry.Result : "")
+           + (entry.DurationMilliseconds is > 0 ? $" ⌚ {TimeSpan.FromMilliseconds(entry.DurationMilliseconds.Value).TotalSeconds}s " : "")
+           + (!string.IsNullOrEmpty(entry.Exception?.Message) ? " " + entry.Exception.Message : "")
+           + (!string.IsNullOrEmpty(entry.Exception?.Details) ? " " + entry.Exception.Details : "");
+
+    private static string Source(InsightsLogEventSnapshot entry) => entry.FullSource ?? entry.Category;
 
     /// <summary>
     /// try to at least report, that something failed

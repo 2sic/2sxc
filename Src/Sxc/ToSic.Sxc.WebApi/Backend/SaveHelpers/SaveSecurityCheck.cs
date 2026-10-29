@@ -1,12 +1,13 @@
 ﻿using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.WebApi.Sys.Security;
+using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class SaveSecurity(Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> multiPermissionsTypesGen)
-    : ServiceBase("Api.SavSec", connect: [multiPermissionsTypesGen])
+public class SaveSecurity(Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> multiPermissionsTypesGen, LazySvc<ISysFeaturesService> sysFeatSvc)
+    : ServiceBase("Api.SavSec", connect: [multiPermissionsTypesGen, sysFeatSvc])
 {
 
     public IMultiPermissionCheck DoPreSaveSecurityCheck(IContextOfApp context, IEnumerable<BundleWithHeader> items)
@@ -25,10 +26,10 @@ public class SaveSecurity(Generator<MultiPermissionsTypes, MultiPermissionsTypes
             )
         });
         
-        if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
-            throw HttpException.PermissionDenied(error);
+        if (permCheck.EnsureAll(GrantSets.WriteSomething) is { Allowed: false } pcResult)
+            throw HttpException.PermissionDenied(pcResult.ErrorMessage);
         
-        if (!permCheck.UserCanWriteAndPublicFormsEnabled(out _, out error))
+        if (!permCheck.UserCanWriteAndPublicFormsEnabled(sysFeatSvc, out _, out var error))
             throw HttpException.PermissionDenied(error);
 
         return l.Return(permCheck, "passed security checks");

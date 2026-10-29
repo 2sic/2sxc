@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
+using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Models;
 using ToSic.Sxc.Render.Polymorphism.Sys;
 
@@ -15,30 +16,28 @@ namespace ToSic.Sxc.Backend.Views;
     DataConfidentiality = DataConfidentiality.Confidential,
     UiHint = "Current Apps Polymorphism")]
 // ReSharper disable once UnusedMember.Global
-public class AppPolymorphism : CustomDataSource
+public class AppPolymorphism(CustomDataSource.Dependencies services, IAppReaderFactory appReaders)
+    : CustomDataSource(services, logName: "Sxc.PolyMo", connect: [appReaders])
 {
-    public AppPolymorphism(Dependencies services, IAppReaderFactory appReaders)
-        : base(services, logName: "Sxc.PolyMo", connect: [appReaders])
+    /// <summary>
+    /// Default data generation according to CustomDataSource - will return the polymorphism configuration for the current app.
+    /// </summary>
+    /// <returns></returns>
+    protected override IEnumerable<IRawData> GetDefault()
     {
-        ProvideOut(() => AppConfig(appReaders));
-    }
-
-
-    private IEnumerable<IEntity> AppConfig(IAppReaderFactory appReaders)
-    {
-        var l = Log.Fn<IEnumerable<IEntity>>($"App: {AppId}");
+        var l = Log.Fn<IEnumerable<IRawData>>($"App: {AppId}");
 
         var poly = appReaders.Get(AppId).List
             .FirstModel<PolymorphismConfigurationModel>(options: new() { NullHandling = NullHandling.ReturnModel })!;
 
-        var data = DataFactory
-            .SpawnNew(new() { AutoId = false })
-            .Create(new Dictionary<string, object?>
-            {
-                { nameof(poly.Resolver), poly.Resolver },
-                { "TypeName", PolymorphismConfigurationModel.ContentTypeName },
-            }, id: poly.Id);
+        var data = new AppPolymorphismRaw(poly.Id, poly.Resolver, PolymorphismConfigurationModel.ContentTypeName);
 
         return l.Return([data], $"{poly}");
     }
+
+    /// <summary>
+    /// The raw data structure for the AppPolymorphism DataSource.
+    /// Reduced, so it doesn't contain all the properties of the PolymorphismConfigurationModel, but only the ones needed for the DataSource.
+    /// </summary>
+    private sealed record AppPolymorphismRaw(int Id, string? Resolver, string TypeName) : IRawEntityAutoConvert;
 }

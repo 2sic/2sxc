@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net48;net9.0</TargetFrameworks>
+    <TargetFrameworks>net48;net10.0</TargetFrameworks>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <LangVersion>preview</LangVersion>
     <WarningLevel>9999</WarningLevel>
@@ -13,7 +13,7 @@
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.14.8" />
   </ItemGroup>
 

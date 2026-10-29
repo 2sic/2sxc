@@ -11,6 +11,9 @@
   <!-- Disable some common warnings we don't care about-->
   <Import Project="./ConfigurationsAndWarnings.props" />
 
+  <!-- Remove obsolete XML documentation from Release outputs -->
+  <Import Project="./RemoveStaleXmlDocumentation.props" />
+
   <!-- Include C# files which contain the Assembly Info and some classes so that C# latest is supported (such as init-properties) -->
   <Import Project="./IncludeCode/Compiler Features and API Hiding.props" />
 

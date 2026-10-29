@@ -109,6 +109,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, ITypedCode16
     string IGetCodePath.CreateInstancePath { get; set; } = null!;
 
     /// <inheritdoc cref="ITypedCode16.GetCode"/>
+    [PrivateApi("Hidden, as not supported any more going forward")]
     public dynamic? GetCode(string path, NoParamOrder npo = default, string? className = default)
         => CompileCodeHlp.GetCode(path: path, className: className);
 

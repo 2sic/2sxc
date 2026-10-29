@@ -89,7 +89,10 @@ internal class DnnUsersProvider(
             }
 
             // Exclude users
-            dnnUsers = dnnUsers.Distinct().Where(user => !ExcludeUser(user)).ToList();
+            dnnUsers = dnnUsers
+                .Distinct()
+                .Where(user => !ExcludeUser(user))
+                .ToList();
 
             if (!dnnUsers.Any())
                 return l.Return([], "null/empty");
@@ -110,12 +113,18 @@ internal class DnnUsersProvider(
 
     private bool ExcludeUser(UserInfo user)
     {
-        if (user == null) return true;
-        if (SpecsParsed.ExcludeUserIdsFilter.Contains(user.UserID)) return true;
-        if (SpecsParsed.ExcludeUserGuidsFilter.Contains(dnnSecurity.Value.UserGuid(user))) return true;
-        if (SpecsParsed.ExcludeRolesFilter.Any(roleId => user.IsInRole(RoleController.Instance.GetRoleById(user.PortalID, roleId).RoleName))) return true;
-        if (_specs.IncludeSystemAdmins.EqualsInsensitive(UserConstants.IncludeForbidden) && user.IsSuperUser) return true;
-        if (_specs.IncludeSystemAdmins.EqualsInsensitive(UserConstants.IncludeRequired) && !user.IsSuperUser) return true;
+        if (user == null)
+            return true;
+        if (SpecsParsed.ExcludeUserIdsFilter.Contains(user.UserID))
+            return true;
+        if (SpecsParsed.ExcludeUserGuidsFilter.Contains(dnnSecurity.Value.UserGuid(user)))
+            return true;
+        if (SpecsParsed.ExcludeRolesFilter.Any(roleId => user.IsInRole(RoleController.Instance.GetRoleById(user.PortalID, roleId).RoleName)))
+            return true;
+        if (_specs.IncludeSystemAdmins.EqualsInsensitive(UserConstants.IncludeForbidden) && user.IsSuperUser)
+            return true;
+        if (_specs.IncludeSystemAdmins.EqualsInsensitive(UserConstants.IncludeRequired) && !user.IsSuperUser)
+            return true;
         return false;
     }
 

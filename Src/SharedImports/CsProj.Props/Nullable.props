@@ -1,7 +1,7 @@
 <Project>
 
   <!-- All Sys projects are nullable -->
-  <PropertyGroup  Condition="$(TargetFramework) == 'net9.0'">
+  <PropertyGroup  Condition="$(TargetFramework) == 'net10.0'">
     <!--<Nullable>enable</Nullable>-->
   </PropertyGroup>
 

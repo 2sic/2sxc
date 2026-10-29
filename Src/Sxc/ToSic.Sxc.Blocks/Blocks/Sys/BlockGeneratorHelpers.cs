@@ -9,6 +9,7 @@ using ToSic.Sxc.LookUp.Sys;
 
 namespace ToSic.Sxc.Blocks.Sys;
 
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockGeneratorHelpers(
     AppWorkContextService appCtxSvc, 
     AppWorkChain<WorkViews> workViews,

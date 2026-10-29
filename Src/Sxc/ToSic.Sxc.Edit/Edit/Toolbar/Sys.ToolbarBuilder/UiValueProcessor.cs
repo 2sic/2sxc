@@ -7,31 +7,27 @@ using static ToSic.Sxc.Edit.Toolbar.Sys.ToolbarButtonDecorator;
 
 namespace ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
 
-internal class UiValueProcessor: UrlValueProcess
+internal class UiValueProcessor: IUrlParameterInGroupOperation
 {
+    private const string Json64Prefix = "json64:";
 
-    public override NameObjectSet? Process(NameObjectSet? set)
-    {
-        if (set == null)
-            return null;
-        // Colors - remove any # like #CCDDFF
-        if (set.Name == KeyColor)
-            return set.Value is string color && color.HasValue() && color.Contains("#")
-                ? new(set, value: color.Replace("#", ""))
-                : set;
+    public UrlParameter? Process(UrlParameter? set) =>
+        set?.Value == null
+            ? null
+            : set.Name switch
+            {
+                // For Colors - remove any # like #CCDDFF
+                KeyColor => set.Value is string color && color.HasValue() && color.Contains("#")
+                    ? set with { Value = color.Replace("#", "") }
+                    : set,
 
-        // Data: must always be object and base64
-        // WIP!
-        if (set.Name == KeyData || set.Name == KeyNote)
-        {
-            if (set.Value == null)
-                return set;
-            var json = JsonSerializer.Serialize(set.Value, JsonOptions.SafeJsonForHtmlAttributes);
-            return new(set, value: $"{Json64Prefix}{Base64.Encode(json)}");
-        }
+                // For Data or Notes: must always be an object and base64
+                KeyData or KeyNote => set with
+                {
+                    Value = $"{Json64Prefix}{Base64.Encode(JsonSerializer.Serialize(set.Value, JsonOptions.SafeJsonForHtmlAttributes))}"
+                },
 
-        // All others such as icons - make safe
-        return MakeSafe(set);
-    }
-        
+                // All others such as icons - make safe
+                _ => new UrlValueSafeMaker().Process(set)
+            };
 }

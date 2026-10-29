@@ -11,11 +11,11 @@ using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.DataSources.Sys;
 using ToSic.Sxc.Integration.Modules;
 using ToSic.Sxc.LookUp.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
-using ToSic.Sys.Users.Permissions;
+using ToSic.Sys.Context;
 
-// ReSharper disable once CheckNamespace
+#pragma warning disable IDE0130
 namespace ToSic.Sxc.Run.Startup;
+#pragma warning restore IDE0130
 
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 public static class StartupSxcBlocks
@@ -40,23 +40,16 @@ public static class StartupSxcBlocks
 
         services.TryAddTransient<IAppDataConfigProvider, SxcAppDataConfigProvider>(); // new v17
 
-        // Context stuff in general
-        services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
-
-
-
         // Context stuff, which is explicitly scoped
-        services.TryAddTransient<IContextOfApp, ContextOfApp>();
-        services.TryAddTransient<ContextOfApp.Dependencies>();
-        services.TryAddScoped<ISxcCurrentContextService, SxcCurrentContextService>();
-        // must be the same instance, so it must get the original, scoped SxcContextResolver
-        services.TryAddTransient<ISxcAppCurrentContextService>(sp => sp.GetRequiredService<ISxcCurrentContextService>());
+        services.TryAddTransient<IContextOfAppFactory, ContextOfAppFactory>(); // new v22 WIP
+        services.TryAddTransient<IContextOfBlockFactory, ContextOfBlockFactory>(); // new v22 WIP
 
-
-        // New v15.04 WIP
-        services.TryAddScoped<ICurrentContextService>(x => x.GetRequiredService<ISxcCurrentContextService>());
-        services.TryAddScoped<ICurrentContextUserPermissionsService>(x => x.GetRequiredService<ISxcCurrentContextService>());
-        services.TryAddScoped<AppIdResolver>();
+        // moved to WebApi
+        //// v22.01 2dm 2026-10-20 - only one service left, as we're trying to clean state sharing...
+        //services.TryAddScoped<ISxcCurrentContextService, SxcCurrentContextService>();
+        //services.TryAddScoped<IContextService>(x => x.GetRequiredService<ISxcCurrentContextService>());
+        //services.TryAddScoped<IContextOfSiteService>(x => x.GetRequiredService<ISxcCurrentContextService>());
+        //services.TryAddScoped<IContextCompleteService>(x => x.GetRequiredService<ISxcCurrentContextService>());
 
         // Integration stuff - must be implemented by each platform
         services.TryAddTransient<IPlatformModuleUpdater, BasicModuleUpdater>();

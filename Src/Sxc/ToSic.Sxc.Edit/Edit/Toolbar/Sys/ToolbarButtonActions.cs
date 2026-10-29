@@ -14,6 +14,7 @@ namespace ToSic.Sxc.Edit.Toolbar.Sys;
     DataConfidentiality = DataConfidentiality.Public,
     UiHint = "Buttons")]
 // ReSharper disable once UnusedMember.Global
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ToolbarButtonActions : CustomDataSource
 {
     public ToolbarButtonActions(Dependencies services)

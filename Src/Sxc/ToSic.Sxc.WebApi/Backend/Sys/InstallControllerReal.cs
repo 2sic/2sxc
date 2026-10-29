@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.Apps.Sys.AppStack;
 using ToSic.Eav.Data.Sys.PropertyLookup;
 using ToSic.Eav.Data.Sys.PropertyStack;
@@ -13,25 +14,24 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Sys.Integration.Installation;
 using ToSic.Sys.Capabilities.Features;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
-using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 
 namespace ToSic.Sxc.Backend.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class InstallControllerReal(
-    LazySvc<IContextOfSite> context,
+    LazySvc<IContextOfSiteService> ctxSvc,
     LazySvc<IEnvironmentInstaller> envInstallerLazy,
     LazySvc<IPlatformAppInstaller> platformAppInstaller,
     LazySvc<ImportFromRemote> impFromRemoteLazy,
     IResponseMaker responseMaker,
     LazySvc<IFeaturesService> featureService,
-    LazySvc<AppsBackend> appsBackend,
+    LazySvc<WorkApps> workApps,
     LazySvc<AppDataStackService> appSettingsStack)
-    : Services_ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
+    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
         connect:
         [
-            context, envInstallerLazy, platformAppInstaller, impFromRemoteLazy, responseMaker, featureService,
-            appSettingsStack, appsBackend
+            ctxSvc, envInstallerLazy, platformAppInstaller, impFromRemoteLazy, responseMaker, featureService,
+            appSettingsStack,  workApps,
         ])
 {
     public const string LogSuffix = "Install";
@@ -53,17 +53,17 @@ public class InstallControllerReal(
         var l = Log.Fn<InstallAppsDto>();
         
         // Get Remote Install URL
-        var site = context.Value.Site;
+        var site = ctxSvc.Value.Context.Site;
         var url = platformAppInstaller.Value
             .GetAutoInstallPackagesUiUrl(site, module, isContentApp);
 
         // Get list of already installed Apps
-        var appsOfThisSite = appsBackend.Value.Apps()
+        var appsOfThisSite = workApps.Value.GetApps(site)
             .Select(a => new AppDtoLight
             {
-                name = a.Name,
-                guid = a.Guid,
-                version = a.Version,
+                name = a.Specs.Name,
+                guid = a.Specs.NameId,
+                version = a.Specs.VersionSafe(),
             })
             .ToListOpt();
 

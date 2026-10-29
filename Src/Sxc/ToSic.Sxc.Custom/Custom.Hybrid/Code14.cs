@@ -55,9 +55,6 @@ public abstract class Code14()
 
     #region Stuff added by Code12
 
-    ///// <inheritdoc cref="IDynamicCode12Docs.Convert" />
-    //public IConvertService Convert => _DynCodeRoot.Convert;
-
     /// <inheritdoc cref="IDynamicCode12Docs.Resources" />
     public dynamic? Resources => CodeApi.Resources;
 

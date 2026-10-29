@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Backend.Cms;
 public class ListActivityReplace(
     AppWorkQuick<WorkFieldList> workFieldList,
     Generator<IPagePublishing> publishing,
-    ISxcCurrentContextService ctxService
+    IContextCompleteService ctxService
 ) : ServiceBase("Act.LsRpOp", connect: [workFieldList, ctxService, publishing])
 {
     public record Options(

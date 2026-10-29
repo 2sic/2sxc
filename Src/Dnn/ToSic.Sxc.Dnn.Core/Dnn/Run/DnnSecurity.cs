@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Dnn.Run;
 // TODO: probably change this to use an interface so we can make it internal
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [PrivateApi]
-public class DnnSecurity(LazySvc<RoleController> roleController) : ServiceBase("dnnSec", connect: [roleController])
+public class DnnSecurity(LazySvc<IRoleController> roleController) : ServiceBase("Dnn.SecSvc", connect: [roleController])
 {
     /// <summary>
     /// Returns true if a DotNetNuke User Group "2sxc Designers" / "2sxcAdministrators" exists
@@ -22,25 +22,25 @@ public class DnnSecurity(LazySvc<RoleController> roleController) : ServiceBase("
     private bool PortalHasExplicitAdminGroups(int portalId)
         => DnnGroupsSxcAdmins.Any(grpName => PortalHasGroup(portalId, grpName));
 
-    private bool IsExplicitAdmin(UserInfo user)
+    private static bool IsExplicitAdmin(UserInfo user)
         => !IsNullOrAnonymous(user) && DnnGroupsSxcAdmins.Any(user.IsInRole);
 
 
     private bool PortalHasGroup(int portalId, string groupName)
         => roleController.Value.GetRoleByName(portalId, groupName) != null;
 
-    private bool IsNullOrAnonymous(UserInfo user)
+    private static bool IsNullOrAnonymous(/*[NotNullWhen(false)]*/ UserInfo? user)
         => user == null || user.UserID == -1;
 
 
-    internal EffectivePermissions UserMayAdminThis(UserInfo user)
+    internal EffectivePermissions UserPermissions(UserInfo? user)
     {
         // Null-Check
         if (IsNullOrAnonymous(user))
             return new(false);
 
         // Super always AppAdmin
-        if (user.IsSuperUser)
+        if (user!.IsSuperUser)
             return new(true);
 
         var portal = PortalSettings.Current;
@@ -75,33 +75,39 @@ public class DnnSecurity(LazySvc<RoleController> roleController) : ServiceBase("
         return new(false);
     }
 
-    private List<UserRoleModelRaw> UserRoles(UserInfo user, int? portalId = null)
+    internal List<RoleInfo> UserRoleInfos(UserInfo? user, int portalId)
         => IsNullOrAnonymous(user)
             ? []
-            : user.Roles
-                .Select(r => RoleController.Instance.GetRoleByName(portalId ?? user.PortalID, r))
+            : user!.Roles
+                .Select(r => roleController.Value.GetRoleByName(portalId, r))
                 .Where(r => r != null)
-                .Select(r => new UserRoleModelRaw
-                {
-                    Id = r.RoleID,
-                    Name = r.RoleName,
-                    Created = r.CreatedOnDate,
-                    Modified = r.LastModifiedOnDate,
-                })
                 .ToList();
 
-    internal Guid UserGuid(UserInfo user)
-        => Membership.GetUser(user.Username)?.ProviderUserKey as Guid?
-           ?? Guid.Empty;
+    private List<UserRoleModelRaw> UserRoles(UserInfo? user, int? portalId = null) =>
+    [
+        .. UserRoleInfos(user, portalId ?? user?.PortalID ?? -1)
+            .Select(r => new UserRoleModelRaw
+            {
+                Id = r.RoleID,
+                Name = r.RoleName,
+                Created = r.CreatedOnDate,
+                Modified = r.LastModifiedOnDate,
+            })
+    ];
 
-    internal string UserIdentityToken(UserInfo user)
+    internal Guid UserGuid(UserInfo? user)
+        => (user?.Username).IsEmpty()
+            ? Guid.Empty
+            : Membership.GetUser(user.Username)?.ProviderUserKey as Guid? ?? Guid.Empty;
+
+    internal string UserIdentityToken(UserInfo? user)
         => IsNullOrAnonymous(user)
             ? SxcUserConstants.Anonymous
-            : DnnConstants.UserTokenPrefix + user.UserID;
+            : DnnConstants.UserTokenPrefix + user!.UserID;
 
     internal UserModelRaw CmsUserBuilder(UserInfo user, int siteId)
     {
-        var adminInfo = UserMayAdminThis(user);
+        var adminInfo = UserPermissions(user);
         return new()
         {
             Id = user.UserID,

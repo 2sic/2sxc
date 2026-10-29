@@ -19,7 +19,7 @@ namespace ToSic.Sxc.LookUp.Sys;
 /// </summary>
 /// <param name="getEngineLazy"></param>
 /// <param name="httpLazy"></param>
-public class SxcAppDataConfigProvider(LazySvc<ILookUpEngineResolver> getEngineLazy, LazySvc<IHttp> httpLazy)
+internal class SxcAppDataConfigProvider(LazySvc<ILookUpEngineResolver> getEngineLazy, LazySvc<IHttp> httpLazy)
     : ServiceBase("Sxc.CnfPrv", connect: [getEngineLazy, httpLazy]), IAppDataConfigProvider
 {
     public IAppDataConfiguration GetDataConfiguration(SxcAppBase app, AppDataConfigSpecs specs)
@@ -34,8 +34,9 @@ public class SxcAppDataConfigProvider(LazySvc<ILookUpEngineResolver> getEngineLa
     // will probably move again some day
     internal LookUpEngine GetLookupEngineForContext(IContextOfSite? context, IApp? appForLookup, IBlock? blockForLookupOrNull)
     {
-        var l = Log.Fn<LookUpEngine>($"module: {(context as ContextOfBlock)?.Module.Id}, app: {appForLookup?.AppId} ..., ...");
-        var modId = (context as ContextOfBlock)?.Module.Id ?? 0;
+        var maybeModuleId = (context as IContextOfBlock)?.Module.Id;
+        var l = Log.Fn<LookUpEngine>($"module: {maybeModuleId}, app: {appForLookup?.AppId} ..., ...");
+        var modId = maybeModuleId ?? 0;
 
         // Find the standard DNN property sources if PortalSettings object is available
         var envLookups = getEngineLazy.Value.GetLookUpEngine(modId);

@@ -56,7 +56,13 @@ internal class ToolbarRuleForEntity: ToolbarRuleTargeted
 
     protected string? EntityParamsList()
     {
-        var obj2Url = new ObjectToUrl(null, [_urlValueFilterNames]);
+        var obj2Url = new ObjectToUrl() // null, [_urlValueFilterNames])
+        {
+            MyOptions = new()
+            {
+                PreProcessors = [_urlValueFilterNames],
+            }
+        };
         return obj2Url.Serialize(EditInfo);
     }
 }

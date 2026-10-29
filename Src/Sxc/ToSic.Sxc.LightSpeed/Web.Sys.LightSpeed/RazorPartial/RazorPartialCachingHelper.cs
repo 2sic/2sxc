@@ -19,6 +19,7 @@ namespace ToSic.Sxc.Web.Sys.LightSpeed;
 /// <param name="exCtx"></param>
 /// <param name="featureSvc"></param>
 /// <param name="parentLog"></param>
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictionary<string, object?>? model, IExecutionContext exCtx, IFeaturesService featureSvc, ILog parentLog) : HelperBase(parentLog, "Rzr.Cache")
 {
 

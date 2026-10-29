@@ -2,6 +2,9 @@
 
   <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-Nullable.props" />
 
+  <!-- Activating docs for this DLL in v22.01 -->
+  <Import Project="../../SharedImports/CsProj.Props/CreateXDocsOnRelease.props" />
+
   <PropertyGroup>
     <AssemblyName>ToSic.Sxc.LightSpeed</AssemblyName>
   </PropertyGroup>
@@ -20,8 +23,8 @@
     <Reference Include="System.Runtime.Caching" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
-    <PackageReference Include="System.Runtime.Caching" Version="9.0.0" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Include="System.Runtime.Caching" Version="10.0.9" />
   </ItemGroup>
 
 </Project>

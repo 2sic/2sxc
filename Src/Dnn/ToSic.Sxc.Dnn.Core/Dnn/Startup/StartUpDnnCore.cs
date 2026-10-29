@@ -50,18 +50,27 @@ internal static class StartUpDnnCore
     public static IServiceCollection AddDnnCore(this IServiceCollection services)
     {
         // Core Runtime Context Objects
-        services.TryAddScoped<IUser, DnnUser>();
+        services.TryAddTransient<DnnUserFactory>();
+        services.TryAddScoped<IUser>(sp => sp.GetRequiredService<DnnUserFactory>().GetUser());
         services.TryAddScoped<DnnSecurity>();
         // Make sure that ISite and IZoneCultureResolver use the same singleton!
-        services.TryAddScoped<ISite, DnnSite>();    // this must come first!
-        services.TryAddScoped<IZoneCultureResolver>(x => x.GetRequiredService<ISite>());
+        services.TryAddTransient<DnnCultureResolver>();
+        services.TryAddScoped<DnnSiteFactory>(); // WIP v22 - separate factory job from the ISite itself - TODO: later should become transient!
+        services.TryAddScoped<ISite>(sp => sp.GetRequiredService<DnnSiteFactory>().TempSite);    // this must come before the IZoneCultureResolver!
+        services.TryAddScoped<IZoneCultureResolver>(x => x.GetRequiredService<DnnSiteFactory>().TempSite);
 
         // Module cannot yet be scoped, until we have a per-module scope at some time
-        services.TryAddTransient<IModule, DnnModule>();
-        services.TryAddTransient<IPage, DnnPage>();
-        services.TryAddTransient<IValueConverter, DnnValueConverter>();
+        //services.TryAddTransient<IModule, DnnModule>();
+        services.TryAddTransient<DnnModuleFactory>(); // new v22 TODO: MUST RENAME TO DnnModuleFactory
+        services.TryAddTransient<IModuleFactory, DnnModuleFactory>(); // new v22
 
-        services.TryAddTransient<XmlExporter, DnnXmlExporter>();
+        // The page is transient, which seems wrong, but it has very little initialization and is deterministic, so this is fine ATM
+        services.TryAddTransient<DnnPageFactory>(); // new v22
+        services.TryAddTransient<IPage>(sp => sp.GetRequiredService<DnnPageFactory>().Create()); // new v22
+        //services.TryAddTransient<IPage, DnnPage>(); // old
+
+        services.TryAddTransient<IValueConverter, DnnValueConverter>();
+        services.TryAddTransient<IXmlExporterIntegration, DnnXmlExporterIntegration>();  // new v22
         services.TryAddTransient<IImportExportEnvironment, DnnImportExportEnvironment>();
 
         services.TryAddTransient<IZoneMapper, DnnZoneMapper>();

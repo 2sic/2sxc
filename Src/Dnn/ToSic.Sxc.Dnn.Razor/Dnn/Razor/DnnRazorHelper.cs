@@ -36,7 +36,7 @@ internal class DnnRazorHelper() : CodeHelperBase("Sxc.RzrHlp")
         ParentPage = typedParent;
 
         // Only call the Page.ConnectToRoot, as it will call-back this objects ConnectToRoot
-        // So don't call: ConnectToRoot(typedParent._DynCodeRoot);
+        // So don't call: ConnectToRoot(typedParent.ExCtx);
         Page.ConnectToRoot(typedParent.ExCtx);
 
         Log.A($"{nameof(virtualPath)} for Render etc.:{virtualPath}");
