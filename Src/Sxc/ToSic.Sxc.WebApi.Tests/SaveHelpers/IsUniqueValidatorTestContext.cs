@@ -143,7 +143,7 @@ internal sealed class IsUniqueValidatorTestContext : IDisposable
 
     private static IImmutableList<ILanguage> BuildLanguages(IEnumerable<string> languages)
         => languages
-            .Select((language, index) => (ILanguage)new Language(language, readOnly: false, dimensionId: index + 1))
+            .Select((language, index) => (ILanguage)new Language(language, ReadOnly: false, Id: index + 1))
             .ToImmutableList();
 
     private IEntity CreateUniqueMetadataEntity(bool? isUnique)

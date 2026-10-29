@@ -274,6 +274,8 @@ public class OqtCultureTests
     private static DimensionDefinition Dimension(string key, bool active = true)
         => new()
         {
+            Id = 0,
+            ParentId = null,
             Name = key,
             Key = key.ToLowerInvariant(),
             EnvironmentKey = key.ToLowerInvariant(),
