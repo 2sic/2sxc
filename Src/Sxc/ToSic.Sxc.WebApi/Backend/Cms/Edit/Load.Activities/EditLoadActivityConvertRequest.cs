@@ -1,10 +1,8 @@
 ﻿using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.Data.Build.Sys;
-using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Metadata.Targets;
 using ToSic.Eav.Serialization;
-using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sys.HookUp;
 
@@ -20,7 +18,7 @@ public class EditLoadActivityConvertRequest(Generator<IJsonDataWriter> jsonSeria
         var l = Log.Fn<EditLoadDto>();
 
         var appReader = actionCtx.Get<IAppReader>(EditLoadContextConstants.AppReader);
-        var jsonSerializer = jsonSerializerGenerator.New().SetApp(appReader);
+        var jsonSerializer = jsonSerializerGenerator.New();
 
         // Exit early if no data
         if (!package.Data.Any())

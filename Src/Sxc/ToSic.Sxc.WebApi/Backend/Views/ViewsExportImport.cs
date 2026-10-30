@@ -61,8 +61,7 @@ public class ViewsExportImport(
             }
         }
 
-        var serializer = jsonWriter.Value.SetApp(appReader);
-        var serialized = serializer.Serialize(bundle, 0);
+        var serialized = jsonWriter.Value.Serialize(bundle, 0);
 
         return logCall.ReturnAsOk(responseMaker.File(serialized,
             ("View" + "." + bundle.Entity.GetBestTitle() + ImpExpConstants.Extension(ImpExpConstants.Files.json))

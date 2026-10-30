@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.Serialization;
-using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sxc.Data.Sys;
 using ToSic.Sys.HookUp;
@@ -18,7 +17,7 @@ public class EditLoadActivityAddContentTypes(Generator<IJsonDataWriter> jsonSeri
             CtAttributeIncludeInheritedMetadata = true
         };
 
-        var serializerForTypes = jsonSerializerGenerator.New().SetApp(mainCtx.Get<IAppReader>(EditLoadContextConstants.AppReader));
+        var serializerForTypes = jsonSerializerGenerator.New();
         serializerForTypes.ValueConvertHyperlinks = true;
 
         var jsonTypes = mainCtx.Get<List<IContentType>>(EditLoadContextConstants.UsedTypes)

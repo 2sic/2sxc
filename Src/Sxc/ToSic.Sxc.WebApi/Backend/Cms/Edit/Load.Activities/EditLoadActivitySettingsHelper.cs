@@ -117,7 +117,7 @@ public class EditLoadActivitySettingsHelper(
 
         // Setup Type Serializer - same as EditLoadBackend
         // 2026-10-30 2dm #JsonWriteToDo:
-        var serializerForTypes = jsonSerializerGenerator.New().SetApp(parameters.ContextOfApp.AppReaderRequired);
+        var serializerForTypes = jsonSerializerGenerator.New();
         var serSettings = new JsonSerializationSettings
         {
             CtIncludeInherited = true,
@@ -164,7 +164,7 @@ public class EditLoadActivitySettingsHelper(
                 .ToList();
 
             // 2026-10-30 2dm #JsonWriteToDo:
-            var jsonSerializer = jsonSerializerGenerator.New().SetApp(appWorkCtx.AppReader);
+            var jsonSerializer = jsonSerializerGenerator.New();
             var result = entities.Select(e => jsonSerializer.ToJson(e)).ToList();
 
             return l.Return(result, $"{result.Count}");
