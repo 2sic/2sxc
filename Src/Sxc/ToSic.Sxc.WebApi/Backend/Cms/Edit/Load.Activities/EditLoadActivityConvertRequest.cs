@@ -3,13 +3,14 @@ using ToSic.Eav.Data.Build.Sys;
 using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Metadata.Targets;
+using ToSic.Eav.Serialization;
 using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
-public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerializerGenerator, DataAssembler entityAssemblerKit, ITargetTypeService metadataTargets)
+public class EditLoadActivityConvertRequest(Generator<IJsonDataWriter> jsonSerializerGenerator, DataAssembler entityAssemblerKit, ITargetTypeService metadataTargets)
     : ServiceBase("UoW.AddCtx", connect: [jsonSerializerGenerator, entityAssemblerKit, metadataTargets]),
         IWork<List<BundleWithHeaderOptional<IEntity>>, EditLoadDto>
 {
@@ -58,7 +59,7 @@ public class EditLoadActivityConvertRequest(Generator<JsonSerializer> jsonSerial
     /// </summary>
     /// <returns></returns>
     private JsonEntity GetSerializeAndMdAssignJsonEntity(int appId, BundleWithHeaderOptional<IEntity> bundle,
-        JsonSerializer jsonSerializer, IAppReader appReader)
+        IJsonDataWriter jsonSerializer, IAppReader appReader)
     {
         var l = Log.Fn<JsonEntity>();
         // attach original metadata assignment when creating a new one

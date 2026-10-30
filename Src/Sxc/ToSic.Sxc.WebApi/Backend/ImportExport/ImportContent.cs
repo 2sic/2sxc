@@ -8,6 +8,7 @@ using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys.XmlImport;
 using ToSic.Eav.ImportExport.Sys.Zip;
 using ToSic.Eav.Persistence.Sys.Logging;
+using ToSic.Eav.Serialization;
 using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.WebApi.Sys.Helpers.Validation;
 using ToSic.Sys.Capabilities.Features;
@@ -23,7 +24,7 @@ public class ImportContent(
     LazySvc<ImportService> importerLazy,
     LazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
     ZipImport zipImport,
-    Generator<JsonSerializer> jsonSerializerGenerator,
+    Generator<IJsonDataReader> jsonReaderGen,
     IGlobalConfiguration globalConfiguration,
     IAppReaderFactory appReaders,
     LazySvc<IUser> userLazy,
@@ -33,7 +34,7 @@ public class ImportContent(
     : ServiceBase("Bck.Export",
         connect:
         [
-            envLogger, importerLazy, xmlImportWithFilesLazy, zipImport, jsonSerializerGenerator, globalConfiguration,
+            envLogger, importerLazy, xmlImportWithFilesLazy, zipImport, jsonReaderGen, globalConfiguration,
             appReaders, appCachePurger, userLazy, features, workEntSave
         ])
 {
@@ -85,7 +86,7 @@ public class ImportContent(
                 throw l.Ex(new ArgumentException("a file is not json"));
 
             // 1. Create content types
-            var serializer = jsonSerializerGenerator.New().SetApp(appReaders.Get(new AppIdentity(zoneId, appId)));
+            var serializer = jsonReaderGen.New().SetApp(appReaders.Get(new AppIdentity(zoneId, appId)));
 
             // 1.1 Deserialize json files
             var packages = files.ToDictionary(file => file.Name, file => serializer.UnpackAndTestGenericJsonV1(file.Contents));
@@ -136,7 +137,7 @@ public class ImportContent(
 
             // 2.1 Reset serializer to use the new app
             var appState = appReaders.Get(new AppIdentity(zoneId, appId));
-            serializer = jsonSerializerGenerator.New().Setup(new(appState) { PreferLocalAppTypes = true });
+            serializer = jsonReaderGen.New().Setup(new(appState) { PreferLocalAppTypes = true });
             // Since we're importing directly into this app, we prefer local content-types
             //serializer.PreferLocalAppTypes = true;
             l.A("Load items");

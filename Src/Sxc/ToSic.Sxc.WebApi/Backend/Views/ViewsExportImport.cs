@@ -8,6 +8,7 @@ using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys.Xml;
 using ToSic.Eav.Persistence.Sys.Logging;
+using ToSic.Eav.Serialization;
 using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.WebApi.Sys.Helpers.Validation;
 using ToSic.Eav.WebApi.Sys.ImportExport;
@@ -23,7 +24,8 @@ public class ViewsExportImport(
     AppWorkQuick<WorkEntitySave> workEntSave,
     IServerPaths serverPaths,
     IEnvironmentLogger envLogger,
-    LazySvc<JsonSerializer> jsonSerializerLazy,
+    LazySvc<IJsonDataReader> jsonReader,
+    LazySvc<IJsonDataWriter> jsonWriter,
     ISite site,
     AppIconHelpers appIconHelpers,
     Generator<ImpExpHelpers> impExpHelpers,
@@ -32,7 +34,7 @@ public class ViewsExportImport(
     : ServiceBase("Bck.Views",
         connect:
         [
-            workEntSave, serverPaths, envLogger, jsonSerializerLazy, appIconHelpers, impExpHelpers, responseMaker,
+            workEntSave, serverPaths, envLogger, jsonReader, jsonWriter, appIconHelpers, impExpHelpers, responseMaker,
             qDefBuilder, site
         ])
 {
@@ -59,7 +61,7 @@ public class ViewsExportImport(
             }
         }
 
-        var serializer = jsonSerializerLazy.Value.SetApp(appReader);
+        var serializer = jsonWriter.Value.SetApp(appReader);
         var serialized = serializer.Serialize(bundle, 0);
 
         return logCall.ReturnAsOk(responseMaker.File(serialized,
@@ -97,7 +99,7 @@ public class ViewsExportImport(
                 throw new ArgumentException("a file is not json");
 
             // 1. create the views
-            var serializer = jsonSerializerLazy.Value.SetApp(appRead);
+            var serializer = jsonReader.Value.SetApp(appRead);
 
             var bundles = files
                 .Select(f => serializer.DeserializeEntityWithAssets(f.Contents))

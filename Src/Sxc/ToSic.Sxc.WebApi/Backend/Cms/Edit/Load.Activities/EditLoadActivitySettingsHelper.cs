@@ -2,6 +2,7 @@
 using ToSic.Eav.Data.ContentTypes.Sys;
 using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.ImportExport.Json.V1;
+using ToSic.Eav.Serialization;
 using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sxc.Backend.Cms.Load.Settings;
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class EditLoadActivitySettingsHelper(
-    Generator<JsonSerializer> jsonSerializerGenerator,
+    Generator<IJsonDataWriter> jsonSerializerGenerator,
     IEnumerable<ILoadSettingsProvider> loadSettingsProviders,
     IEnumerable<ILoadSettingsContentTypesProvider> loadSettingsTypesProviders,
     AppWorkChain<WorkEntities> appEntities)
@@ -115,6 +116,7 @@ public class EditLoadActivitySettingsHelper(
             .ToList();
 
         // Setup Type Serializer - same as EditLoadBackend
+        // 2026-10-30 2dm #JsonWriteToDo:
         var serializerForTypes = jsonSerializerGenerator.New().SetApp(parameters.ContextOfApp.AppReaderRequired);
         var serSettings = new JsonSerializationSettings
         {
@@ -161,6 +163,7 @@ public class EditLoadActivitySettingsHelper(
                 .GetWithParentAppsExperimental("StringWysiwygConfiguration")
                 .ToList();
 
+            // 2026-10-30 2dm #JsonWriteToDo:
             var jsonSerializer = jsonSerializerGenerator.New().SetApp(appWorkCtx.AppReader);
             var result = entities.Select(e => jsonSerializer.ToJson(e)).ToList();
 

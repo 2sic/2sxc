@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.ImportExport.Json.Sys;
+using ToSic.Eav.Serialization;
 using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sxc.Data.Sys;
@@ -6,7 +7,7 @@ using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
-public class EditLoadActivityAddContentTypes(Generator<JsonSerializer> jsonSerializerGenerator)
+public class EditLoadActivityAddContentTypes(Generator<IJsonDataWriter> jsonSerializerGenerator)
     : IWork<EditLoadDto, EditLoadDto>
 {
     public async Task<Package<EditLoadDto>> Handle(WorkContext mainCtx, Package<EditLoadDto> package)

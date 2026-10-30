@@ -1,8 +1,6 @@
-﻿using ToSic.Eav.Apps.AppReader.Sys;
-using ToSic.Eav.Data.Build.Sys;
+﻿using ToSic.Eav.Data.Build.Sys;
 using ToSic.Eav.Data.Processing;
-using ToSic.Eav.ImportExport.Json.Sys;
-using ToSic.Eav.Serialization.Sys;
+using ToSic.Eav.Serialization;
 using ToSic.Eav.Services;
 using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Backend.SaveHelpers;
@@ -17,13 +15,13 @@ public class EditSaveBackend(
     AppWorkChain<SxcPagePublishing> pagePublishing,
     AppWorkChain<WorkEntities> workEntities,
     ISxcCurrentContextService ctxService,
-    JsonSerializer jsonSerializer,
+    IJsonDataReader jsonReader,
     SaveSecurity saveSecurity,
     SaveEntities saveBackendHelper,
     IDataSourcesService dataSourcesService,
     LazySvc<DataValidatorContentTypeDataStore> valContentTypeDataStore,
     DataAssembler dataAssembler)
-    : ServiceBase("Cms.SaveBk", connect: [appCtxSvc, pagePublishing, workEntities, ctxService, jsonSerializer, saveSecurity, saveBackendHelper, dataSourcesService, dataAssembler, valContentTypeDataStore])
+    : ServiceBase("Cms.SaveBk", connect: [appCtxSvc, pagePublishing, workEntities, ctxService, jsonReader, saveSecurity, saveBackendHelper, dataSourcesService, dataAssembler, valContentTypeDataStore])
 {
     public async Task<Dictionary<Guid, int>> Save(int appId, EditSaveDto package, bool partOfPage)
     {
@@ -52,8 +50,8 @@ public class EditSaveBackend(
         var appCtxNew = appCtxSvc.ContextNew(appId);
         var appEntities = workEntities.New(appCtxNew);
         //var appCtx = appEntities.AppWorkCtx;
-
-        var ser = jsonSerializer.Setup(new(appCtxNew.AppReader) { PreferLocalAppTypes = true });//.SetApp(appCtxNew.AppReader);
+        jsonReader.Initialize(new(appCtxNew.AppReader) { PreferLocalAppTypes = true });//.SetApp(appCtxNew.AppReader);
+        var ser = jsonReader;
         // Since we're importing directly into this app, we would prefer local content-types
         //ser.PreferLocalAppTypes = true;
 
