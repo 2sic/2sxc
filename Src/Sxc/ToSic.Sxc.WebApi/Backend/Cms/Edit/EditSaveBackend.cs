@@ -15,13 +15,13 @@ public class EditSaveBackend(
     AppWorkChain<SxcPagePublishing> pagePublishing,
     AppWorkChain<WorkEntities> workEntities,
     ISxcCurrentContextService ctxService,
-    IJsonDataReader jsonReader,
+    Generator<IJsonDataReader, IJsonDataReader.Options> jsonReaderGen,
     SaveSecurity saveSecurity,
     SaveEntities saveBackendHelper,
     IDataSourcesService dataSourcesService,
     LazySvc<DataValidatorContentTypeDataStore> valContentTypeDataStore,
     DataAssembler dataAssembler)
-    : ServiceBase("Cms.SaveBk", connect: [appCtxSvc, pagePublishing, workEntities, ctxService, jsonReader, saveSecurity, saveBackendHelper, dataSourcesService, dataAssembler, valContentTypeDataStore])
+    : ServiceBase("Cms.SaveBk", connect: [appCtxSvc, pagePublishing, workEntities, ctxService, jsonReaderGen, saveSecurity, saveBackendHelper, dataSourcesService, dataAssembler, valContentTypeDataStore])
 {
     public async Task<Dictionary<Guid, int>> Save(int appId, EditSaveDto package, bool partOfPage)
     {
@@ -50,8 +50,7 @@ public class EditSaveBackend(
         var appCtxNew = appCtxSvc.ContextNew(appId);
         var appEntities = workEntities.New(appCtxNew);
         //var appCtx = appEntities.AppWorkCtx;
-        jsonReader.Initialize(new(appCtxNew.AppReader) { PreferLocalAppTypes = true });//.SetApp(appCtxNew.AppReader);
-        var ser = jsonReader;
+        var ser = jsonReaderGen.New(new(appCtxNew.AppReader) { PreferLocalAppTypes = true });//.SetApp(appCtxNew.AppReader);
         // Since we're importing directly into this app, we would prefer local content-types
         //ser.PreferLocalAppTypes = true;
 

@@ -3,13 +3,11 @@ using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Eav.ImportExport.Integration;
-using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys.Xml;
 using ToSic.Eav.Persistence.Sys.Logging;
 using ToSic.Eav.Serialization;
-using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.WebApi.Sys.Helpers.Validation;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Apps.Sys;
@@ -24,7 +22,7 @@ public class ViewsExportImport(
     AppWorkQuick<WorkEntitySave> workEntSave,
     IServerPaths serverPaths,
     IEnvironmentLogger envLogger,
-    LazySvc<IJsonDataReader> jsonReader,
+    Generator<IJsonDataReader, IJsonDataReader.Options> jsonReader,
     LazySvc<IJsonDataWriter> jsonWriter,
     ISite site,
     AppIconHelpers appIconHelpers,
@@ -98,7 +96,7 @@ public class ViewsExportImport(
                 throw new ArgumentException("a file is not json");
 
             // 1. create the views
-            var serializer = jsonReader.Value.SetApp(appRead);
+            var serializer = jsonReader.New(new(appRead));
 
             var bundles = files
                 .Select(f => serializer.DeserializeEntityWithAssets(f.Contents))

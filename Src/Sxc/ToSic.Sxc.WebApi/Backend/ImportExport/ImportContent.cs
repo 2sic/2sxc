@@ -3,7 +3,6 @@ using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Data.Sys.Entities.Sources;
 using ToSic.Eav.Identity;
 using ToSic.Eav.ImportExport.Integration;
-using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys.XmlImport;
 using ToSic.Eav.ImportExport.Sys.Zip;
@@ -24,7 +23,7 @@ public class ImportContent(
     LazySvc<ImportService> importerLazy,
     LazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
     ZipImport zipImport,
-    Generator<IJsonDataReader> jsonReaderGen,
+    Generator<IJsonDataReader, IJsonDataReader.Options> jsonReaderGen,
     IGlobalConfiguration globalConfiguration,
     IAppReaderFactory appReaders,
     LazySvc<IUser> userLazy,
@@ -86,7 +85,7 @@ public class ImportContent(
                 throw l.Ex(new ArgumentException("a file is not json"));
 
             // 1. Create content types
-            var serializer = jsonReaderGen.New().SetApp(appReaders.Get(new AppIdentity(zoneId, appId)));
+            var serializer = jsonReaderGen.New(new(appReaders.Get(new AppIdentity(zoneId, appId))) { PreferLocalAppTypes = true });
 
             // 1.1 Deserialize json files
             var packages = files.ToDictionary(file => file.Name, file => serializer.UnpackAndTestGenericJsonV1(file.Contents));
@@ -137,7 +136,7 @@ public class ImportContent(
 
             // 2.1 Reset serializer to use the new app
             var appState = appReaders.Get(new AppIdentity(zoneId, appId));
-            serializer = jsonReaderGen.New().Setup(new(appState) { PreferLocalAppTypes = true });
+            serializer = jsonReaderGen.New(new(appState) { PreferLocalAppTypes = true });
             // Since we're importing directly into this app, we prefer local content-types
             //serializer.PreferLocalAppTypes = true;
             l.A("Load items");
