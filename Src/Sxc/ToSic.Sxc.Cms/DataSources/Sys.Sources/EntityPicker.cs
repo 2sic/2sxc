@@ -7,6 +7,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.DataSource.Sys.Streams;
 using ToSic.Eav.DataSource.VisualQuery;
+using ToSic.Sys.Context;
 using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Users;
 using static ToSic.Eav.DataSource.DataSourceConstants;
@@ -34,12 +35,13 @@ namespace ToSic.Sxc.DataSources.Sys.Sources;
 public class EntityPicker(
     AppWorkQuick<WorkEntities> workEntities,
     IContextOfAppFactory appCtxFactory,
+    IContextService ctxSvc,
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions,
     Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> typePermissions,
     IUser user,
     IAppReaderFactory appReaders,
     DataSourceBase.Dependencies services)
-    : DataSourceBase(services, "Api.EntPck", connect: [workEntities, appCtxFactory, appPermissions, typePermissions, appReaders])
+    : DataSourceBase(services, "Api.EntPck", connect: [workEntities, appCtxFactory, ctxSvc, appPermissions, typePermissions, appReaders])
 {
     #region Configuration-properties
 
@@ -109,8 +111,10 @@ public class EntityPicker(
 
         // Preserve module permissions from the context prepared by the WebApi.
         // A nested query targeting another app must not inherit those permissions.
-        // Get the context - must be pre-set by the caller
-        var ctxForPermissions = appCtxFactory.Create(this.PureIdentity());
+        var ctxForPermissions = ctxSvc.Context is IContextOfApp { AppReaderOrNull: { } app } shared
+                                && app.AppId == AppId && app.ZoneId == ZoneId
+            ? shared
+            : appCtxFactory.Create(this.PureIdentity());
 
         // Case 1: No Type Names - return all entities in the Content-Scope
         if (TypeNames.IsEmptyOrWs())
