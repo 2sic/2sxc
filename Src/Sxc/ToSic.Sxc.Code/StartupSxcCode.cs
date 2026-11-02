@@ -38,7 +38,7 @@ public static class StartupSxcCode
 
         // Code Fallbacks if not registered by the platform
         services.TryAddTransient<ExecutionContext, ExecutionContextUnknown>();
-        services.TryAddTransient(typeof(ExecutionContext<,>), typeof(ExecutionContextUnknownObjKit));
+        services.TryAddTransient(typeof(ExecutionContext<,>), typeof(ExecutionContextUnknownObjKit<,>));
 
         // v13 DynamicCodeService
         //services.TryAddTransient<CodeApiServiceBase.Dependencies>();
