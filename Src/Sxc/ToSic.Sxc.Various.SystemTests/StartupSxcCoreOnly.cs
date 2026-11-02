@@ -56,5 +56,7 @@ public class StartupSxcCoreOnly
             .AddSxcAppsFallbacks()
             .AddEavDataBuildFallbacks()
             .AddEavDataFallbacks()
-            .AddAllLibAndSysFallbacks();
+            .AddAllLibAndSysFallbacks()
+            // ImgResizeLinker requires ISite, which has its fallback in AddContextFallbacks
+            .AddContextFallbacks();
 }
