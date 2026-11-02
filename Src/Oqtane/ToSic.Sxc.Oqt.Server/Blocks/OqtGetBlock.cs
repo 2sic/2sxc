@@ -28,8 +28,9 @@ internal class OqtGetBlock(
             return currentContextServiceToInit;
         _alreadyTriedToLoad = true;
 
-        var block = InitializeBlock();
-        currentContextServiceToInit.ShareBlockSpecs(block);
+        // Requests without ModuleId/PageId have no block, same as in Dnn
+        if (InitializeBlock() is { } block)
+            currentContextServiceToInit.ShareBlockSpecs(block);
         return currentContextServiceToInit;
     }
     private bool _alreadyTriedToLoad;
