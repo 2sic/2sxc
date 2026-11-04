@@ -3,15 +3,14 @@ using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Processing;
 using ToSic.Eav.Metadata.Sys;
 using ToSic.Eav.Models;
-using ToSic.Sys.HookUp;
+using ToSic.Eav.WebApi.Sys.Helpers.Validation;
 using ToSic.Sys.Users;
 using ToSic.Sys.Utils.Types;
-using static ToSic.Eav.WebApi.Sys.Helpers.Validation.ValidatorBase;
 
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
 [PrivateApi]
-public class DataValidatorContentTypeDataStore(IServiceProvider sp, RemoteWork<WorkEntityBlockUsers, PermissionCheckPayload, IEntity?> blockUser) : ServiceBase("Val.DtStor")
+public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBase("Val.DtStor")
 {
 
     /// <summary>
@@ -49,7 +48,7 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp, RemoteWork<W
             return l.Return(new(
                     result.Entity,
                     result.Decorator,
-                    BuildExceptionIfHasIssues($"Save is disabled for content-type {ent.Type.Name} (index: {index})", l)),
+                    ValidatorErrors.BuildExceptionIfHasIssues($"Save is disabled for content-type {ent.Type.Name} (index: {index})", l)),
                 "save disabled!"
             );
 
@@ -91,7 +90,7 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp, RemoteWork<W
 
 
         Result AsError(string msg) =>
-            new(ent, decorator, BuildExceptionIfHasIssues(
+            new(ent, decorator, ValidatorErrors.BuildExceptionIfHasIssues(
                 $"Data processing handler '{decorator.DataProcessingHandler}' {msg} for content-type {ct.Name} (id: {ct.Id})", l));
     }
     

@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Backend.SaveHelpers;
 /// <summary>
 /// Validates save packages for fields marked with <c>IsUnique</c>.
 /// </summary>
-internal class IsUniqueValidator(UniqueValueLookup lookup, IDataSource appData, ILog parentLog) : ValidatorBase(parentLog, "Val.UnqOk")
+internal class IsUniqueValidator(UniqueValueLookup lookup, IDataSource appData, ILog parentLog) : HelperBase(parentLog, "Val.UnqOk")
 {
     internal HttpExceptionAbstraction? UniqueValuesOnly(IReadOnlyCollection<IEntity> pendingEntities)
     {
@@ -26,8 +26,7 @@ internal class IsUniqueValidator(UniqueValueLookup lookup, IDataSource appData, 
             if (lookup.FindConflict(appData, LookupRequest(entry)) is { } conflict)
                 return DuplicateException(l, entry, conflict, null, "existing");
 
-        Errors = string.Empty;
-        var exception = BuildExceptionIfHasIssues(Errors, l, "UniqueValuesOnly() done");
+        var exception = ValidatorErrors.BuildExceptionIfHasIssues("", l, "UniqueValuesOnly() done");
         return l.Return(exception, "ok");
     }
 
@@ -101,12 +100,12 @@ internal class IsUniqueValidator(UniqueValueLookup lookup, IDataSource appData, 
 
         // Keep the message and log in one place so request-local and persisted conflicts explain
         // duplicates in the same format.
-        Errors = $"Duplicate unique value in {entry.ContentType}.{entry.Field}: value '{entry.Value}' (language: {language}) already exists on {target}.";
+        var errors = $"Duplicate unique value in {entry.ContentType}.{entry.Field}: value '{entry.Value}' (language: {language}) already exists on {target}.";
         Log.A($"Unique conflict ct:{entry.ContentType} field:{entry.Field} value:'{entry.Value}' lang:{language} " +
               $"pending[item:{entry.Index}, entityId:{entry.Entity.EntityId}, repoId:{entry.Entity.RepositoryId}, guid:{entry.Entity.EntityGuid}] " +
               $"conflict[entityId:{conflict.EntityId}, repoId:{conflict.RepositoryId}, guid:{conflict.EntityGuid}]");
 
-        var exception = BuildExceptionIfHasIssues(Errors, l, "UniqueValuesOnly() done");
+        var exception = ValidatorErrors.BuildExceptionIfHasIssues(errors, l, "UniqueValuesOnly() done");
         return l.Return(exception, $"duplicate:first; source:{source}");
     }
 

@@ -8,8 +8,20 @@ namespace ToSic.Sxc.Backend.SaveHelpers;
 /// especially missing headers or inconsistent group assignments.
 /// </summary>
 /// <param name="parentLog"></param>
-internal class SaveDataPackageValidator(ILog parentLog) : ValidatorBase(parentLog, "Val.PackOk")
+internal class SaveDataPackageValidator(ILog parentLog) : HelperBase(parentLog, "Val.PackOk")
 {
+    private string _errors = string.Empty;
+
+    /// <summary>
+    /// Add an error message
+    /// </summary>
+    private void Add(string addition)
+    {
+        var l = Log.Fn($"Add problem to list:{addition}");
+        _errors += (_errors == string.Empty ? "" : "\n") + addition;
+        l.Done();
+    }
+
     /// <summary>
     /// The package format for loading and saving are the same, but we want to make sure
     /// that the save package doesn't contain unexpected trash (which would indicate the UI was broken)
@@ -30,7 +42,7 @@ internal class SaveDataPackageValidator(ILog parentLog) : ValidatorBase(parentLo
             ValidateEachItemInBundle(package.Items);
         }
 
-        var preparedException = BuildExceptionIfHasIssues(Errors, l, "ContainsOnlyExpectedNodes() done");
+        var preparedException = ValidatorErrors.BuildExceptionIfHasIssues(_errors, l, "ContainsOnlyExpectedNodes() done");
         return l.Return(preparedException);
     }
 

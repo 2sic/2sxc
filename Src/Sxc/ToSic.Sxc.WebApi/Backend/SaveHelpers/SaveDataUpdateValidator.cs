@@ -6,8 +6,20 @@ namespace ToSic.Sxc.Backend.SaveHelpers;
 /// Perform special validation checks on update, such as ensuring that we're updating the correct target item etc.
 /// </summary>
 /// <param name="parentLog"></param>
-internal class SaveDataUpdateValidator(ILog parentLog) : ValidatorBase(parentLog, "Val.UpdOk")
+internal class SaveDataUpdateValidator(ILog parentLog) : HelperBase(parentLog, "Val.UpdOk")
 {
+    private string _errors = string.Empty;
+
+    /// <summary>
+    /// Add an error message
+    /// </summary>
+    private void Add(string addition)
+    {
+        var l = Log.Fn($"Add problem to list:{addition}");
+        _errors += (_errors == string.Empty ? "" : "\n") + addition;
+        l.Done();
+    }
+
     internal (int? ResetId, HttpExceptionAbstraction? Exception) IfUpdateValidateAndCorrectIds(WorkEntities workEntities, int count, IEntity newEntity)
     {
         var l = Log.Fn<(int?, HttpExceptionAbstraction?)>();
@@ -32,7 +44,7 @@ internal class SaveDataUpdateValidator(ILog parentLog) : ValidatorBase(parentLog
         CompareIdentities(count, previousEntity, newEntity);
         CompareAttributes(count, previousEntity, newEntity);
 
-        var exception = BuildExceptionIfHasIssues(Errors, l, "EntityIsOk() done");
+        var exception = ValidatorErrors.BuildExceptionIfHasIssues(_errors, l, "EntityIsOk() done");
 
         return l.Return((resetId, exception), "ok");
     }
