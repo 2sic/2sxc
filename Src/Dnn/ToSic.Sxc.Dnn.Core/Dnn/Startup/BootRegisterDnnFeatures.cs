@@ -5,12 +5,19 @@ using ToSic.Sys.Capabilities.Features;
 namespace ToSic.Sxc.Dnn.StartUp;
 
 internal class BootRegisterDnnFeatures(FeaturesCatalog featuresCatalog)
-    : BootProcessBase("DnnFts", bootPhase: BootPhase.Registrations, connect: [featuresCatalog]), IBootProcess
+    : ServiceBase("DnnFts", connect: [featuresCatalog]), IBootProcess
 {
+
+    public string NameId => Log.NameId;
+
+    public BootPhase Phase => BootPhase.Registrations;
+
+    public int Priority => 999;
+
     /// <summary>
     /// Register Dnn features before loading
     /// </summary>
-    public override void Run() => featuresCatalog.Register(DnnFeatures);
+    public void Run() => featuresCatalog.Register(DnnFeatures);
 
     public static readonly Feature[] DnnFeatures =
     [

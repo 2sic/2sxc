@@ -6,12 +6,19 @@ namespace ToSic.Sxc.Sys.Configuration;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public sealed class BootRegisterSxcFeatures(FeaturesCatalog featuresCatalog)
-    : BootProcessBase($"{SxcLogName}.SUpReg", bootPhase: BootPhase.Registrations, connect: [featuresCatalog]), IBootProcess
+    : ServiceBase($"{SxcLogName}.SUpReg", connect: [featuresCatalog]), IBootProcess
 {
+
+    public string NameId => Log.NameId;
+
+    public BootPhase Phase => BootPhase.Registrations;
+
+    public int Priority => 999;
+
     /// <summary>
     /// Register Sxc features during boot.
     /// </summary>
-    public override void Run() => featuresCatalog.Register(SxcFeatures);
+    public void Run() => featuresCatalog.Register(SxcFeatures);
 
     private static readonly Feature[] SxcFeatures =
     [
