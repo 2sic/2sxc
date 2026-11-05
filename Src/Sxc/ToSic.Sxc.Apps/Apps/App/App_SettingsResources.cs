@@ -24,8 +24,6 @@ public partial class App
     /// </summary>
     /// <param name="cdf"></param>
     internal void SetupCodeDataFactory(ICodeDataFactory cdf)
-        // 2026-10-18 2dm: Replaced the Inject here, so we don't actually use the inject in production code.
-        //=> cdfLazy.Inject(cdf);
         => Cdf = cdf;
 
     private dynamic MakeDynProperty(IEntity contents, bool propsRequired)

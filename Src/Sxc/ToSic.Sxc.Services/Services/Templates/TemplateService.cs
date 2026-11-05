@@ -24,7 +24,7 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getLookupsLazy) : 
 
         // in some cases, like when testing, the _CodeApiSvc is not available
         // then it should still work, but of course not know about the app's sources
-        var original = ((IExCtxLookUpEngine?)ExCtxOrNull)?.LookUpForDataSources // #DropAppConfigurationProvider ((Apps.App?)ExCtxOrNull?.GetApp())?.ConfigurationProvider
+        var original = ((IExCtxLookUpEngine?)ExCtxOrNull)?.LookUpForDataSources
             ?? getLookupsLazy.Value.GetLookUpEngine(ExCtxOrNull?.GetBlock()?.Context?.Module?.Id ?? 0);
         
         return noSources
