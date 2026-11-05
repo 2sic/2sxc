@@ -11,8 +11,8 @@ namespace ToSic.Sxc.Code.Generate.Data;
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class CSharpCustomModelsGenerator(IUser user, IAppReaderFactory appReadFac)
-    : CSharpModelsGeneratorBase(user, appReadFac, SxcLogName + ".CMdGen") // IFileGenerator is inherited from base
+internal class CSharpCustomModelSetGenerator(IUser user, IAppReaderFactory appReadFac)
+    : CSharpModelSetGeneratorBase(user, appReadFac, SxcLogName + ".CMdGen") // IFileGenerator is inherited from base
 {
     #region Information for the interface
 
@@ -24,13 +24,13 @@ internal class CSharpCustomModelsGenerator(IUser user, IAppReaderFactory appRead
 
     #endregion
 
-    protected internal override CSharpCodeSpecs BuildDerivedSpecs(IFileGeneratorSpecs parameters)
+    protected internal override CSharpCodeSpecs BuildDerivedSpecs(IGenerateFileSetSpecs parameters)
         => BuildCustomModelSpecs(parameters);
 
     /// <summary>
     /// Build CustomModel-specific specs with CustomModel inheritance and naming conventions
     /// </summary>
-    private CSharpCodeSpecs BuildCustomModelSpecs(IFileGeneratorSpecs parameters)
+    private CSharpCodeSpecs BuildCustomModelSpecs(IGenerateFileSetSpecs parameters)
     {
         var codeSpecs = base.BuildSpecs(parameters);
 

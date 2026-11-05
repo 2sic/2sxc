@@ -22,7 +22,7 @@ public class RazorViewsGenerator(IUser user, IAppReaderFactory appReadFac)
     #endregion
 
 
-    public IGeneratedFileSet[] Generate(IFileGeneratorSpecs specs)
+    public IGeneratedFileSet[] Generate(IGenerateFileSetSpecs specs)
     {
         var cSharpSpecs = BuildSpecs(specs);
         var file = AppRazors(cSharpSpecs, "AppRazor");

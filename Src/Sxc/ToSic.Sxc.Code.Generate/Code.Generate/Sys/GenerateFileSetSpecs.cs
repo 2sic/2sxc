@@ -3,7 +3,7 @@
 /// <summary>
 /// WIP Parameters to give the code generator
 /// </summary>
-internal record FileGeneratorSpecs : IFileGeneratorSpecs
+internal record GenerateFileSetSpecs : IGenerateFileSetSpecs
 {
     /// <inheritdoc />
     public string? Configuration { get; init; }

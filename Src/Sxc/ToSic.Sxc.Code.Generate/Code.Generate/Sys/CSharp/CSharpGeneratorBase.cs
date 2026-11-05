@@ -27,7 +27,7 @@ public abstract class CSharpGeneratorBase(IUser user, IAppReaderFactory appReadF
 
     #endregion
 
-    internal CSharpCodeSpecs BuildSpecs(IFileGeneratorSpecs parameters)
+    internal CSharpCodeSpecs BuildSpecs(IGenerateFileSetSpecs parameters)
     {
         // Prepare App State and add to Specs
         var appReader = appReadFac.Get(parameters.AppId);

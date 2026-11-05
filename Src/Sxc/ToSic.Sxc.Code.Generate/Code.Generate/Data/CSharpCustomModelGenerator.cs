@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Code.Generate.Data;
 /// Generator for individual CustomModel classes
 /// Creates lightweight model classes that inherit from CustomModel
 /// </summary>
-internal class CSharpCustomModelGenerator(CSharpCustomModelsGenerator generator) : HelperBase(generator.Log, "Gen.CstMdl"), ICSharpCodeFragmentGenerator
+internal class CSharpCustomModelGenerator(CSharpCustomModelSetGenerator generator) : HelperBase(generator.Log, "Gen.CstMdl"), ICSharpCodeFragmentGenerator
 {
     #region Overrides
 

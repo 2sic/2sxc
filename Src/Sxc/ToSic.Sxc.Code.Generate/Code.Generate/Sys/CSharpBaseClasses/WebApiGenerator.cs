@@ -22,7 +22,7 @@ public class WebApiGenerator(IUser user, IAppReaderFactory appReadFac)
     #endregion
 
 
-    public new IGeneratedFileSet[] Generate(IFileGeneratorSpecs specs)
+    public new IGeneratedFileSet[] Generate(IGenerateFileSetSpecs specs)
     {
         var cSharpSpecs = BuildSpecs(specs);
 

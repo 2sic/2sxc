@@ -24,8 +24,8 @@ public class CSharpModelGeneratorTests(
     {
         var context = CodeGeneratorTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder);
 
-        AssertGeneratorSkipsEphemeral(new CSharpTypedDataModelsGenerator(context.User, context.AppReaders), context);
-        AssertGeneratorSkipsEphemeral(new CSharpCustomModelsGenerator(context.User, context.AppReaders), context);
+        AssertGeneratorSkipsEphemeral(new CSharpTypedDataModelSetGenerator(context.User, context.AppReaders), context);
+        AssertGeneratorSkipsEphemeral(new CSharpCustomModelSetGenerator(context.User, context.AppReaders), context);
     }
 
     #endregion
@@ -87,7 +87,7 @@ public class CSharpModelGeneratorTests(
         await context.RunAsync();
 
         var specs = Assert.Single(context.Generator.ReceivedSpecs);
-        var body = GenerateBody(new CSharpTypedDataModelsGenerator(context.CodeContext.User, context.CodeContext.AppReaders), specs, context.ContentType.Name);
+        var body = GenerateBody(new CSharpTypedDataModelSetGenerator(context.CodeContext.User, context.CodeContext.AppReaders), specs, context.ContentType.Name);
 
         Assert.Contains($"public {CodeGeneratorTestContext.EntityFieldAndTypeName} {CodeGeneratorTestContext.EntityFieldAndTypeName} =>", body);
         Assert.Contains($"_item.Child<{CodeGeneratorTestContext.EntityFieldAndTypeName}>(\"{CodeGeneratorTestContext.EntityFieldAndTypeName}\")", body);
@@ -103,8 +103,8 @@ public class CSharpModelGeneratorTests(
         var context = CodeGeneratorTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder);
 
         var body = GenerateBody(
-            new CSharpTypedDataModelsGenerator(context.User, context.AppReaders),
-            new TestFileGeneratorSpecs { AppId = CodeGeneratorTestContext.AppId, ContentTypes = [context.ContentType.NameId] },
+            new CSharpTypedDataModelSetGenerator(context.User, context.AppReaders),
+            new GenerateFileSetSpecs { AppId = CodeGeneratorTestContext.AppId, ContentTypes = [context.ContentType.NameId] },
             context.ContentType.Name);
 
         Assert.Contains($"public ITypedItem {CodeGeneratorTestContext.EntityFieldAndTypeName} =>", body);
@@ -128,7 +128,7 @@ public class CSharpModelGeneratorTests(
     private static void AssertGeneratorSkipsEphemeral(IFileGenerator generator, CodeGeneratorTestContext context)
     {
         var body = generator
-            .Generate(new TestFileGeneratorSpecs
+            .Generate(new GenerateFileSetSpecs
             {
                 AppId = CodeGeneratorTestContext.AppId,
                 ContentTypes = [context.ContentType.NameId]
@@ -145,7 +145,7 @@ public class CSharpModelGeneratorTests(
     /// <summary>
     /// Generate everything the specs ask for, then pick the file of one content type.
     /// </summary>
-    private static string GenerateBody(IFileGenerator generator, IFileGeneratorSpecs specs, string typeName)
+    private static string GenerateBody(IFileGenerator generator, IGenerateFileSetSpecs specs, string typeName)
         => generator
             .Generate(specs)
             .Single()

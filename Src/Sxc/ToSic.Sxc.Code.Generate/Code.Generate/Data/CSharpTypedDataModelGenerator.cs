@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Code.Generate.Data;
 
-internal class CSharpTypedDataModelGenerator(CSharpTypedDataModelsGenerator generator) : HelperBase(generator.Log, "Gen.DtaCls"), ICSharpCodeFragmentGenerator
+internal class CSharpTypedDataModelGenerator(CSharpTypedDataModelSetGenerator generator) : HelperBase(generator.Log, "Gen.DtaCls"), ICSharpCodeFragmentGenerator
 {
     #region Overrides
 

@@ -15,16 +15,16 @@ public static class StartupSxcCodeGenerate
     public static IServiceCollection AddSxcCodeGen(this IServiceCollection services)
     {
         // v17 Code Generators
-        services.TryAddTransient<CSharpTypedDataModelsGenerator>();  // direct registration
-        services.AddTransient<IFileGenerator, CSharpTypedDataModelsGenerator>(); // with interface and no try, so all can be listed in DI
+        services.TryAddTransient<CSharpTypedDataModelSetGenerator>();  // direct registration
+        services.AddTransient<IFileGenerator, CSharpTypedDataModelSetGenerator>(); // with interface and no try, so all can be listed in DI
         services.AddTransient<IFileGenerator, RazorViewsGenerator>(); // with interface and no try, so all can be listed in DI
         services.AddTransient<IFileGenerator, CSharpServicesGenerator>(); // with interface and no try, so all can be listed in DI
         services.AddTransient<IFileGenerator, WebApiGenerator>(); // with interface and no try, so all can be listed in DI
         services.TryAddTransient<FileSaver>();
 
         // v20 Code Generators
-        services.TryAddTransient<CSharpCustomModelsGenerator>();  // direct registration
-        services.AddTransient<IFileGenerator, CSharpCustomModelsGenerator>(); // with interface and no try, so all can be listed in DI
+        services.TryAddTransient<CSharpCustomModelSetGenerator>();  // direct registration
+        services.AddTransient<IFileGenerator, CSharpCustomModelSetGenerator>(); // with interface and no try, so all can be listed in DI
 
         // v21.04 Copilot auto-generate on schema changes.
         services.TryAddTransient<CopilotCodeGenerateService>();

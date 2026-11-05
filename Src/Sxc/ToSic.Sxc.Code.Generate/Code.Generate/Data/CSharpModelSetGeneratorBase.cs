@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Code.Generate.Data;
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal abstract class CSharpModelsGeneratorBase(IUser user, IAppReaderFactory appReadFac, string logName)
+internal abstract class CSharpModelSetGeneratorBase(IUser user, IAppReaderFactory appReadFac, string logName)
     : CSharpGeneratorBase(user, appReadFac, logName), IFileGenerator
 {
     protected internal CSharpCodeSpecs Specs { get; protected set; } = new();
@@ -28,9 +28,9 @@ internal abstract class CSharpModelsGeneratorBase(IUser user, IAppReaderFactory 
     // OutputType is common
     public string OutputType => "DataModel";
 
-    protected internal abstract CSharpCodeSpecs BuildDerivedSpecs(IFileGeneratorSpecs parameters);
+    protected internal abstract CSharpCodeSpecs BuildDerivedSpecs(IGenerateFileSetSpecs parameters);
 
-    protected virtual void Setup(IFileGeneratorSpecs parameters)
+    protected virtual void Setup(IGenerateFileSetSpecs parameters)
     {
         Specs = BuildDerivedSpecs(parameters);
 
@@ -106,7 +106,7 @@ internal abstract class CSharpModelsGeneratorBase(IUser user, IAppReaderFactory 
 
     protected abstract IGeneratedFile? CreateFileGenerator(CSharpFileSpecs fileSpecs);
     
-    public IGeneratedFileSet[] Generate(IFileGeneratorSpecs specs)
+    public IGeneratedFileSet[] Generate(IGenerateFileSetSpecs specs)
     {
         Setup(specs);
 

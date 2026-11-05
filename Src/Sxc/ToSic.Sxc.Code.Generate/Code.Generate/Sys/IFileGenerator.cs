@@ -39,5 +39,5 @@ public interface IFileGenerator : IHasIdentityNameId
     /// <summary>
     /// Call to run the generator and get the files
     /// </summary>
-    public IGeneratedFileSet[] Generate(IFileGeneratorSpecs specs);
+    public IGeneratedFileSet[] Generate(IGenerateFileSetSpecs specs);
 }

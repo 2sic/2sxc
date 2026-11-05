@@ -3,7 +3,7 @@ using ToSic.Sxc.Code.Generate.Sys;
 
 namespace ToSic.Sxc.Code.Generate.Data;
 
-internal class CSharpDataFileGenerator(CSharpModelsGeneratorBase setGenerator, ILog parentLog): HelperBase(parentLog, "Gen.CSMHlp")
+internal class CSharpDataFileGenerator(CSharpModelSetGeneratorBase setGenerator, ILog parentLog): HelperBase(parentLog, "Gen.CSMHlp")
 {
     /// <summary>
     /// Generates a file model using a helper generator (for different types of target code).

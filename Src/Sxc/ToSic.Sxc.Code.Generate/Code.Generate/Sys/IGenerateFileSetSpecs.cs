@@ -9,7 +9,7 @@
 /// WIP v17.04
 /// </remarks>
 [WorkInProgressApi("still being standardized")]
-public interface IFileGeneratorSpecs
+public interface IGenerateFileSetSpecs
 {
     /// <summary>
     /// ID and name of the configuration used.
