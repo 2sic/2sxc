@@ -45,9 +45,6 @@ public abstract class Code14()
     [PrivateApi]
     public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 
-    [field: AllowNull, MaybeNull]
-    private CodeHelperV14 CodeHelper => field ??= new(new(ExCtx, false, "c# code file"));
-
     #endregion
 
     [field: AllowNull, MaybeNull]
@@ -63,7 +60,7 @@ public abstract class Code14()
 
     [PrivateApi("Not yet ready")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public IDevTools DevTools => CodeHelper.DevTools;
+    public IDevTools DevTools => new DevTools("c# code file", CompileCodeHlp.Log);
 
     #endregion
 

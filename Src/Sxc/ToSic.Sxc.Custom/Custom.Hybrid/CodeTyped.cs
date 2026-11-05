@@ -52,8 +52,8 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, ITypedCode16
         => AppCodeGetNamedServiceHelper.GetService<TService>(owner: this, CodeHelper.Specs, typeName);
 
     [field: AllowNull, MaybeNull]
-    private TypedCode16Helper CodeHelper
-        => field ??= new(helperSpecs: new(CodeRootOrError(), false, "c# code file"), getRazorModel: () => null, getModelDic: () => null);
+    private CodeHelperTypedData CodeHelper
+        => field ??= new(helperSpecs: new(CodeRootOrError(), false, "c# code file"));
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -177,7 +177,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, ITypedCode16
 
     #endregion
 
-    public ITypedRazorModel MyModel => CodeHelper.MyModel;
+    public ITypedRazorModel MyModel => new TypedRazorModel(CodeHelper.Specs, null);
 
     #region MyContext & UniqueKey
 

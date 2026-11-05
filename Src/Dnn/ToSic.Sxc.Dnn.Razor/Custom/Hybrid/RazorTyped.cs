@@ -60,39 +60,29 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
     /// <inheritdoc cref="IHasKit{TServiceKit}.Kit"/>
     public ServiceKit16 Kit => field ??= CodeApi.ServiceKit16;
 
-    internal TypedCode16Helper CodeHelper => field ??= CreateCodeHelper();
+    internal CodeHelperTypedData CodeHelper => field ??= new(helperSpecs: new(ExCtx, true, Path));
 
     /// <inheritdoc cref="CodeTyped.Customize"/>
     protected ICodeCustomizer Customize => field ??= CodeApi.GetService<ICodeCustomizer>(reuse: true);
 
     void ISetDynamicModel.SetDynamicModel(RenderSpecs viewData)
     {
-        _renderSpecs = viewData;
+        RenderSpecs = viewData;
 
         // Only overwrite if data is not null
         if (viewData.Data != null)
-            _overridePageData = viewData.Data;
+            OverridePageData = viewData.Data;
     }
 
-    private RenderSpecs _renderSpecs;
-
-    private RenderSpecs GetRenderSpecs()
+    private RenderSpecs? RenderSpecs
     {
-        return _renderSpecs ??= PageData.Values.FirstOrDefault(value => value is RenderSpecs) as RenderSpecs;
+        get => field ??= PageData.Values.FirstOrDefault(value => value is RenderSpecs) as RenderSpecs;
+        set;
     }
-    private object _overridePageData;
+    internal object? OverridePageData;
 
-    private TypedCode16Helper CreateCodeHelper() =>
-        new(
-            new(ExCtx, true, Path),
-            getRazorModel: () => _overridePageData
-                                 // the default/only value would be on a 0 key
-                                 ?? (PageData?.TryGetValue(0, out var zeroData) ?? false ? zeroData as object : null),
-            () => GetRenderSpecs()?.DataDic
-                  ?? PageData?
-                      .Where(pair => pair.Key is string)
-                      .ToDictionary(pair => pair.Key.ToString(), pair => pair.Value, InvariantCultureIgnoreCase)
-        );
+
+
 
     #endregion
 
@@ -149,7 +139,13 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
     public IDataSource MyData => CodeApi.Data;
 
     /// <inheritdoc />
-    public ITypedRazorModel MyModel => CodeHelper.MyModel;
+    public ITypedRazorModel MyModel => new TypedRazorModel(
+        new(ExCtx, true, Path),
+        RenderSpecs?.DataDic
+        ?? PageData?
+            .Where(pair => pair.Key is string)
+            .ToDictionary(pair => pair.Key.ToString(), pair => pair.Value, InvariantCultureIgnoreCase)
+    );
 
     #endregion
 
@@ -242,7 +238,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
     [WorkInProgressApi("not yet public or final, WIP v20.00.0x")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     // [field: AllowNull, MaybeNull]
-    public IRazorConfiguration Configuration => field ??= new RazorConfiguration(GetRenderSpecs(), RzrHlp.Log);
+    public IRazorConfiguration Configuration => field ??= new RazorConfiguration(RenderSpecs, RzrHlp.Log);
 
     #endregion
 }

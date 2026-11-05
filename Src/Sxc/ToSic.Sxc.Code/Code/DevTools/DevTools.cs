@@ -1,12 +1,10 @@
-﻿using ToSic.Sxc.Code.Sys.CodeRunHelpers;
-
-namespace ToSic.Sxc.Code;
+﻿namespace ToSic.Sxc.Code;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class DevTools(CompileCodeHelperSpecs specs, ILog parentLog) : HelperBase(parentLog, $"{SxcLogName}.DevTls"), IDevTools
+internal class DevTools(string codeFileName, ILog parentLog) : HelperBase(parentLog, $"{SxcLogName}.DevTls"), IDevTools
 {
     private string RequireMsg(string requires, string but, string[] names) =>
-        $"Partial Razor '{specs.CodeFileName}' requires {requires} of the following parameters, but {but} were provided: " +
+        $"Partial Razor '{codeFileName}' requires {requires} of the following parameters, but {but} were provided: " +
         string.Join(", ", (names ?? []).Select(s => $"'{s}'"));
 
     public void Debug(object target, NoParamOrder npo = default, bool debug = true)

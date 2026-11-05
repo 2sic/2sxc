@@ -30,7 +30,6 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
     {
         CompatibilityLevel = compatibilityLevel;
         RzrHlp = new(this);
-        //Log.Rename(logName);
     }
 
     [PrivateApi] public int CompatibilityLevel { get; }

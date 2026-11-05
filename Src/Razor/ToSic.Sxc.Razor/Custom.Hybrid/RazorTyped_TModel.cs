@@ -46,7 +46,7 @@ public abstract class RazorTyped<TModel>()
     #region MyModel
 
     [PrivateApi("WIP v16.02")]
-    public ITypedRazorModel MyModel => CodeHelper.MyModel;
+    public ITypedRazorModel MyModel => RzrHlp.MyModel;
 
     #endregion
 
@@ -68,7 +68,7 @@ public abstract class RazorTyped<TModel>()
 
     #region My... Stuff
 
-    private TypedCode16Helper CodeHelper => RzrHlp.CodeHelper;
+    private CodeHelperTypedData CodeHelper => RzrHlp.CodeHelper;
 
     public ITypedItem MyItem => CodeHelper.MyItem;
 
@@ -194,7 +194,7 @@ public abstract class RazorTyped<TModel>()
     /// * Stable since v18.00
     /// </remarks>
     [PrivateApi("WIP, don't publish yet")]
-    public new TModel Model => CodeHelper.GetModel<TModel>();
+    public new TModel Model => RzrHlp.RazorModelHelper.GetModel<TModel>();
 
     /// <inheritdoc cref="CodeTyped.Customize"/>
     [ShowApiWhenReleased(ShowApiMode.Never)]
