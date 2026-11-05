@@ -1,113 +1,104 @@
 using System.Text;
-using ToSic.Eav.Data.Sys;
 using ToSic.Sxc.Code.Generate.Sys;
 
 namespace ToSic.Sxc.Code.Generate.Data;
 
-/// <summary>
-/// Abstract base class for C# model generators (both DataModel and CustomModel)
-/// Contains common logic for generating model classes with properties
-/// </summary>
-internal abstract class CSharpModelGeneratorBase(CSharpModelsGeneratorBase generator, IContentType type, string baseName, ILog parentLog, string logName) 
-    : HelperBase(parentLog, logName)
-{
-    protected readonly CSharpModelsGeneratorBase Generator = generator;
-    protected readonly IContentType Type = type;
+///// <summary>
+///// Abstract base class for C# model generators (both DataModel and CustomModel)
+///// Contains common logic for generating model classes with properties
+///// </summary>
+//internal abstract class CSharpModelGeneratorBase(CSharpModelsGeneratorBase multiGenerator, /*IContentType type, string baseName,*/ ILog parentLog, string logName) 
+//    : HelperBase(parentLog, logName)
+//{
+    //protected readonly CSharpModelsGeneratorBase Generator = multiGenerator;
+    //protected readonly IContentType Type = type;
 
     /// <summary>
     /// The "true" name such as "Tag" without prefix/suffix
     /// </summary>
-    protected readonly string BaseName = baseName;
+    //protected readonly string BaseName = baseName;
+
+    //protected string ClassName => $"{FileSetSpecs.Prefix}{BaseName}{ClassSuffix}";
+
+    //internal CSharpCodeSpecs FileSetSpecs => multiGenerator.Specs;
+    //protected CSharpGeneratorHelper CodeGenHelper => multiGenerator.CodeGenHelper;
+
+    //#region Abstract Members
 
     ///// <summary>
-    ///// Prefix to use for the class name
+    ///// Gets the class suffix to append to the main class name (e.g., "Model" for CustomModel)
     ///// </summary>
-    //protected string Prefix => Specs.Prefix ?? "";
+    //protected abstract string ClassSuffix { get; }
 
     ///// <summary>
-    ///// Gets the suffix associated with the class.
+    ///// Generates the file introduction comment with extension instructions
     ///// </summary>
-    //protected string Suffix => ClassSuffix;
+    ///// <param name="userName">The name of the user generating the file</param>
+    ///// <returns>The file introduction comment</returns>
+    //protected abstract string GenerateFileIntroComment(string userName);
 
-    protected string ClassName => $"{Specs.Prefix}{BaseName}{ClassSuffix}";
+    ///// <summary>
+    ///// Generates the main class XML documentation comment
+    ///// </summary>
+    ///// <param name="firstPropertyName">The name of the first property for examples</param>
+    ///// <returns>The main class comment</returns>
+    //protected abstract string GenerateMainClassComment(string? firstPropertyName);
 
-    internal CSharpCodeSpecs Specs => Generator.Specs;
-    protected CSharpGeneratorHelper CodeGenHelper => Generator.CodeGenHelper;
+    ///// <summary>
+    ///// Generates the auto-generated base class XML documentation comment
+    ///// </summary>
+    ///// <returns>The auto-generated class comment</returns>
+    //protected abstract string GenerateAutoGenClassComment();
 
-    #region Abstract Members
+//    #endregion
 
-    /// <summary>
-    /// Gets the username for file generation
-    /// </summary>
-    protected string UserName => Generator.User.Name;
+//}
 
-    /// <summary>
-    /// Gets the class suffix to append to the main class name (e.g., "Model" for CustomModel)
-    /// </summary>
-    protected abstract string ClassSuffix { get; }
-
-    /// <summary>
-    /// Generates the file introduction comment with extension instructions
-    /// </summary>
-    /// <param name="userName">The name of the user generating the file</param>
-    /// <returns>The file introduction comment</returns>
-    protected abstract string GenerateFileIntroComment(string userName);
-
-    /// <summary>
-    /// Generates the main class XML documentation comment
-    /// </summary>
-    /// <param name="firstPropertyName">The name of the first property for examples</param>
-    /// <returns>The main class comment</returns>
-    protected abstract string GenerateMainClassComment(string? firstPropertyName);
-
-    /// <summary>
-    /// Generates the auto-generated base class XML documentation comment
-    /// </summary>
-    /// <returns>The auto-generated class comment</returns>
-    protected abstract string GenerateAutoGenClassComment();
-
-    #endregion
+internal class CSharpModelFileGenerator(CSharpModelsGeneratorBase multiGenerator, ILog parentLog): HelperBase(parentLog, "Gen.CSMHlp")
+{
+    private CSharpGeneratorHelper CodeGenHelper => multiGenerator.CodeGenHelper;
 
     #region Common Implementation
 
-    internal GeneratedDataModel? PrepareFile()
+    internal GeneratedDataModel? PrepareFile(IGenCodeFragments singleGenerator, CodeFragmentSpecs specs)
     {
-        var finalClassName = ClassName;
-        var l = Log.Fn<GeneratedDataModel>($"ClassName: {finalClassName}; {nameof(Type)}: {Type?.Name} ({Type?.NameId})");
+        var fileSetSpecs = specs.FileSetSpecs;
+        var finalClassName = specs.ClassName;
+        var l = Log.Fn<GeneratedDataModel>($"ClassName: {finalClassName}; {nameof(specs.Type)}: {specs.Type?.Name} ({specs.Type?.NameId})");
 
-        if (Type == null)
+        if (specs.Type == null)
             return l.ReturnNull("No content type provided");
 
         // Generate main partial class with optional suffix
         // TODO: WHY are we using 2 prefixes here?
-        var autoGenClassName = $"{Specs.BaseClassPrefix}{ClassName}{Specs.BaseClassSuffix}";
-        var mainClass = CodeGenHelper.ClassWrapper(finalClassName, false, true, Specs.NamespaceAutoGen + "." + autoGenClassName);
+        var autoGenClassName = $"{fileSetSpecs.BaseClassPrefix}{specs.ClassName}{fileSetSpecs.BaseClassSuffix}";
+        var mainClass = CodeGenHelper.ClassWrapper(finalClassName, false, true, fileSetSpecs.NamespaceAutoGen + "." + autoGenClassName);
 
         // Generate AutoGen class with properties
-        var classAutoGen = CodeGenHelper.ClassWrapper(autoGenClassName, true, false, Specs.DataInherits);
-        var (_, propsSb, usings, firstProperty) = ClassProperties(Type.Attributes.ToList());
+        var classAutoGen = CodeGenHelper.ClassWrapper(autoGenClassName, true, false, fileSetSpecs.DataInherits);
+        var (_, propsSb, usings, firstProperty) = ClassProperties(specs, [..specs.Type.Attributes]);
         var classCode = classAutoGen.ToString(propsSb);
 
         var autoGenClass =
-            GenerateAutoGenClassComment()
+            singleGenerator.GenerateAutoGenClassComment(specs)
             + classCode;
 
         var fullBody =
-            GenerateMainClassComment(firstProperty)
+            singleGenerator.GenerateMainClassComment(specs, firstProperty)
             + mainClass;
 
         var fileContents =
             CodeGenHelper.GenerateUsings(usings)
-            + CodeGenHelper.NamespaceWrapper(Specs.DataNamespace)
+            + CodeGenHelper.NamespaceWrapper(fileSetSpecs.DataNamespace)
                 .ToString(fullBody)
             + "\n\n"
-            + CodeGenHelper.NamespaceWrapper(Specs.BaseClassNamespace)
+            + CodeGenHelper.NamespaceWrapper(fileSetSpecs.BaseClassNamespace)
                 .ToString(autoGenClass);
 
-        return l.Return(new($"{finalClassName}{Specs.FileGeneratedSuffix}", fileContents, GenerateFileIntroComment(UserName)), $"File size: {fileContents.Length}");
+        return l.Return(new($"{finalClassName}{fileSetSpecs.FileGeneratedSuffix}", fileContents, singleGenerator.GenerateFileIntroComment(specs)), $"File size: {fileContents.Length}");
     }
 
-    private (bool HasProps, string? Code, List<string>? Usings, string? FirstProperty) ClassProperties(List<IContentTypeField> attributes)
+    private (bool HasProps, string? Code, List<string>? Usings, string? FirstProperty) ClassProperties(CodeFragmentSpecs specs, List<IContentTypeField> attributes)
     {
         var l = Log.Fn<(bool, string?, List<string>?, string?)>($"{nameof(attributes)}: {attributes.Count}");
 
@@ -130,7 +121,7 @@ internal abstract class CSharpModelGeneratorBase(CSharpModelsGeneratorBase gener
             .SelectMany(set =>
             {
                 return set.Generators
-                    .SelectMany(p => p.Generate(set.Attribute, Specs.TabsProperty));
+                    .SelectMany(p => p.Generate(set.Attribute, specs.FileSetSpecs.TabsProperty));
             })
             .ToList();
 
@@ -163,21 +154,48 @@ internal abstract class CSharpModelGeneratorBase(CSharpModelsGeneratorBase gener
 
     #endregion
 
-    #region Helper Methods for Derived Classes
+}
 
-    protected string? GenerateCommonScopeRemarks()
-    {
-        var scope = Type.Scope;
-        var scopeIsSpecial = scope != ScopeConstants.Default;
-        return scopeIsSpecial ? $"This Content-Type is NOT in the default scope, so you may not see it in the Admin UI. It's in the scope {scope}." : null;
-    }
+/// <summary>
+/// 
+/// </summary>
+/// <param name="UserName">Gets the username for file generation</param>
+internal record CodeFragmentSpecs(
+    CSharpCodeSpecs FileSetSpecs,
+    IContentType Type,
+    string UserName,
+    string BaseName
+)
+{
+    public string ClassName => $"{FileSetSpecs.Prefix}{BaseName}{ClassSuffix}";
 
-    protected string GetScopeDescription()
-    {
-        var scope = Type.Scope;
-        var scopeIsSpecial = scope != ScopeConstants.Default;
-        return scopeIsSpecial ? $"(scope: {scope})" : "";
-    }
+    /// <summary>
+    /// Gets the class suffix to append to the main class name (e.g., "Model" for CustomModel)
+    /// </summary>
+    public string ClassSuffix => FileSetSpecs.Suffix ?? "";
+}
 
-    #endregion
+internal interface IGenCodeFragments
+{
+    /// <summary>
+    /// Generates the file introduction comment with extension instructions
+    /// </summary>
+    /// <param name="fileSpecs">The specifications for the file being generated</param>
+    /// <returns>The file introduction comment</returns>
+    string GenerateFileIntroComment(CodeFragmentSpecs fileSpecs);
+
+    /// <summary>
+    /// Generates the main class XML documentation comment
+    /// </summary>
+    /// <param name="fileSpecs">The specifications for the file being generated</param>
+    /// <param name="firstPropertyName">The name of the first property for examples</param>
+    /// <returns>The main class comment</returns>
+    string GenerateMainClassComment(CodeFragmentSpecs fileSpecs, string? firstPropertyName);
+
+    /// <summary>
+    /// Generates the auto-generated base class XML documentation comment
+    /// </summary>
+    /// <returns>The auto-generated class comment</returns>
+    string GenerateAutoGenClassComment(CodeFragmentSpecs fileSpecs);
+
 }
