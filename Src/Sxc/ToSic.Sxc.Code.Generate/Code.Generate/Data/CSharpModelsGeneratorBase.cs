@@ -104,7 +104,7 @@ internal abstract class CSharpModelsGeneratorBase(IUser user, IAppReaderFactory 
             : []; // No content types matched selection
     }
 
-    protected abstract IGeneratedFile? CreateFileGenerator(CodeFragmentSpecs fileSpecs);
+    protected abstract IGeneratedFile? CreateFileGenerator(CSharpFileSpecs fileSpecs);
     
     public IGeneratedFileSet[] Generate(IFileGeneratorSpecs specs)
     {
@@ -114,7 +114,7 @@ internal abstract class CSharpModelsGeneratorBase(IUser user, IAppReaderFactory 
             .Select(t =>
             {
                 var baseName = (t.Name ?? "").Replace("-", "");
-                var fileSpecs = new CodeFragmentSpecs(Specs, t, User.Name, baseName);
+                var fileSpecs = new CSharpFileSpecs(Specs, t, User.Name, baseName);
                 return CreateFileGenerator(fileSpecs);
             })
             .Where(f => f != null) // Ensure no null files are added

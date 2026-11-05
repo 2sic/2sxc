@@ -6,11 +6,11 @@ namespace ToSic.Sxc.Code.Generate.Data;
 /// Generator for individual CustomModel classes
 /// Creates lightweight model classes that inherit from CustomModel
 /// </summary>
-internal class CSharpCustomModelGenerator(CSharpCustomModelsGenerator generator) : HelperBase(generator.Log, "Gen.CstMdl"), IGenCodeFragments
+internal class CSharpCustomModelGenerator(CSharpCustomModelsGenerator generator) : HelperBase(generator.Log, "Gen.CstMdl"), ICSharpCodeFragmentGenerator
 {
     #region Overrides
 
-    public string GenerateFileIntroComment(CodeFragmentSpecs fileSpecs) =>
+    public string GenerateFileIntroComment(CSharpFileSpecs fileSpecs) =>
         $$"""
           // DO NOT MODIFY THIS FILE - IT IS AUTO-GENERATED
           // See also: https://go.2sxc.org/copilot-data
@@ -29,7 +29,7 @@ internal class CSharpCustomModelGenerator(CSharpCustomModelsGenerator generator)
           
           """;
 
-    public string GenerateMainClassComment(CodeFragmentSpecs fileSpecs, string? firstPropertyName)
+    public string GenerateMainClassComment(CSharpFileSpecs fileSpecs, string? firstPropertyName)
     {
         var remarks = fileSpecs.Type.GenerateCommonScopeRemarks();
         return generator.CodeGenHelper.CodeComment(fileSpecs.FileSetSpecs.TabsClass,
@@ -49,7 +49,7 @@ internal class CSharpCustomModelGenerator(CSharpCustomModelsGenerator generator)
                    remarks: remarks);
     }
 
-    public string GenerateAutoGenClassComment(CodeFragmentSpecs fileSpecs) =>
+    public string GenerateAutoGenClassComment(CSharpFileSpecs fileSpecs) =>
         generator.CodeGenHelper.XmlComment(fileSpecs.FileSetSpecs.TabsClass,
             summary: $"Auto-Generated *base* class for '{fileSpecs.ClassName}' in data scope '{fileSpecs.Type.Scope}'. " +
                      $"It uses special names to avoid accidental use.");

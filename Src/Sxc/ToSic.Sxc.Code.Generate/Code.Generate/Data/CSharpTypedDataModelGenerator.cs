@@ -2,11 +2,11 @@
 
 namespace ToSic.Sxc.Code.Generate.Data;
 
-internal class CSharpTypedDataModelGenerator(CSharpTypedDataModelsGenerator generator) : HelperBase(generator.Log, "Gen.DtaCls"), IGenCodeFragments
+internal class CSharpTypedDataModelGenerator(CSharpTypedDataModelsGenerator generator) : HelperBase(generator.Log, "Gen.DtaCls"), ICSharpCodeFragmentGenerator
 {
     #region Overrides
 
-    public string GenerateFileIntroComment(CodeFragmentSpecs fileSpecs) =>
+    public string GenerateFileIntroComment(CSharpFileSpecs fileSpecs) =>
         $$"""
           // DO NOT MODIFY THIS FILE - IT IS AUTO-GENERATED
           // See also: https://go.2sxc.org/copilot-data
@@ -25,7 +25,7 @@ internal class CSharpTypedDataModelGenerator(CSharpTypedDataModelsGenerator gene
           
           """;
 
-    public string GenerateMainClassComment(CodeFragmentSpecs fileSpecs, string? firstPropertyName)
+    public string GenerateMainClassComment(CSharpFileSpecs fileSpecs, string? firstPropertyName)
     {
         var remarks = fileSpecs.Type.GenerateCommonScopeRemarks();
         return generator.CodeGenHelper.CodeComment(fileSpecs.FileSetSpecs.TabsClass,
@@ -46,7 +46,7 @@ internal class CSharpTypedDataModelGenerator(CSharpTypedDataModelsGenerator gene
                    remarks: remarks);
     }
 
-    public string GenerateAutoGenClassComment(CodeFragmentSpecs fileSpecs) =>
+    public string GenerateAutoGenClassComment(CSharpFileSpecs fileSpecs) =>
         generator.CodeGenHelper.XmlComment(fileSpecs.FileSetSpecs.TabsClass,
             summary:
             $"Auto-Generated *base* class for '{fileSpecs.ClassName}' in scope '{fileSpecs.Type.Scope}'. " +
