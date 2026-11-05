@@ -24,8 +24,8 @@ public class CSharpModelGeneratorTests(
     {
         var context = CodeGeneratorTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder);
 
-        AssertGeneratorSkipsEphemeral(new CSharpTypedDataModelSetGenerator(context.User, context.AppReaders), context);
-        AssertGeneratorSkipsEphemeral(new CSharpCustomModelSetGenerator(context.User, context.AppReaders), context);
+        AssertGeneratorSkipsEphemeral(new CSharpTypedDataModelsGenerator(context.User, context.AppReaders), context);
+        AssertGeneratorSkipsEphemeral(new CSharpCustomModelsGenerator(context.User, context.AppReaders), context);
     }
 
     #endregion
@@ -87,7 +87,7 @@ public class CSharpModelGeneratorTests(
         await context.RunAsync();
 
         var specs = Assert.Single(context.Generator.ReceivedSpecs);
-        var body = GenerateBody(new CSharpTypedDataModelSetGenerator(context.CodeContext.User, context.CodeContext.AppReaders), specs, context.ContentType.Name);
+        var body = GenerateBody(new CSharpTypedDataModelsGenerator(context.CodeContext.User, context.CodeContext.AppReaders), specs, context.ContentType.Name);
 
         Assert.Contains($"public {CodeGeneratorTestContext.EntityFieldAndTypeName} {CodeGeneratorTestContext.EntityFieldAndTypeName} =>", body);
         Assert.Contains($"_item.Child<{CodeGeneratorTestContext.EntityFieldAndTypeName}>(\"{CodeGeneratorTestContext.EntityFieldAndTypeName}\")", body);
@@ -103,7 +103,7 @@ public class CSharpModelGeneratorTests(
         var context = CodeGeneratorTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder);
 
         var body = GenerateBody(
-            new CSharpTypedDataModelSetGenerator(context.User, context.AppReaders),
+            new CSharpTypedDataModelsGenerator(context.User, context.AppReaders),
             new GenerateFileSetSpecs { AppId = CodeGeneratorTestContext.AppId, ContentTypes = [context.ContentType.NameId] },
             context.ContentType.Name);
 

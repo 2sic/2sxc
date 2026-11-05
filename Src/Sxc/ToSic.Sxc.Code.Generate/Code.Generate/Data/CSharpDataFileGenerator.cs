@@ -1,20 +1,33 @@
 using System.Text;
 using ToSic.Sxc.Code.Generate.Sys;
+using ToSic.Sys.Performance;
+using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Code.Generate.Data;
 
-internal class CSharpDataFileGenerator(CSharpModelSetGeneratorBase setGenerator, ILog parentLog): HelperBase(parentLog, "Gen.CSMHlp")
+internal class CSharpDataFileGenerator(ILog parentLog): HelperBase(parentLog, "Gen.CSMHlp")
 {
+    public IGeneratedFileSet[] Generate(FileGeneratorSpecs genSpecs, CSharpCodeSpecs specs, IUser user, string setName, ICSharpCodeFragmentGenerator fragmentGenerator)
+    {
+        var classFiles = specs.ExportedContentContentTypes
+            .Select(t => Generate(fragmentGenerator, new(specs, t, user.Name, BaseName: (t.Name ?? "").Replace("-", ""))))
+            .OfType<IGeneratedFile>() // Ensure no null files are added
+            .ToListOpt();
+
+        var result = GeneratedFileSet.FromSpecs(genSpecs, setName, [.. classFiles]);
+        return [result];
+    }
+
     /// <summary>
     /// Generates a file model using a helper generator (for different types of target code).
     /// </summary>
-    /// <param name="singleGenerator"></param>
+    /// <param name="fragmentGenerator"></param>
     /// <param name="specs"></param>
     /// <returns></returns>
-    internal GeneratedDataModel? Generate(ICSharpCodeFragmentGenerator singleGenerator, CSharpFileSpecs specs)
+    private GeneratedDataModel? Generate(ICSharpCodeFragmentGenerator fragmentGenerator, CSharpFileSpecs specs)
     {
         var fileSetSpecs = specs.FileSetSpecs;
-        var setCodeGenHelper = setGenerator.CodeGenHelper;
+        var setCodeGenHelper = new CSharpGeneratorHelper(specs.FileSetSpecs, Log);
         var finalClassName = specs.ClassName;
         var l = Log.Fn<GeneratedDataModel>($"ClassName: {finalClassName}; {nameof(specs.Type)}: {specs.Type?.Name} ({specs.Type?.NameId})");
 
@@ -32,11 +45,11 @@ internal class CSharpDataFileGenerator(CSharpModelSetGeneratorBase setGenerator,
         var classCode = classAutoGen.ToString(propsSb);
 
         var autoGenClass =
-            singleGenerator.GenerateAutoGenClassComment(specs)
+            fragmentGenerator.GenerateAutoGenClassComment(specs)
             + classCode;
 
         var fullBody =
-            singleGenerator.GenerateMainClassComment(specs, firstProperty)
+            fragmentGenerator.GenerateMainClassComment(specs, firstProperty)
             + mainClass;
 
         var fileContents =
@@ -47,7 +60,7 @@ internal class CSharpDataFileGenerator(CSharpModelSetGeneratorBase setGenerator,
             + setCodeGenHelper.NamespaceWrapper(fileSetSpecs.BaseClassNamespace)
                 .ToString(autoGenClass);
 
-        return l.Return(new($"{finalClassName}{fileSetSpecs.FileGeneratedSuffix}", fileContents, singleGenerator.GenerateFileIntroComment(specs)), $"File size: {fileContents.Length}");
+        return l.Return(new($"{finalClassName}{fileSetSpecs.FileGeneratedSuffix}", fileContents, fragmentGenerator.GenerateFileIntroComment(specs)), $"File size: {fileContents.Length}");
     }
 
     /// <summary>
@@ -67,11 +80,12 @@ internal class CSharpDataFileGenerator(CSharpModelSetGeneratorBase setGenerator,
             .ToList();
 
         // Generate all properties with the helpers
+        var codeGenHelper = new CSharpGeneratorHelper(specs.FileSetSpecs, Log);
         var propsSnippets = persistedAttributes
             .Select(a => new
             {
                 Attribute = a,
-                Generators = GenDataProperties.Generators(setGenerator.CodeGenHelper)
+                Generators = GenDataProperties.Generators(codeGenHelper)
                     .Where(p => p.ForDataType == a.Type)
                     .ToList()
             })

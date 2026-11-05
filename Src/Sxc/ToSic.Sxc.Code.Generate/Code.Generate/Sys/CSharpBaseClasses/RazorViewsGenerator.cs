@@ -9,32 +9,27 @@ namespace ToSic.Sxc.Code.Generate.Sys.CSharpBaseClasses;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class RazorViewsGenerator(IUser user, IAppReaderFactory appReadFac)
-    : CSharpGeneratorBase(user, appReadFac, SxcLogName + ".RzrVGn"), IFileGenerator
+    : ServiceBase($"{SxcLogName}.RzrVGn"), IFileGenerator
 {
     #region Information for the interface
 
-    public string Description => "Generates Razor Views in the AppCode/Razor folder";
-
-    public string DescriptionHtml => $"The {Name} will generate <code>[Prefix]AppRazor[Suffix].Generated.cs</code> files in the <code>AppCode/Razor</code> folder. <br> IMPORTANT: Requires that Content-Types were generated.";
-
-    public string OutputType => "RazorView";
+    public FileGeneratorSpecs GeneratorSpecs => field ??= new(this)
+    {
+        Description = "Generates Razor Views in the AppCode/Razor folder",
+        DescriptionHtml = $"The {GetType().Name} will generate <code>[Prefix]AppRazor[Suffix].Generated.cs</code> files in the <code>AppCode/Razor</code> folder. <br> IMPORTANT: Requires that Content-Types were generated.",
+        OutputLanguage = "CSharp",
+        OutputType = "RazorView"
+    };
 
     #endregion
 
 
     public IGeneratedFileSet[] Generate(IGenerateFileSetSpecs specs)
     {
-        var cSharpSpecs = BuildSpecs(specs);
+        var cSharpSpecs = CSharpGeneratorShared.BuildSpecs(appReadFac.Get(specs.AppId).Specs.Name, specs);
         var file = AppRazors(cSharpSpecs, "AppRazor");
 
-        var result = new GeneratedFileSet
-        {
-            Name = "C# Razor Views",
-            Description = Description,
-            Generator = $"{Name} v{Version}",
-            Path = GenerateConstants.PathToAppCode,
-            Files = [file],
-        };
+        var result = GeneratedFileSet.FromSpecs(GeneratorSpecs, "C# Razor Views", [file]);
         return [result];
     }
 
@@ -50,7 +45,7 @@ public class RazorViewsGenerator(IUser user, IAppReaderFactory appReadFac)
             Body = $$"""
                      {{CSharpGeneratorHelper.DoNotModifyMessage}}
 
-                     {{CSharpGeneratorHelper.GeneratorHeader(this, cSharpSpecs, User.Name)}}
+                     {{CSharpGeneratorHelper.GeneratorHeader(GeneratorSpecs, cSharpSpecs, user.Name)}}
 
                      {{string.Join("\n", allUsings)}}
 

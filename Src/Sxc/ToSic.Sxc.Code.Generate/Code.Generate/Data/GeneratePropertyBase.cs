@@ -23,8 +23,8 @@ internal abstract class GeneratePropertyBase(CSharpGeneratorHelper helper, strin
         bool cache = false,
         bool jsonIgnore = false)
     {
-        var overrideProp = helper.OverridePropertyNames.Contains(name);
-        var overrideMeth = helper.OverrideMethods.Contains(method);
+        var overrideProp = helper.Specs.OverridePropertyNames.Contains(name);
+        var overrideMeth = helper.Specs.OverrideMethods.Contains(method);
         var isOverride = overrideProp || overrideMeth;
         if (isOverride)
         {

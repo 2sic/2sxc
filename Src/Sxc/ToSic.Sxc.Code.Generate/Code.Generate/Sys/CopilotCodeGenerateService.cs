@@ -86,7 +86,7 @@ public class CopilotCodeGenerateService(
     }
 
     private IFileGenerator? FindGenerator(string generatorName)
-        => generators.Value.FirstOrDefault(g => g.Name.EqualsInsensitive(generatorName));
+        => generators.Value.FirstOrDefault(g => g.GeneratorSpecs.Name.EqualsInsensitive(generatorName));
 
     internal static GenerateFileSetSpecs BuildFileGeneratorSpecs(IDataCopilotConfiguration configuration, GenerateFileSetSpecs baseSpecs)
         => baseSpecs with

@@ -52,12 +52,12 @@ public class CodeGenerators: CustomDataSource
                 Values = new Dictionary<string, object?>
                 {
                     //{ AttributeNames.NameIdNiceName, g.NameId },
-                    { nameof(g.Name), g.Name },
-                    { nameof(g.Version), g.Version },
-                    { nameof(g.Description), g.Description },
-                    { nameof(g.DescriptionHtml), g.DescriptionHtml },
-                    { nameof(g.OutputLanguage), g.OutputLanguage },
-                    { nameof(g.OutputType), g.OutputType },
+                    { nameof(FileGeneratorSpecs.Name), g.GeneratorSpecs.Name },
+                    { nameof(FileGeneratorSpecs.Version), g.GeneratorSpecs.Version },
+                    { nameof(FileGeneratorSpecs.Description), g.GeneratorSpecs.Description },
+                    { nameof(FileGeneratorSpecs.DescriptionHtml), g.GeneratorSpecs.DescriptionHtml },
+                    { nameof(FileGeneratorSpecs.OutputLanguage), g.GeneratorSpecs.OutputLanguage },
+                    { nameof(FileGeneratorSpecs.OutputType), g.GeneratorSpecs.OutputType },
                 }
             })
             .ToList();
@@ -69,7 +69,7 @@ public class CodeGenerators: CustomDataSource
     {
         var l = Log.Fn<IEnumerable<IRawEntity>>();
         var list = fileGenerators
-            .GroupBy(g => g.OutputType)
+            .GroupBy(g => g.GeneratorSpecs.OutputType)
             .Select(g => new RawEntity
             {
                 Values = new Dictionary<string, object?>

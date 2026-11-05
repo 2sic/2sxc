@@ -20,4 +20,14 @@ public class GeneratedFileSet : IGeneratedFileSet
 
     /// <inheritdoc />
     public required IReadOnlyCollection<IGeneratedFile> Files { get; init; }
+
+    public static GeneratedFileSet FromSpecs(FileGeneratorSpecs specs, string name, IReadOnlyCollection<IGeneratedFile> files) =>
+        new()
+        {
+            Name = name,
+            Description = specs.Description,
+            Generator = $"{specs.Name} v{specs.Version}",
+            Path = GenerateConstants.PathToAppCode,
+            Files = files
+        };
 }

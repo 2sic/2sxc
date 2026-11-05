@@ -66,7 +66,10 @@ public class FileSaver(ISite site, IAppReaderFactory appReadFac, IAppPathsMicroS
         if (classFiles.Any())
             File.AppendAllText(
                 Path.Combine(physicalPath, "code-generator.log"),
-                $"{DateTime.Now:u}: Code generated. Generator: {generator.Name} v{generator.Version} {specs}\n"
+                $"""
+                 {DateTime.Now:u}: Code generated. Generator: {generator.GeneratorSpecs.Name} v{generator.GeneratorSpecs.Version} {specs}
+
+                 """
             );
 
         l.Done();

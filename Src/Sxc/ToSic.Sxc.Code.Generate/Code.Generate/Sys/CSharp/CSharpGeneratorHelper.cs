@@ -1,14 +1,12 @@
 ﻿using System.Text;
-using ToSic.Sxc.Code.Generate.Data;
 
 namespace ToSic.Sxc.Code.Generate.Sys;
+
+// TODO: Rename to something like CSharpFragmentGenerator; maybe split
 
 internal class CSharpGeneratorHelper(CSharpCodeSpecs specs, ILog parentLog): HelperBase(parentLog, "Cde.GenHlp")
 {
     public CSharpCodeSpecs Specs => specs;
-
-    public string[] OverridePropertyNames { get; set; } = ModelGeneratorConstants.OverridePropertyNames;
-    public string[] OverrideMethods { get; set; } = ModelGeneratorConstants.OverrideMethods;
 
     public string Indent(int depth) => new(' ', specs.TabSize * depth);
 
@@ -82,12 +80,6 @@ internal class CSharpGeneratorHelper(CSharpCodeSpecs specs, ILog parentLog): Hel
         if (comments == null || comments.All(s => s.IsEmptyOrWs()))
             return null;
 
-        // Single liner
-        // 2024-02-16 2dm disabled for now, seems like an optimization but the code is harder to read
-        //if (comments.Length == 1)
-        //    return $"{indent}/// <{tagName}>{comments[0]}</{tagName}>";
-
-        // Multi-liner
         var sb = new StringBuilder();
         sb.AppendLine($"{indent}/// <{tagName}>");
         foreach (var l in comments) sb.AppendLine($"{indent}/// {l}");
@@ -126,7 +118,7 @@ internal class CSharpGeneratorHelper(CSharpCodeSpecs specs, ILog parentLog): Hel
         return l.Return(new("class", start, closing: $"{indent}}}\n"));
     }
 
-    public static string GeneratorHeader(IFileGenerator generator, CSharpCodeSpecs specs, string userName) =>
+    public static string GeneratorHeader(FileGeneratorSpecs generator, CSharpCodeSpecs specs, string userName) =>
         $"""
          // Generator:   {generator.Name}
          // App/Edition: {specs.AppName}/{specs.Edition}

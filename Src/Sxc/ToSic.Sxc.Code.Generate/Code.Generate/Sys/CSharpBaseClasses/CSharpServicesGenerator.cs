@@ -9,40 +9,35 @@ namespace ToSic.Sxc.Code.Generate.Sys.CSharpBaseClasses;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CSharpServicesGenerator(IUser user, IAppReaderFactory appReadFac)
-    : CSharpGeneratorBase(user, appReadFac, SxcLogName + ".SvcGen"), IFileGenerator
+    : ServiceBase($"{SxcLogName}.SvcGen"), IFileGenerator
 {
     #region Information for the interface
 
-    public string Description => "Generates CSharp Service Base Classes in the AppCode/Services folder";
-
-    public string DescriptionHtml => $"The {Name} will generate <code>[Prefix]ServiceBase[Suffix].Generated.cs</code> files in the <code>AppCode/Services</code> folder. <br> IMPORTANT: Requires that Content-Types were generated.";
-
-    public string OutputType => "RazorView";// "CSharpService";
+    public FileGeneratorSpecs GeneratorSpecs => field ??= new(this)
+    {
+        OutputLanguage = "CSharp",
+        OutputType = "CSharpService",
+        Description = "Generates CSharp Service Base Classes in the AppCode/Services folder",
+        DescriptionHtml = $"The {GetType().Name} will generate <code>[Prefix]ServiceBase[Suffix].Generated.cs</code> files in the <code>AppCode/Services</code> folder. <br> IMPORTANT: Requires that Content-Types were generated."
+    };
 
     #endregion
 
 
     public IGeneratedFileSet[] Generate(IGenerateFileSetSpecs specs)
     {
-        var cSharpSpecs = BuildSpecs(specs);
+        var cSharpSpecs = CSharpGeneratorShared.BuildSpecs(appReadFac.Get(specs.AppId).Specs.Name, specs);
 
-        var file = CSharpServiceBase(cSharpSpecs, "ServiceBase", "Custom.Hybrid.CodeTyped", "Services");
+        var file = GenerateCSharpService(GeneratorSpecs, cSharpSpecs, user, "ServiceBase", "Custom.Hybrid.CodeTyped", "Services", Log);
 
-        var result = new GeneratedFileSet
-        {
-            Name = "C# Services",
-            Description = Description,
-            Generator = $"{Name} v{Version}",
-            Path = GenerateConstants.PathToAppCode,
-            Files = [file],
-        };
+        var result = GeneratedFileSet.FromSpecs(GeneratorSpecs, "C# Services", [file]);
         return [result];
     }
 
-    internal GeneratedFile CSharpServiceBase(CSharpCodeSpecs cSharpSpecs, string baseName, string baseClass, string nsAndPath)
+    internal static GeneratedFile GenerateCSharpService(FileGeneratorSpecs genSpecs, CSharpCodeSpecs cSharpSpecs, IUser user, string baseName, string baseClass, string nsAndPath, ILog log)
     {
         var className = $"{cSharpSpecs.Prefix}{baseName}{cSharpSpecs.Suffix}";
-        var (_, appSnip, allUsings) = BaseClassHelper.BaseClassTools(cSharpSpecs, Log);
+        var (_, appSnip, allUsings) = BaseClassHelper.BaseClassTools(cSharpSpecs, log);
 
         var file = new GeneratedFile
         {
@@ -51,7 +46,7 @@ public class CSharpServicesGenerator(IUser user, IAppReaderFactory appReadFac)
             Body = $$"""
                      {{CSharpGeneratorHelper.DoNotModifyMessage}}
                      
-                     {{CSharpGeneratorHelper.GeneratorHeader(this, cSharpSpecs, User.Name)}}
+                     {{CSharpGeneratorHelper.GeneratorHeader(genSpecs, cSharpSpecs, user.Name)}}
                      
                      {{string.Join("\n", allUsings)}}
                      
