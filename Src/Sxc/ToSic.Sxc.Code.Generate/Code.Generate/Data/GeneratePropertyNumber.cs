@@ -2,11 +2,11 @@
 
 namespace ToSic.Sxc.Code.Generate.Data;
 
-internal class GeneratePropertyNumber(CSharpGeneratorHelper helper) : GeneratePropertyBase(helper)
+internal class GeneratePropertyNumber(CSharpGeneratorHelper helper) : ICodeGenProperty
 {
-    public override ValueTypes ForDataType => ValueTypes.Number;
+    public ValueTypes ForDataType => ValueTypes.Number;
 
-    public override List<CodeFragment> Generate(IContentTypeField fieldDef, int tabs)
+    public List<CodeFragment> Generate(IContentTypeField fieldDef, int tabs)
     {
         var name = fieldDef.Name;
 
@@ -15,7 +15,7 @@ internal class GeneratePropertyNumber(CSharpGeneratorHelper helper) : GeneratePr
         return decimals == 0
             ?
             [
-                GenPropSnip(tabs, "int", name, $"{Specs.ItemAccessor}.Int", summary:
+                helper.GenPropSnip(tabs, "int", name, $"{helper.Specs.ItemAccessor}.Int", summary:
                 [
                     $"{name} as int. <br/>",
                     $"To get other types use methods such as .Decimal(\"{name}\")"
@@ -23,7 +23,7 @@ internal class GeneratePropertyNumber(CSharpGeneratorHelper helper) : GeneratePr
             ]
             :
             [
-                GenPropSnip(tabs, "decimal", name, $"{Specs.ItemAccessor}.Decimal", summary:
+                helper.GenPropSnip(tabs, "decimal", name, $"{helper.Specs.ItemAccessor}.Decimal", summary:
                 [
                     $"{name} as decimal. <br/>",
                     $"To get other types use methods such as .Int(\"{name}\")"

@@ -2,11 +2,11 @@
 
 namespace ToSic.Sxc.Code.Generate.Data;
 
-internal class GeneratePropertyString(CSharpGeneratorHelper helper) : GeneratePropertyBase(helper)
+internal class GeneratePropertyString(CSharpGeneratorHelper helper) : ICodeGenProperty
 {
-    public override ValueTypes ForDataType => ValueTypes.String;
+    public ValueTypes ForDataType => ValueTypes.String;
 
-    public override List<CodeFragment> Generate(IContentTypeField fieldDef, int tabs)
+    public List<CodeFragment> Generate(IContentTypeField fieldDef, int tabs)
     {
         var name = fieldDef.Name;
 
@@ -16,7 +16,7 @@ internal class GeneratePropertyString(CSharpGeneratorHelper helper) : GeneratePr
 
         return
         [
-            GenPropSnip(tabs: tabs, returnType: "string", name: name, method: $"{Specs.ItemAccessor}.String",
+            helper.GenPropSnip(tabs: tabs, returnType: "string", name: name, method: $"{helper.Specs.ItemAccessor}.String",
                 parameters: "fallback: \"\"",
                 summary:
                 [

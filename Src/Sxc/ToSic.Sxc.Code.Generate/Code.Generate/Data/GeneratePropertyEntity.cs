@@ -5,11 +5,13 @@ using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Code.Generate.Data;
 
-internal class GeneratePropertyEntity(CSharpGeneratorHelper helper) : GeneratePropertyBase(helper, "Gen.Entity")
+internal class GeneratePropertyEntity(CSharpGeneratorHelper helper) : ICodeGenProperty, IHasLog
 {
-    public override ValueTypes ForDataType => ValueTypes.Entity;
+    public ILog? Log => field ??= helper.Log.SubLogOrNull("Gen.PrEnt");
 
-    public override List<CodeFragment> Generate(IContentTypeField fieldDef, int tabs)
+    public ValueTypes ForDataType => ValueTypes.Entity;
+
+    public List<CodeFragment> Generate(IContentTypeField fieldDef, int tabs)
     {
         var name = fieldDef.Name;
         var l = Log.Fn<List<CodeFragment>>($"name: {name}");
@@ -44,7 +46,7 @@ internal class GeneratePropertyEntity(CSharpGeneratorHelper helper) : GeneratePr
 
         // If we know the entity type, we can use the actual type instead of ITypedItem
         if (entityType.HasValue())
-            Specs.ExportedContentTypes
+            helper.Specs.ExportedContentTypes
                 .FirstOrDefault(t => t.Is(entityType))
                 .DoIfNotNull(ct =>
                 {
@@ -59,7 +61,7 @@ internal class GeneratePropertyEntity(CSharpGeneratorHelper helper) : GeneratePr
 
         return l.Return(
         [
-            GenPropSnip(tabs, string.Format(result, resultType), name, $"{Specs.ItemAccessor}." + method, cache: true,
+            helper.GenPropSnip(tabs, string.Format(result, resultType), name, $"{helper.Specs.ItemAccessor}." + method, cache: true,
                 usings: usings,
                 summary: [$"{msgPrefix} {resultType}."],
                 remarks: [msgRemarks],

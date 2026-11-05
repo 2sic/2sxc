@@ -2,17 +2,17 @@
 
 namespace ToSic.Sxc.Code.Generate.Data;
 
-internal class GeneratePropertyDateTime(CSharpGeneratorHelper helper) : GeneratePropertyBase(helper)
+internal class GeneratePropertyDateTime(CSharpGeneratorHelper helper) : ICodeGenProperty
 {
-    public override ValueTypes ForDataType => ValueTypes.DateTime;
+    public ValueTypes ForDataType => ValueTypes.DateTime;
 
-    public override List<CodeFragment> Generate(IContentTypeField fieldDef, int tabs)
+    public List<CodeFragment> Generate(IContentTypeField fieldDef, int tabs)
     {
         var name = fieldDef.Name;
 
         return
         [
-            GenPropSnip(tabs, "DateTime", name, $"{Specs.ItemAccessor}.DateTime", usings: UsingDateTime, summary:
+            helper.GenPropSnip(tabs, "DateTime", name, $"{helper.Specs.ItemAccessor}.DateTime", usings: UsingDateTime, summary:
             [
                 $"{name} as DateTime.",
             ]),

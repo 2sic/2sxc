@@ -2,16 +2,9 @@
 
 namespace ToSic.Sxc.Code.Generate.Data;
 
-internal abstract class GeneratePropertyBase(CSharpGeneratorHelper helper, string? logName = null): IHasLog
+internal static class GeneratePropertyExtensions
 {
-    protected CSharpCodeSpecs Specs = helper.Specs;
-    public ILog? Log => field ??= helper.Log.SubLogOrNull(logName ?? "unknown");
-
-    public abstract ValueTypes ForDataType { get; }
-
-    public abstract List<CodeFragment> Generate(IContentTypeField fieldDef, int tabs);
-
-    protected CodeFragment GenPropSnip(int tabs, string returnType, string name, string method,
+    public static CodeFragment GenPropSnip(this CSharpGeneratorHelper helper, int tabs, string returnType, string name, string method,
         NoParamOrder npo = default,
         string? sourceName = default,
         string[]? summary = default,
@@ -23,8 +16,9 @@ internal abstract class GeneratePropertyBase(CSharpGeneratorHelper helper, strin
         bool cache = false,
         bool jsonIgnore = false)
     {
-        var overrideProp = Specs.OverrideProperties.Contains(name);
-        var overrideMeth = Specs.OverrideMethods.Contains(method);
+        var specs = helper.Specs;
+        var overrideProp = specs.OverrideProperties.Contains(name);
+        var overrideMeth = specs.OverrideMethods.Contains(method);
         var isOverride = overrideProp || overrideMeth;
         if (isOverride)
         {
@@ -42,17 +36,17 @@ internal abstract class GeneratePropertyBase(CSharpGeneratorHelper helper, strin
         return new(
             name,
             comment
-            + GenAttribute(jsonIgnore, tabs)
-            + GenProp(tabs, returnType, name, sourceName ?? name, method, parameters: parameters, cache, isOverride),
+            + GenAttribute(helper, jsonIgnore, tabs)
+            + GenProp(helper, tabs, returnType, name, sourceName ?? name, method, parameters: parameters, cache, isOverride),
             priority: priority,
             usings: GenUsings(usings ?? [], jsonIgnore)
         );
     }
 
-    private string GenAttribute(bool jsonIgnore, int tabs) 
+    private static string GenAttribute(CSharpGeneratorHelper helper, bool jsonIgnore, int tabs)
         => jsonIgnore ? $"\n{helper.Indent(tabs)}[JsonIgnore]\n" : "";
 
-    private string GenProp(int tabs, string returnType, string name, string sourceName, string method, string? parameters, bool cache, bool isOverride)
+    private static string GenProp(CSharpGeneratorHelper helper, int tabs, string returnType, string name, string sourceName, string method, string? parameters, bool cache, bool isOverride)
     {
         if (parameters.HasValue())
             parameters = ", " + parameters;
@@ -73,9 +67,9 @@ internal abstract class GeneratePropertyBase(CSharpGeneratorHelper helper, strin
         return mainCode + cacheCode;
     }
 
-    private static List<string> GenUsings(List<string> usings, bool jsonIgnore) 
-        => jsonIgnore 
-            ? ["System.Text.Json.Serialization", .. usings] 
+    private static List<string> GenUsings(List<string> usings, bool jsonIgnore)
+        => jsonIgnore
+            ? ["System.Text.Json.Serialization", .. usings]
             : usings;
 
 }
