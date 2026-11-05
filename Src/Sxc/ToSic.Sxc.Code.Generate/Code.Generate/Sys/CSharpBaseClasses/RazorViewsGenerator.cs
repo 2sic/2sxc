@@ -24,9 +24,14 @@ public class RazorViewsGenerator(IUser user, IAppReaderFactory appReadFac)
     #endregion
 
 
-    public IGeneratedFileSet[] Generate(IGenerateFileSetSpecs specs)
+    public IGeneratedFileSet[] Generate(GenerateFileSetSpecs specs)
     {
-        var cSharpSpecs = CSharpGeneratorShared.BuildSpecs(appReadFac.Get(specs.AppId).Specs.Name, specs);
+        var appReader = appReadFac.Get(specs.AppId);
+        var cSharpSpecs = new CSharpCodeSpecs
+        {
+            AppName = appReader.Specs.Name,
+            SetSpecs = specs,
+        };
         var file = AppRazors(cSharpSpecs, "AppRazor");
 
         var result = GeneratedFileSet.FromSpecs(GeneratorSpecs, "C# Razor Views", [file]);
@@ -35,7 +40,7 @@ public class RazorViewsGenerator(IUser user, IAppReaderFactory appReadFac)
 
     private GeneratedFile AppRazors(CSharpCodeSpecs cSharpSpecs, string baseName)
     {
-        var className = $"{cSharpSpecs.Prefix}{baseName}{cSharpSpecs.Suffix}";
+        var className = $"{cSharpSpecs.SetSpecs.Prefix}{baseName}{cSharpSpecs.SetSpecs.Suffix}";
         var (_, appSnip, allUsings) = BaseClassHelper.BaseClassTools(cSharpSpecs, Log);
 
         var file = new GeneratedFile

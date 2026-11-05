@@ -2,13 +2,11 @@
 
 namespace ToSic.Sxc.Code.Generate.Sys;
 
-// TODO: Rename to something like CSharpFragmentGenerator; maybe split
-
 internal class CSharpGeneratorHelper(CSharpCodeSpecs specs, ILog parentLog): HelperBase(parentLog, "Cde.GenHlp")
 {
-    public CSharpCodeSpecs Specs => specs;
+    internal CSharpCodeSpecs Specs = specs;
 
-    public string Indent(int depth) => new(' ', specs.TabSize * depth);
+    public string Indent(int depth) => new(' ', Specs.TabSize * depth);
 
     public void AddLines(StringBuilder sb, int lines)
     {
@@ -101,13 +99,13 @@ internal class CSharpGeneratorHelper(CSharpCodeSpecs specs, ILog parentLog): Hel
     internal CodeFragment NamespaceWrapper(string @namespace)
     {
         var l = Log.Fn<CodeFragment>($"{nameof(@namespace)}: {@namespace}");
-        return l.Return(new("namespace", $"{Indent(specs.TabsNamespace)}namespace {@namespace}" + "\n{", closing: "}"));
+        return l.Return(new("namespace", $"{Indent(Specs.TabsNamespace)}namespace {@namespace}" + "\n{", closing: "}"));
     }
 
     internal CodeFragment ClassWrapper(string className, bool isAbstract, bool isPartial, string? inherits)
     {
         var l = Log.Fn<CodeFragment>($"{nameof(className)}: {className}; {nameof(isAbstract)}: {isAbstract}; {nameof(isPartial)}: {isPartial}; {nameof(inherits)}: {inherits}");
-        var indent = Indent(specs.TabsClass);
+        var indent = Indent(Specs.TabsClass);
         var specifiers = (isAbstract ? "abstract " : "") + (isPartial ? "partial " : "");
         inherits = inherits.NullOrGetWith(i => $": {i}");
 
@@ -121,7 +119,7 @@ internal class CSharpGeneratorHelper(CSharpCodeSpecs specs, ILog parentLog): Hel
     public static string GeneratorHeader(FileGeneratorSpecs generator, CSharpCodeSpecs specs, string userName) =>
         $"""
          // Generator:   {generator.Name}
-         // App/Edition: {specs.AppName}/{specs.Edition}
+         // App/Edition: {specs.AppName}/{specs.SetSpecs.Edition}
          // User:        {userName}
          """;
 

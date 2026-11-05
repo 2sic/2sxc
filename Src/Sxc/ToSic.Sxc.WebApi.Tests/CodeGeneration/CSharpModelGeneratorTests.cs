@@ -104,7 +104,7 @@ public class CSharpModelGeneratorTests(
 
         var body = GenerateBody(
             new CSharpTypedDataModelsGenerator(context.User, context.AppReaders),
-            new GenerateFileSetSpecs { AppId = CodeGeneratorTestContext.AppId, ContentTypes = [context.ContentType.NameId] },
+            new() { AppId = CodeGeneratorTestContext.AppId, ContentTypes = [context.ContentType.NameId] },
             context.ContentType.Name);
 
         Assert.Contains($"public ITypedItem {CodeGeneratorTestContext.EntityFieldAndTypeName} =>", body);
@@ -128,7 +128,7 @@ public class CSharpModelGeneratorTests(
     private static void AssertGeneratorSkipsEphemeral(IFileGenerator generator, CodeGeneratorTestContext context)
     {
         var body = generator
-            .Generate(new GenerateFileSetSpecs
+            .Generate(new()
             {
                 AppId = CodeGeneratorTestContext.AppId,
                 ContentTypes = [context.ContentType.NameId]
@@ -145,7 +145,7 @@ public class CSharpModelGeneratorTests(
     /// <summary>
     /// Generate everything the specs ask for, then pick the file of one content type.
     /// </summary>
-    private static string GenerateBody(IFileGenerator generator, IGenerateFileSetSpecs specs, string typeName)
+    private static string GenerateBody(IFileGenerator generator, GenerateFileSetSpecs specs, string typeName)
         => generator
             .Generate(specs)
             .Single()

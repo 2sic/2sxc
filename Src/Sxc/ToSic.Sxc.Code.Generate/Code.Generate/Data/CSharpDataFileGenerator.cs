@@ -9,9 +9,9 @@ internal class CSharpDataFileGenerator(ILog parentLog): HelperBase(parentLog, "G
 {
     public IGeneratedFileSet[] Generate(FileGeneratorSpecs genSpecs, CSharpCodeSpecs specs, IUser user, string setName, ICSharpCodeFragmentGenerator fragmentGenerator)
     {
-        var classFiles = specs.ExportedContentContentTypes
+        var classFiles = specs.ExportedContentTypes
             .Select(t => Generate(fragmentGenerator, new(specs, t, user.Name, BaseName: (t.Name ?? "").Replace("-", ""))))
-            .OfType<IGeneratedFile>() // Ensure no null files are added
+            .OfType<GeneratedDataModel>() // Ensure no null files are added
             .ToListOpt();
 
         var result = GeneratedFileSet.FromSpecs(genSpecs, setName, [.. classFiles]);

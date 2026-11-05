@@ -5,7 +5,7 @@ using ToSic.Sys.Users;
 namespace ToSic.Sxc.Code.Generate.Data;
 
 // IMPORTANT: DON'T RENAME THIS CLASS
-// The exact name and everything is stored in configurations
+// The exact name is stored in configurations
 
 /// <summary>
 /// Experimental
@@ -28,14 +28,16 @@ internal class CSharpTypedDataModelsGenerator(IUser user, IAppReaderFactory appR
     #endregion
 
 
-    public IGeneratedFileSet[] Generate(IGenerateFileSetSpecs specs)
+    public IGeneratedFileSet[] Generate(GenerateFileSetSpecs specs)
     {
         var appReader = appReadFac.Get(specs.AppId);
-        var buildSpecs = CSharpGeneratorShared.BuildSpecs(appReader.Specs.Name, specs) with
+        var buildSpecs = new CSharpCodeSpecs
         {
+            AppName = appReader.Specs.Name,
             OverrideMethods = ModelGeneratorConstants.OverrideMethods,
-            OverridePropertyNames = ModelGeneratorConstants.OverridePropertyNames,
-            ExportedContentContentTypes = CSharpModelSpecsContentTypeHelper.GetSelectedContentTypes(appReader, specs.ContentTypes),
+            OverrideProperties = ModelGeneratorConstants.OverridePropertyNames,
+            ExportedContentTypes = CSharpModelSpecsContentTypeHelper.GetSelectedContentTypes(appReader, specs.ContentTypes),
+            SetSpecs = specs,
         };
 
         var fragmentGenerator = new CSharpTypedDataModelGenerator(GeneratorSpecs, Log);

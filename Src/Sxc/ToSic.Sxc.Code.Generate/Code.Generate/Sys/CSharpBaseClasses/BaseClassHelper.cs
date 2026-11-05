@@ -7,7 +7,7 @@ internal class BaseClassHelper
         var l = parentLog.Fn();
         var codeGenHelper = new CSharpGeneratorHelper(cSharpSpecs, parentLog);
 
-        var snipApp = AppPropertyCodeFragment(codeGenHelper, parentLog);
+        var snipApp = AppPropertyCodeFragment(codeGenHelper, cSharpSpecs, parentLog);
 
         var allUsings = snipApp.Usings
             .Distinct()
@@ -19,10 +19,10 @@ internal class BaseClassHelper
         return (codeGenHelper, snipApp, allUsings);
     }
 
-    private static CodeFragment AppPropertyCodeFragment(CSharpGeneratorHelper codeGenHelper, ILog parentLog)
+    private static CodeFragment AppPropertyCodeFragment(CSharpGeneratorHelper codeGenHelper, CSharpCodeSpecs cSharpSpecs, ILog parentLog)
     {
         var l = parentLog.Fn<CodeFragment>();
-        var tabs = codeGenHelper.Specs.TabsProperty;
+        var tabs = cSharpSpecs.TabsProperty;
         var indent = codeGenHelper.Indent(tabs);
         var summary = codeGenHelper.XmlComment(tabs, ["Typed App with typed Settings & Resources"]);
         var snipApp = new CodeFragment(

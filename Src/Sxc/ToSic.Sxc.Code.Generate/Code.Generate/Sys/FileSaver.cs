@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Code.Generate.Sys;
 public class FileSaver(ISite site, IAppReaderFactory appReadFac, IAppPathsMicroSvc appPaths)
     : ServiceBase(SxcLogName + ".GenFSv", connect: [site, appReadFac, appPaths])
 {
-    public void GenerateAndSaveFiles(IFileGenerator generator, IGenerateFileSetSpecs specs)
+    public void GenerateAndSaveFiles(IFileGenerator generator, GenerateFileSetSpecs specs)
     {
         var l = Log.Fn();
 
@@ -81,7 +81,7 @@ public class FileSaver(ISite site, IAppReaderFactory appReadFac, IAppPathsMicroS
         return appPaths.Get(appReader, site).PhysicalPath;
     }
 
-    private string GetAppCodeDataPhysicalPath(string mask, IGenerateFileSetSpecs specs)
+    private string GetAppCodeDataPhysicalPath(string mask, GenerateFileSetSpecs specs)
     {
         // Do basic mask tests
         if (mask.IsEmpty()) throw new("Mask must not be empty");

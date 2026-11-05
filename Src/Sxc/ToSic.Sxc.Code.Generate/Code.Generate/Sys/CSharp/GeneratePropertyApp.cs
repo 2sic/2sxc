@@ -38,8 +38,8 @@ internal class GeneratePropertyApp(CSharpGeneratorHelper helper) : GeneratePrope
 
         // If we know the entity type, we can use the actual type instead of ITypedItem
         if (entityType.HasValue())
-            Specs.ExportedContentContentTypes
-                ?.FirstOrDefault(t => entityType.EqualsInsensitive(t.Name))
+            Specs.ExportedContentTypes
+                .FirstOrDefault(t => entityType.EqualsInsensitive(t.Name))
                 .DoIfNotNull(ct =>
                 {
                     // Switch the result type

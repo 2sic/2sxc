@@ -1,10 +1,10 @@
 ﻿namespace ToSic.Sxc.Code.Generate.Sys;
 
 /// <summary>
-/// WIP - should contain a list of code-files and additional specs
+/// Contains a list of code-files and additional specs
 /// </summary>
 [WorkInProgressApi("still being standardized")]
-public class GeneratedFileSet : IGeneratedFileSet
+public record GeneratedFileSet : IGeneratedFileSet
 {
     /// <inheritdoc />
     public required string Name { get; init; }

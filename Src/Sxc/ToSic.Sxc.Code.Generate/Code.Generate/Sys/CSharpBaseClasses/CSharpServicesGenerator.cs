@@ -24,9 +24,14 @@ public class CSharpServicesGenerator(IUser user, IAppReaderFactory appReadFac)
     #endregion
 
 
-    public IGeneratedFileSet[] Generate(IGenerateFileSetSpecs specs)
+    public IGeneratedFileSet[] Generate(GenerateFileSetSpecs specs)
     {
-        var cSharpSpecs = CSharpGeneratorShared.BuildSpecs(appReadFac.Get(specs.AppId).Specs.Name, specs);
+        var appReader = appReadFac.Get(specs.AppId);
+        var cSharpSpecs = new CSharpCodeSpecs
+        {
+            AppName = appReader.Specs.Name,
+            SetSpecs = specs,
+        };
 
         var file = GenerateCSharpService(GeneratorSpecs, cSharpSpecs, user, "ServiceBase", "Custom.Hybrid.CodeTyped", "Services", Log);
 
@@ -36,7 +41,7 @@ public class CSharpServicesGenerator(IUser user, IAppReaderFactory appReadFac)
 
     internal static GeneratedFile GenerateCSharpService(FileGeneratorSpecs genSpecs, CSharpCodeSpecs cSharpSpecs, IUser user, string baseName, string baseClass, string nsAndPath, ILog log)
     {
-        var className = $"{cSharpSpecs.Prefix}{baseName}{cSharpSpecs.Suffix}";
+        var className = $"{cSharpSpecs.SetSpecs.Prefix}{baseName}{cSharpSpecs.SetSpecs.Suffix}";
         var (_, appSnip, allUsings) = BaseClassHelper.BaseClassTools(cSharpSpecs, log);
 
         var file = new GeneratedFile

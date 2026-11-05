@@ -11,5 +11,5 @@ public interface IFileGenerator
     /// <summary>
     /// Call to run the generator and get the files
     /// </summary>
-    public IGeneratedFileSet[] Generate(IGenerateFileSetSpecs specs);
+    public IGeneratedFileSet[] Generate(GenerateFileSetSpecs specs);
 }

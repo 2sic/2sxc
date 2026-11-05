@@ -79,7 +79,7 @@ public class CopilotCodeGenerateService(
         return l.Return(errors, $"errors:{errors.Count}");
     }
 
-    private void GenerateAndSave(IFileGenerator generator, IGenerateFileSetSpecs specs)
+    private void GenerateAndSave(IFileGenerator generator, GenerateFileSetSpecs specs)
     {
         (generator as IHasLog)?.LinkLog(Log);
         fileSaver.GenerateAndSaveFiles(generator, specs);

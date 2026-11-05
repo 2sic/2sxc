@@ -13,10 +13,10 @@ internal record CSharpFileSpecs(
     string BaseName
 )
 {
-    public string ClassName => $"{FileSetSpecs.Prefix}{BaseName}{ClassSuffix}";
+    public string ClassName => $"{FileSetSpecs.SetSpecs.Prefix}{BaseName}{ClassSuffix}";
 
     /// <summary>
     /// Gets the class suffix to append to the main class name (e.g., "Model" for CustomModel)
     /// </summary>
-    public string ClassSuffix => FileSetSpecs.Suffix ?? "";
+    public string ClassSuffix => FileSetSpecs.SetSpecs.Suffix ?? "";
 }

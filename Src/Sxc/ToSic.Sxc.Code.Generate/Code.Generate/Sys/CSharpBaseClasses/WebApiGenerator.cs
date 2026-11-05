@@ -24,9 +24,14 @@ public class WebApiGenerator(IUser user, IAppReaderFactory appReadFac)
     #endregion
 
 
-    public new IGeneratedFileSet[] Generate(IGenerateFileSetSpecs specs)
+    public IGeneratedFileSet[] Generate(GenerateFileSetSpecs specs)
     {
-        var cSharpSpecs = CSharpGeneratorShared.BuildSpecs(appReadFac.Get(specs.AppId).Specs.Name, specs);
+        var appReader = appReadFac.Get(specs.AppId);
+        var cSharpSpecs = new CSharpCodeSpecs
+        {
+            AppName = appReader.Specs.Name,
+            SetSpecs = specs,
+        };
 
         var file = CSharpServicesGenerator.GenerateCSharpService(GeneratorSpecs, cSharpSpecs, user, "ControllerBase", "Custom.Hybrid.ApiTyped", "Api", Log);
 

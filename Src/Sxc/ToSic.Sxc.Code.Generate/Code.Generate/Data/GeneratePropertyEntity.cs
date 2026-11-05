@@ -44,7 +44,7 @@ internal class GeneratePropertyEntity(CSharpGeneratorHelper helper) : GeneratePr
 
         // If we know the entity type, we can use the actual type instead of ITypedItem
         if (entityType.HasValue())
-            Specs.ExportedContentContentTypes
+            Specs.ExportedContentTypes
                 .FirstOrDefault(t => t.Is(entityType))
                 .DoIfNotNull(ct =>
                 {
