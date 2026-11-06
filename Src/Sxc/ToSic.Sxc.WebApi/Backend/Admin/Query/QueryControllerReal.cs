@@ -57,7 +57,7 @@ public class QueryControllerReal(
         var block = ctxSvc.BlockRequired();
         var specs = new SxcAppDataConfigSpecs { BlockForLookupOrNull = block };
         var lookUps = tokenEngineWithContext.New()
-            .GetDataConfiguration((SxcAppBase)block.App, specs)
+            .GetDataConfiguration(block.App, specs)
             .LookUpEngine;
         return lookUps;
     }

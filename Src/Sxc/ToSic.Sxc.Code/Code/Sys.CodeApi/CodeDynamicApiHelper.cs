@@ -11,7 +11,7 @@ internal class CodeDynamicApiHelper(ExecutionContext exCtx) : CodeAnyApiHelper(e
 {
     public dynamic? Content => ExCtx.Content;
     public dynamic? Header => ExCtx.Header;
-    public IApp App => ExCtx.App;
+    public IApp App => (IApp)ExCtx.App;
     public IDynamicStack Resources => ExCtx.Resources;
     public IDynamicStack Settings => ExCtx.Settings;
 

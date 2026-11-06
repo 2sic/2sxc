@@ -2,6 +2,7 @@
 using System.Web.Http.Controllers;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys;
@@ -90,7 +91,7 @@ internal class DnnCustomWebApiHelper: CompileCodeHelper
 
         // 2.5 In case SxcBlock was null, there is no instance, but we may still need the app
         // This is special in WebAPIs, so we must handle it here
-        var app = exCtx.GetApp();
+        var app = exCtx.GetAppForCode();
         if (app == null! /* Special: there are cases where it's null, even though the nullable API doesn't show it */)
         {
             l.A("DynCode.App is null");
@@ -115,9 +116,9 @@ internal class DnnCustomWebApiHelper: CompileCodeHelper
     }
 
 
-    private IApp GetAppOrNullFromUrlParams(ApiControllerDependencies services, HttpRequestMessage request, IBlock? blockOrNull)
+    private IAppForCode GetAppOrNullFromUrlParams(ApiControllerDependencies services, HttpRequestMessage request, IBlock? blockOrNull)
     {
-        var l = Log.Fn<IApp>();
+        var l = Log.Fn<IAppForCode>();
         try
         {
             var routeAppPath = services.WebApiAppFolderUtilities.New(request)
@@ -131,8 +132,7 @@ internal class DnnCustomWebApiHelper: CompileCodeHelper
             var siteCtx = SharedCurrentContextService.Context;
             // Look up if page publishing is enabled - if module context is not available, always false
             l.A($"AppId: {appReader.AppId}");
-            var app = services.AppOverrideLazy.Value;
-            app.Init(siteCtx.Site, appReader.PureIdentity(), new());
+            var app = services.AppOverrideLazy.New(new(siteCtx.Site, appReader.PureIdentity(), new()));
             return l.Return(app, $"found #{app.AppId}");
         }
         catch

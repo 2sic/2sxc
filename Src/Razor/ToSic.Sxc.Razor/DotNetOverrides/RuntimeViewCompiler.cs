@@ -489,7 +489,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
         }
 
         // appRelativePath from block (this is not working for inner-content)
-        var appRelativePath = block.App.RelativePath;
+        var appRelativePath = block.App.AppPaths.RelativePath;
 
         // Inner-content app case
         if (!IsTemplateLocatedInAppFolder(appRelativePath, relativePath))

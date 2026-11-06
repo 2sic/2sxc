@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Context.Sys.Site;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys;
@@ -69,7 +71,7 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
         AdamCode = exCtx.GetService<AdamCode>();
 
         // In case SxcBlock was null, there is no instance, but we may still need the app
-        if (ExCtx.GetApp() == null! /* realistic case */)
+        if (ExCtx.GetAppForCode() == null! /* realistic case */)
         {
             Log.A("DynCode.App is null");
             TryToAttachAppFromUrlParams(context);
@@ -108,9 +110,10 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
                 return;
             }
 
-            // Look up if page publishing is enabled - if module context is not available, always false
+            // Since we only have the AppId, we need to load the app and attach it to the context
             l.A($"AppId: {appId}");
-            var app = LoadAppOnly(appId, CtxService.Context.Site);
+            var site = CtxService.Context.Site;
+            var app = _helper.GetService<Generator<Apps.App, AppForCodeShared.Options>>().New(new(site, new AppIdentityPure(site.ZoneId, appId), new()));
             ((IExCtxAttachApp)ExCtx).AttachApp(app);
             l.Done("app initialized");
             return;
@@ -120,21 +123,6 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
             l.Done("error, ignore");
         }
     }
-
-    /// <summary>
-    /// Only load the app in case we don't have a module context
-    /// </summary>
-    /// <param name="appId"></param>
-    /// <param name="site"></param>
-    /// <returns></returns>
-    private IApp LoadAppOnly(int appId, ISite site)
-    {
-        var l = Log.Fn<IApp>($"{appId}");
-        var app = _helper.GetService<Apps.App>();
-        app.Init(site, new AppIdentityPure(site.ZoneId, appId), new());
-        return l.Return(app);
-    }
-
 
     #endregion
 

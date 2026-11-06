@@ -1,4 +1,6 @@
 ﻿using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.DataSource.Query.Sys;
+using ToSic.Eav.Metadata;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Apps.Sys.Assets;
 using ToSic.Sxc.Apps.Sys.Paths;
@@ -15,60 +17,78 @@ namespace ToSic.Sxc.Apps;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
 public partial class App(
-    SxcAppBase.Dependencies services,
+    AppForCodeShared.Dependencies services,
     LazySvc<GlobalPaths> globalPaths,
     LazySvc<ICodeDataFactory> cdfLazy,
     LazySvc<CodeInfoService> codeChanges,
-    IAppPathsMicroSvc pathFactoryTemp)
+    LazySvc<QueryManager> queryManager)
     // Note: If this is ever changed to not inherit from the EavApp, make sure you correct/update the LightSpeed code as well as it checks for this base class
-    : SxcAppBase(services, "App.SxcApp", connect: [globalPaths, cdfLazy, codeChanges, pathFactoryTemp]),
-        IAppWithInternal
+    : SxcAppBase(services, "App.SxcApp", connect: [globalPaths, cdfLazy, codeChanges, queryManager]),
+        IApp, IAppForCode
 {
-    #region Special objects
 
-    IAppReader IAppWithInternal.AppReader => AppReaderInt;
+    #region IApp (old dynamic API) Properties
+
+    /// <inheritdoc />
+    [field: AllowNull, MaybeNull]
+    public string Name => field ??= AppSource.AppSpecs.Name;
 
 
-    private IAppPaths AppPaths => field ??= pathFactoryTemp.Get(AppReaderInt, MySite);
+    private IAppForCode AppSource => field ??= this;
 
     #endregion
+
+    /// <inheritdoc />
+    [Obsolete]
+    [PrivateApi]
+    public string AppGuid => NameId;
+
+    /// <inheritdoc />
+    [field: AllowNull, MaybeNull]
+    public string NameId => field ??= AppSource.AppSpecs.NameId;
+
+    /// <inheritdoc />
+    [field: AllowNull, MaybeNull]
+    public string Folder => field ??= AppSource.AppSpecs.Folder;
 
 
     #region IApp Paths
 
 
     /// <inheritdoc cref="IApp.Path" />
-    public string Path => field ??= AppPaths.Path;
+    public string Path => field ??= AppSource.AppPaths.Path;
 
 
     /// <inheritdoc cref="IApp.Thumbnail" />
-    public string? Thumbnail => _thumbnail.Get(() => new AppAssetThumbnail(AppReaderInt, AppPaths, globalPaths).Url);
+    public string? Thumbnail => _thumbnail.Get(() => new AppAssetThumbnail(AppSource.AppReader, AppSource.AppPaths, globalPaths).Url);
     private readonly LazyGet<string?> _thumbnail = new();
 
     /// <inheritdoc cref="IApp.PathShared" />
-    public string PathShared => field ??= AppPaths.PathShared;
+    public string PathShared => field ??= AppSource.AppPaths.PathShared;
+
+    [PrivateApi]
+    public string PhysicalPath
+        => AppSource.AppPaths.PhysicalPath;
 
     /// <inheritdoc cref="IApp.PhysicalPathShared" />
-    public string PhysicalPathShared => field ??= AppPaths.PhysicalPathShared;
+    public string PhysicalPathShared => field ??= AppSource.AppPaths.PhysicalPathShared;
 
     [PrivateApi("not public, not sure if we should surface this")]
-    public string RelativePath => field ??= AppPaths.RelativePath;
+    public string RelativePath => field ??= AppSource.AppPaths.RelativePath;
 
 
     [PrivateApi("not public, not sure if we should surface this")]
-    public string RelativePathShared => field ??= AppPaths.RelativePathShared;
+    public string RelativePathShared => field ??= AppSource.AppPaths.RelativePathShared;
 
 
     #endregion
 
-    #region Special internal properties for the IAppTyped wrapper. It will need these properties, but they are protected
+    #region Metadata and Permission Accessors
 
-    internal IAppPaths AppPathsForTyped => AppPaths;
-    internal IAppReader AppReaderForTyped => AppReaderInt;
-
-    internal TResult BuildDataForTyped<TDataSource, TResult>() where TDataSource : TResult where TResult : class, IDataSource
-        => BuildData<TDataSource, TResult>();
+    /// <inheritdoc />
+    public IMetadata Metadata => AppSource.AppSpecs.Metadata;
 
     #endregion
+
 
 }

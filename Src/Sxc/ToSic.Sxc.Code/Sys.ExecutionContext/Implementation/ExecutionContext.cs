@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.AppStack;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
@@ -9,7 +10,6 @@ using ToSic.Sxc.Render.Polymorphism.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 using ToSic.Sys.Caching.PiggyBack;
-using IApp = ToSic.Sxc.Apps.IApp;
 // ReSharper disable InheritdocInvalidUsage
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
@@ -93,7 +93,7 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
     }
 
     /// <inheritdoc />
-    internal IApp App { get; private set; } = null!;
+    internal IAppForCode App { get; private set; } = null!;
 
     /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     [field: AllowNull, MaybeNull]

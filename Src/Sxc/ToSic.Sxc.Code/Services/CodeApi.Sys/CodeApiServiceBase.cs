@@ -3,6 +3,7 @@ using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
@@ -23,15 +24,15 @@ public abstract class CodeApiServiceBase(CodeApiServiceBase.Dependencies service
         ISite Site,
         LazySvc<IZoneMapper> ZoneMapper,
         LazySvc<IAppsCatalog> AppsCatalog)
-        : DependenciesBase(connect: [/* never! serviceProvider */ LogStore, /* not needed: User,*/ /* not needed: Site,*/ ZoneMapper, AppsCatalog]);
+        : DependenciesBase(connect: [/* never! serviceProvider */ LogStore, ZoneMapper, AppsCatalog]);
 
     public record ScopedDependencies(
         Generator<IExecutionContextFactory> ExCtxGenerator,
-        Generator<App> AppGenerator,
+        Generator<App, AppForCodeShared.Options> AppGenerator,
         LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder)
         : DependenciesBase(connect: [ExCtxGenerator, AppGenerator, ModAndBlockBuilder]);
 
-    protected IApp GetApp(Generator<App> appGenerator, NoParamOrder npo = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
+    protected IApp GetApp(Generator<App, AppForCodeShared.Options> appGenerator, NoParamOrder npo = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
     {
         MakeSureLogIsInHistory();
 
@@ -40,7 +41,7 @@ public abstract class CodeApiServiceBase(CodeApiServiceBase.Dependencies service
 
         // lookup zoneId if not provided
         var realZoneId = zoneId ?? Services.AppsCatalog.Value.AppIdentity(realAppId).ZoneId;
-        return GetAndInitApp(appGenerator.New(), new AppIdentityPure(realZoneId, realAppId), site, showDrafts: withUnpublished);
+        return GetAndInitApp(appGenerator, new AppIdentityPure(realZoneId, realAppId), site, showDrafts: withUnpublished);
     }
 
 
@@ -52,10 +53,10 @@ public abstract class CodeApiServiceBase(CodeApiServiceBase.Dependencies service
         return primaryApp;
     }
 
-    protected IApp GetAndInitApp(App app, IAppIdentityPure appIdentity, ISite? overrideSite, bool? showDrafts = null)
+    protected IApp GetAndInitApp(Generator<App, AppForCodeShared.Options> appGen, IAppIdentityPure appIdentity, ISite? overrideSite, bool? showDrafts = null)
     {
         var l = Log.Fn<IApp>($"{appIdentity.Show()}, site:{overrideSite != null}, showDrafts: {showDrafts}");
-        app.Init(overrideSite, appIdentity, new() { ShowDrafts = showDrafts });
+        var app = appGen.New(new(overrideSite, appIdentity, new() { ShowDrafts = showDrafts }));
         return l.Return(app);
     }
 

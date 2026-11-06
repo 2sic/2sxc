@@ -2,6 +2,7 @@
 using System.Web.Http.Controllers;
 using ToSic.Eav.Web.Sys;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sys.Code.InfoSystem;
 
@@ -43,7 +44,7 @@ internal class DnnWebApiLogging(HttpRequestLoggingScoped requestLogging, string 
     /// <summary>
     /// Add Log Specs to the current request and also to any reported code changes later on.
     /// </summary>
-    public void AddLogSpecs(IBlock block, IApp app, string currentPath, CodeInfosInScope codeInfos) =>
+    public void AddLogSpecs(IBlock block, IAppForCode app, string currentPath, CodeInfosInScope codeInfos) =>
         requestLogging.StoreEntry.TryUpdateSpecs(() =>
         {
             // Add app-id to entry info to ensure controllers with same name being detected by app

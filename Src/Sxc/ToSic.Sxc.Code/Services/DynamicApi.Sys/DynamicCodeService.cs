@@ -45,12 +45,12 @@ public partial class DynamicCodeService(CodeApiServiceBase.Dependencies services
 
     /// <inheritdoc />
     public IApp AppOfSite()
-        => GetAndInitApp(ServicesScoped.AppGenerator.New(), GetPrimaryAppIdentity(null), null);
+        => GetAndInitApp(ServicesScoped.AppGenerator, GetPrimaryAppIdentity(null), null);
 
     /// <inheritdoc />
     // ReSharper disable once MethodOverloadWithOptionalParameter
     public IApp AppOfSite(NoParamOrder npo = default, int? siteId = null, ISite? overrideSite = null, bool? withUnpublished = null)
-        => GetAndInitApp(ServicesScoped.AppGenerator.New(), GetPrimaryAppIdentity(siteId, overrideSite), overrideSite, withUnpublished);
+        => GetAndInitApp(ServicesScoped.AppGenerator, GetPrimaryAppIdentity(siteId, overrideSite), overrideSite, withUnpublished);
 
     #endregion
 }

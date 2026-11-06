@@ -30,7 +30,7 @@ public partial class DataService(
     public override void ConnectToRoot(IExecutionContext exCtx)
     {
         base.ConnectToRoot(exCtx);
-        Setup(new(exCtx.GetState<Sxc.Apps.IApp>(), () => (exCtx as IExCtxLookUpEngine)?.LookUpForDataSources));
+        Setup(new(exCtx.GetState<Apps.IApp>(), () => (exCtx as IExCtxLookUpEngine)?.LookUpForDataSources));
     }
 
     public void Setup(Options opts)

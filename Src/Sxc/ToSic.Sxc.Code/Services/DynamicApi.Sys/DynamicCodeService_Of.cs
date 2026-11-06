@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -54,7 +55,7 @@ partial class DynamicCodeService
             CompatibilityFallback = CompatibilityLevels.CompatibilityLevel12,
         });
         var app = App(zoneId: zoneId, appId: appId);
-        ((IExCtxAttachApp)exCtx).AttachApp(app);
+        ((IExCtxAttachApp)exCtx).AttachApp(app as IAppForCode);
         var code12 = new DynamicApiStandalone(exCtx, ((ExecutionContext)exCtx).DynamicApi);
         return l.ReturnAsOk(code12);
     }

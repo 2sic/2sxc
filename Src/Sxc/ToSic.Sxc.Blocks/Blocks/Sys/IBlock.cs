@@ -1,9 +1,9 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys.Problems;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Context.Sys;
-using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks.Sys;
 
@@ -44,10 +44,10 @@ public interface IBlock: IAppIdentity
     [PrivateApi("unsure if this should be public, or only needed to initialize it?")]
     BlockConfiguration Configuration { get; }
 
-    /// <summary>
-    /// The app this block is running in
-    /// </summary>
-    IApp App { get; }
+    ///// <summary>
+    ///// The app this block is running in
+    ///// </summary>
+    //IApp App { get; }
 
     /// <summary>
     /// The DataSource which delivers data for this block (will be used by the [](xref:ToSic.Sxc.Render.Engines.Sys.IEngine) together with the View)
@@ -95,7 +95,8 @@ public interface IBlock: IAppIdentity
 
     bool ConfigurationIsReady { get; }
 
-    IApp? AppOrNull { get; }
+    //IApp? AppOrNull { get; }
+    IAppForCode? AppOrNull { get; }
 
     /// <summary>
     /// This list is only populated on the root builder. Child builders don't actually use this.
@@ -106,4 +107,5 @@ public interface IBlock: IAppIdentity
     /// </remarks>
     List<IDependentApp> DependentApps { get; }
 
+    IAppForCode App { get; }
 }

@@ -17,11 +17,12 @@ public static class StartupSxcApps
     public static IServiceCollection AddSxcApps(this IServiceCollection services)
     {
         // App Dependencies
-        services.TryAddTransient<SxcAppBase.Dependencies>();
+        services.TryAddTransient<AppForCodeShared.Dependencies>();
 
         // Configuration objects
         services.TryAddTransient<GlobalPaths>();
 
+        services.TryAddTransient<SxcAppDataService>(); // new v22
         services.TryAddTransient<App>();
 
         services.TryAddTransient<IAppTyped, AppTyped>();

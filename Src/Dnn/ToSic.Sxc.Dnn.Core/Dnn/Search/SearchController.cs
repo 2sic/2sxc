@@ -290,7 +290,7 @@ internal class SearchController(
             .Combine(Block.View.IsShared ? site.SharedAppsRootRelative() : site.AppsRootPhysical, block.Context.AppReaderRequired.Specs.Folder)
             .ForwardSlash();
         l.A($"compile ViewController class on path: {path}/{Block.View.ViewController}");
-        var spec = new HotBuildSpec(block.AppId, _edition, block.App.Name);
+        var spec = new HotBuildSpec(block.AppId, _edition, block.App.AppSpecs.Name);
         l.A($"prepare spec: {spec}");
         var instance = codeCompiler.New().InstantiateClass(virtualPath: block.View.ViewController, spec: spec, className: null, relativePath: path, throwOnError: true);
         l.A("got instance of compiled ViewController class");

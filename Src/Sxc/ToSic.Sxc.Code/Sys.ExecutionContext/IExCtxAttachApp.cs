@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Apps;
+﻿using ToSic.Sxc.Apps.Sys;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
 
@@ -6,5 +6,5 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IExCtxAttachApp
 {
-    void AttachApp(IApp app);
+    void AttachApp(IAppForCode app);
 }

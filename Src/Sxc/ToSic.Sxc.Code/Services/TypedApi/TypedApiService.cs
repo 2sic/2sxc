@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
@@ -54,7 +55,7 @@ internal class TypedApiService(CodeApiServiceBase.Dependencies services, string?
         var l = Log.Fn<IAppTyped>();
 
         MakeSureLogIsInHistory();
-        var app = GetAndInitApp(ServicesScoped.AppGenerator.New(), GetPrimaryAppIdentity(null), null);
+        var app = GetAndInitApp(ServicesScoped.AppGenerator, GetPrimaryAppIdentity(null), null);
         return l.ReturnAsOk(GetNewCodeRoot(app).GetState<IAppTyped>());
     }
 
@@ -131,7 +132,7 @@ internal class TypedApiService(CodeApiServiceBase.Dependencies services, string?
             ModuleIfBlockUnknown = moduleIfBlockUnknown,
         });
         if (appToAttach != null)
-            ((IExCtxAttachApp)exCtx).AttachApp(appToAttach);
+            ((IExCtxAttachApp)exCtx).AttachApp(appToAttach as IAppForCode);
         return exCtx;
     }
 

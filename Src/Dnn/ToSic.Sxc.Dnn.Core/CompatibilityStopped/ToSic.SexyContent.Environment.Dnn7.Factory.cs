@@ -3,7 +3,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Render.Block.Sys;
-using IApp = ToSic.Sxc.Apps.IApp;
+using IAppDynamic = ToSic.Sxc.Apps.IApp;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Environment.Dnn7;
@@ -37,7 +37,7 @@ public static class Factory
     /// </summary>
     /// <returns></returns>
     [Obsolete]
-    public static IApp App(int appId, bool unusedButKeepForApiStability = false, bool showDrafts = false)
+    public static IAppDynamic App(int appId, bool unusedButKeepForApiStability = false, bool showDrafts = false)
         => throw new NotSupportedException(Sxc.Dnn.Factory.GenerateMessage());
 
     /// <summary>
@@ -45,16 +45,16 @@ public static class Factory
     /// </summary>
     /// <returns></returns>
     [Obsolete]
-    public static IApp App(int zoneId, int appId, bool unusedButKeepForApiStability = false, bool showDrafts = false)
+    public static IAppDynamic App(int zoneId, int appId, bool unusedButKeepForApiStability = false, bool showDrafts = false)
         => throw new NotSupportedException(Sxc.Dnn.Factory.GenerateMessage());
 
     [Obsolete]
-    public static IApp App(int appId, PortalSettings ownerPortalSettings, bool unusedButKeepForApiStability = false, bool showDrafts = false)
+    public static IAppDynamic App(int appId, PortalSettings ownerPortalSettings, bool unusedButKeepForApiStability = false, bool showDrafts = false)
         => throw new NotSupportedException(Sxc.Dnn.Factory.GenerateMessage());
 
 
     [Obsolete]
-    public static IApp App(int zoneId, int appId, PortalSettings ownerPortalSettings, bool unusedButKeepForApiStability = false, bool showDrafts = false)
+    public static IAppDynamic App(int zoneId, int appId, PortalSettings ownerPortalSettings, bool unusedButKeepForApiStability = false, bool showDrafts = false)
         => throw new NotSupportedException(Sxc.Dnn.Factory.GenerateMessage());
 
 }

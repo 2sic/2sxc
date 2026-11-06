@@ -50,7 +50,7 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.Depe
         }
 
         // only set preview / content-group-reference - but must use the guid
-        var templateGuid = Block.App.Data.List.GetOne(templateId)!.EntityGuid;
+        var templateGuid = Block.App.AppReader.List.GetOne(templateId)!.EntityGuid;
         SavePreviewTemplateId(templateGuid);
         return l.Return(null, "only set preview, return null");
     }

@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Data.Sys.Decorators;
+﻿using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Data.Sys.Factory;
 
 namespace ToSic.Sxc.Apps;
@@ -9,7 +10,7 @@ public partial class App
 
     // Create config object. Note that AppConfiguration could be null, then it would use default values
     /// <inheritdoc />
-    public IAppConfiguration Configuration => AppReaderInt.Specs.Configuration;
+    public IAppConfiguration Configuration => AppSource.AppSpecs.Configuration;
 
     private ICodeDataFactory Cdf
     {
@@ -26,19 +27,17 @@ public partial class App
     internal void SetupCodeDataFactory(ICodeDataFactory cdf)
         => Cdf = cdf;
 
-    private dynamic MakeDynProperty(IEntity contents, bool propsRequired)
+    private IDynamicEntity MakeDynProperty(IEntity contents, bool propsRequired)
     {
         var wrapped = CmsEditDecorator.Wrap(contents, false);
         return Cdf.AsDynamic(wrapped, new() { ItemIsStrict = propsRequired });
     }
 
 
-    /// <inheritdoc cref="Eav.ImportExport.Sys.Settings" />
-    public dynamic? Settings => AppSettings == null ? null : _settings.Get(() => MakeDynProperty(AppSettings, propsRequired: false));
+    public dynamic? Settings => AppSource.SettingsEntity == null ? null : _settings.Get(() => MakeDynProperty(AppSource.SettingsEntity, propsRequired: false));
     private readonly LazyGet<dynamic> _settings = new();
 
-    /// <inheritdoc cref="IDynamicCode12Docs.Resources" />
-    public dynamic? Resources => AppResources == null ? null : _res.Get(() => MakeDynProperty(AppResources, propsRequired: false));
+    public dynamic? Resources => AppSource.ResourcesEntity == null ? null : _res.Get(() => MakeDynProperty(AppSource.ResourcesEntity, propsRequired: false));
     private readonly LazyGet<dynamic> _res = new();
 
     #endregion

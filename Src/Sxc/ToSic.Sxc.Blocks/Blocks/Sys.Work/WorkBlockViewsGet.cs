@@ -45,7 +45,7 @@ public class WorkBlockViewsGet(AppWorkChain<WorkViews> workViews, LazySvc<AppIco
                 Name = t.Name,
                 ContentTypeStaticName = t.ContentType,
                 IsHidden = t.IsHidden,
-                Thumbnail = block.AppOrNull == null ? null : thumbnailHelper.IconPathOrNull(block.App, t, PathTypes.Link),
+                Thumbnail = block.AppOrNull is not {} app ? null : thumbnailHelper.IconPathOrNull(app.AppPaths, t, PathTypes.Link),
                 IsDefault = t.Metadata.HasType(KnownDecorators.IsDefaultDecorator),
             })
             .ToList();

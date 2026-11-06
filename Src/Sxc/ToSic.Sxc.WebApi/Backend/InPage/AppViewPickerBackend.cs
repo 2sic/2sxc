@@ -38,12 +38,12 @@ public class AppViewPickerBackend(
     public IEnumerable<ContentTypeUiInfo> ContentTypes()
     {
         var block = Block;
-        return block.AppOrNull == null
+        return block.AppOrNull is not {} app
             ? []
             : workViewsContentTypes.Value.GetContentTypesWithStatus(
                 AppCtx,
-                block.App.Path ?? "",
-                block.App.PathShared ?? ""
+                app.AppPaths.Path ?? "",
+                app.AppPaths.PathShared ?? ""
             );
     }
 

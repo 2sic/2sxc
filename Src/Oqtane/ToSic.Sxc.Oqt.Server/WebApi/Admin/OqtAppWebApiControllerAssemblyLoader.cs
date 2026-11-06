@@ -45,7 +45,7 @@ internal class OqtAppWebApiControllerAssemblyLoader(
         var runtimeKey = blockOrNull?.Context.AppReaderRequired?.Specs.CacheKey;
         var spec = new HotBuildSpec(blockOrNull?.AppId ?? KnownAppsConstants.AppIdEmpty,
             edition: edition,
-            appName: blockOrNull?.AppOrNull?.Name,
+            appName: blockOrNull?.AppOrNull?.AppSpecs.Name,
             appCacheKey: runtimeKey);
 
         Log.A($"Controller path from root: {pathFromRoot}");

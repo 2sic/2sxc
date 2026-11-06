@@ -1,9 +1,15 @@
-﻿using ToSic.Eav.DataSource.Sys;
+﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.DataSource.Sys;
+using ToSic.Sxc.Apps.Sys;
 
 namespace ToSic.Sxc.Apps;
 
 partial class App
 {
+    /// <inheritdoc />
+    [field: AllowNull, MaybeNull]
+    public IAppData Data => field ??= AppSource.DataService.BuildData<AppDataWithCrud, IAppData>(this.PureIdentity());
+
     /// <summary>
     /// Accessor to queries. Use like:
     /// - App.Query.Count
@@ -19,9 +25,10 @@ partial class App
             if (field != null)
                 return field;
 
-            if (AppDataConfig.LookUpEngine == null)
+            var le = AppSource.DataService.LookUpEngine;
+            if (le == null)
                 throw new("Can't use app-queries, because the necessary configuration provider hasn't been initialized. Call InitData first.");
-            return field = Services.QueryManager.Value.AllQueries(this, AppDataConfig.LookUpEngine);
+            return field = queryManager.Value.AllQueries(this, le);
         }
     }
 
@@ -34,7 +41,7 @@ partial class App
             return query;
 
         // Try to find query definition - while also checking parent apps
-        var qEntity = Services.QueryManager.Value.TryGetQuery(AppReaderInt, name, AppDataConfig.LookUpEngine, recurseParents: 3);
+        var qEntity = queryManager.Value.TryGetQuery(AppSource.AppReader, name, AppSource.DataService.LookUpEngine, recurseParents: 3);
 
         return qEntity ?? throw new((DataSourceConstantsInternal.IsGlobalQuery(name) ? "Global " : "") + "Query not Found!");
     }

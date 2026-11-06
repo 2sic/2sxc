@@ -16,7 +16,7 @@ public partial class ExecutionContext
     public ITypedStack AllResources => field ??= Cdf.AsTypedStack(RootNameResources, ResSrc);
 
     [field: AllowNull, MaybeNull]
-    private AppDataStackService AppDss => field ??= Services.DataStackService.Init(((IAppWithInternal)App).AppReader);
+    private AppDataStackService AppDss => field ??= Services.DataStackService.Init(((IAppForCode)App).AppReader);
 
     private SettingsSources ResSrc => field ??= AppDss.GetStack(AppStackConstants.Resources, Block?.View?.Resources);
 

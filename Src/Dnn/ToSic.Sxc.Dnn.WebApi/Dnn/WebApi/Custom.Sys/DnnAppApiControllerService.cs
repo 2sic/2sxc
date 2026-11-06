@@ -67,7 +67,7 @@ public partial class DnnAppApiControllerService(
             {
                 // Note: Had to trim last slash, because it was added in the get-call, but causes trouble here
                 // must ensure it's improved and done the same way in Oqtane!!!
-                spec = new(blockOrNull.AppId, edition: edition.TrimLastSlash(), blockOrNull.AppOrNull?.Name);
+                spec = new(blockOrNull.AppId, edition: edition.TrimLastSlash(), blockOrNull.AppOrNull?.AppSpecs.Name);
                 l.A($"{nameof(spec)} from Block: {spec}");
             }
             // 4.2. If we don't have a block, we can try to get the AppId and name from the path; will throw if not found

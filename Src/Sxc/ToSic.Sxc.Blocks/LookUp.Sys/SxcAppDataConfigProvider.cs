@@ -22,17 +22,17 @@ namespace ToSic.Sxc.LookUp.Sys;
 internal class SxcAppDataConfigProvider(LazySvc<ILookUpEngineResolver> getEngineLazy, LazySvc<IHttp> httpLazy)
     : ServiceBase("Sxc.CnfPrv", connect: [getEngineLazy, httpLazy]), IAppDataConfigProvider
 {
-    public IAppDataConfiguration GetDataConfiguration(SxcAppBase app, AppDataConfigSpecs specs)
+    public IAppDataConfiguration GetDataConfiguration(IAppForCode appForLookup, AppDataConfigSpecs specs)
     {
         var block = (specs as SxcAppDataConfigSpecs)?.BlockForLookupOrNull;
-        var lookup = GetLookupEngineForContext(block?.Context, app as IApp, block);
+        var lookup = GetLookupEngineForContext(block?.Context, appForLookup, block);
         return new AppDataConfiguration(lookup, specs.ShowDrafts);
     }
 
 
     // note: not sure yet where the best place for this method is, so it's here for now
     // will probably move again some day
-    internal LookUpEngine GetLookupEngineForContext(IContextOfSite? context, IApp? appForLookup, IBlock? blockForLookupOrNull)
+    internal LookUpEngine GetLookupEngineForContext(IContextOfSite? context, IAppForCode? appForLookup, IBlock? blockForLookupOrNull)
     {
         var maybeModuleId = (context as IContextOfBlock)?.Module.Id;
         var l = Log.Fn<LookUpEngine>($"module: {maybeModuleId}, app: {appForLookup?.AppId} ..., ...");
@@ -46,7 +46,7 @@ internal class SxcAppDataConfigProvider(LazySvc<ILookUpEngineResolver> getEngine
         // Create a new lookup engine and add the standard sources as inner-sources
         var newSources = new List<ILookUp>();
         if (appForLookup != null)
-            newSources.Add(new LookUpInAppProperty("app", appForLookup));
+            newSources.Add(new LookUpInAppProperty("app", appForLookup, context?.Site.SafeLanguagePriorityCodes()));
 
         // add module if it was not already added previously
         if (!existSources.HasSource(BlockInstanceConstants.InstanceLookupName))

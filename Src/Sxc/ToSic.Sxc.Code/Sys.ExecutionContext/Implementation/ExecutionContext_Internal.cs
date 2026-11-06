@@ -7,7 +7,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
-using IApp = ToSic.Sxc.Apps.IApp;
+using IAppDynamic = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
 
@@ -16,7 +16,7 @@ public partial class ExecutionContext
         IExCtxAttachApp
 {
     [PrivateApi]
-    public void AttachApp(IApp app)
+    public void AttachApp(IAppForCode app)
     {
         if (app is App appClassic)
             appClassic.SetupCodeDataFactory(Cdf);
@@ -25,7 +25,7 @@ public partial class ExecutionContext
 
         _editionForHotBuild = Block == null
             ? null
-            : Services.EditionSvc.Edition(Block.View, ((IAppWithInternal)App).AppReader);
+            : Services.EditionSvc.Edition(Block.View, App.AppReader);
     }
 
     private string? _editionForHotBuild;
@@ -49,11 +49,14 @@ public partial class ExecutionContext
         if (typeof(TState) == typeof(ICmsContext))
             return (TState)CmsContext;
 
-        if (typeof(TState) == typeof(IApp))
+        if (typeof(TState) == typeof(IAppDynamic))
+            return (TState)App;
+
+        if (typeof(TState) == typeof(IAppForCode))
             return (TState)App;
 
         if (typeof(TState) == typeof(IAppReader))
-            return (TState)((IAppWithInternal)App)?.AppReader!;
+            return (TState)App?.AppReader!;
 
         if (typeof(TState) == typeof(IDataSource))
             return (TState)(Block?.Data ?? throw new NullReferenceException($"{nameof(Block)} isn't available"));
@@ -68,7 +71,7 @@ public partial class ExecutionContext
             return (TState)AppTyped;
 
         throw new InvalidOperationException(
-            $"Can't get state of type {typeof(TState).Name} - only {nameof(IApp)}, {nameof(IDataSource)}, {nameof(IBlock)} and {nameof(IAppTyped)} are supported");
+            $"Can't get state of type {typeof(TState).Name} - only {nameof(IAppDynamic)}, {nameof(IDataSource)}, {nameof(IBlock)} and {nameof(IAppTyped)} are supported");
     }
 
     public TState GetDataStack<TState>(string name) where TState : class
