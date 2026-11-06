@@ -14,7 +14,6 @@ using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Render.Engines.Sys;
 using ToSic.Sxc.Render.Engines.Token.Sys;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Sys.CodeApiServiceHelpers;
 using ToSic.Sxc.Services.Sys.DynamicCodeService;
 using ToSic.Sxc.Services.Sys.TypedApiService;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -42,13 +41,15 @@ public static class StartupSxcCode
         services.TryAddTransient(typeof(ExecutionContext<,>), typeof(ExecutionContextUnknownObjKit));
 
         // v13 DynamicCodeService
-        services.TryAddTransient<CodeApiServiceBase.Dependencies>();
-        services.TryAddTransient<CodeApiServiceBase.ScopedDependencies>();  // new v15
+        //services.TryAddTransient<CodeApiServiceBase.Dependencies>();
+        //services.TryAddTransient<CodeApiServiceBase.ScopedDependencies>();  // new v15
 #pragma warning disable CS0618 // Type or member is obsolete
         services.TryAddTransient<IDynamicCodeService, DynamicCodeService>();
 #pragma warning restore CS0618 // Type or member is obsolete
 
         // v20 TypedCodeService
+        services.TryAddTransient<TypedApiService.Dependencies>();           // new v22
+        services.TryAddTransient<TypedApiService.ScopedDependencies>();     // new v22
         services.TryAddTransient<ITypedApiService, TypedApiService>();
 
 

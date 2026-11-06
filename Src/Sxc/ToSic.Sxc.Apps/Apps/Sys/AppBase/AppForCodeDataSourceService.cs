@@ -8,8 +8,8 @@ namespace ToSic.Sxc.Apps.Sys;
 /// </summary>
 /// <param name="dsFactory"></param>
 /// <param name="dataConfigProvider"></param>
-public class SxcAppDataService(IDataSourcesService dsFactory, IAppDataConfigProvider dataConfigProvider)
-    : ServiceWithSetup<SxcAppDataService.Options>("App.PrvData", connect: [dsFactory, dataConfigProvider])
+public class AppForCodeDataSourceService(IDataSourcesService dsFactory, IAppDataConfigProvider dataConfigProvider)
+    : ServiceWithSetup<AppForCodeDataSourceService.Options>("App.PrvData", connect: [dsFactory, dataConfigProvider])
 {
     public record Options(IAppForCode App, AppDataConfigSpecs? DataConfigSpecs);
 

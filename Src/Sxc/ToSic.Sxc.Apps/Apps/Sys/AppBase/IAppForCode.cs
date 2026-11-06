@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Apps.Sys;
+﻿using ToSic.Eav.Context;
+
+namespace ToSic.Sxc.Apps.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IAppForCode: IAppIdentity
@@ -13,5 +15,5 @@ public interface IAppForCode: IAppIdentity
 
     IAppReader AppReader { get; }
 
-    SxcAppDataService DataService { get; }
+    AppForCodeDataSourceService DataService { get; }
 }

@@ -8,7 +8,7 @@ partial class App
 {
     /// <inheritdoc />
     [field: AllowNull, MaybeNull]
-    public IAppData Data => field ??= AppSource.DataService.BuildData<AppDataWithCrud, IAppData>(this.PureIdentity());
+    public IAppData Data => field ??= MyOptions.DataService.BuildData<AppDataWithCrud, IAppData>(this.PureIdentity());
 
     /// <summary>
     /// Accessor to queries. Use like:
@@ -25,7 +25,7 @@ partial class App
             if (field != null)
                 return field;
 
-            var le = AppSource.DataService.LookUpEngine;
+            var le = MyOptions.DataService.LookUpEngine;
             if (le == null)
                 throw new("Can't use app-queries, because the necessary configuration provider hasn't been initialized. Call InitData first.");
             return field = queryManager.Value.AllQueries(this, le);
@@ -41,7 +41,7 @@ partial class App
             return query;
 
         // Try to find query definition - while also checking parent apps
-        var qEntity = queryManager.Value.TryGetQuery(AppSource.AppReader, name, AppSource.DataService.LookUpEngine, recurseParents: 3);
+        var qEntity = queryManager.Value.TryGetQuery(MyOptions.AppReader, name, MyOptions.DataService.LookUpEngine, recurseParents: 3);
 
         return qEntity ?? throw new((DataSourceConstantsInternal.IsGlobalQuery(name) ? "Global " : "") + "Query not Found!");
     }

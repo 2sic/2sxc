@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Data;
+﻿using ToSic.Sxc.Apps.Sys;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Data.Sys.Factory;
 
@@ -10,11 +11,11 @@ public partial class App
 
     // Create config object. Note that AppConfiguration could be null, then it would use default values
     /// <inheritdoc />
-    public IAppConfiguration Configuration => AppSource.AppSpecs.Configuration;
+    public IAppConfiguration Configuration => MyOptions.AppSpecs.Configuration;
 
     private ICodeDataFactory Cdf
     {
-        get => field ??= cdfLazy.SetInit(obj => obj.SetFallbacks(MySite)).Value;
+        get => field ??= cdfLazy.SetInit(obj => obj.SetFallbacks((MyOptions as AppForCodeShared)!.AppSite)).Value;
         set;
     }
 
@@ -34,10 +35,10 @@ public partial class App
     }
 
 
-    public dynamic? Settings => AppSource.SettingsEntity == null ? null : _settings.Get(() => MakeDynProperty(AppSource.SettingsEntity, propsRequired: false));
+    public dynamic? Settings => MyOptions.SettingsEntity == null ? null : _settings.Get(() => MakeDynProperty(MyOptions.SettingsEntity, propsRequired: false));
     private readonly LazyGet<dynamic> _settings = new();
 
-    public dynamic? Resources => AppSource.ResourcesEntity == null ? null : _res.Get(() => MakeDynProperty(AppSource.ResourcesEntity, propsRequired: false));
+    public dynamic? Resources => MyOptions.ResourcesEntity == null ? null : _res.Get(() => MakeDynProperty(MyOptions.ResourcesEntity, propsRequired: false));
     private readonly LazyGet<dynamic> _res = new();
 
     #endregion

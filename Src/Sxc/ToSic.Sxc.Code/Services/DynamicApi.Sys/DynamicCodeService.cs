@@ -1,7 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
-using ToSic.Sxc.Apps;
-using ToSic.Sxc.Services.Sys.CodeApiServiceHelpers;
+using ToSic.Eav.Context.Sys.ZoneMapper;
+using ToSic.Eav.DataSources;
+using ToSic.Sxc.Apps.Sys;
+using ToSic.Sxc.Blocks.Sys.BlockBuilder;
+using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sys.Users;
+using IAppDynamic = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Services.Sys.DynamicCodeService;
 
@@ -10,12 +17,79 @@ namespace ToSic.Sxc.Services.Sys.DynamicCodeService;
 /// Not sure how to get this to work, since normally we always start with a code-file, and here we don't have one!
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public partial class DynamicCodeService(CodeApiServiceBase.Dependencies services, string? logName = null /* must be nullable for DI */)
-    : CodeApiServiceBase(services, logName ?? $"{SxcLogName}.DCS"),
+public partial class DynamicCodeService(DynamicCodeService.Dependencies services, string? logName = null /* must be nullable for DI */)
+    : ServiceBase<DynamicCodeService.Dependencies>(services, logName ?? $"{SxcLogName}.DCS"),
 #pragma warning disable CS0618 // Type or member is obsolete
-        IDynamicCodeService
+        IDynamicCodeService,
+        ILogWasConnected
 #pragma warning restore CS0618 // Type or member is obsolete
 {
+    #region Dependencies
+
+    public record Dependencies(
+        IServiceProvider ServiceProvider,
+        LazySvc<ILogStore> LogStore,
+        IUser User,
+        ISite Site,
+        LazySvc<IZoneMapper> ZoneMapper,
+        LazySvc<IAppsCatalog> AppsCatalog)
+        : DependenciesBase(connect: [/* never! serviceProvider */ LogStore, ZoneMapper, AppsCatalog]);
+
+    public record ScopedDependencies(
+        Generator<IExecutionContextFactory> ExCtxGenerator,
+        Generator<AppForCodeShared, AppForCodeShared.Options> AppGenerator,
+        Generator<ToSic.Sxc.Apps.App, IAppForCode> AppDynGenerator,
+        LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder)
+        : DependenciesBase(connect: [ExCtxGenerator, AppGenerator, AppDynGenerator, ModAndBlockBuilder]);
+
+
+    #endregion
+
+    #region Get App
+
+    protected IAppDynamic GetApp(NoParamOrder npo = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
+    {
+        MakeSureLogIsInHistory();
+
+        // Ensure AppId is provided
+        var realAppId = appId ?? throw new ArgumentException($@"At least the {nameof(appId)} is required and must be a valid AppId", nameof(appId));
+
+        // lookup zoneId if not provided
+        var realZoneId = zoneId ?? Services.AppsCatalog.Value.AppIdentity(realAppId).ZoneId;
+        return GetAndInitApp(new AppIdentityPure(realZoneId, realAppId), site, showDrafts: withUnpublished);
+    }
+
+
+    protected IAppIdentityPure GetPrimaryAppIdentity(int? siteId, ISite? site = default)
+    {
+        siteId ??= site?.Id ?? Services.Site.Id;
+        var zoneId = Services.ZoneMapper.Value.GetZoneId(siteId.Value);
+        var primaryApp = Services.AppsCatalog.Value.PrimaryAppIdentity(zoneId);
+        return primaryApp;
+    }
+
+    protected IAppDynamic GetAndInitApp(IAppIdentityPure appIdentity, ISite? overrideSite, bool? showDrafts = null)
+    {
+        var appGen = ServicesScoped.AppGenerator;
+
+        var l = Log.Fn<IAppDynamic>($"{appIdentity.Show()}, site:{overrideSite != null}, showDrafts: {showDrafts}");
+        var app = appGen.New(new(overrideSite, appIdentity, new() { ShowDrafts = showDrafts }));
+        var dynApp = ServicesScoped.AppDynGenerator.New(app);
+        return l.Return(dynApp);
+    }
+
+    public void LogWasConnected() => _logInitDone = true; // if we link it to a parent, we don't need to add own entry in log history
+    private bool _logInitDone;
+
+    protected void MakeSureLogIsInHistory()
+    {
+        if (_logInitDone) return;
+        _logInitDone = true;
+        Services.LogStore.Value.Add("code-api-service", Log);
+    }
+
+    #endregion
+
     #region Constructor and Init
 
     /// <summary>
@@ -40,17 +114,17 @@ public partial class DynamicCodeService(CodeApiServiceBase.Dependencies services
     #region App
 
     /// <inheritdoc />
-    public IApp App(NoParamOrder npo = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
-        => GetApp(ServicesScoped.AppGenerator, npo, zoneId, appId, site, withUnpublished);
+    public IAppDynamic App(NoParamOrder npo = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
+        => GetApp(npo, zoneId, appId, site, withUnpublished);
 
     /// <inheritdoc />
-    public IApp AppOfSite()
-        => GetAndInitApp(ServicesScoped.AppGenerator, GetPrimaryAppIdentity(null), null);
+    public IAppDynamic AppOfSite()
+        => GetAndInitApp(GetPrimaryAppIdentity(null), null);
 
     /// <inheritdoc />
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public IApp AppOfSite(NoParamOrder npo = default, int? siteId = null, ISite? overrideSite = null, bool? withUnpublished = null)
-        => GetAndInitApp(ServicesScoped.AppGenerator, GetPrimaryAppIdentity(siteId, overrideSite), overrideSite, withUnpublished);
+    public IAppDynamic AppOfSite(NoParamOrder npo = default, int? siteId = null, ISite? overrideSite = null, bool? withUnpublished = null)
+        => GetAndInitApp(GetPrimaryAppIdentity(siteId, overrideSite), overrideSite, withUnpublished);
 
     #endregion
 }

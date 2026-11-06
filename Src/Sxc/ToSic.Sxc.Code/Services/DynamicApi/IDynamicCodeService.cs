@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Sxc.Code;
-using IApp = ToSic.Sxc.Apps.IApp;
+using IAppDynamic = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Services;
 
@@ -85,7 +85,7 @@ public interface IDynamicCodeService
     /// <param name="site">Site information for further context (optional) </param>
     /// <param name="withUnpublished">Determines if the App.Data gives you unpublished data (like in admin-mode) or just published data. If not set, will default to user permissions.</param>
     /// <returns>An initialized App object which you can use to access App.Data</returns>
-    IApp App(
+    IAppDynamic App(
         NoParamOrder npo = default,
         int? zoneId = null,
         int? appId = null,
@@ -97,7 +97,7 @@ public interface IDynamicCodeService
     /// This is the simplest way to work with data of this App, but won't give you commands like `AsDynamic(...)`.
     /// For more control, use the `AppOfSite` with parameters. 
     /// </summary>
-    IApp AppOfSite();
+    IAppDynamic AppOfSite();
     
     /// <summary>
     /// Get a rich <see cref="Apps.IApp"/> object for the primary (aka Site) App. 
@@ -108,7 +108,7 @@ public interface IDynamicCodeService
     /// <param name="overrideSite">Site information for further context (optional) </param>
     /// <param name="withUnpublished">Determines if the App.Data gives you unpublished data (like in admin-mode) or just published data. If not set, will default to user permissions.</param>
     /// <returns>An initialized App object which you can use to access App.Data</returns>
-    IApp AppOfSite(
+    IAppDynamic AppOfSite(
         // ReSharper disable once MethodOverloadWithOptionalParameter
         NoParamOrder npo = default,
         int? siteId = null,

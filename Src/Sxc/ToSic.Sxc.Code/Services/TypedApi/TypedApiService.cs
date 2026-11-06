@@ -1,14 +1,17 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
+using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Sys;
+using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Services.Sys.CodeApiServiceHelpers;
 using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Services.Sys.TypedApiService;
 
@@ -17,10 +20,67 @@ namespace ToSic.Sxc.Services.Sys.TypedApiService;
 /// Not sure how to get this to work, since normally we always start with a code-file, and here we don't have one!
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class TypedApiService(CodeApiServiceBase.Dependencies services, string? logName = null /* must be nullable for DI */)
-    : CodeApiServiceBase(services, logName ?? $"{SxcLogName}.TypeCS"),
-        ITypedApiService
+internal class TypedApiService(TypedApiService.Dependencies services, string? logName = null /* must be nullable for DI */)
+    : ServiceBase<TypedApiService.Dependencies>(services, logName ?? $"{SxcLogName}.TypeCS"),
+        ITypedApiService,
+        ILogWasConnected
 {
+    #region Dependencies
+
+    public record Dependencies(
+        IServiceProvider ServiceProvider,
+        LazySvc<ILogStore> LogStore,
+        IUser User,
+        ISite Site,
+        LazySvc<IZoneMapper> ZoneMapper,
+        LazySvc<IAppsCatalog> AppsCatalog)
+        : DependenciesBase(connect: [/* never! serviceProvider */ LogStore, ZoneMapper, AppsCatalog]);
+
+
+    public record ScopedDependencies(
+        Generator<IExecutionContextFactory> ExCtxGenerator,
+        Generator<AppForCodeShared, AppForCodeShared.Options> AppGenerator,
+        LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder)
+        : DependenciesBase(connect: [ExCtxGenerator, AppGenerator, ModAndBlockBuilder]);
+
+    #endregion
+
+    #region Get App
+
+    private IAppForCode GetApp(NoParamOrder npo = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
+    {
+        MakeSureLogIsInHistory();
+
+        // Ensure AppId is provided
+        var realAppId = appId ?? throw new ArgumentException($@"At least the {nameof(appId)} is required and must be a valid AppId", nameof(appId));
+
+        // lookup zoneId if not provided
+        var realZoneId = zoneId ?? Services.AppsCatalog.Value.AppIdentity(realAppId).ZoneId;
+        return GetAndInitApp(new AppIdentityPure(realZoneId, realAppId), site, showDrafts: withUnpublished);
+    }
+
+
+    private IAppIdentityPure GetPrimaryAppIdentity(int? siteId, ISite? site = default)
+    {
+        siteId ??= site?.Id ?? Services.Site.Id;
+        var zoneId = Services.ZoneMapper.Value.GetZoneId(siteId.Value);
+        var primaryApp = Services.AppsCatalog.Value.PrimaryAppIdentity(zoneId);
+        return primaryApp;
+    }
+
+    private IAppForCode GetAndInitApp(IAppIdentityPure appIdentity, ISite? overrideSite, bool? showDrafts = null)
+    {
+        var appGen = ServicesScoped.AppGenerator;
+        var l = Log.Fn<IAppForCode>($"{appIdentity.Show()}, site:{overrideSite != null}, showDrafts: {showDrafts}");
+        var app = appGen.New(new(overrideSite, appIdentity, new() { ShowDrafts = showDrafts }));
+        return l.Return(app);
+    }
+
+
+
+
+    #endregion
+
     /// <summary>
     /// This is for all the services used here, or also for services needed in inherited classes which will need the same scoped objects.
     /// It's important to understand that everything in here will use the scoped service provider.
@@ -45,7 +105,7 @@ internal class TypedApiService(CodeApiServiceBase.Dependencies services, string?
         var l = Log.Fn<IAppTyped>();
         MakeSureLogIsInHistory();
 
-        var app = GetApp(ServicesScoped.AppGenerator, zoneId: zoneId, appId: appId, site: site, withUnpublished: withUnpublished);
+        var app = GetApp(zoneId: zoneId, appId: appId, site: site, withUnpublished: withUnpublished);
         return l.ReturnAsOk(GetNewCodeRoot(app).GetState<IAppTyped>());
     }
 
@@ -55,7 +115,7 @@ internal class TypedApiService(CodeApiServiceBase.Dependencies services, string?
         var l = Log.Fn<IAppTyped>();
 
         MakeSureLogIsInHistory();
-        var app = GetAndInitApp(ServicesScoped.AppGenerator, GetPrimaryAppIdentity(null), null);
+        var app = GetAndInitApp(GetPrimaryAppIdentity(null), null);
         return l.ReturnAsOk(GetNewCodeRoot(app).GetState<IAppTyped>());
     }
 
@@ -115,13 +175,13 @@ internal class TypedApiService(CodeApiServiceBase.Dependencies services, string?
         var l = Log.Fn<ITypedApi>();
         MakeSureLogIsInHistory();
         ActivateEditUi();
-        var app = GetApp(ServicesScoped.AppGenerator, zoneId: zoneId, appId: appId);
+        var app = GetApp(zoneId: zoneId, appId: appId);
         var exCtx = GetNewCodeRoot(app, moduleIfBlockUnknown);
         var code12 = new TypedApiStandalone(exCtx, exCtx.GetTypedApi());
         return l.ReturnAsOk(code12);
     }
 
-    private IExecutionContext GetNewCodeRoot(IApp? appToAttach = default, IModule? moduleIfBlockUnknown = default)
+    private IExecutionContext GetNewCodeRoot(IAppForCode? appToAttach = default, IModule? moduleIfBlockUnknown = default)
     {
         var exCtx = ServicesScoped.ExCtxGenerator.New().New(new()
         {
@@ -132,10 +192,21 @@ internal class TypedApiService(CodeApiServiceBase.Dependencies services, string?
             ModuleIfBlockUnknown = moduleIfBlockUnknown,
         });
         if (appToAttach != null)
-            ((IExCtxAttachApp)exCtx).AttachApp(appToAttach as IAppForCode);
+            ((IExCtxAttachApp)exCtx).AttachApp(appToAttach);
         return exCtx;
     }
 
     #endregion
+
+
+    public void LogWasConnected() => _logInitDone = true; // if we link it to a parent, we don't need to add own entry in log history
+    private bool _logInitDone;
+
+    private void MakeSureLogIsInHistory()
+    {
+        if (_logInitDone) return;
+        _logInitDone = true;
+        Services.LogStore.Value.Add("code-api-service", Log);
+    }
 
 }

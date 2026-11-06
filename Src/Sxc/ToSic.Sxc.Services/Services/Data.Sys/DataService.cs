@@ -4,6 +4,7 @@ using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Eav.DataSource.Sys.Catalog;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Eav.Services;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Services.Sys.DataService;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -30,7 +31,7 @@ public partial class DataService(
     public override void ConnectToRoot(IExecutionContext exCtx)
     {
         base.ConnectToRoot(exCtx);
-        Setup(new(exCtx.GetState<Apps.IApp>(), () => (exCtx as IExCtxLookUpEngine)?.LookUpForDataSources));
+        Setup(new(exCtx.GetState<IAppForCode>(), () => (exCtx as IExCtxLookUpEngine)?.LookUpForDataSources));
     }
 
     public void Setup(Options opts)
@@ -41,32 +42,6 @@ public partial class DataService(
     }
     private IAppIdentity? _appIdentity;
 
-    // #DropSpawnNew
-    //public IDataService SpawnNew(NoParamOrder npo = default, IAppIdentity? appIdentity = default, int zoneId = default, int appId = default)
-    //{
-    //    // Make sure we have an AppIdentity if possible - or reuse the existing, though it could be null
-    //    if (appIdentity == default)
-    //    {
-    //        if (appId != default)
-    //            appIdentity = zoneId == default
-    //                ? appsCatalog.Value.AppIdentity(appId)
-    //                : new AppIdentity(zoneId, appId);
-    //        else
-    //            appIdentity = _appIdentity;
-    //    }
-
-    //    var newDs = new DataService(dataSources, catalog, appsCatalog, queryManager, user);
-    //    if (ExCtxOrNull != null)
-    //    {
-    //        newDs.ConnectToRoot(ExCtxOrNull);
-    //        newDs.Setup(new(appIdentity, null));
-    //    }
-    //    else
-    //    {
-    //        newDs.Setup(new(appIdentity, _getLookup));
-    //    }
-    //    return newDs;
-    //}
 
     private DataSourceOptionsMs OptionsMs => field ??= new(_appIdentity, _getLookup);
 

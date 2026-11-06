@@ -2,14 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.Apps.Sys;
-using ToSic.Eav.Context.Sys.Site;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Sys.ExecutionContext;
-using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Backend.Context;
 internal class NetCoreWebApiContextHelper: CodeHelperBase
@@ -113,7 +111,7 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
             // Since we only have the AppId, we need to load the app and attach it to the context
             l.A($"AppId: {appId}");
             var site = CtxService.Context.Site;
-            var app = _helper.GetService<Generator<Apps.App, AppForCodeShared.Options>>().New(new(site, new AppIdentityPure(site.ZoneId, appId), new()));
+            var app = _helper.GetService<Generator<AppForCodeShared, AppForCodeShared.Options>>().New(new(site, new AppIdentityPure(site.ZoneId, appId), new()));
             ((IExCtxAttachApp)ExCtx).AttachApp(app);
             l.Done("app initialized");
             return;

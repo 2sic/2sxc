@@ -1,74 +1,75 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Sys;
-using ToSic.Eav.Context;
-using ToSic.Eav.Context.Sys.ZoneMapper;
-using ToSic.Sxc.Apps;
-using ToSic.Sxc.Apps.Sys;
-using ToSic.Sxc.Blocks.Sys.BlockBuilder;
-using ToSic.Sxc.Sys.ExecutionContext;
-using ToSic.Sys.Users;
+﻿//using ToSic.Eav.Apps;
+//using ToSic.Eav.Apps.Sys;
+//using ToSic.Eav.Context;
+//using ToSic.Eav.Context.Sys.ZoneMapper;
+//using ToSic.Sxc.Apps;
+//using ToSic.Sxc.Apps.Sys;
+//using ToSic.Sxc.Blocks.Sys.BlockBuilder;
+//using ToSic.Sxc.Sys.ExecutionContext;
+//using ToSic.Sys.Users;
+//using IAppDynamic = ToSic.Sxc.Apps.IApp;
 
-namespace ToSic.Sxc.Services.Sys.CodeApiServiceHelpers;
+//namespace ToSic.Sxc.Services.Sys.CodeApiServiceHelpers;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class CodeApiServiceBase(CodeApiServiceBase.Dependencies services, string logName)
-    : ServiceBase<CodeApiServiceBase.Dependencies>(services, logName),
-        ILogWasConnected
-{
-    public record Dependencies(
-        IServiceProvider ServiceProvider,
-        LazySvc<ILogStore> LogStore,
-        IUser User,
-        // Dependencies to get primary app
-        // #DropLazySite 2026-10-18 2dm
-        ISite Site,
-        LazySvc<IZoneMapper> ZoneMapper,
-        LazySvc<IAppsCatalog> AppsCatalog)
-        : DependenciesBase(connect: [/* never! serviceProvider */ LogStore, ZoneMapper, AppsCatalog]);
+//[ShowApiWhenReleased(ShowApiMode.Never)]
+//public abstract class CodeApiServiceBase(CodeApiServiceBase.Dependencies services, string logName)
+//    : ServiceBase<CodeApiServiceBase.Dependencies>(services, logName),
+//        ILogWasConnected
+//{
+//    public record Dependencies(
+//        IServiceProvider ServiceProvider,
+//        LazySvc<ILogStore> LogStore,
+//        IUser User,
+//        // Dependencies to get primary app
+//        // #DropLazySite 2026-10-18 2dm
+//        ISite Site,
+//        LazySvc<IZoneMapper> ZoneMapper,
+//        LazySvc<IAppsCatalog> AppsCatalog)
+//        : DependenciesBase(connect: [/* never! serviceProvider */ LogStore, ZoneMapper, AppsCatalog]);
 
-    public record ScopedDependencies(
-        Generator<IExecutionContextFactory> ExCtxGenerator,
-        Generator<App, AppForCodeShared.Options> AppGenerator,
-        LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder)
-        : DependenciesBase(connect: [ExCtxGenerator, AppGenerator, ModAndBlockBuilder]);
+//    public record ScopedDependencies(
+//        Generator<IExecutionContextFactory> ExCtxGenerator,
+//        Generator<AppForCodeShared, AppForCodeShared.Options> AppGenerator,
+//        LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder)
+//        : DependenciesBase(connect: [ExCtxGenerator, AppGenerator, ModAndBlockBuilder]);
 
-    protected IApp GetApp(Generator<App, AppForCodeShared.Options> appGenerator, NoParamOrder npo = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
-    {
-        MakeSureLogIsInHistory();
+//    protected IAppDynamic GetApp(Generator<App, AppForCodeShared.Options> appGenerator, NoParamOrder npo = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
+//    {
+//        MakeSureLogIsInHistory();
 
-        // Ensure AppId is provided
-        var realAppId = appId ?? throw new ArgumentException($@"At least the {nameof(appId)} is required and must be a valid AppId", nameof(appId));
+//        // Ensure AppId is provided
+//        var realAppId = appId ?? throw new ArgumentException($@"At least the {nameof(appId)} is required and must be a valid AppId", nameof(appId));
 
-        // lookup zoneId if not provided
-        var realZoneId = zoneId ?? Services.AppsCatalog.Value.AppIdentity(realAppId).ZoneId;
-        return GetAndInitApp(appGenerator, new AppIdentityPure(realZoneId, realAppId), site, showDrafts: withUnpublished);
-    }
-
-
-    protected IAppIdentityPure GetPrimaryAppIdentity(int? siteId, ISite? site = default)
-    {
-        siteId ??= site?.Id ?? Services.Site.Id;
-        var zoneId = Services.ZoneMapper.Value.GetZoneId(siteId.Value);
-        var primaryApp = Services.AppsCatalog.Value.PrimaryAppIdentity(zoneId);
-        return primaryApp;
-    }
-
-    protected IApp GetAndInitApp(Generator<App, AppForCodeShared.Options> appGen, IAppIdentityPure appIdentity, ISite? overrideSite, bool? showDrafts = null)
-    {
-        var l = Log.Fn<IApp>($"{appIdentity.Show()}, site:{overrideSite != null}, showDrafts: {showDrafts}");
-        var app = appGen.New(new(overrideSite, appIdentity, new() { ShowDrafts = showDrafts }));
-        return l.Return(app);
-    }
+//        // lookup zoneId if not provided
+//        var realZoneId = zoneId ?? Services.AppsCatalog.Value.AppIdentity(realAppId).ZoneId;
+//        return GetAndInitApp(appGenerator, new AppIdentityPure(realZoneId, realAppId), site, showDrafts: withUnpublished);
+//    }
 
 
-    public void LogWasConnected() => _logInitDone = true; // if we link it to a parent, we don't need to add own entry in log history
-    private bool _logInitDone;
+//    protected IAppIdentityPure GetPrimaryAppIdentity(int? siteId, ISite? site = default)
+//    {
+//        siteId ??= site?.Id ?? Services.Site.Id;
+//        var zoneId = Services.ZoneMapper.Value.GetZoneId(siteId.Value);
+//        var primaryApp = Services.AppsCatalog.Value.PrimaryAppIdentity(zoneId);
+//        return primaryApp;
+//    }
 
-    protected void MakeSureLogIsInHistory()
-    {
-        if (_logInitDone) return;
-        _logInitDone = true;
-        Services.LogStore.Value.Add("code-api-service", Log);
-    }
+//    protected IAppDynamic GetAndInitApp(Generator<App, AppForCodeShared.Options> appGen, IAppIdentityPure appIdentity, ISite? overrideSite, bool? showDrafts = null)
+//    {
+//        var l = Log.Fn<IAppDynamic>($"{appIdentity.Show()}, site:{overrideSite != null}, showDrafts: {showDrafts}");
+//        var app = appGen.New(new(overrideSite, appIdentity, new() { ShowDrafts = showDrafts }));
+//        return l.Return(app);
+//    }
 
-}
+
+//    public void LogWasConnected() => _logInitDone = true; // if we link it to a parent, we don't need to add own entry in log history
+//    private bool _logInitDone;
+
+//    protected void MakeSureLogIsInHistory()
+//    {
+//        if (_logInitDone) return;
+//        _logInitDone = true;
+//        Services.LogStore.Value.Add("code-api-service", Log);
+//    }
+
+//}

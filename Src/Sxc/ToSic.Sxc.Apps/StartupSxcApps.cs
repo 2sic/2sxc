@@ -22,7 +22,8 @@ public static class StartupSxcApps
         // Configuration objects
         services.TryAddTransient<GlobalPaths>();
 
-        services.TryAddTransient<SxcAppDataService>(); // new v22
+        services.TryAddTransient<AppForCodeShared>();  // new v22
+        services.TryAddTransient<AppForCodeDataSourceService>(); // new v22
         services.TryAddTransient<App>();
 
         services.TryAddTransient<IAppTyped, AppTyped>();
@@ -33,8 +34,6 @@ public static class StartupSxcApps
         services.TryAddTransient<AppIconHelpers>();
 
         // Runtimes - new: better architecture v16.07+
-        //services.TryAddTransient<WorkBlocks>();
-        //services.TryAddTransient<WorkBlocksMod>();
         services.TryAddTransient<WorkViewDelete>();
         services.TryAddTransient<WorkViews>();
         services.TryAddTransient<WorkApps>();

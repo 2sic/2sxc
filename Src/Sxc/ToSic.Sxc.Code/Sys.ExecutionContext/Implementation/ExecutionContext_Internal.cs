@@ -7,7 +7,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
-using IAppDynamic = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
 
@@ -30,10 +29,6 @@ public partial class ExecutionContext
 
     private string? _editionForHotBuild;
 
-    //[PrivateApi]
-    //[Obsolete("Warning - avoid using this on the DynamicCode Root - always use the one on the AsC")]
-    //public int CompatibilityLevel => Cdf.CompatibilityLevel;
-
     /// <summary>
     /// The current block - can be null if the context only knows about the App, but not about the block.
     /// </summary>
@@ -48,9 +43,6 @@ public partial class ExecutionContext
     {
         if (typeof(TState) == typeof(ICmsContext))
             return (TState)CmsContext;
-
-        if (typeof(TState) == typeof(IAppDynamic))
-            return (TState)App;
 
         if (typeof(TState) == typeof(IAppForCode))
             return (TState)App;
@@ -71,7 +63,7 @@ public partial class ExecutionContext
             return (TState)AppTyped;
 
         throw new InvalidOperationException(
-            $"Can't get state of type {typeof(TState).Name} - only {nameof(IAppDynamic)}, {nameof(IDataSource)}, {nameof(IBlock)} and {nameof(IAppTyped)} are supported");
+            $"Can't get state of type {typeof(TState).Name} - only {nameof(IAppForCode)}, {nameof(IDataSource)}, {nameof(IBlock)} and {nameof(IAppTyped)} are supported");
     }
 
     public TState GetDataStack<TState>(string name) where TState : class
