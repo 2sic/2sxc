@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Services;
 /// * New in v13.02 - this is meant to replace the `ToSic.Sxc.Dnn.Factory`. Please use this from now on.
 /// * In v21 it's superseded by <see cref="ITypedApiService"/> - please use that instead
 /// </remarks>
-[WorkInProgressApi("Deprecated in v21, should not be used any more; previously PublicApi, only works in DNN")]
+[DeprecatedApi("Deprecated in v21, should not be used any more; previously PublicApi, only works in DNN", "v21", "TBD")]
 [Obsolete($"Superseded by {nameof(ITypedApiService)}")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IDynamicCodeService
