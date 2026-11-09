@@ -1,30 +1,23 @@
 ﻿using ToSic.Eav.WebApi.Sys.Cms;
-using ToSic.Sxc.Backend.InPage;
 
 namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class EditControllerReal(
-    LazySvc<EditLoadBackend> loadBackend,
-    LazySvc<EditSaveBackend> saveBackendLazy,
-    LazySvc<HyperlinkBackend> linkBackendLazy,
-    LazySvc<AppViewPickerBackend> appViewPickerBackendLazy)
-    : ServiceBase("Api.EditRl", connect: [loadBackend, saveBackendLazy, linkBackendLazy, appViewPickerBackendLazy]),
-        IEditController
+public class EditControllerReal(LazySvc<EditLoadBackend> load, LazySvc<EditSaveBackend> save, LazySvc<HyperlinkBackend> links, LazySvc<PublishWebApi> publish)
+    : ServiceBase("Api.EditRl", connect: [load, save, links, publish]), IEditController
 {
     public const string LogSuffix = "Edit";
 
-    public async Task<EditLoadDto> Load(List<ItemIdentifier> items, int appId)
-        => await loadBackend.Value.Load(appId, items);
+    public Task<EditLoadDto> Load(List<ItemIdentifier> items, int appId)
+        => load.Value.Load(appId, items);
 
-    public async Task<Dictionary<Guid, int>> Save(EditSaveDto package, int appId, bool partOfPage)
-        => await saveBackendLazy.Value.Save(appId, package, partOfPage);
+    public Task<Dictionary<Guid, int>> Save(EditSaveDto package, int appId, bool partOfPage)
+        => save.Value.Save(appId, package, partOfPage);
 
 
     public LinkInfoDto LinkInfo(string link, int appId, string? contentType = default, Guid guid = default, string? field = default)
-        => linkBackendLazy.Value.LookupHyperlink(appId, link, contentType, guid, field);
+        => links.Value.LookupHyperlink(appId, link, contentType, guid, field);
 
     // TODO: we will need to make simpler implementation
-    public bool Publish(int id)
-        => appViewPickerBackendLazy.Value.Publish(id);
+    public Task<bool> Publish(int id) => publish.Value.Publish(id);
 }

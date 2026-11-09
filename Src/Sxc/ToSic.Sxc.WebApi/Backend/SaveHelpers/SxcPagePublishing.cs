@@ -9,7 +9,7 @@ public class SxcPagePublishing(AppWorkChain<ContentGroupList> contentGroupList, 
     : ServiceWithSetup<IAppWorkContext>("Sxc.PgPubl", connect: [contentGroupList, pagePublishing, appsCatalog])
 {
 
-    internal Dictionary<Guid, int> SaveInPagePublishing(
+    internal async Task<Dictionary<Guid, int>> SaveInPagePublishing(
         IContextOfApp context,
         IBlock? blockOrNull,
         int appId,
@@ -28,7 +28,6 @@ public class SxcPagePublishing(AppWorkChain<ContentGroupList> contentGroupList, 
         Dictionary<Guid, int>? postSaveIds = null;
 
         // The internal call which will be used further down
-        var appIdentity = appsCatalog.AppIdentity(appId);
         var groupList = contentGroupList.New(MyOptions);
 
 
@@ -36,22 +35,22 @@ public class SxcPagePublishing(AppWorkChain<ContentGroupList> contentGroupList, 
         if (partOfPage)
         {
             l.A("partOfPage - save with publishing");
-            pagePublishing.DoInsidePublishing(context, _ => postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft));
+            pagePublishing.DoInsidePublishing(context, async void (_) => postSaveIds = await SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft));
         }
         else
         {
             l.A("partOfPage false, save without publishing");
-            postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft);
+            postSaveIds = await SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft);
         }
 
         var logIds = l.Try(() => string.Join(",", postSaveIds!.Select(psi => $"{psi.Key}({psi.Value})")));
         return l.Return(postSaveIds!, $"post save IDs: {logIds}");
 
-        Dictionary<Guid, int> SaveAndSaveGroupsInnerCall(Func<bool, Dictionary<Guid, int>> call, bool forceSaveAsDraft)
+        async Task<Dictionary<Guid, int>> SaveAndSaveGroupsInnerCall(Func<bool, Dictionary<Guid, int>> call, bool forceSaveAsDraft)
         {
             var ids = call.Invoke(forceSaveAsDraft);
             // now assign all content-groups as needed
-            groupList.IfChangesAffectListUpdateIt(blockOrNull, items, ids);
+            await groupList.IfChangesAffectListUpdateIt(blockOrNull, items, ids);
             return ids;
         }
     }

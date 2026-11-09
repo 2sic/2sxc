@@ -1,11 +1,18 @@
 ﻿using ToSic.Sxc.Blocks.Sys.Work;
+using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Blocks.Sys.BlockEditor;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockUpdateTemplate(LazySvc<AppWorkContextService> appWorkCtxSvc, AppWorkChain<WorkBlocksMod> workBlocksMod, BlockSavePicker savePicker)
-    : ServiceBase("Sxc.BlkEdt", connect: [appWorkCtxSvc, workBlocksMod, savePicker])
+    : ServiceBase("Sxc.BlkEdt", connect: [appWorkCtxSvc, workBlocksMod, savePicker]), IWork<(IBlock block, int templateId, bool forceCreateContentGroup), Guid?>
 {
+    public Task<Package<Guid?>> Handle(WorkContext mainCtx, Package<(IBlock block, int templateId, bool forceCreateContentGroup)> package)
+    {
+        var (block, templateId, forceCreateContentGroup) = package.Data;
+        var result = SaveTemplateId(block, templateId, forceCreateContentGroup);
+        return Task.FromResult(new Package<Guid?>(result));
+    }
 
     /// <summary>
     /// Lookup the template and update the stored data; if necessary, create the content-group.
@@ -13,7 +20,7 @@ public class BlockUpdateTemplate(LazySvc<AppWorkContextService> appWorkCtxSvc, A
     /// <param name="templateId"></param>
     /// <param name="forceCreateContentGroup"></param>
     /// <returns></returns>
-    public Guid? SaveTemplateId(IBlock block, int templateId, bool forceCreateContentGroup)
+    private Guid? SaveTemplateId(IBlock block, int templateId, bool forceCreateContentGroup)
     {
         var blockConfig = block.Configuration;
         var updater = savePicker.PickUpdater(block);
@@ -38,5 +45,5 @@ public class BlockUpdateTemplate(LazySvc<AppWorkContextService> appWorkCtxSvc, A
         updater.SetPreview(block.Context.Module.Id, templateGuid);
         return l.Return(null, "only set preview, return null");
     }
-    
+
 }

@@ -45,6 +45,6 @@ public class EditController() : OqtStatefulControllerBase(RealController.LogSuff
     [HttpPost]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool Publish(int id)
+    public Task<bool> Publish(int id)
         => Real.Publish(id);
 }

@@ -43,7 +43,7 @@ public class BlockController() : OqtStatefulControllerBase(RealController.LogSuf
     [HttpPost]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public void App(int? appId) => Real.App(appId);
+    public Task App(int? appId) => Real.App(appId);
 
     /// <inheritdoc />
     [HttpGet]
@@ -70,7 +70,7 @@ public class BlockController() : OqtStatefulControllerBase(RealController.LogSuf
     //[Authorize(Roles = RoleNames.Registered)]
     [Authorize(Roles = RoleNames.Admin)]
     // TODO: 2DM please check permissions
-    public Guid? Template(int templateId, bool forceCreateContentGroup) => Real.Template(templateId, forceCreateContentGroup);
+    public Task<Guid?> Template(int templateId, bool forceCreateContentGroup) => Real.Template(templateId, forceCreateContentGroup);
 
 
     /// <inheritdoc />
@@ -83,6 +83,6 @@ public class BlockController() : OqtStatefulControllerBase(RealController.LogSuf
     [HttpPost]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool Publish(string part, int index) => Real.Publish(part, index);
+    public Task<bool> Publish(string part, int index) => Real.Publish(part, index);
 
 }

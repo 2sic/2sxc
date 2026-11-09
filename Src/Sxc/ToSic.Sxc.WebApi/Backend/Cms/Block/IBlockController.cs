@@ -20,7 +20,7 @@ public interface IBlockController
     /// </summary>
     /// <param name="appId"></param>
     /*new*/
-    void App(int? appId);
+    Task App(int? appId);
 
     /// <summary>
     /// used to be GET Module/GetSelectableApps
@@ -48,7 +48,7 @@ public interface IBlockController
     /// <param name="templateId"></param>
     /// <param name="forceCreateContentGroup"></param>
     /// <returns></returns>
-    Guid? Template(int templateId, bool forceCreateContentGroup);
+    Task<Guid?> Template(int templateId, bool forceCreateContentGroup);
 
     /// <summary>
     /// used to be GET Module/RenderTemplate
@@ -62,5 +62,5 @@ public interface IBlockController
     /// <summary>
     /// Used to be GET Module/Publish
     /// </summary>
-    bool Publish(string part, int index);
+    Task<bool> Publish(string part, int index);
 }

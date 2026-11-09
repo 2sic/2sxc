@@ -1,16 +1,29 @@
 ﻿using ToSic.Sxc.Blocks.Sys.Work;
+using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Blocks.Sys.BlockEditor;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockUpdateTitle(LazySvc<AppWorkContextService> appWorkCtxSvc, AppWorkChain<WorkBlocks> appBlocks, BlockSavePicker savePicker)
-    : ServiceBase("Sxc.BlkEdt", connect: [appWorkCtxSvc, appBlocks, savePicker])
+    : ServiceBase("Sxc.BlkEdt", connect: [appWorkCtxSvc, appBlocks, savePicker]), IWork<IBlock, bool>
 {
+    public Task<Package<bool>> Handle(WorkContext mainCtx, Package<IBlock> package)
+    {
+        try
+        {
+            UpdateTitle(package.Data);
+            return Task.FromResult(true.ToPackage());
+        }
+        catch (Exception exception)
+        {
+            return Task.FromException<Package<bool>>(exception);
+        }
+    }
+
     /// <summary>
     /// Update the title.
     /// </summary>
-    /// <param name="block1"></param>
-    public void UpdateTitle(IBlock block)
+    private void UpdateTitle(IBlock block)
     {
         var l = Log.Fn("update title");
 

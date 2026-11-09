@@ -2,6 +2,8 @@
 using ToSic.Sxc.Apps.Sys.Ui;
 using ToSic.Sxc.Backend.ContentBlocks;
 using ToSic.Sxc.Backend.InPage;
+using ToSic.Sxc.Blocks.Sys.BlockEditor;
+using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Backend.Cms;
 
@@ -10,8 +12,11 @@ public class BlockControllerReal(
     LazySvc<IContextOfSiteService> ctxSvc,
     LazySvc<ContentBlockBackend> blockBackend,
     LazySvc<AppViewPickerBackend> viewsBackend,
-    LazySvc<WorkApps> workApps)
-    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [ctxSvc, blockBackend, viewsBackend, workApps]),
+    LazySvc<PublishWebApi> publish,
+    LazySvc<WorkApps> workApps,
+    LazySvc<IContextCompleteService> ctxService,
+    Generator<BlockUpdateApp> blockUpdateApp)
+    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [ctxSvc, blockBackend, viewsBackend, publish, workApps, ctxService, blockUpdateApp]),
         IBlockController
 {
     public const string LogSuffix = "Block";
@@ -44,8 +49,8 @@ public class BlockControllerReal(
     /// </summary>
     /// <param name="appId"></param>
 
-    public void App(int? appId)
-        => viewsBackend.Value.SetAppId(appId);
+    public Task App(int? appId)
+        => blockUpdateApp.New().Handle(new(), (ctxService.Value.BlockRequired(), appId).ToPackage());
 
     /// <summary>
     /// used to be GET Module/GetSelectableApps
@@ -83,7 +88,7 @@ public class BlockControllerReal(
     /// <param name="templateId"></param>
     /// <param name="forceCreateContentGroup"></param>
     /// <returns></returns>
-    public Guid? Template(int templateId, bool forceCreateContentGroup)
+    public Task<Guid?> Template(int templateId, bool forceCreateContentGroup)
         => viewsBackend.Value
             .SaveTemplateId(templateId, forceCreateContentGroup);
 
@@ -101,8 +106,7 @@ public class BlockControllerReal(
 
     private string _moduleRoot = null!;
 
-
     /// <inheritdoc />
-    public bool Publish(string part, int index)
-        => Backend.PublishPart(part, index);
+    public Task<bool> Publish(string part, int index)
+        => publish.Value.PublishPart(part, index);
 }

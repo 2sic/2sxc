@@ -38,6 +38,6 @@ public class EditController() : DnnSxcControllerBase(RealController.LogSuffix), 
     /// <inheritdoc />
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-    public bool Publish(int id) =>
-        Real.Publish(id);
+    public Task<bool> Publish(int id)
+        => Real.Publish(id);
 }

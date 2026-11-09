@@ -1,8 +1,6 @@
-﻿using ToSic.Eav.Apps.Sys.Permissions;
-using ToSic.Eav.Sys;
+﻿using ToSic.Eav.Sys;
 using ToSic.Sxc.Backend.InPage;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Blocks.Sys.BlockEditor;
 using ToSic.Sxc.Blocks.Sys.Work;
 using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sxc.Render.Block.Sys;
@@ -10,7 +8,6 @@ using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Sys.Url;
-using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.ContentBlocks;
@@ -18,17 +15,15 @@ namespace ToSic.Sxc.Backend.ContentBlocks;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentBlockBackend(
     AppWorkChain<WorkViews> workViews,
-    Generator<MultiPermissionsApp, MultiPermissionsApp.Options> multiPermissionsApp,
     IPagePublishing publishing,
     AppWorkChain<WorkBlocksMod> workBlocksMod,
     ISxcCurrentContextService ctxService,
     LazySvc<IAssetsExtractor> optimizerLazy,
-    LazySvc<BlockPublishAction> blockEditorSelectorLazy,
     AppWorkContextService appCtxSvc,
     Generator<BlockOfEntity> entityBlockGenerator,
     Generator<IBlockRenderer> blockBuilderGenerator)
     : ServiceBase("Bck.FldLst",
-        connect: [workViews, multiPermissionsApp, publishing, workBlocksMod, ctxService, optimizerLazy, blockEditorSelectorLazy, appCtxSvc, entityBlockGenerator, blockBuilderGenerator])
+        connect: [workViews, publishing, workBlocksMod, ctxService, optimizerLazy, appCtxSvc, entityBlockGenerator, blockBuilderGenerator])
 {
 
     private const bool DebugDetails = true;
@@ -57,15 +52,6 @@ public class ContentBlockBackend(
             => workBlocksMod.New(appWorCtxDb).AddEmptyItem(block.Configuration, index, block.Context.Publishing.ForceDraft));
     }
 
-        
-    public bool PublishPart(string part, int index)
-    {
-        Log.A($"try to publish #{index} on '{part}'");
-        var block = ctxService.BlockRequired();
-        multiPermissionsApp.ThrowIfNotAllowedInApp(block.Context, GrantSets.WritePublished);
-        return blockEditorSelectorLazy.Value
-            .Publish(block, part, index);
-    }
 
     public AjaxRenderDto RenderForAjax(int templateId, string lang, string root, string edition)
     {

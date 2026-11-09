@@ -6,6 +6,7 @@ using ToSic.Eav.WebApi.Sys.App.Details;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Apps.Sys.DataSources;
 using ToSic.Sxc.Apps.Sys.EditAssets;
+using ToSic.Sxc.Backend;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.Admin.AppFiles;
@@ -136,6 +137,9 @@ public static class StartupSxcWebApi
         services.TryAddTransient<ListActivityGetBlockHeader>();
 
         services.TryAddTransient<IContextBuilderService, ContextBuilderService>();
+
+        services.TryAddTransient<PermissionCheckAction>(); // new v22
+        services.TryAddTransient<PublishWebApi>();  // new v22
 
         // v22 moved here from Sxc.Blocks
         services.AddContextProviders();

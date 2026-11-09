@@ -16,7 +16,7 @@ public class ContentGroupList(
     : ServiceWithSetup<IAppWorkContext>("Api.GrpPrc", connect: [blocks, workFieldList, blockEditor])
 {
 
-    internal bool IfChangesAffectListUpdateIt(IBlock? block, List<BundleWithHeader<IEntity>> items, Dictionary<Guid, int> ids)
+    internal async Task<bool> IfChangesAffectListUpdateIt(IBlock? block, List<BundleWithHeader<IEntity>> items, Dictionary<Guid, int> ids)
     {
         var l = Log.Fn<bool>();
         var groupItems = items
@@ -27,11 +27,11 @@ public class ContentGroupList(
         // if it's new, it has to be added to a group
         // only add if the header wants it, AND we started with ID unknown
         return groupItems.Any()
-            ? l.Return(PostSaveUpdateIdsInParent(block, ids, groupItems), "post save ids")
-            : l.Return(true, "no additional group processing necessary");
+            ? l.Return(await PostSaveUpdateIdsInParent(block, ids, groupItems), "post save ids")
+            : l.ReturnTrue("no additional group processing necessary");
     }
 
-    private bool PostSaveUpdateIdsInParent(IBlock? block, Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, BundleWithHeader<IEntity>>> pairsOrSingleItems)
+    private async Task<bool> PostSaveUpdateIdsInParent(IBlock? block, Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, BundleWithHeader<IEntity>>> pairsOrSingleItems)
     {
         var l = Log.Fn<bool>($"{MyOptions.AppReader.AppId}");
 
@@ -88,7 +88,7 @@ public class ContentGroupList(
         }
 
         // update-module-title
-        blockEditor.New().UpdateTitle(block);
+        var ok = await blockEditor.New().Handle(new(), new(block));
         return l.ReturnTrue("ok");
     }
 

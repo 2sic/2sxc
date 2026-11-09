@@ -39,7 +39,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
         /// <inheritdoc />
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        public bool Publish(int id)
+        public Task<bool> Publish(int id)
             => Real.Publish(id);
     }
 }

@@ -30,7 +30,7 @@ public class BlockController() : DnnSxcControllerBase(RealController.LogSuffix),
     /// <inheritdoc />
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public void App(int? appId)
+    public Task App(int? appId)
         => Real.App(appId);
 
     /// <inheritdoc />
@@ -56,7 +56,7 @@ public class BlockController() : DnnSxcControllerBase(RealController.LogSuffix),
     /// <inheritdoc />
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-    public Guid? Template(int templateId, bool forceCreateContentGroup)
+    public Task<Guid?> Template(int templateId, bool forceCreateContentGroup)
         => Real.Template(templateId, forceCreateContentGroup);
 
 
@@ -69,6 +69,6 @@ public class BlockController() : DnnSxcControllerBase(RealController.LogSuffix),
     /// <inheritdoc />
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public bool Publish(string part, int index)
-        => Real.Publish(part, index);
+    public async Task<bool> Publish(string part, int index)
+        => await Real.Publish(part, index);
 }

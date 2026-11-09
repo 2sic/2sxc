@@ -154,7 +154,8 @@ public class EditSaveBackend(
         if (isUniqueValidationException != null)
             throw isUniqueValidationException;
 
-        var result = pagePublishing.New(options: appCtxNew)
+        var result = await pagePublishing
+            .New(options: appCtxNew)
             .SaveInPagePublishing(
                 context: context,
                 blockOrNull: ctxService.BlockOrNull,
