@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.DataSource;
+﻿using ToSic.Eav.Apps.Sys.AppStack;
+using ToSic.Eav.DataSource;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
@@ -39,9 +40,9 @@ internal class CodeTypedApiHelper(ExecutionContext exCtx) : ICodeTypedApiHelper
 
     #region Common Local Data
 
-    public ITypedStack AllSettings => exCtx.AllSettings;
+    public ITypedStack AllSettings => field ??= exCtx.AllSettings;
 
-    public ITypedStack AllResources => exCtx.AllResources;
+    public ITypedStack AllResources => field ??= exCtx.AllResources;
 
     #endregion
 

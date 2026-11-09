@@ -1,4 +1,6 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Sys.AppStack;
+using ToSic.Eav.Data.Sys.PropertyLookup;
 using ToSic.Eav.DataSource;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Sys;
@@ -6,13 +8,11 @@ using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Sys.Factory;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
 
 public partial class ExecutionContext
-    : IWrapper<ICodeDataFactory>,
-        IExCtxAttachApp
+    : IExCtxAttachApp
 {
     [PrivateApi]
     public void AttachApp(IAppForCode app)
@@ -64,17 +64,29 @@ public partial class ExecutionContext
     public TState GetDataStack<TState>(string name) where TState : class
     {
         if (typeof(TState) == typeof(IDynamicStack) && name == ExecutionContextStateNames.Settings)
-            return (TState)Settings;
+            return (TState)DynamicApi.Settings;
 
         if (typeof(TState) == typeof(ITypedStack) && name == ExecutionContextStateNames.AllSettings)
-            return (TState)AllSettings;
+            return (TState)TypedApi.AllSettings;
 
         if (typeof(TState) == typeof(ITypedStack) && name == ExecutionContextStateNames.AllResources)
-            return (TState)AllResources;
+            return (TState)TypedApi.AllResources;
 
         throw new InvalidOperationException("Can only retrieve 'Settings', 'AllSettings', 'AllResources'");
     }
 
-    ICodeDataFactory IWrapper<ICodeDataFactory>.GetContents()
-        => Cdf;
+    [field: AllowNull, MaybeNull]
+    private AppDataStackService AppDss => field ??= Services.DataStackService.Init(App!.AppReader);
+
+    internal List<KeyValuePair<string, IPropertyLookup>> ResourcesSources => field
+        ??= AppDss.GetStack(AppStackConstants.Resources, Block?.View?.Resources);
+
+
+    internal List<KeyValuePair<string, IPropertyLookup>> SettingsSources => field
+        ??= AppDss.GetStack(AppStackConstants.Settings, Block?.View?.Settings);
+
+    public ITypedStack AllSettings => field ??= Cdf.AsTypedStack(AppStackConstants.RootNameSettings, SettingsSources);
+
+    public ITypedStack AllResources => field ??= Cdf.AsTypedStack(AppStackConstants.RootNameResources, ResourcesSources);
+
 }

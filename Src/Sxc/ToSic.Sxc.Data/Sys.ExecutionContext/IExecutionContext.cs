@@ -53,5 +53,8 @@ public interface IExecutionContext: ICanGetService, IHasPiggyBack, IHasLog
     /// <typeparam name="TService"></typeparam>
     /// <returns></returns>
     TService GetServiceForData<TService>() where TService : class;
+
+    ITypedStack AllSettings { get; }
+    ITypedStack AllResources { get; }
 }
 

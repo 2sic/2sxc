@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.DataSource;
+﻿using ToSic.Eav.Apps.Sys.AppStack;
+using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
@@ -71,9 +72,9 @@ internal class CodeDynamicApiHelper(ExecutionContext exCtx) : ICodeDynamicApiHel
 
     #region Common Local Data
 
-    public IDynamicStack Resources => exCtx.Resources;
+    public IDynamicStack Resources => Cdf.AsDynStack(AppStackConstants.RootNameResources, exCtx.ResourcesSources);
 
-    public IDynamicStack Settings => exCtx.Settings;
+    public IDynamicStack Settings => field ??= Cdf.AsDynStack(AppStackConstants.RootNameSettings, exCtx.SettingsSources);
 
     /// <inheritdoc cref="IDynamicCodeDocs.Content" />
     public IDynamicEntity? Content => _contentGo.Get(() => TryToBuildFirstOfStream(DataSourceConstants.StreamDefaultName));
