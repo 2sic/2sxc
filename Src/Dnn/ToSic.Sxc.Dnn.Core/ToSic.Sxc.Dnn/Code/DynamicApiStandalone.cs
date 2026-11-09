@@ -95,10 +95,10 @@ internal class DynamicApiStandalone(IExecutionContext exCtx, ICodeDynamicApiHelp
         => apiHelper.Cdf.AsDynamicFromObject(dynamicEntity);
 
     IEntity IDynamicCode.AsEntity(object dynamicEntity)
-        => apiHelper.Cdf.AsEntity(dynamicEntity); // ((IDynamicCode)exCtx).AsEntity(dynamicEntity);
+        => apiHelper.Cdf.AsEntity(dynamicEntity);
 
     IEnumerable<dynamic>? IDynamicCode.AsList(object list)
-        => apiHelper.Cdf.CodeAsDynList(list);// ((IDynamicCode)exCtx).AsList(list);
+        => apiHelper.Cdf.CodeAsDynList(list);
 
     T IDynamicCode.CreateSource<T>(IDataStream source)
         => apiHelper.CreateSource<T>(source);
@@ -112,7 +112,7 @@ internal class DynamicApiStandalone(IExecutionContext exCtx, ICodeDynamicApiHelp
     public dynamic? AsDynamic(params object[] entities)
         => apiHelper.Cdf.MergeDynamic(entities);
 
-    public IConvertService Convert => ((ExecutionContext)exCtx).Convert;
+    public IConvertService Convert => apiHelper.Convert;
 
     public dynamic Resources => apiHelper.Resources;
 

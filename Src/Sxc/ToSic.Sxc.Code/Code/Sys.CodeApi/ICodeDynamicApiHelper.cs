@@ -56,12 +56,10 @@ public interface ICodeDynamicApiHelper: ICreateInstance
 
     #region Content, Header, App, Data, Resources, Settings
 
-    dynamic? Content { get; }
+    IDynamicEntity? Content { get; }
 
-    /// <inheritdoc cref="Razor.Html5.Header" />
-    dynamic? Header { get; }
+    IDynamicEntity? Header { get; }
 
-    /// <inheritdoc cref="Eav.DataSources.App" />
     IApp App { get; }
 
     /// <summary>

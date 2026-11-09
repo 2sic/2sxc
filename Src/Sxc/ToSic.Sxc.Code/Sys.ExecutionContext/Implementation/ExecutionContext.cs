@@ -1,12 +1,10 @@
 ﻿using ToSic.Eav.Apps.Sys.AppStack;
 using ToSic.Sxc.Apps.Sys;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Render.Polymorphism.Sys;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 using ToSic.Sys.Caching.PiggyBack;
 // ReSharper disable InheritdocInvalidUsage
@@ -24,7 +22,7 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 /// </remarks>
 [PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.Dependencies>, IExecutionContext, /*IGetCodePath,*/ IHasPiggyBack, IServiceWithSetup<ExecutionContextOptions>
+public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.Dependencies>, IExecutionContext, IHasPiggyBack, IServiceWithSetup<ExecutionContextOptions>
 {
     #region Constructor
 
@@ -34,14 +32,12 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
     [PrivateApi]
     public record Dependencies(
         IServiceProvider ServiceProvider,
-        //LazySvc<IClassCompiler> CodeCompilerLazy,
         AppDataStackService DataStackService,
-        LazySvc<IConvertService> ConvertService,
         LazySvc<ExCtxDataSourceService> DataSources,
         ICodeDataFactory Cdf,
         IEditionService EditionSvc)
         : DependenciesBase(connect:
-            [/* never! serviceProvider */ /*CodeCompilerLazy,*/ DataStackService, ConvertService, DataSources, Cdf, EditionSvc]);
+            [/* never! serviceProvider */ DataStackService, DataSources, Cdf, EditionSvc]);
 
     [PrivateApi]
     protected internal ExecutionContext(Dependencies services, string logPrefix) : base(services, logPrefix + ".DynCdR")
@@ -93,22 +89,6 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
 
     /// <inheritdoc />
     internal IAppForCode? App { get; private set; } = null!;
-
-    /// <inheritdoc cref="IDynamicCodeDocs.Link" />
-    [field: AllowNull, MaybeNull]
-    internal ILinkService Link => field ??= GetService<ILinkService>(reuse: true);
-
-
-    #region Edit
-
-    /// <inheritdoc />
-    [field: AllowNull, MaybeNull]
-    internal IEditService Edit => field ??= GetService<IEditService>(reuse: true);
-
-    #endregion
-
-    [PrivateApi("Not yet ready")]
-    internal IDevTools DevTools => throw new NotImplementedException("This is a future feature, we're just reserving the object name");
 
     /// <summary>
     /// WIP!
