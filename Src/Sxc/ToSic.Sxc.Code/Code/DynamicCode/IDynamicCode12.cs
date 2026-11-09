@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Code;
 /// <remarks>
 /// This interface is only used by developers who use the <see cref="IDynamicCodeService"/> to retrieve the object which helps them access things such as the App.
 /// </remarks>
-[PublicApi]
+[WorkInProgressApi("Slowly being deprecated in v23, as it should be replaced with Typed APIs")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IDynamicCode12 : IDynamicCode, ICreateInstance, ICompatibilityLevel, IHasLog
 {
