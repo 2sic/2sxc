@@ -34,18 +34,13 @@ public partial class ExecutionContext
     /// </summary>
     [PrivateApi] public IBlock? Block { get; private set; } = null!;
 
-    [PrivateApi]
-    [field: AllowNull, MaybeNull]
-    internal IAppTyped AppTyped => field ??= GetService<IAppTyped>(reuse: true);
-
-
     public TState GetState<TState>() where TState : class
     {
         if (typeof(TState) == typeof(ICmsContext))
             return (TState)CmsContext;
 
         if (typeof(TState) == typeof(IAppForCode))
-            return (TState)App;
+            return (TState)App!;
 
         if (typeof(TState) == typeof(IAppReader))
             return (TState)App?.AppReader!;
@@ -60,7 +55,7 @@ public partial class ExecutionContext
             return (TState)Block?.Context!;
 
         if (typeof(TState) == typeof(IAppTyped))
-            return (TState)AppTyped;
+            return (TState)TypedApi.AppTyped;
 
         throw new InvalidOperationException(
             $"Can't get state of type {typeof(TState).Name} - only {nameof(IAppForCode)}, {nameof(IDataSource)}, {nameof(IBlock)} and {nameof(IAppTyped)} are supported");

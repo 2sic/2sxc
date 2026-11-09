@@ -2,6 +2,7 @@
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 
@@ -11,7 +12,7 @@ internal class CodeDynamicApiHelper(ExecutionContext exCtx) : CodeAnyApiHelper(e
 {
     public dynamic? Content => ExCtx.Content;
     public dynamic? Header => ExCtx.Header;
-    public IApp App => (IApp)ExCtx.App;
+    public IApp App => field ??= ExCtx.GetService<Generator<App, IAppForCode>>().New(ExCtx.App!);
     public IDynamicStack Resources => ExCtx.Resources;
     public IDynamicStack Settings => ExCtx.Settings;
 
