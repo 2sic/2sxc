@@ -4,17 +4,15 @@ using ToSic.Sys.Security.Permissions;
 namespace ToSic.Sxc.Adam.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamWorkGet(Generator<AdamContext, AdamContext.Options> adamContextGen, AdamGenericHelper adamGenericHelper)
-    : ServiceWithSetup<AdamContext.Options>("Adm.TrnFld")
+public class AdamWorkGet(AdamGenericHelper adamGenericHelper)
+    : ServiceWithSetup<AdamContext>("Adm.TrnFld")
 {
-    public AdamContext AdamContext => field ??= adamContextGen.New(MyOptions);
-
     public AdamFolderFileSet? ItemsInField(string subFolderName, bool autoCreate = false)
     {
         var l = Log.Fn<AdamFolderFileSet>($"Subfolder: {subFolderName}; AutoCreate: {autoCreate}");
 
         l.A("starting permissions checks");
-        var adamCtx = AdamContext;
+        var adamCtx = MyOptions;
         if (adamCtx.Security.UserIsRestricted && !adamCtx.Security.FieldPermissionOk(GrantSets.ReadSomething))
             return l.ReturnNull("user is restricted, and doesn't have permissions on field - return null");
 

@@ -6,9 +6,21 @@ namespace ToSic.Sxc.Adam.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class AdamWorkUpload(Generator<AdamContext, AdamContext.Options> adamContextGen)
-    : ServiceWithSetup<AdamContext.Options>("Adm.TrnUpl", connect: [adamContextGen])
+    : ServiceWithSetup<AdamContext>("Adm.TrnUpl", connect: [adamContextGen]), IServiceWithSetup<AdamContext.Options>
 {
-    public AdamContext AdamContext => field ??= adamContextGen.New(MyOptions);
+    /// <summary>
+    /// Note: this is a demo with multiple setups.
+    /// It's probably not super useful, but might become more of a thing in future.
+    /// </summary>
+    /// <param name="options"></param>
+    public void Setup(AdamContext.Options options) => AdamContext = adamContextGen.New(options);
+
+    private AdamContext AdamContext
+    {
+        get => field ??= MyOptions;
+        set;
+    }
+
 
     public IFile UploadOneNew(Stream stream, string subFolder, string fileName)
     {
@@ -85,4 +97,5 @@ public partial class AdamWorkUpload(Generator<AdamContext, AdamContext.Options> 
 
         return eavFile;
     }
+
 }

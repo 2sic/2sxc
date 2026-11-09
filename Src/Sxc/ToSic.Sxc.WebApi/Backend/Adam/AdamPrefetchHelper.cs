@@ -9,21 +9,23 @@ namespace ToSic.Sxc.Backend.Adam;
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamPrefetchHelper(
-    Generator<AdamWorkGet, AdamContext.Options> adamGet,
+    Generator<AdamContext, AdamContext.Options> adamContextGen,
+    Generator<AdamWorkGet, AdamContext> adamGet,
     Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> dtoMaker)
-    : ServiceWithSetup<AdamContext.Options>("Adm.TrnItm"),
+    : ServiceWithSetup<AdamContext.Options>("Adm.TrnItm", connect: [adamContextGen, adamGet, dtoMaker]),
         IAdamPrefetchHelper
 {
     public ICollection<AdamItemDto> GetAdamItemsForPrefetch(string subFolderName, bool autoCreate = true)
     {
         var l = Log.Fn<ICollection<AdamItemDto>>($"subFolderName:{subFolderName}, autoCreate:{autoCreate}");
-        var adamGetReady = adamGet.New(MyOptions);
+        var adamCtx = adamContextGen.New(MyOptions);
+        var adamGetReady = adamGet.New(adamCtx);
         var items = adamGetReady.ItemsInField(subFolderName, autoCreate);
         
         if (items == null)
             return l.ReturnAsError([], "got empty object, user is probably restricted");
 
-        var maker = dtoMaker.New(new() { AdamContext = adamGetReady.AdamContext, });
+        var maker = dtoMaker.New(new() { AdamContext = adamCtx, });
         var result = maker.Convert(items)
             .ToListOpt();
         return l.ReturnAsOk(result);

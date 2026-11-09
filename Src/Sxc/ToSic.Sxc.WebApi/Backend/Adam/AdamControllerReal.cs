@@ -6,14 +6,15 @@ namespace ToSic.Sxc.Backend.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamControllerReal<TIdentifier>(
-    Generator<AdamWorkUpload, AdamContext.Options> adamUpload,
-    Generator<AdamWorkGet, AdamContext.Options> adamWorkGet,
-    Generator<AdamWorkFolderCreate, AdamContext.Options> adamFolders,
-    Generator<AdamWorkDelete, AdamContext.Options> adamDelete,
-    Generator<AdamWorkRename, AdamContext.Options> adamRename,
+    Generator<AdamContext, AdamContext.Options> adamContextGen,
+    Generator<AdamWorkUpload, AdamContext> adamUpload,
+    Generator<AdamWorkGet, AdamContext> adamWorkGet,
+    Generator<AdamWorkFolderCreate, AdamContext> adamFolders,
+    Generator<AdamWorkDelete, AdamContext> adamDelete,
+    Generator<AdamWorkRename, AdamContext> adamRename,
     Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> dtoMaker,
     ISxcCurrentContextService ctxService)
-    : ServiceBase("Api.Adam", connect: [adamUpload, adamWorkGet, adamFolders, adamDelete, adamRename])
+    : ServiceBase("Api.Adam", connect: [adamContextGen, adamUpload, adamWorkGet, adamFolders, adamDelete, adamRename])
 {
     // TODO: @2dm change to not changing the state
     private IContextOfApp ShareAppStateOptimized(int appId)
@@ -41,15 +42,16 @@ public class AdamControllerReal<TIdentifier>(
             if (stream == null!)
                 return l.ReturnAsError(new("File Stream is empty"));
 
-            var uploader = adamUpload.New(new(
+            var adamContext = adamContextGen.New(new(
                 Context: context,
                 ContentType: contentType,
                 FieldName: field,
                 EntityGuid: guid,
                 UsePortalRoot: usePortalRoot));
-            var file = uploader.UploadOneNew(stream, subFolder, fileName);
 
-            var dtoMake = dtoMaker.New(new() { AdamContext = uploader.AdamContext, });
+            var file = adamUpload.New(adamContext).UploadOneNew(stream, subFolder, fileName);
+
+            var dtoMake = dtoMaker.New(new() { AdamContext = adamContext, });
             return dtoMake.Create(file);
         }
         catch (HttpExceptionAbstraction he)
@@ -73,20 +75,20 @@ public class AdamControllerReal<TIdentifier>(
         // 1. Set the global context
         var context = ShareAppStateOptimized(appId);
 
-        var adamGet = adamWorkGet.New(new(
+        var adamContext = adamContextGen.New(new(
             Context: context,
             ContentType: contentType,
             FieldName: field,
             EntityGuid: guid,
             UsePortalRoot: usePortalRoot));
 
-        var results = adamGet.ItemsInField(subfolder);
+        var results = adamWorkGet.New(adamContext).ItemsInField(subfolder);
 
         if (results == null)
             return l.ReturnAsError([], "got empty object, user probably restricted");
 
         var dto = dtoMaker
-            .New(new() { AdamContext = adamGet.AdamContext })
+            .New(new() { AdamContext = adamContext })
             .Convert(results);
 
         return l.ReturnAsOk(dto);
@@ -99,27 +101,22 @@ public class AdamControllerReal<TIdentifier>(
         // 1. Set the global context
         var context = ShareAppStateOptimized(appId);
 
-        adamFolders.New(new(
-            Context: context,
-            ContentType: contentType,
-            FieldName: field,
-            EntityGuid: guid,
-            UsePortalRoot: usePortalRoot))
-            .Create(subfolder, newFolder);
-
-        var adamGet = adamWorkGet.New(new(
+        var adamContext = adamContextGen.New(new(
             Context: context,
             ContentType: contentType,
             FieldName: field,
             EntityGuid: guid,
             UsePortalRoot: usePortalRoot));
-        var folder = adamGet.ItemsInField(subfolder);
+
+        adamFolders.New(adamContext).Create(subfolder, newFolder);
+
+        var folder = adamWorkGet.New(adamContext).ItemsInField(subfolder);
 
         if (folder == null)
             return l.ReturnAsError([], "got empty object, user probably restricted");
 
         var dto = dtoMaker
-            .New(new() { AdamContext = adamGet.AdamContext })
+            .New(new() { AdamContext = adamContext })
             .Convert(folder);
         return l.ReturnAsOk(dto);
     }
@@ -129,12 +126,13 @@ public class AdamControllerReal<TIdentifier>(
         // 1. Set the global context
         var context = ShareAppStateOptimized(appId);
 
-        return adamDelete.New(new(
-                Context: context,
-                ContentType: contentType,
-                FieldName: field,
-                EntityGuid: guid,
-                UsePortalRoot: usePortalRoot))
+        var adamContext = adamContextGen.New(new(
+            Context: context,
+            ContentType: contentType,
+            FieldName: field,
+            EntityGuid: guid,
+            UsePortalRoot: usePortalRoot));
+        return adamDelete.New(adamContext)
             .Delete(subfolder, isFolder, AdamAssetIdentifier.Create(id), AdamAssetIdentifier.Create(id));
     }
 
@@ -144,12 +142,13 @@ public class AdamControllerReal<TIdentifier>(
         // 1. Set the global context
         var context = ShareAppStateOptimized(appId);
 
-        return adamRename.New(new(
+        var adamContext = adamContextGen.New(new(
             Context: context,
             ContentType: contentType,
             FieldName: field,
             EntityGuid: guid,
-            UsePortalRoot: usePortalRoot))
+            UsePortalRoot: usePortalRoot));
+        return adamRename.New(adamContext)
             .Rename(subfolder, isFolder, AdamAssetIdentifier.Create(id), AdamAssetIdentifier.Create(id), newName);
     }
 }

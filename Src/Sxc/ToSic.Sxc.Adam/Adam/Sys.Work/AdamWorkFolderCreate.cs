@@ -5,15 +5,12 @@ using ToSic.Sys.Security.Permissions;
 namespace ToSic.Sxc.Adam.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamWorkFolderCreate(Generator<AdamContext, AdamContext.Options> adamContextGen)
-    : ServiceWithSetup<AdamContext.Options>("Adm.TrnFld")
+public class AdamWorkFolderCreate() : ServiceWithSetup<AdamContext>("Adm.TrnFld")
 {
-    private AdamContext AdamContext => field ??= adamContextGen.New(MyOptions);
-
     public bool Create(string parentSubfolder, string newFolder)
     {
         var l = Log.Fn<bool>($"get folders for subfolder:{parentSubfolder}, new:{newFolder}");
-        var adamCtx = AdamContext;
+        var adamCtx = MyOptions;
         if (adamCtx.Security.UserIsRestricted && !adamCtx.Security.FieldPermissionOk(GrantSets.ReadSomething))
             return l.ReturnFalse();
 

@@ -6,7 +6,7 @@ partial class AdamWorkUpload
 {
     #region More Checks
 
-    internal bool CustomFileFilterOk(string additionalFilter, string fileName)
+    private bool CustomFileFilterOk(string additionalFilter, string fileName)
     {
         var l = Log.Fn<bool>();
         var extension = Path.GetExtension(fileName)?.TrimStart('.') ?? "";

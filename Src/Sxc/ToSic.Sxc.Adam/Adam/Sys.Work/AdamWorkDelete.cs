@@ -4,15 +4,12 @@ using ToSic.Sys.Security.Permissions;
 namespace ToSic.Sxc.Adam.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamWorkDelete(Generator<AdamContext, AdamContext.Options> adamContextGen, AdamGenericHelper adamGenericHelper)
-    : ServiceWithSetup<AdamContext.Options>("Adm.TrnDel")
+public class AdamWorkDelete(AdamGenericHelper adamGenericHelper) : ServiceWithSetup<AdamContext>("Adm.TrnDel")
 {
-    private AdamContext AdamContext => field ??= adamContextGen.New(MyOptions);
-
     public bool Delete(string parentSubfolder, bool isFolder, AdamAssetIdentifier folderId, AdamAssetIdentifier fileId)
     {
         var l = Log.Fn<bool>();
-        var adamCtx = AdamContext;
+        var adamCtx = MyOptions;
         if (adamCtx.Security.UserNotPermittedOnField(GrantSets.DeleteSomething, out var exp))
             throw l.Ex(exp);
 
@@ -41,4 +38,14 @@ public class AdamWorkDelete(Generator<AdamContext, AdamContext.Options> adamCont
 
     }
 
+}
+
+public class AdamWorkGen<T>(Generator<AdamContext, AdamContext.Options> adamContextGen, Generator<T, AdamContext> adamGen) where T: IServiceWithSetup<AdamContext>
+{
+    public T New(AdamContext.Options options)
+    {
+        var adamCtx = adamContextGen.New(options);
+        var svc = adamGen.New(adamCtx);
+        return svc;
+    }
 }

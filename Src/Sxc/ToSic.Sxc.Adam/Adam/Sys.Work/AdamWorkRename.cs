@@ -5,14 +5,13 @@ namespace ToSic.Sxc.Adam.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamWorkRename(Generator<AdamContext, AdamContext.Options> adamContextGen, AdamGenericHelper adamGenericHelper)
-    : ServiceWithSetup<AdamContext.Options>("Adm.TrnRen", connect: [adamContextGen])
+    : ServiceWithSetup<AdamContext>("Adm.TrnRen", connect: [adamContextGen])
 {
-    private AdamContext AdamContext => field ??= adamContextGen.New(MyOptions);
 
     public bool Rename(string parentSubfolder, bool isFolder, AdamAssetIdentifier folderId, AdamAssetIdentifier fileId, string newName)
     {
         var l = Log.Fn<bool>();
-        var adamCtx = AdamContext;
+        var adamCtx = MyOptions;
         if (adamCtx.Security.UserNotPermittedOnField(GrantSets.WriteSomething, out var exp))
             throw l.Ex(exp);
 
