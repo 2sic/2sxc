@@ -38,7 +38,7 @@ partial class CodeDataFactory
         // TODO: @2dm - find out / document why this could even be null
         if (contextOfApp == null)
         {
-            var app = ExCtx.GetAppForCode()
+            var app = ExCtx.GetApp()
                       ?? throw new("Can't create App Context for ADAM - no block, no App");
             contextOfApp = appCtxFactory.Value.Create(app.PureIdentity());
         }

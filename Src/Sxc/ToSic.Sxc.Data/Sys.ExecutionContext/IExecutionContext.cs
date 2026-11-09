@@ -18,14 +18,6 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 public interface IExecutionContext: ICanGetService, IHasPiggyBack, IHasLog
 {
     /// <summary>
-    /// Get the current state of the execution context. Only works for a few types.
-    /// </summary>
-    /// <typeparam name="TState">The data type of known states: `IApp`, `ICmsContext` or `IDataSource` and a few more.
-    /// Any other type will throw an error.</typeparam>
-    /// <returns></returns>
-    public TState GetState<TState>() where TState : class;
-
-    /// <summary>
     /// Special GetService which can cache the found service so any other use could get the same instance.
     /// This should ensure that an Edit service requested through Kit14 and Kit16 are both the same, etc.
     /// </summary>

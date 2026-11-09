@@ -44,7 +44,7 @@ internal class CacheService(
     /// <summary>
     /// AppId to use in key generation, so it won't collide with other apps.
     /// </summary>
-    private int AppId => _appId ??= ExCtxOrNull?.GetAppForCode().AppId ?? -1;
+    private int AppId => _appId ??= ExCtxOrNull?.GetApp().AppId ?? -1;
     private int? _appId;
 
     private string? AppCacheKey => field ??= GetAppCacheKey();
@@ -81,7 +81,7 @@ internal class CacheService(
 
     private string? GetAppCacheKey()
     {
-        var app = ExCtxOrNull?.GetAppForCode();
+        var app = ExCtxOrNull?.GetApp();
         if (app is {} appWithInternal)
             return appWithInternal.AppReader.Specs.CacheKey;
 

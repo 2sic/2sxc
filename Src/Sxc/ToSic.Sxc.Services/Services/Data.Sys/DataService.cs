@@ -4,7 +4,6 @@ using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Eav.DataSource.Sys.Catalog;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Eav.Services;
-using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Services.Sys.DataService;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -31,7 +30,7 @@ public partial class DataService(
     public override void ConnectToRoot(IExecutionContext exCtx)
     {
         base.ConnectToRoot(exCtx);
-        Setup(new(exCtx.GetState<IAppForCode>(), () => (exCtx as IExCtxLookUpEngine)?.LookUpForDataSources));
+        Setup(new(exCtx.GetApp(), () => (exCtx as IExCtxLookUpEngine)?.LookUpForDataSources));
     }
 
     public void Setup(Options opts)

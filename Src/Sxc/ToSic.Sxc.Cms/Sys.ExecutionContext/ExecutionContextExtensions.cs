@@ -6,5 +6,5 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 public static class ExecutionContextExtensions
 {
     public static ICmsContext GetCmsContext(this IExecutionContext context)
-        => context.GetState<ICmsContext>();
+        => ((IExecutionContextWithCmsContext)context).CmsContext;
 }

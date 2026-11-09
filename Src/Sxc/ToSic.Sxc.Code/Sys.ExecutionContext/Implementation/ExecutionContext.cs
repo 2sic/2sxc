@@ -7,6 +7,7 @@ using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Render.Polymorphism.Sys;
 using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 using ToSic.Sys.Caching.PiggyBack;
+
 // ReSharper disable InheritdocInvalidUsage
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
@@ -22,7 +23,13 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 /// </remarks>
 [PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.Dependencies>, IExecutionContext, IHasPiggyBack, IServiceWithSetup<ExecutionContextOptions>
+public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.Dependencies>,
+    IExecutionContext,
+    IExecutionContextWithApp,
+    IExecutionContextWithBlock,
+    IExecutionContextWithCmsContext,
+    IHasPiggyBack,
+    IServiceWithSetup<ExecutionContextOptions>
 {
     #region Constructor
 
@@ -50,7 +57,7 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
     }
 
     [PrivateApi]
-    internal ICmsContext CmsContext { get; }
+    public ICmsContext CmsContext { get; }
 
     internal IModule? ModuleIfBlockUnknown { get; private set; }
 
@@ -88,7 +95,7 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
     }
 
     /// <inheritdoc />
-    internal IAppForCode? App { get; private set; } = null!;
+    public IAppForCode? App { get; private set; }
 
     /// <summary>
     /// WIP!

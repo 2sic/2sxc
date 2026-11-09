@@ -29,7 +29,7 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager<T
 {
     [field: AllowNull, MaybeNull]
     protected IAppForCode App => field
-        ??= ExCtx.GetAppForCode()
+        ??= ExCtx.GetApp()
             ?? throw new($"Can't access {nameof(App)} - either null or can't convert");
 
 

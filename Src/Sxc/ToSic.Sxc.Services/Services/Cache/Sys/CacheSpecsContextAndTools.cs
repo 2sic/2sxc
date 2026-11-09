@@ -48,25 +48,13 @@ internal record CacheSpecsContextAndTools : HelperRecordBase
     [field: AllowNull, MaybeNull]
     private ICmsContext Context => field ??= ExCtx.GetCmsContext();
 
-    //[field: AllowNull, MaybeNull]
-    //public ICmsUser User => field ??= ExCtx.GetCmsContext().User;
-
-    //[field: AllowNull, MaybeNull]
-    //public ICmsModule Module => field ??= ExCtx.GetCmsContext().Module;
-
-    //[field: AllowNull, MaybeNull]
-    //public ICmsPage Page => field ??= ExCtx.GetCmsContext().Page;
-
-    //[field: AllowNull, MaybeNull]
-    //public ICmsCulture Culture => field ??= ExCtx.GetCmsContext().Culture;
-
-    public UserElevation UserElevation => _userElevation ??= Context.User.GetElevation(); // ?? UserElevation.Unknown;
+    public UserElevation UserElevation => _userElevation ??= Context.User.GetElevation();
     private UserElevation? _userElevation;
 
     private ISite? Site => field ??= ExCtx.GetContextOfBlock()?.Site;
 
     [field: AllowNull, MaybeNull]
-    private IAppReader AppReader => field ??= ExCtx.GetState<IAppReader>();
+    private IAppReader AppReader => field ??= ExCtx.GetApp().AppReader;
 
     #endregion
 

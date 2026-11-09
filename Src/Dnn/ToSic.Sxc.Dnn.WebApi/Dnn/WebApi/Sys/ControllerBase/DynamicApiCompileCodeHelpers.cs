@@ -91,7 +91,7 @@ internal class DnnCustomWebApiHelper: CompileCodeHelper
 
         // 2.5 In case SxcBlock was null, there is no instance, but we may still need the app
         // This is special in WebAPIs, so we must handle it here
-        var app = exCtx.GetAppForCode();
+        var app = exCtx.GetApp();
         if (app == null! /* Special: there are cases where it's null, even though the nullable API doesn't show it */)
         {
             l.A("DynCode.App is null");

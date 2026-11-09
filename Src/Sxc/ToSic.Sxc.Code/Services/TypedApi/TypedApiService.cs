@@ -106,7 +106,7 @@ internal class TypedApiService(TypedApiService.Dependencies services, string? lo
         MakeSureLogIsInHistory();
 
         var app = GetApp(zoneId: zoneId, appId: appId, site: site, withUnpublished: withUnpublished);
-        return l.ReturnAsOk(GetNewCodeRoot(app).GetState<IAppTyped>());
+        return l.ReturnAsOk(GetNewCodeRoot(app).GetTypedApi().AppTyped);
     }
 
     /// <inheritdoc />
@@ -116,7 +116,7 @@ internal class TypedApiService(TypedApiService.Dependencies services, string? lo
 
         MakeSureLogIsInHistory();
         var app = GetAndInitApp(GetPrimaryAppIdentity(null), null);
-        return l.ReturnAsOk(GetNewCodeRoot(app).GetState<IAppTyped>());
+        return l.ReturnAsOk(GetNewCodeRoot(app).GetTypedApi().AppTyped);
     }
 
     #endregion

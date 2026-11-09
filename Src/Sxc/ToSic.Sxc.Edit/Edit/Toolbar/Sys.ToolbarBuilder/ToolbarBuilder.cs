@@ -46,7 +46,7 @@ public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, ITo
         if (exCtx == null)
             return;
         ExCtx = exCtx;
-        CurrentAppIdentity = exCtx.GetAppForCode().PureIdentity();
+        CurrentAppIdentity = exCtx.GetApp().PureIdentity();
         Services.ToolbarButtonHelper.Value.MainAppIdentity = CurrentAppIdentity;
     }
 

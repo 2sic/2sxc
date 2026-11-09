@@ -7,8 +7,8 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 public static class ExecutionContextExtensions
 {
     public static IBlock GetBlock(this IExecutionContext exCtx)
-        => exCtx.GetState<IBlock>();
+        => (exCtx as IExecutionContextWithBlock)?.Block!;
 
     public static IContextOfBlock GetContextOfBlock(this IExecutionContext exCtx)
-        => exCtx.GetState<IContextOfBlock>();
+        => (exCtx as IExecutionContextWithBlock)?.Block?.Context!;
 }

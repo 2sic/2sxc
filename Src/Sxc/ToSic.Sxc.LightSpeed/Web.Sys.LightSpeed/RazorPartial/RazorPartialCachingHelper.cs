@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sxc.Code.Razor.Sys;
 using ToSic.Sxc.Render.Sys;
@@ -26,7 +25,7 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
     private bool IsEnabled => _isEnabled ??= featureSvc.IsEnabled(SxcFeatures.LightSpeedOutputCachePartials.NameId);
     private bool? _isEnabled;
 
-    private string AppCacheKey => field ??= exCtx.GetAppForCode()?.AppReader.Specs.CacheKey ?? appId.ToString();
+    private string AppCacheKey => field ??= exCtx.GetApp()?.AppReader.Specs.CacheKey ?? appId.ToString();
 
     /// <summary>
     /// Underlying cache service, taken from the execution context so it knows more about the current request.

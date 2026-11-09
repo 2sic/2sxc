@@ -25,7 +25,7 @@ public class DnnExecutionContextCreateSourceObsolete(IExecutionContext dynCode)
         try
         {
             // try to find with assembly name, or otherwise with GlobalName / previous names
-            var app = dynCode.GetAppForCode();
+            var app = dynCode.GetApp();
             var type = dataSources.Catalog.Value.FindDataSourceInfo(typeName, app.AppId)?.Type;
             configuration ??= dataSources.LookUpEngine;
             var cnf2Wip = new DataSourceOptions
