@@ -54,15 +54,15 @@ public class CspOfApp : ServiceWithContext
         var l = Log.Fn<string?>(AppId.ToString());
 
         // Get Stack
-        if (ExCtxOrNull?.GetDataStack<IDynamicStack>(ExecutionContextStateNames.Settings) is not { } stack) 
+        if (ExCtxOrNull?.AllSettings is not { } stack) 
             return l.ReturnNull("no stack");
 
         // Enable this for detailed debugging
         //stack.Debug = true;
 
         // Dynamic Stack of the App Settings
-        var appSettings = stack.GetStack(AppStackConstants.PartAppSystem);
-        Log.A($"has {nameof(appSettings)}: {appSettings != null}");
+        var appSettings = stack.GetStack([AppStackConstants.PartAppSystem]);
+        l.A($"has {nameof(appSettings)}: {appSettings != null}");
 
         // CSP Settings Reader from Dynamic Entity for the App
         var cspReader = new CspSettingsReader(appSettings, _user, _moduleCsp.UrlIsDevMode, Log);

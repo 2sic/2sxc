@@ -61,20 +61,6 @@ public partial class ExecutionContext
             $"Can't get state of type {typeof(TState).Name} - only {nameof(IAppForCode)}, {nameof(IDataSource)}, {nameof(IBlock)} and {nameof(IAppTyped)} are supported");
     }
 
-    public TState GetDataStack<TState>(string name) where TState : class
-    {
-        if (typeof(TState) == typeof(IDynamicStack) && name == ExecutionContextStateNames.Settings)
-            return (TState)DynamicApi.Settings;
-
-        if (typeof(TState) == typeof(ITypedStack) && name == ExecutionContextStateNames.AllSettings)
-            return (TState)TypedApi.AllSettings;
-
-        if (typeof(TState) == typeof(ITypedStack) && name == ExecutionContextStateNames.AllResources)
-            return (TState)TypedApi.AllResources;
-
-        throw new InvalidOperationException("Can only retrieve 'Settings', 'AllSettings', 'AllResources'");
-    }
-
     [field: AllowNull, MaybeNull]
     private AppDataStackService AppDss => field ??= Services.DataStackService.Init(App!.AppReader);
 

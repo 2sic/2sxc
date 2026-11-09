@@ -62,9 +62,9 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
     /// </summary>
     private CspSettingsReader SiteCspSettings => _siteCspSettings.Get(Log, () =>
     {
-        var pageSettings = ExCtxOrNull?.GetDataStack<IDynamicStack>(ExecutionContextStateNames.Settings)
-            ?.GetStack(AppStackConstants.PartSiteSystem, AppStackConstants.PartGlobalSystem, AppStackConstants.PartPresetSystem);
-        return new CspSettingsReader(pageSettings, user, UrlIsDevMode, Log);
+        var pageSettings = ExCtxOrNull?.AllSettings
+            ?.GetStack([AppStackConstants.PartSiteSystem, AppStackConstants.PartGlobalSystem, AppStackConstants.PartPresetSystem]);
+        return new(pageSettings, user, UrlIsDevMode, Log);
     })!;
     private readonly LazyGetAndLog<CspSettingsReader> _siteCspSettings = new();
 

@@ -121,9 +121,9 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
 
     #endregion
 
-    #region Add-Ons for ITypedStack
+    #region ITypedItem.Children / .Child
 
-    ITypedItem? /*ITypedStack*/ITypedItem.Child(string name, NoParamOrder npo, bool? required, GetRelatedOptions? options)
+    ITypedItem? ITypedItem.Child(string name, NoParamOrder npo, bool? required, GetRelatedOptions? options)
     {
         var findResult = _helper.TryGet(name);
         return IsErrStrict(findResult.Found, required, _helper.PropsRequired)
@@ -131,7 +131,7 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
             : Cdf.AsItem(findResult.Result!, new() { EntryPropIsRequired = required ?? true, ItemIsStrict = _helper.PropsRequired });
     }
 
-    IEnumerable<ITypedItem> /*ITypedStack*/ITypedItem.Children(string? field, NoParamOrder npo, string? type, bool? required, GetRelatedOptions? options)
+    IEnumerable<ITypedItem> ITypedItem.Children(string? field, NoParamOrder npo, string? type, bool? required, GetRelatedOptions? options)
     {
         var findResult = _helper.TryGet(field);
         return IsErrStrict(findResult.Found, required, _helper.PropsRequired)
@@ -142,6 +142,19 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
                 .Where(i => i.Entity.Type.Is(type))
                 .ToList();
     }
+
+    #endregion
+
+    #region Partial Stack
+
+    public ITypedStack GetStack(string[] names)
+    {
+        var l = Cdf.Log.Fn<ITypedStack>();
+        var newStack = _stack.GetStack(Cdf.Log, names);
+        var newDynStack = new TypedStack("New", Cdf, newStack.Sources);
+        return l.Return(newDynStack);
+    }
+
 
     #endregion
 }

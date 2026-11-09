@@ -1,4 +1,5 @@
-﻿using ToSic.Sys.Caching.PiggyBack;
+﻿using ToSic.Sxc.Data;
+using ToSic.Sys.Caching.PiggyBack;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
 
@@ -23,16 +24,6 @@ public interface IExecutionContext: ICanGetService, IHasPiggyBack, IHasLog
     /// Any other type will throw an error.</typeparam>
     /// <returns></returns>
     public TState GetState<TState>() where TState : class;
-
-    /// <summary>
-    /// Special accessor - currently only for
-    /// * `IDynamicStack` and name "Settings"
-    /// * `ITypedStack` and name `AllSettings`
-    /// </summary>
-    /// <typeparam name="TState"></typeparam>
-    /// <param name="name"></param>
-    /// <returns></returns>
-    public TState GetDataStack<TState>(string name) where TState : class;
 
     /// <summary>
     /// Special GetService which can cache the found service so any other use could get the same instance.
