@@ -49,10 +49,12 @@ internal class OqtImportExportEnvironment(
         {
             Log.A($"Must create {destinationFolder} in site {siteId}");
             Directory.CreateDirectory(destinationFolderFullPath);
-            AddFolder(destinationFolder);
         }
 
-        var folderInfo = oqtFolderRepository.GetFolder(siteId, destinationFolder.EnsureOqtaneFolderFormat());
+        // A failed import can leave the physical directory without an Oqtane folder record.
+        var folderInfo = GetOqtFolderByPath(destinationFolder)
+            ?? AddFolder(destinationFolder)
+            ?? throw new InvalidOperationException($"Could not register folder '{destinationFolder}' in Oqtane site {siteId}.");
 
         foreach (var sourceFilePath in files)
         {

@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Oqtane.Infrastructure;
 using Oqtane.Repository;
 using ToSic.Eav.Environment.Sys.ServerPaths;
+using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
-internal class OqtServerPaths(IWebHostEnvironment hostingEnvironment, LazySvc<IFileRepository> fileRepository)
+internal class OqtServerPaths(IWebHostEnvironment hostingEnvironment, LazySvc<IFileRepository> fileRepository, LazySvc<ITenantManager> tenantManager)
     : ServerPathsBase
 {
     public override string FullAppPath(string virtualPath) => FullContentPath(virtualPath);
@@ -20,7 +22,24 @@ internal class OqtServerPaths(IWebHostEnvironment hostingEnvironment, LazySvc<IF
 
 
     protected override string FullPathOfReference(int id)
-        => fileRepository.Value.GetFilePath(id);
+    {
+        // Oqtane 10.3.0 removed GetFilePath; only local storage providers have physical paths.
+        var file = fileRepository.Value.GetFile(id);
+        if (file?.Folder == null)
+            return null;
+
+        var root = OqtFolderStorage.GetStorageProvider(file.Folder) switch
+        {
+            OqtFolderStorage.PrivateStorageProvider => hostingEnvironment.ContentRootPath,
+            OqtFolderStorage.PublicStorageProvider => hostingEnvironment.WebRootPath,
+            _ => null
+        };
+        if (root == null)
+            return null;
+
+        var sitePath = string.Format(OqtConstants.ContentRootPublicBase, tenantManager.Value.GetTenant().TenantId, file.Folder.SiteId);
+        return Path.Combine(root, sitePath, file.Folder.Path, file.Name).ToSystemPath();
+    }
 
     public static string GetAppRootWithTenantAndSiteId(int tenantId, int siteId)
         => string.Format(OqtConstants.AppRootTenantSiteBase, tenantId, siteId);
