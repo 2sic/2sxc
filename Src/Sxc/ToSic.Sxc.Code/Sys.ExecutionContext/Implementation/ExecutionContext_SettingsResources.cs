@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps.Sys.AppStack;
-using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Data;
 using static ToSic.Eav.Apps.Sys.AppStack.AppStackConstants;
 using SettingsSources = System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, ToSic.Eav.Data.Sys.PropertyLookup.IPropertyLookup>>;
@@ -16,7 +15,7 @@ public partial class ExecutionContext
     public ITypedStack AllResources => field ??= Cdf.AsTypedStack(RootNameResources, ResSrc);
 
     [field: AllowNull, MaybeNull]
-    private AppDataStackService AppDss => field ??= Services.DataStackService.Init(((IAppForCode)App).AppReader);
+    private AppDataStackService AppDss => field ??= Services.DataStackService.Init(App!.AppReader);
 
     private SettingsSources ResSrc => field ??= AppDss.GetStack(AppStackConstants.Resources, Block?.View?.Resources);
 

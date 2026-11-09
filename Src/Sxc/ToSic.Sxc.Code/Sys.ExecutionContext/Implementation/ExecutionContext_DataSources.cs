@@ -23,7 +23,7 @@ public partial class ExecutionContext: IExCtxLookUpEngine
     [PrivateApi]
     [field: AllowNull, MaybeNull]
     public ExCtxDataSourceService DataSources => field
-        ??= Services.DataSources.Value.Setup(App, () => LookUpForDataSources);
+        ??= Services.DataSources.Value.Setup(App!, () => LookUpForDataSources);
 
 
     /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataSource, ILookUpEngine)" />

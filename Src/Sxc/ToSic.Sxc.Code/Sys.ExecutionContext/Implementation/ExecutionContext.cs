@@ -93,7 +93,7 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
     }
 
     /// <inheritdoc />
-    internal IAppForCode App { get; private set; } = null!;
+    internal IAppForCode? App { get; private set; } = null!;
 
     /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     [field: AllowNull, MaybeNull]
