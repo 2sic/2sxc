@@ -9,26 +9,12 @@ using ToSic.Sys.Security.Permissions;
 namespace ToSic.Sxc.Backend.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-#pragma warning disable CS9113 // Parameter is unread. - ignore for now, in case we want dependencies later
-public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TFileId>.Dependencies settings)
-#pragma warning restore CS9113 // Parameter is unread.
-    : ServiceWithSetup<AdamItemDtoMakerOptions>("Adm"), IAdamItemDtoMaker
+public class AdamItemDtoMaker<TFolderId, TFileId>() : ServiceWithSetup<AdamItemDtoMakerOptions>("Adm"), IAdamItemDtoMaker
 {
     #region Constructor / DI
 
-    /// <summary>
-    /// ATM no dependencies...
-    /// </summary>
-    public class Dependencies;
-
-    /// <summary>
-    /// This service must work without options, as it usually uses default options.
-    /// </summary>
-    protected override AdamItemDtoMakerOptions GetDefaultOptions() => new();
-
-
     [field: AllowNull, MaybeNull]
-    public AdamContext AdamContext => field ??= MyOptions.AdamContext!;
+    public AdamContext AdamContext => field ??= MyOptions.AdamContext;
 
     #endregion
 

@@ -4,8 +4,8 @@ using ToSic.Sys.Security.Permissions;
 namespace ToSic.Sxc.Adam.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamWorkRename(Generator<AdamContext, AdamContext.Options> adamContextGen, AdamGenericHelper adamGenericHelper)
-    : ServiceWithSetup<AdamContext>("Adm.TrnRen", connect: [adamContextGen])
+public class AdamWorkRename(AdamGenericHelper adamGenericHelper)
+    : ServiceWithSetup<AdamContext>("Adm.TrnRen")
 {
 
     public bool Rename(string parentSubfolder, bool isFolder, AdamAssetIdentifier folderId, AdamAssetIdentifier fileId, string newName)

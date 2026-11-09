@@ -180,7 +180,6 @@ public static class StartupSxcWebApi
         // Adam Controllers etc.
         services.TryAddTransient(typeof(HyperlinkBackend));
         services.TryAddTransient(typeof(AdamItemDtoMaker<,>));
-        services.TryAddTransient(typeof(AdamItemDtoMaker<,>.Dependencies));
 
         // Default `int` implementation, the platform must specify a different type before this if it needs another identity type
         services.TryAddTransient<IAdamItemDtoMaker, AdamItemDtoMaker<TFolder, TFile>>();

@@ -40,12 +40,13 @@ public class AdamWorkDelete(AdamGenericHelper adamGenericHelper) : ServiceWithSe
 
 }
 
-public class AdamWorkGen<T>(Generator<AdamContext, AdamContext.Options> adamContextGen, Generator<T, AdamContext> adamGen) where T: IServiceWithSetup<AdamContext>
-{
-    public T New(AdamContext.Options options)
-    {
-        var adamCtx = adamContextGen.New(options);
-        var svc = adamGen.New(adamCtx);
-        return svc;
-    }
-}
+// Experimental, not in use
+//public class AdamWorkGen<T>(Generator<AdamContext, AdamContext.Options> adamContextGen, Generator<T, AdamContext> adamGen) where T: IServiceWithSetup<AdamContext>
+//{
+//    public T New(AdamContext.Options options)
+//    {
+//        var adamCtx = adamContextGen.New(options);
+//        var svc = adamGen.New(adamCtx);
+//        return svc;
+//    }
+//}
