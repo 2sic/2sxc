@@ -10,7 +10,7 @@ internal class DnnAssetsExtractor(IPageServiceShared pageServiceShared)
     // 2025-09-04 2dm having some difficulties, want to log details
     // 2026-08-13 2dm disabled again, clogs up logs and memory
     // if we think this should be used from time to time, we should create an option
-    private const bool DebugDetails = true;
+    private const bool DebugDetails = false;
 
     protected override ClientAssetsExtractSettings DefaultSettings => field
         ??= new(
