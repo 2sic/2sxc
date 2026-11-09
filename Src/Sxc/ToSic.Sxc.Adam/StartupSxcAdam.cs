@@ -18,8 +18,8 @@ public static class StartupSxcAdam
     public static IServiceCollection AddSxcAdam(this IServiceCollection services)
     {
         // Adam stuff
-        services.TryAddTransient<IAdamSecurityCheckService, AdamSecurityChecksBasic>();
-        services.TryAddTransient<AdamSecurityChecksBase.Dependencies>();
+        //services.TryAddTransient<IAdamSecurityCheckService, AdamSecurityChecksBasic>();
+        services.TryAddTransient<IAdamSecurityCheckService, AdamSecurityCheckService>();
         services.TryAddTransient<IAdamPaths, AdamPathsBase>();
         services.TryAddTransient<AdamConfiguration>();
 
@@ -75,6 +75,8 @@ public static class StartupSxcAdam
         // ADAM basics
         // TODO: this doesn't warn yet, there should be an AdamFileSystemUnknown(WarnUseOfUnknown<AdamFileSystemUnknown> warn)
         services.TryAddTransient<IAdamFileSystem, AdamFileSystemString>();
+
+        services.TryAddTransient<IAdamSecurityCheckEnvironment, AdamSecurityCheckEnvironmentBasic>();
 
         return services;
     }

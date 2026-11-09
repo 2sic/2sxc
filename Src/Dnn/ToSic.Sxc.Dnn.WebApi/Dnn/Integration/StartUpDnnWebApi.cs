@@ -26,7 +26,7 @@ public static class StartUpDnnWebApi
         services.TryAddTransient<IViewUsageDataProvider, DnnViewUsageDataProvider>();
 
         // new #2160
-        services.TryAddTransient<IAdamSecurityCheckService, DnnAdamSecurityChecks>();
+        services.TryAddTransient<IAdamSecurityCheckEnvironment, DnnAdamSecCheckEnvironment>();
 
         services.TryAddTransient<DnnGetBlock>();
 

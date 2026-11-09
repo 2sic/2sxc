@@ -5,9 +5,8 @@ using ToSic.Sys.Security.Permissions;
 namespace ToSic.Sxc.Adam.Sys.Security;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IAdamSecurityCheckService
+public interface IAdamSecurityCheckService: IServiceWithSetup<AdamContext>
 {
-    bool SiteAllowsExtension(string fileName);
     bool CanEditFolder(Eav.Apps.Assets.IAsset? item);
 
     /// <summary>
@@ -16,7 +15,6 @@ public interface IAdamSecurityCheckService
     /// </summary>
     bool FieldPermissionOk(List<Grants> requiredGrant);
 
-    internal IAdamSecurityCheckService Init(AdamContext adamContext, bool usePortalRoot);
     //bool ExtensionIsOk(string fileName, out HttpExceptionAbstraction preparedException);
     bool ExtensionIsNotOk(string fileName, [NotNullWhen(true)] out HttpExceptionAbstraction? preparedException);
 
@@ -38,6 +36,9 @@ public interface IAdamSecurityCheckService
 
     bool MustThrowIfAccessingRootButNotAllowed(bool usePortalRoot, [NotNullWhen(true)] out HttpExceptionAbstraction? preparedException);
     bool UserIsRestricted { get; }
+
+    AdamContext AdamContext { get; }
+
     //bool SuperUserOrAccessingItemFolder(string path, out HttpExceptionAbstraction? preparedException);
     bool UserIsRestrictedAndAccessingItemOutsideOfFolder([NotNullWhen(false)]  string? path, [NotNullWhen(true)] out HttpExceptionAbstraction? preparedException);
 }

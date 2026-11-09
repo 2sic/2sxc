@@ -21,12 +21,12 @@ namespace ToSic.Sxc.Adam.Sys.Manager;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamContext(
     Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> typesPermissions,
-    Generator<IAdamSecurityCheckService> adamSecurityGenerator,
+    Generator<IAdamSecurityCheckService, AdamContext> adamSecGen,
     LazySvc<ISysFeaturesService> featuresSvc,
     LazySvc<AdamManager> adamManagerLazy,
     Generator<AdamStorageOfSite> siteStorageGen,
     Generator<AdamStorageOfField> fieldStorageGen)
-    : ServiceWithSetup<AdamContext.Options>("Adm.Ctx", connect: [typesPermissions, adamSecurityGenerator, featuresSvc, adamManagerLazy, siteStorageGen, fieldStorageGen])
+    : ServiceWithSetup<AdamContext.Options>("Adm.Ctx", connect: [typesPermissions, adamSecGen, featuresSvc, adamManagerLazy, siteStorageGen, fieldStorageGen])
 {
     #region Constructor and DI
 
@@ -37,7 +37,7 @@ public class AdamContext(
         Guid EntityGuid,
         bool UsePortalRoot);
 
-    public IAdamSecurityCheckService Security { get; private set; } = null!;
+    public IAdamSecurityCheckService Security => field ??= adamSecGen.New(this);
     public MultiPermissionsTypes Permissions { get; private set; } = null!;
 
     public AdamManager AdamManager => adamManagerLazy.Value;
@@ -55,6 +55,7 @@ public class AdamContext(
     /// </summary>
     public override void Setup(Options options)
     {
+        base.Setup(options);
         var (context, contentType, fieldName, entityGuid, usePortalRoot) = options;
         var l = Log.Fn($"app: {context.AppReaderRequired.Show()}, field:{fieldName}, guid:{entityGuid}, usePortalRoot: {usePortalRoot}");
         AdamManager.Init(context, CompatibilityLevels.CompatibilityLevel10);
@@ -65,9 +66,8 @@ public class AdamContext(
 
         Context = context;
 
-        Permissions = typesPermissions.New(new()
-                { SiteContext = context, App = context.AppReaderRequired, ContentTypes = [contentType] })
-            ;
+        Permissions = typesPermissions.New(new() { SiteContext = context, App = context.AppReaderRequired, ContentTypes = [contentType] });
+
         // only do checks on field/guid if it's actually accessing that, if it's on the portal root, don't.
         UseSiteRoot = usePortalRoot;
         if (!usePortalRoot)
@@ -75,8 +75,6 @@ public class AdamContext(
             ItemFieldName = fieldName;
             ItemGuid = entityGuid;
         }
-
-        Security = adamSecurityGenerator.New().Init(this, usePortalRoot);
 
         if (Security.MustThrowIfAccessingRootButNotAllowed(usePortalRoot, out var exception))
             throw exception;

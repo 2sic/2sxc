@@ -7,49 +7,45 @@ using ToSic.Sys.Security.Permissions;
 namespace ToSic.Sxc.Adam.Sys.Security;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.Dependencies services, string logPrefix)
-    : ServiceBase<AdamSecurityChecksBase.Dependencies>(services, $"{logPrefix}.TnScCk"), IAdamSecurityCheckService
+public class AdamSecurityCheckService(LazySvc<PermissionCheckFactory> permCheckFactory, IAdamSecurityCheckEnvironment securityCheckEnvironment)
+    : ServiceWithSetup<AdamContext>("Adm.TnScCk", connect: [permCheckFactory]), IAdamSecurityCheckService
 {
 
     #region DI / Constructor
 
-    public record Dependencies(LazySvc<PermissionCheckFactory> PermCheckFactory)
-        : DependenciesBase(connect: [PermCheckFactory]);
-
-    public IAdamSecurityCheckService Init(AdamContext adamContext, bool usePortalRoot)
+    public override void Setup(AdamContext options)
     {
-        var l = Log.Fn<IAdamSecurityCheckService>();
-        AdamContext = adamContext;
+        var l = Log.Fn();
+        base.Setup(options);
+        AdamContext = options;
 
-        var firstChecker = AdamContext.Permissions.PermissionCheckers.First().Value;
+        var firstChecker = options.Permissions.PermissionCheckers.First().Value;
         var (userMayAdminSomeFiles, conditions, _) = firstChecker.UserMay(GrantSets.WritePublished);
         var userMayAdminSiteFiles = conditions is Conditions.EnvironmentGlobal or Conditions.EnvironmentInstance;
 
-        UserIsRestricted = !(usePortalRoot
+        UserIsRestricted = !(options.MyOptions.UsePortalRoot
             ? userMayAdminSiteFiles
             : userMayAdminSomeFiles);
 
-        Log.A($"adminSome:{userMayAdminSomeFiles}, restricted:{UserIsRestricted}");
-
-        return l.Return(this);
+        l.Done($"adminSome:{userMayAdminSomeFiles}, restricted:{UserIsRestricted}");
     }
 
-    internal AdamContext AdamContext { get; private set; } = null!;
+    public AdamContext AdamContext { get; private set; } = null!;
     public bool UserIsRestricted { get; private set; }
 
     #endregion
 
     #region Abstract methods to re-implement
 
-    public abstract bool SiteAllowsExtension(string fileName);
+    //public abstract bool SiteAllowsExtension(string fileName);
 
-    public abstract bool CanEditFolder(Eav.Apps.Assets.IAsset? item);
+    public bool CanEditFolder(Eav.Apps.Assets.IAsset? item) => securityCheckEnvironment.CanEditFolder(this, item);
 
     #endregion
 
     public bool ExtensionIsNotOk(string fileName, [NotNullWhen(true)] out HttpExceptionAbstraction? preparedException)
     {
-        if (!SiteAllowsExtension(fileName))
+        if (!securityCheckEnvironment.SiteAllowsExtension(this, fileName))
         {
             preparedException = HttpException.NotAllowedFileType(fileName, "Not in whitelisted CMS file types.");
             return true;
@@ -123,7 +119,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.Dependencies
     /// </summary>
     public bool FieldPermissionOk(List<Grants> requiredGrant)
     {
-        var fieldPermissions = Services.PermCheckFactory.Value
+        var fieldPermissions = permCheckFactory.Value
             .For(AdamContext.Permissions.MyOptions.SiteContext, AdamContext.Context.AppReaderRequired, AdamContext.Attribute?.Permissions, "Field");
 
         return fieldPermissions.UserMay(requiredGrant).Allowed;
@@ -161,5 +157,6 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.Dependencies
         preparedException = null;
         return false;
     }
+
 
 }
