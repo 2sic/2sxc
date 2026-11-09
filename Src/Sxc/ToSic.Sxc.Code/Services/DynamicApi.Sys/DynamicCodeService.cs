@@ -3,7 +3,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneMapper;
-using ToSic.Eav.DataSources;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -38,7 +38,7 @@ public partial class DynamicCodeService(DynamicCodeService.Dependencies services
     public record ScopedDependencies(
         Generator<IExecutionContextFactory> ExCtxGenerator,
         Generator<AppForCodeShared, AppForCodeShared.Options> AppGenerator,
-        Generator<ToSic.Sxc.Apps.App, IAppForCode> AppDynGenerator,
+        Generator<Apps.App, IAppForCode> AppDynGenerator,
         LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder)
         : DependenciesBase(connect: [ExCtxGenerator, AppGenerator, AppDynGenerator, ModAndBlockBuilder]);
 
@@ -47,20 +47,26 @@ public partial class DynamicCodeService(DynamicCodeService.Dependencies services
 
     #region Get App
 
-    protected IAppDynamic GetApp(NoParamOrder npo = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
+    /// <summary>
+    /// Get proper app Identity from nullable AppId and Zone; AppId is actually required.
+    /// </summary>
+    /// <param name="zoneId"></param>
+    /// <param name="appId"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    private AppIdentityPure ToAppIdentityOrThrow(int? zoneId, int? appId)
     {
-        MakeSureLogIsInHistory();
-
         // Ensure AppId is provided
         var realAppId = appId ?? throw new ArgumentException($@"At least the {nameof(appId)} is required and must be a valid AppId", nameof(appId));
 
         // lookup zoneId if not provided
         var realZoneId = zoneId ?? Services.AppsCatalog.Value.AppIdentity(realAppId).ZoneId;
-        return GetAndInitApp(new AppIdentityPure(realZoneId, realAppId), site, showDrafts: withUnpublished);
+        var appIdentity = new AppIdentityPure(realZoneId, realAppId);
+        return appIdentity;
     }
 
 
-    protected IAppIdentityPure GetPrimaryAppIdentity(int? siteId, ISite? site = default)
+    private IAppIdentityPure GetPrimaryAppIdentity(int? siteId, ISite? site = default)
     {
         siteId ??= site?.Id ?? Services.Site.Id;
         var zoneId = Services.ZoneMapper.Value.GetZoneId(siteId.Value);
@@ -68,11 +74,11 @@ public partial class DynamicCodeService(DynamicCodeService.Dependencies services
         return primaryApp;
     }
 
-    protected IAppDynamic GetAndInitApp(IAppIdentityPure appIdentity, ISite? overrideSite, bool? showDrafts = null)
+    private App GetAndInitApp(IAppIdentityPure appIdentity, ISite? overrideSite, bool? showDrafts = null)
     {
         var appGen = ServicesScoped.AppGenerator;
 
-        var l = Log.Fn<IAppDynamic>($"{appIdentity.Show()}, site:{overrideSite != null}, showDrafts: {showDrafts}");
+        var l = Log.Fn<App>($"{appIdentity.Show()}, site:{overrideSite != null}, showDrafts: {showDrafts}");
         var app = appGen.New(new(overrideSite, appIdentity, new() { ShowDrafts = showDrafts }));
         var dynApp = ServicesScoped.AppDynGenerator.New(app);
         return l.Return(dynApp);
@@ -104,10 +110,9 @@ public partial class DynamicCodeService(DynamicCodeService.Dependencies services
     private ScopedDependencies ServicesScoped => field
         ??= ScopedServiceProvider.Build<ScopedDependencies>().ConnectServices(Log);
 
-
-    protected void ActivateEditUi() => EditUiRequired = true;
-
-    protected bool EditUiRequired;
+    // #ActivateEditUi seems unused, it's never read; keep till ca. mid 2027
+    //private void ActivateEditUi() => EditUiRequired = true;
+    //private bool EditUiRequired;
 
     #endregion
 
@@ -115,7 +120,10 @@ public partial class DynamicCodeService(DynamicCodeService.Dependencies services
 
     /// <inheritdoc />
     public IAppDynamic App(NoParamOrder npo = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
-        => GetApp(npo, zoneId, appId, site, withUnpublished);
+    {
+        MakeSureLogIsInHistory();
+        return GetAndInitApp(ToAppIdentityOrThrow(zoneId, appId), site, showDrafts: withUnpublished);
+    }
 
     /// <inheritdoc />
     public IAppDynamic AppOfSite()

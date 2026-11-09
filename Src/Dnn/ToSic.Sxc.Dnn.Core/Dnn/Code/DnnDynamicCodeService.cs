@@ -11,8 +11,8 @@ namespace ToSic.Sxc.Dnn.Code;
 
 /// <summary>
 /// Dnn implementation
-/// goal is that we can hook into certain page lifecycle events to ensure changes
-/// happen to the page when necessary
+/// goal is that we can hook into certain page lifecycle events,
+/// to ensure changes happen to the page when necessary
 /// </summary>
 internal class DnnDynamicCodeService: DynamicCodeService
 {

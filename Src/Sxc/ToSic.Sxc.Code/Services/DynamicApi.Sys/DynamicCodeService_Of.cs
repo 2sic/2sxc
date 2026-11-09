@@ -22,7 +22,8 @@ partial class DynamicCodeService
     {
         var l = Log.Fn<IDynamicCode12>($"{pageId}, {moduleId}");
         MakeSureLogIsInHistory();
-        ActivateEditUi();
+        // #ActivateEditUi seems unused, it's never read; keep till ca. mid 2027
+        //ActivateEditUi();
         var cmsBlock = ServicesScoped.ModAndBlockBuilder.Value.BuildBlock(pageId, moduleId);
         var exCtx = ServicesScoped.ExCtxGenerator.New().New(new()
         {
@@ -46,7 +47,8 @@ partial class DynamicCodeService
     {
         var l = Log.Fn<IDynamicCode12>();
         MakeSureLogIsInHistory();
-        ActivateEditUi();
+        // #ActivateEditUi seems unused, it's never read; keep till ca. mid 2027
+        //ActivateEditUi();
         var exCtx = ServicesScoped.ExCtxGenerator.New().New(new()
         {
             OwnerOrNull = null,
@@ -54,8 +56,8 @@ partial class DynamicCodeService
             ParentLog = Log,
             CompatibilityFallback = CompatibilityLevels.CompatibilityLevel12,
         });
-        var app = App(zoneId: zoneId, appId: appId);
-        ((IExCtxAttachApp)exCtx).AttachApp(app as IAppForCode);
+        var app = GetAndInitApp(ToAppIdentityOrThrow(zoneId, appId), overrideSite: null);
+        ((IExCtxAttachApp)exCtx).AttachApp(app);
         var code12 = new DynamicApiStandalone(exCtx, ((ExecutionContext)exCtx).DynamicApi);
         return l.ReturnAsOk(code12);
     }
