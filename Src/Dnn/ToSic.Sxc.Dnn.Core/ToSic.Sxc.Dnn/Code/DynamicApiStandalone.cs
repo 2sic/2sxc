@@ -22,10 +22,10 @@ internal class DynamicApiStandalone(IExecutionContext exCtx, ICodeDynamicApiHelp
 
     public string CreateInstancePath
     {
-        get => ((IGetCodePath)exCtx).CreateInstancePath;
+        get => exCtx.GetDynamicApi().CreateInstancePath;
         set
         {
-            if (exCtx is not IGetCodePath getCodePath)
+            if (exCtx?.GetDynamicApi() is not IGetCodePath getCodePath)
                 throw new InvalidOperationException("CreateInstancePath can only be set on a DynamicCode12Proxy which implements IGetCodePath");
             getCodePath.CreateInstancePath = value;
         }

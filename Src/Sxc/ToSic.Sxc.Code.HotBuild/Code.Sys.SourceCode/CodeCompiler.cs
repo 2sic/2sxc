@@ -27,9 +27,7 @@ public abstract class CodeCompiler(IServiceProvider serviceProvider, object[]? c
         {
             l.A($"Error: {hasErrorMessage}");
             l.ReturnNull("failed");
-            if (throwOnError)
-                throw new(hasErrorMessage);
-            return null; // special, l.Return was already called
+            return throwOnError ? throw new(hasErrorMessage) : null; // special, l.Return was already called
         }
 
         var pathLowerCase = virtualPath.ToLowerInvariant();
@@ -50,14 +48,25 @@ public abstract class CodeCompiler(IServiceProvider serviceProvider, object[]? c
         {
             l.A($"{errorMessages}; throw error: {throwOnError}");
             l.ReturnNull("failed");
-            if (throwOnError) throw new(errorMessages);
-            return null;
+            return throwOnError ? throw new(errorMessages) : null;
         }
 
         var instance = serviceProvider.Build<object>(compiledType!, Log);
         AttachRelativePath(virtualPath, instance);
 
         return l.Return(instance, $"found: {instance != null!}");
+
+        bool AttachRelativePath(string virtualPath, object instance)
+        {
+            var l = Log.Fn<bool>($"{nameof(virtualPath)}: {virtualPath}");
+
+            if (instance is not IGetCodePath codeForwarding)
+                return l.ReturnFalse("didn't attach");
+
+            // in case it supports shared code again, give it the relative path
+            codeForwarding.CreateInstancePath = Path.GetDirectoryName(virtualPath)!;
+            return l.ReturnTrue("attached");
+        }
     }
 
     public (Type? Type, string? ErrorMessages) GetTypeOrErrorMessages(string relativePath, string? className, bool throwOnError, HotBuildSpec spec)
@@ -94,7 +103,8 @@ public abstract class CodeCompiler(IServiceProvider serviceProvider, object[]? c
         catch (Exception ex)
         {
             l.A(possibleErrorMessage);
-            if (throwOnError) throw new TypeLoadException(possibleErrorMessage, ex);
+            if (throwOnError)
+                throw new TypeLoadException(possibleErrorMessage, ex);
         }
 
         if (compiledType == null)
@@ -139,18 +149,5 @@ public abstract class CodeCompiler(IServiceProvider serviceProvider, object[]? c
             return l.ReturnAndLog($"Tried to get .cs file, but found '{virtualPath}' containing ':', (not allowed)");
 
         return l.ReturnNull("all ok");
-    }
-
-
-    private bool AttachRelativePath(string virtualPath, object instance)
-    {
-        var l = Log.Fn<bool>($"{nameof(virtualPath)}: {virtualPath}");
-
-        if (instance is not IGetCodePath codeForwarding)
-            return l.ReturnFalse("didn't attach");
-
-        // in case it supports shared code again, give it the relative path
-        codeForwarding.CreateInstancePath = Path.GetDirectoryName(virtualPath)!;
-        return l.ReturnTrue("attached");
     }
 }

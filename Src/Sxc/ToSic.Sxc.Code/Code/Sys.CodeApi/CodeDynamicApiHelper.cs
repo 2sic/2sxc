@@ -3,47 +3,107 @@ using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Sys;
+using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Code.Sys.HotBuild;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Sys.CodeApi;
 
-internal class CodeDynamicApiHelper(ExecutionContext exCtx) : CodeAnyApiHelper(exCtx), ICodeDynamicApiHelper
+internal class CodeDynamicApiHelper(ExecutionContext exCtx) : ICodeDynamicApiHelper
 {
-    public dynamic? Content => ExCtx.Content;
-    public dynamic? Header => ExCtx.Header;
+    #region ICodeAnyApiHelper
+
+    public IBlock Block => exCtx.Block!; // If accessed, the code doing it must have the block
+
+    public ICmsContext CmsContext => exCtx.CmsContext;
+    public IDataSource Data => exCtx.Block!.Data; // If accessed, it must be working
+
+    public TService GetService<TService>(NoParamOrder npo = default, bool reuse = false, Type? type = default)
+        where TService : class
+        => exCtx.GetService<TService>(npo, reuse, type);
+
+    public IDevTools DevTools => exCtx.DevTools;
+
+    public ICodeDataFactory Cdf => exCtx.Cdf;
+    public ILinkService Link => exCtx.Link;
+
+    public IConvertService Convert => exCtx.Convert;
+
+    #endregion
+
+    public dynamic? Content => exCtx.Content;
+    public dynamic? Header => exCtx.Header;
 
     // Fails - was invisible because of MEL
     //public IApp App => (IApp)ExCtx.App!;
     // works
-    public IApp App => field ??= ExCtx.GetService<Generator<App, IAppForCode>>().New(ExCtx.App!);
+    public IApp App => field ??= exCtx.GetService<Generator<App, IAppForCode>>().New(exCtx.App!);
 
-    public IDynamicStack Resources => ExCtx.Resources;
-    public IDynamicStack Settings => ExCtx.Settings;
+    public IDynamicStack Resources => exCtx.Resources;
+    public IDynamicStack Settings => exCtx.Settings;
 
     [field: AllowNull, MaybeNull]
     public IEditService Edit => field
-        ??= ExCtx.GetService<IEditService>(reuse: true);
+        ??= exCtx.GetService<IEditService>(reuse: true);
 
     public IFolder AsAdam(ICanBeEntity item, string fieldName)
-        => ExCtx.AsAdam(item, fieldName);
+        => exCtx.AsAdam(item, fieldName);
 
     public T CreateSource<T>(IDataStream source) where T : IDataSource
-        => ExCtx.CreateSource<T>(source);
+        => exCtx.CreateSource<T>(source);
 
     public T CreateSource<T>(IDataSource? inSource = null, ILookUpEngine? configurationProvider = default) where T : IDataSource
-        => ExCtx.CreateSource<T>(inSource, configurationProvider);
+        => exCtx.CreateSource<T>(inSource, configurationProvider);
 
-    public ServiceKit14 ServiceKit14 => ExCtx.GetKit<ServiceKit14>();
+    public ServiceKit14 ServiceKit14 => exCtx.GetKit<ServiceKit14>();
 
-    public string CreateInstancePath
+    #region SharedCode Compiler
+
+    private IClassCompiler CodeCompilerLazy => field ??= exCtx.GetService<IClassCompiler>();
+
+    /// <inheritdoc />
+    public string CreateInstancePath { get; set; } = null!;  // must be set as the context becomes clear
+
+    //public dynamic? CreateInstance(string virtualPath, NoParamOrder npo = default, string? name = null,
+    //    string? relativePath = null, bool throwOnError = true) =>
+    //    ExCtx.CreateInstance(virtualPath, npo, name, relativePath, throwOnError);
+
+
+    /// <inheritdoc />
+    public object? CreateInstance(string virtualPath,
+        NoParamOrder npo = default,
+        string? name = null,
+        string? relativePath = null,
+        bool throwOnError = true)
     {
-        get => ExCtx.CreateInstancePath;
-        set => ExCtx.CreateInstancePath = value;
+        var l = exCtx.Log.Fn<object>($"{virtualPath}, {name}, {relativePath}, {throwOnError}");
+
+        // Compile
+        var runtimeKey = exCtx.App!.AppReader.Specs.CacheKey;
+        var spec = new HotBuildSpec(App.AppId, exCtx.EditionForHotBuild, exCtx.App.AppSpecs.Name, runtimeKey);
+        var instance = CodeCompilerLazy.InstantiateClass(virtualPath, spec, className: name, relativePath: relativePath, throwOnError: throwOnError);
+
+        if (instance == null)
+            return l.ReturnNull("null / not found / error");
+
+        var typeName = instance.GetType().FullName;
+
+        // if it supports all our known context properties, attach them
+        if (instance is INeedsExecutionContext needsRoot)
+        {
+            l.A($"will attach root / Kit to {typeName}");
+            needsRoot.ConnectToRoot(exCtx);
+        }
+        else
+            l.A($"no root / Kit for {typeName}");
+
+        return l.Return(instance, instance.ToString());
     }
 
-    public dynamic? CreateInstance(string virtualPath, NoParamOrder npo = default, string? name = null,
-        string? relativePath = null, bool throwOnError = true) =>
-        ExCtx.CreateInstance(virtualPath, npo, name, relativePath, throwOnError);
+    #endregion
 
 }

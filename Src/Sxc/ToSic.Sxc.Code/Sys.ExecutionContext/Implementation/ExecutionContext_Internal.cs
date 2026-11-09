@@ -22,12 +22,12 @@ public partial class ExecutionContext
 
         App = app;
 
-        _editionForHotBuild = Block == null
+        EditionForHotBuild = Block == null
             ? null
             : Services.EditionSvc.Edition(Block.View, App.AppReader);
     }
 
-    private string? _editionForHotBuild;
+    internal string? EditionForHotBuild;
 
     /// <summary>
     /// The current block - can be null if the context only knows about the App, but not about the block.

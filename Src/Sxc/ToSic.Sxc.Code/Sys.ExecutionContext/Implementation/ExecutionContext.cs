@@ -3,7 +3,6 @@ using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
-using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Render.Polymorphism.Sys;
@@ -25,7 +24,7 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 /// </remarks>
 [PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.Dependencies>, IExecutionContext, IGetCodePath, IHasPiggyBack, IServiceWithSetup<ExecutionContextOptions>
+public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.Dependencies>, IExecutionContext, /*IGetCodePath,*/ IHasPiggyBack, IServiceWithSetup<ExecutionContextOptions>
 {
     #region Constructor
 
@@ -35,14 +34,14 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
     [PrivateApi]
     public record Dependencies(
         IServiceProvider ServiceProvider,
-        LazySvc<IClassCompiler> CodeCompilerLazy,
+        //LazySvc<IClassCompiler> CodeCompilerLazy,
         AppDataStackService DataStackService,
         LazySvc<IConvertService> ConvertService,
         LazySvc<ExCtxDataSourceService> DataSources,
         ICodeDataFactory Cdf,
         IEditionService EditionSvc)
         : DependenciesBase(connect:
-            [/* never! serviceProvider */ CodeCompilerLazy, DataStackService, ConvertService, DataSources, Cdf, EditionSvc]);
+            [/* never! serviceProvider */ /*CodeCompilerLazy,*/ DataStackService, ConvertService, DataSources, Cdf, EditionSvc]);
 
     [PrivateApi]
     protected internal ExecutionContext(Dependencies services, string logPrefix) : base(services, logPrefix + ".DynCdR")
