@@ -2,7 +2,6 @@
 using DotNetNuke.Common.Extensions;
 using ToSic.Sxc.Dnn;
 
-// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Services;
 
 /// <summary>
