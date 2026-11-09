@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class HyperlinkBackend(
-    Generator<AdamContext> adamCtxGen,
+    Generator<AdamContext, AdamContext.Options> adamCtxGen,
     ISxcCurrentContextService ctxService,
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions,
     Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> adamDtoMaker,
@@ -51,8 +51,7 @@ public class HyperlinkBackend(
 
             // file-check, more abilities to allow
             // this will already do a ensure-or-throw inside it if outside of adam
-            var adamCtx = adamCtxGen.New();
-            adamCtx.Init(context, contentType!, field!, guid, isOutsideOfAdam);
+            var adamCtx = adamCtxGen.New(new(context, contentType!, field!, guid, isOutsideOfAdam));
             if (adamCtx.Security.UserIsRestrictedAndAccessingItemOutsideOfFolder(resolved, out var exp))
                 throw exp;
             if (adamCtx.Security.UserNotPermittedOnField(GrantSets.ReadSomething, out exp))

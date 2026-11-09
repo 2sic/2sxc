@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Eav.WebApi.Sys.Entities;
-using ToSic.Sxc.Adam.Sys.Work;
+using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sys.HookUp;
 
@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class EditLoadActivityAddPrefetch(
     Generator<HyperlinkBackend> hyperlinkBackend,
-    Generator<IAdamPrefetchHelper, AdamWorkOptions> adamTransGetItems,
+    Generator<IAdamPrefetchHelper, AdamContext.Options> adamTransGetItems,
     EntityPickerApi entityPickerBackend,
     IContextCompleteService ctxService)
     : ServiceBase(SxcLogName + ".Prefetch", connect: [adamTransGetItems, hyperlinkBackend, entityPickerBackend, ctxService]),

@@ -34,7 +34,6 @@ public static class StartupSxcCms
         services.TryAddTransient<AppAssetsDataSourceProvider>();
         services.TryAddTransient<AppAssetsDataSourceProvider.Dependencies>();
         services.TryAddTransient(typeof(AdamDataSourceProvider<,>));
-        services.TryAddTransient(typeof(AdamDataSourceProvider<,>.Dependencies));
 
 
         return services;

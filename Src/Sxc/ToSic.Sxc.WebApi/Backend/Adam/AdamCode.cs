@@ -1,4 +1,5 @@
 ﻿using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Adam.Sys.Work;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -14,8 +15,8 @@ namespace ToSic.Sxc.Backend.Adam;
 /// </summary>
 [PrivateApi("Used by DynamicApiController and Hybrid.Api12_DynCode")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamCode(Generator<AdamWorkUpload, AdamWorkOptions> adamUploadGenerator, LazySvc<ISysFeaturesService> featuresLazy)
-    : ServiceWithContext("AdamCode", connect: [adamUploadGenerator, featuresLazy])
+public class AdamCode(Generator<AdamWorkUpload, AdamContext.Options> adamUpload, LazySvc<ISysFeaturesService> features, IContextCompleteService ctxSvc)
+    : ServiceWithContext("AdamCode", connect: [adamUpload, features])
 {
     public IFile SaveInAdam(NoParamOrder npo = default,
         Stream? stream = null,
@@ -32,21 +33,21 @@ public class AdamCode(Generator<AdamWorkUpload, AdamWorkOptions> adamUploadGener
 
         var feats = new[] { SaveInAdamApi.Guid, PublicUploadFiles.Guid };
 
-        if (!featuresLazy.Value.IsEnabled(feats, "can't save in ADAM", out var exp))
+        if (!features.Value.IsEnabled(feats, "can't save in ADAM", out var exp))
             throw l.Ex(exp);
 
-        var appId = ExCtx.GetBlock()?.AppId
-                    ?? ExCtx.GetApp()?.AppId
-                    ?? throw l.Ex(new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known."));
-        var adamUploader = adamUploadGenerator.New(new()
-            {
-                AppId = appId,
-                Context = ExCtx.GetContextOfBlock(),
-                ContentType = contentType,
-                ItemGuid = guid.Value,
-                Field = field,
-                UsePortalRoot = false,
-            });
+        //var appId = ExCtx.GetBlock()?.AppId
+        //            ?? ExCtx.GetApp()?.AppId
+        //            ?? throw l.Ex(new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known."));
+        var context = ExCtx.GetContextOfBlock()
+            ?? ctxSvc.AppContextOrNull
+                ?? throw l.Ex(new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known."));
+        var adamUploader = adamUpload.New(new(
+            Context: context,
+            ContentType: contentType,
+            FieldName: field,
+            EntityGuid: guid.Value,
+            UsePortalRoot: false));
 
         var upload = adamUploader.UploadOne(stream, fileName, subFolder, true);
         return upload;

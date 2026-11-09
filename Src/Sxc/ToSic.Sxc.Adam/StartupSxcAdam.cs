@@ -25,7 +25,6 @@ public static class StartupSxcAdam
 
         services.TryAddTransient<AdamManager>();
         services.TryAddTransient<AdamContext>();
-        services.TryAddTransient<AdamContext.Dependencies>();
 
         services.AddTransient<AdamManager.Dependencies>();
 
@@ -43,8 +42,6 @@ public static class StartupSxcAdam
 
     public static IServiceCollection AddSxcAdamWork<TFolder, TFile>(this IServiceCollection services)
     {
-        // Helper Services
-        services.TryAddTransient<AdamWorkBase.Dependencies>();
 
         // Generic Services, untyped; used when other services request helpers
         services.TryAddTransient<AdamWorkGet>();

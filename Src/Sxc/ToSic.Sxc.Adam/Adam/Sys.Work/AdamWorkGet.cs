@@ -1,37 +1,41 @@
-﻿using ToSic.Sys.Security.Permissions;
+﻿using ToSic.Sxc.Adam.Sys.Manager;
+using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Adam.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamWorkGet(AdamWorkBase.Dependencies services)
-    : AdamWorkBase(services, "Adm.TrnFld")
+public class AdamWorkGet(Generator<AdamContext, AdamContext.Options> adamContextGen, AdamGenericHelper adamGenericHelper)
+    : ServiceWithSetup<AdamContext.Options>("Adm.TrnFld")
 {
+    public AdamContext AdamContext => field ??= adamContextGen.New(MyOptions);
+
     public AdamFolderFileSet? ItemsInField(string subFolderName, bool autoCreate = false)
     {
         var l = Log.Fn<AdamFolderFileSet>($"Subfolder: {subFolderName}; AutoCreate: {autoCreate}");
 
         l.A("starting permissions checks");
-        if (AdamContext.Security.UserIsRestricted && !AdamContext.Security.FieldPermissionOk(GrantSets.ReadSomething))
+        var adamCtx = AdamContext;
+        if (adamCtx.Security.UserIsRestricted && !adamCtx.Security.FieldPermissionOk(GrantSets.ReadSomething))
             return l.ReturnNull("user is restricted, and doesn't have permissions on field - return null");
 
         // check that if the user should only see drafts, he doesn't see items of published data
-        if (AdamContext.Security.UserIsRestrictedOrItemIsNotDraft(AdamContext.ItemGuid, out _))
+        if (adamCtx.Security.UserIsRestrictedOrItemIsNotDraft(adamCtx.ItemGuid, out _))
             return l.ReturnNull("user is restricted (no read-published rights) and item is published - return null");
 
         l.A("first permission checks passed");
 
         // get root and at the same time auto-create the core folder in case it's missing (important)
-        var root = AdamContext.AdamRoot.RootFolder(autoCreate);
+        var root = adamCtx.AdamRoot.RootFolder(autoCreate);
 
         // if no root exists then quit now
         if (!autoCreate && root == null! /* paranoid */)
             return l.Return(new(null!, [], []), "silent error, no folder");
 
         // try to see if we can get into the subfolder - will throw error if missing
-        var currentFolder = AdamContext.AdamRoot.Folder(subFolderName, false);
+        var currentFolder = adamCtx.AdamRoot.Folder(subFolderName, false);
 
         // ensure that it's superuser, or the folder is really part of this item
-        if (AdamContext.Security.UserIsRestrictedAndAccessingItemOutsideOfFolder(currentFolder?.Path, out var ex))
+        if (adamCtx.Security.UserIsRestrictedAndAccessingItemOutsideOfFolder(currentFolder?.Path, out var ex))
         {
             l.A("user is not super-user and folder doesn't seem to be an ADAM folder of this item - will throw");
             throw l.Ex(ex);
@@ -41,7 +45,7 @@ public class AdamWorkGet(AdamWorkBase.Dependencies services)
             //.Cast<Sxc.Adam.Internal.Folder<TFolderId, TFileId>>()
             //.Where(s => !EqualityComparer<TFolderId>.Default.Equals(s.SysId, ((IAssetSysId<TFolderId>)currentFolder).SysId))
             //.Cast<IFolder>()
-            .Where(s => !Services.AdamGenericHelper.FoldersHaveSameId(s, currentFolder))
+            .Where(s => !adamGenericHelper.FoldersHaveSameId(s, currentFolder))
             .ToList();
 
         // Get/Cast Files

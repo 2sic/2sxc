@@ -1,15 +1,16 @@
 ﻿using ToSic.Sxc.Adam.Sys;
+using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Adam.Sys.Work;
 
 namespace ToSic.Sxc.Backend.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamControllerReal<TIdentifier>(
-    Generator<AdamWorkUpload, AdamWorkOptions> adamUpload,
-    Generator<AdamWorkGet, AdamWorkOptions> adamWorkGet,
-    Generator<AdamWorkFolderCreate, AdamWorkOptions> adamFolders,
-    Generator<AdamWorkDelete, AdamWorkOptions> adamDelete,
-    Generator<AdamWorkRename, AdamWorkOptions> adamRename,
+    Generator<AdamWorkUpload, AdamContext.Options> adamUpload,
+    Generator<AdamWorkGet, AdamContext.Options> adamWorkGet,
+    Generator<AdamWorkFolderCreate, AdamContext.Options> adamFolders,
+    Generator<AdamWorkDelete, AdamContext.Options> adamDelete,
+    Generator<AdamWorkRename, AdamContext.Options> adamRename,
     Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> dtoMaker,
     ISxcCurrentContextService ctxService)
     : ServiceBase("Api.Adam", connect: [adamUpload, adamWorkGet, adamFolders, adamDelete, adamRename])
@@ -40,15 +41,12 @@ public class AdamControllerReal<TIdentifier>(
             if (stream == null!)
                 return l.ReturnAsError(new("File Stream is empty"));
 
-            var uploader = adamUpload.New(new()
-            {
-                AppId = appId,
-                Context = context,
-                ContentType = contentType,
-                ItemGuid = guid,
-                Field = field,
-                UsePortalRoot = usePortalRoot,
-            });//.Value.Setup(appId, contentType, guid, field, usePortalRoot);
+            var uploader = adamUpload.New(new(
+                Context: context,
+                ContentType: contentType,
+                FieldName: field,
+                EntityGuid: guid,
+                UsePortalRoot: usePortalRoot));
             var file = uploader.UploadOneNew(stream, subFolder, fileName);
 
             var dtoMake = dtoMaker.New(new() { AdamContext = uploader.AdamContext, });
@@ -75,15 +73,13 @@ public class AdamControllerReal<TIdentifier>(
         // 1. Set the global context
         var context = ShareAppStateOptimized(appId);
 
-        var adamGet = adamWorkGet.New(new()
-        {
-            AppId = appId,
-            Context = context,
-            ContentType = contentType,
-            ItemGuid = guid,
-            Field = field,
-            UsePortalRoot = usePortalRoot,
-        });
+        var adamGet = adamWorkGet.New(new(
+            Context: context,
+            ContentType: contentType,
+            FieldName: field,
+            EntityGuid: guid,
+            UsePortalRoot: usePortalRoot));
+
         var results = adamGet.ItemsInField(subfolder);
 
         if (results == null)
@@ -103,26 +99,20 @@ public class AdamControllerReal<TIdentifier>(
         // 1. Set the global context
         var context = ShareAppStateOptimized(appId);
 
-        adamFolders.New(new()
-            {
-                AppId = appId,
-                Context = context,
-                ContentType = contentType,
-                ItemGuid = guid,
-                Field = field,
-                UsePortalRoot = usePortalRoot,
-            })
+        adamFolders.New(new(
+            Context: context,
+            ContentType: contentType,
+            FieldName: field,
+            EntityGuid: guid,
+            UsePortalRoot: usePortalRoot))
             .Create(subfolder, newFolder);
 
-        var adamGet = adamWorkGet.New(new()
-        {
-            AppId = appId,
-            Context = context,
-            ContentType = contentType,
-            ItemGuid = guid,
-            Field = field,
-            UsePortalRoot = usePortalRoot,
-        });
+        var adamGet = adamWorkGet.New(new(
+            Context: context,
+            ContentType: contentType,
+            FieldName: field,
+            EntityGuid: guid,
+            UsePortalRoot: usePortalRoot));
         var folder = adamGet.ItemsInField(subfolder);
 
         if (folder == null)
@@ -139,15 +129,13 @@ public class AdamControllerReal<TIdentifier>(
         // 1. Set the global context
         var context = ShareAppStateOptimized(appId);
 
-        return adamDelete.New(new()
-        {
-            AppId = appId,
-            Context = context,
-            ContentType = contentType,
-            ItemGuid = guid,
-            Field = field,
-            UsePortalRoot = usePortalRoot,
-        }).Delete(subfolder, isFolder, AdamAssetIdentifier.Create(id),  AdamAssetIdentifier.Create(id));
+        return adamDelete.New(new(
+                Context: context,
+                ContentType: contentType,
+                FieldName: field,
+                EntityGuid: guid,
+                UsePortalRoot: usePortalRoot))
+            .Delete(subfolder, isFolder, AdamAssetIdentifier.Create(id), AdamAssetIdentifier.Create(id));
     }
 
     public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder,
@@ -156,14 +144,12 @@ public class AdamControllerReal<TIdentifier>(
         // 1. Set the global context
         var context = ShareAppStateOptimized(appId);
 
-        return adamRename.New(new()
-            {
-                AppId = appId,
-                Context = context,
-                ContentType = contentType,
-                ItemGuid = guid,
-                Field = field,
-                UsePortalRoot = usePortalRoot,
-            }).Rename(subfolder, isFolder, AdamAssetIdentifier.Create(id), AdamAssetIdentifier.Create(id), newName);
+        return adamRename.New(new(
+            Context: context,
+            ContentType: contentType,
+            FieldName: field,
+            EntityGuid: guid,
+            UsePortalRoot: usePortalRoot))
+            .Rename(subfolder, isFolder, AdamAssetIdentifier.Create(id), AdamAssetIdentifier.Create(id), newName);
     }
 }

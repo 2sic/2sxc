@@ -49,16 +49,13 @@ partial class EditLoadActivityAddPrefetch
     private IEnumerable<AdamItemDto> GetAdamListOfItems(int appId, BundleWithLinkField set, string key)
     {
         var l = Log.Fn<IEnumerable<AdamItemDto>>();
-        var adamListMaker = adamTransGetItems.New(new()
-        {
-            AppId = appId,
-            Context = ctxService.AppContextOrNull ?? throw new InvalidOperationException("Context is required"),
-            ContentType = set.ContentTypeName,
-            ItemGuid = set.Guid,
-            Field = key,
-            UsePortalRoot = false,
-        });
-        //adamListMaker.Setup(appId, set.ContentTypeName, set.Guid, key, false);
+        var adamListMaker = adamTransGetItems.New(new(
+            Context: ctxService.AppContextOrNull ?? throw new InvalidOperationException("Context is required"),
+            ContentType: set.ContentTypeName,
+            EntityGuid: set.Guid,
+            FieldName: key,
+            UsePortalRoot: false
+            ));
         var list = adamListMaker.GetAdamItemsForPrefetch(string.Empty, false);
         return l.Return(list);
     }

@@ -94,10 +94,9 @@ public class AdamFiles : CustomDataSource
             return l.Return(new(failed, failed, failed), "error");
         }
 
-        _provider.Configure(appId: AppId);
-        var find = _provider.GetInternal();
+        var find = _provider.GetInternal(AppId);
 
-        var items = source.SelectMany(o => find(o)).ToImmutableOpt();
+        var items = source.SelectMany(find).ToImmutableOpt();
         var folders = items.Where(item => item.IsFolder).ToImmutableOpt();
         var files = items.Where(item => !item.IsFolder).ToImmutableOpt();
 

@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Adam.Sys.Work;
+﻿using ToSic.Sxc.Adam.Sys.Manager;
+using ToSic.Sxc.Adam.Sys.Work;
 
 namespace ToSic.Sxc.Backend.Adam;
 
@@ -8,9 +9,9 @@ namespace ToSic.Sxc.Backend.Adam;
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamPrefetchHelper(
-    Generator<AdamWorkGet, AdamWorkOptions> adamGet,
+    Generator<AdamWorkGet, AdamContext.Options> adamGet,
     Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> dtoMaker)
-    : ServiceWithSetup<AdamWorkOptions>("Adm.TrnItm"),
+    : ServiceWithSetup<AdamContext.Options>("Adm.TrnItm"),
         IAdamPrefetchHelper
 {
     public ICollection<AdamItemDto> GetAdamItemsForPrefetch(string subFolderName, bool autoCreate = true)
