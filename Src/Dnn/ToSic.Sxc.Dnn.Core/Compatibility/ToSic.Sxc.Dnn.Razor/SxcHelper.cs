@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.DataFormats.EavLight;
 
-namespace ToSic.Sxc.Compatibility.Sxc;
+namespace ToSic.Sxc.Dnn.Razor;
 
 /// <summary>
 /// This is for compatibility - old code had a Sxc.Serializer.Prepare code which should still work

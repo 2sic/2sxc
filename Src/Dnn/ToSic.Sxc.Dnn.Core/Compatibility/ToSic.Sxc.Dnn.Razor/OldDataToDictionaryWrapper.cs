@@ -3,12 +3,11 @@ using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource;
 using ToSic.Sxc.Data.Sys.Convert;
 
-namespace ToSic.Sxc.Compatibility.Sxc;
+namespace ToSic.Sxc.Dnn.Razor;
 
 /// <summary>
 /// This is for compatibility - old code had a Sxc.Serializer.Prepare code which should still work
 /// </summary>
-// Important: Changed Dictionary... to IDictionary in 12.04 2021-08-29 - may cause issues, but probably shouldn't
 [Obsolete]
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]

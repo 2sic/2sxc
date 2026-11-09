@@ -3,14 +3,9 @@ using DotNetNuke.Entities.Modules;
 
 namespace ToSic.Sxc.Dnn.Cms;
 
-internal class ModuleSettingsHelper 
+internal class ModuleSettingsHelper(int instanceId)
 {
-    public ModuleInfo ModuleInfo { get; set; }
-
-    public ModuleSettingsHelper(int instanceId)
-    {
-        ModuleInfo = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
-    }
+    public ModuleInfo ModuleInfo { get; set; } = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
 
     public string GetModuleSetting(string settingName, string defaultValue)
     {

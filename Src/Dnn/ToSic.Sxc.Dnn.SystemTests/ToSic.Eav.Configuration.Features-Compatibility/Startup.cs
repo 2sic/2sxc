@@ -2,6 +2,7 @@
 using ToSic.Eav;
 using ToSic.Eav.Run.Startup;
 using ToSic.Sxc.Compatibility;
+using ToSic.Sxc.Dnn.Compatibility;
 using ToSic.Sys.Capabilities.Platform;
 using ToSic.Testing.Shared.Platforms;
 

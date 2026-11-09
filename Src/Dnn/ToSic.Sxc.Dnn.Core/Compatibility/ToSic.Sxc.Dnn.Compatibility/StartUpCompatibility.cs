@@ -2,9 +2,10 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Configuration;
 using ToSic.Sxc.Data.Sys;
+using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Compatibility;
+namespace ToSic.Sxc.Dnn.Compatibility;
 
 internal static class StartUpCompatibility
 {

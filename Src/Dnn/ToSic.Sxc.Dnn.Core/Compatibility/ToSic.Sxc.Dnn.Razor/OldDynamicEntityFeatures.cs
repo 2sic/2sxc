@@ -1,6 +1,4 @@
-﻿#if NETFRAMEWORK
-
-using ToSic.Eav.Data;
+﻿using ToSic.Eav.Data;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Data;
@@ -10,8 +8,7 @@ using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Edit.Toolbar.Sys;
 using ToSic.Sxc.Services;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Compatibility;
+namespace ToSic.Sxc.Dnn.Razor;
 
 /// <summary>
 /// Helper so that the old DynamicEntity can get a toolbar
@@ -46,4 +43,3 @@ internal class OldDynamicEntityFeatures : IOldDynamicEntityFeatures
         return cdf.GetService<IRenderService>().One(target);
     }
 }
-#endif

@@ -8,7 +8,6 @@ using ToSic.Sxc.WebApi;
 // This is a special workaround for DNN 9.4
 // Review the readme.md to understand how and why
 
-// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Dnn940;
 
 internal class WebApiHttpControllerActivator : IHttpControllerActivator

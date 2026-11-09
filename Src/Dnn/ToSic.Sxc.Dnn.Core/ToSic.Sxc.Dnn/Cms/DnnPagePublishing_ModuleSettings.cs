@@ -4,22 +4,16 @@ namespace ToSic.Sxc.Dnn.Cms;
 
 partial class DnnPagePublishing
 {
-    internal class ModuleVersions: HelperBase
+    internal class ModuleVersions(int instanceId, ILog parentLog) : HelperBase(parentLog, "Dnn.ModVer")
     {
         private const string LatestVersionSettingsKey = "LatestVersion";
 
         private const string PublishedVersionSettingsKey = "PublishedVersion";
 
-        private readonly ModuleSettingsHelper _settingsHelper;
+        private readonly ModuleSettingsHelper _settingsHelper = new(instanceId);
 
 
         public ModuleInfo ModuleInfo => _settingsHelper.ModuleInfo;
-
-
-        public ModuleVersions(int instanceId, ILog parentLog): base(parentLog, "Dnn.ModVer")
-        {
-            _settingsHelper = new(instanceId);
-        }
 
 
         public int GetPublishedVersion()

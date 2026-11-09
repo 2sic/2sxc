@@ -3,7 +3,6 @@ using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 
-// ReSharper disable once CheckNamespace
 namespace Custom.Dnn;
 
 /// <summary>

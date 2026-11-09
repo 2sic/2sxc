@@ -5,8 +5,9 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Render.Block.Sys;
 using IAppDynamic = ToSic.Sxc.Apps.IApp;
 
-// ReSharper disable once CheckNamespace
+#pragma warning disable IDE0130
 namespace ToSic.SexyContent.Environment.Dnn7;
+#pragma warning restore IDE0130
 
 /// <summary>
 /// Deprecated since v13, announced for removal in v15, removed in v20.

@@ -5,7 +5,6 @@ using System.Web.Http.Dispatcher;
 // This is a special workaround for DNN 9.4
 // Review the readme.md to understand how and why
 
-// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Dnn940;
 
 // ReSharper disable once UnusedMember.Global

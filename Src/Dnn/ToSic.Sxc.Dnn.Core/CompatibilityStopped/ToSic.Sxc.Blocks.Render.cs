@@ -1,7 +1,8 @@
 ﻿
 
-// ReSharper disable once CheckNamespace
+#pragma warning disable IDE0130
 namespace ToSic.Sxc.Blocks;
+#pragma warning restore IDE0130
 
 /// <summary>
 /// Deprecated since v12, announced for removal in v15, removed in v20.
