@@ -11,22 +11,10 @@ namespace ToSic.Sxc.Backend.SaveHelpers;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentGroupList(
     AppWorkChain<WorkBlocks> blocks,
-    LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
+    Generator<BlockUpdateTitle> blockEditor,
     AppWorkChain<WorkFieldList> workFieldList)
-    : ServiceWithSetup<IAppWorkContext>("Api.GrpPrc", connect: [blocks, workFieldList, blockEditorSelectorLazy])
+    : ServiceWithSetup<IAppWorkContext>("Api.GrpPrc", connect: [blocks, workFieldList, blockEditor])
 {
-    #region Constructor / DI
-
-    //public ContentGroupList Init(IAppIdentity appIdentity)
-    //{
-    //    _appIdentity = appIdentity;
-    //    MyOptions = blocks.CtxSvc.Context(appIdentity);
-    //    return this;
-    //}
-
-    //private IAppIdentity _appIdentity = null!;
-    //private IAppWorkCtx MyOptions { get; set; } = null!;
-    #endregion
 
     internal bool IfChangesAffectListUpdateIt(IBlock? block, List<BundleWithHeader<IEntity>> items, Dictionary<Guid, int> ids)
     {
@@ -100,7 +88,7 @@ public class ContentGroupList(
         }
 
         // update-module-title
-        blockEditorSelectorLazy.Value.GetEditor(block).UpdateTitle();
+        blockEditor.New().UpdateTitle(block);
         return l.ReturnTrue("ok");
     }
 

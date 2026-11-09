@@ -11,17 +11,16 @@ namespace ToSic.Sxc.Backend.InPage;
 public class AppViewPickerBackend(
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> multiPermissionsApp,
     IContextCompleteService ctxService,
-    LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
+    Generator<BlockUpdateApp> blockUpdateApp,
+    Generator<BlockUpdateTemplate> blockUpdateTemplate,
     AppWorkChain<WorkBlockViewsGet> workBlockViews,
     AppWorkContextService appWorkCtxService,
     LazySvc<WorkEntityPublish> workPublish,
     LazySvc<WorkViewsContentTypes> workViewsContentTypes)
-    : ServiceBase("Bck.ViwApp", connect: [multiPermissionsApp, ctxService, blockEditorSelectorLazy, workBlockViews, appWorkCtxService, workPublish, workViewsContentTypes])
+    : ServiceBase("Bck.ViwApp", connect: [multiPermissionsApp, ctxService, blockUpdateApp, blockUpdateTemplate, workBlockViews, appWorkCtxService, workPublish, workViewsContentTypes])
 {
     public void SetAppId(int? appId)
-        => blockEditorSelectorLazy.Value
-            .GetEditor(ctxService.BlockRequired())
-            .SetAppId(appId);
+        => blockUpdateApp.New().SetAppId(ctxService.BlockRequired(), appId);
     
     private IBlock Block => ctxService.BlockRequired();
     private IAppWorkContext AppCtx => field ??= appWorkCtxService.ContextNew(Block.Context.AppReaderRequired);
@@ -51,8 +50,8 @@ public class AppViewPickerBackend(
     {
         var l = Log.Fn<Guid?>($"{templateId}, {forceCreateContentGroup}");
         multiPermissionsApp.ThrowIfNotAllowedInApp(Block.Context, GrantSets.WriteSomething);
-        var result = blockEditorSelectorLazy.Value.GetEditor(Block)
-            .SaveTemplateId(templateId, forceCreateContentGroup);
+        var result = blockUpdateTemplate.New()
+            .SaveTemplateId(Block, templateId, forceCreateContentGroup);
         return l.ReturnAsOk(result);
     }
 

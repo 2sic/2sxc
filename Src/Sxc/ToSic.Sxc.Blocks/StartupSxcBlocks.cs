@@ -11,7 +11,6 @@ using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.DataSources.Sys;
 using ToSic.Sxc.Integration.Modules;
 using ToSic.Sxc.LookUp.Sys;
-using ToSic.Sys.Context;
 
 #pragma warning disable IDE0130
 namespace ToSic.Sxc.Run.Startup;
@@ -27,12 +26,13 @@ public static class StartupSxcBlocks
         services.TryAddTransient<BlockOfEntity>();
         services.TryAddTransient<BlockGeneratorHelpers>();
 
-        services.TryAddTransient<BlockEditorSelector>();
-
-        // Block Editors
-        services.TryAddTransient<BlockEditorForEntity>();
-        services.TryAddTransient<BlockEditorForModule>();
-        services.TryAddTransient<BlockEditorBase.Dependencies>();
+        // Block Editors - updated v22
+        services.TryAddTransient<BlockSavePicker>();
+        services.TryAddTransient<BlockUpdateTitle>();
+        services.TryAddTransient<BlockUpdateApp>();
+        services.TryAddTransient<BlockUpdateTemplate>();
+        services.TryAddTransient<BlockPublishAction>();
+        services.TryAddTransient<BlockUpdaterEntity>();
 
         // Block functionality
         services.TryAddTransient<BlockDataSourceFactory>();

@@ -23,7 +23,7 @@ public class ContentBlockBackend(
     AppWorkChain<WorkBlocksMod> workBlocksMod,
     ISxcCurrentContextService ctxService,
     LazySvc<IAssetsExtractor> optimizerLazy,
-    LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
+    LazySvc<BlockPublishAction> blockEditorSelectorLazy,
     AppWorkContextService appCtxSvc,
     Generator<BlockOfEntity> entityBlockGenerator,
     Generator<IBlockRenderer> blockBuilderGenerator)
@@ -64,8 +64,7 @@ public class ContentBlockBackend(
         var block = ctxService.BlockRequired();
         multiPermissionsApp.ThrowIfNotAllowedInApp(block.Context, GrantSets.WritePublished);
         return blockEditorSelectorLazy.Value
-            .GetEditor(block)
-            .Publish(part, index);
+            .Publish(block, part, index);
     }
 
     public AjaxRenderDto RenderForAjax(int templateId, string lang, string root, string edition)
