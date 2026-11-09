@@ -166,7 +166,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     public ITypedRazorModel MyModel => throw new("MyModel isn't meant to work in WebApi"); // v20 CodeHelper.MyModel;
 
-    private CompileCodeHelper CompileCodeHlp => field ??= GetService<CompileCodeHelper>().Init(this);
+    private CompileCodeHelper CompileCodeHlp => field ??= GetService<Generator<CompileCodeHelper, IGetCodePath>>().New(this);
 
     /// <inheritdoc cref="ITypedCode16.GetCode"/>
     [PrivateApi("Hidden, as not supported any more going forward")]

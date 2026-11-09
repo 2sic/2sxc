@@ -1,5 +1,7 @@
 ﻿using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.HotBuild;
+using ToSic.Sxc.Services.Sys;
+using ToSic.Sys;
 
 namespace ToSic.Sxc.Code.Sys.CodeRunHelpers;
 
@@ -11,19 +13,21 @@ namespace ToSic.Sxc.Code.Sys.CodeRunHelpers;
 /// but when used in APIs it only provides the GetCode and CreateInstance methods.
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class CompileCodeHelper() : CodeHelperBase("Sxc.CdHlp")
+public class CompileCodeHelper() : ServiceWithContext("Sxc.CdHlp"), IServiceWithSetup<IGetCodePath>
 {
     #region Setup
 
-    public CompileCodeHelper Init(IGetCodePath parent)
+    public void Setup(IGetCodePath parent)
     {
         _parent = parent;
-        return this;
     }
 
     private IGetCodePath _parent = null!;
 
     #endregion
+
+    public ICodeLog CodeLog => field ??= new CodeLog(Log);
+
 
     #region GetCode / CreateInstance
 

@@ -6,12 +6,13 @@ using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Render.Engines.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
+using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Razor;
 
-internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : CodeHelperBase("Oqt.RzrHlp"), ISetDynamicModel
+internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : ServiceWithContext("Oqt.RzrHlp"), ISetDynamicModel
 {
     #region DynamicCode Attachment / Handling through ViewData
 
@@ -24,6 +25,8 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : CodeHelperBa
     }
 
     private const string DynCode = "_dynCode";
+
+    public ICodeLog CodeLog => field ??= new CodeLog(Log);
 
     public IExecutionContext ExCtxRoot
     {

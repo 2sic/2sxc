@@ -1,5 +1,4 @@
-﻿using System.CodeDom;
-using System.Web.Http.Controllers;
+﻿using System.Web.Http.Controllers;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Apps.Sys;
@@ -9,16 +8,16 @@ using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Dnn.Code;
+using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.InfoSystem;
-using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
-internal class DnnCustomWebApiHelper: CompileCodeHelper
+internal class DnnCustomWebApiHelper: ServiceWithContext
 {
 
-    public DnnCustomWebApiHelper(DnnApiController ownerController, DnnWebApiHelper sysHlp)
+    public DnnCustomWebApiHelper(DnnApiController ownerController, DnnWebApiHelper sysHlp): base("Dnn.CdHlp")
     {
         _ownerController = ownerController;
         this.LinkLog((ownerController as IHasLog)?.Log);

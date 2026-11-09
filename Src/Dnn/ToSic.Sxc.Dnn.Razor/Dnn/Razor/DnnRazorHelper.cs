@@ -1,14 +1,14 @@
 ﻿using Custom.Razor.Sys;
-using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
+using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn.Razor;
 
 [PrivateApi]
-internal class DnnRazorHelper() : CodeHelperBase("Sxc.RzrHlp")
+internal class DnnRazorHelper() : ServiceWithContext("Sxc.RzrHlp")
 {
     #region Constructor / Init
 
@@ -45,6 +45,8 @@ internal class DnnRazorHelper() : CodeHelperBase("Sxc.RzrHlp")
     internal RazorComponentBase ParentPage { get; set; }
 
     #endregion
+
+    public ICodeLog CodeLog => field ??= new CodeLog(Log);
 
     #region Html Helper
 

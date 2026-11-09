@@ -5,12 +5,13 @@ using ToSic.Eav.Apps.Sys;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
-using ToSic.Sxc.Code.Sys.CodeRunHelpers;
+using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Backend.Context;
-internal class NetCoreWebApiContextHelper: CodeHelperBase
+internal class NetCoreWebApiContextHelper: ServiceWithContext
 {
     private readonly ControllerBase _owner;
     private readonly ICanGetService _helper;
@@ -26,6 +27,8 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
     #region Initialize
 
     internal new IExecutionContext? ExCtxOrNull => base.ExCtxOrNull;
+
+    public ICodeLog CodeLog => field ??= new CodeLog(Log);
 
     /// <summary>
     /// This will make sure that any services requiring the context can get it.

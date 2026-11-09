@@ -1,13 +1,13 @@
-﻿using System.Web;
-using ToSic.Eav.Web.Sys;
+﻿using ToSic.Eav.Web.Sys;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Code.Sys.CodeRunHelpers;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Integration;
+using ToSic.Sxc.Services.Sys;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
-internal class DnnWebApiHelper : CodeHelperBase
+internal class DnnWebApiHelper : ServiceWithContext
 {
     #region Constructor & Destructor
 
@@ -54,4 +54,5 @@ internal class DnnWebApiHelper : CodeHelperBase
     private readonly LazyGet<IBlock?> _blcCtx = new();
 
 
+    public ICodeLog CodeLog => field ??= new CodeLog(Log);
 }

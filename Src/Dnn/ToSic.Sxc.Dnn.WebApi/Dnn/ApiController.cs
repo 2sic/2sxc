@@ -144,7 +144,7 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
 
     string IGetCodePath.CreateInstancePath { get; set; }
 
-    private CompileCodeHelper CompileCodeHlp => field ??= GetService<CompileCodeHelper>().Init(this);
+    private CompileCodeHelper CompileCodeHlp => field ??= GetService<Generator<CompileCodeHelper, IGetCodePath>>().New(this);
 
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>

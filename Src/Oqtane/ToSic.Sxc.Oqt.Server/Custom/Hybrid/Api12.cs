@@ -180,7 +180,7 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
 
     string IGetCodePath.CreateInstancePath { get; set; }
 
-    protected CompileCodeHelper CompileCodeHlp => _compileCodeHlp ??= GetService<CompileCodeHelper>().Init(this);
+    protected CompileCodeHelper CompileCodeHlp => _compileCodeHlp ??= GetService<Generator<CompileCodeHelper, IGetCodePath>>().New(this);
     private CompileCodeHelper _compileCodeHlp;
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
