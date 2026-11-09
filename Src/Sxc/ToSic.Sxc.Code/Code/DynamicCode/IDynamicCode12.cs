@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Code;
 /// Important for dynamic code files like Razor or WebApi. Note that there are many overloads to ensure that AsDynamic and AsEntity "just work" even if you give them the original data.
 /// </summary>
 /// <remarks>
-/// This interface is only used by developers who use the <see cref="IDynamicCodeService"/> to retrieve the object which helps them access things such as the App.
+/// This interface is only used by developers who use the [IDynamicCodeService](xref:ToSic.Sxc.Services.IDynamicCodeService) to retrieve the object which helps them access things such as the App.
 /// </remarks>
 [DeprecatedApi("Slowly being deprecated in v23, as it should be replaced with Typed APIs", "v23", "TBD")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
