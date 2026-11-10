@@ -16,7 +16,6 @@ using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using ToSic.Sxc.Sys.ExecutionContext;
-using IApp = ToSic.Sxc.Apps.IApp;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
 // ReSharper disable InheritdocInvalidUsage
@@ -68,7 +67,7 @@ public abstract partial class SxcApiController() :
     [PrivateApi] public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel9Old;
 
     /// <inheritdoc cref="IDynamicCodeDocs.App" />
-    public IApp App => CodeApi.App;
+    public IAppDynamic App => CodeApi.App;
 
     /// <inheritdoc cref="IDynamicCodeDocs.Data" />
     public IDataSource Data => /*(IBlockDataSource)*/CodeApi.Data;

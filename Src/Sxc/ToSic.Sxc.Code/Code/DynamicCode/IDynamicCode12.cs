@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp.Sys.Engines;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
@@ -46,7 +45,7 @@ public interface IDynamicCode12 : IDynamicCode, ICreateInstance, ICompatibilityL
     TService GetService<TService>() where TService : class;
 
     /// <inheritdoc cref="IDynamicCodeDocs.App" />
-    IApp App { get; }
+    IAppDynamic App { get; }
 
     /// <inheritdoc cref="IDynamicCodeDocs.Data" />
     IDataSource Data { get; }

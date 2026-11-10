@@ -14,7 +14,6 @@ using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.Help;
-using IApp = ToSic.Sxc.Apps.IApp;
 
 
 // ReSharper disable InheritdocInvalidUsage
@@ -79,7 +78,7 @@ public abstract class SexyContentWebPage :
     [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel9Old;
 
     /// <inheritdoc />
-    public new IApp App => CodeApi.App;
+    public new IAppDynamic App => CodeApi.App;
 
     #region Data - with old interface #DataInAddWontWork
 

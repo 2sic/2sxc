@@ -12,7 +12,6 @@ using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.Help;
 
-
 namespace Custom.Hybrid;
 
 /// <summary>
@@ -72,7 +71,7 @@ public abstract class Code14()
     #region App / Data / Content / Header
 
     /// <inheritdoc cref="IDynamicCodeDocs.App" />
-    public IApp App => CodeApi.App;
+    public IAppDynamic App => CodeApi.App;
 
     /// <inheritdoc cref="IDynamicCodeDocs.Data" />
     public IDataSource Data => CodeApi.Data;

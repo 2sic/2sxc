@@ -2,7 +2,6 @@
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Context;
@@ -41,7 +40,7 @@ public abstract class DynamicCode() : CustomCodeBase("Sxc.DynCod"), IHasCodeLog,
     #region App / Data / Content / Header
 
     /// <inheritdoc cref="IDynamicCodeDocs.App" />
-    public IApp App => CodeApi.App;
+    public IAppDynamic App => CodeApi.App;
 
     /// <inheritdoc cref="IDynamicCodeDocs.Data" />
     public IDataSource Data => CodeApi.Data;

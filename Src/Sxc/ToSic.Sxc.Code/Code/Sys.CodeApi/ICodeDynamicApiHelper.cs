@@ -60,7 +60,7 @@ public interface ICodeDynamicApiHelper: ICreateInstance
 
     IDynamicEntity? Header { get; }
 
-    IApp App { get; }
+    IAppDynamic App { get; }
 
     /// <summary>
     /// Almost every use 

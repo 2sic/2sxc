@@ -2,7 +2,6 @@
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
@@ -28,7 +27,7 @@ internal class CodeDynamicApiHelper(ExecutionContext exCtx) : ICodeDynamicApiHel
     // Fails - was invisible because of MEL
     //public IApp App => (IApp)ExCtx.App!;
     // works
-    public IApp App => field ??= exCtx.GetService<Generator<AppDynamic, IAppForCode>>().New(exCtx.App!);
+    public IAppDynamic App => field ??= exCtx.GetService<Generator<IAppDynamic, IAppForCode>>().New(exCtx.App!);
 
     #endregion
 

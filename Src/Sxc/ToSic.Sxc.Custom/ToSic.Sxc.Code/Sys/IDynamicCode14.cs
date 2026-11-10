@@ -45,7 +45,7 @@ public interface IDynamicCode14<out TModel, out TServiceKit> : /*ICompatibleToCo
     TService GetService<TService>() where TService : class;
 
     /// <inheritdoc cref="IDynamicCodeDocs.App" />
-    IApp App { get; }
+    IAppDynamic App { get; }
 
     /// <inheritdoc cref="IDynamicCodeDocs.Data" />
     IDataSource Data { get; }

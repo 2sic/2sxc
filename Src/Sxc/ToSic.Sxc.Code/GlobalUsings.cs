@@ -15,3 +15,4 @@ global using ToSic.Sys.Performance;
 global using ToSic.Sys.Utils;
 global using static ToSic.Sxc.Sys.SxcLogging;
 global using ExecutionContext = ToSic.Sxc.Sys.ExecutionContext.ExecutionContext;
+global using IAppDynamic = ToSic.Sxc.Apps.IApp;

@@ -61,7 +61,7 @@ public abstract partial class Api14(string logSuffix) : DnnSxcCustomControllerBa
     public dynamic Header => CodeApi.Header;
 
     /// <inheritdoc cref="IDynamicCodeDocs.App" />
-    public IApp App => CodeApi.App;
+    public IAppDynamic App => CodeApi.App;
 
     /// <inheritdoc cref="IDynamicCodeDocs.Data" />
     public IDataSource Data => CodeApi.Data;

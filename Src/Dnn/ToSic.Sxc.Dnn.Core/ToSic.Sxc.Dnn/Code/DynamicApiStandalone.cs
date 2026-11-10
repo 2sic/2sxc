@@ -46,7 +46,7 @@ internal class DynamicApiStandalone(IExecutionContext exCtx, ICodeDynamicApiHelp
     public TService GetService<TService>() where TService : class
         => exCtx.GetService<TService>();
 
-    public IApp App => apiHelper.App;
+    public IAppDynamic App => apiHelper.App;
 
     public IDataSource Data => apiHelper.Data;
 

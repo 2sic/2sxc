@@ -64,7 +64,7 @@ public abstract class DynamicCode12(): CustomCodeBase("Sxc.DynCod"), IHasCodeLog
     #region App / Data / Content / Header
 
     /// <inheritdoc cref="IDynamicCodeDocs.App" />
-    public IApp App => CodeApi.App;
+    public IAppDynamic App => CodeApi.App;
 
     /// <inheritdoc cref="IDynamicCodeDocs.Data" />
     public IDataSource Data => CodeApi.Data;

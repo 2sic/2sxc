@@ -3,7 +3,6 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Render.Block.Sys;
-using IAppDynamic = ToSic.Sxc.Apps.IApp;
 
 #pragma warning disable IDE0130
 namespace ToSic.SexyContent.Environment.Dnn7;

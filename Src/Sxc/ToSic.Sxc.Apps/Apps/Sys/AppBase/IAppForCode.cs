@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.Context;
-
-namespace ToSic.Sxc.Apps.Sys;
+﻿namespace ToSic.Sxc.Apps.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IAppForCode: IAppIdentity

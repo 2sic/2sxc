@@ -59,7 +59,7 @@ public abstract partial class RazorComponent : RazorComponentBase,
     [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel10;
 
     /// <inheritdoc />
-    public new IApp App => CodeApi.App;
+    public new IAppDynamic App => CodeApi.App;
 
     #endregion
 
