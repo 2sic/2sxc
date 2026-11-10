@@ -20,23 +20,6 @@ public interface IDataService: IServiceWithSetup<IDataService.Options>
 
     #region CreateDataSource - new in v15 - make sure it's copied in identical form to IDynamicCode, ...
 
-    // #DropSpawnNew
-    ///// <summary>
-    ///// Spawn a new <see cref="IDataService"/> with specific configuration.
-    ///// Uses the [Spawn New convention](xref:NetCode.Conventions.SpawnNew).
-    ///// </summary>
-    ///// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    ///// <param name="appIdentity"></param>
-    ///// <param name="zoneId"></param>
-    ///// <param name="appId"></param>
-    ///// <returns></returns>
-    //[PrivateApi("Being deprecated")]
-    //[ShowApiWhenReleased(ShowApiMode.Never)]
-    //IDataService SpawnNew(NoParamOrder npo = default,
-    //    IAppIdentity? appIdentity = default,
-    //    int zoneId = default,
-    //    int appId = default);
-
     /// <summary>
     /// Get the App DataSource containing the App Data.
     /// The `Default` stream of this source has the data the current user is allowed to see.
