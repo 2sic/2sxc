@@ -8,11 +8,7 @@ internal class TypedQuery(DataSourceBase.Dependencies services, LazySvc<QueryFac
 {
     #region Cdf Attachments and setup ToTypedHelper
 
-    internal TypedQuery Setup(ICodeDataFactory cdfConnected)
-    {
-        ToTypedHelper = new(cdfConnected, this, Log);
-        return this;
-    }
+    internal void Setup(ICodeDataFactory cdfConnected) => ToTypedHelper = new(cdfConnected, this, Log);
 
     [field: AllowNull, MaybeNull]
     private DataSourceToTypedHelper ToTypedHelper { get => field ?? throw new($"{nameof(ToTypedHelper)} not set"); set; }

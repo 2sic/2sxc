@@ -24,7 +24,7 @@ public class AppQueryControllerReal(
     IContextBuilderService ctxBuilder,
     Generator<IConvertToEavLight> dataConverter,
     LazySvc<PermissionCheckFactory> permCheckFactory,
-    LazySvc<QueryManager> queryManager,
+    LazySvc<QueryBuilder<Query>> queryManager,
     LazySvc<ILookUpEngineResolver> lookupResolver)
     : ServiceBase("Sxc.ApiApQ",
         connect: [oDataHelper, lookupResolver, ctxService, ctxBuilder, dataConverter, permCheckFactory, queryManager]), IAppQueryController
@@ -104,7 +104,7 @@ public class AppQueryControllerReal(
         var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"name:{name}, stream:{stream}, withModule:{(context as IContextOfBlock)?.Module.Id}");
 
         var lookups = preparedLookup ?? lookupResolver.Value.GetLookUpEngine(modId);
-        var query = queryManager.Value.TryGetQuery(app, name, lookups, recurseParents: 3);
+        var query = queryManager.Value.TryBuild(app, name, lookups, recurseParents: 3);
 
         if (query == null)
         {

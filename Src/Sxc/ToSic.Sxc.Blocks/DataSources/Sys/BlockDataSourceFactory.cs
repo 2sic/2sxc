@@ -8,8 +8,8 @@ using ToSic.Sxc.Blocks.Sys;
 namespace ToSic.Sxc.DataSources.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFactory, Generator<Query> queryLazy)
-    : ServiceBase("Sxc.BDsFct", connect: [dataSourceFactory, queryLazy])
+public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFactory, Generator<Query, Query.Options> queryGen)
+    : ServiceBase("Sxc.BDsFct", connect: [dataSourceFactory, queryGen])
 {
 
     internal IDataSource GetContextDataSourceFromView(BlockSpecs block, ILookUpEngine? configLookUp)
@@ -25,7 +25,7 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
             LookUp = configLookUp,
         };
         var initialSource = dsFactory.CreateDefault(options);
-        var blockDataSource = dsFactory.Create<CmsBlock>(/*attach: initialSource*/ options with { Attach = initialSource });
+        var blockDataSource = dsFactory.Create<CmsBlock>(options with { Attach = initialSource });
 
         blockDataSource.OverrideView = view;
         blockDataSource.UseSxcInstanceContentGroup = true;
@@ -37,8 +37,7 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
         l.A($"use query upstream:{viewDataSourceUpstream != null}");
 
         l.A($"Will get ModuleDataSource, aka {nameof(ContextData)}");
-        var contextDataSource = dsFactory.Create<ContextData>(/*attach: viewDataSourceUpstream,*/
-            options: options with { Attach = viewDataSourceUpstream });
+        var contextDataSource = dsFactory.Create<ContextData>(options: options with { Attach = viewDataSourceUpstream });
         contextDataSource.SetBlock(blockDataSource);
 
         // Take Publish-Properties from the View-Template
@@ -51,9 +50,7 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
                 return l.ReturnAsOk(contextDataSource);
 
             l.A("Generate query");
-            var query = queryLazy.New();
-            var app = block.App;
-            query.Init(app.ZoneId, app.AppId, (view.Query as ICanBeEntity).Entity, configLookUp, contextDataSource);
+            var query = queryGen.New(new(block.App.PureIdentity(), (view.Query as ICanBeEntity).Entity, configLookUp /*contextDataSource*/));
             l.A("attaching");
             contextDataSource.SetOut(query);
         }

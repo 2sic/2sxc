@@ -6,12 +6,12 @@ namespace ToSic.Sxc.Data;
 /// Query object from <see cref="IAppTyped.GetQuery"/> an App in **Typed** mode, with quick get-and-convert-helpers such as `GetAll` or `GetOne`.
 /// </summary>
 /// <remarks>
-/// WIP v20
+/// New v20
 /// </remarks>
-[WorkInProgressApi("Still WIP")]
+[PublicApi]
 public interface ITypedQuery: IDataSource
 {
-    #region GetAll, GetOne, GetMany WIP v17.02+
+    #region GetAll, GetOne, GetMany New v20+
 
     /// <summary>
     /// Get all data from the app of the specified type in a stream with the same name (or "Default").

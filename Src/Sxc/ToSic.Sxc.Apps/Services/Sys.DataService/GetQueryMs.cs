@@ -8,10 +8,10 @@ namespace ToSic.Sxc.Services.Sys.DataService;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class GetQueryMs<TQuery>: ServiceBase where TQuery : Query
 {
-    private readonly LazySvc<QueryManager<TQuery>> _queryManager;
+    private readonly LazySvc<QueryBuilder<TQuery>> _queryManager;
     private readonly DataSourceOptionsMs _optionsMs;
 
-    internal GetQueryMs(LazySvc<QueryManager<TQuery>> queryManager, DataSourceOptionsMs optionsMs, ILog parentLog): base(SxcLogName + ".DtGqMs")
+    internal GetQueryMs(LazySvc<QueryBuilder<TQuery>> queryManager, DataSourceOptionsMs optionsMs, ILog parentLog): base(SxcLogName + ".DtGqMs")
     {
         _queryManager = queryManager;
         _optionsMs = optionsMs;
@@ -28,10 +28,10 @@ internal class GetQueryMs<TQuery>: ServiceBase where TQuery : Query
 
 
         // If no in-source was provided, make sure that we create one from the current app
-        var fullOptions = _optionsMs.SafeOptions(parameters, null, true /*, options: options*/);
+        var fullOptions = _optionsMs.SafeOptions(parameters, null, true);
 
         // #WipAppIdentityOrReader must become not null
-        var query = _queryManager.Value.TryGetQuery(fullOptions.AppIdentityOrReader! /* WIP */, name, fullOptions.LookUp!, 3);
+        var query = _queryManager.Value.TryBuild(fullOptions.AppIdentityOrReader!, name, fullOptions.LookUp!, 3);
 
         if (query == null)
             return l.ReturnNull("query was null");

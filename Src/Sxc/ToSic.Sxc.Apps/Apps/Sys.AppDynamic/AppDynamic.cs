@@ -22,9 +22,9 @@ namespace ToSic.Sxc.Apps.Sys.AppDynamic;
 /// </remarks>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppDynamic(LazySvc<GlobalPaths> globalPaths, /*LazySvc<ICodeDataFactory> cdfLazy,*/ LazySvc<QueryManager> queryManager)
+public class AppDynamic(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryBuilder<Query>> queryManager, LazySvc<AppDynamicQueries> appDynamicQueries)
     // Note: If this is ever changed to not inherit from the EavApp, make sure you correct/update the LightSpeed code as well as it checks for this base class
-    : ServiceWithSetup<IAppForCode>("App.SxcApp", connect: [globalPaths, /*cdfLazy,*/ queryManager]),
+    : ServiceWithSetup<IAppForCode>("App.SxcApp", connect: [globalPaths, queryManager, appDynamicQueries]),
         IAppDynamic,
         IWrapper<IAppForCode>,
         INeedsExecutionContext
@@ -155,7 +155,7 @@ public class AppDynamic(LazySvc<GlobalPaths> globalPaths, /*LazySvc<ICodeDataFac
     /// <inheritdoc />
     [field: AllowNull, MaybeNull]
     public IDictionary<string, IQuery> Query => field
-        ??= queryManager.Value.AllQueries(this,
+        ??= appDynamicQueries.Value.AllQueries(this,
             MyOptions.DataService.LookUpEngine
             ?? throw new("Can't use app-queries, because the necessary configuration provider hasn't been initialized. Call InitData first."));
 
@@ -168,7 +168,7 @@ public class AppDynamic(LazySvc<GlobalPaths> globalPaths, /*LazySvc<ICodeDataFac
             return query;
 
         // Try to find query definition - while also checking parent apps
-        var qEntity = queryManager.Value.TryGetQuery(MyOptions.AppReader, name, MyOptions.DataService.LookUpEngine, recurseParents: 3)
+        var qEntity = queryManager.Value.TryBuild(MyOptions.AppReader, name, MyOptions.DataService.LookUpEngine, recurseParents: 3)
                       ?? throw new((DataSourceConstantsInternal.IsGlobalQuery(name) ? "Global " : "") + "Query not Found!");
 
         return qEntity;

@@ -4,7 +4,7 @@ using ToSic.Sxc.Data.Sys.Typed;
 
 namespace ToSic.Sxc.Apps.Sys.AppTyped;
 
-internal class AppTyped<TSettings, TResources>(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager<TypedQuery>> queryManager)
+internal class AppTyped<TSettings, TResources>(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryBuilder<TypedQuery>> queryManager)
     : AppTyped(globalPaths, queryManager), IAppTyped<TSettings, TResources>
     where TSettings : class, IModelFromData, new()
     where TResources : class, IModelFromData, new()

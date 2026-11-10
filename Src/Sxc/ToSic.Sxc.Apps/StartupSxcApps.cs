@@ -30,6 +30,8 @@ public static class StartupSxcApps
         services.TryAddTransient<IAppTyped, AppTyped>();
         services.TryAddTransient(typeof(IAppTyped<,>), typeof(AppTyped<,>));    // new v17
 
+        services.TryAddTransient<AppDynamicQueries>();
+
         services.TryAddTransient<AppFolderInitializer>();
 
         services.TryAddTransient<AppIconHelpers>();

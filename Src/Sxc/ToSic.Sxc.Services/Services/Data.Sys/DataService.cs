@@ -19,7 +19,7 @@ public partial class DataService(
     LazySvc<IDataSourcesService> dataSources,
     LazySvc<DataSourceCatalog> catalog,
     LazySvc<IAppsCatalog> appsCatalog,
-    LazySvc<QueryManager<Query>> queryManager,
+    LazySvc<QueryBuilder<Query>> queryManager,
     IUser user)
     : ServiceWithContext("Sxc.DatSvc", connect: [user, dataSources, catalog, appsCatalog, queryManager]),
         IDataService,

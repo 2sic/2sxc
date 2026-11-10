@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Apps.Sys.AppTyped;
 // - provide an instance of this on the CodeApiService
 // - use that instead
 
-internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager<TypedQuery>> queryManager)
+internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryBuilder<TypedQuery>> queryManager)
     : ServiceWithContext(SxcLogName + ".AppTyp", connect: [globalPaths, queryManager]),
         IAppTyped
 {
