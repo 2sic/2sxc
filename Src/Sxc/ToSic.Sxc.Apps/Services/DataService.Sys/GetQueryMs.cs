@@ -1,23 +1,16 @@
 ﻿using ToSic.Eav.DataSource.Query.Sys;
 
-namespace ToSic.Sxc.Services.Sys.DataService;
+namespace ToSic.Sxc.Services.DataService.Sys;
 
 /// <summary>
 /// Get-Query Micro Service
 /// </summary>
+[PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class GetQueryMs<TQuery>: ServiceBase where TQuery : Query
+public class GetQueryMs<TQuery>(LazySvc<QueryBuilder<TQuery>> queryBuilder)
+    : ServiceWithSetup<DataSourceOptionsMs>(SxcLogName + ".DtGqMs", connect: [queryBuilder])
+    where TQuery : Query
 {
-    private readonly LazySvc<QueryBuilder<TQuery>> _queryManager;
-    private readonly DataSourceOptionsMs _optionsMs;
-
-    internal GetQueryMs(LazySvc<QueryBuilder<TQuery>> queryManager, DataSourceOptionsMs optionsMs, ILog parentLog): base(SxcLogName + ".DtGqMs")
-    {
-        _queryManager = queryManager;
-        _optionsMs = optionsMs;
-        this.LinkLog(parentLog);
-    }
-
     public TQuery? GetQuery(
         string? name = default,
         NoParamOrder npo = default,
@@ -26,19 +19,20 @@ internal class GetQueryMs<TQuery>: ServiceBase where TQuery : Query
     {
         var l = Log.Fn<TQuery>($"{name}, {nameof(parameters)}: {(parameters == null ? "null" : "not null")}");
 
-
         // If no in-source was provided, make sure that we create one from the current app
-        var fullOptions = _optionsMs.SafeOptions(parameters, null, true);
+        var fullOptions = MyOptions.SafeOptions(parameters, null, true);
 
         // #WipAppIdentityOrReader must become not null
-        var query = _queryManager.Value.TryBuild(fullOptions.AppIdentityOrReader!, name, fullOptions.LookUp!, 3);
+        var query = queryBuilder.Value.TryBuild(fullOptions.AppIdentityOrReader!, name, fullOptions.LookUp!, 3);
 
+        // no query / parameters, exit early
         if (query == null)
             return l.ReturnNull("query was null");
 
         if (parameters == null)
             return l.Return(query, "query, no parameters");
 
+        // Transfer parameters
         var paramsDic = parameters.ObjectToDictionary();
         foreach (var param in paramsDic)
             query.Params(param.Key, param.Value);

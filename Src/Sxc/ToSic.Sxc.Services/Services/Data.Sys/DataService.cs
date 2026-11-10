@@ -4,8 +4,8 @@ using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Eav.DataSource.Sys.Catalog;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Eav.Services;
+using ToSic.Sxc.Services.DataService.Sys;
 using ToSic.Sxc.Services.Sys;
-using ToSic.Sxc.Services.Sys.DataService;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
 
@@ -19,21 +19,18 @@ public partial class DataService(
     LazySvc<IDataSourcesService> dataSources,
     LazySvc<DataSourceCatalog> catalog,
     LazySvc<IAppsCatalog> appsCatalog,
-    LazySvc<QueryBuilder<Query>> queryManager,
+    Generator<GetQueryMs<Query>, DataSourceOptionsMs> queryBuilder,
     IUser user)
-    : ServiceWithContext("Sxc.DatSvc", connect: [user, dataSources, catalog, appsCatalog, queryManager]),
-        IDataService,
-        IServiceWithSetup<DataService.Options>
+    : ServiceWithContext("Sxc.DatSvc", connect: [user, dataSources, catalog, appsCatalog, queryBuilder]),
+        IDataService
 {
-    public record Options(IAppIdentity? AppIdentity, Func<ILookUpEngine?>? GetLookup);
-
     public override void ConnectToRoot(IExecutionContext exCtx)
     {
         base.ConnectToRoot(exCtx);
         Setup(new(exCtx.GetApp(), () => (exCtx as IExCtxLookUpEngine)?.LookUpForDataSources));
     }
 
-    public void Setup(Options opts)
+    public void Setup(IDataService.Options opts)
     {
         _appIdentity = opts.AppIdentity ?? _appIdentity;
         _getLookup = opts.GetLookup ?? _getLookup;
@@ -62,7 +59,7 @@ public partial class DataService(
         NoParamOrder npo = default,
         IDataSourceLinkable? attach = default,
         object? parameters = default)
-        => new GetQueryMs<Query>(queryManager, OptionsMs, Log).GetQuery(name, npo, attach, parameters);
+        => queryBuilder.New(OptionsMs).GetQuery(name, npo, attach, parameters);
 
     #endregion
 

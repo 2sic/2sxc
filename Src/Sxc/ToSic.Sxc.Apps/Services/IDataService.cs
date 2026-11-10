@@ -2,6 +2,8 @@
 
 
 // ReSharper disable once CheckNamespace
+using ToSic.Eav.LookUp.Sys.Engines;
+
 namespace ToSic.Sxc.Services;
 
 /// <summary>
@@ -12,8 +14,10 @@ namespace ToSic.Sxc.Services;
 /// New in v16.00
 /// </remarks>
 [PublicApi]
-public interface IDataService
+public interface IDataService: IServiceWithSetup<IDataService.Options>
 {
+    public record Options(IAppIdentity? AppIdentity, Func<ILookUpEngine?>? GetLookup);
+
     #region CreateDataSource - new in v15 - make sure it's copied in identical form to IDynamicCode, ...
 
     // #DropSpawnNew

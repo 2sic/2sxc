@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.Apps.Sys;
-using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.Sys.Assets;
 using ToSic.Sxc.Apps.Sys.Paths;
@@ -8,8 +7,8 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Typed;
+using ToSic.Sxc.Services.DataService.Sys;
 using ToSic.Sxc.Services.Sys;
-using ToSic.Sxc.Services.Sys.DataService;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Apps.Sys.AppTyped;
@@ -23,8 +22,8 @@ namespace ToSic.Sxc.Apps.Sys.AppTyped;
 // - provide an instance of this on the CodeApiService
 // - use that instead
 
-internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryBuilder<TypedQuery>> queryManager)
-    : ServiceWithContext(SxcLogName + ".AppTyp", connect: [globalPaths, queryManager]),
+internal class AppTyped(LazySvc<GlobalPaths> globalPaths, Generator<GetQueryMs<TypedQuery>, DataSourceOptionsMs> queryBuilder)
+    : ServiceWithContext(SxcLogName + ".AppTyp", connect: [globalPaths, queryBuilder]),
         IAppTyped
 {
     [field: AllowNull, MaybeNull]
@@ -59,7 +58,7 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryBuilder<T
     public ITypedQuery? GetQuery(string? name = default, NoParamOrder npo = default, IDataSourceLinkable? attach = default, object? parameters = default)
     {
         var opts = new DataSourceOptionsMs(this, () => App.DataService.LookUpEngine);
-        var queryMicroService = new GetQueryMs<TypedQuery>(queryManager, opts, Log);
+        var queryMicroService = queryBuilder.New(opts);
         var query = queryMicroService.GetQuery(name, npo, attach, parameters);
         query?.Setup(Cdf);
         return query;

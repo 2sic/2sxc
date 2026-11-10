@@ -1,10 +1,11 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.LookUp.Sys.Engines;
 
-namespace ToSic.Sxc.Services.Sys.DataService;
+namespace ToSic.Sxc.Services.DataService.Sys;
 
+[PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class DataSourceOptionsMs(IAppIdentity? identity, Func<ILookUpEngine?>? getLookup)
+public class DataSourceOptionsMs(IAppIdentity? identity, Func<ILookUpEngine?>? getLookup)
     : ServiceBase(SxcLogName + "DtOptH")
 {
     private ILookUpEngine? LookUpEngine => _lookupEngine.Get(() => getLookup?.Invoke());

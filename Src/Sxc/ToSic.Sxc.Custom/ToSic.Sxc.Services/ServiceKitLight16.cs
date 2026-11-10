@@ -38,8 +38,9 @@ public class ServiceKitLight16(IServiceProvider serviceProvider) : ServiceBase("
     /// <inheritdoc cref="ServiceKit14.Data"/>
     public IDataService Data => field ??= new Func<IDataService>(() =>
     {
+        // Important: don't use Generator<IDataService> here, because it would miss the INeedsExecutionContext
         var dss = GetService<IDataService>();
-        (dss as DataService)?.Setup(new(_appIdentity, _getLookup));
+        dss.Setup(new(_appIdentity, _getLookup));
         return dss;
     })();
 

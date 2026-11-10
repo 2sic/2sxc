@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Apps.Sys.Api01;
@@ -7,6 +8,7 @@ using ToSic.Sxc.Apps.Sys.AppDynamic;
 using ToSic.Sxc.Apps.Sys.AppTyped;
 using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Apps.Sys.Work;
+using ToSic.Sxc.Services.DataService.Sys;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Run.Startup;
@@ -31,6 +33,8 @@ public static class StartupSxcApps
         services.TryAddTransient(typeof(IAppTyped<,>), typeof(AppTyped<,>));    // new v17
 
         services.TryAddTransient<AppDynamicQueries>();
+        services.TryAddTransient(typeof(QueryBuilder<>));   // new v20
+        services.TryAddTransient(typeof(GetQueryMs<>));     // new v22
 
         services.TryAddTransient<AppFolderInitializer>();
 
