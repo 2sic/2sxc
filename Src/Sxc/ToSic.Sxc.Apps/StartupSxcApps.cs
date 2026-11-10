@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Apps.Sys.Api01;
@@ -19,13 +18,10 @@ public static class StartupSxcApps
 
     public static IServiceCollection AddSxcApps(this IServiceCollection services)
     {
-        // App Dependencies
-        services.TryAddTransient<AppForCodeShared.Dependencies>();
-
         // Configuration objects
         services.TryAddTransient<GlobalPaths>();
 
-        services.TryAddTransient<AppForCodeShared>();  // new v22
+        services.TryAddTransient<AppForCode>();  // new v22
         services.TryAddTransient<AppForCodeDataSourceService>(); // new v22
         services.TryAddTransient<IAppDynamic, AppDynamic>();
 

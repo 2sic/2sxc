@@ -5,7 +5,7 @@ using ExecutionContext = ToSic.Sxc.Sys.ExecutionContext.ExecutionContext;
 namespace ToSic.Sxc.Mocks;
 public class ExecutionContextMock : ExecutionContext
 {
-    public ExecutionContextMock(Generator<AppForCodeShared, AppForCodeShared.Options> appGen, Dependencies services) : base(services, "Mck")
+    public ExecutionContextMock(Generator<AppForCode, AppForCode.Options> appGen, Dependencies services) : base(services, "Mck")
     {
         var app = appGen.New(new(null, KnownAppsConstants.PresetIdentity.PureIdentity(), null));
         AttachApp(app);

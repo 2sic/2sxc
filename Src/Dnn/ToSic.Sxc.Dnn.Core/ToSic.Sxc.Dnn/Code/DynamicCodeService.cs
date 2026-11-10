@@ -36,7 +36,7 @@ internal abstract partial class DynamicCodeService(DynamicCodeService.Dependenci
 
     public record ScopedDependencies(
         Generator<IExecutionContextFactory> ExCtxGenerator,
-        Generator<AppForCodeShared, AppForCodeShared.Options> AppGenerator,
+        Generator<AppForCode, AppForCode.Options> AppGenerator,
         Generator<IAppDynamic, IAppForCode> AppDynGenerator,
         LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder)
         : DependenciesBase(connect: [ExCtxGenerator, AppGenerator, AppDynGenerator, ModAndBlockBuilder]);

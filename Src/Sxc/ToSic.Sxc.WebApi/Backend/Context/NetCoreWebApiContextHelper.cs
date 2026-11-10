@@ -114,7 +114,7 @@ internal class NetCoreWebApiContextHelper: ServiceWithContext
             // Since we only have the AppId, we need to load the app and attach it to the context
             l.A($"AppId: {appId}");
             var site = CtxService.Context.Site;
-            var app = _helper.GetService<Generator<AppForCodeShared, AppForCodeShared.Options>>().New(new(site, new AppIdentityPure(site.ZoneId, appId), new()));
+            var app = _helper.GetService<Generator<AppForCode, AppForCode.Options>>().New(new(site, new AppIdentityPure(site.ZoneId, appId), new()));
             ((IExCtxAttachApp)ExCtx).AttachApp(app);
             l.Done("app initialized");
             return;

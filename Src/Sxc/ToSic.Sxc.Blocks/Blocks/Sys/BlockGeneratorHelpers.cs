@@ -14,7 +14,7 @@ public class BlockGeneratorHelpers(
     AppWorkChain<WorkViews> workViews,
     AppWorkChain<WorkBlocks> appBlocks,
     LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
-    Generator<AppForCodeShared, AppForCodeShared.Options> appLazy)
+    Generator<AppForCode, AppForCode.Options> appLazy)
     : ServiceBase("Eav.BlGenH", connect: [bdsFactoryLazy, appLazy, workViews, appBlocks])
 {
     public BlockSpecs CompleteInit(BlockSpecs currentSpecs, IBlock? parentOrNull, IBlockIdentifier blockIdentifier, int blockId)

@@ -13,5 +13,5 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys;
 public record ApiControllerDependencies(
     IExecutionContextFactory ExCtxFactory,
     Generator<DnnWebApiAppFolderUtilities, HttpRequestMessage> WebApiAppFolderUtilities,
-    Generator<AppForCodeShared, AppForCodeShared.Options> AppOverrideLazy)
+    Generator<AppForCode, AppForCode.Options> AppOverrideLazy)
     : DependenciesBase(connect: [ExCtxFactory, WebApiAppFolderUtilities, AppOverrideLazy]);

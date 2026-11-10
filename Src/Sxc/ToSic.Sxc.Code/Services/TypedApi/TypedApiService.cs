@@ -39,7 +39,7 @@ internal class TypedApiService(TypedApiService.Dependencies services, string? lo
 
     public record ScopedDependencies(
         Generator<IExecutionContextFactory> ExCtxGenerator,
-        Generator<AppForCodeShared, AppForCodeShared.Options> AppGenerator,
+        Generator<AppForCode, AppForCode.Options> AppGenerator,
         LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder)
         : DependenciesBase(connect: [ExCtxGenerator, AppGenerator, ModAndBlockBuilder]);
 

@@ -1,5 +1,7 @@
 ﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Context;
+using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.Sys;
 
 namespace ToSic.Sxc.Apps.Sys;
@@ -12,14 +14,25 @@ namespace ToSic.Sxc.Apps.Sys;
 /// * was `ToSic.Eav.Apps.App` till ca. 2023-01-11 ca. v16.09
 /// * then was `ToSic.Eav.Apps.Internal.EavApp` till v20
 /// </remarks>
-/// <param name="services">All the dependencies of this app, managed by this app</param>
-/// <param name="logName">must be null by default, because of DI</param>
 [PrivateApi("Hide implementation - was PublicApi_Stable_ForUseInYourCode till 16.09")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public partial class AppForCodeShared(AppForCodeShared.Dependencies services, string? logName = default, object[]? connect = default)
-    : ServiceWithSetup<AppForCodeShared.Dependencies, AppForCodeShared.Options>(services, logName ?? "Eav.App", connect: connect),
+public class AppForCode(
+    IZoneMapper zoneMapper,
+    ISite site,
+    IAppReaderFactory appReaders,
+    IAppPathsMicroSvc appPathSvc,
+    Generator<AppForCodeDataSourceService, AppForCodeDataSourceService.Options> appDataSvc)
+    : ServiceWithSetup<AppForCode.Options>("Sxc.AppCde", connect: [zoneMapper, site, appReaders, appPathSvc, appDataSvc]),
         IAppForCode
 {
+    /// <summary>
+    /// Options
+    /// </summary>
+    /// <param name="ReplaceSite">The site to replace the default site with, if any.</param>
+    /// <param name="AppIdentity">The identity of the app.</param>
+    /// <param name="DataSpecs">The data specifications for the app.</param>
+    public record Options(ISite? ReplaceSite, IAppIdentityPure AppIdentity, AppDataConfigSpecs? DataSpecs);
+
     /// <inheritdoc />
     public int ZoneId => MyOptions.AppIdentity.ZoneId;
 
@@ -29,18 +42,18 @@ public partial class AppForCodeShared(AppForCodeShared.Dependencies services, st
     #region AppReader and all derived properties of the AppReader
 
     public IAppReader AppReader => field
-        ??= Services.AppReaders.Get(this) ?? throw new ("AppReaderInt not set, did you call Init()?");
+        ??= appReaders.Get(this) ?? throw new ("AppReaderInt not set, did you call Init()?");
 
     public IAppSpecs AppSpecs => field ??= AppReader.Specs;
 
-    IAppPaths IAppForCode.AppPaths => field ??= Services.AppPathSvc.Get(AppReader, AppSite);
+    IAppPaths IAppForCode.AppPaths => field ??= appPathSvc.Get(AppReader, AppSite);
 
     #region Settings, Config, Metadata
 
     IEntity? IAppForCode.SettingsEntity => AppSpecs.Settings.MetadataItem;
     IEntity? IAppForCode.ResourcesEntity => AppSpecs.Resources.MetadataItem;
 
-    AppForCodeDataSourceService IAppForCode.DataService => field ??= Services.AppDataSvc.New(new(this, MyOptions.DataSpecs));
+    AppForCodeDataSourceService IAppForCode.DataService => field ??= appDataSvc.New(new(this, MyOptions.DataSpecs));
 
     #endregion
 
@@ -66,14 +79,14 @@ public partial class AppForCodeShared(AppForCodeShared.Dependencies services, st
         if (AppSite.Id == EavConstants.NullId
             && appIdentity.AppId != EavConstants.NullId
             && appIdentity.AppId != AppConstants.AppIdNotFound)
-            AppSite = Services.ZoneMapper.SiteOfApp(appIdentity.AppId);
+            AppSite = zoneMapper.SiteOfApp(appIdentity.AppId);
         
         l.Done();
     }
 
     #region Environment & Physical Path
 
-    internal ISite AppSite { get; set; } = services.Site;
+    internal ISite AppSite { get; set; } = site;
 
 
     #endregion
