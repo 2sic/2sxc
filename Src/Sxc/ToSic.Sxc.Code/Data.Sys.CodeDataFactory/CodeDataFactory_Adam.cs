@@ -34,16 +34,14 @@ partial class CodeDataFactory
             throw new($"Can't create App Context for {nameof(AdamManager)} in {nameof(ICodeDataFactory)} - no block, no App");
 
         // Try to use the block context, as it would allow for more permission checks
-        IContextOfApp contextOfApp = ExCtx.GetContextOfBlock();
-        // TODO: @2dm - find out / document why this could even be null
-        if (contextOfApp == null)
-        {
-            var app = ExCtx.GetApp()
-                      ?? throw new("Can't create App Context for ADAM - no block, no App");
-            contextOfApp = appCtxFactory.Value.Create(app.PureIdentity());
-        }
+        // Note: the block context could be null in WebApis which are App only (no block)
+        var contextOfApp = ExCtx.TryGetContextOfBlock()
+                           ?? appCtxFactory.Value.Create(
+                               (ExCtx.GetApp()
+                                ?? throw new("Can't create App Context for ADAM - no block, no App"))
+                               .PureIdentity());
 
-        return adamManager.Value.Init(contextOfApp, CompatibilityLevel, this);
+        return adamManager.New(new(contextOfApp, CompatibilityLevel, this));
     }
     #region ADAM / Folder
 

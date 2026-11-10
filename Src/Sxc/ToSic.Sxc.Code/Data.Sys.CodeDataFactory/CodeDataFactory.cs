@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 public partial class CodeDataFactory(
     IServiceProvider serviceProvider,
     LazySvc<CodeDataServices> codeDataServices,
-    LazySvc<AdamManager> adamManager,
+    Generator<AdamManager, AdamManager.Options> adamManager,
     LazySvc<IContextOfAppFactory> appCtxFactory,
     LazySvc<DataAssembler> dataBuilderLazy,
     Generator<ContentTypeAssembler, DataAssemblerOptions> contentTypeAssembler,

@@ -5,7 +5,11 @@ namespace ToSic.Sxc.Adam.Sys.Storage;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class AdamStorage(string? logName = default) : ServiceBase(logName ?? "Adm.Base")
 {
-    public void Init(AdamManager manager) => Manager = manager;
+    public AdamStorage Init(AdamManager manager)
+    {
+        Manager = manager;
+        return this;
+    }
 
     protected AdamManager Manager { get; private set; } = null!;
 

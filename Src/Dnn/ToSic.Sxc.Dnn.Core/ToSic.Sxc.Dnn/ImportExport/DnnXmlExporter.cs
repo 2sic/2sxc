@@ -9,16 +9,10 @@ using FileManager = DotNetNuke.Services.FileSystem.FileManager;
 
 namespace ToSic.Sxc.Dnn.ImportExport;
 
-public class DnnXmlExporterIntegration(AdamManager adamManager) : IXmlExporterIntegration
+public class DnnXmlExporterIntegration(Generator<AdamManager, AdamManager.Options> adamManagerGen) : ServiceWithSetup<IContextOfApp>("Dnn.XmlExI"), IXmlExporterIntegration
 {
-    /// <summary>
-    /// Post context init the caller must be able to init Adam, which is not part of this project, so we're handling it as a callback
-    /// </summary>
-    /// <param name="appContext"></param>
-    public void Setup(IContextOfApp appContext)
-    {
-        adamManager.Init(appCtx: appContext, compatibility: CompatibilityLevels.CompatibilityLevel10);
-    }
+
+    private AdamManager AdamManager => field ??= adamManagerGen.New(new(MyOptions, CompatibilityLevels.CompatibilityLevel10));
 
     private readonly IFileManager _dnnFiles = FileManager.Instance;
     private readonly IFolderManager _dnnFolders = FolderManager.Instance;
@@ -29,7 +23,7 @@ public class DnnXmlExporterIntegration(AdamManager adamManager) : IXmlExporterIn
     public void AddFilesToExportQueue()
     {
         // Add Adam Files To Export Queue
-        var exportList = new AdamExportListHelper<int, int>(adamManager);
+        var exportList = new AdamExportListHelper<int, int>(AdamManager);
         var adamIds = exportList.AppFiles;
         adamIds.ForEach(AddFileAndFolderToQueue);
 

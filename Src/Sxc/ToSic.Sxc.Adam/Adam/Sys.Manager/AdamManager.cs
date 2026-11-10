@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Metadata;
 using ToSic.Sxc.Adam.Sys.FileSystem;
@@ -19,48 +18,36 @@ namespace ToSic.Sxc.Adam.Sys.Manager;
 /// It's abstract, because there will be a typed implementation inheriting this
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamManager(AdamManager.Dependencies services)
-    : ServiceBase<AdamManager.Dependencies>(services, "Adm.Managr")
+public class AdamManager(
+    LazySvc<ICodeDataFactory> cdfIfNotProvided,
+    AdamConfiguration adamConfiguration,
+    LazySvc<IAdamFileSystem> adamFsLazy,
+    Generator<AdamStorageOfField> fieldStorageGenerator,
+    AdamGenericHelper adamGenericHelper)
+    : ServiceWithSetup<AdamManager.Options>("Adm.Managr", connect: [cdfIfNotProvided, adamConfiguration, adamFsLazy, fieldStorageGenerator, adamGenericHelper])
 {
-    #region Dependencies
-
-    public record Dependencies(
-        LazySvc<ICodeDataFactory> CdfIfNotProvided,
-        AdamConfiguration AdamConfiguration,
-        LazySvc<IAdamFileSystem> AdamFsLazy,
-        Generator<AdamStorageOfField> FieldStorageGenerator,
-        AdamGenericHelper AdamGenericHelper)
-        : DependenciesBase(connect: [CdfIfNotProvided, AdamConfiguration, AdamFsLazy, FieldStorageGenerator]);
-
-    #endregion
 
     #region Init
 
-    public AdamManager Init(IContextOfApp appCtx, int compatibility, ICodeDataFactory? cdf = default)
-    {
-        var l = Log.Fn<AdamManager>();
-        AppContext = appCtx;
-        Cdf = cdf
-              ?? Services.CdfIfNotProvided
-                  .SetInit(obj => obj.SetFallbacks(appCtx.Site, compatibility, this))
-                  .Value;
-        return l.Return(this, "ready");
-    }
+    public record Options(IContextOfApp AppCtx, int Compatibility, ICodeDataFactory? Cdf = default);
 
     public bool UseTypedAssets => Cdf.CompatibilityLevel >= CompatibilityLevels.MinLevelForTyped;
 
     [field: AllowNull, MaybeNull]
-    public IAdamFileSystem AdamFs => field ??= Services.AdamFsLazy.SetInit(f => f.Init(this)).Value;
+    public IAdamFileSystem AdamFs => field ??= adamFsLazy.SetInit(f => f.Init(this)).Value;
 
     [field: AllowNull, MaybeNull]
     public IAppReader AppReader => field ??= AppContext.AppReaderRequired;
 
-    private IContextOfApp AppContext { get; set; } = null!;
+    private IContextOfApp AppContext => field ??= MyOptions.AppCtx;
 
     [field: AllowNull, MaybeNull]
     public ISite Site => field ??= AppContext.Site;
 
-    internal ICodeDataFactory Cdf { get; private set; } = null!;
+    internal ICodeDataFactory Cdf => field
+        ??= MyOptions.Cdf
+            ?? cdfIfNotProvided.SetInit(obj => obj.SetFallbacks(MyOptions.AppCtx.Site, MyOptions.Compatibility, this))
+                .Value;
 
     #endregion
 
@@ -68,7 +55,7 @@ public class AdamManager(AdamManager.Dependencies services)
     /// Path to the app assets
     /// </summary>
     [field: AllowNull, MaybeNull]
-    public string Path => field ??= Services.AdamConfiguration.PathForApp(AppContext.AppReaderRequired.Specs);
+    public string Path => field ??= adamConfiguration.PathForApp(AppContext.AppReaderRequired.Specs);
 
     #region Folder Stuff
 
@@ -106,9 +93,9 @@ public class AdamManager(AdamManager.Dependencies services)
 
     public IFolder FolderOfField(Guid entityGuid, string fieldName, IField? field = default)
     {
-        var folderStorage = Services.FieldStorageGenerator.New().InitItemAndField(entityGuid, fieldName);
+        var folderStorage = fieldStorageGenerator.New().InitItemAndField(entityGuid, fieldName);
         folderStorage.Init(this);
-        var folder = Services.AdamGenericHelper.FolderOfField(this, folderStorage, field);
+        var folder = adamGenericHelper.FolderOfField(this, folderStorage, field);
         return folder;
     }
     #endregion

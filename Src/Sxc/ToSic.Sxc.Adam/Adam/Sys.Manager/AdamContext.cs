@@ -23,7 +23,7 @@ public class AdamContext(
     Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> typesPermissions,
     Generator<IAdamSecurityCheckService, AdamContext> adamSecGen,
     LazySvc<ISysFeaturesService> featuresSvc,
-    LazySvc<AdamManager> adamManagerLazy,
+    Generator<AdamManager, AdamManager.Options> adamManagerLazy,
     Generator<AdamStorageOfSite> siteStorageGen,
     Generator<AdamStorageOfField> fieldStorageGen)
     : ServiceWithSetup<AdamContext.Options>("Adm.Ctx", connect: [typesPermissions, adamSecGen, featuresSvc, adamManagerLazy, siteStorageGen, fieldStorageGen])
@@ -38,11 +38,18 @@ public class AdamContext(
         bool UsePortalRoot);
 
     public IAdamSecurityCheckService Security => field ??= adamSecGen.New(this);
-    public MultiPermissionsTypes Permissions { get; private set; } = null!;
 
-    public AdamManager AdamManager => adamManagerLazy.Value;
+    public MultiPermissionsTypes Permissions => field ??= typesPermissions.New(new()
+    {
+        SiteContext = MyOptions.Context, App = MyOptions.Context.AppReaderRequired,
+        ContentTypes = [MyOptions.ContentType]
+    });
 
-    public AdamStorage AdamRoot { get; private set; } = null!;
+    public AdamManager AdamManager => field ??= adamManagerLazy.New(new(MyOptions.Context, CompatibilityLevels.CompatibilityLevel10));
+
+    public AdamStorage AdamRoot => field ??= MyOptions.UsePortalRoot
+        ? siteStorageGen.New().Init(AdamManager)
+        : fieldStorageGen.New().InitItemAndField(MyOptions.EntityGuid, MyOptions.FieldName).Init(AdamManager);
 
     public IAppReader AppReader => AdamManager.AppReader;
 
@@ -58,18 +65,8 @@ public class AdamContext(
         base.Setup(options);
         var (context, contentType, fieldName, entityGuid, usePortalRoot) = options;
         var l = Log.Fn($"app: {context.AppReaderRequired.Show()}, field:{fieldName}, guid:{entityGuid}, usePortalRoot: {usePortalRoot}");
-        AdamManager.Init(context, CompatibilityLevels.CompatibilityLevel10);
-        AdamRoot = usePortalRoot
-            ? siteStorageGen.New()
-            : fieldStorageGen.New().InitItemAndField(entityGuid, fieldName);
-        AdamRoot.Init(AdamManager);
-
-        Context = context;
-
-        Permissions = typesPermissions.New(new() { SiteContext = context, App = context.AppReaderRequired, ContentTypes = [contentType] });
 
         // only do checks on field/guid if it's actually accessing that, if it's on the portal root, don't.
-        UseSiteRoot = usePortalRoot;
         if (!usePortalRoot)
         {
             ItemFieldName = fieldName;
@@ -80,10 +77,9 @@ public class AdamContext(
             throw exception;
 
         l.A("check if feature enabled");
-        var sysFeatures = featuresSvc.Value;
-        if (Security.UserIsRestricted && !sysFeatures.IsEnabled(FeaturesForRestrictedUsers))
+        if (Security.UserIsRestricted && !featuresSvc.Value.IsEnabled(FeaturesForRestrictedUsers))
         {
-            var msg = sysFeatures.MsgMissingSome(FeaturesForRestrictedUsers);
+            var msg = featuresSvc.Value.MsgMissingSome(FeaturesForRestrictedUsers);
             throw HttpException.PermissionDenied(
                 $"low-permission users may not access this - {msg}");
 
@@ -95,7 +91,6 @@ public class AdamContext(
             return;
         }
 
-        Attribute = AttributeDefinition(context.AppReaderRequired, contentType, fieldName);
         if (Security.FieldDoesNotSupportFiles(out var exp))
             throw exp;
         l.Done();
@@ -107,7 +102,7 @@ public class AdamContext(
     /// Determines if the files come from the root (shared files).
     /// Is false, if they come from the item specific ADAM folder.
     /// </summary>
-    public bool UseSiteRoot;
+    public bool UseSiteRoot => MyOptions.UsePortalRoot;
 
     /// <summary>
     /// The field this state is for. Will be null/empty if UsePortalRoot is true
@@ -119,9 +114,10 @@ public class AdamContext(
     /// </summary>
     public Guid ItemGuid;
 
-    internal IContentTypeField? Attribute;
+    internal IContentTypeField? Attribute => _attribute.Get(() => AttributeDefinition(MyOptions));
+    private readonly LazyGet<IContentTypeField?> _attribute = new();
 
-    public IContextOfApp Context { get; private set; } = null!;
+    public IContextOfApp Context => field ??= MyOptions.Context;
 
     public readonly Guid[] FeaturesForRestrictedUsers =
     [
@@ -133,10 +129,10 @@ public class AdamContext(
     /// <summary>
     /// try to find fieldDef definition - for later extra security checks
     /// </summary>
-    private static IContentTypeField? AttributeDefinition(IAppReadContentTypes appReadContentTypes, string contentType, string fieldName)
+    private static IContentTypeField? AttributeDefinition(Options options)
     {
-        var type = appReadContentTypes.GetContentType(contentType);
-        return type[fieldName];
+        var type = options.Context.AppReaderRequired.GetContentType(options.ContentType);
+        return type[options.FieldName];
     }
 
 }

@@ -25,7 +25,7 @@ public class OqtXmlExporterIntegration(
     /// <param name="appContext"></param>
     public void Setup(IContextOfApp appContext)
     {
-        adamManager.Init(appCtx: appContext, compatibility: CompatibilityLevels.CompatibilityLevel10);
+        adamManager.Setup(new(appContext, CompatibilityLevels.CompatibilityLevel10));
     }
 
     public List<int> ReferencedFileIds { get; } = [];

@@ -26,8 +26,6 @@ public static class StartupSxcAdam
         services.TryAddTransient<AdamManager>();
         services.TryAddTransient<AdamContext>();
 
-        services.AddTransient<AdamManager.Dependencies>();
-
         // WIP v14
         services.TryAddTransient<IAdamService, AdamService>();
 
