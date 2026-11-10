@@ -3,6 +3,7 @@ using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Cms.Assets.Sys;
+using ToSic.Sys.Work;
 
 namespace ToSic.Sxc.DataSources.Sys.AppAssets;
 
@@ -11,44 +12,26 @@ namespace ToSic.Sxc.DataSources.Sys.AppAssets;
 ///
 /// Must be overriden in each platform.
 /// </summary>
+/// <param name="fileManagerGenerator">Note that we will use Generators for safety, because in rare cases the dependencies could be re-used to create a sub-data-source</param>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.Dependencies services)
-    : ServiceBase<AppAssetsDataSourceProvider.Dependencies>(services, $"{SxcLogName}.AppFls")
+public class AppAssetsDataSourceProvider(IAppReaderFactory appReaders, IAppPathsMicroSvc appPathMicroSvc, Generator<AppFileManager> fileManagerGenerator)
+    : ServiceWithSetup<AppAssetsDataSourceProvider.Options>($"{SxcLogName}.AppFls", connect: [appReaders, appPathMicroSvc, fileManagerGenerator])
 {
-
-    public record Dependencies(
-        IAppReaderFactory AppReaders,
-        IAppPathsMicroSvc AppPathMicroSvc,
-        // Note that we will use Generators for safety, because in rare cases the dependencies could be re-used to create a sub-data-source
-        Generator<AppFileManager> FileManagerGenerator)
-        : DependenciesBase(connect: [AppReaders, AppPathMicroSvc, FileManagerGenerator]);
-
-    public AppAssetsDataSourceProvider Configure(
-        AppAssetsGetSpecs specs,
-        NoParamOrder npo = default
-        //int zoneId = default,
-        //int appId = default
-        //string root = default,
-        //string filter = default
-    )
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    public record Options : IWorkSpecs
     {
-        var root = specs.RootFolder;
-        var filter = specs.FileFilter;
-        var l = Log.Fn<AppAssetsDataSourceProvider>($"a:{specs.AppId}; z:{specs.ZoneId}, root:{root}, filter:{filter}");
-        _root = root.TrimPrefixSlash().ToSystemPath();
-        _filter = filter;
-
-        var appReader = Services.AppReaders.Get(new AppIdentity(specs.ZoneId, specs.AppId));
-        _appPaths = Services.AppPathMicroSvc.Get(appReader);
-        
-        _appFileManager = Services.FileManagerGenerator.New().SetFolder(specs.AppId, _appPaths.PhysicalPath, _root);
-        return l.Return(this);
+        public int AppId { get; init; } = int.MinValue;
+        public int ZoneId { get; init; } = int.MinValue;
+        public string? RootFolder { get; init; } = "/";
+        public string? FileFilter { get; init; } = "*.*";
     }
 
-    private string? _root;
-    private string? _filter;
-    private AppFileManager _appFileManager = null!;
-    private IAppPaths _appPaths = null!;
+    private string? Root => field ??= MyOptions.RootFolder.TrimPrefixSlash().ToSystemPath();
+    private string? Filter => field ??= MyOptions.FileFilter;
+    private AppFileManager AppFileManager => field ??= fileManagerGenerator.New().SetFolder(MyOptions.AppId, AppPaths.PhysicalPath, Root);
+
+    private IAppPaths AppPaths =>
+        field ??= appPathMicroSvc.Get(appReaders.Get(new AppIdentity(MyOptions.ZoneId, MyOptions.AppId)));
 
     /// <summary>
     /// FYI: The filters are not actually implemented yet.
@@ -63,9 +46,9 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.Dependencie
     public List<FileModelRaw> GetFiles()
     {
         var l = Log.Fn<List<FileModelRaw>>();
-        var pathsFromRoot = PreparePaths(_appPaths, "");
+        var pathsFromRoot = PreparePaths(AppPaths, "");
 
-        var files = _appFileManager.GetAllTransferableFiles(_filter)
+        var files = AppFileManager.GetAllTransferableFiles(Filter)
             .Select(p => new FileInfo(p))
             .Select(f =>
             {
@@ -80,7 +63,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.Dependencie
                     ParentFolderInternal = path.BeforeLast("/").SuffixSlash(),
                     Path = path,
                     // TODO convert characters for safe HTML
-                    Url = $"{_appPaths.Path}{fullNameFromAppRoot}",
+                    Url = $"{AppPaths.Path}{fullNameFromAppRoot}",
 
                     Size = (int)f.Length,
                     Created = f.CreationTime,
@@ -97,16 +80,16 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.Dependencie
     private List<FolderModelRaw> GetFolders()
     {
         var l = Log.Fn<List<FolderModelRaw>>();
-        var pathsFromRoot = PreparePaths(_appPaths, "");
+        var pathsFromRoot = PreparePaths(AppPaths, "");
 
-        var folders = _appFileManager.GetAllTransferableFolders(/*filter*/)
+        var folders = AppFileManager.GetAllTransferableFolders(/*filter*/)
             .Select(p => new DirectoryInfo(p))
             .Select(d => ToFolderData(d, pathsFromRoot))
             .ToList();
 
         // if the root is just "/" then we need to add the root folder, otherwise not
         var root = new DirectoryInfo(
-            $"{_appPaths.PhysicalPath}/{_root}"
+            $"{AppPaths.PhysicalPath}/{Root}"
                 .FlattenMultipleForwardSlashes()
                 .TrimLastSlash()
         );
@@ -133,7 +116,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.Dependencie
             Path = fullNameFromAppRoot.TrimPrefixSlash().SuffixSlash(),
             Created = d.CreationTime,
             Modified = d.LastWriteTime,
-            Url = $"{_appPaths.Path}{fullNameFromAppRoot}",
+            Url = $"{AppPaths.Path}{fullNameFromAppRoot}",
         };
     }
 
