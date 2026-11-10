@@ -1,21 +1,18 @@
 ﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
+using ToSic.Eav.Context;
+using ToSic.Eav.ImportExport.Integration;
 using ToSic.Eav.Persistence.Sys.Logging;
-using ToSic.Sxc.Sys.Integration;
 
 namespace ToSic.Sxc.Dnn.ImportExport;
 
-internal class DnnImportExportEnvironment : SxcImportExportEnvironmentBase
+
+
+internal class DnnImportExportEnvironment(ImportExportPathsAndOptions pathAndOptions, ISite site)
+    : ServiceBase("Dnn.ImExEn", connect: [pathAndOptions, site]), IImportExportEnvironment
 {
-    #region Constructors
-
-    /// <summary>
-    /// DI Constructor
-    /// </summary>
-    public DnnImportExportEnvironment(Dependencies services) : base(services, "Dnn.ImExEn") { }
-
-    #endregion
+    public ImportExportPathsAndOptions PathsAndOptions => pathAndOptions;
 
     /// <inheritdoc />
     /// <summary>
@@ -23,7 +20,7 @@ internal class DnnImportExportEnvironment : SxcImportExportEnvironmentBase
     /// </summary>
     /// <param name="sourceFolder"></param>
     /// <param name="destinationFolder">The portal-relative path where the files should be copied to</param>
-    public override List<Message> TransferFilesToSite(string sourceFolder, string destinationFolder)
+    public List<Message> TransferFilesToSite(string sourceFolder, string destinationFolder)
     {
         var l = Log.Fn<List<Message>>($"{sourceFolder}, {destinationFolder}");
         var messages = new List<Message>();
@@ -31,7 +28,7 @@ internal class DnnImportExportEnvironment : SxcImportExportEnvironmentBase
 
         var dnnFileManager = FileManager.Instance;
         var dnnFolderManager = FolderManager.Instance;
-        var siteId = Site.Id;
+        var siteId = site.Id;
 
         if (!dnnFolderManager.FolderExists(siteId, destinationFolder))
         {
@@ -91,14 +88,14 @@ internal class DnnImportExportEnvironment : SxcImportExportEnvironmentBase
         return l.ReturnAsOk(messages);
     }
 
-    public override Version TenantVersion => typeof(PortalSettings).Assembly.GetName().Version;
+    public Version TenantVersion => typeof(PortalSettings).Assembly.GetName().Version;
 
     #region stuff we need for Import
 
-    public override void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap)
+    public void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap)
     {
         var l = Log.Fn($"files: {filesAndPaths.Count}, map size: {fileIdMap.Count}");
-        var siteId = Site.Id;
+        var siteId = site.Id;
         var fileManager = FileManager.Instance;
         var folderManager = FolderManager.Instance;
 
@@ -137,10 +134,10 @@ internal class DnnImportExportEnvironment : SxcImportExportEnvironmentBase
         l.Done();
     }
 
-    public override void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog) 
+    public void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog) 
     {
         var l = Log.Fn($"folders and paths: {foldersAndPath.Count}");
-        var siteId = Site.Id;
+        var siteId = site.Id;
         var folderManager = FolderManager.Instance;
 
         foreach (var folder in foldersAndPath)

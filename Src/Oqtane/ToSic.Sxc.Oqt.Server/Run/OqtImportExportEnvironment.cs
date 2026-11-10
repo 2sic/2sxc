@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Oqtane.Models;
 using Oqtane.Repository;
+using ToSic.Eav.Context;
 using ToSic.Eav.Environment.Sys.ServerPaths;
+using ToSic.Eav.ImportExport.Integration;
 using ToSic.Eav.Persistence.Sys.Logging;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.Sys.Integration;
 using ToSic.Sys.Utils;
 using File = Oqtane.Models.File;
 using IO = System.IO;
@@ -15,52 +16,47 @@ using IO = System.IO;
 namespace ToSic.Sxc.Oqt.Server.Run;
 
 internal class OqtImportExportEnvironment(
-    SxcImportExportEnvironmentBase.Dependencies services,
+    ImportExportPathsAndOptions pathAndOptions,
+    ISite site,
     IServerPaths oqtServerPaths,
     IFileRepository oqtFileRepository,
     IFolderRepository oqtFolderRepository)
-    : SxcImportExportEnvironmentBase(services, $"{OqtConstants.OqtLogPrefix}.IExEnv")
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.IExEnv", connect: [site]), IImportExportEnvironment
 {
+    public ImportExportPathsAndOptions PathsAndOptions => pathAndOptions;
+    
     /// <inheritdoc />
     /// <summary>
     /// Copy all files from SourceFolder to DestinationFolder
     /// </summary>
     /// <param name="sourceFolder"></param>
     /// <param name="destinationFolder">The portal-relative path where the files should be copied to</param>
-    public override List<Message> TransferFilesToSite(string sourceFolder, string destinationFolder)
+    public List<Message> TransferFilesToSite(string sourceFolder, string destinationFolder)
     {
         var l = Log.Fn<List<Message>>($"{sourceFolder}, {destinationFolder}");
         var messages = new List<Message>();
-        var files = IO.Directory.GetFiles(sourceFolder, "*.*");
-        var siteId = Site.Id;
-        var oqtSite = (OqtSite)Site;
+        var files = Directory.GetFiles(sourceFolder, "*.*");
+        var siteId = site.Id;
+        var oqtSite = (OqtSite)site;
 
         // Ensure trim prefixSlash and backslash at the end of folder path, because Oqtane require path like that.
         destinationFolder = destinationFolder.EnsureOqtaneFolderFormat();
 
-        var destinationVirtualPath = IO.Path.Combine(oqtSite.ContentPath, destinationFolder);
+        var destinationVirtualPath = Path.Combine(oqtSite.ContentPath, destinationFolder);
         var destinationFolderFullPath = oqtServerPaths.FullContentPath(destinationVirtualPath);
 
-        if (!IO.Directory.Exists(destinationFolderFullPath))
+        if (!Directory.Exists(destinationFolderFullPath))
         {
             Log.A($"Must create {destinationFolder} in site {siteId}");
-            IO.Directory.CreateDirectory(destinationFolderFullPath);
+            Directory.CreateDirectory(destinationFolderFullPath);
             AddFolder(destinationFolder);
         }
 
         var folderInfo = oqtFolderRepository.GetFolder(siteId, destinationFolder.EnsureOqtaneFolderFormat());
 
-        void MassLog(string msg, Exception exception)
-        {
-            Log.A(msg);
-            if (exception == null) return;
-            messages.Add(new(msg, Message.MessageTypes.Warning));
-            //Exceptions.LogException(exception);
-        }
-
         foreach (var sourceFilePath in files)
         {
-            var destinationFileName = IO.Path.GetFileName(sourceFilePath);
+            var destinationFileName = Path.GetFileName(sourceFilePath);
             Log.A($"Try to copy '{sourceFilePath}' to '{destinationFileName}'");
 
             if (!FileExists(folderInfo, destinationFileName))
@@ -82,20 +78,28 @@ internal class OqtImportExportEnvironment(
         }
 
         // Call the method recursively to handle subdirectories
-        foreach (var sourceFolderPath in IO.Directory.GetDirectories(sourceFolder))
+        foreach (var sourceFolderPath in Directory.GetDirectories(sourceFolder))
         {
             Log.A($"subfolder:{sourceFolderPath}");
-            var newDestinationFolder = IO.Path.Combine(destinationFolder, sourceFolderPath.Replace(sourceFolder, "").EnsureOqtaneFolderFormat());
+            var newDestinationFolder = Path.Combine(destinationFolder, sourceFolderPath.Replace(sourceFolder, "").EnsureOqtaneFolderFormat());
 
             TransferFilesToSite(sourceFolderPath, newDestinationFolder);
         }
 
         return l.Return(messages);
+
+        void MassLog(string msg, Exception exception)
+        {
+            Log.A(msg);
+            if (exception == null) return;
+            messages.Add(new(msg, Message.MessageTypes.Warning));
+            //Exceptions.LogException(exception);
+        }
     }
 
-    public override Version TenantVersion => typeof(OqtImportExportEnvironment).Assembly.GetName().Version!;
+    public Version TenantVersion => typeof(OqtImportExportEnvironment).Assembly.GetName().Version!;
 
-    public override void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap
+    public void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap
     ) => Log.Do($"files: {filesAndPaths.Count}, map size: {fileIdMap.Count}", l =>
     {
         foreach (var file in filesAndPaths)
@@ -103,8 +107,8 @@ internal class OqtImportExportEnvironment(
             var fileId = file.Key;
             var relativePath = file.Value;
 
-            var fileName = IO.Path.GetFileName(relativePath);
-            var directory = IO.Path.GetDirectoryName(relativePath).EnsureOqtaneFolderFormat();
+            var fileName = Path.GetFileName(relativePath);
+            var directory = Path.GetDirectoryName(relativePath).EnsureOqtaneFolderFormat();
             if (directory == null)
             {
                 l.A($"Warning: File '{relativePath}', folder is 'null' doesn't exist on drive");
@@ -144,7 +148,7 @@ internal class OqtImportExportEnvironment(
 
     });
 
-    public override void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog) 
+    public void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog) 
     {
         var l = Log.Fn($"folders and paths: {foldersAndPath.Count}");
         foreach (var folder in foldersAndPath)
@@ -156,7 +160,7 @@ internal class OqtImportExportEnvironment(
                     continue;
                 }
 
-                var directory = IO.Path.GetDirectoryName(folder.Value);
+                var directory = Path.GetDirectoryName(folder.Value);
                 if (directory == null)
                 {
                     l.A($"Parent folder of folder {folder.Value} doesn't exist");
@@ -182,23 +186,23 @@ internal class OqtImportExportEnvironment(
         l.Done($"done - final count {folderIdCorrectionList.Count}");
     }
 
-    private File Add(Folder parent, IO.Stream body, string fileName, OqtSite oqtSite)
+    private File Add(Folder parent, Stream body, string fileName, OqtSite oqtSite)
     {
         var l = Log.Fn<File>($"Add {fileName}, folderId:{parent.FolderId}, siteId {oqtSite.Id}");
 
-        var fullContentPath = IO.Path.Combine(oqtServerPaths.FullContentPath(oqtSite.ContentPath), parent.Path);
-        IO.Directory.CreateDirectory(fullContentPath);
-        var filePath = IO.Path.Combine(fullContentPath, fileName);
-        using (var stream = new IO.FileStream(filePath, IO.FileMode.Create))
+        var fullContentPath = Path.Combine(oqtServerPaths.FullContentPath(oqtSite.ContentPath), parent.Path);
+        Directory.CreateDirectory(fullContentPath);
+        var filePath = Path.Combine(fullContentPath, fileName);
+        using (var stream = new FileStream(filePath, FileMode.Create))
         {
             body.CopyTo(stream);
         }
-        var fileInfo = new IO.FileInfo(filePath);
+        var fileInfo = new FileInfo(filePath);
 
         // register into oqtane
         var oqtFileData = new File
         {
-            Name = IO.Path.GetFileName(fileName),
+            Name = Path.GetFileName(fileName),
             FolderId = parent.FolderId,
             Extension = fileInfo.Extension.ToLowerInvariant().Replace(".", ""),
             Size = (int)fileInfo.Length,
@@ -217,7 +221,7 @@ internal class OqtImportExportEnvironment(
         => oqtFileRepository.GetFiles(folderInfo.FolderId, false)
             .FirstOrDefault(f => f.Name.Equals(fileName, StringComparison.OrdinalIgnoreCase));
 
-    private Folder GetOqtFolderByPath(string path) => oqtFolderRepository.GetFolder(Site.Id, path.EnsureOqtaneFolderFormat());
+    private Folder GetOqtFolderByPath(string path) => oqtFolderRepository.GetFolder(site.Id, path.EnsureOqtaneFolderFormat());
 
     private Folder AddFolder(string path)
     {
@@ -230,8 +234,8 @@ internal class OqtImportExportEnvironment(
         {
             // find parent
             var pathWithPretendFileName = path.TrimLastSlash();
-            var parent = IO.Path.GetDirectoryName(pathWithPretendFileName) + "/";
-            var subfolder = IO.Path.GetFileName(pathWithPretendFileName);
+            var parent = Path.GetDirectoryName(pathWithPretendFileName) + "/";
+            var subfolder = Path.GetFileName(pathWithPretendFileName);
             var parentFolder = GetOqtFolderByPath(parent) ?? GetOqtFolderByPath("");
 
             // Create the new virtual folder
@@ -253,7 +257,7 @@ internal class OqtImportExportEnvironment(
 
     private Folder CreateVirtualFolder(Folder parentFolder, string path, string folder)
     {
-        var newVirtualFolder = AdamFolderHelper.NewVirtualFolder(Site.Id, parentFolder.FolderId, path, folder);
+        var newVirtualFolder = AdamFolderHelper.NewVirtualFolder(site.Id, parentFolder.FolderId, path, folder);
         oqtFolderRepository.AddFolder(newVirtualFolder);
         return newVirtualFolder;
     }
