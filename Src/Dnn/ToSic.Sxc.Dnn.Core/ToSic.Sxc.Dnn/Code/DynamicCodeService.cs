@@ -38,7 +38,7 @@ internal abstract partial class DynamicCodeService(DynamicCodeService.Dependenci
     public record ScopedDependencies(
         Generator<IExecutionContextFactory> ExCtxGenerator,
         Generator<AppForCodeShared, AppForCodeShared.Options> AppGenerator,
-        Generator<Apps.App, IAppForCode> AppDynGenerator,
+        Generator<Apps.AppDynamic, IAppForCode> AppDynGenerator,
         LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder)
         : DependenciesBase(connect: [ExCtxGenerator, AppGenerator, AppDynGenerator, ModAndBlockBuilder]);
 
@@ -74,11 +74,11 @@ internal abstract partial class DynamicCodeService(DynamicCodeService.Dependenci
         return primaryApp;
     }
 
-    private App GetAndInitApp(IAppIdentityPure appIdentity, ISite? overrideSite, bool? showDrafts = null)
+    private AppDynamic GetAndInitApp(IAppIdentityPure appIdentity, ISite? overrideSite, bool? showDrafts = null)
     {
         var appGen = ServicesScoped.AppGenerator;
 
-        var l = Log.Fn<App>($"{appIdentity.Show()}, site:{overrideSite != null}, showDrafts: {showDrafts}");
+        var l = Log.Fn<AppDynamic>($"{appIdentity.Show()}, site:{overrideSite != null}, showDrafts: {showDrafts}");
         var app = appGen.New(new(overrideSite, appIdentity, new() { ShowDrafts = showDrafts }));
         var dynApp = ServicesScoped.AppDynGenerator.New(app);
         return l.Return(dynApp);

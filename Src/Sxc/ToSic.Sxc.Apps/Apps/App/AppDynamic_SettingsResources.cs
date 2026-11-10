@@ -5,7 +5,7 @@ using ToSic.Sxc.Data.Sys.Factory;
 
 namespace ToSic.Sxc.Apps;
 
-public partial class App
+public partial class AppDynamic
 {
     #region Dynamic Properties: Configuration, Settings, Resources
 

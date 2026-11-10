@@ -4,11 +4,11 @@ using ToSic.Sxc.Apps.Sys;
 
 namespace ToSic.Sxc.Apps;
 
-partial class App
+partial class AppDynamic
 {
     /// <inheritdoc />
     [field: AllowNull, MaybeNull]
-    public IAppData Data => field ??= MyOptions.DataService.BuildData<AppDataWithCrud, IAppData>(this.PureIdentity());
+    public IAppData Data => field ??= MyOptions.DataService.BuildData<AppDataDynamic, IAppData>(this.PureIdentity());
 
     /// <summary>
     /// Accessor to queries. Use like:

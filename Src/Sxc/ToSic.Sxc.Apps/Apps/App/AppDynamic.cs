@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Apps;
 [PrivateApi("hide implementation - IMPORTANT: was PublicApi_Stable_ForUseInYourCode up to 16.03!")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
-public partial class App(LazySvc<GlobalPaths> globalPaths, LazySvc<ICodeDataFactory> cdfLazy, LazySvc<QueryManager> queryManager)
+public partial class AppDynamic(LazySvc<GlobalPaths> globalPaths, LazySvc<ICodeDataFactory> cdfLazy, LazySvc<QueryManager> queryManager)
     // Note: If this is ever changed to not inherit from the EavApp, make sure you correct/update the LightSpeed code as well as it checks for this base class
     : ServiceWithSetup<IAppForCode>("App.SxcApp", connect: [globalPaths, cdfLazy, queryManager]),
         IApp, IAppForCode

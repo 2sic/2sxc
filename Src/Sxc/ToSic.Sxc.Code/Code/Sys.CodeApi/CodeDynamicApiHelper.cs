@@ -28,7 +28,7 @@ internal class CodeDynamicApiHelper(ExecutionContext exCtx) : ICodeDynamicApiHel
     // Fails - was invisible because of MEL
     //public IApp App => (IApp)ExCtx.App!;
     // works
-    public IApp App => field ??= exCtx.GetService<Generator<App, IAppForCode>>().New(exCtx.App!);
+    public IApp App => field ??= exCtx.GetService<Generator<AppDynamic, IAppForCode>>().New(exCtx.App!);
 
     #endregion
 

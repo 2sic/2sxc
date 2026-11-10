@@ -13,7 +13,7 @@ public partial class ExecutionContext
     [PrivateApi]
     public void AttachApp(IAppForCode app)
     {
-        if (app is App appClassic)
+        if (app is AppDynamic appClassic)
             appClassic.SetupCodeDataFactory(Cdf);
 
         App = app;

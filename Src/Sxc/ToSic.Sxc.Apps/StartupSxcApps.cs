@@ -24,7 +24,7 @@ public static class StartupSxcApps
 
         services.TryAddTransient<AppForCodeShared>();  // new v22
         services.TryAddTransient<AppForCodeDataSourceService>(); // new v22
-        services.TryAddTransient<App>();
+        services.TryAddTransient<AppDynamic>();
 
         services.TryAddTransient<IAppTyped, AppTyped>();
         services.TryAddTransient(typeof(IAppTyped<,>), typeof(AppTyped<,>));    // new v17

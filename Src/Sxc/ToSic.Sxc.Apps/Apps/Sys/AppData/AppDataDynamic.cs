@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Apps.Sys;
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class AppDataWithCrud(Eav.DataSources.App.Dependencies services, Generator<AppDataCrud, AppDataCrud.Options> appDataCrud)
+internal class AppDataDynamic(Eav.DataSources.App.Dependencies services, Generator<AppDataCrud, AppDataCrud.Options> appDataCrud)
     : Eav.DataSources.App(services), IAppData
 {
 
