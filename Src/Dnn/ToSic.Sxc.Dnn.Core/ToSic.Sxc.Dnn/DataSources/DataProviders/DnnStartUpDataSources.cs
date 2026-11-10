@@ -20,11 +20,6 @@ internal static class DnnStartUpDataSources
         // info class to ensure SQL knows about default connections
         services.TryAddTransient<SqlPlatformInfo, DnnSqlPlatformInfo>();
 
-        // General data sources
-        services.TryAddTransient<DnnSql>();
-        services.TryAddTransient<DnnUserProfile>();
-        services.TryAddTransient<DnnUserProfile.Dependencies>();
-
         services.TryAddTransient<PagesDataSourceProvider, DnnPagesDsProvider>();
         services.TryAddTransient<SitesDataSourceProvider, DnnSitesDsProvider>();
 
@@ -35,7 +30,6 @@ internal static class DnnStartUpDataSources
         // General data sources
         services.TryAddTransient<DnnSql>();
         services.TryAddTransient<DnnUserProfile>();
-        services.TryAddTransient<DnnUserProfile.Dependencies>();
 
         return services;
     }

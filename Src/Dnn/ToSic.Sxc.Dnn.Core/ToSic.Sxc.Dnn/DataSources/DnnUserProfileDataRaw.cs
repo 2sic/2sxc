@@ -32,8 +32,8 @@ namespace ToSic.Sxc.Dnn.DataSources;
         "ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource, ToSic.SexyContent"
     ]
 )]
-public class DnnUserProfile(DnnUserProfile.Dependencies services)
-    : CustomDataSource(services.ParentServices, "Dnn.Profile", connect: [services])
+public class DnnUserProfile(CustomDataSource.Dependencies parentServices, ISite site, IZoneMapper zoneMapper, LazySvc<DnnSecurity> dnnSecurity)
+    : CustomDataSource(parentServices, "Dnn.Profile", connect: [site, zoneMapper, dnnSecurity])
 {
     #region Configuration-properties
 
@@ -81,21 +81,14 @@ public class DnnUserProfile(DnnUserProfile.Dependencies services)
 
     #endregion
 
-    #region Constructor / DI
-
-    public new record Dependencies(CustomDataSource.Dependencies ParentServices, ISite Site, IZoneMapper ZoneMapper, LazySvc<DnnSecurity> DnnSecurity)
-        : DependenciesBase(connect: [Site, ZoneMapper, DnnSecurity]);
-
-    #endregion
-
     protected override IEnumerable<IRawData> GetDefault()
     {
         var l = Log.Fn<IImmutableList<IRawEntity>>();
         Configuration.Parse();
 
-        var realTenant = services.Site.Id != EavConstants.NullId
-            ? services.Site
-            : services.ZoneMapper.SiteOfApp(AppId);
+        var realTenant = site.Id != EavConstants.NullId
+            ? site
+            : zoneMapper.SiteOfApp(AppId);
         l.A($"realTenant {realTenant.Id}");
 
         var portalId = realTenant.Id;
@@ -139,7 +132,7 @@ public class DnnUserProfile(DnnUserProfile.Dependencies services)
                 return new DnnUserProfileDataRaw
                 {
                     Id = user.UserID,
-                    Guid = services.DnnSecurity.Value.UserGuid(user),
+                    Guid = dnnSecurity.Value.UserGuid(user),
                     Name = name,
                     Values = userProps,
                 };
