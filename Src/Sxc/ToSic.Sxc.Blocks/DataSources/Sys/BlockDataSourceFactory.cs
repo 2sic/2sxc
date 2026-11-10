@@ -50,7 +50,7 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
                 return l.ReturnAsOk(contextDataSource);
 
             l.A("Generate query");
-            var query = queryGen.New(new(block.App.PureIdentity(), (view.Query as ICanBeEntity).Entity, configLookUp /*contextDataSource*/));
+            var query = queryGen.New(new(block.App.PureIdentity(), (view.Query as ICanBeEntity).Entity, configLookUp /*contextDataSource #DropInOnQuery */));
             l.A("attaching");
             contextDataSource.SetOut(query);
         }

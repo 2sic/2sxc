@@ -14,14 +14,14 @@ public class QueryBuilder<TQuery>(QueryDefinitionService queryDefSvc, Generator<
     where TQuery : Query
 {
     
-    public TQuery? TryBuild(IAppIdentity appIdentity, string? nameOrGuid, ILookUpEngine lookUps, int recurseParents = 0)
+    public TQuery? TryBuild(IAppIdentity appIdentity, string? queryNameOrGuid, ILookUpEngine lookUps, int recurseParents = 0)
     {
-        var l = Log.Fn<TQuery>($"{nameOrGuid}, recurse: {recurseParents}");
-        var qEntity = queryDefSvc.TryGetQueryEntity(appIdentity, nameOrGuid, recurseParents);
+        var l = Log.Fn<TQuery>($"{queryNameOrGuid}, recurse: {recurseParents}");
+        var qEntity = queryDefSvc.TryGetQueryEntity(appIdentity, queryNameOrGuid, recurseParents);
         if (qEntity == null)
             return l.ReturnNull("not found");
-        var delayedQuery = queryGenerator.New(new(appIdentity, qEntity, lookUps));
-        return l.Return(delayedQuery, "found");
+        var query = queryGenerator.New(new(appIdentity, qEntity, lookUps));
+        return l.Return(query, "found");
     }
 
 }
