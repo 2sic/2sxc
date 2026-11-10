@@ -20,7 +20,7 @@ public class DataSourceOptionsMs(IAppIdentity? identity, Func<ILookUpEngine?>? g
                           ?? (identityRequired
                               ? throw new(
                                   "Creating a DataSource requires an AppIdentity which must either be supplied by the context, " +
-                                  $"(the Module / WebApi call) or provided manually by spawning a new {nameof(IDataService)} with the AppIdentity using 'New(...).")
+                                  "(the Module / WebApi call) or provided manually by spawning a new IDataService with the AppIdentity using 'New(...).")
                               : new AppIdentity(0, 0)
                           );
         var opts = new DataSourceOptionConverter().Create(new DataSourceOptions
