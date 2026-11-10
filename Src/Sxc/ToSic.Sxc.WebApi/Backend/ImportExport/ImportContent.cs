@@ -22,7 +22,7 @@ public class ImportContent(
     IEnvironmentLogger envLogger,
     LazySvc<ImportService> importerLazy,
     LazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
-    ZipImport zipImport,
+    Generator<ZipImport, ZipImport.Options> zipImport,
     Generator<IJsonDataReader, IJsonDataReader.Options> jsonReaderGen,
     IGlobalConfiguration globalConfiguration,
     IAppReaderFactory appReaders,
@@ -43,35 +43,43 @@ public class ImportContent(
     public ImportResultDto Import(int zoneId, int appId, string fileName, Stream stream, string defaultLanguage)
     {
         var l = Log.Fn<ImportResultDto>();
-        var result = new ImportResultDto();
 
         var allowSystemChanges = userLazy.Value.IsSystemAdmin;
         if (fileName.EndsWith(".zip"))
         {   // ZIP
             try
             {
-                zipImport.Init(zoneId, appId, userLazy.Value.IsSystemAdmin);
                 var temporaryDirectory = Path.Combine(globalConfiguration.TemporaryFolder(), Guid.NewGuid().GuidCompress().Substring(0, 8));
 
-                result.Success = zipImport.ImportZip(stream, temporaryDirectory);
-                result.Messages.AddRange(zipImport.Messages);
+                var importResult = zipImport
+                    .New(new(zoneId, appId, userLazy.Value.IsSystemAdmin))
+                    .ImportZip(stream, temporaryDirectory);
+                var result = new ImportResultDto
+                {
+                    Success = importResult.Success,
+                    Messages = importResult.Messages,
+                };
+                return l.Return(result);
             }
             catch (Exception ex)
             {
                 l.Ex(ex);
                 envLogger.LogException(ex);
             }
+
+            return l.Return(new());
         }
         else
         {
             // XML
             using var fileStreamReader = new StreamReader(stream);
-            var xmlImport = xmlImportWithFilesLazy.Value.Init(defaultLanguage, allowSystemChanges);
             var xmlDocument = XDocument.Parse(fileStreamReader.ReadToEnd());
+            var xmlImport = xmlImportWithFilesLazy.Value.Init(defaultLanguage, allowSystemChanges);
+            var result = new ImportResultDto();
             result.Success = xmlImport.ImportXml(zoneId, appId, parentAppId: null /* not sure if we never have a parent here */, xmlDocument);
             result.Messages.AddRange(xmlImport.Messages);
+            return l.Return(result);
         }
-        return l.Return(result);
     }
 
 

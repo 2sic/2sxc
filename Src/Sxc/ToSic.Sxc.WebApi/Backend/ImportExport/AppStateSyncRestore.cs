@@ -25,7 +25,7 @@ public class AppStateSyncRestore(
     ISite site,
     IUser user,
     IImportExportEnvironment env,
-    ZipImport zipImport,
+    Generator<ZipImport, ZipImport.Options> zipImport,
     ISysFeaturesService features)
     : ServiceBase("Bck.Export",
         connect: [xmlImportWithFilesLazy, impExpHelpers, workAppsRemove, site, user, env, zipImport, features]),
@@ -102,9 +102,9 @@ public class AppStateSyncRestore(
             var globalTemplatesStateFolder = Path.Combine(appDataFolder, FolderConstants.ZipFolderForGlobalAppStuff);
             if (Directory.Exists(globalTemplatesStateFolder))
             {
-                zipImport.Init(zoneId, appId, allowCode: true);
+                var zipImportInstance = zipImport.New(new(zoneId, appId, AllowCode: true));
                 var discard = new List<Message>();
-                zipImport.CopyAppGlobalFiles(discard, appId, sourcePath, deleteGlobalTemplates: true, overwriteFiles: true);
+                zipImportInstance.CopyAppGlobalFiles(discard, appId, sourcePath, deleteGlobalTemplates: true, overwriteFiles: true);
             }
 
             // Copy portal files persisted in /App_Data/SiteFiles/ back to site
