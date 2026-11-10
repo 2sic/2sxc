@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Metadata;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Data;
 
 
@@ -13,7 +14,8 @@ namespace ToSic.Sxc.Apps;
 public interface IApp: 
     IAppPaths,
     IAppIdentity,
-    IHasMetadata
+    IHasMetadata,
+    IServiceWithSetup<IAppForCode>
 {
     /// <summary>
     /// App Name
@@ -46,6 +48,7 @@ public interface IApp:
     /// Configuration object with information about the App.
     /// This contains things like app version, path etc.
     /// </summary>
+    /// <remarks>If the underlying AppConfiguration is `null`, it would use default values</remarks>
     IAppConfiguration Configuration { get; }
 
     /// <summary>

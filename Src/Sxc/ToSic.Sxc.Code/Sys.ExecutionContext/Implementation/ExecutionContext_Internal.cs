@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.AppStack;
 using ToSic.Eav.Data.Sys.PropertyLookup;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Data;
@@ -13,9 +12,6 @@ public partial class ExecutionContext
     [PrivateApi]
     public void AttachApp(IAppForCode app)
     {
-        if (app is AppDynamic appClassic)
-            appClassic.SetupCodeDataFactory(Cdf);
-
         App = app;
 
         EditionForHotBuild = Block == null

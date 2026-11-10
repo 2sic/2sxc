@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Apps.Sys.Api01;
+using ToSic.Sxc.Apps.Sys.AppDynamic;
 using ToSic.Sxc.Apps.Sys.AppTyped;
 using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Apps.Sys.Work;
@@ -24,7 +25,7 @@ public static class StartupSxcApps
 
         services.TryAddTransient<AppForCodeShared>();  // new v22
         services.TryAddTransient<AppForCodeDataSourceService>(); // new v22
-        services.TryAddTransient<AppDynamic>();
+        services.TryAddTransient<IAppDynamic, AppDynamic>();
 
         services.TryAddTransient<IAppTyped, AppTyped>();
         services.TryAddTransient(typeof(IAppTyped<,>), typeof(AppTyped<,>));    // new v17

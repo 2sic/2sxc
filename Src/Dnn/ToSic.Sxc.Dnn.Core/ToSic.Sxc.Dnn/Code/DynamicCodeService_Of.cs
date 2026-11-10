@@ -1,22 +1,23 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Sys.ExecutionContext;
-using ExecutionContext = ToSic.Sxc.Sys.ExecutionContext.ExecutionContext;
+using ToSic.Sys.Wrappers;
 
 namespace ToSic.Sxc.Services.Sys.DynamicCodeService;
 
 partial class DynamicCodeService
 {
     /// <inheritdoc />
-    public IDynamicCode12 OfApp(int appId) => OfAppInternal(appId: appId);
+    public IDynamicCode12 OfApp(int appId) => GetApi12(appId: appId);
 
     /// <inheritdoc />
-    public IDynamicCode12 OfApp(int zoneId, int appId) => OfAppInternal(zoneId: zoneId, appId: appId);
+    public IDynamicCode12 OfApp(int zoneId, int appId) => GetApi12(zoneId: zoneId, appId: appId);
 
     /// <inheritdoc />
-    public IDynamicCode12 OfApp(IAppIdentity appIdentity) => OfAppInternal(zoneId: appIdentity.ZoneId, appId: appIdentity.AppId);
+    public IDynamicCode12 OfApp(IAppIdentity appIdentity) => GetApi12(zoneId: appIdentity.ZoneId, appId: appIdentity.AppId);
 
     /// <inheritdoc />
     public IDynamicCode12 OfModule(int pageId, int moduleId)
@@ -44,7 +45,7 @@ partial class DynamicCodeService
     /// <inheritdoc />
     public IDynamicCode12 OfSite(int siteId) => OfApp(GetPrimaryAppIdentity(siteId));
 
-    private IDynamicCode12 OfAppInternal(int? zoneId = null, int? appId = null)
+    private IDynamicCode12 GetApi12(int? zoneId = null, int? appId = null)
     {
         var l = Log.Fn<IDynamicCode12>();
         MakeSureLogIsInHistory();
@@ -58,7 +59,7 @@ partial class DynamicCodeService
             CompatibilityFallback = CompatibilityLevels.CompatibilityLevel12,
         });
         var app = GetAndInitApp(ToAppIdentityOrThrow(zoneId, appId), overrideSite: null);
-        ((IExCtxAttachApp)exCtx).AttachApp(app);
+        ((IExCtxAttachApp)exCtx).AttachApp(((IWrapper<IAppForCode>)app).GetContents());
         var code12 = new DynamicApiStandalone(exCtx, exCtx.GetDynamicApi());
         return l.ReturnAsOk(code12);
     }
