@@ -44,6 +44,8 @@ public static class StartupSxcApps
         // Simple DataController - registration was missing
         services.TryAddTransient<SimpleDataEditService>();
 
+        services.TryAddTransient<AppDataCrud>();    // new v22
+
         return services;
     }
 
