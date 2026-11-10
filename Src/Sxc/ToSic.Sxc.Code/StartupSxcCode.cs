@@ -14,7 +14,6 @@ using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Render.Engines.Sys;
 using ToSic.Sxc.Render.Engines.Token.Sys;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Sys.TypedApiService;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 // ReSharper disable once CheckNamespace
@@ -48,7 +47,6 @@ public static class StartupSxcCode
 #pragma warning restore CS0618 // Type or member is obsolete
 
         // v20 TypedCodeService
-        services.TryAddTransient<TypedApiService.Dependencies>();           // new v22
         services.TryAddTransient<TypedApiService.ScopedDependencies>();     // new v22
         services.TryAddTransient<ITypedApiService, TypedApiService>();
 

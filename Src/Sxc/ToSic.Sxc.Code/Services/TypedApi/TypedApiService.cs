@@ -13,15 +13,15 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
 
-namespace ToSic.Sxc.Services.Sys.TypedApiService;
+namespace ToSic.Sxc.Services;
 
 /// <summary>
 /// WIP - goal is to have a DI factory which creates DynamicCode objects for use in Skins and other external controls
 /// Not sure how to get this to work, since normally we always start with a code-file, and here we don't have one!
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class TypedApiService(TypedApiService.Dependencies services, string? logName = null /* must be nullable for DI */)
-    : ServiceBase<TypedApiService.Dependencies>(services, logName ?? $"{SxcLogName}.TypeCS"),
+internal class TypedApiService(IServiceProvider serviceProvider, LazySvc<ILogStore> logStore, ISite site, LazySvc<IZoneMapper> zoneMapper, LazySvc<IAppsCatalog> appsCatalog)
+    : ServiceBase($"{SxcLogName}.TypeCS", connect: [/* never! serviceProvider */ logStore, zoneMapper, appsCatalog]),
         ITypedApiService,
         ILogWasConnected
 {
@@ -55,16 +55,16 @@ internal class TypedApiService(TypedApiService.Dependencies services, string? lo
         var realAppId = appId ?? throw new ArgumentException($@"At least the {nameof(appId)} is required and must be a valid AppId", nameof(appId));
 
         // lookup zoneId if not provided
-        var realZoneId = zoneId ?? Services.AppsCatalog.Value.AppIdentity(realAppId).ZoneId;
+        var realZoneId = zoneId ?? appsCatalog.Value.AppIdentity(realAppId).ZoneId;
         return GetAndInitApp(new AppIdentityPure(realZoneId, realAppId), site, showDrafts: withUnpublished);
     }
 
 
-    private IAppIdentityPure GetPrimaryAppIdentity(int? siteId, ISite? site = default)
+    private IAppIdentityPure GetPrimaryAppIdentity(int? siteId, ISite? preferredSite = default)
     {
-        siteId ??= site?.Id ?? Services.Site.Id;
-        var zoneId = Services.ZoneMapper.Value.GetZoneId(siteId.Value);
-        var primaryApp = Services.AppsCatalog.Value.PrimaryAppIdentity(zoneId);
+        siteId ??= preferredSite?.Id ?? site.Id;
+        var zoneId = zoneMapper.Value.GetZoneId(siteId.Value);
+        var primaryApp = appsCatalog.Value.PrimaryAppIdentity(zoneId);
         return primaryApp;
     }
 
@@ -87,7 +87,7 @@ internal class TypedApiService(TypedApiService.Dependencies services, string? lo
     /// </summary>
     [field: AllowNull, MaybeNull]
     protected IServiceProvider ScopedServiceProvider => field
-        ??= Services.ServiceProvider.CreateScope().ServiceProvider;
+        ??= serviceProvider.CreateScope().ServiceProvider;
 
     [field: AllowNull, MaybeNull]
     private ScopedDependencies ServicesScoped => field
@@ -206,7 +206,7 @@ internal class TypedApiService(TypedApiService.Dependencies services, string? lo
     {
         if (_logInitDone) return;
         _logInitDone = true;
-        Services.LogStore.Value.Add("code-api-service", Log);
+        logStore.Value.Add("code-api-service", Log);
     }
 
 }
