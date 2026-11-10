@@ -24,7 +24,6 @@ public static class StartupSxcRender
         services.TryAddTransient<InTextContentBlockRenderer>();
         
         services.TryAddTransient<IBlockRenderer, BlockRenderer>();
-        services.TryAddTransient<BlockRenderer.Dependencies>();
 
         services.TryAddTransient<IRenderingHelper, RenderingHelper>();
 

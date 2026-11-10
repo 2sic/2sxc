@@ -18,21 +18,19 @@ namespace ToSic.Sxc.Render.Block.Sys;
 /// </summary>
 [PrivateApi("not sure yet what to call this, maybe BlockHost or something")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public partial class BlockRenderer(BlockRenderer.Dependencies services)
-    : ServiceBase<BlockRenderer.Dependencies>(services, "Sxc.BlkBld"), IBlockRenderer
+public partial class BlockRenderer(
+    Generator<IEngine> engineFactory,
+    Generator<IEnvironmentInstaller> envInstGen,
+    Generator<IRenderingHelper> renderHelpGen,
+    LazySvc<PageChangeSummary> pageChangeSummary,
+    LazySvc<ILicenseService> licenseService,
+    IModulesOutputService modulesOutputService,
+    CodeInfosInScope codeInfos,
+    BlockCachingHelper blockCachingHelper)
+    : ServiceBase("Sxc.BlkBld", connect:
+        [engineFactory, envInstGen, renderHelpGen, pageChangeSummary, licenseService, modulesOutputService, codeInfos, blockCachingHelper]),
+        IBlockRenderer
 {
-    public record Dependencies(
-        Generator<IEngine> EngineFactory,
-        Generator<IEnvironmentInstaller> EnvInstGen,
-        Generator<IRenderingHelper> RenderHelpGen,
-        LazySvc<PageChangeSummary> PageChangeSummary,
-        LazySvc<ILicenseService> LicenseService,
-        IModulesOutputService ModulesOutputService,
-        CodeInfosInScope CodeInfos,
-        BlockCachingHelper BlockCachingHelper)
-        : DependenciesBase(connect:
-            [EngineFactory, EnvInstGen, RenderHelpGen, PageChangeSummary, LicenseService, ModulesOutputService, CodeInfos, BlockCachingHelper]);
-
     #region Constructor
 
     public IBlockRenderer Setup(IBlock cb)

@@ -1,7 +1,6 @@
 ﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
-using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Render.Engines.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
@@ -17,7 +16,7 @@ public partial class BlockRenderer
 
     [PrivateApi]
     [field: AllowNull, MaybeNull]
-    public IRenderingHelper RenderingHelper => field ??= Services.RenderHelpGen.New().Init(Block);
+    public IRenderingHelper RenderingHelper => field ??= renderHelpGen.New().Init(Block);
 
     public IRenderResult Run(bool topLevel, RenderSpecs specs)
     {
@@ -40,7 +39,7 @@ public partial class BlockRenderer
             // Because once these properties are picked up, they are flushed
             // So only the top-level should get them
             var changeSummary = topLevel
-                ? Services.PageChangeSummary.Value
+                ? pageChangeSummary.Value
                     .FinalizeAndGetAllChanges(Block.ParentId, Block.Context.PageServiceShared, specs, Block.Context.Permissions.IsContentAdmin)
                 : new();
 
@@ -67,7 +66,7 @@ public partial class BlockRenderer
         }
 
         // Add information to code changes if relevant
-        Services.CodeInfos.AddContext(() => new SpecsForLogHistory().BuildSpecsForLogHistory(Block));
+        codeInfos.AddContext(() => new SpecsForLogHistory().BuildSpecsForLogHistory(Block));
 
 
         return l.Return(_cached!);
@@ -93,7 +92,7 @@ public partial class BlockRenderer
             // This way first the top block does this, later on inner-child blocks
             // will also do it (since this same code is called for them when they render).
             // Later on we'll collect the result.
-            Services.BlockCachingHelper.PushAppDependenciesToRoot(Block);
+            blockCachingHelper.PushAppDependenciesToRoot(Block);
 
             // do pre-check to see if system is stable & ready
             var (body, err) = GenerateErrorMsgIfInstallationNotOk();
@@ -209,7 +208,7 @@ public partial class BlockRenderer
             // This is not ideal, because it actually changes what's in the DIV
             // We would rather add it to the end, but ATM that doesn't trigger turnOn in AJAX reload
             // Note: DNN implementation will ignore the module ID, but Oqtane needs it
-            var additionalTags = Services.ModulesOutputService.GetMoreTagsAndFlush(Block.Context.Module.Id);
+            var additionalTags = modulesOutputService.GetMoreTagsAndFlush(Block.Context.Module.Id);
 
             var bodyWithAddOns = additionalTags.Any()
                 ? body + "\n" + string.Join("\n", additionalTags.Select(t => t?.ToString()))
@@ -255,7 +254,7 @@ public partial class BlockRenderer
         if (InstallationOk)
             return (null, false);
 
-        var installer = Services.EnvInstGen.New();
+        var installer = envInstGen.New();
         var notReady = installer.UpgradeMessages();
         if (!string.IsNullOrEmpty(notReady))
         {
@@ -275,7 +274,7 @@ public partial class BlockRenderer
         // This would be the case after a typical update,
         // where the fingerprint changes and the license needs to be re-registered.
         // If any are valid, then it's ok (there may be multiple licenses registered, and some may be valid, some not)
-        if (!Services.LicenseService.Value.AllRegisteredLicensesAreInvalid)
+        if (!licenseService.Value.AllRegisteredLicensesAreInvalid)
             return null;
 
         Log.A("none of the licenses are valid");
@@ -305,7 +304,7 @@ public partial class BlockRenderer
 
         // Get engine service, using the view's engine name, and initialize it with the block
         // Note: uses .net 8 dependency injection "keyed" feature (new 2026-08-19)
-        _engine = Services.EngineFactory.New(Block.View.GetEngineName());
+        _engine = engineFactory.New(Block.View.GetEngineName());
         return l.Return(_engine, "created");
     }
     private IEngine? _engine;
