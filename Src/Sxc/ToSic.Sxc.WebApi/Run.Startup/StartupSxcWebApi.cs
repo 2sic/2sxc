@@ -92,9 +92,8 @@ public static class StartupSxcWebApi
         services.TryAddTransient<ContentGroupList>();
 
         // js context / UI
-        services.TryAddTransient<IUiContextBuilder, UiContextBuilder>();  // v22 - default implementation, for re-implementations
-        services.TryAddTransient<UiContextPartsDefault>();  // v22 - default implementation, for re-implementations
-        services.TryAddTransient<IUiContextParts, UiContextPartsDefault>();
+        services.TryAddTransient<SxcUiContextParts>();  // v22 - default implementation, for re-implementations
+        services.TryAddTransient<IUiContextParts, SxcUiContextParts>();
             
         // Helpers
         services.TryAddTransient<ImpExpHelpers>();

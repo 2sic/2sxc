@@ -9,7 +9,7 @@ using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 namespace ToSic.Sxc.Oqt.Server.Controllers;
 
 internal class OqtUiContextParts(
-    Generator<UiContextPartsDefault, IAppReader?> uiDefaults,
+    Generator<SxcUiContextParts, IAppReader?> uiDefaults,
     ILinkPaths linkPaths,
     IContextCompleteService siteCtxSvc,
     SiteState siteState,

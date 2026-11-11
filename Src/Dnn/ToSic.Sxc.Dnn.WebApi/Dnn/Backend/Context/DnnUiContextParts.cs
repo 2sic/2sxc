@@ -12,7 +12,7 @@ using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 
 namespace ToSic.Sxc.Dnn.WebApi.Context;
 
-internal sealed class DnnUiContextParts(Generator<UiContextPartsDefault, IAppReader?> uiDefaults, IContextCompleteService ctxService, ExternalLinksService externalLinksService)
+internal sealed class DnnUiContextParts(Generator<SxcUiContextParts, IAppReader?> uiDefaults, IContextCompleteService ctxService, ExternalLinksService externalLinksService)
     : ServiceWithSetup<IAppReader?>("Dnn.UiCtxP", connect: [uiDefaults, ctxService, externalLinksService]), IUiContextParts
 {
     #region Constructor / DI
