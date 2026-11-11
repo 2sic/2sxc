@@ -8,27 +8,8 @@ using ToSic.Sxc.Apps.Sys.Assets;
 using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Services;
 using ToSic.Sys.Capabilities.Features;
-using ContextLanguageDto = ToSic.Eav.WebApi.Sys.Dto.ContextLanguageDto;
 
 namespace ToSic.Sxc.Backend.Context;
-
-
-public interface IUiContextParts : IServiceWithSetup<IAppReader?>
-{
-    ContextLanguageDto? GetLanguage(Ctx flags);
-    ContextResourceWithApp? GetSystem(Ctx flags);
-    ContextResourceWithApp? GetSite(Ctx flags);
-    WebResourceDto GetPage(Ctx flags);
-    ContextEnableDto GetEnable(CtxEnable ctx);
-    ContextAppDto? GetApp(Ctx flags);
-    ContextUserDto GetUser(Ctx flags);
-
-    /// <summary>
-    /// Features provided must be virtual, so that applications can override this.
-    /// </summary>
-    /// <returns></returns>
-    IList<FeatureDto> GetFeatures(Ctx flags);
-}
 
 public class UiContextPartsDefault(
     IContextOfSiteService siteCtxSvc,
@@ -44,7 +25,7 @@ public class UiContextPartsDefault(
     private ISite Site => field ??= siteCtxSvc.Context.Site;
     protected int ZoneId => siteCtxSvc.Context.Site.ZoneId;
 
-    public ContextLanguageDto? GetLanguage(Ctx flags)
+    public ContextLanguageInfoDto? GetLanguage(Ctx flags)
     {
         if (ZoneId == 0)
             return null;

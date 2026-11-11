@@ -9,7 +9,6 @@ using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.WebApi.Sys.ExternalLinks;
-using ContextLanguageDto = ToSic.Eav.WebApi.Sys.Dto.ContextLanguageDto;
 
 namespace ToSic.Sxc.Dnn.WebApi.Context;
 
@@ -24,7 +23,7 @@ internal sealed class DnnUiContextParts(Generator<UiContextPartsDefault, IAppRea
 
     #endregion
 
-    public ContextLanguageDto GetLanguage(Ctx flags) => UiDefaults.GetLanguage(flags);
+    public ContextLanguageInfoDto GetLanguage(Ctx flags) => UiDefaults.GetLanguage(flags);
 
     public ContextResourceWithApp? GetSystem(Ctx flags) =>
         (UiDefaults.GetSystem(flags) ?? new()) with

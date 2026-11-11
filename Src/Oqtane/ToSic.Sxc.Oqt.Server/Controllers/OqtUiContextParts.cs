@@ -4,7 +4,6 @@ using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Sys.Integration.Paths;
 using ToSic.Sxc.WebApi.Sys.ExternalLinks;
-using ContextLanguageDto = ToSic.Eav.WebApi.Sys.Dto.ContextLanguageDto;
 using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers;
@@ -19,7 +18,7 @@ internal class OqtUiContextParts(
 {
     private IUiContextParts UiDefaults => field ??= uiDefaults.New(MyOptions);
 
-    public ContextLanguageDto GetLanguage(Ctx flags) => UiDefaults.GetLanguage(flags);
+    public ContextLanguageInfoDto GetLanguage(Ctx flags) => UiDefaults.GetLanguage(flags);
 
     public ContextResourceWithApp GetSystem(Ctx flags) =>
         (UiDefaults.GetSystem(flags) ?? new()) with
