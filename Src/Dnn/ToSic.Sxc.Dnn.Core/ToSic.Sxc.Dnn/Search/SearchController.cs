@@ -10,13 +10,11 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Context.Sys.Module;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Render.Polymorphism.Sys;
@@ -40,14 +38,13 @@ internal class SearchController(
     AppsCacheSwitch appsCache,
     Generator<CodeCompiler> codeCompiler,
     Generator<IExecutionContextFactory> exCtxFactory,
-    DnnSiteFactory siteGenerator,
     LazySvc<DnnModuleContextFactory> ctxOfModFac,
     LazySvc<BlockOfModule> moduleAndBlockBuilder,
     LazySvc<ILookUpEngineResolver> dnnLookUpEngineResolver,
     LazySvc<ILogStore> logStore,
     IEditionService editionSvc)
     : ServiceBase("DNN.Search",
-        connect: [appsCache, codeCompiler, exCtxFactory, siteGenerator, ctxOfModFac, dnnLookUpEngineResolver, moduleAndBlockBuilder, logStore, editionSvc])
+        connect: [appsCache, codeCompiler, exCtxFactory, ctxOfModFac, dnnLookUpEngineResolver, moduleAndBlockBuilder, logStore, editionSvc])
 {
     /// <summary>
     /// Initialize all values which are needed - or return a text with the info why we must stop.
@@ -65,7 +62,7 @@ internal class SearchController(
             return l.ReturnAsOk("no module");
 
         // This changes site in whole scope
-        DnnSite = siteGenerator.CreateFromModuleAndShare(DnnModule, Log);
+        DnnSite = ctxOfModFac.Value.CreateFromModuleAndShare(DnnModule, Log);
 
         // New Context because Portal-Settings.Current is null
         var appId = module.BlockIdentifier.AppId;

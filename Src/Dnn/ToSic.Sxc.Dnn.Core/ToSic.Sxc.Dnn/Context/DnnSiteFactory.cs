@@ -1,7 +1,5 @@
-﻿using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
+﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Abstractions.Portals;
-using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Sys.Integration.Paths;
@@ -17,21 +15,6 @@ namespace ToSic.Sxc.Dnn.Context;
 public sealed class DnnSiteFactory(LazySvc<IZoneMapper> zoneMapperLazy, LazySvc<ILinkPaths> linkPathsLazy, DnnCultureResolver cultureResolver)
     : ServiceBase(DnnConstants.LogName, connect: [zoneMapperLazy, linkPathsLazy, cultureResolver])
 {
-    #region Separating factory from shared global state
-
-    /// <summary>
-    /// The shared state, not ideal, but working for now.
-    /// In the future, we must find a better way to clearly broadcast the shared site.
-    /// </summary>
-    public ISite TempSite => TempSiteContents;
-
-    private DnnSite TempSiteContents
-    {
-        get => field ??= CreateFromPortal(null);
-        set;
-    }
-
-    #endregion
 
     #region Swap new Portal Settings into this object
 
@@ -78,30 +61,6 @@ public sealed class DnnSiteFactory(LazySvc<IZoneMapper> zoneMapperLazy, LazySvc<
         };
 
         return l.Return(result, $"Site Id {zoneId}");
-    }
-
-    internal DnnSite CreateFromModuleAndShare(ModuleInfo module, ILog extLog)
-    {
-        var l = extLog.Fn<DnnSite>($"Owner Site: {module?.OwnerPortalID}, Current Site: {module?.PortalID}");
-
-        if (module == null)
-            return l.Return(TempSiteContents, "no module");
-        if (module.OwnerPortalID < 0)
-            return l.Return(TempSiteContents, "no change, owner < 0");
-        if (module.OwnerPortalID == TempSiteContents.ZoneId)
-            return l.Return(TempSiteContents, "no change, owner = temp site");
-
-        // Note: this does look a bit fishy, since creating the object will probably be missing
-        // some properties; should probably go through some kind of portal-settings manager or something?
-        var modulePortalSettings = new PortalSettings(module.OwnerPortalID);
-        var result = CreateFromPortal(modulePortalSettings);
-
-        // Share/Broadcast the new site object, as it will apply to everything now
-        // This is how it used to work before v22
-        // It's not a good implementation as of now, but the complexity to change this is huge.
-        TempSiteContents = result;
-
-        return l.Return(result, "updated with portal settings of module");
     }
 
     /// <summary>

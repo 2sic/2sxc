@@ -17,7 +17,6 @@ using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Adam;
 using ToSic.Sxc.Dnn.Cms;
-using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Code.Sys;
 using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Compile.Sys;
@@ -29,7 +28,6 @@ using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Search;
-using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Services.Sys;
 using ToSic.Sxc.Dnn.StartUp;
 using ToSic.Sxc.Dnn.Web;
@@ -44,7 +42,6 @@ using ToSic.Sys.Boot;
 using ToSic.Sys.Capabilities.Platform;
 using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Users;
-using ExecutionContext = ToSic.Sxc.Sys.ExecutionContext.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn.Startup;
 
@@ -58,9 +55,13 @@ internal static class StartUpDnnCore
         services.TryAddScoped<DnnSecurity>();
         // Make sure that ISite and IZoneCultureResolver use the same singleton!
         services.TryAddTransient<DnnCultureResolver>();
-        services.TryAddScoped<DnnSiteFactory>(); // WIP v22 - separate factory job from the ISite itself - TODO: later should become transient!
-        services.TryAddScoped<ISite>(sp => sp.GetRequiredService<DnnSiteFactory>().TempSite);    // this must come before the IZoneCultureResolver!
-        services.TryAddScoped<IZoneCultureResolver>(x => x.GetRequiredService<DnnSiteFactory>().TempSite);
+
+        services.TryAddTransient<DnnSiteFactory>(); // WIP v22 - separate factory job from the ISite itself - TODO: later should become transient!
+
+        // this must come before ISite and the IZoneCultureResolver!
+        services.TryAddScoped<DnnSiteShareWip>();
+        services.TryAddTransient<ISite>(sp => sp.GetRequiredService<DnnSiteShareWip>().TempSite);
+        services.TryAddTransient<IZoneCultureResolver>(x => x.GetRequiredService<DnnSiteShareWip>().TempSite);
 
         // Module cannot yet be scoped, until we have a per-module scope at some time
         //services.TryAddTransient<IModule, DnnModule>();
@@ -70,7 +71,6 @@ internal static class StartUpDnnCore
         // The page is transient, which seems wrong, but it has very little initialization and is deterministic, so this is fine ATM
         services.TryAddTransient<DnnPageFactory>(); // new v22
         services.TryAddTransient<IPage>(sp => sp.GetRequiredService<DnnPageFactory>().Create()); // new v22
-        //services.TryAddTransient<IPage, DnnPage>(); // old
 
         services.TryAddTransient<IValueConverter, DnnValueConverter>();
         services.TryAddTransient<IXmlExporterIntegration, DnnXmlExporterIntegration>();  // new v22
