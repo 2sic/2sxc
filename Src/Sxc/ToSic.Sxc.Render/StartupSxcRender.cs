@@ -19,7 +19,7 @@ public static class StartupSxcRender
     public static IServiceCollection AddSxcRender(this IServiceCollection services)
     {
         services.TryAddTransient<Services.IRenderService, RenderService>();  // new 12.05
-        services.TryAddTransient<RenderService.Dependencies>();
+        services.TryAddTransient<RenderService>();  // new v22 so it can be used in composition
         services.TryAddTransient<SimpleRenderer>();
         services.TryAddTransient<InTextContentBlockRenderer>();
         

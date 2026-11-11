@@ -1,43 +1,39 @@
 ﻿using System.Web;
-using ToSic.Sxc.Context.Sys;
+using ToSic.Eav.Data;
+using ToSic.Razor.Markup;
+using ToSic.Sxc.Context;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Render.Sys;
+using ToSic.Sxc.Services;
 using Page = System.Web.UI.Page;
 
 namespace ToSic.Sxc.Dnn.Services;
 
-internal class DnnRenderService : RenderService
+internal class DnnRenderService(
+    RenderService originalRenderService,
+    LazySvc<DnnPageChanges> dnnPageChanges,
+    LazySvc<DnnClientResources> dnnClientResources,
+    Generator<IModuleFactory> context)
+    : ServiceBase("Dnn.RndSvc", connect: [originalRenderService, dnnPageChanges, dnnClientResources, context]),
+        IRenderService
 {
-    private readonly LazySvc<DnnPageChanges> _dnnPageChanges;
-    private readonly LazySvc<DnnClientResources> _dnnClientResources;
-    private readonly Generator<IContextOfBlock> _context;
+    public IRawHtmlString One(ICanBeItem parent, NoParamOrder npo = default, ICanBeEntity item = null, object data = null,
+        string field = null, Guid? newGuid = null)
+        => originalRenderService.One(parent, npo, item, data, field, newGuid);
 
-    public DnnRenderService(
-        Dependencies services,
-        LazySvc<DnnPageChanges> dnnPageChanges,
-        LazySvc<DnnClientResources> dnnClientResources,
-        Generator<IContextOfBlock> context
-    ) : base(services)
-    {
-        // Must be done like this, since the base class can also be created directly through DI,
-        // so the default constructor can't include `connect`
-        ConnectLogs([
-            _dnnPageChanges = dnnPageChanges,
-            _dnnClientResources = dnnClientResources,
-            _context = context
-        ]);
-    }
+    public IRawHtmlString All(ICanBeItem parent, NoParamOrder npo = default, string field = null, string apps = null,
+        int max = 100, string merge = null)
+        => originalRenderService.All(parent, npo, field, apps, max, merge);
 
-    public override IRenderResult Module(int pageId, int moduleId,
-        NoParamOrder npo = default,
-        object data = null)
+    public IRenderResult Module(int pageId, int moduleId, NoParamOrder npo = default, object data = null)
     {
         var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
-        var result = base.Module(pageId, moduleId, npo, data);
+        var result = originalRenderService.Module(pageId, moduleId, npo, data);
 
         // this code should be executed in PreRender of page (ensure when calling) or it is too late
         if (HttpContext.Current?.Handler is Page dnnHandler) // detect if we are on the page
-            if (_context.New().Module.BlockIdentifier == null) // find if is in module (because in module it's already handled)
+            if (context.New().Get(moduleId).BlockIdentifier == null) // find if is in module (because in module it's already handled)
                 DnnPageProcess(dnnHandler, result);
 
         return l.ReturnAsOk(result);
@@ -45,7 +41,7 @@ internal class DnnRenderService : RenderService
 
     private void DnnPageProcess(Page dnnPage, IRenderResult result)
     {
-        _dnnPageChanges.Value.Apply(dnnPage, result);
-        _dnnClientResources.Value.Init(dnnPage, null).AddEverything(result.Features);
+        dnnPageChanges.Value.Apply(dnnPage, result);
+        dnnClientResources.Value.Init(dnnPage, null).AddEverything(result.Features);
     }
 }

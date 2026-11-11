@@ -17,7 +17,14 @@ namespace ToSic.Sxc.Render.Sys;
 /// </summary>
 [PrivateApi("Hide Implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class RenderService(RenderService.Dependencies services) : ServiceWithContext("Sxc.RndSvc", connect: [services]),
+public class RenderService(
+    Generator<IEditService> editGenerator,
+    LazySvc<IModuleAndBlockBuilder> builderSvc,
+    Generator<SimpleRenderer> simpleRendererGen,
+    Generator<InTextContentBlockRenderer> inTextRenderer,
+    Generator<IBlockRenderer> blockBuilderGenerator,
+    LazySvc<ILogStore> logStore)
+    : ServiceWithContext("Sxc.RndSvc", connect: [editGenerator, builderSvc, simpleRendererGen, inTextRenderer, logStore, blockBuilderGenerator]),
     IRenderService
 {
     #region Constructor & ConnectToRoot
@@ -60,7 +67,7 @@ public class RenderService(RenderService.Dependencies services) : ServiceWithCon
     {
         item ??= parent.Item;
         var block = ExCtx.GetBlock();
-        var simpleRenderer = services.SimpleRenderer.New();
+        var simpleRenderer = simpleRendererGen.New();
         return Tag.Custom(field == null
             ? simpleRenderer.Render(block, item.Entity, data: data) // without field edit-context
             : simpleRenderer.RenderWithEditContext(block, parent, item, field, newGuid, GetEditService(), data)); // with field-edit-context data-list-context
@@ -93,26 +100,26 @@ public class RenderService(RenderService.Dependencies services) : ServiceWithCon
         var block = ExCtx.GetBlock();
         var editService = GetEditService();
         return Tag.Custom(merge == null
-            ? services.SimpleRenderer.New().RenderListWithContext(block, parent.Entity, field, apps, max, editService)
-            : services.InTextRenderer.New().RenderMerge(block, parent.Entity, field, merge, editService)
+            ? simpleRendererGen.New().RenderListWithContext(block, parent.Entity, field, apps, max, editService)
+            : inTextRenderer.New().RenderMerge(block, parent.Entity, field, merge, editService)
         );
     }
 
 
     /// <inheritdoc />
-    public virtual IRenderResult Module(int pageId, int moduleId, NoParamOrder npo = default, object? data = null)
+    public IRenderResult Module(int pageId, int moduleId, NoParamOrder npo = default, object? data = null)
     {
         var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
 
         // This service is often used from a theme/skin, in which case it doesn't have a ExecutionContext,
         // which also means that it was not logged - which we're doing here.
         if (ExCtxOrNull == null)
-            services.LogStore.Value.Add("render-service", Log);
+            logStore.Value.Add("render-service", Log);
 
-        var moduleBlock = services.Builder.Value.BuildBlock(pageId, moduleId);
+        var moduleBlock = builderSvc.Value.BuildBlock(pageId, moduleId);
 
         moduleBlock.BlockFeatureKeys.Add(SxcPageFeatures.JsApiOnModule.NameId);
-        var builder = services.BlockBuilderGenerator.New().Setup(moduleBlock);
+        var builder = blockBuilderGenerator.New().Setup(moduleBlock);
         var result = builder.Run(true, specs: new() { Data = data });
 
         return l.ReturnAsOk(result);
