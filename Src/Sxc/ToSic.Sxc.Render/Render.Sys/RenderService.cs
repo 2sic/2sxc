@@ -27,24 +27,6 @@ public class RenderService(
     : ServiceWithContext("Sxc.RndSvc", connect: [editGenerator, builderSvc, simpleRendererGen, inTextRenderer, logStore, blockBuilderGenerator]),
     IRenderService
 {
-    #region Constructor & ConnectToRoot
-
-    public record Dependencies(
-        Generator<IEditService> EditGenerator,
-        LazySvc<IModuleAndBlockBuilder> Builder,
-        Generator<SimpleRenderer> SimpleRenderer,
-        Generator<InTextContentBlockRenderer> InTextRenderer,
-        Generator<IBlockRenderer> BlockBuilderGenerator,
-        LazySvc<ILogStore> LogStore)
-        : DependenciesBase(connect: [EditGenerator, Builder, SimpleRenderer, InTextRenderer, LogStore, BlockBuilderGenerator]);
-
-    // ReSharper disable once InconsistentNaming
-
-    #endregion
-
-    //#endregion
-
-
     /// <summary>
     /// Render one content block
     /// This is accessed through DynamicEntity.Render()
