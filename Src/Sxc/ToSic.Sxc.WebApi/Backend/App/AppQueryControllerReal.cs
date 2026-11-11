@@ -7,7 +7,6 @@ using ToSic.Eav.DataSource.Sys.Convert;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Eav.WebApi.Sys.Admin.App;
 using ToSic.Eav.WebApi.Sys.Admin.Query;
-using ToSic.Sxc.Data.Sys.Convert;
 using ToSic.Sxc.Services.DataService.Sys;
 using ToSic.Sys.OData;
 using ToSic.Sys.Security.Permissions;
@@ -153,19 +152,8 @@ public class AppQueryControllerReal(
             ICollection<string> (pair) => pair.Value.Select.ToListOpt(),
             StringComparer.OrdinalIgnoreCase
         );
-        var dc = PrepareDataConverter(includeGuid, context.Permissions.IsContentAdmin, systemQueryOptions);
+        var dc = dataConverter.PrepareDataConverter(systemQueryOptions, includeGuid, context.Permissions.IsContentAdmin);
         var result = dc.Convert(query, streamNames, more?.Guids, selectFields);
         return l.Return(result, "classic convert");
-    }
-
-    private IConvertToEavLight PrepareDataConverter(bool withGuid, bool isEditor, ODataOptions options)
-    {
-        var dc = dataConverter.New();
-        dc.WithGuid = withGuid;
-        if (dc is ConvertToEavLightWithCmsInfo serializerWithEdit)
-            serializerWithEdit.WithEdit = isEditor;
-        if (dc is ConvertToEavLight serializerWithOData)
-            serializerWithOData.AddSelectFields(options.Select.ToListOpt());
-        return dc;
     }
 }

@@ -6,7 +6,6 @@ using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Apps.Sys.Installation;
 using ToSic.Sxc.Apps.Sys.Permissions;
-using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Data.Sys.Convert;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Render.Polymorphism.Sys;
@@ -34,8 +33,6 @@ public static class StartupSxcWeb
 #endif
 
         // The top version should be deprecated soon, so we just use DataToDictionary or an Interface instead
-        services.TryAddTransient<ConvertToEavLight, ConvertToEavLightWithCmsInfo>(); // this is needed for all the EAV uses of conversion
-        services.TryAddTransient<ConvertToEavLightWithCmsInfo>(); // WIP, not public, should use interface instead
         services.TryAddTransient<IConvertToEavLight, ConvertToEavLightWithCmsInfo>();
 
         // Polymorphism - changed to keyed in v22

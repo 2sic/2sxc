@@ -45,7 +45,7 @@ public class AppQueryODataHelper(Generator<IConvertToEavLight> dataConverter, ID
 
                 // If it's not the one to apply OData to, exit here.
                 if (!streamName.EqualsInsensitive(streamToFilter))
-                    return lStream.Return((name: streamName, list: PrepareConverter(stream.Value).Convert(sourceStream)), "not in processing list");
+                    return lStream.Return((name: streamName, list: dataConverter.PrepareDataConverter(stream.Value, withGuid, withEdit).Convert(sourceStream)), "not in processing list");
 
                 // Apply OData to this stream
                 // For the internal processing, we need it to be in an IDataSource
@@ -60,7 +60,7 @@ public class AppQueryODataHelper(Generator<IConvertToEavLight> dataConverter, ID
 
                 // The filtered OData path must still honor that stream's $select,
                 // otherwise adding $filter/$orderby/$top causes the selected fields to be lost.
-                var converted = PrepareConverter(stream.Value).Convert(entities);
+                var converted = dataConverter.PrepareDataConverter(stream.Value, withGuid, withEdit).Convert(entities);
                 return lStream.Return((name: streamName, list: converted), "applied OData and converted");
             })
             .ToDictionary(
@@ -71,18 +71,6 @@ public class AppQueryODataHelper(Generator<IConvertToEavLight> dataConverter, ID
         
         return l.Return(filtered);
 
-        
-        
-        IConvertToEavLight PrepareConverter(ODataOptions options)
-        {
-            var converter = dataConverter.New();
-            converter.WithGuid = withGuid;
-            if (converter is ConvertToEavLightWithCmsInfo serializerWithEdit)
-                serializerWithEdit.WithEdit = withEdit;
-            if (converter is ConvertToEavLight serializerWithOData)
-                serializerWithOData.AddSelectFields(options.Select.ToListOpt());
-            return converter;
-        }
 
     }
 }

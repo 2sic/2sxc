@@ -28,7 +28,6 @@ public class ViewsBackend(
 
         var viewList = appViews.GetAll().ToList();
         Log.A($"fieldDef list count:{contentTypes.Count}, template count:{viewList.Count}");
-        var ser = convertToEavLight.Value as ConvertToEavLight;
 
         var views = viewList
             .Select(view =>
@@ -58,7 +57,7 @@ public class ViewsBackend(
                     Used = view.Entity.Parents().Count(),
                     IsShared = view.IsShared,
                     EditInfo = new(view.Entity),
-                    Metadata = ser?.SubConverter.CreateListOfSubEntities(view.Metadata, SubEntitySerialization.NeverSerializeChildren()),
+                    Metadata = convertToEavLight.Value.SubConverter.CreateListOfSubEntities(view.Metadata, SubEntitySerialization.NeverSerializeChildren()),
                     Permissions = new() { Count = view.Entity.Metadata.Permissions.Count() },
                     Lightspeed = lightspeed,
                 };

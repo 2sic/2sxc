@@ -31,11 +31,6 @@ public class ConvertToEavLightWithCmsInfo(ConvertToEavLight.Dependencies service
 
         AddPresentation(entity, dictionary!);
 
-        // #CleanUp2sxcEditInformation
-        // The edit info is an old feature. To phase it out, disable it whenever a $select filter is active.
-        //if (PresetFilters.FilterFieldsEnabled != true)
-        //    AddEditInfo(entity, dictionary!);
-
         return dictionary;
     }
 
@@ -53,41 +48,6 @@ public class ConvertToEavLightWithCmsInfo(ConvertToEavLight.Dependencies service
         dictionary.Add(ViewParts.Presentation, GetDictionaryFromEntity(decorator.Presentation));
     }
 
-    // #CleanUp2sxcEditInformation 2026-08-26 2dm - this is old, and I believe not used anymore, commented out
-
-    ///// <summary>
-    ///// Add additional information in case we're in edit mode
-    ///// </summary>
-    ///// <param name="entity"></param>
-    ///// <param name="dictionary"></param>
-    //private void AddEditInfo(IEntity entity, IDictionary<string, object> dictionary)
-    //{
-    //    if (!WithEdit)
-    //        return;
-
-    //    // 2024-02-29 2dm - this is old, and I believe not used any more, commented out
-    //    // At least in the Edit-UI it shouldn't be used, 
-    //    // But the key was still found in the inpage, so we're not sure if we can get rid of it
-
-    //    var title = entity.GetBestTitle(Languages);
-    //    if (string.IsNullOrEmpty(title))
-    //        title = "(no title)";
-
-    //    var editDecorator = entity.GetDecorator<EntityInBlockDecorator>();
-
-    //    dictionary.Add(SxcEditSharedConstants.JsonEntityEditNodeName, editDecorator != null // entity is IHasEditingData entWithEditing
-    //        ? new
-    //        {
-    //            sortOrder = editDecorator.SortOrder,
-    //            isPublished = entity.IsPublished,
-    //        }
-    //        : new
-    //        {
-    //            entityId = entity.EntityId,
-    //            title,
-    //            isPublished = entity.IsPublished,
-    //        });
-    //}
 
     #endregion
 }
