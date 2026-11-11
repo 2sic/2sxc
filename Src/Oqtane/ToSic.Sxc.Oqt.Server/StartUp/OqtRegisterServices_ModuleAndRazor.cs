@@ -33,6 +33,7 @@ partial class OqtRegisterServices
     {
         // Multi-Site Services
         services.TryAddTransient<IZoneMapper, OqtZoneMapper>();
+        services.TryAddTransient<ISiteOfZoneSvc, OqtSiteOfZoneSvc>();
         services.TryAddTransient<IZoneFinder, OqtZoneFinder>();
 
         // Update title etc. when a module-content changes
