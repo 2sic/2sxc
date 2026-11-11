@@ -9,14 +9,14 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
-internal class OqtZoneFinder(
+internal class OqtZoneOfSiteSvc(
     ISiteRepository siteRepository,
     ISettingRepository settingRepository,
     LazySvc<ZoneCreator> zoneCreatorLazy,
     OqtSiteGroup oqtSiteGroup,
     LazySvc<ITenantManager> tenantManager)
     : ServiceBase($"{OqtConstants.OqtLogPrefix}.ZoneMp",
-        connect: [siteRepository, settingRepository, zoneCreatorLazy, oqtSiteGroup, tenantManager]), IZoneFinder
+        connect: [siteRepository, settingRepository, zoneCreatorLazy, oqtSiteGroup, tenantManager]), IZoneOfSiteSvc
 {
     public int GetZoneId(int siteId)
     {

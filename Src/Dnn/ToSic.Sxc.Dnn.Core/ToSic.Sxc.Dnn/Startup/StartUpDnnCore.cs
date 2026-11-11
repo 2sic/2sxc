@@ -76,9 +76,9 @@ internal static class StartUpDnnCore
         services.TryAddTransient<IXmlExporterIntegration, DnnXmlExporterIntegration>();  // new v22
         services.TryAddTransient<IImportExportEnvironment, DnnImportExportEnvironment>();
 
-        services.TryAddTransient<IZoneMapper, DnnZoneMapper>();
+        services.TryAddTransient<ICultureStateSvc, DnnCultureStateSvc>();
         services.TryAddTransient<ISiteOfZoneSvc, DnnSiteOfZoneSvc>();
-        services.TryAddTransient<IZoneFinder, DnnZoneFinder>();
+        services.TryAddTransient<IZoneOfSiteSvc, DnnZoneOfSiteSvc>();
 
         services.TryAddTransient<IAssetsExtractor, DnnAssetsExtractor>();
         services.TryAddTransient<IEnvironmentPermission, DnnEnvironmentPermission>();

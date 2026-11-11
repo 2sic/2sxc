@@ -22,7 +22,7 @@ internal class AssemblyDiskCacheService(
     AssemblyResolver assemblyResolver,
     IAppReaderFactory appReadFac,
     LazySvc<IAppPathsMicroSvc> appPathsLazy,
-    LazySvc<IAppSiteService> appSiteSvc,
+    LazySvc<ISiteOfAppSvc> appSiteSvc,
     ISite site)
   : ServiceBase("Dnn.AsmDskCch", connect: [featureService, globalConfiguration, diskCache, assemblyUtilities, assemblyResolver, appReadFac, appPathsLazy, appSiteSvc, site]), IAssemblyDiskCacheService
 {

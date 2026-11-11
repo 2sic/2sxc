@@ -4,7 +4,7 @@ using ToSic.Eav.Context.Sys.ZoneMapper;
 namespace ToSic.Sxc.Render.JsContext.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class JsContextLanguage(LazySvc<IZoneMapper> zoneMapperLazy)
+public class JsContextLanguage(LazySvc<ICultureStateSvc> zoneMapperLazy)
 {
     public string? Current { get; private set; }
     public string? Primary { get; private set; }

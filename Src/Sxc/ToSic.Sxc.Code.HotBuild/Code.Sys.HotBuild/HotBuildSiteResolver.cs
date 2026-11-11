@@ -12,11 +12,11 @@ internal static class HotBuildSiteResolver
     /// This must not short-circuit on ZoneId, because platform can host shared apps across sites
     /// and the first cold request may come from a different site than owning site.
     /// </summary>
-    internal static ISite ResolveForApp(ISite siteFromDi, IAppIdentity appIdentity, IAppSiteService appSiteSvc)
+    internal static ISite ResolveForApp(ISite siteFromDi, IAppIdentity appIdentity, ISiteOfAppSvc siteOfAppSvc)
     {
         try
         {
-            var mappedSite = appSiteSvc.SiteOfApp(appIdentity.AppId);
+            var mappedSite = siteOfAppSvc.SiteOfApp(appIdentity.AppId);
             if (mappedSite is not { Id: not EavConstants.NullId })
                 return siteFromDi;
 

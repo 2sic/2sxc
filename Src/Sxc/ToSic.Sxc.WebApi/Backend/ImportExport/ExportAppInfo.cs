@@ -10,13 +10,13 @@ namespace ToSic.Sxc.Backend.ImportExport;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ExportAppInfo(
-    IZoneMapper zoneMapper,
+    ICultureStateSvc cultureStateSvc,
     AppWorkContextService appCtxSvc,
     AppWorkChain<WorkViews> workViews,
     AppWorkChain<WorkEntities> workEntities,
     ExportHelper exportHelper,
     ISite site
-) : ServiceBase("Bck.Export", connect: [workEntities, appCtxSvc, workViews, zoneMapper, site, exportHelper])
+) : ServiceBase("Bck.Export", connect: [workEntities, appCtxSvc, workViews, cultureStateSvc, site, exportHelper])
 {
     public AppExportInfoModel GetAppInfo(IAppIdentity appIdentity)
     {
@@ -43,7 +43,7 @@ public class ExportAppInfo(
             NameId = appSpecs.NameId,
             Version = appSpecs.VersionSafe(),
             EntitiesCount = appEntities.All().Count(e => !e.HasAncestor()),
-            LanguagesCount = zoneMapper.CulturesEnabledWithState(site).Count,
+            LanguagesCount = cultureStateSvc.CulturesEnabledWithState(site).Count,
             TemplatesCount = allViews.Count,
             HasRazorTemplates = allViews.Any(t => t.IsRazor),
             HasTokenTemplates = allViews.Any(t => !t.IsRazor),

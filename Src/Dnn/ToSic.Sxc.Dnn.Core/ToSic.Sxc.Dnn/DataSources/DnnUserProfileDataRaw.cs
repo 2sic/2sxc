@@ -32,8 +32,8 @@ namespace ToSic.Sxc.Dnn.DataSources;
         "ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource, ToSic.SexyContent"
     ]
 )]
-public class DnnUserProfile(CustomDataSource.Dependencies parentServices, ISite site, IAppSiteService appSiteSvc, LazySvc<DnnSecurity> dnnSecurity)
-    : CustomDataSource(parentServices, "Dnn.Profile", connect: [site, appSiteSvc, dnnSecurity])
+public class DnnUserProfile(CustomDataSource.Dependencies parentServices, ISite site, ISiteOfAppSvc siteOfAppSvc, LazySvc<DnnSecurity> dnnSecurity)
+    : CustomDataSource(parentServices, "Dnn.Profile", connect: [site, siteOfAppSvc, dnnSecurity])
 {
     #region Configuration-properties
 
@@ -88,7 +88,7 @@ public class DnnUserProfile(CustomDataSource.Dependencies parentServices, ISite 
 
         var realTenant = site.Id != EavConstants.NullId
             ? site
-            : appSiteSvc.SiteOfApp(AppId);
+            : siteOfAppSvc.SiteOfApp(AppId);
         l.A($"realTenant {realTenant.Id}");
 
         var portalId = realTenant.Id;

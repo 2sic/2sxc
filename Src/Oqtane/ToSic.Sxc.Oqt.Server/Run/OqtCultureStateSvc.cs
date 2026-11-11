@@ -8,8 +8,8 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
-internal class OqtZoneMapper(ISiteRepository siteRepository, OqtCulture oqtCulture, IAppsCatalog appsCat)
-    : ServiceBase($"{OqtConstants.OqtLogPrefix}.ZoneMp", connect: [siteRepository, oqtCulture, appsCat]), IZoneMapper
+internal class OqtCultureStateSvc(ISiteRepository siteRepository, OqtCulture oqtCulture, IAppsCatalog appsCat)
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.ZoneMp", connect: [siteRepository, oqtCulture, appsCat]), ICultureStateSvc
 {
 
     public List<ISiteLanguageState> CulturesWithState(ISite oqtSite)

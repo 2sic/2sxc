@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Apps.Sys.Api01;
 public partial class SimpleDataEditService(
     DataAssembler dataAssembler,
     LazySvc<ISiteOfZoneSvc> zoneSiteSvc,
-    IZoneMapper zoneMapper,
+    ICultureStateSvc cultureStateSvc,
     Generator<IContextOfSiteService> ctxSvc,
     AppWorkContextService appWorkCtxSvc,
     AppWorkChain<WorkEntitySave> entSave,
@@ -40,7 +40,7 @@ public partial class SimpleDataEditService(
     AppWorkChain<WorkEntityDelete> entDelete,
     LazySvc<IValueConverter> valueConverter,
     LazySvc<PermissionCheckFactory> permCheckFactory
-) : ServiceWithSetup<SimpleDataEditService.Options>("Dta.Simple", connect: [appWorkCtxSvc,  entSave, entUpdate, entDelete, zoneSiteSvc, zoneMapper, dataAssembler, ctxSvc, permCheckFactory, valueConverter])
+) : ServiceWithSetup<SimpleDataEditService.Options>("Dta.Simple", connect: [appWorkCtxSvc,  entSave, entUpdate, entDelete, zoneSiteSvc, cultureStateSvc, dataAssembler, ctxSvc, permCheckFactory, valueConverter])
 {
     /// <summary>
     /// 
@@ -74,7 +74,7 @@ public partial class SimpleDataEditService(
         if (site == null! /* paranoid */)
             return l.Return("", "site is null");
 
-        var usesLanguages = zoneMapper.CulturesEnabledWithState(site).Any();
+        var usesLanguages = cultureStateSvc.CulturesEnabledWithState(site).Any();
         return l.Return(usesLanguages ? site.DefaultCultureCode : "", $"ok, usesLanguages:{usesLanguages}");
     }
         

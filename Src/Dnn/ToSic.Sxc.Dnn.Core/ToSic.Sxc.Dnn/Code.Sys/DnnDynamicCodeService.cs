@@ -29,7 +29,7 @@ internal partial class DnnDynamicCodeService : ServiceBase<DnnDynamicCodeService
         LazySvc<ILogStore> LogStore,
         IUser User,
         ISite Site,
-        LazySvc<IZoneFinder> ZoneFinder,
+        LazySvc<IZoneOfSiteSvc> ZoneFinder,
         LazySvc<IAppsCatalog> AppsCatalog)
         : DependenciesBase(connect: [/* never! serviceProvider */ LogStore, ZoneFinder, AppsCatalog]);
 

@@ -6,7 +6,7 @@ using ToSic.Sys.Locking;
 
 namespace ToSic.Sxc.Dnn.Run;
 
-internal class DnnZoneFinder(LazySvc<ZoneCreator> zoneCreatorLazy) : ServiceBase("DNN.ZoneMp", connect: [zoneCreatorLazy]), IZoneFinder
+internal class DnnZoneOfSiteSvc(LazySvc<ZoneCreator> zoneCreatorLazy) : ServiceBase("DNN.ZoneMp", connect: [zoneCreatorLazy]), IZoneOfSiteSvc
 {
     /// <inheritdoc />
     /// <summary>

@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Dnn.Context;
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public sealed class DnnSiteFactory(LazySvc<IZoneFinder> zoneFinder, LazySvc<ILinkPaths> linkPathsLazy, DnnCultureResolver cultureResolver)
+public sealed class DnnSiteFactory(LazySvc<IZoneOfSiteSvc> zoneFinder, LazySvc<ILinkPaths> linkPathsLazy, DnnCultureResolver cultureResolver)
     : ServiceBase(DnnConstants.LogName, connect: [zoneFinder, linkPathsLazy, cultureResolver])
 {
 

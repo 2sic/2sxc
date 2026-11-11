@@ -12,8 +12,8 @@ namespace ToSic.Sxc.Web.Sys.EditUi;
 /// Provide all resources (fonts, icons, etc.) needed for the edit-ui
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class EditUiResources(AppDataStackService stackServiceHelper, IZoneFinder zoneFinder, IFeaturesService features)
-    : ServiceBase("Sxc.EUiRes", connect: [stackServiceHelper, zoneFinder, features])
+public class EditUiResources(AppDataStackService stackServiceHelper, IZoneOfSiteSvc zoneOfSiteSvc, IFeaturesService features)
+    : ServiceBase("Sxc.EUiRes", connect: [stackServiceHelper, zoneOfSiteSvc, features])
 {
 
     #region Resources / Constants
@@ -41,7 +41,7 @@ public class EditUiResources(AppDataStackService stackServiceHelper, IZoneFinder
 
         if (features.IsEnabled(SxcFeatures.CdnSourceEdit.NameId) && siteId.HasValue)
         {
-            var zoneId = zoneFinder.GetZoneId(siteId.Value);
+            var zoneId = zoneOfSiteSvc.GetZoneId(siteId.Value);
             var stack = stackServiceHelper.InitForPrimaryAppOfZone(zoneId).GetStack(RootNameSettings);
             var getResult = stack.InternalGetPath($"{WebResourcesNode}.{CdnSourceEditField}");
             cdnRoot = getResult.Result as string;

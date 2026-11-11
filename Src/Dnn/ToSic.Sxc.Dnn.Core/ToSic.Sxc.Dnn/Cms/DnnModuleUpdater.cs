@@ -16,13 +16,13 @@ using ToSic.Sxc.Integration.Modules;
 namespace ToSic.Sxc.Dnn.Cms;
 
 // TODO: @STV - this looks very similar to the Oqtane implementation
-// Probably best to make a base class and de-duplicate.
+// Probably best to put shared code somewhere
 internal class DnnModuleUpdater(
     AppWorkQuick<WorkViews> workViews,
-    IZoneMapper zoneMapper,
+    ICultureStateSvc cultureStateSvc,
     IAppsCatalog appsCatalog,
     ISite site)
-    : ServiceBase("Dnn.MapA2I", connect: [workViews, appsCatalog, site, zoneMapper]), IPlatformModuleUpdater
+    : ServiceBase("Dnn.MapA2I", connect: [workViews, appsCatalog, site, cultureStateSvc]), IPlatformModuleUpdater
 {
     public void SetAppId(IModule instance, int? appId)
     {
@@ -100,7 +100,7 @@ internal class DnnModuleUpdater(
     {
         Log.A("update title");
 
-        var languages = zoneMapper.CulturesWithState(block.Context.Site);
+        var languages = cultureStateSvc.CulturesWithState(block.Context.Site);
 
         // Find Module for default language
         var moduleController = new ModuleController();

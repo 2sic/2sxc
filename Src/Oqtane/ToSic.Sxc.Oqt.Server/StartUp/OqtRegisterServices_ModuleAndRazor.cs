@@ -32,9 +32,9 @@ partial class OqtRegisterServices
     private static IServiceCollection AddSxcOqtModule(this IServiceCollection services)
     {
         // Multi-Site Services
-        services.TryAddTransient<IZoneMapper, OqtZoneMapper>();
+        services.TryAddTransient<ICultureStateSvc, OqtCultureStateSvc>();
         services.TryAddTransient<ISiteOfZoneSvc, OqtSiteOfZoneSvc>();
-        services.TryAddTransient<IZoneFinder, OqtZoneFinder>();
+        services.TryAddTransient<IZoneOfSiteSvc, OqtZoneOfSiteSvc>();
 
         // Update title etc. when a module-content changes
         services.TryAddTransient<IPlatformModuleUpdater, OqtModuleUpdater>();

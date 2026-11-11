@@ -6,8 +6,8 @@ using ToSic.Eav.Context.Sys.ZoneMapper;
 
 namespace ToSic.Sxc.Dnn.Run;
 
-internal class DnnZoneMapper(IAppsCatalog appsCatalog)
-    : ServiceBase("DNN.ZoneMp", connect: [appsCatalog]), IZoneMapper
+internal class DnnCultureStateSvc(IAppsCatalog appsCatalog)
+    : ServiceBase("DNN.ZoneMp", connect: [appsCatalog]), ICultureStateSvc
 {
 
     /// <inheritdoc />

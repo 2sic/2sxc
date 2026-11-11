@@ -13,7 +13,7 @@ public class HotBuildSiteResolverTests
     public void ResolveForApp_KeepsCurrentSite_WhenZoneMatches()
     {
         var currentSite = new TestSite(id: 7, zoneId: 11);
-        var zoneMapper = new TrackingZoneMapper(currentSite);
+        var zoneMapper = new TrackingCultureStateSvc(currentSite);
 
         var result = HotBuildSiteResolver.ResolveForApp(currentSite, new AppIdentity(11, 42), zoneMapper);
 
@@ -27,7 +27,7 @@ public class HotBuildSiteResolverTests
     {
         var currentSite = new TestSite(id: 7, zoneId: 11);
         var mappedSite = new TestSite(id: 9, zoneId: 11);
-        var zoneMapper = new TrackingZoneMapper(mappedSite);
+        var zoneMapper = new TrackingCultureStateSvc(mappedSite);
 
         var result = HotBuildSiteResolver.ResolveForApp(currentSite, new AppIdentity(11, 42), zoneMapper);
 
@@ -41,7 +41,7 @@ public class HotBuildSiteResolverTests
     {
         var currentSite = new TestSite(id: 7, zoneId: 11);
         var mappedSite = new TestSite(id: 9, zoneId: 22);
-        var zoneMapper = new TrackingZoneMapper(mappedSite);
+        var zoneMapper = new TrackingCultureStateSvc(mappedSite);
 
         var result = HotBuildSiteResolver.ResolveForApp(currentSite, new AppIdentity(22, 42), zoneMapper);
 
@@ -50,7 +50,7 @@ public class HotBuildSiteResolverTests
         Equal(42, zoneMapper.LastAppId);
     }
 
-    private sealed class TrackingZoneMapper(ISite mappedSite) : IZoneMapper
+    private sealed class TrackingCultureStateSvc(ISite mappedSite) : ICultureStateSvc
     {
         public ILog? Log => null;
 

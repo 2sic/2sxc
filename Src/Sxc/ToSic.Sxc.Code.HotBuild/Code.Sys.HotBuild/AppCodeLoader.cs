@@ -17,7 +17,7 @@ public class AppCodeLoader(
     ISite site,
     IAppReaderFactory appReadFac,
     LazySvc<IAppPathsMicroSvc> appPathsLazy,
-    LazySvc<IAppSiteService> appSiteSvc,
+    LazySvc<ISiteOfAppSvc> appSiteSvc,
     LazySvc<AppCodeCompiler> appCompilerLazy,
     AssemblyCacheManager assemblyCacheManager,
     LazySvc<IFeaturesService> features)

@@ -22,7 +22,7 @@ internal sealed class OqtSite(
     AliasResolver aliasResolver,
     LazySvc<ISiteService> siteService,
     LazySvc<IServerPaths> serverPaths,
-    LazySvc<IZoneFinder> zoneFinder,
+    LazySvc<IZoneOfSiteSvc> zoneFinder,
     LazySvc<OqtCulture> oqtCulture,
     LazySvc<OqtSiteGroup> oqtSiteGroup,
     LazySvc<ILinkPaths> linkPathsLazy)

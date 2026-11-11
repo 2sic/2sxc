@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Services;
 /// Not sure how to get this to work, since normally we always start with a code-file, and here we don't have one!
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class TypedApiService(IServiceProvider serviceProvider, LazySvc<ILogStore> logStore, ISite site, LazySvc<IZoneFinder> zoneFinder, LazySvc<IAppsCatalog> appsCatalog)
+internal class TypedApiService(IServiceProvider serviceProvider, LazySvc<ILogStore> logStore, ISite site, LazySvc<IZoneOfSiteSvc> zoneFinder, LazySvc<IAppsCatalog> appsCatalog)
     : ServiceBase($"{SxcLogName}.TypeCS", connect: [/* never! serviceProvider */ logStore, zoneFinder, appsCatalog]),
         ITypedApiService,
         ILogWasConnected
@@ -32,7 +32,7 @@ internal class TypedApiService(IServiceProvider serviceProvider, LazySvc<ILogSto
         LazySvc<ILogStore> LogStore,
         IUser User,
         ISite Site,
-        LazySvc<IZoneMapper> ZoneMapper,
+        LazySvc<ICultureStateSvc> ZoneMapper,
         LazySvc<IAppsCatalog> AppsCatalog)
         : DependenciesBase(connect: [/* never! serviceProvider */ LogStore, ZoneMapper, AppsCatalog]);
 
