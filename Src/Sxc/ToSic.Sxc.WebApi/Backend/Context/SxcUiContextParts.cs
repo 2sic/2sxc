@@ -35,8 +35,10 @@ public class SxcUiContextParts(
         if (result == null || MyOptions == null)
             return null;
         var paths = appPaths.Get(MyOptions, Site);
-        result.Icon = AppAssetThumbnail.GetUrl(MyOptions, paths!, globalPaths);
-        return result;
+        return result with
+        {
+            Icon = AppAssetThumbnail.GetUrl(MyOptions, paths!, globalPaths)
+        };
     }
 
     public ContextUserDto? GetUser(Ctx flags)
