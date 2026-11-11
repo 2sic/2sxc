@@ -36,7 +36,7 @@ internal class OqtEnvironmentPermission(
     /// </summary>
     private ClaimsPrincipal ClaimsPrincipal => httpContextAccessor.HttpContext?.User;
 
-    private IModule Module => field ??= (MyOptions?.ContextOfSiteOrBlock as IContextOfBlock)?.Module;
+    private IModule Module => field ??= (MyOptions?.ContextOfSiteOrBlock as IContextOfModule)?.Module;
 
     public bool VerifyConditionOfEnvironment(string condition)
     {

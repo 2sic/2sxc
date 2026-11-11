@@ -5,10 +5,10 @@ using ToSic.Sxc.Sys.Render.PageContext;
 namespace ToSic.Sxc.Context.Sys;
 
 /// <summary>
-/// TODO: SHOULD actually be called ContextOfModule!
+/// The entire context of a module, with Page, Module, Publishing etc.
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IContextOfBlock: IContextOfApp
+public interface IContextOfModule: IContextOfApp
 {
     /// <summary>
     /// The page it's running on + parameters for queries, url etc.

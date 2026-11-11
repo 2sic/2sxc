@@ -31,7 +31,7 @@ public class ListActivityReplace(
         l.Done();
     }
 
-    private void InternalSave(IContextOfBlock context, Options options)
+    private void InternalSave(IContextOfModule context, Options options)
     {
         var (guid, part, index, entityId, add) = options;
         var isContentPair = ViewParts.ContentLower.EqualsInsensitive(part);

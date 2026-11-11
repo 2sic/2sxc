@@ -33,12 +33,12 @@ internal class OqtModuleAndBlockBuilder(
         return module;
     }
 
-    protected override IContextOfBlock GetContextOfBlock(IModule module, int? pageId)
+    protected override IContextOfModule GetContextOfBlock(IModule module, int? pageId)
         => GetContextOfBlock((module as OqtModule)?.GetContents(), pageId);
 
-    protected override IContextOfBlock GetContextOfBlock<TPlatformModule>(TPlatformModule module, int? pageId)
+    protected override IContextOfModule GetContextOfBlock<TPlatformModule>(TPlatformModule module, int? pageId)
     {
-        var l = Log.Fn<IContextOfBlock>();
+        var l = Log.Fn<IContextOfModule>();
         if (module == null) throw new ArgumentNullException(nameof(module));
 
         var oqtModule = module switch
@@ -54,9 +54,9 @@ internal class OqtModuleAndBlockBuilder(
     }
 
 
-    private IContextOfBlock InitOqtSiteModuleAndBlockContext(Module oqtModule, int? pageId)
+    private IContextOfModule InitOqtSiteModuleAndBlockContext(Module oqtModule, int? pageId)
     {
-        var l = Log.Fn<IContextOfBlock>();
+        var l = Log.Fn<IContextOfModule>();
         l.A("Will init module");
         // TODO: try to use the pageId if given, would usually only be used in inner-content / IRenderService scenarios
         // Collect / assemble page information

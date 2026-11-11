@@ -33,7 +33,7 @@ public record BlockSpecs : IBlock
     /// <summary>
     /// The context we're running in, with tenant, container etc.
     /// </summary>
-    public required IContextOfBlock Context { get; init; }
+    public required IContextOfModule Context { get; init; }
 
     /// <summary>
     /// The view which will be used to render this block

@@ -32,11 +32,11 @@ internal class DnnModuleAndBlockBuilder(
         return l.Return(module, $"Page Id on IModule: {module.BlockIdentifier} - should be {pageId}");
     }
 
-    protected override IContextOfBlock GetContextOfBlock(IModule module, int? pageId)
+    protected override IContextOfModule GetContextOfBlock(IModule module, int? pageId)
         => GetContextOfBlock((module as IWrapper<ModuleInfo>)?.GetContents(), pageId);
 
 
-    protected override IContextOfBlock GetContextOfBlock<TPlatformModule>(TPlatformModule module, int? pageId)
+    protected override IContextOfModule GetContextOfBlock<TPlatformModule>(TPlatformModule module, int? pageId)
     {
         if (module == null)
             throw new ArgumentNullException(nameof(module));
@@ -48,9 +48,9 @@ internal class DnnModuleAndBlockBuilder(
         return initializedCtx;
     }
 
-    private IContextOfBlock InitDnnSiteModuleAndBlockContext(ModuleInfo dnnModule, int? pageId)
+    private IContextOfModule InitDnnSiteModuleAndBlockContext(ModuleInfo dnnModule, int? pageId)
     {
-        var l = Log.Fn<IContextOfBlock>($"{nameof(pageId)}: {pageId}, {nameof(dnnModule.ModuleID)}: {dnnModule.ModuleID}");
+        var l = Log.Fn<IContextOfModule>($"{nameof(pageId)}: {pageId}, {nameof(dnnModule.ModuleID)}: {dnnModule.ModuleID}");
 
         l.A($"Will try-swap module info of {dnnModule.ModuleID} into site");
         var newSite = siteFactory.CreateFromModuleAndShare(dnnModule, ParentLog);

@@ -32,8 +32,8 @@ internal class CmsContext(
     // Note: Internal so it can be used for View<T, T>
     internal IBlock BlockInternal => field ??= ExCtx.GetBlock();
 
-    internal IContextOfBlock? CtxBlockOrNull => _ctxBlock.Get(() => BlockInternal?.Context);
-    private readonly LazyGet<IContextOfBlock?> _ctxBlock = new();
+    internal IContextOfModule? CtxBlockOrNull => _ctxBlock.Get(() => BlockInternal?.Context);
+    private readonly LazyGet<IContextOfModule?> _ctxBlock = new();
 
     internal IContextOfSite CtxSite => CtxBlockOrNull ?? ctxSvcFallback.Context;
 

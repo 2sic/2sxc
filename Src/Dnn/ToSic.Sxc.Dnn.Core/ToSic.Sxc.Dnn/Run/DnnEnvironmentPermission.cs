@@ -31,7 +31,7 @@ internal class DnnEnvironmentPermission() : ServiceWithSetup<EnvironmentPermissi
     /// In some cases the container is a ContainerNull object without ModuleInfo, so we must really do null-checks
     /// </remarks>
     private ModuleInfo Module => _module.Get(
-        () => ((MyOptions?.ContextOfSiteOrBlock as IContextOfBlock)?.Module as IWrapper<ModuleInfo>)?.GetContents());
+        () => ((MyOptions?.ContextOfSiteOrBlock as IContextOfModule)?.Module as IWrapper<ModuleInfo>)?.GetContents());
     private readonly LazyGet<ModuleInfo> _module = new();
 
     public bool VerifyConditionOfEnvironment(string condition)

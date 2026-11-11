@@ -26,14 +26,14 @@ internal class OqtLinkService(
     : LinkServiceBase(imgLinker, linkPathsLazy, connect: [pageRepository, aliasResolver])
 {
     public Razor12 RazorPage { get; set; }
-    private IContextOfBlock _blockCtx;
+    private IContextOfModule _moduleContext;
 
     private new OqtLinkPaths LinkPaths => (OqtLinkPaths) base.LinkPaths;
 
     public override void ConnectToRoot(IExecutionContext exCtx)
     {
         base.ConnectToRoot(exCtx);
-        _blockCtx = exCtx.GetContextOfBlock();
+        _moduleContext = exCtx.GetContextOfBlock();
     }
 
     protected override string ToApi(string api, string parameters = null) => ApiNavigateUrl(api, parameters);
@@ -60,7 +60,7 @@ internal class OqtLinkService(
     // Prepare Page link.
     private string PageNavigateUrl(int? pageId, string parameters, bool absoluteUrl = true)
     {
-        var currentPageId = _blockCtx?.Page?.Id;
+        var currentPageId = _moduleContext?.Page?.Id;
 
         if ((pageId ?? currentPageId) == null)
             throw new($"Error, PageId is unknown, pageId: {pageId}, currentPageId: {currentPageId} .");

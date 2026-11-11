@@ -12,9 +12,9 @@ public class ModuleAndBlockBuilderUnknown: ModuleAndBlockBuilder
     public override IModule GetModule(int pageId, int moduleId)
         => throw new NotSupportedException();
 
-    protected override IContextOfBlock GetContextOfBlock(IModule module, int? pageId)
+    protected override IContextOfModule GetContextOfBlock(IModule module, int? pageId)
         => throw new NotSupportedException();
 
-    protected override IContextOfBlock GetContextOfBlock<TPlatformModule>(TPlatformModule module, int? pageId)
+    protected override IContextOfModule GetContextOfBlock<TPlatformModule>(TPlatformModule module, int? pageId)
         => throw new NotSupportedException();
 }

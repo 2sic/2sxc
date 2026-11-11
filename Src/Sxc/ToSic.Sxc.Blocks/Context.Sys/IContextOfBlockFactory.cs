@@ -5,6 +5,6 @@ namespace ToSic.Sxc.Context.Sys;
 
 public interface IContextOfBlockFactory
 {
-    IContextOfBlock Update(IContextOfBlock contextOfBlock, IAppIdentity appIdentity);
-    IContextOfBlock Create(ISite site, IPage page, IModule module);
+    IContextOfModule Update(IContextOfModule contextOfModule, IAppIdentity appIdentity);
+    IContextOfModule Create(ISite site, IPage page, IModule module);
 }

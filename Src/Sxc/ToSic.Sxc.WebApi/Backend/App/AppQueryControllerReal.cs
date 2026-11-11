@@ -100,9 +100,9 @@ public class AppQueryControllerReal(
         QueryParametersDtoFromClient? more,
         ILookUpEngine? preparedLookup = null)
     {
-        var modId = (context as IContextOfBlock)?.Module.Id ?? -1;
+        var modId = (context as IContextOfModule)?.Module.Id ?? -1;
 
-        var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"name:{name}, stream:{stream}, withModule:{(context as IContextOfBlock)?.Module.Id}");
+        var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"name:{name}, stream:{stream}, withModule:{(context as IContextOfModule)?.Module.Id}");
 
         var lookups = preparedLookup ?? lookupResolver.Value.GetLookUpEngine(modId);
         var query = queryManager.Value.TryBuild(app, name, lookups, recurseParents: 3);

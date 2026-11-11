@@ -14,7 +14,7 @@ public sealed class BlockOfModule(BlockGeneratorHelpers helpers) : ServiceBase("
     /// </summary>
     /// <param name="ctx"></param>
     ///// <param name="overrideParams">optional override parameters</param>
-    public IBlock GetBlockOfModule(IContextOfBlock ctx)
+    public IBlock GetBlockOfModule(IContextOfModule ctx)
     {
         var l = Log.Fn<BlockSpecs>(timer: true);
         var appIdentity = ctx.Module.BlockIdentifier;

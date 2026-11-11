@@ -9,7 +9,7 @@ internal class OqtPagePublishing() : ServiceBase($"{OqtConstants.OqtLogPrefix}.P
 {
     public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
     {
-        var containerId = (context as IContextOfBlock)?.Module.Id ?? Eav.Sys.EavConstants.IdNotInitialized;
+        var containerId = (context as IContextOfModule)?.Module.Id ?? Eav.Sys.EavConstants.IdNotInitialized;
         var userId = 0;
         var enabled = false;
         Log.A($"DoInsidePublishing(module:{containerId}, user:{userId}, enabled:{enabled})");

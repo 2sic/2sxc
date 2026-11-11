@@ -90,7 +90,7 @@ internal sealed class EntityPickerTestContext : IDisposable
     };
 
     public IContextOfApp BlockContext(bool canEdit = true, bool otherApp = false)
-        => new FakeBlockContext(_site, _user, otherApp ? _otherApp : _app, canEdit)
+        => new FakeModuleContext(_site, _user, otherApp ? _otherApp : _app, canEdit)
         {
             InternalMachinery = null!,
             SettingsStackSvc = null!,
@@ -122,8 +122,8 @@ internal sealed class EntityPickerTestContext : IDisposable
         _builderServices.Dispose();
     }
 
-    private sealed record FakeBlockContext(ISite Site, IUser User, IAppReader AppReader, bool CanEdit)
-        : ContextOfApp(Site, User, AppReader), IContextOfBlock
+    private sealed record FakeModuleContext(ISite Site, IUser User, IAppReader AppReader, bool CanEdit)
+        : ContextOfApp(Site, User, AppReader), IContextOfModule
     {
         public IModule Module { get; } = new FakeModule();
         public IPage Page => throw new NotSupportedException();
@@ -158,7 +158,7 @@ internal sealed class EntityPickerTestContext : IDisposable
         {
             var allowed = new EnvironmentPermissionsLogic(Log).EnvironmentAllows(grants, MyOptions,
                 userIsModuleAdmin: () => false,
-                userIsModuleEditor: () => MyOptions.ContextOfSiteOrBlock is FakeBlockContext { CanEdit: true });
+                userIsModuleEditor: () => MyOptions.ContextOfSiteOrBlock is FakeModuleContext { CanEdit: true });
             return new(allowed, allowed ? Conditions.EnvironmentGlobal : Conditions.Undefined);
         }
 

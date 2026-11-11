@@ -33,7 +33,7 @@ public interface IBlock: IAppIdentity
     /// <summary>
     /// The context we're running in, with tenant, container etc.
     /// </summary>
-    IContextOfBlock Context { get; }
+    IContextOfModule Context { get; }
 
     /// <summary>
     /// The view which will be used to render this block

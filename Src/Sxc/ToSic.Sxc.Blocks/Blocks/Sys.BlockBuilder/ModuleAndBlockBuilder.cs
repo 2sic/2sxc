@@ -38,7 +38,7 @@ public abstract class ModuleAndBlockBuilder(Generator<BlockOfModule> blockGenera
         return l.Return(block);
     }
 
-    protected abstract IContextOfBlock GetContextOfBlock(IModule module, int? pageId);
+    protected abstract IContextOfModule GetContextOfBlock(IModule module, int? pageId);
 
-    protected abstract IContextOfBlock GetContextOfBlock<TPlatformModule>(TPlatformModule module, int? pageId);
+    protected abstract IContextOfModule GetContextOfBlock<TPlatformModule>(TPlatformModule module, int? pageId);
 }

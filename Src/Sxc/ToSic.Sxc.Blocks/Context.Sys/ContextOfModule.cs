@@ -6,14 +6,14 @@ using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Context.Sys;
 
-internal record ContextOfBlock(
+internal record ContextOfModule(
     ISite Site,
     IUser User,
     IPage Page,
     IModule Module,
     IAppReader? AppReaderOrNull,
     IPageServiceShared PageServiceShared
-) : ContextOfApp(Site, User, AppReaderOrNull), IContextOfBlock
+) : ContextOfApp(Site, User, AppReaderOrNull), IContextOfModule
 {
     /// <summary>
     /// Helper to lazy-retrieve publishing state if ever needed.

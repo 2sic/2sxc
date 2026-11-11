@@ -128,7 +128,7 @@ internal class SxcCurrentContextService(
         var blockSpecs = block as BlockSpecs
                          ?? throw new NullReferenceException($"Block is not a {nameof(BlockSpecs)}, cannot update.");
 
-        var origCtx = blockSpecs.Context as ContextOfBlock
+        var origCtx = blockSpecs.Context as ContextOfModule
                       ?? throw new NullReferenceException("Context is not Block or App, cannot update.");
         
         var updatedPerms = draftService.Value.UserPermissions(origCtx.Permissions);

@@ -11,7 +11,7 @@ internal class OqtContextOfBlockFactory(
     IPage page,
     Generator<IModule> moduleGenerator)
 {
-    public IContextOfBlock Create(int pageId, Module oqtModule)
+    public IContextOfModule Create(int pageId, Module oqtModule)
     {
         ((OqtPage)page).OqtInit(pageId);
         var module = ((OqtModule)moduleGenerator.New()).Init(oqtModule);

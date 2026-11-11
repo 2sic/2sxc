@@ -17,7 +17,7 @@ public static class ISxcCurrentContextServiceExtensions
         /// <summary>
         /// Return the block or throw an error
         /// </summary>
-        public IContextOfBlock BlockContextRequired()
+        public IContextOfModule BlockContextRequired()
             => ctx.BlockOrNull?.Context
                ?? throw new("Block context required but not known. It was not attached.");
 
@@ -25,7 +25,7 @@ public static class ISxcCurrentContextServiceExtensions
         /// Return the block if known, or null if not
         /// </summary>
         /// <returns>The current block or null</returns>
-        public IContextOfBlock? BlockContextOrNull()
+        public IContextOfModule? BlockContextOrNull()
             => ctx.BlockOrNull?.Context;
     }
 }

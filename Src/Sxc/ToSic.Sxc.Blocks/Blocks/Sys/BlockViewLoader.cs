@@ -22,7 +22,7 @@ internal class BlockViewLoader(ILog parentLog) : HelperBase(parentLog, "Blk.View
     }
 
 
-    private IView? TryGetViewBasedOnUrlParams(IContextOfBlock context, WorkViews views)
+    private IView? TryGetViewBasedOnUrlParams(IContextOfModule context, WorkViews views)
     {
         var l = Log.Fn<IView>("template override - check");
 

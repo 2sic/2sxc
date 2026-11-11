@@ -25,7 +25,7 @@ internal partial class DnnPagePublishing(
 
     public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
     {
-        var possibleContextOfBlock = context as IContextOfBlock;
+        var possibleContextOfBlock = context as IContextOfModule;
         var enabled = possibleContextOfBlock?.Publishing.ForceDraft ?? false;
         var instanceId = possibleContextOfBlock?.Module.Id ?? EavConstants.IdNotInitialized;
         var userId = context.User.Id;

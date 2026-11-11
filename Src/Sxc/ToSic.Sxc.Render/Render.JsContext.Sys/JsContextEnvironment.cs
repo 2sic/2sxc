@@ -5,7 +5,7 @@ using ToSic.Sxc.Web.Sys.Parameters;
 namespace ToSic.Sxc.Render.JsContext.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class JsContextEnvironment(string systemRootUrl, IContextOfBlock ctx)
+public class JsContextEnvironment(string systemRootUrl, IContextOfModule ctx)
 {
     public int WebsiteId { get; } = ctx.Site.Id;
     public string WebsiteUrl { get; } = "//" + ctx.Site.UrlRoot + "/";

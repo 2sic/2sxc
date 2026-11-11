@@ -36,7 +36,7 @@ internal class OqtUiContextBuilder(
     protected override WebResourceDto GetPage() =>
         new()
         {
-            Id = (ctxSvc as IContextOfBlock)?.Page.Id ?? Eav.Sys.EavConstants.NullId,
+            Id = (ctxSvc as IContextOfModule)?.Page.Id ?? Eav.Sys.EavConstants.NullId,
         };
 
     protected override ContextAppDto GetApp(Ctx flags)
@@ -48,7 +48,7 @@ internal class OqtUiContextBuilder(
 
     protected override string GetGettingStartedUrl()
     {
-        var blockCtx = ctxSvc as IContextOfBlock; // may be null!
+        var blockCtx = ctxSvc as IContextOfModule; // may be null!
 
         var gsUrl = externalLinksService.LinkToDestination(
             ExternalSxcDestinations.GettingStarted,

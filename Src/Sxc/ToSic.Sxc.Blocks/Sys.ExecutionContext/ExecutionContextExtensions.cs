@@ -9,8 +9,8 @@ public static class ExecutionContextExtensions
     public static IBlock GetBlock(this IExecutionContext exCtx)
         => (exCtx as IExecutionContextWithBlock)?.Block!;
 
-    public static IContextOfBlock GetContextOfBlock(this IExecutionContext exCtx)
+    public static IContextOfModule GetContextOfBlock(this IExecutionContext exCtx)
         => (exCtx as IExecutionContextWithBlock)?.Block?.Context!;
-    public static IContextOfBlock? TryGetContextOfBlock(this IExecutionContext exCtx)
+    public static IContextOfModule? TryGetContextOfBlock(this IExecutionContext exCtx)
         => (exCtx as IExecutionContextWithBlock)?.Block?.Context;
 }
