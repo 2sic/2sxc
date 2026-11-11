@@ -6,8 +6,8 @@ using ToSic.Sxc.Data.Sys.Decorators;
 namespace ToSic.Sxc.Data.Sys.Convert;
 
 /// <summary>
-/// Convert various types of entities (standalone, dynamic, in streams, etc.) to Dictionaries <br/>
-/// Mainly used for serialization scenarios, like in WebApis.
+/// Enhances the standard EavLight converter with the presentation info.
+/// Previously also added edit info, but that is probably obsolete now; or handled by entity-specific conversion rules.
 /// </summary>
 /// <remarks>
 /// Standard constructor, important for opening this class in dependency-injection
@@ -15,13 +15,14 @@ namespace ToSic.Sxc.Data.Sys.Convert;
 [PrivateApi("Hide implementation; this was never public; the DataToDictionary was with empty constructor, but that's already polyfilled")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
-public class ConvertToEavLightWithCmsInfo(ConvertToEavLight.Dependencies services) : ConvertToEavLight(services)
+internal class ConvertToEavLightWithCmsInfo(ConvertToEavLight.Dependencies services) : ConvertToEavLight(services)
 {
-    /// <summary>
-    /// Determines if we should use edit-information
-    /// </summary>
-    [PrivateApi("Note: wasn't private till 2sxc 12.04, very low risk of it being published. Set was always internal")]
-    public bool WithEdit { get; set; }
+    // 2026-11-11 2dm - dropped this, believe it's not used anymore; keep for reference till ca. 2027-07 #DropWithEdit
+    ///// <summary>
+    ///// Determines if we should use edit-information
+    ///// </summary>
+    //[PrivateApi("Note: wasn't private till 2sxc 12.04, very low risk of it being published. Set was always internal")]
+    //public bool WithEdit { get; set; }
 
     [PrivateApi]
     protected override EavLightEntity GetDictionaryFromEntity(IEntity entity)

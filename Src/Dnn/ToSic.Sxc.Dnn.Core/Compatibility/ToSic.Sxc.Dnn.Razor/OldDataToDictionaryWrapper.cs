@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource;
-using ToSic.Sxc.Data.Sys.Convert;
 
 namespace ToSic.Sxc.Dnn.Razor;
 
@@ -16,7 +15,8 @@ public class OldDataToDictionaryWrapper
     public OldDataToDictionaryWrapper(bool userMayEdit, IConvertToEavLight innerConverter)
     {
         _converter = innerConverter;
-        if (_converter is ConvertToEavLightWithCmsInfo serializerWithEdit) serializerWithEdit.WithEdit = userMayEdit;
+        // 2026-11-11 2dm - dropped this, believe it's not used anymore; keep for reference till ca. 2027-07 #DropWithEdit
+        //if (_converter is ConvertToEavLightWithCmsInfo serializerWithEdit) serializerWithEdit.WithEdit = userMayEdit;
     }
 
     private readonly IConvertToEavLight _converter;
@@ -39,10 +39,6 @@ public class OldDataToDictionaryWrapper
 
     public IEnumerable<IDictionary<string, object>> Prepare(IEnumerable<IEntity> entities)
         => _converter.Convert(entities);
-
-    // Removed in v20
-    //public IEnumerable<IDictionary<string, object>> Prepare(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities)
-    //    => _converter.Convert(entities as IEnumerable<IEntity>);
 
     public IDictionary<string, object> Prepare(IEntity entity)
         => _converter.Convert(entity);

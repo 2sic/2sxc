@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Sys.Insights;
 using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Eav.WebApi.Sys.App.Details;
@@ -24,6 +25,7 @@ using ToSic.Sxc.Backend.SaveHelpers;
 using ToSic.Sxc.Backend.Sys;
 using ToSic.Sxc.Backend.Usage;
 using ToSic.Sxc.Backend.Views;
+using ToSic.Sxc.Data.Sys.Convert;
 using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 using ToSic.Sys.Context;
@@ -143,6 +145,10 @@ public static class StartupSxcWebApi
 
         // v22 moved here from Sxc.Blocks
         services.AddContextProviders();
+
+        // v22 moved here from Sxc.Web The top version should be deprecated soon, so we just use DataToDictionary or an Interface instead
+        services.TryAddTransient<IConvertToEavLight, ConvertToEavLightWithCmsInfo>();
+
 
         services.AddLoadSettingsProviders();
 

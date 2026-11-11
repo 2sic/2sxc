@@ -235,7 +235,8 @@ public class AppContent(
         var ser = entToDicLazy.Value;
         ser.WithGuid = true;
         var converter = (ConvertToEavLightWithCmsInfo)ser;
-        converter.WithEdit = userMayEdit;
+        // 2026-11-11 2dm - dropped this, believe it's not used anymore; keep for reference till ca. 2027-07 #DropWithEdit
+        //converter.WithEdit = userMayEdit;
         if (uri is not null)
             converter.AddSelectFields([.. SystemQueryOptionsParser.Parse(uri).Select]);
 
