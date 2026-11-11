@@ -22,12 +22,12 @@ internal sealed class OqtSite(
     AliasResolver aliasResolver,
     LazySvc<ISiteService> siteService,
     LazySvc<IServerPaths> serverPaths,
-    LazySvc<IZoneMapper> zoneMapper,
+    LazySvc<IZoneFinder> zoneFinder,
     LazySvc<OqtCulture> oqtCulture,
     LazySvc<OqtSiteGroup> oqtSiteGroup,
     LazySvc<ILinkPaths> linkPathsLazy)
     : Site<Site>(OqtConstants.OqtLogPrefix,
-        connect: [aliasResolver, siteService, serverPaths, zoneMapper, oqtCulture, oqtSiteGroup, linkPathsLazy])
+        connect: [aliasResolver, siteService, serverPaths, zoneFinder, oqtCulture, oqtSiteGroup, linkPathsLazy])
 {
     private ILinkPaths LinkPaths => linkPathsLazy.Value;
 
@@ -94,7 +94,7 @@ internal sealed class OqtSite(
     public override int ZoneId => _zoneId ??= (
         (Id <= 0) // check if siteId is negative; 0 is a valid tenant id
             ? Eav.Sys.EavConstants.NullId
-            : zoneMapper.Value.GetZoneId(PrimarySiteId)
+            : zoneFinder.Value.GetZoneId(PrimarySiteId)
     );
     private int? _zoneId;
 

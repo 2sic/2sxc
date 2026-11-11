@@ -12,8 +12,8 @@ namespace ToSic.Sxc.Cms.Sites.Sys;
 public abstract class SitesDataSourceProvider(SitesDataSourceProvider.Dependencies services, string logName)
     : ServiceBase<SitesDataSourceProvider.Dependencies>(services, logName)
 {
-    public record Dependencies(LazySvc<IZoneMapper> ZoneMapperLazy, IAppsCatalog AppsCatalog)
-        : DependenciesBase(connect: [ZoneMapperLazy, AppsCatalog]);
+    public record Dependencies(LazySvc<IZoneFinder> ZoneFinder, IAppsCatalog AppsCatalog)
+        : DependenciesBase(connect: [ZoneFinder, AppsCatalog]);
 
     /// <summary>
     /// So the core data source doesn't have settings to configure this
@@ -21,7 +21,7 @@ public abstract class SitesDataSourceProvider(SitesDataSourceProvider.Dependenci
     /// <returns></returns>
     public abstract List<SiteModelRaw> GetSitesInternal();
 
-    public int GetZoneId(int siteId) => Services.ZoneMapperLazy.Value.GetZoneId(siteId);
+    public int GetZoneId(int siteId) => Services.ZoneFinder.Value.GetZoneId(siteId);
 
     public int GetDefaultAppId(int siteId) => Services.AppsCatalog.DefaultAppIdentity(GetZoneId(siteId)).AppId;
 

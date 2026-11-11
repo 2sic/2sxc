@@ -29,9 +29,9 @@ internal partial class DnnDynamicCodeService : ServiceBase<DnnDynamicCodeService
         LazySvc<ILogStore> LogStore,
         IUser User,
         ISite Site,
-        LazySvc<IZoneMapper> ZoneMapper,
+        LazySvc<IZoneFinder> ZoneFinder,
         LazySvc<IAppsCatalog> AppsCatalog)
-        : DependenciesBase(connect: [/* never! serviceProvider */ LogStore, ZoneMapper, AppsCatalog]);
+        : DependenciesBase(connect: [/* never! serviceProvider */ LogStore, ZoneFinder, AppsCatalog]);
 
     public record ScopedDependencies(
         Generator<IExecutionContextFactory> ExCtxGenerator,
@@ -77,7 +77,7 @@ internal partial class DnnDynamicCodeService : ServiceBase<DnnDynamicCodeService
     private IAppIdentityPure GetPrimaryAppIdentity(int? siteId, ISite? site = default)
     {
         siteId ??= site?.Id ?? Services.Site.Id;
-        var zoneId = Services.ZoneMapper.Value.GetZoneId(siteId.Value);
+        var zoneId = Services.ZoneFinder.Value.GetZoneId(siteId.Value);
         var primaryApp = Services.AppsCatalog.Value.PrimaryAppIdentity(zoneId);
         return primaryApp;
     }

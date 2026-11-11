@@ -20,8 +20,8 @@ namespace ToSic.Sxc.Services;
 /// Not sure how to get this to work, since normally we always start with a code-file, and here we don't have one!
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class TypedApiService(IServiceProvider serviceProvider, LazySvc<ILogStore> logStore, ISite site, LazySvc<IZoneMapper> zoneMapper, LazySvc<IAppsCatalog> appsCatalog)
-    : ServiceBase($"{SxcLogName}.TypeCS", connect: [/* never! serviceProvider */ logStore, zoneMapper, appsCatalog]),
+internal class TypedApiService(IServiceProvider serviceProvider, LazySvc<ILogStore> logStore, ISite site, LazySvc<IZoneFinder> zoneFinder, LazySvc<IAppsCatalog> appsCatalog)
+    : ServiceBase($"{SxcLogName}.TypeCS", connect: [/* never! serviceProvider */ logStore, zoneFinder, appsCatalog]),
         ITypedApiService,
         ILogWasConnected
 {
@@ -64,7 +64,7 @@ internal class TypedApiService(IServiceProvider serviceProvider, LazySvc<ILogSto
     private IAppIdentityPure GetPrimaryAppIdentity(int? siteId, ISite? preferredSite = default)
     {
         siteId ??= preferredSite?.Id ?? site.Id;
-        var zoneId = zoneMapper.Value.GetZoneId(siteId.Value);
+        var zoneId = zoneFinder.Value.GetZoneId(siteId.Value);
         var primaryApp = appsCatalog.Value.PrimaryAppIdentity(zoneId);
         return primaryApp;
     }

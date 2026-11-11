@@ -12,8 +12,8 @@ namespace ToSic.Sxc.Dnn.Context;
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public sealed class DnnSiteFactory(LazySvc<IZoneMapper> zoneMapperLazy, LazySvc<ILinkPaths> linkPathsLazy, DnnCultureResolver cultureResolver)
-    : ServiceBase(DnnConstants.LogName, connect: [zoneMapperLazy, linkPathsLazy, cultureResolver])
+public sealed class DnnSiteFactory(LazySvc<IZoneFinder> zoneFinder, LazySvc<ILinkPaths> linkPathsLazy, DnnCultureResolver cultureResolver)
+    : ServiceBase(DnnConstants.LogName, connect: [zoneFinder, linkPathsLazy, cultureResolver])
 {
 
     #region Swap new Portal Settings into this object
@@ -51,7 +51,7 @@ public sealed class DnnSiteFactory(LazySvc<IZoneMapper> zoneMapperLazy, LazySvc<
         var result = new DnnSite
         {
             Id = zoneId,
-            ZoneId = zoneId < 0 ? EavConstants.NullId : zoneMapperLazy.Value.GetZoneId(zoneId),
+            ZoneId = zoneId < 0 ? EavConstants.NullId : zoneFinder.Value.GetZoneId(zoneId),
             Url = url,
             UrlRoot = urlRoot,
             CurrentCultureCode = currentCultureCode, // note 2026-10-18 2dm null warning, not sure yet how to proceed; was always null, but now null-checks are kicking in

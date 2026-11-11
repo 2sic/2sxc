@@ -58,8 +58,6 @@ public class HotBuildSiteResolverTests
 
         public int LastAppId { get; private set; }
 
-        public int GetZoneId(int siteId) => mappedSite.ZoneId;
-
         public ISite SiteOfZone(int zoneId) => mappedSite;
 
         //public ISite SiteOfApp(int appId)
