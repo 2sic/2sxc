@@ -17,12 +17,12 @@ public class AppCodeLoader(
     ISite site,
     IAppReaderFactory appReadFac,
     LazySvc<IAppPathsMicroSvc> appPathsLazy,
-    LazySvc<IZoneMapper> zoneMapper,
+    LazySvc<IAppSiteService> appSiteSvc,
     LazySvc<AppCodeCompiler> appCompilerLazy,
     AssemblyCacheManager assemblyCacheManager,
     LazySvc<IFeaturesService> features)
     : ServiceBase("Sys.AppCodeLoad",
-        connect: [logStore, site, appReadFac, appPathsLazy, zoneMapper, appCompilerLazy, assemblyCacheManager, features])
+        connect: [logStore, site, appReadFac, appPathsLazy, appSiteSvc, appCompilerLazy, assemblyCacheManager, features])
 {
     /// <summary>
     /// Try to get the app code - first of the edition, then of the root.
@@ -232,7 +232,7 @@ public class AppCodeLoader(
     {
         var l = Log.Fn<(string physicalPath, string relativePath, string physicalPathShared, string relativePathShared)>($"{nameof(folder)}: '{folder}'; {spec}");
         var appReader = appReadFac.Get(spec.AppId);
-        var resolvedSite = HotBuildSiteResolver.ResolveForApp(site, appReader, zoneMapper.Value);
+        var resolvedSite = HotBuildSiteResolver.ResolveForApp(site, appReader, appSiteSvc.Value);
         l.A($"site id: {site.Id}, resolved: {resolvedSite.Id}, ...: {resolvedSite.AppsRootPhysicalFull}");
         var appPaths = appPathsLazy.Value.Get(appReader, resolvedSite);
         var folderWithEdition = folder.HasValue()

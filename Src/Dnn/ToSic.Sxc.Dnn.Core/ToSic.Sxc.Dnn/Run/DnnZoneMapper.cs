@@ -16,7 +16,7 @@ internal class DnnZoneMapper(
     LazySvc<DnnSiteFactory> siteFactory /*must be lazy, very important, otherwise we get cyclical logs attached */,
     LazySvc<ZoneCreator> zoneCreatorLazy,
     IAppsCatalog appsCatalog)
-    : ZoneMapperBase(appsCatalog, "DNN.ZoneMp", connect: [siteFactory, zoneCreatorLazy])
+    : ServiceBase("DNN.ZoneMp", connect: [siteFactory, zoneCreatorLazy]), IZoneMapper
 {
     /// <inheritdoc />
     /// <summary>
@@ -26,7 +26,7 @@ internal class DnnZoneMapper(
     /// </summary>
     /// <param name="siteId"></param>
     /// <returns></returns>
-    public override int GetZoneId(int siteId)
+    public int GetZoneId(int siteId)
     {
         // Additional protection against invalid portalId
         if (siteId < 0)
@@ -65,7 +65,7 @@ internal class DnnZoneMapper(
         return newZoneId;
     }
 
-    public override ISite SiteOfZone(int zoneId)
+    public ISite SiteOfZone(int zoneId)
     {
         var l = Log.Fn<ISite>($"{zoneId}");
         var portalController = PortalController.Instance;
@@ -95,12 +95,12 @@ internal class DnnZoneMapper(
     }
 
     /// <inheritdoc />
-    public override List<ISiteLanguageState> CulturesWithState(ISite site)
+    public List<ISiteLanguageState> CulturesWithState(ISite site)
     {
         if (_supportedCultures != null)
             return _supportedCultures;
 
-        var availableEavLanguages = AppsCatalog.Zone(site.ZoneId).Languages;
+        var availableEavLanguages = appsCatalog.Zone(site.ZoneId).Languages;
         var defaultLanguageCode = site.DefaultCultureCode;
 
         return _supportedCultures = LocaleController.Instance.GetLocales(site.Id)

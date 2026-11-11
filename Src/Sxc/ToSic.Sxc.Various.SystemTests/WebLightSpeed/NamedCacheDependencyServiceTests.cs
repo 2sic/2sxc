@@ -130,26 +130,26 @@ public class StartupSxcWithDbWithoutLightSpeed : StartupSxcWithDb
     }
 }
 
-internal class TestApp(int appId) : IApp
-{
-    public int AppId => appId;
-    public int ZoneId => 0;
-    public string Name => "Test App";
-    public string Folder => "TestApp";
-    public string NameId => "test-app";
-    public string AppGuid => NameId;
-    public IAppData Data => null!;
-    public IAppConfiguration Configuration => null!;
-    public dynamic? Settings => null;
-    public dynamic? Resources => null;
-    public IDictionary<string, IQuery> Query { get; } = new Dictionary<string, IQuery>();
-    public IQuery GetQuery(string name) => throw new NotSupportedException();
-    public string Path => "/test-app";
-    public string PhysicalPath => @"c:\test-app";
-    public string PathShared => "/test-app-shared";
-    public string PhysicalPathShared => @"c:\test-app-shared";
-    public string RelativePath => "test-app";
-    public string RelativePathShared => "test-app-shared";
-    public string? Thumbnail => null;
-    public IMetadata Metadata => null!;
-}
+//internal class TestApp(int appId) : IApp
+//{
+//    public int AppId => appId;
+//    public int ZoneId => 0;
+//    public string Name => "Test App";
+//    public string Folder => "TestApp";
+//    public string NameId => "test-app";
+//    public string AppGuid => NameId;
+//    public IAppData Data => null!;
+//    public IAppConfiguration Configuration => null!;
+//    public dynamic? Settings => null;
+//    public dynamic? Resources => null;
+//    public IDictionary<string, IQuery> Query { get; } = new Dictionary<string, IQuery>();
+//    public IQuery GetQuery(string name) => throw new NotSupportedException();
+//    public string Path => "/test-app";
+//    public string PhysicalPath => @"c:\test-app";
+//    public string PathShared => "/test-app-shared";
+//    public string PhysicalPathShared => @"c:\test-app-shared";
+//    public string RelativePath => "test-app";
+//    public string RelativePathShared => "test-app-shared";
+//    public string? Thumbnail => null;
+//    public IMetadata Metadata => null!;
+//}

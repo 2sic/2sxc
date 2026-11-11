@@ -62,12 +62,12 @@ public class HotBuildSiteResolverTests
 
         public ISite SiteOfZone(int zoneId) => mappedSite;
 
-        public ISite SiteOfApp(int appId)
-        {
-            SiteOfAppCalls++;
-            LastAppId = appId;
-            return mappedSite;
-        }
+        //public ISite SiteOfApp(int appId)
+        //{
+        //    SiteOfAppCalls++;
+        //    LastAppId = appId;
+        //    return mappedSite;
+        //}
 
         public List<ISiteLanguageState> CulturesWithState(ISite site) => [];
 

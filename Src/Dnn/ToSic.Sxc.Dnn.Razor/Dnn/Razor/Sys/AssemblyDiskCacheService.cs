@@ -22,9 +22,9 @@ internal class AssemblyDiskCacheService(
     AssemblyResolver assemblyResolver,
     IAppReaderFactory appReadFac,
     LazySvc<IAppPathsMicroSvc> appPathsLazy,
-    LazySvc<IZoneMapper> zoneMapper,
+    LazySvc<IAppSiteService> appSiteSvc,
     ISite site)
-  : ServiceBase("Dnn.AsmDskCch", connect: [featureService, globalConfiguration, diskCache, assemblyUtilities, assemblyResolver, appReadFac, appPathsLazy, zoneMapper, site]), IAssemblyDiskCacheService
+  : ServiceBase("Dnn.AsmDskCch", connect: [featureService, globalConfiguration, diskCache, assemblyUtilities, assemblyResolver, appReadFac, appPathsLazy, appSiteSvc, site]), IAssemblyDiskCacheService
 {
     /// <summary>
     /// Attempts to load a cached assembly from disk for the specified template.
@@ -134,7 +134,7 @@ internal class AssemblyDiskCacheService(
             return string.Empty;
 
         var appReader = appReadFac.Get(spec.AppId);
-        var resolvedSite = HotBuildSiteResolver.ResolveForApp(site, appReader, zoneMapper.Value);
+        var resolvedSite = HotBuildSiteResolver.ResolveForApp(site, appReader, appSiteSvc.Value);
         return appPathsLazy.Value.Get(appReader, resolvedSite).RelativePath;
     }
 

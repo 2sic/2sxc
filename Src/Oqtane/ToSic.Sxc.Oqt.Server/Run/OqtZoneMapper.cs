@@ -21,10 +21,10 @@ internal class OqtZoneMapper(
     OqtSiteGroup oqtSiteGroup,
     IAppsCatalog appsCat,
     LazySvc<ITenantManager> tenantManager)
-    : ZoneMapperBase(appsCat, $"{OqtConstants.OqtLogPrefix}.ZoneMp",
-        connect: [siteRepository, settingRepository, site, zoneCreatorLazy, oqtCulture, oqtSiteGroup, tenantManager])
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.ZoneMp",
+        connect: [siteRepository, settingRepository, site, zoneCreatorLazy, oqtCulture, oqtSiteGroup, tenantManager]), IZoneMapper
 {
-    public override int GetZoneId(int siteId)
+    public int GetZoneId(int siteId)
     {
         // additional protection against invalid portalId which may come from bad configs and execute in search-index mode
         // see https://github.com/2sic/2sxc/issues/1054
@@ -76,7 +76,7 @@ internal class OqtZoneMapper(
         return false;
     }
 
-    public override ISite SiteOfZone(int zoneId)
+    public ISite SiteOfZone(int zoneId)
     {
         var siteIdsWithZoneId = settingRepository.GetSettings(EntityNames.Site)
             .Where(setting => setting.SettingName == SiteSettingNames.SiteKeyForZoneId && setting.SettingValue == zoneId.ToString())
@@ -95,11 +95,11 @@ internal class OqtZoneMapper(
         };
     }
 
-    public override List<ISiteLanguageState> CulturesWithState(ISite oqtSite)
+    public List<ISiteLanguageState> CulturesWithState(ISite oqtSite)
     {
         if (_supportedCultures != null)
             return _supportedCultures;
-        var availableEavLanguages = AppsCatalog.Zone(oqtSite.ZoneId).Languages;
+        var availableEavLanguages = appsCat.Zone(oqtSite.ZoneId).Languages;
         var oqtaneSite = (oqtSite as IWrapper<Oqtane.Models.Site>)?.GetContents() ?? siteRepository.GetSite(oqtSite.Id);
         _supportedCultures = oqtaneSite == null
             ? []

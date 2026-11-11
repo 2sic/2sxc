@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Code.Sys.HotBuild;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class DependenciesLoader(ILogStore logStore, ISite site, IAppReaderFactory appReadFac, LazySvc<IAppPathsMicroSvc> appPathsLazy, LazySvc<IZoneMapper> zoneMapper, AssemblyCacheManager assemblyCacheManager, LazySvc<AppCodeCompiler> appCodeCompilerLazy)
+public class DependenciesLoader(ILogStore logStore, ISite site, IAppReaderFactory appReadFac, LazySvc<IAppPathsMicroSvc> appPathsLazy, LazySvc<IAppSiteService> zoneMapper, AssemblyCacheManager assemblyCacheManager, LazySvc<AppCodeCompiler> appCodeCompilerLazy)
     : ServiceBase("Sys.AppCodeLoad", connect: [logStore, site, appReadFac, appPathsLazy, zoneMapper, assemblyCacheManager, appCodeCompilerLazy])
 {
     public const string DependenciesFolder = "Dependencies";

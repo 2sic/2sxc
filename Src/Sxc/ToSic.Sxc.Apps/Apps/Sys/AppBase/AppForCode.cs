@@ -17,12 +17,12 @@ namespace ToSic.Sxc.Apps.Sys;
 [PrivateApi("Hide implementation - was PublicApi_Stable_ForUseInYourCode till 16.09")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppForCode(
-    IZoneMapper zoneMapper,
+    IAppSiteService appSiteSvc,
     ISite site,
     IAppReaderFactory appReaders,
     IAppPathsMicroSvc appPathSvc,
     Generator<AppForCodeDataSourceService, AppForCodeDataSourceService.Options> appDataSvc)
-    : ServiceWithSetup<AppForCode.Options>("Sxc.AppCde", connect: [zoneMapper, site, appReaders, appPathSvc, appDataSvc]),
+    : ServiceWithSetup<AppForCode.Options>("Sxc.AppCde", connect: [appSiteSvc, site, appReaders, appPathSvc, appDataSvc]),
         IAppForCode
 {
     /// <summary>
@@ -79,7 +79,7 @@ public class AppForCode(
         if (AppSite.Id == EavConstants.NullId
             && appIdentity.AppId != EavConstants.NullId
             && appIdentity.AppId != AppConstants.AppIdNotFound)
-            AppSite = zoneMapper.SiteOfApp(appIdentity.AppId);
+            AppSite = appSiteSvc.SiteOfApp(appIdentity.AppId);
         
         l.Done();
     }
