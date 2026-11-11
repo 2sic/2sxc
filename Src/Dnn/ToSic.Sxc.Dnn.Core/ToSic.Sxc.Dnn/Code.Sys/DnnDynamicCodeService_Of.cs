@@ -6,9 +6,9 @@ using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Wrappers;
 
-namespace ToSic.Sxc.Services.Sys.DynamicCodeService;
+namespace ToSic.Sxc.Dnn.Code.Sys;
 
-partial class DynamicCodeService
+partial class DnnDynamicCodeService
 {
     /// <inheritdoc />
     public IDynamicCode12 OfApp(int appId) => GetApi12(appId: appId);

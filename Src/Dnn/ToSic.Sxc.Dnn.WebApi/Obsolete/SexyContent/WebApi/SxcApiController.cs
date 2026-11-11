@@ -12,6 +12,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Dnn.Code;
+using ToSic.Sxc.Dnn.Code.Sys;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
@@ -125,7 +126,7 @@ public abstract partial class SxcApiController() :
     [Obsolete]
     [PrivateApi]
     public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
-        => new DnnExecutionContextCreateSourceObsolete(ExCtx).CreateSource(typeName, inSource, configurationProvider);
+        => new DnnCodeDynamicCreateSourceObsolete(ExCtx).CreateSource(typeName, inSource, configurationProvider);
 
     /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataSource, ILookUpEngine)" />
     public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource

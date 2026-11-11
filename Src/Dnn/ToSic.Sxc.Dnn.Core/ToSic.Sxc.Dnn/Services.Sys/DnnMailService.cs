@@ -7,7 +7,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Sxc.Services.Mail.Sys;
 using ToSic.Sys.Users;
 
-namespace ToSic.Sxc.Dnn.Services;
+namespace ToSic.Sxc.Dnn.Services.Sys;
 
 internal class DnnMailService(
     LazySvc<IUser> userLazy,

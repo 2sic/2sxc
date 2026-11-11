@@ -18,9 +18,11 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Adam;
 using ToSic.Sxc.Dnn.Cms;
 using ToSic.Sxc.Dnn.Code;
+using ToSic.Sxc.Dnn.Code.Sys;
 using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Compile.Sys;
 using ToSic.Sxc.Dnn.Context;
+using ToSic.Sxc.Dnn.ExecutionContext.Sys;
 using ToSic.Sxc.Dnn.Features;
 using ToSic.Sxc.Dnn.ImportExport;
 using ToSic.Sxc.Dnn.Install;
@@ -28,6 +30,7 @@ using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Search;
 using ToSic.Sxc.Dnn.Services;
+using ToSic.Sxc.Dnn.Services.Sys;
 using ToSic.Sxc.Dnn.StartUp;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Integration.Modules;
@@ -87,8 +90,7 @@ internal static class StartUpDnnCore
         services.TryAddTransient<DnnInstallLogger>();
 
 
-        services.TryAddTransient<ExecutionContext, DnnExecutionContext>();
-        services.TryAddTransient<DnnExecutionContext>();
+        services.TryAddTransient<Sys.ExecutionContext.ExecutionContext, DnnExecutionContext>();
         // New v14
         services.TryAddTransient(typeof(ExecutionContext<,>), typeof(DnnExecutionContext<,>));
 
@@ -141,7 +143,7 @@ internal static class StartUpDnnCore
 #pragma warning disable CS0618 // Type or member is obsolete
         services.TryAddTransient<IDynamicCodeService, DnnDynamicCodeService>();
 #pragma warning restore CS0618 // Type or member is obsolete
-        services.TryAddTransient<DnnDynamicCodeService.MyScopedServices>();   // new v15
+        services.TryAddTransient<DnnDynamicCodeService.ScopedDependencies>();   // new v15
         services.TryAddTransient<IRenderService, DnnRenderService>();
 
         // v15 - move ready check turbo into a service

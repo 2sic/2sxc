@@ -1,8 +1,8 @@
-﻿using DotNetNuke.Services.Log.EventLog;
+﻿using DotNetNuke.Abstractions.Logging;
+using DotNetNuke.Services.Log.EventLog;
 using ToSic.Sxc.Services;
-using DotNetNuke.Abstractions.Logging;
 
-namespace ToSic.Sxc.Dnn.Services;
+namespace ToSic.Sxc.Dnn.Services.Sys;
 
 internal class DnnSystemLogService(IEventLogger eventLogger) : ISystemLogService,
     ILogService // for compatibility

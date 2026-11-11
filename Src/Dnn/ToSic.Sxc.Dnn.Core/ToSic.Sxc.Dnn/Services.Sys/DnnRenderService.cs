@@ -8,7 +8,7 @@ using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Services;
 using Page = System.Web.UI.Page;
 
-namespace ToSic.Sxc.Dnn.Services;
+namespace ToSic.Sxc.Dnn.Services.Sys;
 
 internal class DnnRenderService(
     RenderService originalRenderService,

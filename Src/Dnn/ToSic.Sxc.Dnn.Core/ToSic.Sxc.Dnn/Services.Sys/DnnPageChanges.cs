@@ -1,7 +1,7 @@
-﻿using DotNetNuke.Web.Client.ClientResourceManagement;
-using DotNetNuke.Web.Client.Providers;
-using System.Web;
+﻿using System.Web;
 using System.Web.UI;
+using DotNetNuke.Web.Client.ClientResourceManagement;
+using DotNetNuke.Web.Client.Providers;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Dnn;
 using ToSic.Razor.Markup;
@@ -14,7 +14,7 @@ using ToSic.Sxc.Web.Sys.ClientAssets;
 using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 using static ToSic.Sxc.Render.StaticAssets.Sys.ClientAssetConstants;
 
-namespace ToSic.Sxc.Dnn.Services;
+namespace ToSic.Sxc.Dnn.Services.Sys;
 
 internal class DnnPageChanges(LazySvc<IFeaturesService> featuresService, Generator<CspOfPage> pageCspGenerator)
     : ServiceBase($"{DnnConstants.LogName}.PgeCng", connect: [featuresService, pageCspGenerator])

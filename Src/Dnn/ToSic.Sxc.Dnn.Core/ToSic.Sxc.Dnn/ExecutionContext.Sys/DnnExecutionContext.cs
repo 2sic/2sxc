@@ -1,11 +1,10 @@
 ﻿using ToSic.Sxc.Services.Sys;
-using ExecutionContext = ToSic.Sxc.Sys.ExecutionContext.ExecutionContext;
 
-namespace ToSic.Sxc.Dnn.Code;
+namespace ToSic.Sxc.Dnn.ExecutionContext.Sys;
 
 /// <summary>
 /// The basic DnnDynamicCode without explicitly typed model / kit
 /// </summary>
 [PrivateApi]
-internal class DnnExecutionContext(ExecutionContext.Dependencies services)
+internal class DnnExecutionContext(Sxc.Sys.ExecutionContext.ExecutionContext.Dependencies services)
     : DnnExecutionContext<object, ServiceKit>(services);

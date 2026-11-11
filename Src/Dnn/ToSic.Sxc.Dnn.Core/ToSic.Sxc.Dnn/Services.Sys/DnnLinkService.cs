@@ -7,7 +7,7 @@ using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Link.Sys;
 using ToSic.Sxc.Sys.Integration.Paths;
 
-namespace ToSic.Sxc.Dnn.Services;
+namespace ToSic.Sxc.Dnn.Services.Sys;
 
 /// <summary>
 /// The DNN implementation of the <see cref="ILinkService"/>.
