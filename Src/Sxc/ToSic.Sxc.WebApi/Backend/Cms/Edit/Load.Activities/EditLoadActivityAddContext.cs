@@ -4,7 +4,7 @@ using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
-public class EditLoadActivityAddContext(IUiContextBuilder contextBuilder): ServiceBase("UoW.AddCtx", connect: [contextBuilder]),
+public class EditLoadActivityAddContext(Generator<IUiContextBuilder, IAppReader?> contextBuilder): ServiceBase("UoW.AddCtx", connect: [contextBuilder]),
     IWork<EditLoadDto, EditLoadDto>
 {
     public async Task<Package<EditLoadDto>> Handle(WorkContext actionCtx, Package<EditLoadDto> package)
@@ -18,7 +18,7 @@ public class EditLoadActivityAddContext(IUiContextBuilder contextBuilder): Servi
         {
             Data = package.Data with
             {
-                Context = contextBuilder.InitApp(actionCtx.Get<IAppReader>(EditLoadContextConstants.AppReader))
+                Context = contextBuilder.New(actionCtx.Get<IAppReader>(EditLoadContextConstants.AppReader))
                     .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.UserRoles |
                          Ctx.Features |
                          (isSystemType ? Ctx.FeaturesForSystemTypes : Ctx.Features), CtxEnable.EditUi),

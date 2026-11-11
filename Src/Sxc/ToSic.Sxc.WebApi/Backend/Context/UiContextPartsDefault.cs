@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.AppReader.Sys;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.Sys;
@@ -7,84 +8,59 @@ using ToSic.Sxc.Apps.Sys.Assets;
 using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Services;
 using ToSic.Sys.Capabilities.Features;
-using static ToSic.Sys.Capabilities.Features.BuiltInFeatures;
 using ContextLanguageDto = ToSic.Eav.WebApi.Sys.Dto.ContextLanguageDto;
 
 namespace ToSic.Sxc.Backend.Context;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
-    : ServiceBase<UiContextBuilderBase.Dependencies>(services, SxcLogName + ".UiCtx"), IUiContextBuilder
+
+public interface IUiContextParts : IServiceWithSetup<IAppReader?>
 {
-    #region Dependencies 
+    ContextLanguageDto? GetLanguage(Ctx flags);
+    ContextResourceWithApp? GetSystem(Ctx flags);
+    ContextResourceWithApp? GetSite(Ctx flags);
+    WebResourceDto GetPage(Ctx flags);
+    ContextEnableDto GetEnable(CtxEnable ctx);
+    ContextAppDto? GetApp(Ctx flags);
+    ContextUserDto GetUser(Ctx flags);
 
-    public record Dependencies(
-        IContextOfSiteService SiteCtxSvc,
-        LazySvc<ISysFeaturesService> Features,
-        LazySvc<IUiData> UiDataLazy,
-        LazySvc<ContextLanguageDtoService> LanguagesBackend,
-        IAppPathsMicroSvc AppPaths,
-        LazySvc<GlobalPaths> GlobalPaths,
-        IAppsCatalog AppsCatalog,
-        LazySvc<IUserService> UsersSvc
-    ) : DependenciesBase(connect: [SiteCtxSvc, Features, UiDataLazy, AppPaths, LanguagesBackend, GlobalPaths, AppsCatalog, UsersSvc]);
+    /// <summary>
+    /// Features provided must be virtual, so that applications can override this.
+    /// </summary>
+    /// <returns></returns>
+    IList<FeatureDto> GetFeatures(Ctx flags);
+}
 
-    #endregion
+public class UiContextPartsDefault(
+    IContextOfSiteService siteCtxSvc,
+    LazySvc<ISysFeaturesService> features,
+    LazySvc<IUiData> uiDataLazy,
+    LazySvc<ContextLanguageDtoService> languagesBackend,
+    IAppPathsMicroSvc appPaths,
+    LazySvc<GlobalPaths> globalPaths,
+    IAppsCatalog appsCatalog,
+    LazySvc<IUserService> usersSvc)
+    : ServiceWithSetup<IAppReader?>("Sxc.CtxPrt", connect: [siteCtxSvc, languagesBackend, features, uiDataLazy, appPaths, globalPaths, appsCatalog, usersSvc]), IUiContextParts
+{
+    private ISite Site => field ??= siteCtxSvc.Context.Site;
+    protected int ZoneId => siteCtxSvc.Context.Site.ZoneId;
 
-    #region Constructor / DI
-
-    private ISite Site => field ??= Services.SiteCtxSvc.Context.Site;
-    protected int ZoneId => Services.SiteCtxSvc.Context.Site.ZoneId;
-    protected IAppSpecs? AppSpecsOrNull;
-    private IAppReader? _appReaderOrNull;
-
-    #endregion
-
-    public IUiContextBuilder InitApp(IAppReader? appReaderOrNull)
-    {
-        AppSpecsOrNull = appReaderOrNull?.Specs;
-        _appReaderOrNull = appReaderOrNull;
-        return this;
-    }
-
-    /// <inheritdoc />
-    public ContextDto Get(Ctx flags, CtxEnable enableFlags)
-    {
-        var ctx = new ContextDto();
-        // logic for activating each part
-        // 1. either that switch is on
-        // 2. or the null-check: all is on
-        // 3. This also means if the switch is off, it's off
-        if (flags.HasFlag(Ctx.AppBasic) | flags.HasFlag(Ctx.AppAdvanced))
-            ctx.App = GetApp(flags);
-        if (enableFlags != CtxEnable.None) ctx.Enable = GetEnable(enableFlags);
-        if (flags.HasFlag(Ctx.Language)) ctx.Language = GetLanguage();
-        if (flags.HasFlag(Ctx.Page)) ctx.Page = GetPage();
-        if (flags.HasFlag(Ctx.Site)) ctx.Site = GetSite(flags);
-        if (flags.HasFlag(Ctx.System)) ctx.System = GetSystem(flags);
-        if (flags.HasFlag(Ctx.User)) ctx.User = GetUser(flags);
-        if (flags.HasFlag(Ctx.Features) || flags.HasFlag(Ctx.FeaturesForSystemTypes))
-            ctx.Features = GetFeatures(flags);
-        return ctx;
-    }
-
-    protected ContextLanguageDto? GetLanguage()
+    public ContextLanguageDto? GetLanguage(Ctx flags)
     {
         if (ZoneId == 0)
             return null;
         var site = Site;
 
-        var converted = Services.LanguagesBackend.Value.GetLanguagesOfApp(_appReaderOrNull);
+        var converted = languagesBackend.Value.GetLanguagesOfApp(MyOptions);
 
         return new()
         {
             Current = site.CurrentCultureCode,
             Primary = converted.Any() ? site.DefaultCultureCode : site.CurrentCultureCode, // in special case when no languages are available, use the current culture to fix translation issue in UI
-            List = converted, 
+            List = converted,
         };
     }
 
-    protected virtual ContextResourceWithApp GetSystem(Ctx flags)
+    public ContextResourceWithApp? GetSystem(Ctx flags)
     {
         var result = new ContextResourceWithApp
         {
@@ -99,7 +75,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
         return result;
     }
 
-    protected virtual ContextResourceWithApp GetSite(Ctx flags)
+    public ContextResourceWithApp? GetSite(Ctx flags)
     {
         var result = new ContextResourceWithApp
         {
@@ -111,25 +87,25 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
 
         // Otherwise also add the global appId
         var zoneId = Site.ZoneId;
-        result.DefaultApp = (AppIdentity)Services.AppsCatalog.DefaultAppIdentity(zoneId);
-        result.PrimaryApp = (AppIdentity)Services.AppsCatalog.PrimaryAppIdentity(zoneId);
+        result.DefaultApp = appsCatalog.DefaultAppIdentity(zoneId).PureIdentityExplicit();
+        result.PrimaryApp = appsCatalog.PrimaryAppIdentity(zoneId).PureIdentityExplicit();
         return result;
     }
 
-    protected virtual WebResourceDto GetPage() =>
+    public WebResourceDto GetPage(Ctx flags) =>
         new()
         {
             Id = EavConstants.NullId,
         };
 
-    protected virtual ContextEnableDto GetEnable(CtxEnable ctx)
+    public ContextEnableDto GetEnable(CtxEnable ctx)
     {
-        var isRealApp = AppSpecsOrNull != null && ! AppSpecsOrNull.IsContentApp();
-        var user = Services.SiteCtxSvc.Context.User;
+        var isRealApp = MyOptions?.Specs != null && !MyOptions.Specs.IsContentApp();
+        var user = siteCtxSvc.Context.User;
         var dto = new ContextEnableDto
         {
             DebugMode = user.IsSystemAdmin ||
-                        Services.Features.Value.IsEnabled(EditUiAllowDebugModeForEditors)
+                        features.Value.IsEnabled(BuiltInFeatures.EditUiAllowDebugModeForEditors)
         };
         if (ctx.HasFlag(CtxEnable.AppPermissions))
             dto.AppPermissions = isRealApp;
@@ -144,15 +120,15 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
         return dto;
     }
 
-    protected virtual string GetGettingStartedUrl() => EavConstants.UrlNotInitialized;
+    public string GetGettingStartedUrl() => EavConstants.UrlNotInitialized;
 
-    protected virtual ContextAppDto? GetApp(Ctx flags)
+    public ContextAppDto? GetApp(Ctx flags)
     {
-        if (_appReaderOrNull == null)
+        if (MyOptions == null)
             return null;
-        var appReader = _appReaderOrNull;
+        var appReader = MyOptions;
         var appSpecs = appReader.Specs;
-        var paths = Services.AppPaths.Get(appReader, Site);
+        var paths = appPaths.Get(appReader, Site);
         var result = new ContextAppDto
         {
             Id = appSpecs.AppId,
@@ -178,12 +154,12 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
 
         result.GettingStartedUrl = GetGettingStartedUrl();
         result.Identifier = appSpecs.NameId;
-            
+
         // #SiteApp v13
         result.SettingsScope = appSpecs.IsGlobalSettingsApp()
-            ? "Global" 
+            ? "Global"
             : appSpecs.IsSiteSettingsApp()
-                ? "Site" 
+                ? "Site"
                 : "App";
 
         result.Permissions = new() { Count = appReader.Specs.Metadata.Permissions.Count() };
@@ -191,13 +167,13 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
         result.IsShared = appReader.IsShared();
         result.IsInherited = appReader.IsInherited();
 
-        result.Icon = AppAssetThumbnail.GetUrl(appReader, paths!, Services.GlobalPaths);
+        result.Icon = AppAssetThumbnail.GetUrl(appReader, paths!, globalPaths);
         return result;
     }
 
-    protected virtual ContextUserDto GetUser(Ctx flags)
+    public ContextUserDto GetUser(Ctx flags)
     {
-        var user = Services.SiteCtxSvc.Context.User;
+        var user = siteCtxSvc.Context.User;
         var userDto = new ContextUserDto
         {
             Email = user.Email,
@@ -210,7 +186,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
             IsContentAdmin = user.IsContentAdmin,
             Name = user.Name,
             Username = user.Username,
-            Roles = flags.HasFlag(Ctx.UserRoles) ? Services.UsersSvc.Value.GetCurrentUser().Roles.Select(r => r.Name).ToListOpt() : [],
+            Roles = flags.HasFlag(Ctx.UserRoles) ? usersSvc.Value.GetCurrentUser().Roles.Select(r => r.Name).ToListOpt() : [],
         };
         return userDto;
     }
@@ -219,6 +195,6 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
     /// Features provided must be virtual, so that applications can override this.
     /// </summary>
     /// <returns></returns>
-    protected virtual IList<FeatureDto> GetFeatures(Ctx flags)
-        => Services.UiDataLazy.Value.FeaturesDto(Services.SiteCtxSvc.Context.Permissions.IsContentAdmin, flags.HasFlag(Ctx.FeaturesForSystemTypes));
+    public IList<FeatureDto> GetFeatures(Ctx flags)
+        => uiDataLazy.Value.FeaturesDto(siteCtxSvc.Context.Permissions.IsContentAdmin, flags.HasFlag(Ctx.FeaturesForSystemTypes));
 }

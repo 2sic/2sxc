@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Oqt.Server.Controllers;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;
@@ -27,7 +28,7 @@ internal static partial class OqtRegisterServices
             .AddSxcOqtAdam()                            // Adam
             ;
 
-        services.TryAddTransient<IUiContextBuilder, OqtUiContextBuilder>();
+        services.TryAddTransient<IUiContextParts, OqtUiContextParts>();
 
         return services;
     }

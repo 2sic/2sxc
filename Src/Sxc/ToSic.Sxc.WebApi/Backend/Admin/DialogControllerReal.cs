@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Backend.Admin;
 public class DialogControllerReal(
     ZoneSwitchPermissionCheck zoneSwitchPermissionCheck,
     ISxcCurrentContextService ctxService,
-    IUiContextBuilder uiContextBuilder)
+    Generator<IUiContextBuilder, IAppReader?> uiContextBuilder)
     : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [zoneSwitchPermissionCheck, ctxService, uiContextBuilder]),
         IDialogController
 {
@@ -34,7 +34,7 @@ public class DialogControllerReal(
                 throw HttpException.PermissionDenied(error);
         }
 
-        var cb = uiContextBuilder.InitApp(appReader);
+        var cb = uiContextBuilder.New(appReader);
 
         return new()
         {
