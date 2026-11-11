@@ -39,7 +39,7 @@ internal partial class DnnDynamicCodeService : ServiceBase<DnnDynamicCodeService
         Generator<IExecutionContextFactory> ExCtxGenerator,
         Generator<AppForCode, AppForCode.Options> AppGenerator,
         Generator<IAppDynamic, IAppForCode> AppDynGenerator,
-        LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder)
+        LazySvc<IBlockBuilder> ModAndBlockBuilder)
         : DependenciesBase(connect: [ExCtxGenerator, AppGenerator, AppDynGenerator, ModAndBlockBuilder]);
 
 

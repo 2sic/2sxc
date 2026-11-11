@@ -66,7 +66,7 @@ partial class OqtRegisterServices
         services.TryAddTransient<IWebApiContextBuilder, OqtGetBlock>();
 
         // v13
-        services.TryAddTransient<IModuleAndBlockBuilder, OqtModuleAndBlockBuilder>();
+        services.TryAddTransient<IEnvModuleBuilder, OqtModuleBuilder>();
 
         // Views / Templates / Razor: Polymorphism Resolvers
         services.TryAddTransient<Connect.Koi.Detectors.ICssFrameworkDetector, OqtKoiCssFrameworkDetector>();

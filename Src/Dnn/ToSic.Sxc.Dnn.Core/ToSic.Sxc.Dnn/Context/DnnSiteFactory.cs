@@ -12,7 +12,9 @@ namespace ToSic.Sxc.Dnn.Context;
 /// <summary>
 /// This is a DNN implementation of a Tenant-object. 
 /// </summary>
-internal sealed class DnnSiteFactory(LazySvc<IZoneMapper> zoneMapperLazy, LazySvc<ILinkPaths> linkPathsLazy, DnnCultureResolver cultureResolver)
+[PrivateApi]
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public sealed class DnnSiteFactory(LazySvc<IZoneMapper> zoneMapperLazy, LazySvc<ILinkPaths> linkPathsLazy, DnnCultureResolver cultureResolver)
     : ServiceBase(DnnConstants.LogName, connect: [zoneMapperLazy, linkPathsLazy, cultureResolver])
 {
     #region Separating factory from shared global state

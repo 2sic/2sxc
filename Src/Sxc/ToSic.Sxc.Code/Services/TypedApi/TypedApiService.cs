@@ -40,8 +40,9 @@ internal class TypedApiService(IServiceProvider serviceProvider, LazySvc<ILogSto
     public record ScopedDependencies(
         Generator<IExecutionContextFactory> ExCtxGenerator,
         Generator<AppForCode, AppForCode.Options> AppGenerator,
-        LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder)
-        : DependenciesBase(connect: [ExCtxGenerator, AppGenerator, ModAndBlockBuilder]);
+        LazySvc<IBlockBuilder> ModAndBlockBuilder,
+        LazySvc<IEnvModuleBuilder> EnvModAndBlockBuilder)
+        : DependenciesBase(connect: [ExCtxGenerator, AppGenerator, ModAndBlockBuilder, EnvModAndBlockBuilder]);
 
     #endregion
 
@@ -161,7 +162,7 @@ internal class TypedApiService(IServiceProvider serviceProvider, LazySvc<ILogSto
 
     public ITypedApi ApiOfSite(int siteId, int pageId, int moduleId)
     {
-        var moduleFallback = ServicesScoped.ModAndBlockBuilder.Value.GetModule(pageId, moduleId);
+        var moduleFallback = ServicesScoped.EnvModAndBlockBuilder.Value.GetModule(pageId, moduleId);
         var appIdentity = GetPrimaryAppIdentity(siteId);
         return OfAppOrSiteInternal(zoneId: appIdentity.ZoneId, appId: appIdentity.AppId, moduleFallback);
     }

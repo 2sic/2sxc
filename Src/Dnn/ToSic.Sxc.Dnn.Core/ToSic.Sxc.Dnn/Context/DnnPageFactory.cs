@@ -7,7 +7,9 @@ using ToSic.Sxc.Web.Sys.Http;
 
 namespace ToSic.Sxc.Dnn.Context;
 
-internal class DnnPageFactory(LazySvc<IHttp> httpLazy) : ServiceBase("Dnn.PageFac")
+[PrivateApi]
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public class DnnPageFactory(LazySvc<IHttp> httpLazy) : ServiceBase("Dnn.PageFac")
 {
     public IPage Create()
         => Create(PortalSettings.Current?.ActiveTab, null);

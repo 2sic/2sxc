@@ -7,6 +7,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.Sys;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sxc.Context.Sys;
@@ -18,9 +19,10 @@ namespace ToSic.Sxc.Dnn.Cms;
 
 internal partial class DnnPagePublishing(
     LazySvc<AppWorkContextService> appWorkCtxSvc,
-    LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder,
+    LazySvc<DnnModuleContextFactory> ctxOfModFac,
+    LazySvc<BlockOfModule> moduleAndBlockBuilder,
     LazySvc<WorkEntityPublish> entPublish)
-    : ServiceBase("Dnn.Publsh", connect: [appWorkCtxSvc, moduleAndBlockBuilder, entPublish]), IPagePublishing
+    : ServiceBase("Dnn.Publsh", connect: [appWorkCtxSvc, ctxOfModFac, moduleAndBlockBuilder, entPublish]), IPagePublishing
 {
 
     public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
@@ -77,7 +79,8 @@ internal partial class DnnPagePublishing(
             // publish all entities of this content block
             var dnnModule = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
             // must find tenant through module, as the Portal-Settings.Current is null in search mode
-            var cb = moduleAndBlockBuilder.Value.BuildBlock(dnnModule, null);
+            var modCtx = ctxOfModFac.Value.InitDnnSiteModuleAndBlockContext(dnnModule);
+            var cb = moduleAndBlockBuilder.Value.GetBlockOfModule(modCtx);
 
             l.A($"found dnn mod {cb.Context.Module.Id}, tenant {cb.Context.Site.Id}, cb exists: {cb.ContentGroupExists}");
             if (cb.ContentGroupExists)

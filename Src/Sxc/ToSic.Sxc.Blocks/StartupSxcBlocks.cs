@@ -25,6 +25,7 @@ public static class StartupSxcBlocks
         services.TryAddTransient<BlockOfModule>();
         services.TryAddTransient<BlockOfEntity>();
         services.TryAddTransient<BlockGeneratorHelpers>();
+        services.TryAddTransient<IBlockBuilder, BlockBuilder>();
 
         // Block Editors - updated v22
         services.TryAddTransient<BlockSavePicker>();
@@ -44,13 +45,6 @@ public static class StartupSxcBlocks
         services.TryAddTransient<IContextOfAppFactory, ContextOfAppFactory>(); // new v22 WIP
         services.TryAddTransient<IContextOfBlockFactory, ContextOfBlockFactory>(); // new v22 WIP
 
-        // moved to WebApi
-        //// v22.01 2dm 2026-10-20 - only one service left, as we're trying to clean state sharing...
-        //services.TryAddScoped<ISxcCurrentContextService, SxcCurrentContextService>();
-        //services.TryAddScoped<IContextService>(x => x.GetRequiredService<ISxcCurrentContextService>());
-        //services.TryAddScoped<IContextOfSiteService>(x => x.GetRequiredService<ISxcCurrentContextService>());
-        //services.TryAddScoped<IContextCompleteService>(x => x.GetRequiredService<ISxcCurrentContextService>());
-
         // Integration stuff - must be implemented by each platform
         services.TryAddTransient<IPlatformModuleUpdater, BasicModuleUpdater>();
 
@@ -67,7 +61,7 @@ public static class StartupSxcBlocks
     public static IServiceCollection AddSxcBlocksFallbacks(this IServiceCollection services)
     {
 
-        services.TryAddTransient<IModuleAndBlockBuilder, ModuleAndBlockBuilderUnknown>();
+        services.TryAddTransient<IEnvModuleBuilder, ModuleBuilderUnknown>();
 
         // This is more of a fallback, in DNN it's pre-registered so it won't use this
         services.TryAddTransient<ILookUpEngineResolver, LookUpEngineResolver>();

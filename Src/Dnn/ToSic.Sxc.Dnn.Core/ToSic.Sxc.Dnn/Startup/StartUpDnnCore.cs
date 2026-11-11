@@ -134,7 +134,8 @@ internal static class StartUpDnnCore
         services.TryAddTransient<IMailService, DnnMailService>();
 
         // v13
-        services.TryAddTransient<IModuleAndBlockBuilder, DnnModuleAndBlockBuilder>();
+        services.TryAddTransient<IEnvModuleBuilder, DnnModuleBuilder>();
+        services.TryAddTransient<DnnModuleContextFactory>(); // new v22
 
         // v13.12
         services.AddTransient<IBootProcess, BootRegisterDnnFeatures>();   // must be Add, not TryAdd

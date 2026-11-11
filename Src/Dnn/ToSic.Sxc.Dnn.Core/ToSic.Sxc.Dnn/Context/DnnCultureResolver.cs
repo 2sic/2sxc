@@ -6,7 +6,9 @@ using static ToSic.Eav.Context.Sys.ZoneCulture.IZoneCultureResolverExtensions;
 
 namespace ToSic.Sxc.Dnn.Context;
 
-internal class DnnCultureResolver(LazySvc<ISysFeaturesService> featuresSvc) : ServiceBase("Dnn.Cult")
+[PrivateApi]
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public class DnnCultureResolver(LazySvc<ISysFeaturesService> featuresSvc) : ServiceBase("Dnn.Cult")
 {
     internal string? GetCurrentCultureCode(PortalSettings? portal)
     {

@@ -1,14 +1,14 @@
 ﻿using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using static ToSic.Sxc.Backend.SxcWebApiConstants;
 
 namespace ToSic.Sxc.Dnn.Integration;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class DnnGetBlock(
-    Generator<BlockOfEntity> blockFromEntity,
-    Generator<IModuleAndBlockBuilder> moduleAndBlockBuilder)
-    : ServiceBase($"{LogName}.GetBlk", connect: [blockFromEntity, moduleAndBlockBuilder])
+    LazySvc<DnnModuleContextFactory> ctxOfModFac,
+    Generator<BlockOfModule> moduleAndBlockBuilder,
+    Generator<BlockOfEntity> blockFromEntity)
+    : ServiceBase($"{LogName}.GetBlk", connect: [ctxOfModFac, moduleAndBlockBuilder, blockFromEntity])
 {
     /// <summary>
     /// Get the block specs using the DNN Module Info headers and optionally any content-block headers in the request.
@@ -24,7 +24,8 @@ public class DnnGetBlock(
             return l.ReturnNull("request ModuleInfo not found");
 
         // Build the initial / outermost block
-        var block = moduleAndBlockBuilder.New().BuildBlock(moduleInfo, null);
+        var ctx = ctxOfModFac.Value.InitDnnSiteModuleAndBlockContext(moduleInfo);
+        var block = moduleAndBlockBuilder.New().GetBlockOfModule(ctx);
 
         // check if we need an inner block
         if (!request.Headers.Contains(HeaderContentBlockId))

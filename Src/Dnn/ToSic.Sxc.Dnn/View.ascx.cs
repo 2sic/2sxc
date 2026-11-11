@@ -2,10 +2,8 @@
 using System.Web.UI;
 using ToSic.Eav.Web.Sys;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Dnn.Features;
 using ToSic.Sxc.Dnn.Install;
-using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Services.Sys;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Render.Block.Sys;
@@ -45,7 +43,12 @@ public partial class View : PortalModuleBase, IActionable
     /// Block needs to self-initialize when first requested, because it's used in the Actions-Menu builder
     /// which runs before page-load
     /// </summary>
-    private IBlock Block => _blockGetOnce.Get(Log, () => GetService<IModuleAndBlockBuilder>().BuildBlock(ModuleConfiguration, null), timer: true);
+    private IBlock Block => _blockGetOnce.Get(Log, timer: true, generator: ()
+        =>
+    {
+        var ctx = GetService<DnnModuleContextFactory>().InitDnnSiteModuleAndBlockContext(ModuleConfiguration);
+        return GetService<BlockOfModule>().GetBlockOfModule(ctx);
+    });
     private readonly LazyGetAndLog<IBlock> _blockGetOnce = new();
 
     private IBlockRenderer BlockRenderer => field ??= GetService<IBlockRenderer>().Setup(Block);

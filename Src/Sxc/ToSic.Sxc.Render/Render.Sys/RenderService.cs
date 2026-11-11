@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Render.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class RenderService(
     Generator<IEditService> editGenerator,
-    LazySvc<IModuleAndBlockBuilder> builderSvc,
+    LazySvc<IBlockBuilder> builderSvc,
     Generator<SimpleRenderer> simpleRendererGen,
     Generator<InTextContentBlockRenderer> inTextRenderer,
     Generator<IBlockRenderer> blockBuilderGenerator,

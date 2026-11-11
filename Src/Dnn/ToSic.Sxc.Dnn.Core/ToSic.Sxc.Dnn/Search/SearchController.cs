@@ -41,12 +41,13 @@ internal class SearchController(
     Generator<CodeCompiler> codeCompiler,
     Generator<IExecutionContextFactory> exCtxFactory,
     DnnSiteFactory siteGenerator,
-    LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder,
+    LazySvc<DnnModuleContextFactory> ctxOfModFac,
+    LazySvc<BlockOfModule> moduleAndBlockBuilder,
     LazySvc<ILookUpEngineResolver> dnnLookUpEngineResolver,
     LazySvc<ILogStore> logStore,
     IEditionService editionSvc)
     : ServiceBase("DNN.Search",
-        connect: [appsCache, codeCompiler, exCtxFactory, siteGenerator, dnnLookUpEngineResolver, moduleAndBlockBuilder, logStore, editionSvc])
+        connect: [appsCache, codeCompiler, exCtxFactory, siteGenerator, ctxOfModFac, dnnLookUpEngineResolver, moduleAndBlockBuilder, logStore, editionSvc])
 {
     /// <summary>
     /// Initialize all values which are needed - or return a text with the info why we must stop.
@@ -75,7 +76,8 @@ internal class SearchController(
         // In case it's not loaded yet
         appsCache.Value.Load(module.BlockIdentifier.PureIdentity(), DnnSite.DefaultCultureCode, appsCache.AppLoaderTools);
 
-        Block = moduleAndBlockBuilder.Value.BuildBlock(DnnModule, null);
+        var modCtx = ctxOfModFac.Value.InitDnnSiteModuleAndBlockContext(DnnModule);
+        Block = moduleAndBlockBuilder.Value.GetBlockOfModule(modCtx);
 
         if (!Block.DataIsReady || !Block.ViewIsReady)
             return "no data or view";
