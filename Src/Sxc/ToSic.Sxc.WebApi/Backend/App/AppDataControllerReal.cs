@@ -14,7 +14,7 @@ public class AppDataControllerReal(Generator<AppContent, AppContent.Options> app
     #region Get List / all of a certain content-type
 
     /// <inheritdoc />
-    public IEnumerable<IDictionary<string, object>> GetEntities(string contentType, string? appPath = default, Uri? uri = null)
+    public IEnumerable<IDictionary<string, object?>> GetEntities(string contentType, string? appPath = default, Uri? uri = null)
         => appContentGen.New(new(appPath)).GetItems(contentType, appPath, uri);
 
     #endregion
@@ -48,7 +48,7 @@ public class AppDataControllerReal(Generator<AppContent, AppContent.Options> app
     /// <param name="oDataSelect"></param>
     /// <param name="uri"></param>
     /// <returns></returns>
-    private IDictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string? appPath, Uri? uri)
+    private IDictionary<string, object?> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string? appPath, Uri? uri)
         => appContentGen.New(new(appPath)).GetOne(contentType, getOne, appPath, uri);
 
     #endregion
@@ -57,7 +57,7 @@ public class AppDataControllerReal(Generator<AppContent, AppContent.Options> app
     #region Create
 
     /// <inheritdoc />
-    public IDictionary<string, object> CreateOrUpdate(string contentType, Dictionary<string, object?> newContentItem, int? id = null,
+    public IDictionary<string, object?> CreateOrUpdate(string contentType, Dictionary<string, object?> newContentItem, int? id = null,
         string? appPath = null)
         => appContentGen.New(new(appPath))
             .CreateOrUpdate(contentType, newContentItem, id, appPath);

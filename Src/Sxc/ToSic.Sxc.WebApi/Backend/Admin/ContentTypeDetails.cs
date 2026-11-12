@@ -1,3 +1,4 @@
+using ToSic.Eav.Data.ContentTypes.Sys;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 
@@ -29,36 +30,36 @@ public class ContentTypeDetails : CustomDataSource
     public ContentTypeDetails(
         Dependencies services,
         AppWorkQuick<WorkEntities> workEntities,
-        ConvertContentTypeToDto convTypeDto,
+        ConvertContentTypeToRaw convTypeRaw,
         AppWorkQuick<WorkAttributes> workAttributes,
-        Generator<ConvertAttributeToDto> convAttrDto)
-        : base(services, logName: "Eav.CtDetails", connect: [workEntities, convTypeDto, workAttributes, convAttrDto])
+        Generator<ConvertAttributeToRaw> convAttrDto)
+        : base(services, logName: "Eav.CtDetails", connect: [workEntities, convTypeRaw, workAttributes, convAttrDto])
     {
 
-        ProvideOutRaw(() => GetContentTypeDetails(workEntities.New(AppId), convTypeDto));
+        ProvideOutRaw(() => GetContentTypeDetails(workEntities.New(AppId), convTypeRaw));
 
         ProvideOutRaw(() => GetFields(workAttributes.New(AppId), convAttrDto), name: "Fields");
     }
 
-    private IEnumerable<ContentTypeDto> GetContentTypeDetails(WorkEntities workEntities,
-        ConvertContentTypeToDto convTypeDto)
+    private IEnumerable<ContentTypeRaw> GetContentTypeDetails(WorkEntities workEntities,
+        ConvertContentTypeToRaw convTypeRaw)
     {
-        var l = Log.Fn<IEnumerable<ContentTypeDto>>();
+        var l = Log.Fn<IEnumerable<ContentTypeRaw>>();
 
         var contentType = workEntities.MyOptions.AppReader.TryGetContentType(ContentTypeId);
 
         if (contentType == null)
             return l.Return([], "not found");
 
-        var dto = convTypeDto.Convert(contentType);
+        var dto = convTypeRaw.Convert(contentType);
 
         return l.Return([dto], "ok");
     }
 
-    private IEnumerable<ContentTypeFieldDto> GetFields(WorkAttributes workAttributes,
-        Generator<ConvertAttributeToDto> convAttrDto)
+    private IEnumerable<ContentTypeFieldRaw> GetFields(WorkAttributes workAttributes,
+        Generator<ConvertAttributeToRaw> convAttrDto)
     {
-        var l = Log.Fn<IEnumerable<ContentTypeFieldDto>>();
+        var l = Log.Fn<IEnumerable<ContentTypeFieldRaw>>();
 
         var fields = workAttributes.GetFields(ContentTypeId);
 

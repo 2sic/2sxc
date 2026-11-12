@@ -2,7 +2,6 @@ using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Apps.Sys.Extensions;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Sys;
-using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sxc.ImportExport.Package.Sys;
 using ToSic.Sys.Utils;
 
@@ -15,9 +14,9 @@ public class ExtensionDeleteBackend(
     IAppPathsMicroSvc appPathSvc,
     ExtensionManifestService manifestService,
     LazySvc<ExtensionInspectBackend> inspectorLazy,
-    LazySvc<EntityApi> entityApiLazy,
+    AppWorkQuick<WorkEntityDelete> entDelete,
     LazySvc<AppCachePurger> appCachePurgerLazy)
-    : ServiceBase("Bck.ExtDel", connect: [appReadersLazy, site, appPathSvc, manifestService, inspectorLazy, entityApiLazy, appCachePurgerLazy])
+    : ServiceBase("Bck.ExtDel", connect: [appReadersLazy, site, appPathSvc, manifestService, inspectorLazy, entDelete, appCachePurgerLazy])
 {
     private ReadOnlyFileHelper ReadOnlyHelper => field ??= new(Log);
 
@@ -85,16 +84,16 @@ public class ExtensionDeleteBackend(
             return;
         }
 
-        var entityApi = entityApiLazy.Value.Init(appId, showDrafts: true);
-
         var entityIds = appReader.List
             .Where(e => e.EntityId > 0 && typeNames.Any(t => e.Type.Is(t)))
             .Select(e => new { e.EntityId, e.Type.NameId })
             .DistinctBy(e => e.EntityId)
             .ToList();
 
+        var entityApi = entDelete.New(appReader, showDrafts: true);
+
         foreach (var entity in entityIds)
-            entityApi.Delete(entity.NameId, entity.EntityId, force: true);
+            entityApi.Delete(entity.EntityId, contentType: entity.NameId, force: true);
 
         l.Done($"deleted:{entityIds.Count}");
     }

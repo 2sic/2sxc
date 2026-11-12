@@ -9,7 +9,6 @@ using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Metadata.Recommendations.Sys;
 using ToSic.Eav.Metadata.Sys;
-using ToSic.Eav.WebApi.Sys.Admin.Metadata;
 
 namespace ToSic.Sxc.Backend.Admin;
 
@@ -33,32 +32,33 @@ public class ItemMetadata : CustomDataSource
 
     public ItemMetadata(
         Dependencies services,
-        LazySvc<MetadataControllerReal> metadata,
+        AppWorkQuick<WorkMetadataGet> metadata,
         IAppReaderFactory appReaders,
         Generator<IConvertToEavLight> converters)
         : base(services, "Sxc.ItemMd", connect: [metadata, appReaders, converters])
     {
-        ProvideOutRaw(() => Recommendations(metadata), name: "Recommendations");
+        var md = metadata.New(AppId);
+        ProvideOutRaw(() => Recommendations(md), name: "Recommendations");
         ProvideOutRaw(() => Items(appReaders, converters), name: "Items", options: DynamicOptions);
-        ProvideOutRaw(() => Target(metadata), name: "For");
+        ProvideOutRaw(() => Target(md), name: "For");
     }
 
-    private MetadataListDto Result(LazySvc<MetadataControllerReal> metadata)
+    private MetadataListDto Result(WorkMetadataGet workMetadata)
     {
         if (_result != null)
             return _result;
 
         _ = Refresh; // Ensure refresh participates in configuration/cache identity.
-        var result = metadata.Value.Get(AppId, TargetType, KeyType, Key, ContentType);
-        return _result = new MetadataListDto
+        var result = workMetadata.Get(AppId, TargetType, KeyType, Key, ContentType);
+        return _result = new()
         {
             For = result.For,
             Items = result.Items?.ToList(),
             Recommendations = result.Recommendations?.ToList(),
         };
     }
-    private IEnumerable<MetadataRecommendationRaw> Recommendations(LazySvc<MetadataControllerReal> metadata)
-        => Result(metadata).Recommendations?.Select(recommendation => new MetadataRecommendationRaw(recommendation)) ?? [];
+    private IEnumerable<MetadataRecommendationRaw> Recommendations(WorkMetadataGet workMetadata)
+        => Result(workMetadata).Recommendations?.Select(recommendation => new MetadataRecommendationRaw(recommendation)) ?? [];
     private IEnumerable<IRawEntity> Items(IAppReaderFactory appReaders, Generator<IConvertToEavLight> converters)
     {
         var metadata = appReaders.Get(AppId).Metadata;
@@ -95,8 +95,9 @@ public class ItemMetadata : CustomDataSource
             };
         }).ToList();
     }
-    private IEnumerable<MetadataForRaw> Target(LazySvc<MetadataControllerReal> metadata)
-        => [new(Result(metadata).For)];
+    private IEnumerable<MetadataForRaw> Target(WorkMetadataGet workMetadata)
+        => [new(Result(workMetadata).For)];
+
     private static DataFactoryOptions DynamicOptions() => new() { AllowUnknownValueTypes = true };
 
     private sealed class MetadataRecommendationRaw(MetadataRecommendation recommendation) : IRawEntityAutoConvert
