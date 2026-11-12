@@ -3,17 +3,19 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Abstractions.Portals;
 using System.Web;
 using ToSic.Eav.Apps;
-using ToSic.Eav.WebApi.Sys.Context;
+using ToSic.Eav.Ui.Context.Sys;
+using ToSic.Eav.Ui.Context.Sys.Dto;
 using ToSic.Eav.WebApi.Sys.Dto;
 using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Ui.Context.Sys;
 using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 
 namespace ToSic.Sxc.Dnn.WebApi.Context;
 
-internal sealed class DnnUiContextParts(Generator<SxcUiContextParts, IAppReader?> uiDefaults, IContextCompleteService ctxService, ExternalLinksService externalLinksService)
-    : ServiceBase("Dnn.UiCtxP", connect: [uiDefaults, ctxService, externalLinksService]), IUiContextParts
+internal sealed class DnnUiContextPartsService(Generator<SxcUiContextPartsService, IAppReader?> uiDefaults, IContextCompleteService ctxService, ExternalLinksService externalLinksService)
+    : ServiceBase("Dnn.UiCtxP", connect: [uiDefaults, ctxService, externalLinksService]), IUiContextPartsService
 {
     #region Constructor / DI
     public void Setup(IAppReader? options) => AppReader = options;
@@ -22,7 +24,7 @@ internal sealed class DnnUiContextParts(Generator<SxcUiContextParts, IAppReader?
 
     private ModuleInfo Module => (ctxService.BlockContextOrNull()?.Module as IWrapper<ModuleInfo>)?.GetContents();
 
-    private IUiContextParts UiDefaults => field ??= uiDefaults.New(AppReader);
+    private IUiContextPartsService UiDefaults => field ??= uiDefaults.New(AppReader);
 
     #endregion
 

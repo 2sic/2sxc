@@ -4,7 +4,6 @@ global using System.Collections.Generic;
 global using System.Linq;
 global using ToSic.Eav.WebApi.Sys;
 global using ToSic.Eav.WebApi.Sys.Admin;
-global using ToSic.Eav.WebApi.Sys.Context;
 global using ToSic.Eav.WebApi.Sys.Dto;
 global using ToSic.Eav.WebApi.Sys.Routing;
 global using ToSic.Sys;

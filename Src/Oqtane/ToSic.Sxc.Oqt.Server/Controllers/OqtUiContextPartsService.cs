@@ -1,26 +1,28 @@
 ﻿using Oqtane.Shared;
 using ToSic.Eav.Apps;
-using ToSic.Sxc.Backend.Context;
+using ToSic.Eav.Ui.Context.Sys;
+using ToSic.Eav.Ui.Context.Sys.Dto;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Sys.Integration.Paths;
+using ToSic.Sxc.Ui.Context.Sys;
 using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers;
 
-internal class OqtUiContextParts(
-    Generator<SxcUiContextParts, IAppReader?> uiDefaults,
+internal class OqtUiContextPartsService(
+    Generator<SxcUiContextPartsService, IAppReader?> uiDefaults,
     ILinkPaths linkPaths,
     IContextCompleteService siteCtxSvc,
     SiteState siteState,
     ExternalLinksService externalLinksService)
-    : ServiceBase("Oqt.UiCtxB", connect: [uiDefaults, linkPaths, siteCtxSvc, siteState, externalLinksService]), IUiContextParts
+    : ServiceBase("Oqt.UiCtxB", connect: [uiDefaults, linkPaths, siteCtxSvc, siteState, externalLinksService]), IUiContextPartsService
 {
     public void Setup(IAppReader? options) => AppReader = options;
 
     private IAppReader? AppReader { get; set; }
 
-    private IUiContextParts UiDefaults => field ??= uiDefaults.New(AppReader);
+    private IUiContextPartsService UiDefaults => field ??= uiDefaults.New(AppReader);
 
     public ContextLanguageInfoDto GetLanguage(Ctx flags) => UiDefaults.GetLanguage(flags);
 

@@ -1,6 +1,8 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.Sys;
+using ToSic.Eav.Ui.Context.Sys;
+using ToSic.Eav.Ui.Context.Sys.Dto;
 
 namespace ToSic.Sxc.Backend.Admin;
 
@@ -8,7 +10,7 @@ namespace ToSic.Sxc.Backend.Admin;
 public class DialogControllerReal(
     ZoneSwitchPermissionCheck zoneSwitchPermissionCheck,
     ISxcCurrentContextService ctxService,
-    Generator<IUiContextBuilder, IAppReader?> uiContextBuilder)
+    Generator<IUiContextService, IAppReader?> uiContextBuilder)
     : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [zoneSwitchPermissionCheck, ctxService, uiContextBuilder]),
         IDialogController
 {

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Sys.Insights;
+using ToSic.Eav.Ui.Context.Sys;
 using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Eav.WebApi.Sys.App.Details;
 using ToSic.Eav.WebApi.Sys.ImportExport;
@@ -27,6 +28,7 @@ using ToSic.Sxc.Backend.Usage;
 using ToSic.Sxc.Backend.Views;
 using ToSic.Sxc.Data.Sys.Convert;
 using ToSic.Sxc.Render.StaticAssets.Sys;
+using ToSic.Sxc.Ui.Context.Sys;
 using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 using ToSic.Sys.Context;
 
@@ -92,8 +94,8 @@ public static class StartupSxcWebApi
         services.TryAddTransient<ContentGroupList>();
 
         // js context / UI
-        services.TryAddTransient<SxcUiContextParts>();  // v22 - default implementation, for re-implementations
-        services.TryAddTransient<IUiContextParts, SxcUiContextParts>();
+        services.TryAddTransient<SxcUiContextPartsService>();  // v22 - default implementation, for re-implementations
+        services.TryAddTransient<IUiContextPartsService, SxcUiContextPartsService>();
             
         // Helpers
         services.TryAddTransient<ImpExpHelpers>();

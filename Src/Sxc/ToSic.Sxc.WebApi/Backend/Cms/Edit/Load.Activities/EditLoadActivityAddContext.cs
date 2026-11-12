@@ -1,10 +1,11 @@
 ﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Ui.Context.Sys;
 using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
-public class EditLoadActivityAddContext(Generator<IUiContextBuilder, IAppReader?> contextBuilder): ServiceBase("UoW.AddCtx", connect: [contextBuilder]),
+public class EditLoadActivityAddContext(Generator<IUiContextService, IAppReader?> contextBuilder): ServiceBase("UoW.AddCtx", connect: [contextBuilder]),
     IWork<EditLoadDto, EditLoadDto>
 {
     public async Task<Package<EditLoadDto>> Handle(WorkContext actionCtx, Package<EditLoadDto> package)
