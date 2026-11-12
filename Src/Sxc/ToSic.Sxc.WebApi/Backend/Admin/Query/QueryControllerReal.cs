@@ -1,6 +1,8 @@
-﻿using ToSic.Eav.LookUp.Sys.Engines;
+﻿using ToSic.Eav.DataSources.ImportExport.Sys;
+using ToSic.Eav.DataSources.Query.Dev.Sys;
+using ToSic.Eav.DataSources.Query.Sys;
+using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Eav.WebApi.Sys;
-using ToSic.Eav.WebApi.Sys.Admin.Query;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.LookUp.Sys;
 
@@ -8,48 +10,32 @@ namespace ToSic.Sxc.Backend.Admin.Query;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class QueryControllerReal(
-    AppWorkContextService appCtxSvc,
-    QueryControllerBase.Dependencies services,
-    Generator<WorkViewsGet, IAppWorkContext> workViews,
+    AppWorkQuick<WorkViewsGet> workViews,
+    AppWorkQuick<WorkQueryCopy> workUnitQueryCopy,
+    AppWorkQuick<WorkQueryDelete> workUnitQueryDelete,
     IContextCompleteService ctxSvc,
+    AppWorkQuick<WorkQueryImport> queryImport,
+    AppWorkQuick<WorkQueryDeleteIfUnused> queryDeleteIfUnused,
+    AppWorkQuick<WorkQuerySave> querySave,
+    QueryDevSvc queryDev,
+    QueryDevDebugSvc queryDevDebug,
     Generator<IAppDataConfigProvider> tokenEngineWithContext)
-    : QueryControllerBase(services, "Api." + LogSuffix, connect: [appCtxSvc, workViews, ctxSvc, tokenEngineWithContext])
+    : ServiceBase("Api." + LogSuffix, connect: [workViews, workUnitQueryCopy, workUnitQueryDelete, queryImport, queryDeleteIfUnused, ctxSvc, querySave, queryDev, queryDevDebug, tokenEngineWithContext])
 {
     public const string LogSuffix = "Query";
     public const string LogGroup = EavWebApiConstants.HistoryNameWebApi + "-query";
 
-    /// <summary>
-    /// Delete a Pipeline with the Pipeline Entity, Pipeline Parts and their Configurations.
-    /// Stops if the Pipeline Entity has relationships to other Entities or is in use in a 2sxc-Template.
-    /// </summary>
-    public bool DeleteIfUnused(int appId, int id)
-    {
-        var l = Log.Fn<bool>($"{nameof(appId)}: {appId}; {nameof(id)}: {id}");
-
-        // Stop if views still use this Query
-        var ctx = appCtxSvc.ContextNew(appId);
-        var viewUsingQuery = workViews.New(ctx).AllViews
-            .Where(t => t.Query?.Id == id)
-            .Select(t => t.Id)
-            .ToArray();
-
-        if (viewUsingQuery.Any())
-            throw l.Done(new Exception($"Query is used by Views and can't be deleted. Query ID: {id}. TemplateIds: {string.Join(", ", viewUsingQuery)}"));
-
-        var queryMod = Services.WorkUnitQueryMod.New(appId: appId);
-        return l.Return( queryMod.Delete(id));
-    }
-        
+    public bool DeleteIfUnused(int appId, int id) => queryDeleteIfUnused.New(appId).DeleteIfUnused(id);
 
 
-    public QueryRunDto DebugStream(int appId, int id, string from, string @out, int top = 25) =>
-        DebugStream(appId, id, top, LookUpEngineWithBlockRequired(), from, @out);
+    public QueryRunDto DebugStream(int appId, int id, string from, string @out, int top = 25)
+        => queryDevDebug.DebugStream(appId, id, top, LookUpEngineWithBlockRequired(), from, @out);
 
     /// <summary>
     /// Query the Result of a Pipeline using Test-Parameters
     /// </summary>
-    public QueryRunDto RunDev(int appId, int id, int top) =>
-        RunDevInternal(appId, id, LookUpEngineWithBlockRequired(), top, builtQuery => builtQuery.Main);
+    public QueryRunDto RunDev(int appId, int id, int top)
+        => queryDev.RunDev(appId, id, LookUpEngineWithBlockRequired(), top, builtQuery => builtQuery.Main);
 
     private ILookUpEngine LookUpEngineWithBlockRequired()
     {
@@ -61,4 +47,23 @@ public class QueryControllerReal(
         return lookUps;
     }
 
+    /// <summary>
+    /// Save Pipeline
+    /// </summary>
+    /// <param name="data">JSON object { pipeline: pipeline, dataSources: dataSources }</param>
+    /// <param name="appId">AppId this Pipeline belongs to</param>
+    /// <param name="id">PipelineEntityId</param>
+    public QueryDefinitionDto Save(QueryDefinitionDto data, int appId, int id)
+        => querySave.New(appId).Save(data, id);
+
+    /// <summary>
+    /// Clone a Pipeline with all DataSources and their configurations
+    /// </summary>
+    public void Clone(int appId, int id) => workUnitQueryCopy.New(appId: appId).SaveCopy(id);
+
+    public bool Import(EntityImportDto args)
+    {
+        var l = Log.Fn<bool>(args.DebugInfo);
+        return l.Return(queryImport.New(args.AppId).Import(args.AppId, args.GetContentString()));
+    }
 }

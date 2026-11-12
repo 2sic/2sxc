@@ -112,6 +112,7 @@ public static class StartupSxcWebApi
         services.TryAddTransient<ViewControllerReal>();
         services.TryAddTransient<AppDataControllerReal>();
         services.TryAddTransient<AppQueryControllerReal>();
+        services.TryAddTransient<WorkQueryDeleteIfUnused>();
         services.TryAddTransient<CacheControllerReal>();
         services.TryAddTransient<EditControllerReal>();
         services.TryAddTransient<HistoryControllerReal>();

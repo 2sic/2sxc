@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Apps.Sys.Work;
 /// Service to figure out what views could be switched to, as the existing data should be compatible with the switched view.
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class WorkAppViewSwitch(WorkViewsGet viewsGet)
+public class WorkAppViewSwitch(AppWorkChain<WorkViewsGet> viewsGet)
     : ServiceWithSetup<IAppWorkContext>("Cms.ViewRd", connect: [viewsGet])
 {
     /// <summary>
@@ -29,7 +29,8 @@ public class WorkAppViewSwitch(WorkViewsGet viewsGet)
     {
         var l = Log.Fn<List<ViewInfoForPathSelect>>();
 
-        var allIViews = viewsGet.AllViews;
+        var viewsSvc = viewsGet.New(MyOptions);
+        var allIViews = viewsSvc.AllViews;
 
         // get from cache if available or generate
         var views = MyOptions.AppReader
@@ -60,7 +61,7 @@ public class WorkAppViewSwitch(WorkViewsGet viewsGet)
 
         var final = views.Value
             .Select(v => new ViewInfoForPathSelect(
-                viewsGet.ViewOfEntity(v.Entity, v.Entity.EntityId, withServices: true, isReplacement: true),
+                viewsSvc.ViewOfEntity(v.Entity, v.Entity.EntityId, withServices: true, isReplacement: true),
                 v.Name, v.urlIdentifier, v.isRegex, v.MainParam)
             )
             .ToList();
