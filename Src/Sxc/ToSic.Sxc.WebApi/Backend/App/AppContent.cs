@@ -277,6 +277,7 @@ public class AppContent(
 
     #region Permission Checks
 
+    // TODO: consider creating something like WorkTypePermissions for items, so we can reuse this in multiple places
     private MultiPermissionsItems ThrowIfNotAllowedInItem(IEntity itm, List<Grants> requiredGrants, IAppIdentity appIdentity)
     {
         if (itm == null)
