@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Eav.ImportExport.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.Backend.Admin.TypeControllerReal;
 
@@ -24,15 +25,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 public class TypeController() : OqtStatefulControllerBase(RealController.LogSuffix), ITypeController
 {
     private RealController Real => GetService<RealController>();
-
-    // Replaced by DataSource System.ContentTypes through query System.SysData.
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[Authorize(Roles = RoleNames.Admin)]
-    //public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
-    //    => Real.List(appId, scope, withStatistics);
-
-
     
     [HttpDelete]
     [ValidateAntiForgeryToken]

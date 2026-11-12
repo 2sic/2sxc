@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Eav.ImportExport.Sys;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Oqt.Server.Controllers;
 
@@ -53,12 +54,6 @@ public class DataController() : OqtStatefulControllerBase(DataControllerReal.Log
     [AllowAnonymous] // will do security check internally
     public bool BundleRestore(string fileName, int zoneId, int appId)
         => Real.BundleRestore(fileName, zoneId, appId);
-
-    ///// <inheritdoc />
-    //[HttpGet]
-    //[Authorize(Roles = RoleNames.Host)]
-    //public IReadOnlyList<WorkEntityRecycleBin.RecycleBinItem> GetRecycleBin(int appId)
-    //    => Real.GetRecycleBin(appId);
 
     /// <inheritdoc />
     [HttpPost]

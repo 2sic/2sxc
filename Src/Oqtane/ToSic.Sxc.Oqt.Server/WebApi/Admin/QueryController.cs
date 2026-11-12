@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.DataSources.Query.Dev.Sys;
+using ToSic.Eav.ImportExport.Sys.JsonData;
 using ToSic.Eav.WebApi.Sys.Admin.Query;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.Backend.Admin.Query.QueryControllerReal;
@@ -23,16 +24,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 public class QueryController() : OqtStatefulControllerBase(RealController.LogSuffix), IQueryController
 {
     private RealController Real => GetService<RealController>();
-
-    // Replaced by DataSource System.QueryDefinition through query System.SysData.
-    //[HttpGet]
-    //public QueryDefinitionDto Get(int appId, int? id = null) =>
-    //    Real.Get(appId, id);
-
-    // Replaced by DataSource System.DataSources through query System.SysData.
-    //[HttpGet]
-    //public IEnumerable<DataSourceDto> DataSources(int zoneId, int appId) =>
-    //    Real.DataSources(new(zoneId, appId));
 
     [HttpPost]
     public QueryDefinitionDto Save([FromBody] QueryDefinitionDto data, int appId, int id) =>

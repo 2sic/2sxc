@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.ImportExport.Sys.JsonData;
 using ToSic.Eav.ImportExport.Sys.Options;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Eav.WebApi.Sys.Admin.EntityControllerReal;
@@ -30,15 +32,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 public class EntityController() : OqtStatefulControllerBase(RealController.LogSuffix), IEntityController
 {
     private RealController Real => GetService<RealController>();
-
-
-    /// <inheritdoc/>
-    // 2rb: replaced by EntitiesAdmin datasource
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    ////[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    //[Authorize(Roles = RoleNames.Admin)]
-    //public IEnumerable<Dictionary<string, object>> List(int appId, string contentType) => Real.List(appId, contentType);
 
 
     /// <inheritdoc/>
@@ -109,9 +102,4 @@ public class EntityController() : OqtStatefulControllerBase(RealController.LogSu
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
     public bool Upload(EntityImportDto args) => Real.Upload(args);
-
-
-    //// New feature in 11.03 - Usage Statistics
-    //// not final yet, so no [HttpGet]
-    //public dynamic Usage(int appId, Guid guid) => Real.Usage(appId, guid);
 }
