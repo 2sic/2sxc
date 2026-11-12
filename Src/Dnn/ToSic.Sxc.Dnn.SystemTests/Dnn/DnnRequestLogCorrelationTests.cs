@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using ToSic.Sys.Logging;
+using ExecCtx = System.Threading.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn;
 
@@ -90,16 +91,16 @@ public class DnnRequestLogCorrelationTests
         var store = new InsightsLogStore();
         using var loggerFactory = LoggerFactory.Create(builder => builder.SetMinimumLevel(LogLevel.Trace).AddProvider(new InsightsLoggerProvider(store)));
         var log = new MelLogFactory(loggerFactory).Create("Dnn.Request", null, new());
-        var firstContext = ExecutionContext.Capture();
-        var secondContext = ExecutionContext.Capture();
-        var externalContext = ExecutionContext.Capture();
+        var firstContext = ExecCtx.Capture();
+        var secondContext = ExecCtx.Capture();
+        var externalContext = ExecCtx.Capture();
         Activity? first = null;
         Activity? second = null;
         var externalPreserved = false;
 
         try
         {
-            ExecutionContext.Run(firstContext!, _ =>
+            ExecCtx.Run(firstContext!, _ =>
             {
                 first = DnnRequestLogCorrelation.Ensure(items, callback =>
                 {
@@ -108,14 +109,14 @@ public class DnnRequestLogCorrelationTests
                 });
                 log.A("first context");
             }, null);
-            ExecutionContext.Run(secondContext!, _ =>
+            ExecCtx.Run(secondContext!, _ =>
             {
                 second = DnnRequestLogCorrelation.Ensure(items, _ => registrations++);
                 Same(first, second);
                 Same(second, Activity.Current);
                 log.A("second context");
             }, null);
-            ExecutionContext.Run(externalContext!, _ =>
+            ExecCtx.Run(externalContext!, _ =>
             {
                 using var external = new Activity("external").SetIdFormat(ActivityIdFormat.W3C).Start();
                 Same(first, DnnRequestLogCorrelation.Ensure(items, _ => registrations++));
