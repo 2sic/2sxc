@@ -1,6 +1,5 @@
-using ToSic.Eav.Data.Build;
+using ToSic.Eav.Apps.Inspect.Sys.Query;
 using ToSic.Eav.Data.Raw;
-using ToSic.Eav.Data.Raw.Sys;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 
@@ -20,14 +19,14 @@ public class QueryDefinition : CustomDataSource
     [Configuration]
     public int QueryId => Configuration.GetThis(0);
 
-    public QueryDefinition(Dependencies services, LazySvc<QueryControllerReal> query)
+    public QueryDefinition(Dependencies services, LazySvc<QueryGetDtoWip> query)
         : base(services, "Sxc.QueryDef", connect: [query])
     {
         ProvideOutRaw(() => Definition(query), name: "Definition", options: () => new() { AllowUnknownValueTypes = true });
         ProvideOutRaw(() => Parts(query), name: "DataSources", options: () => new() { AllowUnknownValueTypes = true });
     }
 
-    private IEnumerable<IRawEntity> Definition(LazySvc<QueryControllerReal> query)
+    private IEnumerable<IRawEntity> Definition(LazySvc<QueryGetDtoWip> query)
         =>
         [
             new RawEntity
@@ -37,7 +36,7 @@ public class QueryDefinition : CustomDataSource
                     .ToDictionary(p => p.Key, object? (p) => p.Value)
             }
         ];
-    private IEnumerable<IRawEntity> Parts(LazySvc<QueryControllerReal> query)
+    private IEnumerable<IRawEntity> Parts(LazySvc<QueryGetDtoWip> query)
         => query.Value.Get(AppId, QueryId)
             .DataSources
             .Select(IRawEntity (x) => new RawEntity

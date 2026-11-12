@@ -62,22 +62,22 @@ public class ViewControllerReal(
         return l.ReturnAsOk(result);
     }
 
-    /// <inheritdoc />
-    public IEnumerable<ViewDto> Usage(int appId, Guid guid)
-    {
-        if (FinalBuilder == null)
-        {
-            Log.A("Error, FinalBuilder implementation is not set.");
-            throw new ArgumentException("FinalBuilder implementation is not set.");
-        }
-        return usageBackend.Value.ViewUsage(appId, guid, FinalBuilder);
-    }
-    public ViewControllerReal UsagePreparations(Func<ICollection<IView>, ICollection<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
-    {
-        FinalBuilder = finalBuilder;
-        return this;
-    }
-    private Func<ICollection<IView>, ICollection<BlockConfiguration>, IEnumerable<ViewDto>>? FinalBuilder { get; set; }
+    ///// <inheritdoc />
+    //public IEnumerable<ViewDto> Usage(int appId, Guid guid)
+    //{
+    //    if (FinalBuilder == null)
+    //    {
+    //        Log.A("Error, FinalBuilder implementation is not set.");
+    //        throw new ArgumentException("FinalBuilder implementation is not set.");
+    //    }
+    //    return usageBackend.Value.ViewUsage(appId, guid, FinalBuilder);
+    //}
+    //public ViewControllerReal UsagePreparations(Func<ICollection<IView>, ICollection<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
+    //{
+    //    FinalBuilder = finalBuilder;
+    //    return this;
+    //}
+    //private Func<ICollection<IView>, ICollection<BlockConfiguration>, IEnumerable<ViewDto>>? FinalBuilder { get; set; }
 
     /// <summary>
     /// Helper method to get SiteId for ControllerReal proxy class.

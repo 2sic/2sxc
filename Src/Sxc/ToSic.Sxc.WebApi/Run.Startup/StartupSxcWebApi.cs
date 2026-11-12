@@ -4,6 +4,7 @@ using ToSic.Eav.Apps.ImportExport.Sys;
 using ToSic.Eav.Apps.Inspect.Sys;
 using ToSic.Eav.Apps.Inspect.Sys.WebApi;
 using ToSic.Eav.DataFormats.EavLight;
+using ToSic.Eav.DataFormats.EavLight.Sys;
 using ToSic.Eav.Sys.Insights;
 using ToSic.Eav.Ui.Context.Sys;
 using ToSic.Eav.WebApi.Sys.Admin;
@@ -144,7 +145,9 @@ public static class StartupSxcWebApi
         services.AddContextProviders();
 
         // v22 moved here from Sxc.Web The top version should be deprecated soon, so we just use DataToDictionary or an Interface instead
-        services.TryAddTransient<IConvertToEavLight, ConvertToEavLightWithCmsInfo>();
+        //services.TryAddTransient<IConvertToEavLight, ConvertToEavLightWithCmsInfo>();
+        // New v22 - making it an add-on processor
+        services.AddTransient<IConvertEntityToEavLightExtraProcessor, ConvertToEavLightWithCmsInfo>();
 
 
         services.AddLoadSettingsProviders();

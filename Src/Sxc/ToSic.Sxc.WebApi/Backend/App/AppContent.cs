@@ -234,7 +234,7 @@ public class AppContent(
         // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
         var ser = entToDicLazy.Value;
         ser.WithGuid = true;
-        var converter = (ConvertToEavLightWithCmsInfo)ser;
+        var converter = ser;
         // 2026-11-11 2dm - dropped this, believe it's not used anymore; keep for reference till ca. 2027-07 #DropWithEdit
         //converter.WithEdit = userMayEdit;
         if (uri is not null)
