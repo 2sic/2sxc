@@ -1,6 +1,6 @@
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Backend.App;
+namespace ToSic.Sxc.Apps.Extensions.Sys.Install;
 
 /// <summary>
 /// Helper to manage readonly flags on files and directories.

@@ -2,7 +2,6 @@ using System.IO.Compression;
 using System.Text;
 using System.Text.Json;
 using ToSic.Eav.Apps.Sys.Extensions;
-using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys.Zip;
@@ -10,12 +9,13 @@ using ToSic.Eav.Models;
 using ToSic.Eav.Persistence.File;
 using ToSic.Eav.Serialization.Sys.Json;
 using ToSic.Eav.Sys;
-using ToSic.Eav.WebApi.Sys;
+using ToSic.Eav.WebApi.Sys.ImportExport;
+using ToSic.Sxc.Apps.Extensions.Sys.Inspect;
 using ToSic.Sxc.ImportExport.Package.Sys;
 using ToSic.Sys.Security.Encryption;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Backend.App;
+namespace ToSic.Sxc.Apps.Extensions.Sys.Export;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ExtensionExportService(

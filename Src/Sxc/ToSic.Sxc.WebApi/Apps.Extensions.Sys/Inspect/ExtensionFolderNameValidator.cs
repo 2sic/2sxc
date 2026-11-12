@@ -1,6 +1,6 @@
 using ToSic.Eav.Security.Files;
 
-namespace ToSic.Sxc.Backend.App;
+namespace ToSic.Sxc.Apps.Extensions.Sys.Inspect;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal static class ExtensionFolderNameValidator

@@ -1,6 +1,6 @@
 using ToSic.Eav.Sys;
 
-namespace ToSic.Sxc.Backend.App;
+namespace ToSic.Sxc.Apps.Extensions.Sys.Inspect;
 
 /// <summary>
 /// Shared helpers for resolving extension-related paths and edition segments.

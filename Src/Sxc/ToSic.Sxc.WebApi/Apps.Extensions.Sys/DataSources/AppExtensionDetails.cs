@@ -1,9 +1,9 @@
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Sxc.Backend.App;
+using ToSic.Sxc.Apps.Extensions.Sys.Inspect;
 
-namespace ToSic.Sxc.Backend.Admin;
+namespace ToSic.Sxc.Apps.Extensions.Sys;
 
 [PrivateApi]
 [VisualQuery(
@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Backend.Admin;
     UiHint = "Details, files and content types of an app extension")]
 public class AppExtensionDetails : CustomDataSource
 {
-    private ExtensionInspectResultDto? _result;
+    private ExtensionInspectResultGroup? _result;
     [Configuration(Fallback = "")]
     public string ExtensionName => Configuration.GetThis<string>("");
 
@@ -34,14 +34,14 @@ public class AppExtensionDetails : CustomDataSource
         ProvideOutRaw(() => ContentTypes(inspect), name: "ContentTypes", options: () => new() { TypeName = "AppExtensionContentType" });
     }
 
-    private ExtensionInspectResultDto Result(LazySvc<ExtensionInspectBackend> inspect) => _result ??= inspect.Value.Inspect(AppId, ExtensionName, Edition);
+    private ExtensionInspectResultGroup Result(LazySvc<ExtensionInspectBackend> inspect) => _result ??= inspect.Value.Inspect(AppId, ExtensionName, Edition);
     private IEnumerable<ExtensionDetailsRaw> Details(LazySvc<ExtensionInspectBackend> inspect)
         => [new(Result(inspect).FoundLock)];
-    private IEnumerable<ExtensionFileStatusDto> Files(LazySvc<ExtensionInspectBackend> inspect)
+    private IEnumerable<ExtensionFileStatusRaw> Files(LazySvc<ExtensionInspectBackend> inspect)
         => Result(inspect).Files ?? [];
-    private IEnumerable<ExtensionInspectSummaryDto> Summary(LazySvc<ExtensionInspectBackend> inspect)
+    private IEnumerable<ExtensionInspectSummaryRaw> Summary(LazySvc<ExtensionInspectBackend> inspect)
         => Result(inspect).Summary is { } summary ? [summary] : [];
-    private IEnumerable<ExtensionInspectContentTypeDto> ContentTypes(LazySvc<ExtensionInspectBackend> inspect)
+    private IEnumerable<ExtensionInspectContentTypeRaw> ContentTypes(LazySvc<ExtensionInspectBackend> inspect)
         => Result(inspect).ContentTypes;
     private sealed record ExtensionDetailsRaw(bool FoundLock) : IRawEntityAutoConvert;
 }

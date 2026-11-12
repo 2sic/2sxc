@@ -2,9 +2,10 @@ using System.Text;
 using ToSic.Eav.Apps.Sys.Extensions;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Sys;
+using ToSic.Sxc.Apps.Extensions.Sys.Inspect;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Backend.App;
+namespace ToSic.Sxc.Apps.Extensions.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ExtensionWriterBackend(

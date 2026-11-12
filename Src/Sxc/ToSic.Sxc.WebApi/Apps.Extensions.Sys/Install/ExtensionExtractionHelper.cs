@@ -1,9 +1,10 @@
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.ImportExport.Sys.Zip;
 using ToSic.Eav.Sys;
+using ToSic.Sxc.Apps.Extensions.Sys.Inspect;
 using ToSic.Sys.Configuration;
 
-namespace ToSic.Sxc.Backend.App;
+namespace ToSic.Sxc.Apps.Extensions.Sys.Install;
 
 /// <summary>
 /// Prepares extraction and validation of extension zip packages.

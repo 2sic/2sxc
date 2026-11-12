@@ -2,10 +2,12 @@ using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Apps.Sys.Extensions;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Sys;
+using ToSic.Sxc.Apps.Extensions.Sys.Inspect;
+using ToSic.Sxc.Apps.Extensions.Sys.Install;
 using ToSic.Sxc.ImportExport.Package.Sys;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Backend.App;
+namespace ToSic.Sxc.Apps.Extensions.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ExtensionDeleteBackend(
@@ -49,7 +51,7 @@ public class ExtensionDeleteBackend(
         if (!inspect.FoundLock)
             throw l.Ex(new InvalidOperationException($"{PackageIndexFile.LockFileName} missing; delete manually."));
 
-        var summary = inspect.Summary ?? new ExtensionInspectSummaryDto();
+        var summary = inspect.Summary ?? new ExtensionInspectSummaryRaw();
         var hasFileChanges = summary.Changed > 0 || summary.Added > 0 || summary.Missing > 0;
         if (hasFileChanges && !force)
             throw l.Ex(new InvalidOperationException("Extension has file changes; use force to delete."));
@@ -70,7 +72,7 @@ public class ExtensionDeleteBackend(
         return l.ReturnTrue("deleted");
     }
 
-    private void DeleteData(IAppReader appReader, int appId, IEnumerable<ExtensionInspectContentTypeDto> types)
+    private void DeleteData(IAppReader appReader, int appId, IEnumerable<ExtensionInspectContentTypeRaw> types)
     {
         var l = Log.Fn($"delete data app:{appId}");
 

@@ -1,8 +1,7 @@
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Sxc.Backend.App;
 
-namespace ToSic.Sxc.Backend.Admin;
+namespace ToSic.Sxc.Apps.Extensions.Sys;
 
 [PrivateApi]
 [VisualQuery(

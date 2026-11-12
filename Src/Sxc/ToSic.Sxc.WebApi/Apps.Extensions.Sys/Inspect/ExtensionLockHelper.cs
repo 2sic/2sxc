@@ -4,7 +4,7 @@ using ToSic.Sxc.ImportExport.Package.Sys;
 using ToSic.Sys.Security.Encryption;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Backend.App;
+namespace ToSic.Sxc.Apps.Extensions.Sys.Inspect;
 
 /// <summary>
 /// Shared helpers to read and work with extension lock files.

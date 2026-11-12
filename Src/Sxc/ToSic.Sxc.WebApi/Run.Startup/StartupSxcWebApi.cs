@@ -1,15 +1,15 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.Apps.ImportExport.Sys;
 using ToSic.Eav.Apps.Inspect.Sys;
 using ToSic.Eav.Apps.Inspect.Sys.WebApi;
 using ToSic.Eav.Apps.Install.Sys;
-using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataFormats.EavLight.Sys;
 using ToSic.Eav.Sys.Insights;
 using ToSic.Eav.Ui.Context.Sys;
-using ToSic.Eav.WebApi.Sys.Admin;
-using ToSic.Eav.WebApi.Sys.ImportExport;
+using ToSic.Sxc.Apps.Extensions.Sys;
+using ToSic.Sxc.Apps.Extensions.Sys.Export;
+using ToSic.Sxc.Apps.Extensions.Sys.Inspect;
+using ToSic.Sxc.Apps.Extensions.Sys.Install;
 using ToSic.Sxc.Apps.Sys.DataSources;
 using ToSic.Sxc.Apps.Sys.EditAssets;
 using ToSic.Sxc.Backend;
@@ -18,7 +18,6 @@ using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.Admin.AppFiles;
 using ToSic.Sxc.Backend.Admin.Query;
 using ToSic.Sxc.Backend.App;
-using ToSic.Sxc.Backend.AppStack;
 using ToSic.Sxc.Backend.Cms;
 using ToSic.Sxc.Backend.Cms.Load.Activities;
 using ToSic.Sxc.Backend.Cms.Load.Settings;
@@ -88,7 +87,6 @@ public static class StartupSxcWebApi
         // App import services moved to EAV WebApi in v22.
         services.TryAddTransient<ImportContent>();
         services.TryAddTransient<ExportContent>();
-        services.TryAddTransient<AppStackBackend>();
         services.TryAddTransient<ViewsExportImport>();
 
         // Small WebApi Helpers

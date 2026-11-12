@@ -2,27 +2,27 @@ using System.Text.Json.Serialization;
 using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw;
 
-namespace ToSic.Sxc.Backend.App;
+namespace ToSic.Sxc.Apps.Extensions.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionInspectResultDto
+public class ExtensionInspectResultGroup
 {
     [JsonPropertyName("foundLock")]
     public bool FoundLock { get; init; }
 
     [JsonPropertyName("files")]
-    public List<ExtensionFileStatusDto>? Files { get; init; }
+    public List<ExtensionFileStatusRaw>? Files { get; init; }
 
     [JsonPropertyName("summary")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public ExtensionInspectSummaryDto? Summary { get; init; }
+    public ExtensionInspectSummaryRaw? Summary { get; init; }
 
     [JsonPropertyName("contentTypes")]
-    public List<ExtensionInspectContentTypeDto> ContentTypes { get; init; } = [];
+    public List<ExtensionInspectContentTypeRaw> ContentTypes { get; init; } = [];
 }
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionFileStatusDto : IRawEntityAutoConvert
+public class ExtensionFileStatusRaw : IRawEntityAutoConvert
 {
     [ContentTypeTitle]
     [JsonPropertyName("path")]
@@ -33,7 +33,7 @@ public class ExtensionFileStatusDto : IRawEntityAutoConvert
 }
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionInspectSummaryDto : IRawEntityAutoConvert
+public class ExtensionInspectSummaryRaw : IRawEntityAutoConvert
 {
     [JsonPropertyName("total")]
     public int Total { get; init; }
@@ -50,7 +50,7 @@ public class ExtensionInspectSummaryDto : IRawEntityAutoConvert
 
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionInspectContentTypeDto : IRawEntityAutoConvert
+public class ExtensionInspectContentTypeRaw : IRawEntityAutoConvert
 {
     [ContentTypeTitle]
     [JsonPropertyName("name")]

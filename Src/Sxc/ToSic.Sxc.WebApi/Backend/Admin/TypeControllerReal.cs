@@ -18,14 +18,6 @@ public class TypeControllerReal(
 {
     public const string LogSuffix = "Types";
 
-    // 2026-09-01 unused, probably moved to #SysData
-    //public IEnumerable<ContentTypeDto> List(int appId, string? scope = null, bool withStatistics = false)
-    //{
-    //    var l = Log.Fn<IEnumerable<ContentTypeDto>>($"{appId}, scope:{scope}, stats:{withStatistics}");
-    //    var list = ctApiLazy.New(appId).List(appId, scope, withStatistics);
-    //    return l.Return(list);
-    //}
-    
     public bool Delete(int appId, string staticName)
         => typeMod.New(appId).Delete(staticName);
 

@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Backend.Views;
-
-namespace ToSic.Sxc.Backend.Admin;
+﻿namespace ToSic.Sxc.Backend.Admin;
 
 /// <summary>
 /// Provide information about views and manage views as needed.

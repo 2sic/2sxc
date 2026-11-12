@@ -1,9 +1,10 @@
 using System.Text.Json;
 using ToSic.Eav.Apps.Sys.Extensions;
 using ToSic.Eav.Sys;
+using ToSic.Sxc.Apps.Extensions.Sys.Inspect;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Backend.App;
+namespace ToSic.Sxc.Apps.Extensions.Sys.Preflight;
 
 /// <summary>
 /// Builds preflight information for extension zip installations.

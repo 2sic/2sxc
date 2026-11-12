@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace ToSic.Sxc.Backend.App;
+namespace ToSic.Sxc.Apps.Extensions.Sys.Preflight;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class PreflightResultDto

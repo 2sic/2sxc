@@ -1,7 +1,7 @@
 using System.Text.Json;
 using ToSic.Eav.Apps.Sys.Extensions;
 
-namespace ToSic.Sxc.Backend.App;
+namespace ToSic.Sxc.Apps.Extensions.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public static class ExtensionManifestSerializer

@@ -4,6 +4,7 @@ using Oqtane.Shared;
 using ToSic.Eav.Apps.Sys.Extensions;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.WebApi.Sys.ImportExport;
+using ToSic.Sxc.Apps.Extensions.Sys.Preflight;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -21,14 +22,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 public class AppExtensionsController() : OqtStatefulControllerBase(RealController.LogSuffix), IAppExtensionsController
 {
     private RealController Real => GetService<RealController>();
-
-    // Replaced by DataSource System.AppExtensions through query System.SysData.
-    ///// <inheritdoc />
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[Authorize(Roles = RoleNames.Admin)]
-    //public ExtensionsResultDto Extensions(int appId)
-    //    => Real.Extensions(appId);
 
     /// <inheritdoc />
     [HttpPost]

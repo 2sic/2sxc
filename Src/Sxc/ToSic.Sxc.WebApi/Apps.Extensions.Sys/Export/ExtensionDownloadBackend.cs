@@ -2,7 +2,7 @@ using System.Net.Http;
 using ToSic.Eav.Security.Files;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Backend.App;
+namespace ToSic.Sxc.Apps.Extensions.Sys.Export;
 
 /// <summary>
 /// Downloads extension packages from remote URLs and returns a stream plus a sanitized filename.

@@ -3,9 +3,9 @@ using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.ImportExport.Package.Sys;
 using ToSic.Sys.Utils;
-using static ToSic.Sxc.Backend.App.ExtensionLockHelper;
+using static ToSic.Sxc.Apps.Extensions.Sys.Inspect.ExtensionLockHelper;
 
-namespace ToSic.Sxc.Backend.App;
+namespace ToSic.Sxc.Apps.Extensions.Sys.Inspect;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ExtensionInspectBackend(
@@ -14,9 +14,9 @@ public class ExtensionInspectBackend(
     IAppPathsMicroSvc appPathSvc)
     : ServiceBase("Bck.ExtInsp", connect: [appReadersLazy, site, appPathSvc])
 {
-    public ExtensionInspectResultDto Inspect(int appId, string name, string? edition)
+    public ExtensionInspectResultGroup Inspect(int appId, string name, string? edition)
     {
-        var l = Log.Fn<ExtensionInspectResultDto>($"app:{appId}, name:{name}, edition:{edition}");
+        var l = Log.Fn<ExtensionInspectResultGroup>($"app:{appId}, name:{name}, edition:{edition}");
         if (!ExtensionFolderNameValidator.IsValid(name))
             throw l.Ex(new ArgumentException("invalid extension name", nameof(name)));
 
@@ -30,7 +30,7 @@ public class ExtensionInspectBackend(
         var lockPath = Path.Combine(extensionRoot, FolderConstants.DataFolderProtected, PackageIndexFile.LockFileName);
         var foundLock = File.Exists(lockPath);
 
-        var statuses = new List<ExtensionFileStatusDto>();
+        var statuses = new List<ExtensionFileStatusRaw>();
         var changed = 0;
         var missing = 0;
         var added = 0;
@@ -74,7 +74,7 @@ public class ExtensionInspectBackend(
                 statuses: statuses);
         }
 
-        var result = new ExtensionInspectResultDto
+        var result = new ExtensionInspectResultGroup
         {
             FoundLock = foundLock,
             Files = statuses,
@@ -91,7 +91,7 @@ public class ExtensionInspectBackend(
     }
 
     private static int AddAddedFiles(string appRoot, string edition, string extensionName, string basePathFull,
-        HashSet<string> expectedPaths, List<ExtensionFileStatusDto> statuses)
+        HashSet<string> expectedPaths, List<ExtensionFileStatusRaw> statuses)
     {
         var added = 0;
         var seen = new HashSet<string>(statuses.Select(s => s.Path), StringComparer.OrdinalIgnoreCase);
@@ -132,9 +132,9 @@ public class ExtensionInspectBackend(
         return added;
     }
 
-    private List<ExtensionInspectContentTypeDto> BuildContentTypes(int appId, string extensionName)
+    private List<ExtensionInspectContentTypeRaw> BuildContentTypes(int appId, string extensionName)
     {
-        var l = Log.Fn<List<ExtensionInspectContentTypeDto>>($"app:{appId}, ext:{extensionName}");
+        var l = Log.Fn<List<ExtensionInspectContentTypeRaw>>($"app:{appId}, ext:{extensionName}");
 
         try
         {
@@ -152,7 +152,7 @@ public class ExtensionInspectBackend(
                 .Select(ct =>
                 {
                     var hasData = localEntityCounts.TryGetValue(ct.NameId, out var count);
-                    return new ExtensionInspectContentTypeDto
+                    return new ExtensionInspectContentTypeRaw
                     {
                         Name = ct.Name,
                         Guid = ct.NameId,

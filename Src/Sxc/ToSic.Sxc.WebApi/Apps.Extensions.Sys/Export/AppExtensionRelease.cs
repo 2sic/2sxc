@@ -2,7 +2,7 @@
 
 // ReSharper disable UnusedMember.Global
 
-namespace ToSic.Sxc.Backend.App;
+namespace ToSic.Sxc.Apps.Extensions.Sys.Export;
 
 [ModelSpecs(ContentType = ContentTypeId)]
 internal record AppExtensionRelease: ModelFromEntity

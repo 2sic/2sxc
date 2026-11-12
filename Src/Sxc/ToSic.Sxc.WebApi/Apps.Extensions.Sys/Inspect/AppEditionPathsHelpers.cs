@@ -1,6 +1,6 @@
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Backend.App;
+namespace ToSic.Sxc.Apps.Extensions.Sys.Inspect;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public static class AppEditionPathsHelpers

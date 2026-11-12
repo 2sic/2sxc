@@ -50,7 +50,7 @@ public class HotBuildSiteResolverTests
         Equal(42, zoneMapper.LastAppId);
     }
 
-    private sealed class TrackingCultureStateSvc(ISite mappedSite) : ICultureStateSvc
+    private sealed class TrackingCultureStateSvc(ISite mappedSite) : ISiteOfAppSvc
     {
         public ILog? Log => null;
 
@@ -70,6 +70,12 @@ public class HotBuildSiteResolverTests
         public List<ISiteLanguageState> CulturesWithState(ISite site) => [];
 
         public List<ISiteLanguageState> CulturesEnabledWithState(ISite site) => [];
+        public ISite SiteOfApp(int appId)
+        {
+            SiteOfAppCalls++;
+            LastAppId = appId;
+            return mappedSite;
+        }
     }
 
     private sealed class TestSite(int id, int zoneId) : ISite

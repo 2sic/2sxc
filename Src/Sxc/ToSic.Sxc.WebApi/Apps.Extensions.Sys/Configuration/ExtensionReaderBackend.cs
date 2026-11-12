@@ -3,12 +3,11 @@ using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.Services;
 using ToSic.Eav.Sys;
-using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Services;
 using ToSic.Sys.Utils;
 using AppEditionsDataSource = ToSic.Sxc.DataSources.AppEditions;
 
-namespace ToSic.Sxc.Backend.App;
+namespace ToSic.Sxc.Apps.Extensions.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ExtensionReaderBackend(

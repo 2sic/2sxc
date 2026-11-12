@@ -1,6 +1,6 @@
 using ToSic.Eav.Apps.Sys.Extensions;
 
-namespace ToSic.Sxc.Backend.App;
+namespace ToSic.Sxc.Apps.Extensions.Sys.Inspect;
 
 /// <summary>
 /// Shared validation results for extension zip operations.
