@@ -1,6 +1,5 @@
 using ToSic.Eav.Apps.Sys.Extensions;
-using ToSic.Eav.Apps.Sys.FileSystemState;
-using ToSic.Eav.WebApi.Sys.ImportExport;
+using ToSic.Eav.ImportExport.Sys;
 using ToSic.Sxc.Backend.App;
 
 namespace ToSic.Sxc.Backend.Admin;
@@ -23,7 +22,7 @@ public class AppExtensionsControllerReal(
     /// </summary>
     /// <param name="appId">App identifier</param>
     /// <returns>Installed extensions</returns>
-    public ICollection<ExtensionDto> Extensions(int appId)
+    public ICollection<ExtensionRaw> Extensions(int appId)
         => readerLazy.Value.GetExtensions(appId);
 
     /// <summary>
@@ -127,7 +126,7 @@ public class AppExtensionsControllerReal(
     /// <param name="appId">App identifier</param>
     /// <param name="name">Extension folder name</param>
     /// <returns>HTTP response containing the file data.</returns>
-    public FileToUploadToClient Download(int appId, string name)
+    public FileResult Download(int appId, string name)
         => exportExtensionLazy.Value.Export(appId, name);
 
     /// <summary>

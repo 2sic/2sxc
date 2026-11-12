@@ -1,10 +1,8 @@
 ﻿using ToSic.Eav.Apps.ImportExport.Sys;
-using ToSic.Eav.Apps.ImportExport.Sys.Dto;
 using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
-using ToSic.Sxc.Backend.ImportExport;
 using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Backend.Admin;
@@ -44,10 +42,6 @@ public class AppControllerReal(
         l.Done("ok");
     }
 
-    // Replaced by DataSource System.AppStatistics through query System.SysData.
-    // Use app/auto/query/System.SysData/Default with SysDataSource=System.AppStatistics.
-    //public AppExportInfoDto Statistics(int zoneId, int appId) => exportAppLazy.Value.GetAppInfo(zoneId, appId);
-
     public bool FlushCache(int zoneId, int appId)
     {
         var l = Log.Fn<bool>($"{zoneId}, {appId}");
@@ -55,7 +49,7 @@ public class AppControllerReal(
         return l.ReturnTrue("ok");
     }
 
-    public FileToUploadToClient Export(AppExportSpecs specs)
+    public FileResult Export(AppExportSpecs specs)
         => exportAppLazy.Value.Export(specs, () => PathCaseReferences(specs.AppId));
 
     public PathCasePreflightResult PathCasePreflight(int zoneId, int appId)
@@ -123,7 +117,7 @@ public class AppControllerReal(
     /// <param name="zoneId"></param>
     /// <param name="pendingApps"></param>
     /// <returns></returns>
-    public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppDto> pendingApps)
+    public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppRaw> pendingApps)
     {
         var l = Log.Fn<ImportResultDto>();
         var result = pendingAppInstallLazy.Value.InstallPendingApps(zoneId, pendingApps);

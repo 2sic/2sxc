@@ -4,6 +4,7 @@ using System.Text.Json;
 using ToSic.Eav.Apps.Sys.Extensions;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys.Zip;
 using ToSic.Eav.Models;
 using ToSic.Eav.Persistence.File;
@@ -36,9 +37,9 @@ public class ExtensionExportService(
     /// </summary>
     private const string DefaultVersion = "00.00.01";
 
-    public FileToUploadToClient Export(int appId, string name)
+    public FileResult Export(int appId, string name)
     {
-        var l = Log.Fn<FileToUploadToClient>($"export extension a#{appId}, name:'{name}'");
+        var l = Log.Fn<FileResult>($"export extension a#{appId}, name:'{name}'");
 
         if (string.IsNullOrWhiteSpace(name))
             throw l.Ex(new ArgumentException(@"Extension name is required", nameof(name)));

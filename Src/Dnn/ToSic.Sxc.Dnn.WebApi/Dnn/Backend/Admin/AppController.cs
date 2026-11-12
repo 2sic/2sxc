@@ -1,5 +1,5 @@
 ﻿using System.Web;
-using ToSic.Eav.Apps.ImportExport.Sys.Dto;
+using ToSic.Eav.Apps.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Eav.WebApi.Sys.Dto;
@@ -36,13 +36,6 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public void App(int zoneId, string name, int? inheritAppId = null) => Real.App(zoneId, name, inheritAppId);
-
-    // Replaced by DataSource System.AppStatistics through query System.SysData.
-    ///// <inheritdoc />
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    //public AppExportInfoDto Statistics(int zoneId, int appId) => Real.Statistics(zoneId, appId);
 
 
     /// <inheritdoc />
@@ -97,7 +90,7 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [HttpPost]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppDto> pendingApps)
+    public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppRaw> pendingApps)
     {
         this.PreventServerTimeout600();
         return Real.InstallPendingApps(zoneId, pendingApps);

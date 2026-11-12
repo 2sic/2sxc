@@ -1,4 +1,3 @@
-using System.Text.Json;
 using ToSic.Eav.Apps.Sys.Extensions;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.DataSource;
@@ -23,9 +22,9 @@ public class ExtensionReaderBackend(
 {
     private const string IconFileName = "icon.png";
 
-    public List<ExtensionDto> GetExtensions(int appId)
+    public List<ExtensionRaw> GetExtensions(int appId)
     {
-        var l = Log.Fn<List<ExtensionDto>>($"a#{appId}");
+        var l = Log.Fn<List<ExtensionRaw>>($"a#{appId}");
         var appReader = appReadersLazy.Value.Get(appId);
         var appPaths = appPathSvc.Get(appReader, site);
         var editionNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
@@ -43,7 +42,7 @@ public class ExtensionReaderBackend(
 
         Log.A($"available editions: {string.Join(", ", availableEditions.Select(EditionLabel))}");
 
-        var list = new List<ExtensionDto>();
+        var list = new List<ExtensionRaw>();
         // 2026-08-20 2dm - seems unused, commented out; #ToRemoveV24
         //var primaryManifests = new Dictionary<string, ExtensionManifest>(StringComparer.OrdinalIgnoreCase);
         //var primaryInputTypes = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
@@ -81,7 +80,7 @@ public class ExtensionReaderBackend(
 
                 if (editionName.IsEmpty())
                 {
-                    list.Add(new ExtensionDto
+                    list.Add(new ExtensionRaw
                     {
                         Folder = folderName,
                         Edition = editionName,
@@ -120,7 +119,7 @@ public class ExtensionReaderBackend(
                 //    continue;
                 //}
 
-                list.Add(new ExtensionDto
+                list.Add(new ExtensionRaw
                 {
                     Folder = folderName,
                     Edition = editionName,

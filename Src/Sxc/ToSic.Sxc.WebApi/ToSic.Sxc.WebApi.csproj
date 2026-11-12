@@ -42,4 +42,8 @@
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Apps.ImportExport.Sys\" />
+  </ItemGroup>
 </Project>

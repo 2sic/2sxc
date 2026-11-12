@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.Apps.ImportExport.Sys.Dto;
+using ToSic.Eav.Apps.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -36,15 +36,6 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
     public void App(int zoneId, string name, int? inheritAppId = null) => Real.App(zoneId, name, inheritAppId);
-
-    // Replaced by DataSource System.AppStatistics through query System.SysData.
-    // Use app/auto/query/System.SysData/Default with SysDataSource=System.AppStatistics.
-    ///// <inheritdoc />
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[Authorize(Roles = RoleNames.Admin)]
-    //public AppExportInfoDto Statistics(int zoneId, int appId)
-    //    => Real.Statistics(zoneId, appId);
 
     /// <inheritdoc />
     [HttpGet]
@@ -99,7 +90,7 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public ImportResultDto InstallPendingApps(int zoneId, [FromBody] IEnumerable<PendingAppDto> pendingApps)
+    public ImportResultDto InstallPendingApps(int zoneId, [FromBody] IEnumerable<PendingAppRaw> pendingApps)
     {
         // Ensure that Hot Reload is not enabled or try to disable it.
         HotReloadEnabledCheck.Check();
