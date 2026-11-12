@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.Serialization;
-using ToSic.Eav.WebApi.Sys.Entities;
+using ToSic.Eav.Ui.Edit.Sys;
 using ToSic.Sxc.Data.Sys;
 using ToSic.Sys.HookUp;
 
