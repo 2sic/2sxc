@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.Persistence.Sys.Logging;
-using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.ImportExport;
 using ToSic.Sys.Users;
@@ -10,12 +9,13 @@ namespace ToSic.Sxc.Backend.Admin;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class TypeControllerReal(
     LazySvc<IContextOfSiteService> ctxSvc,
-    LazySvc<ContentExportApi> contentExportLazy,
     AppWorkQuick<WorkContentTypesMod> typeMod,
+    AppWorkQuick<ExportBundleFile> exportBundleFile,
+    AppWorkQuick<ExportTypeJson> exportTypeJson,
     LazySvc<IUser> userLazy,
     Generator<ImportContent> importContent)
     : ServiceBase("Api.TypesRl",
-        connect: [ctxSvc, contentExportLazy, userLazy, typeMod, importContent]), ITypeController
+        connect: [ctxSvc, userLazy, typeMod, exportBundleFile, exportTypeJson, importContent])//, ITypeController
 {
     public const string LogSuffix = "Types";
 
@@ -59,8 +59,8 @@ public class TypeControllerReal(
     /// <summary>
     /// Used to be GET ContentExport/DownloadTypeAsJson
     /// </summary>
-    public THttpResponseType Json(int appId, string name)
-        => contentExportLazy.Value.Init(appId).DownloadTypeAsJson(userLazy.Value, name);
+    public FileResult Json(int appId, string name)
+        => exportTypeJson.New(appId).DownloadTypeAsJson(userLazy.Value, name);
 
     /// <summary>
     /// This method is not implemented for ControllerReal, because ControllerReal implements Import(HttpUploadedFile uploadInfo, int zoneId, int appId)
@@ -102,7 +102,6 @@ public class TypeControllerReal(
     /// <summary>
     /// Used to be GET ContentExport/DownloadTypeAsJson
     /// </summary>
-
-    public THttpResponseType JsonBundleExport(int appId, Guid exportConfiguration, int indentation)
-        => contentExportLazy.Value.Init(appId).JsonBundleExport(userLazy.Value, exportConfiguration, indentation);
+    public FileResult JsonBundleExport(int appId, Guid exportConfiguration, int indentation)
+        => exportBundleFile.New(appId).JsonBundleExport(userLazy.Value, exportConfiguration, indentation);
 }

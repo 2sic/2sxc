@@ -22,7 +22,7 @@ public class ExtensionExportService(
     LazySvc<IAppReaderFactory> appReadersLazy,
     ISite site,
     IAppPathsMicroSvc appPathSvc,
-    LazySvc<ContentExportApi> contentExport,
+    AppWorkQuick<ExportBundlePrepare> contentExport,
     ExtensionManifestService manifestService
     )
     : ServiceBase("Bck.ExtExp", connect: [appReadersLazy, site, appPathSvc, contentExport, manifestService])
@@ -406,7 +406,7 @@ public class ExtensionExportService(
             return l.Return([], "no valid bundle GUIDs");
 
         l.A($"Exporting {guidList.Count} data bundles");
-        var bundlesExport = contentExport.Value.Init(appId);
+        var bundlesExport = contentExport.New(appId);
         var bundlesDir = Path.Combine(extensionDataPath, FolderConstants.DataSubFolderSystem,
             AppDataFoldersConstants.BundlesFolder);
 

@@ -4,6 +4,7 @@ using Oqtane.Shared;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys.JsonData;
 using ToSic.Eav.ImportExport.Sys.Options;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Eav.WebApi.Sys.Admin.EntityControllerReal;
 
@@ -56,7 +57,7 @@ public class EntityController() : OqtStatefulControllerBase(RealController.LogSu
     {
         // Make sure the Scoped ResponseMaker has this controller context
         CtxHlp.SetupResponseMaker();
-        return Real.Json(appId, id, prefix, withMetadata);
+        return Real.Json(appId, id, prefix, withMetadata).ToHttpResponse();
     }
 
 
@@ -76,7 +77,7 @@ public class EntityController() : OqtStatefulControllerBase(RealController.LogSu
         // Make sure the Scoped ResponseMaker has this controller context
         CtxHlp.SetupResponseMaker();
         return Real.Download(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
-            languageReferences, selectedIds);
+            languageReferences, selectedIds).ToHttpResponse();
     }
 
 

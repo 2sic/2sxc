@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Oqt.Server.Controllers;
 
@@ -33,7 +34,7 @@ public class DataController() : OqtStatefulControllerBase(DataControllerReal.Log
     {
         // Make sure the Scoped ResponseMaker has this controller context
         CtxHlp.SetupResponseMaker();
-        return Real.BundleExport(appId, exportConfiguration, indentation);
+        return Real.BundleExport(appId, exportConfiguration, indentation).ToHttpResponse();
     }
 
     /// <inheritdoc />

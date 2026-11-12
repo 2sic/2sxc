@@ -3,10 +3,9 @@ using System.Text.Json;
 using Tests.ToSic.ToSxc.WebApi.Extensions;
 using ToSic.Eav.Apps.Mocks;
 using ToSic.Eav.Apps.Sys.Extensions;
-using ToSic.Eav.Apps.Sys.FileSystemState;
+using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Apps.Extensions.Sys.Export;
-using ToSic.Sxc.Backend.App;
 using static ToSic.Sxc.ImportExport.Package.Sys.PackageIndexFile;
 
 // ReSharper disable once CheckNamespace
@@ -34,7 +33,7 @@ internal sealed class ExportExtensionTestContext : IDisposable
 
     public static ExportExtensionTestContext Create(
         LazySvc<IAppReaderFactory> appReadersLazy,
-        LazySvc<ContentExportApi> contentExportLazy,
+        AppWorkQuick<ExportBundleFile> contentExportLazy,
         ExtensionManifestService manifestService)
     {
         var tempRoot = Path.Combine(Path.GetTempPath(), "2sxc-export-tests", Guid.NewGuid().ToString("N"));

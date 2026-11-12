@@ -1,6 +1,7 @@
 ﻿using System.Web;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.WebApi.Sys.Dto;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 
@@ -31,7 +32,7 @@ public class DataController() : DnnSxcControllerBase(DataControllerReal.LogSuffi
     {
         // Make sure the Scoped ResponseMaker has this controller context
         using (this.InitializedResponseMaker())
-            return Real.BundleExport(appId, exportConfiguration, indentation);
+            return Real.BundleExport(appId, exportConfiguration, indentation).ToHttpResponse();
     }
 
     /// <inheritdoc />

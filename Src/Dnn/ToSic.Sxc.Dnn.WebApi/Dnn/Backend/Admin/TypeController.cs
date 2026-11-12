@@ -2,6 +2,7 @@
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Eav.WebApi.Sys.Dto;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using RealController = ToSic.Sxc.Backend.Admin.TypeControllerReal;
 
@@ -106,7 +107,7 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     {
         // Make sure the Scoped ResponseMaker has this controller context
         using (this.InitializedResponseMaker())
-            return Real.Json(appId, name);
+            return Real.Json(appId, name).ToHttpResponse();
     }
 
 
@@ -138,7 +139,7 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     {
         // Make sure the Scoped ResponseMaker has this controller context
         using (this.InitializedResponseMaker())
-            return Real.JsonBundleExport(appId, exportConfiguration, indentation);
+            return Real.JsonBundleExport(appId, exportConfiguration, indentation).ToHttpResponse();
     }
 
 }
