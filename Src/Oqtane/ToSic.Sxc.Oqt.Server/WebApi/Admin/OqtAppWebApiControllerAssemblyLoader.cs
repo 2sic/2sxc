@@ -1,8 +1,8 @@
 using System.Reflection;
 using Oqtane.Shared;
+using ToSic.Eav.Apps.Inspect.Sys.WebApi;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Environment.Sys.ServerPaths;
-using ToSic.Eav.WebApi.Sys.ApiExplorer;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Server.Code.Sys;

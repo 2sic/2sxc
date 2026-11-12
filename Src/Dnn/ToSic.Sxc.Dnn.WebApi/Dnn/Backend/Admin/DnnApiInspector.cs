@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
-using ToSic.Eav.WebApi.Sys.ApiExplorer;
+using ToSic.Eav.Apps.Inspect.Sys.WebApi;
+using ToSic.Eav.Apps.Inspect.Sys.WebApi.Dto;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 

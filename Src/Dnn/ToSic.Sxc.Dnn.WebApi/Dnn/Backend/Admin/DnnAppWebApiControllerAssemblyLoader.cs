@@ -1,10 +1,10 @@
 using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Hosting;
+using ToSic.Eav.Apps.Inspect.Sys.WebApi;
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Context;
 using ToSic.Eav.Sys;
-using ToSic.Eav.WebApi.Sys.ApiExplorer;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Context.Sys;
