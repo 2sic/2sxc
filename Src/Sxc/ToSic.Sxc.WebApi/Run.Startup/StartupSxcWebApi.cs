@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.ImportExport.Sys;
 using ToSic.Eav.Apps.Inspect.Sys;
 using ToSic.Eav.Apps.Inspect.Sys.WebApi;
+using ToSic.Eav.Apps.Install.Sys;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataFormats.EavLight.Sys;
 using ToSic.Eav.Sys.Insights;
@@ -150,6 +151,7 @@ public static class StartupSxcWebApi
         // New v22 - making it an add-on processor
         services.AddTransient<IConvertEntityToEavLightExtraProcessor, ConvertToEavLightWithCmsInfo>();
 
+        services.TryAddTransient<InstallSettingsSvc>();
 
         services.AddLoadSettingsProviders();
 

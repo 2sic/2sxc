@@ -1,24 +1,26 @@
 ﻿using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Install.Sys;
 using ToSic.Eav.Apps.Sys.Work;
-using ToSic.Eav.Context;
-using ToSic.Sxc.Apps.Sys.Installation;
 using ToSic.Sxc.Apps.Sys.Work;
-using ToSic.Sxc.Context;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 using ToSic.Sys.Wrappers;
 
 namespace ToSic.Sxc.Dnn.Install;
 
 internal class DnnPlatformAppInstaller(
+    IContextCompleteService context,
     LazySvc<IAppsCatalog> appsCatalog,
     AppWorkQuick<WorkViewsGet> workViews,
     LazySvc<ExternalLinksService> remoteRouterLazy)
-    : ServiceBase("Dnn.AppIns", connect: [workViews, appsCatalog, remoteRouterLazy]), IPlatformAppInstaller
+    : ServiceBase("Dnn.AppIns", connect: [context, workViews, appsCatalog, remoteRouterLazy]), IPlatformAppInstaller
 {
-    public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp)
+    public string GetAutoInstallPackagesUiUrl(bool forContentApp)
     {
         var l = Log.Fn<string>();
+        var site = context.BlockContextRequired().Site;
+        var module = context.BlockContextRequired().Module;
         var moduleInfo = (module as IWrapper<ModuleInfo>)?.GetContents();
         // 2026-10-18 2dm - reworking DnnSite to have a factory, the portal check seems useless.
         // var portal = (site as DnnSiteFactory)?.GetContents();

@@ -1,9 +1,9 @@
+using ToSic.Eav.Apps.Install.Sys;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Eav.WebApi.Sys.Install;
 
 namespace ToSic.Sxc.Backend.Sys;
 
@@ -21,25 +21,26 @@ public class AppInstallation : CustomDataSource
     [Configuration]
     public bool IsContentApp => Configuration.GetThis(false);
 
-    public AppInstallation(Dependencies services, LazySvc<InstallControllerReal> install, IContextCompleteService context)
-        : base(services, "Sxc.AppInstall", connect: [install, context])
+    public AppInstallation(Dependencies services, LazySvc<InstallSettingsSvc> install)
+        : base(services, "Sxc.AppInstall", connect: [install])
     {
-        ProvideOutRaw(() => Settings(install, context), name: "Settings", options: Options);
-        ProvideOutRaw(() => InstalledApps(install, context), name: "InstalledApps", options: Options);
-        ProvideOutRaw(() => Rules(install, context), name: "Rules", options: Options);
+        var result = new Lazy<InstallAppsDto>(() => install.Value.InstallSettings(IsContentApp));
+
+        ProvideOutRaw(name: "Settings", data: () => Settings(result.Value), options: Options);
+        ProvideOutRaw(name: "InstalledApps", data: () => InstalledApps(result.Value), options: Options);
+        ProvideOutRaw(name: "Rules", data: () => Rules(result.Value), options: Options);
     }
 
-    private InstallAppsDto Result(LazySvc<InstallControllerReal> install, IContextCompleteService context)
-        => install.Value.InstallSettings(IsContentApp, context.BlockRequired().Context.Module);
+    private IEnumerable<InstallationSettingsRaw> Settings(InstallAppsDto result)
+        => [new InstallationSettingsRaw(result.remoteUrl)];
+    private IEnumerable<InstalledAppRaw> InstalledApps(InstallAppsDto result)
+        => result.installedApps.Select(app => new InstalledAppRaw(app));
+    private IEnumerable<InstallRuleRaw> Rules(InstallAppsDto result)
+        => result.rules?.Select(rule => new InstallRuleRaw(rule)) ?? [];
 
-    private IEnumerable<InstallationSettingsRaw> Settings(LazySvc<InstallControllerReal> install, IContextCompleteService context)
-        => [new(Result(install, context).remoteUrl)];
-    private IEnumerable<InstalledAppRaw> InstalledApps(LazySvc<InstallControllerReal> install, IContextCompleteService context)
-        => Result(install, context).installedApps.Select(app => new InstalledAppRaw(app));
-    private IEnumerable<InstallRuleRaw> Rules(LazySvc<InstallControllerReal> install, IContextCompleteService context)
-        => Result(install, context).rules?.Select(rule => new InstallRuleRaw(rule)) ?? [];
     private static DataFactoryOptions Options() => new();
 
+    // ReSharper disable NotAccessedPositionalProperty.Local
     private sealed record InstallationSettingsRaw(string RemoteUrl) : IRawEntityAutoConvert;
 
     private sealed class InstalledAppRaw(AppDtoLight app) : IRawEntityAutoConvert
@@ -59,4 +60,5 @@ public class AppInstallation : CustomDataSource
         public string Target => rule.target;
         public string Url => rule.url;
     }
+    // ReSharper restore NotAccessedPositionalProperty.Local
 }

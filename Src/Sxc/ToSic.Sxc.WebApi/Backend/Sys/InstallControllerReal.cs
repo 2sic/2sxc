@@ -1,37 +1,18 @@
 ﻿using System.Text;
-using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.Apps.ImportExport.Sys;
-using ToSic.Eav.Apps.Sys.AppStack;
-using ToSic.Eav.Data.Sys.PropertyLookup;
-using ToSic.Eav.Data.Sys.PropertyStack;
-using ToSic.Eav.Models;
 using ToSic.Eav.Persistence.Sys.Logging;
 using ToSic.Eav.Sys;
-using ToSic.Eav.WebApi.Sys.Install;
-using ToSic.Sxc.Apps.Sys.Installation;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Sys.Integration.Installation;
-using ToSic.Sys.Capabilities.Features;
-using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Backend.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class InstallControllerReal(
-    LazySvc<IContextOfSiteService> ctxSvc,
     LazySvc<IEnvironmentInstaller> envInstallerLazy,
-    LazySvc<IPlatformAppInstaller> platformAppInstaller,
     LazySvc<ImportFromRemote> impFromRemoteLazy,
-    IResponseMaker responseMaker,
-    LazySvc<IFeaturesService> featureService,
-    LazySvc<WorkApps> workApps,
-    LazySvc<AppDataStackService> appSettingsStack)
-    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
-        connect:
-        [
-            ctxSvc, envInstallerLazy, platformAppInstaller, impFromRemoteLazy, responseMaker, featureService,
-            appSettingsStack,  workApps,
-        ])
+    IResponseMaker responseMaker)
+    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [envInstallerLazy, impFromRemoteLazy, responseMaker,])
 {
     public const string LogSuffix = "Install";
 
@@ -44,53 +25,6 @@ public class InstallControllerReal(
     public bool Resume() => envInstallerLazy.Value.ResumeAbortedUpgrade();
 
     #endregion
-
-    #region App / Content Package Installation
-
-    public InstallAppsDto InstallSettings(bool isContentApp, IModule module)
-    {
-        var l = Log.Fn<InstallAppsDto>();
-        
-        // Get Remote Install URL
-        var site = ctxSvc.Value.Context.Site;
-        var url = platformAppInstaller.Value
-            .GetAutoInstallPackagesUiUrl(site, module, isContentApp);
-
-        // Get list of already installed Apps
-        var appsOfThisSite = workApps.Value.GetApps(site)
-            .Select(a => new AppDtoLight
-            {
-                name = a.Specs.Name,
-                guid = a.Specs.NameId,
-                version = a.Specs.VersionSafe(),
-            })
-            .ToListOpt();
-
-        // Get list of allow/forbid rules for the App installer
-        var settingsSources = appSettingsStack.Value
-            .InitForPrimaryAppOfZone(site.ZoneId)
-            .GetStack(AppStackConstants.Settings);
-        var stack = new PropertyStack().Init(AppStackConstants.RootNameSettings, settingsSources);
-
-        var rules = stack.InternalGetPath(new PropReqSpecs("SiteSetup.AutoInstallApps", PropReqSpecs.EmptyDimensions, true, Log), new());
-        var ruleEntities = rules.Result as IEnumerable<IEntity>;    // note: Result is null if nothing found...
-        var rulesFinal = ruleEntities?
-            .Select(e => e.ToModel<SiteSetupAutoInstallAppsRule>(options: ToModelOptions.DisableTypeNameCheck)!.GetRuleDto())
-            .ToListOpt();
-
-        if (!featureService.Value.IsEnabled(BuiltInFeatures.AppAutoInstallerConfigurable.NameId))
-        {
-            l.A("will not add installer rules as the feature is not enabled");
-            rulesFinal = [];
-        }
-
-        return l.Return(new()
-        {
-            remoteUrl = url,
-            installedApps = appsOfThisSite,
-            rules = rulesFinal,
-        });
-    }
 
     /// <summary>
     /// Before this was GET Installer/InstallPackage
@@ -125,5 +59,4 @@ public class InstallControllerReal(
         return err.ToString();
     }
 
-    #endregion
 }

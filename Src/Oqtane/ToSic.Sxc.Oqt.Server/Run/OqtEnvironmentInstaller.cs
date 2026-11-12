@@ -1,9 +1,8 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Install.Sys;
 using ToSic.Eav.Apps.Sys.Work;
-using ToSic.Eav.Context;
-using ToSic.Sxc.Apps.Sys.Installation;
 using ToSic.Sxc.Apps.Sys.Work;
-using ToSic.Sxc.Context;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Sys.Integration.Installation;
 using ToSic.Sxc.WebApi.Sys.ExternalLinks;
@@ -11,10 +10,11 @@ using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 namespace ToSic.Sxc.Oqt.Server.Run;
 
 internal class OqtEnvironmentInstaller(
+    IContextCompleteService context,
     AppWorkQuick<WorkViewsGet> workViews,
     ExternalLinksService externalLinksService,
     IAppsCatalog appsCatalog)
-    : ServiceBase($"{OqtConstants.OqtLogPrefix}.Instll", connect: [workViews, appsCatalog, externalLinksService]),
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.Instll", connect: [context, workViews, appsCatalog, externalLinksService]),
         IEnvironmentInstaller, IPlatformAppInstaller
 {
     public string UpgradeMessages()
@@ -31,8 +31,10 @@ internal class OqtEnvironmentInstaller(
         return true;
     }
 
-    public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp)
+    public string GetAutoInstallPackagesUiUrl(bool forContentApp)
     {
+        var site = context.BlockContextRequired().Site;
+        var module = context.BlockContextRequired().Module;
 
         // new: check if it should allow this
         // it should only be allowed, if the current situation is either

@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Apps.Install.Sys;
 using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Eav.Persistence.Efc.Sys.DbContext;
-using ToSic.Sxc.Apps.Sys.Installation;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Code.Sys;
 using ToSic.Sxc.Oqt.Server.Configuration;
