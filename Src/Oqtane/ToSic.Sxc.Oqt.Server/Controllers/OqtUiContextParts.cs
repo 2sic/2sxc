@@ -16,6 +16,9 @@ internal class OqtUiContextParts(
     ExternalLinksService externalLinksService)
     : ServiceWithSetup<IAppReader?>("Oqt.UiCtxB", connect: [uiDefaults, linkPaths, siteCtxSvc, siteState, externalLinksService]), IUiContextParts
 {
+    // The app/template chooser requests context before an app has been selected.
+    protected override IAppReader? GetDefaultOptions() => null;
+
     private IUiContextParts UiDefaults => field ??= uiDefaults.New(MyOptions);
 
     public ContextLanguageInfoDto GetLanguage(Ctx flags) => UiDefaults.GetLanguage(flags);

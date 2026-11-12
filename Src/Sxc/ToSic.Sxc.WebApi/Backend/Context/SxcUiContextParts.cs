@@ -6,14 +6,17 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Backend.Context;
 
 public class SxcUiContextParts(
-    Generator<UiContextPartsEav, IAppReader> uiDefaults,
+    Generator<UiContextPartsEav, IAppReader?> uiDefaults,
     IContextOfSiteService siteCtxSvc,
     IAppPathsMicroSvc appPaths,
     LazySvc<GlobalPaths> globalPaths,
     LazySvc<IUserService> usersSvc)
     : ServiceWithSetup<IAppReader?>("Sxc.CtxPrt", connect: [uiDefaults, siteCtxSvc, appPaths, globalPaths, usersSvc]), IUiContextParts
 {
-    private IUiContextParts UiDefaults => field ??= uiDefaults.New(MyOptions!);
+    // The app/template chooser requests context before an app has been selected.
+    protected override IAppReader? GetDefaultOptions() => null;
+
+    private IUiContextParts UiDefaults => field ??= uiDefaults.New(MyOptions);
 
     private ISite Site => field ??= siteCtxSvc.Context.Site;
     protected int ZoneId => siteCtxSvc.Context.Site.ZoneId;

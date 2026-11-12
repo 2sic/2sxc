@@ -15,6 +15,9 @@ namespace ToSic.Sxc.Dnn.WebApi.Context;
 internal sealed class DnnUiContextParts(Generator<SxcUiContextParts, IAppReader?> uiDefaults, IContextCompleteService ctxService, ExternalLinksService externalLinksService)
     : ServiceWithSetup<IAppReader?>("Dnn.UiCtxP", connect: [uiDefaults, ctxService, externalLinksService]), IUiContextParts
 {
+    // The app/template chooser requests context before an app has been selected.
+    protected override IAppReader? GetDefaultOptions() => null;
+
     #region Constructor / DI
 
     private ModuleInfo Module => (ctxService.BlockContextOrNull()?.Module as IWrapper<ModuleInfo>)?.GetContents();
