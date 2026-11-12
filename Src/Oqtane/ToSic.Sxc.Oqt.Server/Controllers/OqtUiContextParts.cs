@@ -14,9 +14,13 @@ internal class OqtUiContextParts(
     IContextCompleteService siteCtxSvc,
     SiteState siteState,
     ExternalLinksService externalLinksService)
-    : ServiceWithSetup<IAppReader?>("Oqt.UiCtxB", connect: [uiDefaults, linkPaths, siteCtxSvc, siteState, externalLinksService]), IUiContextParts
+    : ServiceBase("Oqt.UiCtxB", connect: [uiDefaults, linkPaths, siteCtxSvc, siteState, externalLinksService]), IUiContextParts
 {
-    private IUiContextParts UiDefaults => field ??= uiDefaults.New(MyOptions);
+    public void Setup(IAppReader? options) => AppReader = options;
+
+    private IAppReader? AppReader { get; set; }
+
+    private IUiContextParts UiDefaults => field ??= uiDefaults.New(AppReader);
 
     public ContextLanguageInfoDto GetLanguage(Ctx flags) => UiDefaults.GetLanguage(flags);
 
@@ -68,7 +72,7 @@ internal class OqtUiContextParts(
             ExternalSxcDestinations.GettingStarted,
             siteCtxSvc.Context.Site,
             blockCtx?.Module.Id ?? 0,
-            MyOptions?.Specs,
+            AppReader?.Specs,
             true
         );
         return gsUrl;

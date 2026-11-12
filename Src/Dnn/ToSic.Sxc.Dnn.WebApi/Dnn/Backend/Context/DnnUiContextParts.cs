@@ -13,13 +13,16 @@ using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 namespace ToSic.Sxc.Dnn.WebApi.Context;
 
 internal sealed class DnnUiContextParts(Generator<SxcUiContextParts, IAppReader?> uiDefaults, IContextCompleteService ctxService, ExternalLinksService externalLinksService)
-    : ServiceWithSetup<IAppReader?>("Dnn.UiCtxP", connect: [uiDefaults, ctxService, externalLinksService]), IUiContextParts
+    : ServiceBase("Dnn.UiCtxP", connect: [uiDefaults, ctxService, externalLinksService]), IUiContextParts
 {
     #region Constructor / DI
+    public void Setup(IAppReader? options) => AppReader = options;
+
+    private IAppReader? AppReader { get; set; }
 
     private ModuleInfo Module => (ctxService.BlockContextOrNull()?.Module as IWrapper<ModuleInfo>)?.GetContents();
 
-    private IUiContextParts UiDefaults => field ??= uiDefaults.New(MyOptions);
+    private IUiContextParts UiDefaults => field ??= uiDefaults.New(AppReader);
 
     #endregion
 
@@ -81,7 +84,7 @@ internal sealed class DnnUiContextParts(Generator<SxcUiContextParts, IAppReader?
     /// <returns></returns>
     public string GetGettingStartedUrl()
     {
-        if (MyOptions?.Specs is not { } specs)
+        if (AppReader?.Specs is not { } specs)
             return "";
 
         var gsUrl = externalLinksService.LinkToDestination(

@@ -11,9 +11,13 @@ public class SxcUiContextParts(
     IAppPathsMicroSvc appPaths,
     LazySvc<GlobalPaths> globalPaths,
     LazySvc<IUserService> usersSvc)
-    : ServiceWithSetup<IAppReader?>("Sxc.CtxPrt", connect: [uiDefaults, siteCtxSvc, appPaths, globalPaths, usersSvc]), IUiContextParts
+    : ServiceBase("Sxc.CtxPrt", connect: [uiDefaults, siteCtxSvc, appPaths, globalPaths, usersSvc]), IUiContextParts
 {
-    private IUiContextParts UiDefaults => field ??= uiDefaults.New(MyOptions!);
+    public void Setup(IAppReader? options) => AppReader = options;
+
+    private IAppReader? AppReader { get; set; }
+
+    private IUiContextParts UiDefaults => field ??= uiDefaults.New(AppReader!);
 
     private ISite Site => field ??= siteCtxSvc.Context.Site;
     protected int ZoneId => siteCtxSvc.Context.Site.ZoneId;
@@ -32,19 +36,19 @@ public class SxcUiContextParts(
     public ContextAppDto? GetApp(Ctx flags)
     {
         var result = UiDefaults.GetApp(flags);
-        if (result == null || MyOptions == null)
+        if (result == null || AppReader == null)
             return null;
-        var paths = appPaths.Get(MyOptions, Site);
+        var paths = appPaths.Get(AppReader, Site);
         return result with
         {
-            Icon = AppAssetThumbnail.GetUrl(MyOptions, paths!, globalPaths)
+            Icon = AppAssetThumbnail.GetUrl(AppReader, paths!, globalPaths)
         };
     }
 
     public ContextUserDto? GetUser(Ctx flags)
     {
         var result = UiDefaults.GetUser(flags);
-        if (result == null || MyOptions == null)
+        if (result == null || AppReader == null)
             return null;
 
         return result with
