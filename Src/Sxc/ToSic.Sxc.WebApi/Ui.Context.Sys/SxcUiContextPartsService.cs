@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.Sys.Paths;
+﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Ui.Context.Sys;
 using ToSic.Eav.Ui.Context.Sys.Dto;
 using ToSic.Sxc.Apps.Sys.Assets;
@@ -51,7 +52,7 @@ public sealed class SxcUiContextPartsService(
         var paths = appPaths.Get(AppReader, Site);
         return result with
         {
-            Icon = AppAssetThumbnail.GetUrl(AppReader, paths!, globalPaths)
+            Icon = AppThumbnailHelper.GetUrl(AppReader, paths!, globalPaths)
         };
     }
 

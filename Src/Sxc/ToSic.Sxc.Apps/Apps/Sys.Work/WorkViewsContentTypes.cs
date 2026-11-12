@@ -1,9 +1,9 @@
-﻿using ToSic.Eav.Data.ContentTypes.Sys;
+﻿using ToSic.Eav.Apps.Inspect.Sys.UiDto;
+using ToSic.Eav.Data.ContentTypes.Sys;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.ValueConverter;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Metadata.Sys;
-using ToSic.Sxc.Apps.Sys.Ui;
 
 namespace ToSic.Sxc.Apps.Sys.Work;
 

@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps.Inspect.Sys;
 using ToSic.Eav.Apps.Inspect.Sys.Models;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Sxc.Apps.Sys.Assets;
 using ToSic.Sxc.Web.Sys.LightSpeed;
@@ -33,7 +34,7 @@ internal class AppDetailsServiceExtended(AppDetailsService baseSvc, Generator<IA
             };
 
         var paths = appPathsGen.New().Get(appReader, site);
-        var thumbnail = AppAssetThumbnail.GetUrl(appReader, paths, globalPaths);
+        var thumbnail = AppThumbnailHelper.GetUrl(appReader, paths, globalPaths);
         return fromBase with
         {
             Thumbnail = thumbnail,

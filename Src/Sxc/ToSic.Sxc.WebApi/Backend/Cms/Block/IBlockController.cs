@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Apps.Sys.Ui;
+﻿using ToSic.Eav.Apps.Inspect.Sys.UiDto;
 using ToSic.Sxc.Backend.InPage;
 
 namespace ToSic.Sxc.Backend.Cms;

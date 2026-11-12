@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.Sys;
-using ToSic.Sxc.Apps.Sys.Ui;
+﻿using ToSic.Eav.Apps.Inspect.Sys.UiDto;
+using ToSic.Eav.Sys;
 using ToSic.Sxc.Backend.ContentBlocks;
 using ToSic.Sxc.Backend.InPage;
 using ToSic.Sxc.Blocks.Sys.BlockEditor;

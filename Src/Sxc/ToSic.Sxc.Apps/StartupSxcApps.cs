@@ -40,7 +40,6 @@ public static class StartupSxcApps
         // Runtimes - new: better architecture v16.07+
         services.TryAddTransient<WorkViewDelete>();
         services.TryAddTransient<WorkViews>();
-        services.TryAddTransient<WorkApps>();
 
         services.TryAddTransient<WorkViewsContentTypes>(); // new v22
         

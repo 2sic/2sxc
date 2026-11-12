@@ -83,7 +83,7 @@ public class AppDynamic(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryBuilder<Q
 
 
     /// <inheritdoc cref="IAppDynamic.Thumbnail" />
-    string? IAppDynamic.Thumbnail => _thumbnail.Get(() => AppAssetThumbnail.GetUrl(MyOptions.AppReader, MyOptions.AppPaths, globalPaths));
+    string? IAppDynamic.Thumbnail => _thumbnail.Get(() => AppThumbnailHelper.GetUrl(MyOptions.AppReader, MyOptions.AppPaths, globalPaths));
     private readonly LazyGet<string?> _thumbnail = new();
 
     /// <inheritdoc cref="IAppDynamic.PathShared" />

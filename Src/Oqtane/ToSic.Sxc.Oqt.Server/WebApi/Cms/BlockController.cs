@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Sxc.Apps.Sys.Ui;
+using ToSic.Eav.Apps.Inspect.Sys.UiDto;
 using ToSic.Sxc.Backend.Cms;
 using ToSic.Sxc.Backend.InPage;
 using ToSic.Sxc.Oqt.Server.Controllers;
