@@ -6,6 +6,7 @@ using ToSic.Eav.ImportExport.Integration;
 using ToSic.Eav.ImportExport.Sys.XmlExport;
 using ToSic.Sxc.Adam.Sys.FileSystem;
 using ToSic.Sxc.Adam.Sys.Paths;
+using ToSic.Sxc.Adam.Sys.Security;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sys.Security.Permissions;
@@ -28,6 +29,7 @@ internal static partial class OqtRegisterServices
         // ADAM stuff
         services.TryAddTransient<IAdamPaths, OqtAdamPaths>();
         services.TryAddTransient<IAdamFileSystem, OqtAdamFileSystem>();
+        services.TryAddTransient<IAdamSecurityCheckEnvironment, OqtAdamSecCheckEnvironment>();
         return services;
     }
 
