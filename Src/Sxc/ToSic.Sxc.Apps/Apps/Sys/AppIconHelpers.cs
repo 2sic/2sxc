@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.Data.Sys.ValueConverter;
-using ToSic.Sxc.Apps.Sys.Paths;
+﻿using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.Data.Sys.ValueConverter;
 using ToSic.Sxc.Blocks.Sys.Views;
 using static System.StringComparison;
 using static ToSic.Eav.Apps.Sys.AppConstants;

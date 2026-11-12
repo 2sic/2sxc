@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps.Inspect.Sys.Models;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Sxc.Apps.Sys.Assets;
-using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Web.Sys.LightSpeed;
 
 namespace ToSic.Sxc.Apps.Sys.DataSources;

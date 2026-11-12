@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Apps.Sys.Paths;
+﻿using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Sxc.Blocks.Sys.Views;
 
 namespace ToSic.Sxc.Apps.Sys;

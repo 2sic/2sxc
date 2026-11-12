@@ -9,19 +9,21 @@ using ToSic.Sys.Utils;
 namespace ToSic.Sxc.Oqt.Server.Run;
 
 internal class OqtServerPaths(IWebHostEnvironment hostingEnvironment, LazySvc<IFileRepository> fileRepository, LazySvc<ITenantManager> tenantManager)
-    : ServerPathsBase
+    : IServerPaths
 {
-    public override string FullAppPath(string virtualPath) => FullContentPath(virtualPath);
+    public string FullAppPath(string virtualPath) => FullContentPath(virtualPath);
 
 
-    public override string FullContentPath(string virtualPath)
+    public string FullContentPath(string virtualPath)
     {
         var path = virtualPath.TrimPrefixSlash().ToSystemPath();
         return Path.Combine(hostingEnvironment.ContentRootPath, path);
     }
 
+    public string FullPathOfReference(string fileReference) => ServerPathsShared.FullPathOfReference(fileReference, FullPathOfReference);
 
-    protected override string FullPathOfReference(int id)
+
+    private string FullPathOfReference(int id)
     {
         // Oqtane 10.3.0 removed GetFilePath; only local storage providers have physical paths.
         var file = fileRepository.Value.GetFile(id);

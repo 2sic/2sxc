@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Apps.AppReader.Sys;
-using ToSic.Sxc.Apps.Sys.Paths;
+using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Sys.Caching.PiggyBack;
 using static ToSic.Eav.Apps.Sys.AppConstants;
 

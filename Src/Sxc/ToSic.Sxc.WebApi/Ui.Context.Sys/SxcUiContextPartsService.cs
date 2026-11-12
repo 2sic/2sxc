@@ -2,7 +2,6 @@
 using ToSic.Eav.Ui.Context.Sys;
 using ToSic.Eav.Ui.Context.Sys.Dto;
 using ToSic.Sxc.Apps.Sys.Assets;
-using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Ui.Context.Sys;

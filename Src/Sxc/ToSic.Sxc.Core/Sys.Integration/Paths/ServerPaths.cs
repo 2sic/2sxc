@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Data.Sys.ValueConverter;
+﻿using System.Diagnostics.CodeAnalysis;
+using ToSic.Eav.Data.Sys.ValueConverter;
 using ToSic.Eav.Environment.Sys.ServerPaths;
 #if NETFRAMEWORK
 using System.Web.Hosting;
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Sys.Integration.Paths;
 /// In the default implementation, all things have the same root so content-path and app-path
 /// are calculated the same way.
 /// </summary>
-internal class ServerPaths: ServerPathsBase
+internal class ServerPaths: IServerPaths
 {
 #if !NETFRAMEWORK
 
@@ -33,7 +34,7 @@ internal class ServerPaths: ServerPathsBase
         return Path.Combine(_hostingEnvironment.ContentRootPath, virtualPath);
     }
 
-    protected override string? FullPathOfReference(int id)
+    protected string? FullPathOfReference(int id)
     {
         throw new NotImplementedException("leave as not implemented, as we assume this code is never ever used");
     }
@@ -49,21 +50,23 @@ internal class ServerPaths: ServerPathsBase
     private string MapContentPath(string virtualPath)
         => HostingEnvironment.MapPath(virtualPath) ?? "error mapping path.";
 
-    protected override string? FullPathOfReference(int id)
+    private string? FullPathOfReference(int id)
     {
         var fileRef = "file:" + id;
         var resolved = _valueConverterLazy.Value.ToValue(fileRef);
-        if (string.IsNullOrWhiteSpace(resolved))
-            return null;
-        return FullContentPath(resolved);
+        return string.IsNullOrWhiteSpace(resolved)
+            ? null
+            : FullContentPath(resolved);
     }
 #endif
 
 
     /// <inheritdoc />
-    public override string FullAppPath(string virtualPath) => MapContentPath(virtualPath);
+    public string FullAppPath(string virtualPath) => MapContentPath(virtualPath);
 
     /// <inheritdoc />
-    public override string FullContentPath(string virtualPath) => MapContentPath(virtualPath);
+    public string FullContentPath(string virtualPath) => MapContentPath(virtualPath);
 
+    [return: NotNullIfNotNull("fileReference")]
+    public string? FullPathOfReference(string fileReference) => ServerPathsShared.FullPathOfReference(fileReference, FullPathOfReference);
 }

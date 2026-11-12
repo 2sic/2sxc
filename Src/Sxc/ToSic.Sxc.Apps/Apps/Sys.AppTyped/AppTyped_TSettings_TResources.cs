@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Apps.Sys.Paths;
+﻿using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Sxc.Data.Sys.Typed;
 using ToSic.Sxc.Services.DataService.Sys;
 
