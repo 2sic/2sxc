@@ -16,7 +16,6 @@ public class WorkViews(AppWorkChain<WorkEntities> appEntities, IZoneCultureResol
     /// <summary>
     /// Helper class to get information about views, especially for selecting them based on the url identifier
     /// </summary>
-    /// <param name="View"></param>
     /// <param name="Name"></param>
     /// <param name="UrlIdentifier"></param>
     /// <param name="IsRegex"></param>

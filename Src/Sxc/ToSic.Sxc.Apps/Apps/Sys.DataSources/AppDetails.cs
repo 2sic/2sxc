@@ -1,7 +1,7 @@
-﻿using ToSic.Eav.Context;
+﻿using ToSic.Eav.Apps.Inspect.Sys;
+using ToSic.Eav.Context;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Eav.WebApi.Sys.App.Details;
 using ToSic.Sxc.Apps.Sys.Work;
 
 namespace ToSic.Sxc.Apps.Sys.DataSources;

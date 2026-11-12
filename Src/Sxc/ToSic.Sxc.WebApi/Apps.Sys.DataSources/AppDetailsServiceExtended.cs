@@ -1,5 +1,6 @@
-﻿using ToSic.Eav.Apps.Sys.Paths;
-using ToSic.Eav.WebApi.Sys.App.Details;
+﻿using ToSic.Eav.Apps.Inspect.Sys;
+using ToSic.Eav.Apps.Inspect.Sys.Models;
+using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Sxc.Apps.Sys.Assets;
 using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Web.Sys.LightSpeed;

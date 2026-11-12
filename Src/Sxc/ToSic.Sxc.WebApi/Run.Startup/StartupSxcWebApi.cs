@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Apps.ImportExport.Sys;
+using ToSic.Eav.Apps.Inspect.Sys;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Sys.Insights;
 using ToSic.Eav.Ui.Context.Sys;
 using ToSic.Eav.WebApi.Sys.Admin;
-using ToSic.Eav.WebApi.Sys.App.Details;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Apps.Sys.DataSources;
 using ToSic.Sxc.Apps.Sys.EditAssets;
@@ -80,13 +81,10 @@ public static class StartupSxcWebApi
         // Internal API helpers
         services.TryAddTransient<AppContent>();
         services.TryAddTransient<SxcPagePublishing>();
-        services.TryAddTransient<ExportApp>();
         services.TryAddTransient<ExportAppInfo>();
         // App import services moved to EAV WebApi in v22.
         services.TryAddTransient<ImportContent>();
         services.TryAddTransient<ExportContent>();
-        services.TryAddTransient<AppStateSyncSave>();   // new separate in v21.06
-        services.TryAddTransient<AppStateSyncRestore>();
         services.TryAddTransient<AppStackBackend>();
         services.TryAddTransient<ViewsExportImport>();
 
@@ -96,11 +94,7 @@ public static class StartupSxcWebApi
         // js context / UI
         services.TryAddTransient<SxcUiContextPartsService>();  // v22 - default implementation, for re-implementations
         services.TryAddTransient<IUiContextPartsService, SxcUiContextPartsService>();
-            
-        // Helpers
-        services.TryAddTransient<ImpExpHelpers>();
-        services.TryAddTransient<ExportHelper>();
-
+        
         // Adam shared code across the APIs
         services.TryAddTransient<AdamCode>();
 

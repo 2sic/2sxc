@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Apps.ImportExport.Sys;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Apps.Sys.Api01;
@@ -40,7 +41,6 @@ public static class StartupSxcApps
         services.TryAddTransient<WorkViewDelete>();
         services.TryAddTransient<WorkViews>();
         services.TryAddTransient<WorkApps>();
-        services.TryAddTransient<WorkAppsRemove>();
 
         services.TryAddTransient<WorkViewsContentTypes>(); // new v22
         
