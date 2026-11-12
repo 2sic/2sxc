@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Backend.ImportExport;
 public class ExportAppInfo(
     ICultureStateSvc cultureStateSvc,
     AppWorkContextService appCtxSvc,
-    AppWorkChain<WorkViews> workViews,
+    AppWorkChain<WorkViewsGet> workViews,
     AppWorkChain<WorkEntities> workEntities,
     ExportHelper exportHelper,
     ISite site
@@ -35,7 +35,7 @@ public class ExportAppInfo(
         var transferableFilesCount = zipExport.CountFiles(!appHasCustomParent, fm => fm.GetAllTransferableFiles());
 
         var appSpecs = appReader.Specs;
-        var allViews = appViews.GetAll();
+        var allViews = appViews.AllViews;
         return l.Return(new()
         {
             Id = appIdentity.AppId,

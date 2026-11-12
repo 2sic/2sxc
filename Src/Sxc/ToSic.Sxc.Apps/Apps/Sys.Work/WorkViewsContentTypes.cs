@@ -8,12 +8,12 @@ using ToSic.Eav.Metadata.Sys;
 namespace ToSic.Sxc.Apps.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class WorkViewsContentTypes(AppWorkChain<WorkViews> workViews, IConvertToEavLight dataToFormatLight, LazySvc<IValueConverter> valConverterLazy, IAppWorkContext appWorkCtx)
+public class WorkViewsContentTypes(AppWorkChain<WorkViewsGet> workViews, IConvertToEavLight dataToFormatLight, LazySvc<IValueConverter> valConverterLazy, IAppWorkContext appWorkCtx)
     : ServiceBase("Viw.Cts", connect: [workViews, dataToFormatLight, valConverterLazy, appWorkCtx])
 {
     public IList<ContentTypeUiInfo> GetContentTypesWithStatus(IAppWorkContext appWorkCtx, string appPath, string appPathShared)
     {
-        var templates = workViews.New(appWorkCtx).GetAll().ToList();
+        var templates = workViews.New(appWorkCtx).AllViews.ToList();
         var visible = templates.Where(t => !t.IsHidden).ToList();
 
         var valConverter = valConverterLazy.Value;

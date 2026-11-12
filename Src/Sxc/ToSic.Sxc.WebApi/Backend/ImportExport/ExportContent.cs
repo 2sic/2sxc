@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Backend.ImportExport;
 public class ExportContent(
     Generator<XmlExporter, XmlExporter.Options> xmlExporter,
     AppWorkContextService appCtxSvc,
-    AppWorkChain<WorkViews> workViews,
+    AppWorkChain<WorkViewsGet> workViews,
     AppWorkChain<WorkEntities> workEntities,
     Generator<ImpExpHelpers> impExpHelpers,
     IResponseMaker responseMaker)
@@ -28,7 +28,7 @@ public class ExportContent(
         var appCtx = appCtxSvc.ContextNew(currentApp);
         var contentTypes = currentApp.ContentTypes.OfScope(scope);
         var entities = workEntities.New(appCtx).All();
-        var templates = workViews.New(appCtx).GetAll();
+        var templates = workViews.New(appCtx).AllViews;
 
         return l.Return(new()
         {

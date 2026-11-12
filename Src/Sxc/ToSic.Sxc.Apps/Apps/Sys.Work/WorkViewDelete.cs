@@ -1,7 +1,7 @@
 ﻿namespace ToSic.Sxc.Apps.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class WorkViewDelete(AppWorkChain<WorkViews> appViews, AppWorkChain<WorkEntityDelete> entityDelete)
+public class WorkViewDelete(AppWorkChain<WorkViewsGet> appViews, AppWorkChain<WorkEntityDelete> entityDelete)
     : ServiceBase("AWk.EntCre", connect: [appViews, entityDelete])
 {
 

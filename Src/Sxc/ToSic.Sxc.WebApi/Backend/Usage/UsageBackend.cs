@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Backend.Usage;
 public class UsageBackend(
     AppWorkContextService appCtxSvc,
     AppWorkChain<WorkBlocks> appBlocks,
-    AppWorkChain<WorkViews> workViews,
+    AppWorkChain<WorkViewsGet> workViews,
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions,
     ISxcCurrentContextService ctxService)
     : ServiceBase("Bck.Usage", connect: [appCtxSvc, appPermissions, ctxService, workViews, appBlocks])

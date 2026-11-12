@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.Run;
 internal class OqtModuleUpdater(
     SettingsHelper settingsHelper,
     IPageModuleRepository pageModuleRepository,
-    AppWorkQuick<WorkViews> workViews,
+    AppWorkQuick<WorkViewsGet> workViews,
     LazySvc<IAppsCatalog> appsCatalog,
     ISite site)
     : ServiceBase($"{OqtConstants.OqtLogPrefix}.MapA2I",
@@ -46,7 +46,7 @@ internal class OqtModuleUpdater(
         if (appId.HasValue)
         {
             var appIdentity = new AppIdentity(site.ZoneId, appId.Value);
-            var templateGuid = workViews.New(appIdentity).GetAll()
+            var templateGuid = workViews.New(appIdentity).AllViews
                 .FirstOrDefault(t => !t.IsHidden)?.Guid;
             if (templateGuid.HasValue) SetPreview(instance.Id, templateGuid.Value);
         }

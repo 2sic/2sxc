@@ -11,7 +11,7 @@ using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 namespace ToSic.Sxc.Oqt.Server.Run;
 
 internal class OqtEnvironmentInstaller(
-    AppWorkQuick<WorkViews> workViews,
+    AppWorkQuick<WorkViewsGet> workViews,
     ExternalLinksService externalLinksService,
     IAppsCatalog appsCatalog)
     : ServiceBase($"{OqtConstants.OqtLogPrefix}.Instll", connect: [workViews, appsCatalog, externalLinksService]),
@@ -43,7 +43,7 @@ internal class OqtEnvironmentInstaller(
             {
                 var contentAppId = appsCatalog.DefaultAppIdentity(site.ZoneId);
                 // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
-                var contentViews = workViews.New(contentAppId).GetAll();
+                var contentViews = workViews.New(contentAppId).AllViews;
                 if (contentViews.Any())
                     return null;
             }

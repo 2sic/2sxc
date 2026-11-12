@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Apps.Sys.EditAssets;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AssetEditor(
-    AppWorkChain<WorkViews> workViews,
+    AppWorkChain<WorkViewsGet> workViews,
     IUser user,
     LazySvc<AppFolderInitializer> appFolderInitializer,
     ISite site,

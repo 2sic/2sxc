@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Backend.ContentBlocks;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentBlockBackend(
-    AppWorkChain<WorkViews> workViews,
+    AppWorkChain<WorkViewsGet> workViews,
     IPagePublishing publishing,
     AppWorkChain<WorkBlocksMod> workBlocksMod,
     ISxcCurrentContextService ctxService,

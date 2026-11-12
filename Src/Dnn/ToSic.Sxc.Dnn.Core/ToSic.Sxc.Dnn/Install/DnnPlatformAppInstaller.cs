@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Dnn.Install;
 
 internal class DnnPlatformAppInstaller(
     LazySvc<IAppsCatalog> appsCatalog,
-    AppWorkQuick<WorkViews> workViews,
+    AppWorkQuick<WorkViewsGet> workViews,
     LazySvc<ExternalLinksService> remoteRouterLazy)
     : ServiceBase("Dnn.AppIns", connect: [workViews, appsCatalog, remoteRouterLazy]), IPlatformAppInstaller
 {
@@ -34,7 +34,7 @@ internal class DnnPlatformAppInstaller(
             {
                 var primaryAppId = appsCatalog.Value.DefaultAppIdentity(site.ZoneId);
                 // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
-                var contentViews = workViews.New(primaryAppId).GetAll();
+                var contentViews = workViews.New(primaryAppId).AllViews;
                 if (contentViews.Any())
                     return null;
             }

@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Dnn.Cms;
 // TODO: @STV - this looks very similar to the Oqtane implementation
 // Probably best to put shared code somewhere
 internal class DnnModuleUpdater(
-    AppWorkQuick<WorkViews> workViews,
+    AppWorkQuick<WorkViewsGet> workViews,
     ICultureStateSvc cultureStateSvc,
     IAppsCatalog appsCatalog,
     ISite site)
@@ -51,7 +51,7 @@ internal class DnnModuleUpdater(
 
         var appIdentity = new AppIdentity(zoneId, appId.Value);
 
-        var templateGuid = workViews.New(appIdentity).GetAll()
+        var templateGuid = workViews.New(appIdentity).AllViews
             .OrderByDescending(v =>
                 v.Metadata.HasType(KnownDecorators.IsDefaultDecorator)) // first sort by IsDefaultDecorator DESC
             .ThenBy(v => v.Name) // than by Name ASC

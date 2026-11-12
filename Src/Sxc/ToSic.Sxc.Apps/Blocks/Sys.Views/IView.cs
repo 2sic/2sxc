@@ -6,7 +6,11 @@ namespace ToSic.Sxc.Blocks.Sys.Views;
 /// <summary>
 /// Defines a view configuration which is loaded from an entity.
 /// </summary>
-[PrivateApi("Was Public API till v17, but I can't see any reason why people would have used it since it would go through ICmsView")]
+/// <remarks>
+/// * Was Public API as `ToSic.Sxc.Blocks.IView` till v17, but I can't see any reason why people would have used it since it would go through ICmsView
+/// * Put in `ToSic.Sxc.Blocks.Sys.Views` namespace ca. v17 or so.
+/// </remarks>
+[PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IView: IModelFromEntityBasic, IHasMetadata
 {
@@ -63,10 +67,6 @@ public interface IView: IModelFromEntityBasic, IHasMetadata
     /// have Header configuration and treat content in a special way. 
     /// </summary>
     [PrivateApi] bool UseForList { get; }
-
-    // Publishing was removed a long time ago, commented out v21
-    //[PrivateApi] bool PublishData { get; }
-    //[PrivateApi] string StreamsToPublish { get; }
 
     /// <summary>
     /// The query which provides data to this view. 

@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Blocks.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockGeneratorHelpers(
     AppWorkContextService appCtxSvc, 
-    AppWorkChain<WorkViews> workViews,
+    AppWorkChain<WorkAppViewSwitch> workViews,
     AppWorkChain<WorkBlocks> appBlocks,
     LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
     Generator<AppForCode, AppForCode.Options> appLazy)

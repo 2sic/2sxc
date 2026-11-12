@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Backend.Views;
 public class ViewsBackend(
     LazySvc<AppWorkContextService> appCtxSvc,
     LazySvc<WorkViewDelete> workViewDelete,
-    AppWorkChain<WorkViews> workViews,
+    AppWorkChain<WorkViewsGet> workViews,
     LazySvc<IConvertToEavLight> convertToEavLight,
     Generator<ImpExpHelpers> impExpHelpers)
     : ServiceBase("Bck.Views", connect: [appCtxSvc, workViewDelete, convertToEavLight, impExpHelpers, workViews])
@@ -27,7 +27,7 @@ public class ViewsBackend(
         var appViews = workViews.New(appCtx);
         var contentTypes = appCtx.AppReader.ContentTypes.OfScope(ScopeConstants.Default).ToList();
 
-        var viewList = appViews.GetAll().ToList();
+        var viewList = appViews.AllViews.ToList();
         Log.A($"fieldDef list count:{contentTypes.Count}, template count:{viewList.Count}");
 
         var views = viewList

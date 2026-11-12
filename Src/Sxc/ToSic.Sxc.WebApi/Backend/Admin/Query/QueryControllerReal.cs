@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Backend.Admin.Query;
 public class QueryControllerReal(
     AppWorkContextService appCtxSvc,
     QueryControllerBase.Dependencies services,
-    Generator<WorkViews, IAppWorkContext> workViews,
+    Generator<WorkViewsGet, IAppWorkContext> workViews,
     IContextCompleteService ctxSvc,
     Generator<IAppDataConfigProvider> tokenEngineWithContext)
     : QueryControllerBase(services, "Api." + LogSuffix, connect: [appCtxSvc, workViews, ctxSvc, tokenEngineWithContext])
@@ -28,8 +28,7 @@ public class QueryControllerReal(
 
         // Stop if views still use this Query
         var ctx = appCtxSvc.ContextNew(appId);
-        var viewUsingQuery = workViews.New(ctx)
-            .GetAll()
+        var viewUsingQuery = workViews.New(ctx).AllViews
             .Where(t => t.Query?.Id == id)
             .Select(t => t.Id)
             .ToArray();

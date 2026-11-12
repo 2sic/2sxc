@@ -22,7 +22,7 @@ public class AppControllerReal(
     LazySvc<AppCreator> appBuilderLazy,
     LazySvc<AppStateSyncSave> appStateSyncSave,
     LazySvc<AppStateSyncRestore> appStateSyncRestore,
-    AppWorkQuick<WorkViews> workViews,
+    AppWorkQuick<WorkViewsGet> workViews,
     LazySvc<AppCachePurger> systemManagerLazy)
     : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
         connect:
@@ -63,7 +63,7 @@ public class AppControllerReal(
 
     private (IEnumerable<PathCaseItem> App, IEnumerable<PathCaseItem> Shared) PathCaseReferences(int appId)
     {
-        var views = workViews.New(appId).GetAll();
+        var views = workViews.New(appId).AllViews;
         return (
             views.Where(view => !view.IsShared).Select(view => new PathCaseItem(view.Path)),
             views.Where(view => view.IsShared).Select(view => new PathCaseItem(view.Path)));
