@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Http;
 using Oqtane.Repository;
+using Oqtane.Security;
 using Oqtane.Shared;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Sxc.Adam.Sys.Security;
@@ -9,7 +11,11 @@ namespace ToSic.Sxc.Oqt.Server.Adam;
 /// <summary>
 /// Oqtane specific parts of the ADAM security checks.
 /// </summary>
-internal class OqtAdamSecCheckEnvironment(ISettingRepository settingRepository)
+internal class OqtAdamSecCheckEnvironment(
+    ISettingRepository settingRepository,
+    IFolderRepository folderRepository,
+    IUserPermissions userPermissions,
+    IHttpContextAccessor httpContextAccessor)
     : ServiceBase($"{OqtConstants.OqtLogPrefix}.AdmSCh"), IAdamSecurityCheckEnvironment
 {
     /// <summary>
@@ -50,13 +56,23 @@ internal class OqtAdamSecCheckEnvironment(ISettingRepository settingRepository)
     }
 
     /// <summary>
-    /// Same rule as the platform-neutral default, which is internal to ToSic.Sxc.Adam.
+    /// Check native Edit permissions on the folder, or on the containing folder for a file.
     /// </summary>
     public bool CanEditFolder(IAdamSecurityCheckService security, IAsset item)
     {
-        var permissions = security.AdamContext.Context.Permissions;
-        return permissions.IsSiteAdmin
-               || permissions.IsContentAdmin
-               || permissions.IsContentEditor;
+        var folderId = item switch
+        {
+            IFolder folder => folder.Id,
+            IFile file => file.ParentId,
+            _ => 0
+        };
+        var httpContext = httpContextAccessor.HttpContext;
+        if (folderId <= 0 || httpContext == null)
+            return false;
+
+        var nativeFolder = folderRepository.GetFolder(folderId);
+        return nativeFolder != null
+               && nativeFolder.SiteId == security.AdamContext.Context.Site.Id
+               && userPermissions.IsAuthorized(httpContext.User, PermissionNames.Edit, nativeFolder.PermissionList);
     }
 }
