@@ -19,9 +19,9 @@ namespace ToSic.Sxc.Adam.Sys.Manager;
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamManager(
-    LazySvc<ICodeDataFactory> cdfIfNotProvided,
+    Generator<ICodeDataFactory, ICodeDataFactory.OptionalFallbacks> cdfIfNotProvided,
     AdamConfiguration adamConfiguration,
-    LazySvc<IAdamFileSystem> adamFsLazy,
+    Generator<IAdamFileSystem, AdamManager> adamFsLazy,
     Generator<AdamStorageOfField> fieldStorageGenerator,
     AdamGenericHelper adamGenericHelper)
     : ServiceWithSetup<AdamManager.Options>("Adm.Managr", connect: [cdfIfNotProvided, adamConfiguration, adamFsLazy, fieldStorageGenerator, adamGenericHelper])
@@ -33,8 +33,7 @@ public class AdamManager(
 
     public bool UseTypedAssets => Cdf.CompatibilityLevel >= CompatibilityLevels.MinLevelForTyped;
 
-    [field: AllowNull, MaybeNull]
-    public IAdamFileSystem AdamFs => field ??= adamFsLazy.SetInit(f => f.Init(this)).Value;
+    [field: AllowNull, MaybeNull] public IAdamFileSystem AdamFs => field ??= adamFsLazy.New(this);
 
     [field: AllowNull, MaybeNull]
     public IAppReader AppReader => field ??= AppContext.AppReaderRequired;
@@ -46,8 +45,7 @@ public class AdamManager(
 
     internal ICodeDataFactory Cdf => field
         ??= MyOptions.Cdf
-            ?? cdfIfNotProvided.SetInit(obj => obj.SetFallbacks(MyOptions.AppCtx.Site, MyOptions.Compatibility, this))
-                .Value;
+            ?? cdfIfNotProvided.New(new(MyOptions.AppCtx.Site, MyOptions.Compatibility, this));
 
     #endregion
 

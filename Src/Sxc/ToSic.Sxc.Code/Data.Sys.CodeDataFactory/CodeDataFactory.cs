@@ -33,18 +33,20 @@ public partial class CodeDataFactory(
         connect: [/* never: serviceProvider */codeDataServices, adamManager, appCtxFactory, dataBuilderLazy, contentTypeAssembler, codeDataWrapper, wrapJsonGenerator, codeInfoSvc, zoneMapper]),
         ICodeDataFactory
 {
+    
+
     public CodeInfoService CodeInfo => codeInfoSvc.Value;
 
-    public void SetFallbacks(ISite site, int? compatibility = default, object? adamManagerPrepared = default)
+    public void Setup(ICodeDataFactory.OptionalFallbacks fallbacks)
     {
-        _siteOrNull = site;
-        _compatibilityLevel = compatibility ?? _compatibilityLevel;
+        _siteOrNull = fallbacks.Site;
+        _compatibilityLevel = fallbacks.Compatibility ?? _compatibilityLevel;
 
         // Handle Adam Manager - passed in as an object so that the Type doesn't have to exist at top level definition
         // but if we get it, we must really make sure it's the correct type
-        if (adamManagerPrepared is null)
+        if (fallbacks.AdamManagerPrepared is null)
             return;
-        if (adamManagerPrepared is AdamManager adamManagerTyped)
+        if (fallbacks.AdamManagerPrepared is AdamManager adamManagerTyped)
             AdamManager = adamManagerTyped;
         else
             throw new($"The {nameof(adamManager)} must be of type {nameof(AdamManager)}");

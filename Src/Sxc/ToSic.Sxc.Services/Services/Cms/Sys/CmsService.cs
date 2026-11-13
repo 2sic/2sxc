@@ -14,8 +14,14 @@ internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
     : ServiceWithContext($"{SxcLogName}.CmsSrv", connect: [stringWysiwyg]), ICmsService
 {
     [field: AllowNull, MaybeNull]
-    private Generator<CmsServiceStringWysiwyg> StringWysiwygGen => field
-        ??= stringWysiwyg.SetInit(s => s.ConnectToRoot(ExCtx));
+    private CmsServiceStringWysiwyg StringWysiwygGen => field
+        ??= new Func<CmsServiceStringWysiwyg>(() =>
+        {
+            var wysiwyg = stringWysiwyg.New();
+            wysiwyg.ConnectToRoot(ExCtx);
+            return wysiwyg;
+        })();
+
 
     public IHtmlTag Html(
         object? thing,
@@ -82,7 +88,7 @@ internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
 
         // WYSIWYG
         var fieldAdam = Cdf.Folder(field.Parent, field.Name, field);
-        var htmlResult = StringWysiwygGen.New()
+        var htmlResult = StringWysiwygGen
             .Init(field, contentType, fieldDef, fieldAdam, debug, imageSettings)
             .HtmlForStringAndWysiwyg(value);
 

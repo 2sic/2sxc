@@ -14,7 +14,7 @@ internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem
 {
     #region Constructor / DI / Init
 
-    public void Init(AdamManager adamManager)
+    public void Setup(AdamManager adamManager)
     {
         var l = Log.Fn();
         AdamManager = adamManager;
