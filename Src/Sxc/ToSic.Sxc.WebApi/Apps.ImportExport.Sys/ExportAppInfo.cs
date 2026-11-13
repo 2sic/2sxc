@@ -4,6 +4,7 @@ using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.Data.Sys.Ancestors;
+using ToSic.Sxc.Blocks.Sys.Views;
 
 namespace ToSic.Sxc.Backend.ImportExport;
 
@@ -45,8 +46,8 @@ public class ExportAppInfo(
             EntitiesCount = appEntities.All().Count(e => !e.HasAncestor()),
             LanguagesCount = cultureStateSvc.CulturesEnabledWithState(site).Count,
             TemplatesCount = allViews.Count,
-            HasRazorTemplates = allViews.Any(t => t.IsRazor),
-            HasTokenTemplates = allViews.Any(t => !t.IsRazor),
+            HasRazorTemplates = allViews.Any(t => t.IsRazor()),
+            HasTokenTemplates = allViews.Any(t => !t.IsRazor()),
             FilesCount = filesCount,
             TransferableFilesCount = transferableFilesCount,
         });

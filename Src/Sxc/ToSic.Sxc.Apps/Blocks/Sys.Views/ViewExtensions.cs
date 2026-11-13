@@ -13,6 +13,8 @@ public static class ViewExtensions
             _ => throw new NotSupportedException("Unknown group part: " + groupPart)
         };
 
+    public static bool IsRazor(this IView view) => view.Type == ViewConstants.TypeRazorValue;
+
     /// <summary>
     /// Get the engine name for DI injection
     /// </summary>
@@ -20,4 +22,7 @@ public static class ViewExtensions
         => view.Type == ViewConstants.TypeRazorValue
             ? "razor"
             : "token";
+
+    public static IEntity? GetQueryEntity(this IView view) => view.Entity.Children(ViewConstants.FieldPipeline).FirstOrDefault();
+
 }

@@ -1,6 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Render.Sys;
 
 namespace ToSic.Sxc.Render.JsContext.Sys;
@@ -120,9 +121,9 @@ public class ContentBlockDto : EntityDto
         ContentTypeName = view?.ContentType ?? "";
 
         // Query properties
-        var query = view?.Query;
-        QueryId = query?.Id; // will be null if not defined
-        QueryName = query?.Title;
+        var query = view?.GetQueryEntity();
+        QueryId = query?.EntityId; // will be null if not defined
+        QueryName = query?.GetBestTitle();
 
         try
         {

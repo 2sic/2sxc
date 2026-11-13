@@ -69,27 +69,15 @@ public interface IView: IModelFromEntityBasic, IHasMetadata
     [PrivateApi] bool UseForList { get; }
 
     /// <summary>
-    /// The query which provides data to this view. 
-    /// </summary>
-    [PrivateApi]
-    IEntity? QueryRaw { get; }
-
-    /// <summary>
-    /// The query attached to this view (if one was specified)
-    /// </summary>
-    /// <returns>A query object or null</returns>
-    QueryDefinition? Query { get; }
-
-    /// <summary>
     /// An identifier which could occur in the url, causing the view to automatically switch to this one. 
     /// </summary>
     [PrivateApi] string UrlIdentifier { get; }
 
-    /// <summary>
-    /// Returns true if the current template uses Razor
-    /// </summary>
-    [PrivateApi]
-    bool IsRazor { get; }
+    ///// <summary>
+    ///// Returns true if the current template uses Razor
+    ///// </summary>
+    //[PrivateApi]
+    //bool IsRazor { get; }
 
     /// <summary>
     /// Contains the polymorph edition name for this view, which changes

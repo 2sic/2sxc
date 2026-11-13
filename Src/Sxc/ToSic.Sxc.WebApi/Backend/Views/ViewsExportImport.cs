@@ -8,6 +8,7 @@ using ToSic.Eav.ImportExport.Integration;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys.Xml;
+using ToSic.Eav.Models;
 using ToSic.Eav.Persistence.Sys.Logging;
 using ToSic.Eav.Serialization;
 using ToSic.Eav.WebApi.Sys.Helpers.Validation;
@@ -46,7 +47,7 @@ public class ViewsExportImport(
         };
 
         // Attach files
-        var view = new View(bundle.Entity!, [site.CurrentCultureCode], qDefBuilder);
+        var view = new View().Setup(new(bundle.Entity!, [site.CurrentCultureCode]));
 
         if (!string.IsNullOrEmpty(view.Path))
         {

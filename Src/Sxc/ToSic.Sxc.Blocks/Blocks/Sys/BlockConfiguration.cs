@@ -68,7 +68,7 @@ public record BlockConfiguration: ModelFromEntityFull, IAppIdentity
                                  .FirstOrDefault();
             return field = viewEntity == null
                 ? null
-                : new View(viewEntity, LookupLanguages, _qDefBuilder);
+                : new View().Setup(new(viewEntity, LookupLanguages));
         }
     }
 

@@ -5,6 +5,7 @@ using ToSic.Eav.Data.Sys;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Models;
 using ToSic.Eav.Serialization.Sys.Options;
+using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Web.Sys.LightSpeed;
 using ToSic.Sys.Utils;
 
@@ -52,12 +53,12 @@ public class WorkViewsGetDetailed(
                     ViewNameInUrl = view.UrlIdentifier,
                     Guid = view.Guid,
                     List = view.UseForList,
-                    HasQuery = view.QueryRaw != null,
+                    HasQuery = view.GetQueryEntity() != null,
                     Used = view.Entity.Parents().Count(),
                     IsShared = view.IsShared,
                     EditInfo = new(view.Entity),
                     Metadata = convertToEavLight.Value.SubConverter.CreateListOfSubEntities(view.Metadata, SubEntitySerialization.NeverSerializeChildren()),
-                    Permissions = new() { Count = view.Entity.Metadata.Permissions.Count() },
+                    Permissions = new() { Count = view.Metadata.Permissions.Count() },
                     Lightspeed = lightspeed,
                 };
             })

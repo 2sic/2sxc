@@ -61,9 +61,11 @@ public class WorkAppViewSwitch(AppWorkChain<WorkViewsGet> viewsGet)
 
         var final = views.Value
             .Select(v => new ViewInfoForPathSelect(
-                viewsSvc.ViewOfEntity(v.Entity, v.Entity.EntityId, withServices: true, isReplacement: true),
-                v.Name, v.urlIdentifier, v.isRegex, v.MainParam)
-            )
+                View: viewsSvc.ViewOfEntity(v.Entity, v.Entity.EntityId, withServices: true, isReplacement: true),
+                Name: v.Name,
+                UrlIdentifier: v.urlIdentifier,
+                IsRegex: v.isRegex,
+                MainKey: v.MainParam))
             .ToList();
 
         return l.Return(final, $"all: {allIViews.Count}; switchable: {final.Count}; wasCached: {views.IsCached}");

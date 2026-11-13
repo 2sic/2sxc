@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.DataSources.Query.Sys;
+using ToSic.Sxc.Blocks.Sys.Views;
 
 namespace ToSic.Sxc.Backend.Admin.Query;
 
@@ -16,7 +17,7 @@ public class WorkQueryDeleteIfUnused(AppWorkChain<WorkViewsGet> workViews, AppWo
 
         // Stop if views still use this Query
         var viewUsingQuery = workViews.New(MyOptions).AllViews
-            .Where(t => t.Query?.Id == id)
+            .Where(t => t.GetQueryEntity()?.EntityId == id)
             .Select(t => t.Id)
             .ToArray();
 

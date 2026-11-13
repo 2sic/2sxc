@@ -4,6 +4,7 @@ using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Eav.Services;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Blocks.Sys.Views;
 
 namespace ToSic.Sxc.DataSources.Sys;
 
@@ -31,7 +32,8 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
         blockDataSource.UseSxcInstanceContentGroup = true;
 
         // If the Template has a Data-Pipeline, use an empty upstream to attach later, else use the ModuleDataSource created above
-        var viewDataSourceUpstream = view?.Query == null
+        var queryEntity = view?.GetQueryEntity();
+        var viewDataSourceUpstream = queryEntity == null
             ? blockDataSource
             : null;
         l.A($"use query upstream:{viewDataSourceUpstream != null}");
@@ -43,14 +45,14 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
         // Take Publish-Properties from the View-Template
         if (view != null)
         {
-            l.A($"use query from  view, query#{view.Query?.Id}");
+            l.A($"use query from  view, query#{queryEntity?.EntityId}");
 
             // Append Streams of the Data-Query (this doesn't require a change of the viewDataSource itself)
-            if (view.Query == null)
+            if (queryEntity == null)
                 return l.ReturnAsOk(contextDataSource);
 
             l.A("Generate query");
-            var query = queryGen.New(new(block.App.PureIdentity(), (view.Query as ICanBeEntity).Entity, configLookUp /*contextDataSource #DropInOnQuery */));
+            var query = queryGen.New(new(block.App.PureIdentity(), queryEntity, configLookUp));
             l.A("attaching");
             contextDataSource.SetOut(query);
         }
