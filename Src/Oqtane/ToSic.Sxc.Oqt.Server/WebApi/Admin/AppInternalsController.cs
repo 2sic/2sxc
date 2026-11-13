@@ -15,8 +15,8 @@
 //{
 //    private RealController Real => GetService<RealController>();
 
-//    // Replaced by DataSource System.AppEnhancements through query System.SysData.
-//    // Use app/auto/query/System.SysData/ with SysDataSource=System.AppEnhancements.
+//    // Replaced by DataSource System.AppSystemData through query System.SysData.
+//    // Use app/auto/query/System.SysData/ with SysDataSource=System.AppSystemData.
 //    ///// <inheritdoc/>
 //    //[HttpGet]
 //    //[ValidateAntiForgeryToken]
