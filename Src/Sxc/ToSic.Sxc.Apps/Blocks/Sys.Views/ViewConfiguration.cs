@@ -8,18 +8,25 @@ namespace ToSic.Sxc.Blocks.Sys.Views;
 [PrivateApi("Internal implementation - don't publish")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [ModelSpecs(ContentType = ContentTypeNameId)]
-public record ViewConfiguration : ModelFromEntityFull // , IView
+public record ViewConfiguration : ModelFromEntityFull
 {
     public const string ContentTypeNameId = AppConstants.TemplateContentType;
     public const string ContentTypeName = AppConstants.TemplateContentType;
 
-    // Temp, empty constructor...
+    /// <summary>
+    /// Empty constructor for DI and factory.
+    /// </summary>
+    [PrivateApi]
     public ViewConfiguration() {}
 
-    public ViewConfiguration(IEntity templateEntity, string?[] languageCodes) : base(templateEntity)
-    {
-        LookupLanguages = languageCodes;
-    }
+    /// <summary>
+    /// Internal constructor for quick proper create.
+    /// </summary>
+    /// <param name="templateEntity"></param>
+    /// <param name="languageCodes"></param>
+    [PrivateApi]
+    public ViewConfiguration(IEntity templateEntity, string?[] languageCodes) : base(templateEntity, languageCodes)
+    { }
 
     private IEntity? Child(string key)
         => Entity.Children(key).FirstOrDefault();

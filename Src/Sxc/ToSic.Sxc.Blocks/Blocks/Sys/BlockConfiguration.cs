@@ -21,17 +21,17 @@ public record BlockConfiguration: ModelFromEntityFull, IAppIdentity
     private readonly Generator<QueryDefinitionFactory> _qDefBuilder;
 
     public BlockConfiguration(IEntity? entity, IAppIdentity appIdentity, IEntity? previewViewEntity, Generator<QueryDefinitionFactory> qDefBuilder, string languageCode, ILog parentLog):
-        base(entity!)
+        base(entity!, [languageCode])
     {
         parentLog.SubLogOrNull("Blk.Config").A("Entity is " + (entity == null ? "" : "not") + " null");
-        LookupLanguages = [languageCode];
         _qDefBuilder = qDefBuilder;
         ZoneId = appIdentity.ZoneId;
         AppId = appIdentity.AppId;
         PreviewViewEntity = previewViewEntity;
     }
-        
-    internal BlockConfiguration WarnIfMissingData() =>
+    
+    // 2026-11-13 2dm: I believe this will never run, because it's only used once after the null check already happened...
+    internal BlockConfiguration ThrowIfMissingData() =>
         Entity != null
             ? this
             : throw new("BlockConfiguration entity is null. " +

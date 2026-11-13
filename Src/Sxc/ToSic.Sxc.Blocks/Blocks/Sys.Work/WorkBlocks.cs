@@ -44,7 +44,7 @@ public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDef
         var found = groupEntity != null;
         return l.Return(found
                 ? new BlockConfiguration(groupEntity, MyOptions, null, qDefBuilder, cultureResolver.CurrentCultureCode, Log)
-                    .WarnIfMissingData()
+                    .ThrowIfMissingData()
                 : new(null, MyOptions, null, qDefBuilder, cultureResolver.CurrentCultureCode, Log)
                 {
                     DataIsMissing = true

@@ -6,10 +6,8 @@ namespace ToSic.Sxc.Images.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public record ImageDecorator : ModelFromEntity, IImageDecorator
 {
-    public ImageDecorator(IEntity entity, string?[] languageCodes) : base(entity)
-    {
-        LookupLanguages = languageCodes;
-    }
+    public ImageDecorator(IEntity entity, string?[] languageCodes) : base(entity, languageCodes)
+    { }
 
     #region Constants and Type Names
 
