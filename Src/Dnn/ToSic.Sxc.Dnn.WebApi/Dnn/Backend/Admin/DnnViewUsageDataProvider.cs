@@ -12,6 +12,7 @@ public class DnnViewUsageDataProvider() : ServiceBase("Dnn.ViewUse"), IViewUsage
     public IEnumerable<ViewDto> Build(ICollection<IView> views, ICollection<BlockConfiguration> blocks, int siteId)
     {
         var modules = new DnnPages(Log).AllModulesWithContent(siteId);
-        return views.Select(view => view.Init(blocks, modules));
+        return views.Select(view => view.ToViewDto(blocks, modules));
     }
+
 }

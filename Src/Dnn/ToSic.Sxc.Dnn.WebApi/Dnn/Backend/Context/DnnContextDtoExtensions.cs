@@ -44,7 +44,7 @@ internal static class DnnContextDtoExtensions
             Portal = new() { Id = page.PortalID },
         };
 
-    internal static ViewDto Init(this IView view, ICollection<BlockConfiguration> blocks, List<ModuleWithContent> modules)
+    internal static ViewDto ToViewDto(this IView view, ICollection<BlockConfiguration> blocks, List<ModuleWithContent> modules)
         => new()
         {
             Id = view.Entity.EntityId,
