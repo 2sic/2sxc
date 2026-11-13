@@ -4,6 +4,7 @@ using ToSic.Eav.Apps.Inspect.Sys;
 using ToSic.Eav.Apps.Inspect.Sys.WebApi;
 using ToSic.Eav.Apps.Install.Sys;
 using ToSic.Eav.DataFormats.EavLight.Sys;
+using ToSic.Eav.DataSource.DataProviders;
 using ToSic.Eav.Sys.Insights;
 using ToSic.Eav.Ui.Context.Sys;
 using ToSic.Sxc.Apps.Extensions.Sys;
@@ -83,8 +84,17 @@ public static class StartupSxcWebApi
         // Internal API helpers
         services.TryAddTransient<AppContent>();
         services.TryAddTransient<SxcPagePublishing>();
-        services.TryAddTransient<ExportAppInfo>();
-        // App import services moved to EAV WebApi in v22.
+        //services.TryAddTransient<AppStatisticsProvider>();
+
+        // for augmenting with view data
+        services.TryAddKeyedTransient<IDataSourceRawDataProviderWithCtx, SxcAppStatisticsProvider>(AppStatisticsProvider.NameId);
+        services.TryAddTransient<SxcAppStatisticsProvider>();   // in case it needs to inherited
+
+        // "original"
+        services.TryAddKeyedTransient<IDataSourceRawDataProviderWithCtx, AppStatisticsProvider>(AppStatisticsProvider.NameId);
+        services.TryAddTransient<AppStatisticsProvider>();   // for inheritance
+
+       // App import services moved to EAV WebApi in v22.
         services.TryAddTransient<ImportContent>();
         services.TryAddTransient<ExportContent>();
         services.TryAddTransient<ViewsExportImport>();

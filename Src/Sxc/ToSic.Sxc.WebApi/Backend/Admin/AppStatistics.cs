@@ -1,6 +1,7 @@
-﻿using ToSic.Eav.DataSource;
+﻿using ToSic.Eav.Data.Raw;
+using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.DataProviders;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Eav.Data.Raw;
 using ToSic.Sxc.Backend.ImportExport;
 
 namespace ToSic.Sxc.Backend.Admin;
@@ -16,12 +17,12 @@ namespace ToSic.Sxc.Backend.Admin;
     UiHint = "Export statistics for the current app"
 )]
 // ReSharper disable once UnusedMember.Global
-public class AppStatistics(CustomDataSource.Dependencies services, ExportAppInfo exportAppLazy)
-    : CustomDataSource(services, logName: "Sxc.AppStats", connect: [exportAppLazy])
+public class AppStatistics(CustomDataSource.Dependencies services, AppWorkQuick<IDataSourceRawDataProviderWithCtx> data)
+    : CustomDataSource(services, logName: "Sxc.AppStats", connect: [data])
 {
     [Configuration(Field = "ZoneId")]
     public int OfZoneId => Configuration.GetThis(ZoneId);
 
     protected override IEnumerable<IRawData> GetDefault()
-        => [exportAppLazy.GetAppInfo(new AppIdentity(OfZoneId, AppId))];
+        => data.New(AppStatisticsProvider.NameId, new AppIdentity(OfZoneId, AppId)).Provide(Configuration);
 }
