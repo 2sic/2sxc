@@ -11,6 +11,7 @@ using ToSic.Sxc.Apps.Extensions.Sys;
 using ToSic.Sxc.Apps.Extensions.Sys.Export;
 using ToSic.Sxc.Apps.Extensions.Sys.Inspect;
 using ToSic.Sxc.Apps.Extensions.Sys.Install;
+using ToSic.Sxc.Apps.ImportExport.Sys;
 using ToSic.Sxc.Apps.Sys.DataSources;
 using ToSic.Sxc.Apps.Sys.EditAssets;
 using ToSic.Sxc.Backend;
@@ -84,15 +85,6 @@ public static class StartupSxcWebApi
         // Internal API helpers
         services.TryAddTransient<AppContent>();
         services.TryAddTransient<SxcPagePublishing>();
-        //services.TryAddTransient<AppStatisticsProvider>();
-
-        // for augmenting with view data
-        services.TryAddKeyedTransient<IDataSourceRawDataProviderWithCtx, SxcAppStatisticsProvider>(AppStatisticsProvider.NameId);
-        services.TryAddTransient<SxcAppStatisticsProvider>();   // in case it needs to inherited
-
-        // "original"
-        services.TryAddKeyedTransient<IDataSourceRawDataProviderWithCtx, AppStatisticsProvider>(AppStatisticsProvider.NameId);
-        services.TryAddTransient<AppStatisticsProvider>();   // for inheritance
 
        // App import services moved to EAV WebApi in v22.
         services.TryAddTransient<ImportContent>();
@@ -170,6 +162,26 @@ public static class StartupSxcWebApi
 
         return services;
     }
+
+    /// <summary>
+    /// This will add keyed data-source providers.
+    /// Some may be replaced by platform implementations
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    /// <remarks>
+    /// All calls in here MUST use TryAddTransient, and never without the Try
+    /// </remarks>
+    public static IServiceCollection AddSxcWorkDataSourceProviders(this IServiceCollection services)
+    {
+        // Original in case it needs to inherited
+        services.TryAddTransient<SxcAppStatisticsProvider>();
+        // for augmenting with view data
+        services.TryAddKeyedTransient<IDataSourceRawDataProviderWithCtx, SxcAppStatisticsProvider>(AppStatisticsProvider.NameId);
+
+        return services;
+    }
+
 
 
     public static IServiceCollection AddContextProviders(this IServiceCollection services)

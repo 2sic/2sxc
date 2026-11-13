@@ -45,6 +45,7 @@ public static class DnnDi
         l.A("Will start with ADAM and 2sxc parts");
         services
             .AddAdamWebApi<int, int>()
+            .AddSxcWorkDataSourceProviders()
             .AddSxcWebApi();
 
         l.A("Will start with 2sxc Code / Engines etc.");

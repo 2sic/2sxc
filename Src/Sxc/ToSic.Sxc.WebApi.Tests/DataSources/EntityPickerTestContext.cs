@@ -43,7 +43,8 @@ internal sealed class EntityPickerTestContext : IDisposable
     {
         var services = new ServiceCollection();
         new StartupCoreDataSourcesAndTestData().ConfigureServices(services);
-        services.AddEavWork();
+        services.AddEavWork()
+            .AddEavWorkDataSourceProviders();
         _builderServices = services.BuildServiceProvider();
         var appId = Math.Abs(Guid.NewGuid().GetHashCode() / 2) + 100;
         _app = CreateApp(appId);

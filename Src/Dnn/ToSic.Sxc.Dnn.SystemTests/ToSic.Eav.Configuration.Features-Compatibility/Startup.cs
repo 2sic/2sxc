@@ -30,6 +30,7 @@ public class Startup
             .AddFixtureHelpers()
             // Apps
             .AddEavWork()
+            .AddEavWorkDataSourceProviders()
             .AddEavContext()
             .AddEavAppsPersistence()
             .AddEavApps()
