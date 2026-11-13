@@ -59,7 +59,7 @@ public class EngineCheckTemplate(LazySvc<PermissionCheckFactory> permCheckFactor
 
         if (!templatePermissions.UserMay(GrantSets.ReadSomething).Allowed)
             // TODO: maybe create an exception which inherits from UnauthorizedAccess - in case this improves behavior / HTTP response
-            throw new RenderingException(ErrorHelpNotAuthorized, new UnauthorizedAccessException(
+            throw new RenderingException(ErrorHelpNotAuthorized, new PermissionDeniedException(
                 $"{ErrorHelpNotAuthorized.UiMessage} See {ErrorHelpNotAuthorized.LinkCode}"));
     }
 
