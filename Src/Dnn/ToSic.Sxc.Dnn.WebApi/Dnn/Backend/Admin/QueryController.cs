@@ -1,8 +1,8 @@
 ﻿using System.Web;
 using ToSic.Eav.DataSources.Query.Dev.Sys;
+using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys.JsonData;
 using ToSic.Eav.WebApi.Sys.Admin.Query;
-using ToSic.Eav.WebApi.Sys.Dto;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using RealController = ToSic.Sxc.Backend.Admin.Query.QueryControllerReal;
 
@@ -20,16 +20,6 @@ public class QueryController() : DnnSxcControllerBase(RealController.LogSuffix, 
     firstMessage: $"Query: {HttpContext.Current?.Request.Url.AbsoluteUri.After("/query/")}"), IQueryController
 {
     private RealController Real => SysHlp.GetService<RealController>();
-
-    // Replaced by DataSource System.QueryDefinition through query System.SysData.
-    //[HttpGet]
-    //public QueryDefinitionDto Get(int appId, int? id = null) =>
-    //    Real.Get(appId, id);
-
-    // Replaced by DataSource System.DataSources through query System.SysData.
-    //[HttpGet]
-    //public IEnumerable<DataSourceDto> DataSources(int zoneId, int appId) =>
-    //    Real.DataSources(new(zoneId, appId));
 
     [HttpPost]
     public QueryDefinitionDto Save([FromBody] QueryDefinitionDto data, int appId, int id) =>
@@ -52,6 +42,6 @@ public class QueryController() : DnnSxcControllerBase(RealController.LogSuffix, 
         Real.DeleteIfUnused(appId, id);
 
     [HttpPost]
-    public bool Import(EntityImportDto args) =>
+    public bool Import(DataFileImportOptions args) =>
         Real.Import(args);
 }

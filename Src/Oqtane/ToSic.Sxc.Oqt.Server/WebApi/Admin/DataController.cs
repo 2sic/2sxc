@@ -41,7 +41,7 @@ public class DataController() : OqtStatefulControllerBase(DataControllerReal.Log
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public ImportResultDto BundleImport(int zoneId, int appId)
+    public ImportResult BundleImport(int zoneId, int appId)
         => Real.BundleImport(new(Request), zoneId, appId);
 
     /// <inheritdoc />

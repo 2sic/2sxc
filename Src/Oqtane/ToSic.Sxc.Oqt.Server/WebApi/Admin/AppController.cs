@@ -69,7 +69,7 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
     [HttpPost]
     [Authorize(Roles = RoleNames.Host)]
     [ValidateAntiForgeryToken]
-    public Task<ImportResultDto> Reset(int zoneId, int appId, bool withPortalFiles = false) 
+    public Task<ImportResult> Reset(int zoneId, int appId, bool withPortalFiles = false) 
         => Real.Reset(zoneId, appId, CtxHlp.BlockOptional.Context.Site.DefaultCultureCode, withPortalFiles);
 
 
@@ -78,7 +78,7 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public ImportResultDto Import(int zoneId)
+    public ImportResult Import(int zoneId)
     {
         // Ensure that Hot Reload is not enabled or try to disable it.
         HotReloadEnabledCheck.Check();
@@ -90,7 +90,7 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public ImportResultDto InstallPendingApps(int zoneId, [FromBody] IEnumerable<PendingAppRaw> pendingApps)
+    public ImportResult InstallPendingApps(int zoneId, [FromBody] IEnumerable<PendingAppRaw> pendingApps)
     {
         // Ensure that Hot Reload is not enabled or try to disable it.
         HotReloadEnabledCheck.Check();

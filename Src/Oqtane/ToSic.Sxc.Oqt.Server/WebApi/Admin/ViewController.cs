@@ -49,6 +49,6 @@ public class ViewController : OqtStatefulControllerBase, IViewController
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public ImportResultDto Import(int zoneId, int appId) => Real.Import(new(Request), zoneId, appId);
+    public ImportResult Import(int zoneId, int appId) => Real.Import(new(Request), zoneId, appId);
 
 }

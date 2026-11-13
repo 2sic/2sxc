@@ -38,7 +38,7 @@ public class AppPartsController() : DnnSxcControllerRoot(RealController.LogSuffi
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public ImportResultDto Import(int zoneId, int appId)
+    public ImportResult Import(int zoneId, int appId)
     {
         this.PreventServerTimeout600();
         return Real.Import(uploadInfo: new(Request, HttpContext.Current.Request), zoneId: zoneId, appId: appId);

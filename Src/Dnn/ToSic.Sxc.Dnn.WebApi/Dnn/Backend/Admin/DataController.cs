@@ -39,7 +39,7 @@ public class DataController() : DnnSxcControllerBase(DataControllerReal.LogSuffi
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public ImportResultDto BundleImport(int zoneId, int appId)
+    public ImportResult BundleImport(int zoneId, int appId)
     {
         this.PreventServerTimeout600();
         return Real.BundleImport(new(Request, HttpContext.Current.Request), zoneId, appId);

@@ -13,7 +13,7 @@ public interface IAdminDataController
     /// <summary>
     /// Bundle Import
     /// </summary>
-    ImportResultDto BundleImport(int zoneId, int appId);
+    ImportResult BundleImport(int zoneId, int appId);
 
     /// <summary>
     /// Bundle Save

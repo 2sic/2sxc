@@ -43,7 +43,7 @@ public class AppPartsController() : OqtStatefulControllerBase(RealController.Log
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public ImportResultDto Import(int zoneId, int appId) 
+    public ImportResult Import(int zoneId, int appId) 
         => Real.Import(uploadInfo: new(Request), zoneId: zoneId, appId: appId);
 
     #endregion

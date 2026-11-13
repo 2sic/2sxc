@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.DataSources.Query.Dev.Sys;
-using ToSic.Eav.ImportExport.Sys.JsonData;
+using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.WebApi.Sys.Admin.Query;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.Backend.Admin.Query.QueryControllerReal;
@@ -46,6 +46,6 @@ public class QueryController() : OqtStatefulControllerBase(RealController.LogSuf
         Real.DeleteIfUnused(appId, id);
 
     [HttpPost]
-    public bool Import(EntityImportDto args) =>
+    public bool Import(DataFileImportOptions args) =>
         Real.Import(args);
 }

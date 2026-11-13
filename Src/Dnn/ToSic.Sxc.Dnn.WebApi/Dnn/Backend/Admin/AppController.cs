@@ -69,7 +69,7 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [HttpPost]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public Task<ImportResultDto> Reset(int zoneId, int appId, bool withPortalFiles = false)
+    public Task<ImportResult> Reset(int zoneId, int appId, bool withPortalFiles = false)
     {
         this.PreventServerTimeout600();
         return Real.Reset(zoneId, appId, PortalSettings.DefaultLanguage, withPortalFiles);
@@ -79,7 +79,7 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [HttpPost]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public ImportResultDto Import(int zoneId)
+    public ImportResult Import(int zoneId)
     {
         this.PreventServerTimeout600();
         return Real.Import(new(Request, HttpContext.Current.Request), zoneId, HttpContext.Current.Request["Name"]);
@@ -90,7 +90,7 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [HttpPost]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppRaw> pendingApps)
+    public ImportResult InstallPendingApps(int zoneId, IEnumerable<PendingAppRaw> pendingApps)
     {
         this.PreventServerTimeout600();
         return Real.InstallPendingApps(zoneId, pendingApps);

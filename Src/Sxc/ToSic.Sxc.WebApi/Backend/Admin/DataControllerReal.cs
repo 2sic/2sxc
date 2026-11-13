@@ -1,10 +1,10 @@
 ﻿using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.ImportExport.Sys.Bundle;
 using ToSic.Eav.Persistence.File;
 using ToSic.Eav.Persistence.Sys.Logging;
 using ToSic.Eav.Security.Files;
 using ToSic.Eav.Sys;
-using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Eav.WebApi.Sys.Security;
 using ToSic.Sxc.Backend.ImportExport;
 using ToSic.Sys.Users;
@@ -30,9 +30,9 @@ public class DataControllerReal(
     public FileResult BundleExport(int appId, Guid exportConfiguration, int indentation)
         => bundleFile.New(appId).JsonBundleExport(userLazy.Value, exportConfiguration, indentation);
 
-    public ImportResultDto BundleImport(HttpUploadedFile uploadInfo, int zoneId, int appId)
+    public ImportResult BundleImport(HttpUploadedFile uploadInfo, int zoneId, int appId)
     {
-        var l = Log.Fn<ImportResultDto>();
+        var l = Log.Fn<ImportResult>();
 
         SecurityHelpers.ThrowIfNotSiteAdmin(userLazy.Value, l);
 

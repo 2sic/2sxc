@@ -121,7 +121,7 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public ImportResultDto Import(int zoneId, int appId)
+    public ImportResult Import(int zoneId, int appId)
     {
         this.PreventServerTimeout600();
         return Real.Import(new(Request, HttpContext.Current.Request), zoneId, appId);

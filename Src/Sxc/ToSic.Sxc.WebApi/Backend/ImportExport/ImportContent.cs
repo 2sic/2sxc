@@ -39,9 +39,9 @@ public class ImportContent(
 
     protected readonly AppCachePurger AppCachePurger = appCachePurger;
 
-    public ImportResultDto Import(int zoneId, int appId, string fileName, Stream stream, string defaultLanguage)
+    public ImportResult Import(int zoneId, int appId, string fileName, Stream stream, string defaultLanguage)
     {
-        var l = Log.Fn<ImportResultDto>();
+        var l = Log.Fn<ImportResult>();
 
         var allowSystemChanges = userLazy.Value.IsSystemAdmin;
         if (fileName.EndsWith(".zip"))
@@ -53,7 +53,7 @@ public class ImportContent(
                 var importResult = zipImport
                     .New(new(zoneId, appId, userLazy.Value.IsSystemAdmin))
                     .ImportZip(stream, temporaryDirectory);
-                var result = new ImportResultDto
+                var result = new ImportResult
                 {
                     Success = importResult.Success,
                     Messages = importResult.Messages,
@@ -74,7 +74,7 @@ public class ImportContent(
             using var fileStreamReader = new StreamReader(stream);
             var xmlDocument = XDocument.Parse(fileStreamReader.ReadToEnd());
             var xmlImport = xmlImportWithFilesLazy.Value.Init(defaultLanguage, allowSystemChanges);
-            var result = new ImportResultDto();
+            var result = new ImportResult();
             result.Success = xmlImport.ImportXml(zoneId, appId, parentAppId: null /* not sure if we never have a parent here */, xmlDocument);
             result.Messages.AddRange(xmlImport.Messages);
             return l.Return(result);
@@ -82,9 +82,9 @@ public class ImportContent(
     }
 
 
-    public ImportResultDto ImportJsonFiles(int zoneId, int appId, List<FileUploadDto> files, string defaultLanguage)
+    public ImportResult ImportJsonFiles(int zoneId, int appId, List<FileUploadDto> files, string defaultLanguage)
     {
-        var l = Log.Fn<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
+        var l = Log.Fn<ImportResult>($"{zoneId}, {appId}, {defaultLanguage}");
         try
         {
             // 0. Verify it's json etc.
@@ -181,7 +181,7 @@ public class ImportContent(
         {
             l.Ex(ex);
             envLogger.LogException(ex);
-            return l.Return(new ImportResultDto(false, ex.Message, Message.MessageTypes.Error), "error");
+            return l.Return(new ImportResult(false, ex.Message, Message.MessageTypes.Error), "error");
         }
     }
 }
