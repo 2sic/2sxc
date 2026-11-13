@@ -82,9 +82,9 @@ public class ViewsExportImport(
 
         
 
-    public ImportResultDto ImportView(int zoneId, int appId, List<FileUploadDto> files, string defaultLanguage)
+    public ImportResult ImportView(int zoneId, int appId, List<FileUploadDto> files, string defaultLanguage)
     {
-        var l = Log.Fn<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
+        var l = Log.Fn<ImportResult>($"{zoneId}, {appId}, {defaultLanguage}");
 
         try
         {

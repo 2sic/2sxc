@@ -81,7 +81,7 @@ public class EntityController() : DnnSxcControllerBase(RealController.LogSuffix)
     [HttpPost]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public ContentImportResultDto XmlPreview(ContentImportArgsDto args)
+    public ContentImportResult XmlPreview(ContentFileImportOptions args)
         => Real.XmlPreview(args);
 
 
@@ -89,7 +89,7 @@ public class EntityController() : DnnSxcControllerBase(RealController.LogSuffix)
     [HttpPost]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public ContentImportResultDto XmlUpload(ContentImportArgsDto args)
+    public ContentImportResult XmlUpload(ContentFileImportOptions args)
         => Real.XmlUpload(args);
 
 
@@ -97,7 +97,7 @@ public class EntityController() : DnnSxcControllerBase(RealController.LogSuffix)
     [HttpPost]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public bool Upload(EntityImportDto args)
+    public bool Upload(DataFileImportOptions args)
         => Real.Upload(args);
 
 

@@ -1,11 +1,13 @@
 ﻿using ToSic.Eav.DataSources.ImportExport.Sys;
 using ToSic.Eav.DataSources.Query.Dev.Sys;
 using ToSic.Eav.DataSources.Query.Sys;
+using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys.JsonData;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.LookUp.Sys;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.Admin.Query;
 
@@ -62,9 +64,9 @@ public class QueryControllerReal(
     /// </summary>
     public void Clone(int appId, int id) => workUnitQueryCopy.New(appId: appId).SaveCopy(id);
 
-    public bool Import(EntityImportDto args)
+    public bool Import(DataFileImportOptions args)
     {
-        var l = Log.Fn<bool>(args.DebugInfo);
-        return l.Return(queryImport.New(args.AppId).Import(args.AppId, args.GetContentString()));
+        var l = Log.Fn<bool>(args.ToString());
+        return l.Return(queryImport.New(args.AppId).Import(args.AppId, args.ContentBase64.Base64ToUtf8()));
     }
 }

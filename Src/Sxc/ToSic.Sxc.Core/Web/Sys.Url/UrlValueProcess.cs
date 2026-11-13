@@ -28,7 +28,7 @@ internal class UrlValueSafeMaker : IUrlParameterInGroupOperation
 
         var obj = set.Value;
         return obj is string str && str.HasValue() && UnsafeChars.Any(c => str.Contains(c))
-            ? set with { Value = $"{Base64Prefix}{Base64.Encode(str)}" }
+            ? set with { Value = $"{Base64Prefix}{Base64.Utf8ToBase64(str)}" }
             : set;
     }
 }

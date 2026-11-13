@@ -82,7 +82,7 @@ public class AppControllerReal(
     }
 
 
-    public async Task<ImportResultDto> Reset(int zoneId, int appId, string defaultLanguage, bool withPortalFiles)
+    public async Task<ImportResult> Reset(int zoneId, int appId, string defaultLanguage, bool withPortalFiles)
         => (await appStateSyncRestore.Value.Handle(new(), new(new(zoneId, appId, defaultLanguage, withPortalFiles)))).Data;
 
     /// <summary>
@@ -92,9 +92,9 @@ public class AppControllerReal(
     /// <param name="zoneId">int</param>
     /// <param name="renameApp">optional new name for app, provide to rename the app</param>
     /// <returns></returns>
-    public ImportResultDto Import(HttpUploadedFile uploadInfo, int zoneId, string renameApp)
+    public ImportResult Import(HttpUploadedFile uploadInfo, int zoneId, string renameApp)
     {
-        var l = Log.Fn<ImportResultDto>();
+        var l = Log.Fn<ImportResult>();
 
         if (!uploadInfo.HasFiles())
             return l.Return(new(false, "no file uploaded"), "no file uploaded");
@@ -116,9 +116,9 @@ public class AppControllerReal(
     /// <param name="zoneId"></param>
     /// <param name="pendingApps"></param>
     /// <returns></returns>
-    public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppRaw> pendingApps)
+    public ImportResult InstallPendingApps(int zoneId, IEnumerable<PendingAppRaw> pendingApps)
     {
-        var l = Log.Fn<ImportResultDto>();
+        var l = Log.Fn<ImportResult>();
         var result = pendingAppInstallLazy.Value.InstallPendingApps(zoneId, pendingApps);
         return l.ReturnAsOk(result);
     }

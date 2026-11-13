@@ -86,7 +86,7 @@ public class EntityController() : OqtStatefulControllerBase(RealController.LogSu
     [ValidateAntiForgeryToken]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public ContentImportResultDto XmlPreview(ContentImportArgsDto args) => Real.XmlPreview(args);
+    public ContentImportResult XmlPreview(ContentFileImportOptions args) => Real.XmlPreview(args);
 
 
     /// <inheritdoc/>
@@ -94,7 +94,7 @@ public class EntityController() : OqtStatefulControllerBase(RealController.LogSu
     [ValidateAntiForgeryToken]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public ContentImportResultDto XmlUpload(ContentImportArgsDto args) => Real.XmlUpload(args);
+    public ContentImportResult XmlUpload(ContentFileImportOptions args) => Real.XmlUpload(args);
 
 
     /// <inheritdoc/>
@@ -102,5 +102,5 @@ public class EntityController() : OqtStatefulControllerBase(RealController.LogSu
     [ValidateAntiForgeryToken]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool Upload(EntityImportDto args) => Real.Upload(args);
+    public bool Upload(DataFileImportOptions args) => Real.Upload(args);
 }

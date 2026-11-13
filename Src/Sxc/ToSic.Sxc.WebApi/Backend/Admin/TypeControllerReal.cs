@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.ImportExport.Sys.Bundle;
+using ToSic.Eav.ImportExport.Sys.JsonData;
 using ToSic.Eav.Persistence.Sys.Logging;
-using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.ImportExport;
 using ToSic.Sys.Users;
 
@@ -69,7 +70,7 @@ public class TypeControllerReal(
     /// <param name="appId"></param>
     /// <returns></returns>
     /// <exception cref="NotSupportedException"></exception>
-    public ImportResultDto Import(int zoneId, int appId)
+    public ImportResult Import(int zoneId, int appId)
         => throw new NotSupportedException("This is not supported on ControllerReal, you must call the overload.");
 
     /// <summary>
@@ -80,9 +81,9 @@ public class TypeControllerReal(
     /// <param name="appId"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    public ImportResultDto Import(HttpUploadedFile uploadInfo, int zoneId, int appId)
+    public ImportResult Import(HttpUploadedFile uploadInfo, int zoneId, int appId)
     {
-        var l = Log.Fn<ImportResultDto>();
+        var l = Log.Fn<ImportResult>();
 
         if (!uploadInfo.HasFiles())
             return l.Return(new(false, "no file uploaded", Message.MessageTypes.Error), "no file uploaded");

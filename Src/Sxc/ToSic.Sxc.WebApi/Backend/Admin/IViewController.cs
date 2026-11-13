@@ -46,7 +46,7 @@ public interface IViewController
     /// New in 2sxc 11.07
     /// </remarks>
     /// <returns></returns>
-    ImportResultDto Import(int zoneId, int appId);
+    ImportResult Import(int zoneId, int appId);
 
     // Replaced by DataSource System.ViewUsage through query System.SysData.
     //IEnumerable<ViewDto> Usage(int appId, Guid guid);

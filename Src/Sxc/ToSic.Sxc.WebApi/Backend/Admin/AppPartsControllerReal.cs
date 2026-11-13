@@ -32,7 +32,7 @@ public class AppPartsControllerReal(
     /// <param name="appId"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public ImportResultDto Import(int zoneId, int appId)
+    public ImportResult Import(int zoneId, int appId)
     {
         throw new NotImplementedException();
     }
@@ -46,9 +46,9 @@ public class AppPartsControllerReal(
     /// <param name="appId"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    public ImportResultDto Import(HttpUploadedFile uploadInfo, int zoneId, int appId)
+    public ImportResult Import(HttpUploadedFile uploadInfo, int zoneId, int appId)
     {
-        var l = Log.Fn<ImportResultDto>();
+        var l = Log.Fn<ImportResult>();
 
         if (!uploadInfo.HasFiles()) 
             return l.Return(new(false, "no file uploaded"), "no file uploaded");
