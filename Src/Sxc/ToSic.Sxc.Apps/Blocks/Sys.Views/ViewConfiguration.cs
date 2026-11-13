@@ -11,22 +11,6 @@ namespace ToSic.Sxc.Blocks.Sys.Views;
 public record ViewConfiguration : ModelFromEntityFull
 {
     public const string ContentTypeNameId = AppConstants.TemplateContentType;
-    public const string ContentTypeName = AppConstants.TemplateContentType;
-
-    /// <summary>
-    /// Empty constructor for DI and factory.
-    /// </summary>
-    [PrivateApi]
-    public ViewConfiguration() {}
-
-    /// <summary>
-    /// Internal constructor for quick proper create.
-    /// </summary>
-    /// <param name="templateEntity"></param>
-    /// <param name="languageCodes"></param>
-    [PrivateApi]
-    public ViewConfiguration(IEntity templateEntity, string?[] languageCodes) : base(templateEntity, languageCodes)
-    { }
 
     private IEntity? Child(string key)
         => Entity.Children(key).FirstOrDefault();

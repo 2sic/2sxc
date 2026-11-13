@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Apps.Sys.Work;
 public class WorkViewsGet(AppWorkChain<WorkEntities> appEntities, IZoneCultureResolver cultureResolver)
     : ServiceWithSetup<IAppWorkContext>("Cms.ViewRd", connect: [appEntities, cultureResolver])
 {
-    private List<IEntity> ViewEntities => field ??= appEntities.New(MyOptions).GetAllViewEntities(MyOptions.AppReader);
+    private List<IEntity> ViewEntities => field ??= appEntities.New(MyOptions).GetAllViewEntities();
 
     /// <summary>
     /// Get all the views.
