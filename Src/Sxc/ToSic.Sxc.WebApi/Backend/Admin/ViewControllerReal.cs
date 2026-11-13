@@ -8,9 +8,8 @@ namespace ToSic.Sxc.Backend.Admin;
 public class ViewControllerReal(
     LazySvc<IContextOfSiteService> ctxSvc,
     AppWorkQuick<WorkViewDelete> workViewDelete,
-    LazySvc<WorkViewsGetDetailed> viewsBackend,
     LazySvc<ViewsExportImport> viewExportImport)
-    : ServiceBase("Api.ViewRl", connect: [ctxSvc, workViewDelete, viewsBackend, viewExportImport]),
+    : ServiceBase("Api.ViewRl", connect: [ctxSvc, workViewDelete, viewExportImport]),
         IViewController
 {
     public const string LogSuffix = "View";

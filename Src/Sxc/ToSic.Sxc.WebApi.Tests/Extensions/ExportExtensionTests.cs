@@ -18,7 +18,7 @@ namespace ToSic.Sxc.WebApi.Tests.Extensions;
 [Startup(typeof(StartupExtensionsTests))]
 public class ExportExtensionTests(
     LazySvc<IAppReaderFactory> appReadersLazy,
-    AppWorkQuick<ExportBundleFile> contentExportLazy,
+    AppWorkQuick<ExportBundlePrepare> contentExportLazy,
     ExtensionManifestService manifestService)
 {
     #region Basic Export Tests

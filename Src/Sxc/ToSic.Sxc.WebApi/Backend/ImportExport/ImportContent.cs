@@ -142,8 +142,8 @@ public class ImportContent(
             // 2. Create Entities
 
             // 2.1 Reset serializer to use the new app
-            var appState = appReaders.Get(new AppIdentity(zoneId, appId));
-            serializer = jsonReaderGen.New(new(appState) { PreferLocalAppTypes = true });
+            var appReader = appReaders.Get(new AppIdentity(zoneId, appId));
+            serializer = jsonReaderGen.New(new(appReader) { PreferLocalAppTypes = true });
             // Since we're importing directly into this app, we prefer local content-types
             //serializer.PreferLocalAppTypes = true;
             l.A("Load items");
@@ -172,7 +172,7 @@ public class ImportContent(
             // 2.3 Import the entities
             l.A($"Import entity {entities.Count} items");
             if (entities.Any()) 
-                workEntSave.New(appState).Import(entities);
+                workEntSave.New(appReader).Import(entities);
 
             // 3. possibly show messages / issues
             return l.Return(new(true), "ok (with entities)");

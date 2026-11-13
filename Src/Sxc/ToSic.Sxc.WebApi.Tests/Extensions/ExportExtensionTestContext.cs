@@ -33,7 +33,7 @@ internal sealed class ExportExtensionTestContext : IDisposable
 
     public static ExportExtensionTestContext Create(
         LazySvc<IAppReaderFactory> appReadersLazy,
-        AppWorkQuick<ExportBundleFile> contentExportLazy,
+        AppWorkQuick<ExportBundlePrepare> contentExportLazy,
         ExtensionManifestService manifestService)
     {
         var tempRoot = Path.Combine(Path.GetTempPath(), "2sxc-export-tests", Guid.NewGuid().ToString("N"));

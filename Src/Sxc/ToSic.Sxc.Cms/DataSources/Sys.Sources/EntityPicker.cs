@@ -155,7 +155,7 @@ public class EntityPicker(
                 if (permCheckType.EnsureAll(GrantSets.ReadSomething).Allowed)
                 {
                     var withDrafts = permCheckType.EnsureAnyReadDraft().Allowed;
-                    var entitiesSvc = workEntities.New(this, showDrafts: withDrafts);
+                    var entitiesSvc = workEntities.New(this.PureIdentity(), showDrafts: withDrafts);
                     var ofType = entitiesSvc.MyOptions.Data.List.GetAll(type).ToList();
                     result.AddRange(ofType);
                     lType.Done($"{ofType.Count}");

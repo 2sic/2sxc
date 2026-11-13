@@ -12,17 +12,17 @@ namespace ToSic.Sxc.Backend.Views;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class WorkViewsGetDetailed(
-    AppWorkQuick<WorkViewsGet> workViews,
+    AppWorkChain<WorkViewsGet> workViews,
     LazySvc<IConvertToEavLight> convertToEavLight,
     Generator<ImpExpHelpers> impExpHelpers)
-    : ServiceBase("Bck.Views", connect: [convertToEavLight, impExpHelpers, workViews])
+    : ServiceWithSetup<IAppWorkContext>("Bck.Views", connect: [convertToEavLight, impExpHelpers, workViews])
 {
     public IEnumerable<ViewDetailsDto> GetAll(int appId)
     {
         var l = Log.Fn<IEnumerable<ViewDetailsDto>>($"get all a#{appId}");
 
-        var appViews = workViews.New(appId);
-        var contentTypes = appViews.MyOptions.AppReader.ContentTypes.OfScope(ScopeConstants.Default).ToList();
+        var appViews = workViews.New(MyOptions);
+        var contentTypes = MyOptions.AppReader.ContentTypes.OfScope(ScopeConstants.Default).ToList();
 
         var viewList = appViews.AllViews.ToList();
         l.A($"fieldDef list count:{contentTypes.Count}, template count:{viewList.Count}");

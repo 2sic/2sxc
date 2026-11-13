@@ -140,6 +140,7 @@ public static class StartupSxcWebApi
 
         services.TryAddTransient<PermissionCheckAction>(); // new v22
         services.TryAddTransient<PublishWebApi>();  // new v22
+        services.TryAddTransient<WorkViewsGetDetailed>();
 
         // v22 moved here from Sxc.Blocks
         services.AddContextProviders();

@@ -89,14 +89,14 @@ public class ViewsExportImport(
         try
         {
             // 0.1 Check permissions, get the app, 
-            var (appRead, appPaths) = impExpHelpers.New().GetReaderAndPathsAfterZoneSwitchPermissionCheck(site.ToAppIdentity(appId));
+            var (appReader, appPaths) = impExpHelpers.New().GetReaderAndPathsAfterZoneSwitchPermissionCheck(site.ToAppIdentity(appId));
 
             // 0.2 Verify it's json etc.
             if (files.Any(file => !Json.IsValidJson(file.Contents)))
                 throw new ArgumentException("a file is not json");
 
             // 1. create the views
-            var serializer = jsonReader.New(new(appRead));
+            var serializer = jsonReader.New(new(appReader));
 
             var bundles = files
                 .Select(f => serializer.DeserializeEntityWithAssets(f.Contents))
@@ -112,7 +112,7 @@ public class ViewsExportImport(
 
             // 2. Import the views
             // todo: construction of this should go into init
-            workEntSave.New(appRead).Import(bundles.Select(v => v.Entity).ToList());
+            workEntSave.New(appReader).Import(bundles.Select(v => v.Entity).ToList());
 
             // 3. Import the attachments
             var assets = bundles.SelectMany(b => b.Assets);
