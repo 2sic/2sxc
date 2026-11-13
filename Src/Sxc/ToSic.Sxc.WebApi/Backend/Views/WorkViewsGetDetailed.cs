@@ -11,24 +11,21 @@ using ToSic.Sys.Utils;
 namespace ToSic.Sxc.Backend.Views;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ViewsBackend(
-    LazySvc<AppWorkContextService> appCtxSvc,
-    LazySvc<WorkViewDelete> workViewDelete,
-    AppWorkChain<WorkViewsGet> workViews,
+public class WorkViewsGetDetailed(
+    AppWorkQuick<WorkViewsGet> workViews,
     LazySvc<IConvertToEavLight> convertToEavLight,
     Generator<ImpExpHelpers> impExpHelpers)
-    : ServiceBase("Bck.Views", connect: [appCtxSvc, workViewDelete, convertToEavLight, impExpHelpers, workViews])
+    : ServiceBase("Bck.Views", connect: [convertToEavLight, impExpHelpers, workViews])
 {
     public IEnumerable<ViewDetailsDto> GetAll(int appId)
     {
         var l = Log.Fn<IEnumerable<ViewDetailsDto>>($"get all a#{appId}");
 
-        var appCtx = appCtxSvc.Value.ContextNew(appId);
-        var appViews = workViews.New(appCtx);
-        var contentTypes = appCtx.AppReader.ContentTypes.OfScope(ScopeConstants.Default).ToList();
+        var appViews = workViews.New(appId);
+        var contentTypes = appViews.MyOptions.AppReader.ContentTypes.OfScope(ScopeConstants.Default).ToList();
 
         var viewList = appViews.AllViews.ToList();
-        Log.A($"fieldDef list count:{contentTypes.Count}, template count:{viewList.Count}");
+        l.A($"fieldDef list count:{contentTypes.Count}, template count:{viewList.Count}");
 
         var views = viewList
             .Select(view =>
@@ -44,7 +41,8 @@ public class ViewsBackend(
 
                 return new ViewDetailsDto
                 {
-                    Id = view.Id, Name = view.Name,
+                    Id = view.Id,
+                    Name = view.Name,
                     ContentType = TypeSpecs(contentTypes, view.ContentType, view.ContentItem),
                     PresentationType = TypeSpecs(contentTypes, view.PresentationType, view.PresentationItem),
                     ListContentType = TypeSpecs(contentTypes, view.HeaderType, view.HeaderItem),
@@ -84,24 +82,5 @@ public class ViewsBackend(
             DemoId = maybeEntity?.EntityId ?? 0,
             DemoTitle = maybeEntity?.GetBestTitle() ?? ""
         };
-    }
-    
-    /// <summary>
-    /// Delete a view
-    /// </summary>
-    /// <param name="appId"></param>
-    /// <param name="id">View id</param>
-    /// <returns></returns>
-    public bool Delete(int appId, int id)
-    {
-        var l = Log.Fn<bool>($"delete a{appId}, t:{id}");
-        
-        // extra security to only allow zone change if host user
-        var appReader = impExpHelpers.New().GetReaderAfterZoneSwitchPermissionCheck(appId);
-        
-        var ctx = appCtxSvc.Value.ContextNew(appReader);
-        workViewDelete.Value.DeleteView(ctx, id);
-        
-        return l.ReturnTrue();
     }
 }

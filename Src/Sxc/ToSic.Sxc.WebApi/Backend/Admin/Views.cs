@@ -1,4 +1,3 @@
-using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Sxc.Backend.Views;
@@ -16,7 +15,7 @@ namespace ToSic.Sxc.Backend.Admin;
     UiHint = "Views of the current app")]
 public class Views : CustomDataSource
 {
-    public Views(Dependencies services, LazySvc<ViewsBackend> views)
+    public Views(Dependencies services, LazySvc<WorkViewsGetDetailed> views)
         : base(services, "Sxc.Views", connect: [views])
-        => ProvideOutRaw(() => views.Value.GetAll(AppId), options: () =>new DataFactoryOptions { AutoId = false });
+        => ProvideOutRaw(() => views.Value.GetAll(AppId), options: () =>new() { AutoId = false });
 }

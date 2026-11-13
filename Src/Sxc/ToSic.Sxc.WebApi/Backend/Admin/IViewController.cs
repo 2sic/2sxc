@@ -47,8 +47,4 @@ public interface IViewController
     /// </remarks>
     /// <returns></returns>
     ImportResult Import(int zoneId, int appId);
-
-    // Replaced by DataSource System.ViewUsage through query System.SysData.
-    //IEnumerable<ViewDto> Usage(int appId, Guid guid);
-
 }

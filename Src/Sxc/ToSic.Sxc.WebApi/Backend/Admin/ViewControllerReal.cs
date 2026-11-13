@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.Persistence.Sys.Logging;
-using ToSic.Sxc.Backend.Usage;
 using ToSic.Sxc.Backend.Views;
 
 namespace ToSic.Sxc.Backend.Admin;
@@ -8,19 +7,16 @@ namespace ToSic.Sxc.Backend.Admin;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ViewControllerReal(
     LazySvc<IContextOfSiteService> ctxSvc,
-    LazySvc<ViewsBackend> viewsBackend,
-    LazySvc<ViewsExportImport> viewExportImport,
-    LazySvc<UsageBackend> usageBackend)
-    : ServiceBase("Api.ViewRl", connect: [ctxSvc, usageBackend, viewsBackend, viewExportImport]),
+    AppWorkQuick<WorkViewDelete> workViewDelete,
+    LazySvc<WorkViewsGetDetailed> viewsBackend,
+    LazySvc<ViewsExportImport> viewExportImport)
+    : ServiceBase("Api.ViewRl", connect: [ctxSvc, workViewDelete, viewsBackend, viewExportImport]),
         IViewController
 {
     public const string LogSuffix = "View";
 
     /// <inheritdoc />
-    public IEnumerable<ViewDetailsDto> All(int appId) => viewsBackend.Value.GetAll(appId);
-
-    /// <inheritdoc />
-    public bool Delete(int appId, int id) => viewsBackend.Value.Delete(appId, id);
+    public bool Delete(int appId, int id) => workViewDelete.New(appId).DeleteViewWithSiteSwitchCheck(id);
 
     /// <inheritdoc />
     public THttpResponseType Json(int appId, int viewId) => viewExportImport.Value.DownloadViewAsJson(appId, viewId);
@@ -59,23 +55,6 @@ public class ViewControllerReal(
 
         return l.ReturnAsOk(result);
     }
-
-    ///// <inheritdoc />
-    //public IEnumerable<ViewDto> Usage(int appId, Guid guid)
-    //{
-    //    if (FinalBuilder == null)
-    //    {
-    //        Log.A("Error, FinalBuilder implementation is not set.");
-    //        throw new ArgumentException("FinalBuilder implementation is not set.");
-    //    }
-    //    return usageBackend.Value.ViewUsage(appId, guid, FinalBuilder);
-    //}
-    //public ViewControllerReal UsagePreparations(Func<ICollection<IView>, ICollection<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
-    //{
-    //    FinalBuilder = finalBuilder;
-    //    return this;
-    //}
-    //private Func<ICollection<IView>, ICollection<BlockConfiguration>, IEnumerable<ViewDto>>? FinalBuilder { get; set; }
 
     /// <summary>
     /// Helper method to get SiteId for ControllerReal proxy class.
