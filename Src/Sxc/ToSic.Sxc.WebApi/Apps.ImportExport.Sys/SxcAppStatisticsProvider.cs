@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Apps.ImportExport.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class SxcAppStatisticsProvider(AppWorkChain<AppStatisticsProvider> data, AppWorkChain<WorkViewsGet> workViews)
     : ServiceWithSetup<IAppWorkContext>("Bck.Export", connect: [data, workViews]),
-        IDataSourceRawDataProviderWithCtx
+        IRawDataProviderWithCtx
 {
 
     public IEnumerable<IRawData> Provide(IDataSourceConfiguration configuration)

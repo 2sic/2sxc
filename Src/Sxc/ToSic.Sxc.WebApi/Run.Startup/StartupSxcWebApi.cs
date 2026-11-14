@@ -177,7 +177,7 @@ public static class StartupSxcWebApi
         // Original in case it needs to inherited
         services.TryAddTransient<SxcAppStatisticsProvider>();
         // for augmenting with view data
-        services.TryAddKeyedTransient<IDataSourceRawDataProviderWithCtx, SxcAppStatisticsProvider>(AppStatisticsProvider.NameId);
+        services.TryAddKeyedTransient<IRawDataProviderWithCtx, SxcAppStatisticsProvider>(AppStatisticsProvider.NameId);
 
         return services;
     }
