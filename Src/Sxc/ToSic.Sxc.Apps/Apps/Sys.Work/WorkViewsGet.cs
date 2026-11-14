@@ -6,8 +6,8 @@ using ToSic.Sxc.Blocks.Sys.Views;
 namespace ToSic.Sxc.Apps.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class WorkViewsGet(AppWorkChain<WorkEntities> appEntities, IZoneCultureResolver cultureResolver)
-    : ServiceWithSetup<IAppWorkContext>("Cms.ViewRd", connect: [appEntities, cultureResolver])
+public class WorkViewsGet(AppDataChain<WorkEntities> appEntities, IZoneCultureResolver cultureResolver)
+    : ServiceWithSetup<IAppDataContext>("Cms.ViewRd", connect: [appEntities, cultureResolver])
 {
     private List<IEntity> ViewEntities => field ??= appEntities.New(MyOptions).GetAllViewEntities();
 

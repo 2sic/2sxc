@@ -4,7 +4,6 @@ using ToSic.Eav.Serialization;
 using ToSic.Eav.Services;
 using ToSic.Eav.Ui.Edit.Sys;
 using ToSic.Eav.Ui.Edit.Sys.Save;
-using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Backend.SaveHelpers;
 using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Utils;
@@ -15,7 +14,7 @@ namespace ToSic.Sxc.Backend.Cms;
 public class EditSaveBackend(
     AppWorkContextService appCtxSvc,
     AppWorkChain<SxcPagePublishing> pagePublishing,
-    AppWorkChain<WorkEntities> workEntities,
+    AppDataChain<WorkEntities> workEntities,
     ISxcCurrentContextService ctxService,
     Generator<IJsonDataReader, IJsonDataReader.Options> jsonReaderGen,
     SaveSecurity saveSecurity,
@@ -31,7 +30,7 @@ public class EditSaveBackend(
 
         // The context should be from the block if there is one, because it affects saving/publishing
         // Basically it can result in things being saved draft or titles being updated
-        var context = ctxService.ShareAppStateOptimized(appId);
+        var appCtx = ctxService.ShareAppStateOptimized(appId);
 
 
         // perform some basic validation checks
@@ -49,17 +48,15 @@ public class EditSaveBackend(
         //}
 
         // new API WIP
-        var appCtxNew = appCtxSvc.ContextNew(appId);
-        var appEntities = workEntities.New(appCtxNew);
-        //var appCtx = appEntities.AppWorkCtx;
-        var ser = jsonReaderGen.New(new(appCtxNew.AppReader) { PreferLocalAppTypes = true });//.SetApp(appCtxNew.AppReader);
+        var appWorkCtx = appCtxSvc.ContextNew(appId);
+        var appEntities = workEntities.New(appWorkCtx);
         // Since we're importing directly into this app, we would prefer local content-types
-        //ser.PreferLocalAppTypes = true;
+        var ser = jsonReaderGen.New(new(appWorkCtx.AppReader) { PreferLocalAppTypes = true });
 
         #region check if it's an update, and do more security checks then - shared with EntitiesController.Save
 
         // basic permission checks
-        var permCheck = saveSecurity.DoPreSaveSecurityCheck(context, package.Items);
+        var permCheck = saveSecurity.DoPreSaveSecurityCheck(appCtx, package.Items);
 
         var foundItems = package.Items
             .Where(i => i.Entity.Id != 0 || i.Entity.Guid != Guid.Empty)
@@ -110,7 +107,7 @@ public class EditSaveBackend(
                 ent = dataAssembler.Entity.CreateFrom(ent,
                     id: validatorResult.ResetId,
                     isPublished: package.IsPublished, // the published state is only in the header, not per entity, so we need to set it here
-                    owner: ent.Owner.NullIfNoValue() ?? context.User.IdentityToken
+                    owner: ent.Owner.NullIfNoValue() ?? appCtx.User.IdentityToken
                 );
 
                 // new in 11.01
@@ -157,14 +154,14 @@ public class EditSaveBackend(
             throw isUniqueValidationException;
 
         var result = await pagePublishing
-            .New(options: appCtxNew)
+            .New(options: appWorkCtx)
             .SaveInPagePublishing(
-                context: context,
+                context: appCtx,
                 blockOrNull: ctxService.BlockOrNull,
                 appId: appId,
                 items: itemsWithoutProcessor,
                 partOfPage: partOfPage,
-                internalSaveMethod: forceSaveAsDraft => DoSave(appEntities, itemsWithoutProcessor, package.DraftShouldBranch || forceSaveAsDraft),
+                internalSaveMethod: forceSaveAsDraft => DoSave(appWorkCtx, appEntities, itemsWithoutProcessor, package.DraftShouldBranch || forceSaveAsDraft),
                 permCheck: permCheck
             );
 
@@ -192,7 +189,8 @@ public class EditSaveBackend(
     }
 
 
-    private Dictionary<Guid, int> DoSave(WorkEntities workAppEntities, List<BundleWithHeader<IEntity>> items, bool forceSaveAsDraft)
+    private Dictionary<Guid, int> DoSave(IAppWorkContext appWorkCtx, WorkEntities workAppEntities,
+        List<BundleWithHeader<IEntity>> items, bool forceSaveAsDraft)
     {
         // only save entities that are
         // a. not in a group
@@ -201,7 +199,7 @@ public class EditSaveBackend(
             .Where(e => !e.Header.IsContentBlockMode || !e.Header.IsEmpty)
             .ToList();
 
-        saveBackendHelper.UpdateGuidAndPublishedAndSaveMany(workAppEntities.MyOptions, entitiesToSave, forceSaveAsDraft);
+        saveBackendHelper.UpdateGuidAndPublishedAndSaveMany(appWorkCtx, entitiesToSave, forceSaveAsDraft);
         return saveBackendHelper.GenerateIdList(workAppEntities, items);
     }
 }

@@ -7,8 +7,8 @@ using ToSic.Sxc.Blocks.Sys.Views;
 namespace ToSic.Sxc.Apps.ImportExport.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class SxcAppStatisticsProvider(AppWorkChain<AppStatisticsProvider> data, AppWorkChain<WorkViewsGet> workViews)
-    : ServiceWithSetup<IAppWorkContext>("Bck.Export", connect: [data, workViews]),
+public class SxcAppStatisticsProvider(AppDataChain<AppStatisticsProvider> data, AppDataChain<WorkViewsGet> workViews)
+    : ServiceWithSetup<IAppDataContext>("Bck.Export", connect: [data, workViews]),
         IRawDataProviderWithCtx
 {
 

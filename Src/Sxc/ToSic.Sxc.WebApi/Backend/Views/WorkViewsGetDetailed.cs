@@ -13,10 +13,10 @@ namespace ToSic.Sxc.Backend.Views;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class WorkViewsGetDetailed(
-    AppWorkChain<WorkViewsGet> workViews,
+    AppDataChain<WorkViewsGet> workViews,
     LazySvc<IConvertToEavLight> convertToEavLight,
     Generator<ImpExpHelpers> impExpHelpers)
-    : ServiceWithSetup<IAppWorkContext>("Bck.Views", connect: [convertToEavLight, impExpHelpers, workViews])
+    : ServiceWithSetup<IAppDataContext>("Bck.Views", connect: [convertToEavLight, impExpHelpers, workViews])
 {
     public IEnumerable<ViewDetailsDto> GetAll(int appId)
     {
