@@ -1,10 +1,11 @@
-﻿using ToSic.Eav.WebApi.Sys.Cms;
+﻿using ToSic.Eav.Data.Versions.Sys;
+using ToSic.Eav.WebApi.Sys.Cms;
 
 namespace ToSic.Sxc.Backend.Cms;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class HistoryControllerReal(AppWorkQuick<WorkEntityVersioning> versioning)
+public class HistoryControllerReal(AppWorkQuick<WorkEntityVersionRestore> versioning)
     : ServiceBase("Api.CmsHistoryRl", connect: [versioning]), IHistoryController
 {
     public const string LogSuffix = "Hist";
