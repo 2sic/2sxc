@@ -30,32 +30,14 @@ internal class NetCoreWebApiContextHelper: ServiceWithContext
 
     public ICodeLog CodeLog => field ??= new CodeLog(Log);
 
-    /// <summary>
-    /// This will make sure that any services requiring the context can get it.
-    /// It must usually be called from the base class which expects to use this.
-    /// </summary>
-    public void InitializeBlockContext(ActionExecutingContext context)
-    {
-        if (_blockContextInitialized)
-            return;
-        _blockContextInitialized = true;
-        var getBlock = _helper.GetService<IWebApiContextBuilder>();
-        CtxService = getBlock.PrepareContextResolverForApiRequest();
-        CtxBuilder = _helper.GetService<IContextBuilderService>();
-        BlockOptional = CtxService.BlockOrNull;
-    }
-
-    private bool _blockContextInitialized;
-
-    private IContextCompleteService CtxService { get; set; } = null!;
-    private IContextBuilderService CtxBuilder { get; set; } = null!;
-    internal IBlock? BlockOptional { get; private set; }
+    private IContextCompleteService CtxService =>
+        field ??= _helper.GetService<IWebApiContextBuilder>().PrepareContextResolverForApiRequest();
+    private IContextBuilderService CtxBuilder => field ??= _helper.GetService<IContextBuilderService>();
+    internal IBlock? BlockOptional => _blockOptional.Get(() => CtxService.BlockOrNull);
+    private readonly LazyGet<IBlock?> _blockOptional = new();
 
     public void OnActionExecutingEnd(ActionExecutingContext context)
     {
-        // base.OnActionExecuting(context);
-        InitializeBlockContext(context);
-
         // Use the ServiceProvider of the current request to build DynamicCodeRoot
         // Note that BlockOptional was already retrieved in the base class
         var exCtx = context.HttpContext.RequestServices
