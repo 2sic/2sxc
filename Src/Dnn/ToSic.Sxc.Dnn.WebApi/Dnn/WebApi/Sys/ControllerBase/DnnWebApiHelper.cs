@@ -20,9 +20,6 @@ internal class DnnWebApiHelper : ServiceWithContext
         WebApiLogging = new(requestLogging, firstMessage: firstMessage);
     }
 
-    public void OnDispose()
-        => WebApiLogging.OnDispose();
-
     #endregion
 
     #region Logging

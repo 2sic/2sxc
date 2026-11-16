@@ -1,5 +1,6 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Apps.Sys;
@@ -14,47 +15,11 @@ using ToSic.Sys.Code.InfoSystem;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
-internal class DnnCustomWebApiHelper: ServiceWithContext
+internal class DnnCustomWebApiHelper(DnnApiController ownerController, DnnWebApiHelper sysHlp)
+    : ServiceWithContext("Dnn.CdHlp")
 {
 
-    public DnnCustomWebApiHelper(DnnApiController ownerController, DnnWebApiHelper sysHlp): base("Dnn.CdHlp")
-    {
-        _ownerController = ownerController;
-        this.LinkLog((ownerController as IHasLog)?.Log);
-        _sysHlp = sysHlp;
-    }
-
-    private readonly DnnApiController _ownerController;
-    private readonly DnnWebApiHelper _sysHlp;
-
-    private ISxcCurrentContextService SharedCurrentContextService
-        => (_sysHlp ?? throw new InvalidOperationException("System helper is not initialized"))
-            .GetService<ISxcCurrentContextService>();
-    private IWebApiAppContextBuilderService CtxBuilder
-        => (_sysHlp ?? throw new InvalidOperationException("System helper is not initialized"))
-            .GetService<IWebApiAppContextBuilderService>();
     #region Init
-
-    /// <summary>
-    /// This will make sure that any services requiring the context can get it.
-    /// It must usually be called from the base class which expects to use this.
-    /// </summary>
-    /// <param name="request"></param>
-    public IBlock? InitBlockSpecs(HttpRequestMessage request)
-    {
-        // Prevent duplicate execution, as both these call this
-        // - DnnSxcControllerBase (foundational base class) - directly in Initialize
-        // - DnnSxcCustomControllerBase (base class for custom code) - Indirectly, through Initialize below.
-        if (_blockContextInitialized)
-            return null;
-        _blockContextInitialized = true;
-        var block = _sysHlp.GetBlockAndContext(request);
-        if (block != null)
-            SharedCurrentContextService.ShareBlockSpecs(block);
-        return block;
-    }
-
-    private bool _blockContextInitialized;
 
 
     public (IExecutionContext RootExCtx, string Folder) InitExCtxWithBlockSpecOrApp(HttpControllerContext controllerContext)
@@ -65,25 +30,27 @@ internal class DnnCustomWebApiHelper: ServiceWithContext
 
         // 1. Make sure we have the block (if it exists for this request)
         var request = controllerContext.Request;
-        var block = SharedCurrentContextService.BlockOrNull; // InitBlockSpecs(request);
+        var currentCtxSvc = (sysHlp ?? throw new InvalidOperationException("System helper is not initialized"))
+            .GetService<ISxcCurrentContextService>();
+        var block = currentCtxSvc.BlockOrNull; // InitBlockSpecs(request);
         l.A($"HasBlock: {block != null}");
 
         // 2.1 Prepare Services for further initialization
-        var services = _sysHlp
+        var services = sysHlp
             .GetService<ApiControllerDependencies>()
             .ConnectServices(Log);
 
         // 2.2 Build Execution Context
         var exCtx = services.ExCtxFactory.New(new()
         {
-            OwnerOrNull = _ownerController,
+            OwnerOrNull = ownerController,
             BlockOrNull = block,
             ParentLog = Log,
             CompatibilityFallback = CompatibilityLevels.CompatibilityLevel10,
         });
 
         // 2.3 Connect the system helper to the new execution context.
-        _sysHlp.ConnectToRoot(exCtx);
+        sysHlp.ConnectToRoot(exCtx);
 
         // 2.4 Connect Adam so we can provide SaveInAdam() APIs below.
         AdamCode = exCtx.GetService<AdamCode>();
@@ -94,7 +61,7 @@ internal class DnnCustomWebApiHelper: ServiceWithContext
         if (app == null! /* Special: there are cases where it's null, even though the nullable API doesn't show it */)
         {
             l.A("DynCode.App is null");
-            app = GetAppOrNullFromUrlParams(services, request, block);
+            app = GetAppOrNullFromUrlParams(services, request, currentCtxSvc.Context, block);
             if (app != null)
                 ((IExCtxAttachApp)exCtx).AttachApp(app);
         }
@@ -108,27 +75,27 @@ internal class DnnCustomWebApiHelper: ServiceWithContext
 
         // 3.3 v16.02 - try to log more details about the current API call
         var currentPath = request.Properties.TryGetTyped(SourceCodeConstants.SharedCodeRootFullPathKeyInCache, out string p2) ? p2.AfterLast("/") : null;
-        _sysHlp.WebApiLogging?.AddLogSpecs(block, app, currentPath, _sysHlp.GetService<CodeInfosInScope>());
+        sysHlp.WebApiLogging?.AddLogSpecs(block, app, currentPath, sysHlp.GetService<CodeInfosInScope>());
 
         // 4. Finally return the execution context and the path of the current class
         return l.ReturnAsOk((exCtx, path));
     }
 
 
-    private IAppForCode GetAppOrNullFromUrlParams(ApiControllerDependencies services, HttpRequestMessage request, IBlock? blockOrNull)
+    private IAppForCode GetAppOrNullFromUrlParams(ApiControllerDependencies services, HttpRequestMessage request,
+        IContextOfSite siteCtx, IBlock blockOrNull)
     {
         var l = Log.Fn<IAppForCode>();
         try
         {
             var routeAppPath = services.WebApiAppFolderUtilities.New(request)
                 .GetAppFolder(errorIfNotFound: false, blockOrNull: blockOrNull);
-            var appCtx = CtxBuilder.TryFindAppFromPath(routeAppPath);
+            var appCtx = sysHlp.GetService<IWebApiAppContextBuilderService>().TryFindAppFromPath(routeAppPath);
             var appReader = appCtx?.AppReaderRequired;
 
             if (appReader == default)
                 return l.ReturnNull("no app detected");
             
-            var siteCtx = SharedCurrentContextService.Context;
             // Look up if page publishing is enabled - if module context is not available, always false
             l.A($"AppId: {appReader.AppId}");
             var app = services.AppOverrideLazy.New(new(siteCtx.Site, appReader.PureIdentity(), new()));

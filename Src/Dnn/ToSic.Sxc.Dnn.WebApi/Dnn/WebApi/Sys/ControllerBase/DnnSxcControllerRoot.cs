@@ -33,7 +33,7 @@ public abstract class DnnSxcControllerRoot : DnnApiController, IHasLog
     /// Special helper to move all Razor logic into a separate class.
     /// For architecture of Composition over Inheritance.
     /// </summary>
-    internal DnnWebApiHelper SysHlp { get; }
+    internal DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -50,7 +50,7 @@ public abstract class DnnSxcControllerRoot : DnnApiController, IHasLog
     [ShowApiWhenReleased(ShowApiMode.Never)]
     protected override void Dispose(bool disposing)
     {
-        SysHlp.OnDispose();
+        SysHlp.WebApiLogging.OnDispose();
         base.Dispose(disposing);
     }
 

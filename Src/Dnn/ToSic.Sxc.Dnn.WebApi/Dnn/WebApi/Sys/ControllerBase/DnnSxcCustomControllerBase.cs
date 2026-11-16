@@ -47,7 +47,7 @@ public abstract class DnnSxcCustomControllerBase(string logSuffix, string insigh
 
     #region Internal / Plumbing / Obsolete
 
-    internal DnnCustomWebApiHelper CustomCodeHlp => field ??= new(this, SysHlp);
+    internal DnnCustomWebApiHelper CustomCodeHlp => field ??= new DnnCustomWebApiHelper(this, SysHlp).LinkLog(Log);
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]

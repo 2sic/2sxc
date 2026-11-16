@@ -17,8 +17,6 @@ public abstract class DnnSxcControllerBase(string logSuffix, string insightsGrou
     protected override void Initialize(HttpControllerContext controllerContext)
     {
         base.Initialize(controllerContext);
-        CustomCodeHlp.InitBlockSpecs(controllerContext.Request);
+        new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, controllerContext.Request, Log);
     }
-
-    internal DnnCustomWebApiHelper CustomCodeHlp => field ??= new(this, SysHlp);
 }

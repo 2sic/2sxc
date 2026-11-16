@@ -5,9 +5,10 @@ using ToSic.Sxc.Dnn.WebApi.Sys;
 
 namespace ToSic.Sxc.Dnn.Backend.App;
 
+[DnnLogExceptions]
 [AllowAnonymous] // All functions will check security internally, so assume no requirements
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppQueryController() : DnnSxcControllerBase(AppWebApiQueryRunSvc.LogSuffix), IAppQueryController
+public class AppQueryController() : DnnSxcControllerRoot(AppWebApiQueryRunSvc.LogSuffix), IAppQueryController
 {
     private AppWebApiQueryRunSvc Real => SysHlp.GetService<AppWebApiQueryRunSvc>();
     private AppQueryContextResolver CtxResolver => SysHlp.GetService<AppQueryContextResolver>();
@@ -21,8 +22,13 @@ public class AppQueryController() : DnnSxcControllerBase(AppWebApiQueryRunSvc.Lo
         [FromUri] int? appId = null,
         [FromUri] string stream = null,
         [FromUri] bool? includeGuid = false
-    ) => Real.RunQuery(CtxResolver.GetCtxAndLookupForAppIdOrContext(appId),
-        queryName: name, more: null, stream: stream, includeGuid: includeGuid);
+    )
+    {
+        // Experimental: move block context availability to the specific call, instead of on the whole controller.
+        new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, Request, Log);
+        return Real.RunQuery(CtxResolver.GetCtxAndLookupForAppIdOrContext(appId),
+            queryName: name, more: null, stream: stream, includeGuid: includeGuid);
+    }
 
     [HttpPost]
     public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost
@@ -31,8 +37,13 @@ public class AppQueryController() : DnnSxcControllerBase(AppWebApiQueryRunSvc.Lo
         [FromUri] int? appId = null,
         [FromUri] string stream = null,
         [FromUri] bool? includeGuid = false
-    ) => Real.RunQuery(CtxResolver.GetCtxAndLookupForAppIdOrContext(appId),
-        queryName: name, more: more, stream: stream, includeGuid: includeGuid);
+    )
+    {
+        // Experimental: move block context availability to the specific call, instead of on the whole controller.
+        new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, Request, Log);
+        return Real.RunQuery(CtxResolver.GetCtxAndLookupForAppIdOrContext(appId),
+            queryName: name, more: more, stream: stream, includeGuid: includeGuid);
+    }
 
     [HttpGet] 
     public IDictionary<string, IEnumerable<EavLightEntity>> PublicQuery(
