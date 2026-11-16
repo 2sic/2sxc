@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Eav.Context.Sys;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -18,7 +19,7 @@ public abstract class AppAssetsControllerBase : OqtControllerBase
     public record Dependencies(
         IWebHostEnvironment HostingEnvironment,
         LazySvc<IContextCompleteService> SxcContextSvc,
-        LazySvc<IContextBuilderService> CtxBuilder,
+        LazySvc<IWebApiAppContextBuilderService> CtxBuilder,
         SiteState SiteState,
         LazySvc<OqtAssetsFileHelper> FileHelper)
         : DependenciesBase(connect: [HostingEnvironment, SxcContextSvc, CtxBuilder, SiteState, FileHelper]);

@@ -1,11 +1,11 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Context.Sys;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys;
-using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Services.Sys;
@@ -30,9 +30,9 @@ internal class DnnCustomWebApiHelper: ServiceWithContext
     private ISxcCurrentContextService SharedCurrentContextService
         => (_sysHlp ?? throw new InvalidOperationException("System helper is not initialized"))
             .GetService<ISxcCurrentContextService>();
-    private IContextBuilderService CtxBuilder
+    private IWebApiAppContextBuilderService CtxBuilder
         => (_sysHlp ?? throw new InvalidOperationException("System helper is not initialized"))
-            .GetService<IContextBuilderService>();
+            .GetService<IWebApiAppContextBuilderService>();
     #region Init
 
     /// <summary>

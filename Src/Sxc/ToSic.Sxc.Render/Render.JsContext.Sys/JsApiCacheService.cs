@@ -1,5 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using ToSic.Sxc.Web.Sys.Http;
+using ToSic.Eav.Web.Http.Sys;
 
 namespace ToSic.Sxc.Render.JsContext.Sys;
 

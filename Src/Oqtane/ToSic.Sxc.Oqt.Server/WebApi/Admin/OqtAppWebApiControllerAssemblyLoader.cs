@@ -2,6 +2,7 @@ using System.Reflection;
 using Oqtane.Shared;
 using ToSic.Eav.Apps.Inspect.Sys.WebApi;
 using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Context.Sys;
 using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Context.Sys;
@@ -21,7 +22,7 @@ internal class OqtAppWebApiControllerAssemblyLoader(
     Generator<Compiler> compiler,
     SiteState siteState,
     AliasResolver aliasResolver,
-    IContextBuilderService ctxBuilder,
+    IWebApiAppContextBuilderService ctxBuilder,
     IContextCompleteService ctxService,
     IEditionService editionSvc,
     IServerPaths serverPaths)

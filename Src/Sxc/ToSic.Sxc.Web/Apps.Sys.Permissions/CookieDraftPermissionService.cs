@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.Permissions;
-using ToSic.Sxc.Web.Sys.Http;
+using ToSic.Eav.Web.Http.Sys;
 using ToSic.Sys.Users.Permissions;
 
 namespace ToSic.Sxc.Apps.Sys.Permissions;

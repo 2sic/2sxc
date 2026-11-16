@@ -4,6 +4,7 @@ using System.Web;
 using Microsoft.AspNetCore.Http;
 #endif
 using System.Collections.Specialized;
+using ToSic.Eav.Web.Http.Sys;
 
 
 namespace ToSic.Sxc.Web.Sys.Http;
@@ -51,7 +52,5 @@ public abstract class HttpAbstractionBase: IHttp
     }
 
     #endregion Request
-
-    //public abstract IDictionary<object, object> Items { get; }
 
 }

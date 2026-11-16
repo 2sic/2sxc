@@ -7,7 +7,7 @@
 using System.Web;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
-using ToSic.Sxc.Context.Sys;
+using ToSic.Eav.Context.Sys;
 
 namespace ToSic.Sxc.Dnn.WebApi.Routing.Sys;
 

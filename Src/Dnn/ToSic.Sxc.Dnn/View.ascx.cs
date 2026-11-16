@@ -1,6 +1,6 @@
 ﻿using DotNetNuke.Entities.Modules;
 using System.Web.UI;
-using ToSic.Eav.Web.Sys;
+using ToSic.Eav.Web.Http.Sys;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Dnn.Features;
 using ToSic.Sxc.Dnn.Install;

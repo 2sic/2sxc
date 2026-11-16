@@ -1,9 +1,9 @@
 ﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.Sys;
+using ToSic.Eav.Web.Http.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys.Page;
-using ToSic.Sxc.Web.Sys.Http;
 
 namespace ToSic.Sxc.Dnn.Context;
 

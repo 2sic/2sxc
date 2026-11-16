@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Context.Sys;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Blocks.Sys;
@@ -32,7 +33,7 @@ internal class NetCoreWebApiContextHelper: ServiceWithContext
 
     private IContextCompleteService CtxService =>
         field ??= _helper.GetService<IWebApiContextBuilder>().PrepareContextResolverForApiRequest();
-    private IContextBuilderService CtxBuilder => field ??= _helper.GetService<IContextBuilderService>();
+    private IWebApiAppContextBuilderService CtxBuilder => field ??= _helper.GetService<IWebApiAppContextBuilderService>();
     internal IBlock? BlockOptional => _blockOptional.Get(() => CtxService.BlockOrNull);
     private readonly LazyGet<IBlock?> _blockOptional = new();
 

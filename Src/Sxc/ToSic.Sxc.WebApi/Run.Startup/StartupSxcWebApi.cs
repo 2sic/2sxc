@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.Inspect.Sys;
 using ToSic.Eav.Apps.Inspect.Sys.WebApi;
 using ToSic.Eav.Apps.Install.Sys;
+using ToSic.Eav.Context.Sys;
 using ToSic.Eav.DataFormats.EavLight.Sys;
 using ToSic.Eav.DataSource.DataProviders;
 using ToSic.Eav.Sys.Insights;
@@ -137,8 +138,6 @@ public static class StartupSxcWebApi
         services.TryAddTransient<ListActivityGetItems>();
         services.TryAddTransient<ListActivitySave>();
         services.TryAddTransient<ListActivityGetBlockHeader>();
-
-        services.TryAddTransient<IContextBuilderService, ContextBuilderService>();
 
         services.TryAddTransient<PermissionCheckAction>(); // new v22
         services.TryAddTransient<PublishWebApi>();  // new v22

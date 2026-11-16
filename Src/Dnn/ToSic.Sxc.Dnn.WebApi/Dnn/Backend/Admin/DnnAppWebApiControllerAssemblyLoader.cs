@@ -4,6 +4,7 @@ using System.Web.Hosting;
 using ToSic.Eav.Apps.Inspect.Sys.WebApi;
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Context;
+using ToSic.Eav.Context.Sys;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class DnnAppWebApiControllerAssemblyLoader(
     ISite site,
-    IContextBuilderService ctxBuilder,
+    IWebApiAppContextBuilderService ctxBuilder,
     IContextCompleteService ctxService,
     IAppJsonConfigurationService appJson,
     SourceAnalyzer sourceAnalyzer,

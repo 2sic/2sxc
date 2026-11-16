@@ -1,3 +1,4 @@
+using ToSic.Eav.Context.Sys;
 using ToSic.Sxc.Services.OutputCache;
 
 namespace ToSic.Sxc.Backend.App;
@@ -5,7 +6,7 @@ namespace ToSic.Sxc.Backend.App;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CacheControllerReal(
     IContextCompleteService ctxService,
-    IContextBuilderService ctxBuilder,
+    IWebApiAppContextBuilderService ctxBuilder,
     LazySvc<IOutputCacheManagementService> outputCacheManagement)
     : ServiceBase("Sxc.ApiApCac", connect: [ctxService, ctxBuilder, outputCacheManagement])
 {

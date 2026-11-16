@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Web.Http.Controllers;
+using ToSic.Eav.Context.Sys;
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys.Routing;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
@@ -21,7 +22,7 @@ public partial class DnnAppApiControllerService(
     LazySvc<DnnGetBlock> getBlock,
     LazySvc<CodeErrorHelpService> codeErrorSvc,
     LazySvc<ISxcCurrentContextService> currentCtxSvc,
-    LazySvc<IContextBuilderService> ctxBuilder,
+    LazySvc<IWebApiAppContextBuilderService> ctxBuilder,
     MemoryCacheService cacheSvc)
     : ServiceBase("Dnn.ApiSSv", connect: [dnnApiFolderUtils, apiCompilerLazy, getBlock, codeErrorSvc, currentCtxSvc, ctxBuilder, cacheSvc])
 {

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Oqtane.Models;
 using Oqtane.Repository;
 using System.Net;
+using ToSic.Eav.Context.Sys;
 using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.Backend;
 using ToSic.Sxc.Backend.Context;
@@ -97,7 +98,7 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
                 // the next line used to have a side effect of sharing the found app-context
                 // ...but it should already be handled in the previous PrepareContextResolverForApiRequest() call
                 // This has been removed; it may break something, in which case sharing must be added explicitly
-                var builder = httpContext.RequestServices.Build<IContextBuilderService>();
+                var builder = httpContext.RequestServices.Build<IWebApiAppContextBuilderService>();
                 var ctxSvc = httpContext.RequestServices.Build<IContextCompleteService>();
                 appFolder = ctxSvc.FindAppFolderFromScopeOrThrow(builder);
                 // Compilation needs the resolved app folder, not the original "auto" route value.

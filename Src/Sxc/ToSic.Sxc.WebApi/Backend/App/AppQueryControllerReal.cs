@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using ToSic.Eav.Apps.Sys.Permissions;
+using ToSic.Eav.Context.Sys;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Query.Sys;
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Backend.App;
 public class AppQueryControllerReal(
     LazySvc<AppQueryODataHelper> oDataHelper,
     ISxcCurrentContextService ctxService,
-    IContextBuilderService ctxBuilder,
+    IWebApiAppContextBuilderService ctxBuilder,
     Generator<IConvertToEavLight> dataConverter,
     LazySvc<PermissionCheckFactory> permCheckFactory,
     LazySvc<QueryBuilder<Query>> queryManager,

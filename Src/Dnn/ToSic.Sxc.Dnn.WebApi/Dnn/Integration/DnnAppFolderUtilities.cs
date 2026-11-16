@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using ToSic.Eav.Context.Sys;
 using ToSic.Eav.WebApi.Sys.Routing;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.Dnn.Integration;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class DnnWebApiAppFolderUtilities(
     LazySvc<IContextCompleteService> ctxService,
-    LazySvc<IContextBuilderService> ctxBuilder,
+    LazySvc<IWebApiAppContextBuilderService> ctxBuilder,
     LazySvc<CodeErrorHelpService> errorHelp)
     : ServiceWithSetup<HttpRequestMessage>($"{LogName}.AppFld", connect: [errorHelp, ctxService, ctxBuilder])
 {

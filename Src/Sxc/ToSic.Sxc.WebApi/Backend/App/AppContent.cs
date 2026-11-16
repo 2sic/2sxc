@@ -3,6 +3,7 @@ using System.Text.Json.Nodes;
 using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.Apps.Sys.State;
+using ToSic.Eav.Context.Sys;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataFormats.EavLight;
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Backend.App;
 public class AppContent(
     LazySvc<IConvertToEavLight> entToDicLazy,
     IContextCompleteService ctxService,
-    IContextBuilderService ctxBuilder,
+    IWebApiAppContextBuilderService ctxBuilder,
     AppWorkQuick<WorkTypePermissions> typePermissions,
     Generator<MultiPermissionsItems, MultiPermissionsItems.Options> itemsPermissions,
     AppWorkQuick<WorkFieldList> workFieldList,
