@@ -6,7 +6,6 @@ using ToSic.Eav.LookUp.Sys;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Eav.Web.Http.Sys;
 using ToSic.Sxc.LookUp.Sys;
-using ToSic.Sxc.Web.Sys.Http;
 using static ToSic.Sxc.LookUp.Sys.LookUpConstants;
 
 namespace ToSic.Sxc.Dnn.LookUp;

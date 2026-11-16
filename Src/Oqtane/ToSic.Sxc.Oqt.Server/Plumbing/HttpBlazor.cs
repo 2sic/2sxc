@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using ToSic.Eav.Web.Http.Sys;
-using ToSic.Sxc.Web.Sys.Http;
 
 namespace ToSic.Sxc.Oqt.Server.Plumbing;
 
@@ -15,11 +14,16 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing;
 /// Note that it's probably not yet complete. As of now, it only provides ?x=y&a=b stuff,
 /// but if Blazor has any cute-url system like x/y/a/b this would probably not work yet
 /// </remarks>
-internal class HttpBlazor(IHttpContextAccessor contextAccessor, NavigationManager navigationManager) : HttpAbstractionBase, IHttp
+internal class HttpBlazor(IHttpContextAccessor contextAccessor, NavigationManager navigationManager) : IHttp
 {
-    public override HttpContext Current => contextAccessor?.HttpContext!;
+    /// <inheritdoc />
+    public HttpContext Current => contextAccessor?.HttpContext!;
 
-    public override NameValueCollection QueryStringParams
+    /// <inheritdoc />
+    public HttpRequest Request => Current?.Request!;
+
+    /// <inheritdoc />
+    public NameValueCollection QueryStringParams
     {
         get
         {
@@ -51,7 +55,6 @@ internal class HttpBlazor(IHttpContextAccessor contextAccessor, NavigationManage
         }
     }
 
-    //private NameValueCollection _queryStringValues;
 
     private NameValueCollection FilterOutOqtaneParams(NameValueCollection original)
     {
@@ -60,5 +63,6 @@ internal class HttpBlazor(IHttpContextAccessor contextAccessor, NavigationManage
         return original;
     }
 
-    //public override IDictionary<object, object> Items => Current.Items;
+    /// <inheritdoc />
+    public string? GetCookie(string cookieName) => Request?.Cookies[cookieName];
 }

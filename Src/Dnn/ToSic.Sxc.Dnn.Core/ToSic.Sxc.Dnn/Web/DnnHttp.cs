@@ -1,5 +1,6 @@
 ﻿using System.Collections.Specialized;
-using ToSic.Sxc.Web.Sys.Http;
+using System.Web;
+using ToSic.Eav.Web.Http.Sys;
 
 namespace ToSic.Sxc.Dnn.Web;
 
@@ -9,9 +10,16 @@ namespace ToSic.Sxc.Dnn.Web;
 /// It needs this, because DNN automatically creates invisible parameters like tabid=323 and language=en-US
 /// But if we want to create a link to the same page again, then this would result in wrong paths. 
 /// </summary>
-internal class DnnHttp: HttpHybrid
+internal class DnnHttp: IHttp
 {
-    public override NameValueCollection QueryStringParams
+    /// <inheritdoc />
+    public HttpContext Current => HttpContext.Current!;
+
+    /// <inheritdoc />
+    public HttpRequest Request => Current?.Request!;
+
+    /// <inheritdoc />
+    public NameValueCollection QueryStringParams
     {
         get
         {
@@ -25,7 +33,7 @@ internal class DnnHttp: HttpHybrid
             //var queryPart = Request.RawUrl.Substring(separator);
             //var lightList = HttpUtility.ParseQueryString(queryPart);
 
-            var rewrapped = new NameValueCollection(base.QueryStringParams);
+            var rewrapped = new NameValueCollection(Request?.QueryString ?? []);
             return field = FilterOutDnnParams(rewrapped);
         }
     }
@@ -42,4 +50,8 @@ internal class DnnHttp: HttpHybrid
         original.Remove(skinSrc);
         return original;
     }
+
+    /// <inheritdoc />
+    public string? GetCookie(string cookieName) => Request?.Cookies[cookieName]?.Value;
+
 }

@@ -3,12 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.Web.Http.Sys;
 using ToSic.Sxc.Apps.Sys.Permissions;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Render.Polymorphism.Sys;
 using ToSic.Sxc.Web.Sys.EditUi;
-using ToSic.Sxc.Web.Sys.Http;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Run.Startup;
@@ -37,10 +35,6 @@ public static class StartupSxcWeb
         // Koi, mainly so tests don't fail
         services.TryAddTransient<ICssFrameworkDetector, CssFrameworkDetectorUnknown>();
 
-
-        // WIP - add net-core specific stuff
-        services.AddNetVariations();
-
         // Add possibly missing fallback services
         // This must always be at the end here so it doesn't accidentally replace something we actually need
         services.AddKoi();
@@ -60,15 +54,6 @@ public static class StartupSxcWeb
         return services;
     }
 
-    public static IServiceCollection AddNetVariations(this IServiceCollection services)
-    {
-#if NETFRAMEWORK
-        // WebForms implementations
-        services.TryAddScoped<IHttp, HttpHybrid>();
-#else
-        services.TryAddTransient<IHttp, HttpHybrid>();
-#endif
-        return services;
-    }
+
 
 }

@@ -38,7 +38,6 @@ using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Sys.Integration.Installation;
-using ToSic.Sxc.Web.Sys.Http;
 using ToSic.Sys.Boot;
 using ToSic.Sys.Capabilities.Platform;
 using ToSic.Sys.Security.Permissions;
