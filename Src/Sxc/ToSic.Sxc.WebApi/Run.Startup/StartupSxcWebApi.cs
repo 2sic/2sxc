@@ -8,6 +8,8 @@ using ToSic.Eav.DataFormats.EavLight.Sys;
 using ToSic.Eav.DataSource.DataProviders;
 using ToSic.Eav.Sys.Insights;
 using ToSic.Eav.Ui.Context.Sys;
+using ToSic.Eav.WebApi.App.Sys;
+using ToSic.Eav.WebApi.Sys.App;
 using ToSic.Sxc.Apps.Extensions.Sys;
 using ToSic.Sxc.Apps.Extensions.Sys.Export;
 using ToSic.Sxc.Apps.Extensions.Sys.Inspect;
@@ -113,7 +115,6 @@ public static class StartupSxcWebApi
         services.TryAddTransient<TypeControllerReal>();
         services.TryAddTransient<ViewControllerReal>();
         services.TryAddTransient<AppDataControllerReal>();
-        services.TryAddTransient<AppQueryControllerReal>();
         services.TryAddTransient<AppQueryContextResolver>();
         services.TryAddTransient<WorkQueryDeleteIfUnused>();
         services.TryAddTransient<CacheControllerReal>();

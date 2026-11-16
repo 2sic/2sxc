@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Context.Sys;
 using ToSic.Eav.LookUp.Sys.Engines;
+using ToSic.Eav.WebApi.App.Sys;
 
 namespace ToSic.Sxc.Backend.App;
 
@@ -10,7 +11,7 @@ public class AppQueryContextResolver(ISxcCurrentContextService ctxService, ICont
     public const string LogSuffix = "AppQry";
 
 
-    public AppQueryControllerReal.Result GetCtxAndLookupForAppPath(string appPathRequired)
+    public AppWebApiQueryRunSvc.AppCtxAndLookup GetCtxAndLookupForAppPath(string appPathRequired)
     {
         // 2026-10-20 2dm - previously used ctxService.SetAppFromPathOrGetExistingBlock
         var appCtx = ctxBuilder.TryFindAppFromPath(appPathRequired)
@@ -20,7 +21,7 @@ public class AppQueryContextResolver(ISxcCurrentContextService ctxService, ICont
         return new(appCtx, lookups);
     }
 
-    public AppQueryControllerReal.Result GetCtxAndLookupForAppIdOrContext(int? appId)
+    public AppWebApiQueryRunSvc.AppCtxAndLookup GetCtxAndLookupForAppIdOrContext(int? appId)
     {
         var appCtx = appId != null
             ? appCtxSvc.Create(appId.Value)

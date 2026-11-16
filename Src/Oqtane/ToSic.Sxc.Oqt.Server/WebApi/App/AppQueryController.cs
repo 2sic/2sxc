@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Eav.WebApi.Sys.App;
+using ToSic.Eav.WebApi.App.Sys;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using RealController = ToSic.Sxc.Backend.App.AppQueryControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 
@@ -15,9 +14,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 
 [AllowAnonymous] // All functions will check security internally, so assume no requirements
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppQueryController() : OqtStatefulControllerBase(RealController.LogSuffix), IAppQueryController
+public class AppQueryController() : OqtStatefulControllerBase(AppWebApiQueryRunSvc.LogSuffix), IAppQueryController
 {
-    private RealController Real => GetService<RealController>();
+    private AppWebApiQueryRunSvc Real => GetService<AppWebApiQueryRunSvc>();
     private AppQueryContextResolver CtxResolver => GetService<AppQueryContextResolver>();
 
     // GET is separated from POST to solve HttpResponseException that happens when
@@ -29,8 +28,8 @@ public class AppQueryController() : OqtStatefulControllerBase(RealController.Log
         [FromRoute] string appPath,
         [FromRoute] string name,
         [FromRoute] string stream = null
-    ) => Real.QueryNew(CtxResolver.GetCtxAndLookupForAppPath(appPath),
-        name: name, more: null, stream: stream);
+    ) => Real.RunQuery(CtxResolver.GetCtxAndLookupForAppPath(appPath),
+        queryName: name, more: null, stream: stream);
 
     [HttpPost("{appPath}/" + AppParts.Query + "/{name}")]
     [HttpPost("{appPath}/" + AppParts.Query + "/{name}/{stream}")]
@@ -39,8 +38,8 @@ public class AppQueryController() : OqtStatefulControllerBase(RealController.Log
         [FromRoute] string name,
         QueryParametersDtoFromClient more,
         [FromRoute] string stream = null
-    ) => Real.QueryNew(CtxResolver.GetCtxAndLookupForAppPath(appPath),
-        name: name, more: more, stream: stream);
+    ) => Real.RunQuery(CtxResolver.GetCtxAndLookupForAppPath(appPath),
+        queryName: name, more: more, stream: stream);
 
     [HttpGet($"{AppParts.Auto}/{AppParts.Query}" + "/{name}")]
     [HttpGet($"{AppParts.Auto}/{AppParts.Query}" + "/{name}/{stream?}")]
@@ -49,8 +48,8 @@ public class AppQueryController() : OqtStatefulControllerBase(RealController.Log
         [FromQuery] int? appId = null,
         [FromRoute] string stream = null,
         [FromQuery] bool? includeGuid = false
-    ) => Real.QueryNew(CtxResolver.GetCtxAndLookupForAppIdOrContext(appId),
-        name: name, more: null, stream: stream, includeGuid: includeGuid);
+    ) => Real.RunQuery(CtxResolver.GetCtxAndLookupForAppIdOrContext(appId),
+        queryName: name, more: null, stream: stream, includeGuid: includeGuid);
 
     [HttpPost($"{AppParts.Auto}/{AppParts.Query}" + "/{name}")]
     [HttpPost($"{AppParts.Auto}/{AppParts.Query}" + "/{name}/{stream?}")]
@@ -60,6 +59,6 @@ public class AppQueryController() : OqtStatefulControllerBase(RealController.Log
         [FromQuery] int? appId = null,
         [FromRoute] string stream = null,
         [FromQuery] bool? includeGuid = false
-    ) => Real.QueryNew(CtxResolver.GetCtxAndLookupForAppIdOrContext(appId),
-        name: name, more: more, stream: stream, includeGuid: includeGuid);
+    ) => Real.RunQuery(CtxResolver.GetCtxAndLookupForAppIdOrContext(appId),
+        queryName: name, more: more, stream: stream, includeGuid: includeGuid);
 }
