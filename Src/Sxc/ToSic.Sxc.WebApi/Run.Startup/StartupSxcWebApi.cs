@@ -126,9 +126,6 @@ public static class StartupSxcWebApi
 
         services.TryAddTransient<AssetTemplates>();
 
-        // Odata v21
-        services.TryAddTransient<AppQueryODataHelper>();
-
         // SaveData PreSave
         services.TryAddTransient<DataValidatorContentTypeDataStore>();
 
