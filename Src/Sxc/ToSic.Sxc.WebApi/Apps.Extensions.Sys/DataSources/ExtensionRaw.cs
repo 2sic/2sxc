@@ -6,7 +6,7 @@ using ToSic.Eav.Data.Raw;
 namespace ToSic.Sxc.Apps.Extensions.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-[ContentType(Name = "AppExtension", Guid = "94687214-88ea-48f7-9153-186c5c885227", Scope = "System")]
+[ContentType(Name = "AppExtension", Guid = "7bad6d11-4287-4d48-9307-69cd2bf4891a", Scope = "System")]
 public class ExtensionRaw : IRawEntityAutoConvert
 {
     [ContentTypeTitle]

@@ -38,7 +38,7 @@ public class ViewUsage(
     // ReSharper disable UnusedMember.Local
     [ContentType(
         Name = "ViewUsage",
-        Guid = "0a095e44-7f00-4d36-8425-274c7ee7277a",
+        Guid = "96878b31-db9f-4e32-9b5d-28c883abfec7",
         Scope = "System")]
     private sealed class ViewUsageRaw(ViewDto view) : IRawEntityAutoConvert
     {
