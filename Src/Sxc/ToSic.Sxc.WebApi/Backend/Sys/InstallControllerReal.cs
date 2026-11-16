@@ -39,13 +39,13 @@ public class InstallControllerReal(
 
         var isApp = !container.IsContent;
 
-        Log.A($"install package:'{packageUrl}', {nameof(newName)}:'{newName}'");
+        l.A($"install package:'{packageUrl}', {nameof(newName)}:'{newName}'");
 
         var block = container.BlockIdentifier;
         var (success, messages) = impFromRemoteLazy.Value
             .InstallPackage(block.ZoneId, block.AppId, isApp, packageUrl, newName);
 
-        Log.A($"install completed with success:{success}");
+        l.A($"install completed with success:{success}");
 
         return success 
             ? l.ReturnAsOk(responseMaker.Ok()) 

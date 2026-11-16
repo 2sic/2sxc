@@ -7,7 +7,7 @@ using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Eav.DataSource.Sys.Convert;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Eav.WebApi.OData.Sys;
-using ToSic.Eav.WebApi.Sys.Admin.Query;
+using ToSic.Eav.WebApi.Sys.App;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sys.OData;
 using ToSic.Sys.Security.Permissions;

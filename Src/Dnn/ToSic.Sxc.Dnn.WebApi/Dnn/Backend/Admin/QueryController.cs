@@ -1,8 +1,7 @@
 ﻿using System.Web;
 using ToSic.Eav.DataSources.Query.Dev.Sys;
 using ToSic.Eav.ImportExport.Sys;
-using ToSic.Eav.ImportExport.Sys.JsonData;
-using ToSic.Eav.WebApi.Sys.Admin.Query;
+using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using RealController = ToSic.Sxc.Backend.Admin.Query.QueryControllerReal;
 

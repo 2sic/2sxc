@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.DataSources.Query.Dev.Sys;
 using ToSic.Eav.ImportExport.Sys;
-using ToSic.Eav.WebApi.Sys.Admin.Query;
+using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.Backend.Admin.Query.QueryControllerReal;
 

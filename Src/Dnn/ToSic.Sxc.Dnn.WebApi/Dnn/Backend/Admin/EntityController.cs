@@ -1,13 +1,10 @@
 ﻿using ToSic.Eav.ImportExport.Sys;
-using ToSic.Eav.ImportExport.Sys.JsonData;
 using ToSic.Eav.ImportExport.Sys.Options;
-using ToSic.Eav.WebApi.Sys.Admin;
-using ToSic.Eav.WebApi.Sys.Dto;
-using ToSic.Eav.WebApi.Sys.Helpers.Http;
+using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using Guid = System.Guid;
-using RealController = ToSic.Eav.WebApi.Sys.Admin.EntityControllerReal;
+using RealController = ToSic.Eav.WebApi.Admin.Sys.EntityControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
@@ -28,15 +25,6 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 public class EntityController() : DnnSxcControllerBase(RealController.LogSuffix), IEntityController
 {
     private RealController Real => SysHlp.GetService<RealController>();
-
-    /// <inheritdoc/>
-    // 2rb: replaced by EntitiesAdmin datasource
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    //public IEnumerable<Dictionary<string, object>> List(int appId, string contentType)
-    //    => Real.List(appId, contentType);
-
 
     /// <inheritdoc/>
     [HttpDelete]
@@ -99,9 +87,4 @@ public class EntityController() : DnnSxcControllerBase(RealController.LogSuffix)
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     public bool Upload(DataFileImportOptions args)
         => Real.Upload(args);
-
-
-    ///// <inheritdoc/>
-    //// not final yet, so no [HttpGet]
-    //public dynamic Usage(int appId, Guid guid) => Real.Usage(appId, guid);
 }

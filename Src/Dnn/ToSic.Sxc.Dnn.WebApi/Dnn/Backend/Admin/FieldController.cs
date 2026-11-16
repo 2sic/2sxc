@@ -1,6 +1,6 @@
-﻿using ToSic.Eav.WebApi.Sys.Admin;
+﻿using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys;
-using RealController = ToSic.Eav.WebApi.Sys.Admin.FieldControllerReal;
+using RealController = ToSic.Eav.WebApi.Admin.Sys.FieldControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
