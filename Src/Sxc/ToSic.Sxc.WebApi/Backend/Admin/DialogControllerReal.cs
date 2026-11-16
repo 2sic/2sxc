@@ -2,7 +2,7 @@
 using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.Sys;
 using ToSic.Eav.Ui.Context.Sys;
-using ToSic.Eav.Ui.Context.Sys.Dto;
+using ToSic.Eav.WebApi.Admin.Sys;
 
 namespace ToSic.Sxc.Backend.Admin;
 
@@ -30,11 +30,8 @@ public class DialogControllerReal(
 
         // If we have an appid check permissions
         // This will be missing in install-app scenarios and other calls where the app is not set yet
-        if (appReader != null)
-        {
-            if (!zoneSwitchPermissionCheck.Check(appReader, out var error))
-                throw HttpException.PermissionDenied(error);
-        }
+        if (appReader != null && !zoneSwitchPermissionCheck.Check(appReader, out var error))
+            throw HttpException.PermissionDenied(error);
 
         var cb = uiContextBuilder.New(appReader);
 
@@ -43,11 +40,4 @@ public class DialogControllerReal(
             Context = cb.Get(Ctx.General, CtxEnable.All),
         };
     }
-
-
-}
-
-public class DialogContextStandaloneDto
-{
-    public required ContextDto Context { get; init; }
 }
