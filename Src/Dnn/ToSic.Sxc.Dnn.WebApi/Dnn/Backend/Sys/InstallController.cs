@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.WebApi.Sys.Install;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using RealController = ToSic.Sxc.Backend.Sys.InstallControllerReal;
@@ -24,13 +23,6 @@ public class InstallController()
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
     public bool Resume()
         => Real.Resume();
-
-    // Replaced by DataSource System.AppInstallation through query System.SysData.
-    ///// <inheritdoc />
-    //[HttpGet]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    //public InstallAppsDto InstallSettings(bool isContentApp)
-    //    => Real.InstallSettings(isContentApp, ((DnnModule)SysHlp.GetService<IModule>()).Init(Request.FindModuleInfo()));
 
 
     /// <inheritdoc />
