@@ -1,19 +1,31 @@
 ﻿using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.WebApi.App.Sys;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Dnn.WebApi.Sys;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 
 namespace ToSic.Sxc.Dnn.Backend.App;
 
-[DnnLogExceptions]
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [AllowAnonymous] // All functions will check security internally, so assume no requirements
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppQueryController() : DnnSxcControllerRoot(AppWebApiQueryRunSvc.LogSuffix), IAppQueryController
+public class AppQueryController : DnnApiController, IAppQueryController, IHasLog
 {
+    #region WebApi Composition Infrastructure
+
+    public ILog Log => field ??= LogFactory.Create("Api.Query");
+
+    private DnnWebApiHelper SysHlp => field ??= new(this, $"{EavWebApiConstants.HistoryNameWebApi}.query", skipApiLogging: true);
+
+    #endregion
+
+
     private AppWebApiQueryRunSvc Real => SysHlp.GetService<AppWebApiQueryRunSvc>();
     private AppQueryContextResolver CtxResolver => SysHlp.GetService<AppQueryContextResolver>();
 
-    // GET is separated from POST to solve HttpResponseException that happens when
+
+    // Note: GET is separated from POST to solve HttpResponseException that happens when
     // 'content-type' header is missing (or in GET request) on the endpoint that has [FromBody] in signature
 
     [HttpGet]
@@ -25,6 +37,7 @@ public class AppQueryController() : DnnSxcControllerRoot(AppWebApiQueryRunSvc.Lo
     )
     {
         // Experimental: move block context availability to the specific call, instead of on the whole controller.
+        // This is the query with /auto/, so it should be able to auto-detect the current specs
         new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, Request, Log);
         return Real.RunQuery(CtxResolver.GetCtxAndLookupForAppIdOrContext(appId),
             queryName: name, more: null, stream: stream, includeGuid: includeGuid);
@@ -61,4 +74,7 @@ public class AppQueryController() : DnnSxcControllerRoot(AppWebApiQueryRunSvc.Lo
         [FromUri] string stream = null
     ) => Real.RunQuery(CtxResolver.GetCtxAndLookupForAppPath(appPath),
         queryName: name, more: more, stream: stream);
+
+
+
 }
