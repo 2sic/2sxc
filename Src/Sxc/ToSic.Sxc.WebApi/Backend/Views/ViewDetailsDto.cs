@@ -8,7 +8,7 @@ using ToSic.Eav.Ui.Edit.Sys.Dto;
 
 namespace ToSic.Sxc.Backend.Views;
 
-[ContentType(Name = "View", Guid = "708afea8-33d6-48c0-a629-31a052663bc1", Scope = "System")]
+[ContentType(Name = "View", Guid = "2073aa43-4721-4f48-8356-45a7652fda85", Scope = "System")]
 public class ViewDetailsDto : IRawEntityAutoConvert
 {
     public required int Id { get; init; }
