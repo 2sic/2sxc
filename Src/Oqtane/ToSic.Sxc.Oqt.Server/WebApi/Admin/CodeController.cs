@@ -26,11 +26,4 @@ public class CodeController() : OqtControllerBase(false, RealController.LogSuffi
     [Authorize(Roles = RoleNames.Host)]
     public RichResult GenerateDataModels(int appId, string generator, string edition = null, int configurationId = 0)
         => Real.GenerateDataModels(appId, edition, generator: generator, configurationId: configurationId);
-
-    // #MigrateSimpleDataToSysDataAccess
-    //[HttpGet]
-    //[JsonFormatter]
-    //[Authorize(Roles = RoleNames.Host)]
-    //public EditionsDto GetEditions(int appId)
-    //    => Real.GetEditions(appId);
 }

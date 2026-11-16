@@ -46,18 +46,16 @@ public abstract class DnnSxcControllerRoot : DnnApiController, IHasLog
         l.Done();
     }
 
-    [PrivateApi]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
     protected override void Dispose(bool disposing)
     {
-        SysHlp.WebApiLogging.OnDispose();
+        SysHlp.EndRequestTimer();
         base.Dispose(disposing);
     }
 
     /// <inheritdoc />
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public ILog Log { get; }
+    public ILog Log => field ??= LogFactory.Create("Api.ToDo"); // if accessed before created, use to-do name
 
     /// <summary>
     /// The group name for log entries in insights.

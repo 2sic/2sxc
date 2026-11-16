@@ -63,7 +63,7 @@ public partial class View : PortalModuleBase, IActionable
     /// - delay creating until first use to really just track our time when needed.
     /// </remarks>
     private HttpRequestLoggingScoped RequestLogging => field
-        ??= ServiceProvider.Build<Generator<HttpRequestLoggingScoped, HttpRequestLoggingScoped.Opts>>()
+        ??= ServiceProvider.Build<Generator<HttpRequestLoggingScoped, HttpRequestLoggingScoped.Options>>()
             .New(new() { Segment = "module", RootName = "Sxc.View" });
 
     // The request root decides Legacy or MEL for the complete module log family.
