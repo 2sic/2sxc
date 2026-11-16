@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys.Compatibility;
 /// </summary>
 [DnnLogExceptions]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal abstract class ApiTempShimmed : DnnSxcCustomControllerBase, // fake inheritance, just so the code below can compile
+internal abstract class ApiTempShimmed : System.Web.Http.ApiController, // fake inheritance, just so the code below can compile
     IDynamicWebApi, INetCoreCompatibility
 {
 

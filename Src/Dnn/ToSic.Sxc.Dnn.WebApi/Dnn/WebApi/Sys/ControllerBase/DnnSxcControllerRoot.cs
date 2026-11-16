@@ -1,65 +1,60 @@
-﻿using System.Web.Http.Controllers;
-using ToSic.Eav.WebApi.Sys;
-using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
+﻿//using System.Web.Http.Controllers;
+//using ToSic.Eav.WebApi.Sys;
+//using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 
-namespace ToSic.Sxc.Dnn.WebApi.Sys;
+//namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
-/// <summary>
-/// Root base class for all our API controllers in DNN.
-/// 
-/// Things it does:
-/// 
-/// 1. Provide the SysHlp object for GetService(), GetBlock() and logging
-/// 2. Setup 2sxc logging in insights for this controller
-/// 3. Setup DNN logging (for exceptions etc.)
-/// 
-/// </summary>
-[DnnLogWebApi, ConfigureJsonOnlyResponse]
-[PrivateApi("This controller is never used publicly, you can rename any time you want")]
-// Can't hide in Intellisense, because that would hide it for all derived classes too
-// [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class DnnSxcControllerRoot : DnnApiController, IHasLog
-{
-    protected DnnSxcControllerRoot(string logSuffix, string insightsGroup = default, string firstMessage = default)
-    {
-        Log = LogFactory.Create("Api." + logSuffix);
-        // ReSharper disable once VirtualMemberCallInConstructor
-        SysHlp = new(this, insightsGroup ?? HistoryLogGroup, firstMessage, logApiTimer: true);
-    }
+///// <summary>
+///// Root base class for all our API controllers in DNN.
+///// 
+///// Things it does:
+///// 
+///// 1. Provide the SysHlp object for GetService(), GetBlock() and logging
+///// 2. Setup 2sxc logging in insights for this controller
+///// 3. Setup DNN logging (for exceptions etc.)
+///// 
+///// </summary>
+//[DnnLogWebApi, ConfigureJsonOnlyResponse]
+//[PrivateApi("This controller is never used publicly, you can rename any time you want")]
+//// Can't hide in Intellisense, because that would hide it for all derived classes too
+//// [ShowApiWhenReleased(ShowApiMode.Never)]
+//public abstract class DnnSxcControllerRoot : DnnApiController, IHasLog
+//{
+//    //protected DnnSxcControllerRoot(string logSuffix, string insightsGroup = default, string firstMessage = default)
+//    //{
+//        //Log = LogFactory.Create("Api." + logSuffix);
+//        //// ReSharper disable once VirtualMemberCallInConstructor
+//        //SysHlp = new(this, insightsGroup ?? HistoryLogGroup, firstMessage, logApiTimer: true);
+//    //}
 
-    /// <summary>
-    /// Special helper to move all Razor logic into a separate class.
-    /// For architecture of Composition over Inheritance.
-    /// </summary>
-    internal DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi, logApiTimer: true);
+//    ///// <summary>
+//    ///// Special helper to move all Razor logic into a separate class.
+//    ///// For architecture of Composition over Inheritance.
+//    ///// </summary>
+//    //internal DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi, logApiTimer: true);
 
-    [PrivateApi]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    protected override void Initialize(HttpControllerContext controllerContext)
-    {
-        var l = Log.Fn();
-        // Add the logger to the request, in case it's needed in error-reporting
-        SysHlp.WebApiLogging.OnInitialize(controllerContext);
-        base.Initialize(controllerContext);
-        l.Done();
-    }
+//    //[PrivateApi]
+//    //[ShowApiWhenReleased(ShowApiMode.Never)]
+//    //protected override void Initialize(HttpControllerContext controllerContext)
+//    //{
+//    //    var l = Log.Fn();
+//    //    // Add the logger to the request, in case it's needed in error-reporting
+//    //    SysHlp.WebApiLogging.OnInitialize(controllerContext);
+//    //    base.Initialize(controllerContext);
+//    //    l.Done();
+//    //}
 
-    protected override void Dispose(bool disposing)
-    {
-        SysHlp.EndRequestTimer();
-        base.Dispose(disposing);
-    }
 
-    /// <inheritdoc />
-    [PrivateApi]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    public ILog Log => field ??= LogFactory.Create("Api.ToDo"); // if accessed before created, use to-do name
+//    ///// <inheritdoc />
+//    //[PrivateApi]
+//    //[ShowApiWhenReleased(ShowApiMode.Never)]
+//    //public ILog Log => field ??= LogFactory.Create("Api.ToDo"); // if accessed before created, use to-do name
 
-    /// <summary>
-    /// The group name for log entries in insights.
-    /// Helps group various calls by use case. 
-    /// </summary>
-    [PrivateApi]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    protected virtual string HistoryLogGroup => EavWebApiConstants.HistoryNameWebApi;
-}
+//    ///// <summary>
+//    ///// The group name for log entries in insights.
+//    ///// Helps group various calls by use case. 
+//    ///// </summary>
+//    //[PrivateApi]
+//    //[ShowApiWhenReleased(ShowApiMode.Never)]
+//    //protected virtual string HistoryLogGroup => EavWebApiConstants.HistoryNameWebApi;
+//}
