@@ -25,7 +25,7 @@ public class QueryControllerReal(
     : ServiceBase("Api." + LogSuffix, connect: [workViews, workUnitQueryCopy, workUnitQueryDelete, queryImport, queryDeleteIfUnused, ctxSvc, querySave, queryDev, queryDevDebug, tokenEngineWithContext])
 {
     public const string LogSuffix = "Query";
-    public const string LogGroup = EavWebApiConstants.HistoryNameWebApi + "-query";
+    public const string LogGroup = ".query";
 
     public bool DeleteIfUnused(int appId, int id) => queryDeleteIfUnused.New(appId).DeleteIfUnused(id);
 

@@ -1,6 +1,8 @@
-﻿namespace ToSic.Sxc.Backend.Admin;
+﻿using ToSic.Eav.WebApi.Admin.Sys;
 
-public interface IDialogController
+namespace ToSic.Sxc.Backend.Admin;
+
+public interface IDialogController: IAppAdminWebApiController
 {
     /// <summary>
     /// This is the subsystem which delivers the getting-started app-iframe with instructions etc.

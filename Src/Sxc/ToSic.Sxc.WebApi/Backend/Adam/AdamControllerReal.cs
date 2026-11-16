@@ -16,6 +16,8 @@ public class AdamControllerReal<TIdentifier>(
     ISxcCurrentContextService ctxService)
     : ServiceBase("Api.Adam", connect: [adamContextGen, adamUpload, adamWorkGet, adamFolders, adamDelete, adamRename])
 {
+    public const string LogSuffix = "Adam";
+
     // TODO: @2dm change to not changing the state
     private IContextOfApp ShareAppStateOptimized(int appId)
     {

@@ -6,7 +6,7 @@ using RealController = ToSic.Eav.WebApi.Admin.Sys.ZoneControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
-[SupportedModules(DnnSxcControllerRoot.DnnSupportedModuleNames)]
+[SupportedModules(DnnSupportedModuleNames)]
 [DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [ValidateAntiForgeryToken]
@@ -15,7 +15,7 @@ public class ZoneController : DnnApiController, IZoneController, IHasLog
 {
     #region WebApi Composition Infrastructure
 
-    public ILog Log => field ??= LogFactory.Create("Api.Zone");
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}");
 
     private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
 

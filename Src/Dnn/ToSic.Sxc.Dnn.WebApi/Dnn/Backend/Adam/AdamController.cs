@@ -1,6 +1,9 @@
 ﻿using System.Web;
+using System.Web.Http.Controllers;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using RealController = ToSic.Sxc.Backend.Adam.AdamControllerReal<int>;
 
 namespace ToSic.Sxc.Dnn.Backend;
@@ -10,12 +13,32 @@ namespace ToSic.Sxc.Dnn.Backend;
 /// Should check for security at each standard call - to see if the current user may do this
 /// Then we can reduce security access level to anonymous, because each method will do the security check
 /// </summary>
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [SupportedModules(DnnSupportedModuleNames)]
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]    // use view, all methods must re-check permissions
 [ValidateAntiForgeryToken]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamController() : DnnSxcControllerBase("Adam"), IAdamController<int>
+public class AdamController : DnnApiController, IAdamController<int>
 {
+    #region WebApi Composition Infrastructure
+
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}");
+
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
+
+    /// <summary>
+    /// The entity controller probably needs this for every request.
+    /// </summary>
+    /// <param name="controllerContext"></param>
+    protected override void Initialize(HttpControllerContext controllerContext)
+    {
+        base.Initialize(controllerContext);
+        new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, controllerContext.Request, Log);
+    }
+
+    #endregion
+
+
     private RealController Real => SysHlp.GetService<RealController>();
 
     [HttpPost]

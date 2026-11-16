@@ -1,8 +1,10 @@
 ﻿using System.Web;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.WebApi.Admin.Sys;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Dnn.WebApi.Sys;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using RealController = ToSic.Sxc.Backend.Admin.TypeControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
@@ -19,19 +21,20 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 /// Instead, each method must have all attributes, or do additional security checking.
 /// Security checking is possible, because the cookie still contains user information
 /// </remarks>
-[DnnLogExceptions]
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), ITypeController
+public class TypeController : DnnApiController, ITypeController
 {
-    private RealController Real => SysHlp.GetService<RealController>();
+    #region WebApi Composition Infrastructure
 
-    // Replaced by DataSource System.ContentTypes through query System.SysData.
-    ///// <summary>Get a list of all content-types.</summary>
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    //public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
-    //    => Real.List(appId, scope, withStatistics);
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}");
+
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
+
+    #endregion
+
+
+    private RealController Real => SysHlp.GetService<RealController>();
 
     /// <summary>
     /// Delete a Content-Type

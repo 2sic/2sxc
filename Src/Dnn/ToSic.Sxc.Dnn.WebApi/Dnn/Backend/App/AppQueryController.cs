@@ -4,6 +4,7 @@ using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
+using RealController = ToSic.Eav.WebApi.App.Sys.AppWebApiQueryRunSvc;
 
 namespace ToSic.Sxc.Dnn.Backend.App;
 
@@ -14,14 +15,14 @@ public class AppQueryController : DnnApiController, IAppQueryController, IHasLog
 {
     #region WebApi Composition Infrastructure
 
-    public ILog Log => field ??= LogFactory.Create("Api.Query");
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}");
 
-    private DnnWebApiHelper SysHlp => field ??= new(this, $"{EavWebApiConstants.HistoryNameWebApi}.query", skipApiLogging: true);
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi + ".query");
 
     #endregion
 
 
-    private AppWebApiQueryRunSvc Real => SysHlp.GetService<AppWebApiQueryRunSvc>();
+    private RealController Real => SysHlp.GetService<RealController>();
     private AppQueryContextResolver CtxResolver => SysHlp.GetService<AppQueryContextResolver>();
 
 
@@ -38,6 +39,7 @@ public class AppQueryController : DnnApiController, IAppQueryController, IHasLog
     {
         // Experimental: move block context availability to the specific call, instead of on the whole controller.
         // This is the query with /auto/, so it should be able to auto-detect the current specs
+        // The block is required, so that queries can resolve things such as Module.Id etc.
         new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, Request, Log);
         return Real.RunQuery(CtxResolver.GetCtxAndLookupForAppIdOrContext(appId),
             queryName: name, more: null, stream: stream, includeGuid: includeGuid);
@@ -53,6 +55,7 @@ public class AppQueryController : DnnApiController, IAppQueryController, IHasLog
     )
     {
         // Experimental: move block context availability to the specific call, instead of on the whole controller.
+        // The block is required, so that queries can resolve things such as Module.Id etc.
         new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, Request, Log);
         return Real.RunQuery(CtxResolver.GetCtxAndLookupForAppIdOrContext(appId),
             queryName: name, more: more, stream: stream, includeGuid: includeGuid);

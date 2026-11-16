@@ -1,21 +1,44 @@
-﻿using ToSic.Eav.Ui.Edit.Sys;
+﻿using System.Web.Http.Controllers;
+using ToSic.Eav.Ui.Edit.Sys;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Eav.WebApi.Sys.Dto;
 using ToSic.Sxc.Dnn.WebApi.Sys;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using RealController = ToSic.Sxc.Backend.Cms.EditControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Cms;
 
 //[SupportedModules(DnnSupportedModuleNames)]
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [ValidateAntiForgeryToken]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class EditController() : DnnSxcControllerBase(RealController.LogSuffix), IEditController
+public class EditController : DnnApiController, IEditController
 {
-    #region Setup / Infrastructure
+    #region WebApi Composition Infrastructure
+
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}");
+
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
+
+    /// <summary>
+    /// The edit controller probably needs this for every request.
+    /// </summary>
+    /// <param name="controllerContext"></param>
+    protected override void Initialize(HttpControllerContext controllerContext)
+    {
+        base.Initialize(controllerContext);
+        new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, controllerContext.Request, Log);
+    }
+
+    #endregion
+
+
+
 
     private RealController Real => SysHlp.GetService<RealController>();
 
-    #endregion
+    
 
     /// <inheritdoc />
     [HttpPost]

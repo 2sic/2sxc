@@ -16,8 +16,7 @@ public class BlockControllerReal(
     LazySvc<WorkApps> workApps,
     LazySvc<IContextCompleteService> ctxService,
     Generator<BlockUpdateApp> blockUpdateApp)
-    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [ctxSvc, blockBackend, viewsBackend, publish, workApps, ctxService, blockUpdateApp]),
-        IBlockController
+    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [ctxSvc, blockBackend, viewsBackend, publish, workApps, ctxService, blockUpdateApp])
 {
     public const string LogSuffix = "Block";
 

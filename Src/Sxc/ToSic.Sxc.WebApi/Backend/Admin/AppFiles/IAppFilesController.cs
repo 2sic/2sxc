@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
-public interface IAppFilesController
+public interface IAppFilesController: IHasLog
 {
     ICollection<string> All(int appId, bool global, string? path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false);
 

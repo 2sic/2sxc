@@ -3,7 +3,7 @@ using ToSic.Eav.ImportExport.Sys;
 
 namespace ToSic.Sxc.Backend.Admin;
 
-public interface IAdminDataController
+public interface IAdminDataController: IHasLog
 {
     /// <summary>
     /// Bundle Export

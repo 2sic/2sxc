@@ -1,4 +1,5 @@
 using ToSic.Eav.Apps.Sys.Extensions;
+using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Sxc.Apps.Extensions.Sys.Preflight;
 
 namespace ToSic.Sxc.Backend.Admin;
@@ -6,11 +7,8 @@ namespace ToSic.Sxc.Backend.Admin;
 /// <summary>
 /// Controller interface for App Extensions endpoints separated from the main App controller.
 /// </summary>
-public interface IAppExtensionsController
+public interface IAppExtensionsController: IAppAdminWebApiController
 {
-    // Replaced by DataSource System.AppExtensions through query System.SysData.
-    //ICollection<ExtensionDto> Extensions(int appId);
-
     /// <summary>
     /// Preflight installation of an extension zip to report current state and options.
     /// </summary>

@@ -16,14 +16,13 @@ public class DataControllerReal(
     ISite site,
     IAppPathsMicroSvc appPathSvc,
     IAppReaderFactory appReaders,
-    LazySvc<IContextOfSiteService> ctxSvc,
     AppWorkQuick<ExportBundleFile> bundleFile,
     AppWorkQuick<ExportBundleSave> contentExportLazy,
     Generator<ImportContent> importContent,
     LazySvc<IUser> userLazy,
     AppWorkQuick<WorkEntityRecycle> recycle)
     : ServiceBase("Api.DtaCtlRl",
-        connect: [site, appPathSvc, appReaders, ctxSvc, bundleFile, contentExportLazy, importContent, userLazy, recycle])
+        connect: [site, appPathSvc, appReaders, bundleFile, contentExportLazy, importContent, userLazy, recycle])
 {
     public const string LogSuffix = "DataCtrl";
 
@@ -46,7 +45,7 @@ public class DataControllerReal(
             streams.Add(new() { Name = fileName, Stream = stream! });
         }
         var result = importContent.New()
-            .ImportJsonFiles(zoneId, appId, streams, ctxSvc.Value.Context.Site.DefaultCultureCode);
+            .ImportJsonFiles(zoneId, appId, streams, site.DefaultCultureCode);
 
         return l.ReturnAsOk(result);
     }
@@ -70,7 +69,7 @@ public class DataControllerReal(
             return l.ReturnFalse($"File not found: {filePath}");
 
         var result = importContent.New()
-            .ImportJsonFiles(zoneId, appId, [new() { Name = fileName, Stream = new FileStream(filePath, FileMode.Open, FileAccess.Read) }], ctxSvc.Value.Context.Site.DefaultCultureCode);
+            .ImportJsonFiles(zoneId, appId, [new() { Name = fileName, Stream = new FileStream(filePath, FileMode.Open, FileAccess.Read) }], site.DefaultCultureCode);
 
         var message = string.Join(", ", result.Messages.Select(m => m.Text));
 

@@ -1,12 +1,28 @@
-﻿using ToSic.Sxc.Dnn.WebApi.Sys;
+﻿using DotNetNuke.Services.Upgrade.Internals;
+using ToSic.Eav.WebApi.Sys;
+using ToSic.Sxc.Dnn.WebApi.Sys;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using RealController = ToSic.Eav.Sys.Insights.InsightsControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Sys;
 
-[DnnLogExceptions]
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class InsightsController() : DnnSxcControllerRoot(RealController.LogSuffix)
+public class InsightsController : DnnApiController, IHasLog
 {
+    #region WebApi Composition Infrastructure
+
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}");
+
+    /// <summary>
+    /// Make sure that these requests don't land in the normal api-log.
+    /// Otherwise each log-access would re-number what item we're looking at
+    /// </summary>
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi + ".insights");
+
+    #endregion
+
+
     private RealController Real => SysHlp.GetService<RealController>();
 
     /// <summary>
@@ -33,11 +49,6 @@ public class InsightsController() : DnnSxcControllerRoot(RealController.LogSuffi
     /// </summary>
     internal const string InsightsUrlFragment = "/sys/insights/";
 
-    /// <summary>
-    /// Make sure that these requests don't land in the normal api-log.
-    /// Otherwise each log-access would re-number what item we're looking at
-    /// </summary>
-    protected override string HistoryLogGroup => "web-api.insights";
 
     #endregion
 }

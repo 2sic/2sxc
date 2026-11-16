@@ -1,16 +1,36 @@
 ﻿using System.Web;
 using ToSic.Eav.ImportExport.Sys;
-using ToSic.Eav.WebApi.Sys.Dto;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Dnn.WebApi.Sys;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using RealController = ToSic.Sxc.Backend.Admin.ViewControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
-[DnnLogExceptions]
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ViewController() : DnnSxcControllerBase(RealController.LogSuffix), IViewController
+public class ViewController : DnnApiController, IViewController
 {
+    #region WebApi Composition Infrastructure
+
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}");
+
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
+
+    ///// <summary>
+    ///// The app data controller probably needs this for every request.
+    ///// </summary>
+    ///// <param name="controllerContext"></param>
+    //protected override void Initialize(HttpControllerContext controllerContext)
+    //{
+    //    base.Initialize(controllerContext);
+    //    new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, controllerContext.Request, Log);
+    //}
+
+    #endregion
+
+
     private RealController Real => SysHlp.GetService<RealController>();
 
     /// <inheritdoc />

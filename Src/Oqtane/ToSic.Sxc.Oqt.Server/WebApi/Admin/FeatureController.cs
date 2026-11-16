@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi.Sys.Admin.Features;
+using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Eav.WebApi.Sys.Licenses;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sys.Capabilities.Features;
-using RealController = ToSic.Eav.WebApi.Sys.Admin.Features.FeatureControllerReal;
+using RealController = ToSic.Eav.WebApi.Admin.Sys.FeatureControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 

@@ -1,27 +1,27 @@
 ﻿using System.Web;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Eav.WebApi.Sys.Licenses;
 using ToSic.Sxc.Dnn.WebApi.Sys;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using RealController = ToSic.Eav.WebApi.Sys.Licenses.LicenseControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Sys;
 
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class LicenseController() : DnnSxcControllerRoot("License"), ILicenseController
+public class LicenseController : DnnApiController, ILicenseController
 {
+    #region WebApi Composition Infrastructure
+
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}");
+
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi + ".license");
+
+    #endregion
+
+
     private RealController Real => SysHlp.GetService<RealController>();
-
-    /// <summary>
-    /// Make sure that these requests don't land in the normal api-log.
-    /// Otherwise each log-access would re-number what item we're looking at
-    /// </summary>
-    protected override string HistoryLogGroup => "web-api.license";
-
-    // Replaced by DataSources System.Licenses and System.FeatureStates through query System.SysData.
-    ///// <inheritdoc />
-    //[HttpGet]
-    //public IEnumerable<LicenseDto> Summary()
-    //    => Real.Summary();
 
     /// <inheritdoc />
     [HttpPost]

@@ -20,20 +20,18 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys;
 // [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class DnnSxcControllerRoot : DnnApiController, IHasLog
 {
-    internal const string DnnSupportedModuleNames = "2sxc,2sxc-app";
-
     protected DnnSxcControllerRoot(string logSuffix, string insightsGroup = default, string firstMessage = default)
     {
         Log = LogFactory.Create("Api." + logSuffix);
         // ReSharper disable once VirtualMemberCallInConstructor
-        SysHlp = new(this, insightsGroup ?? HistoryLogGroup, firstMessage);
+        SysHlp = new(this, insightsGroup ?? HistoryLogGroup, firstMessage, logApiTimer: true);
     }
 
     /// <summary>
     /// Special helper to move all Razor logic into a separate class.
     /// For architecture of Composition over Inheritance.
     /// </summary>
-    internal DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
+    internal DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi, logApiTimer: true);
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -64,5 +62,4 @@ public abstract class DnnSxcControllerRoot : DnnApiController, IHasLog
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     protected virtual string HistoryLogGroup => EavWebApiConstants.HistoryNameWebApi;
-
 }

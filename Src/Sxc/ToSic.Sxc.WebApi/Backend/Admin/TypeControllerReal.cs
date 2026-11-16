@@ -15,8 +15,7 @@ public class TypeControllerReal(
     AppWorkQuick<ExportTypeJson> exportTypeJson,
     LazySvc<IUser> userLazy,
     Generator<ImportContent> importContent)
-    : ServiceBase("Api.TypesRl",
-        connect: [ctxSvc, userLazy, typeMod, exportBundleFile, exportTypeJson, importContent])//, ITypeController
+    : ServiceBase("Api.TypesRl", connect: [ctxSvc, userLazy, typeMod, exportBundleFile, exportTypeJson, importContent])
 {
     public const string LogSuffix = "Types";
 

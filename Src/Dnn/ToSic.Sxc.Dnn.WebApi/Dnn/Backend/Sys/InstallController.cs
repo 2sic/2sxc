@@ -1,22 +1,26 @@
-﻿using ToSic.Eav.WebApi.Sys.Install;
+﻿using ToSic.Eav.WebApi.Sys;
+using ToSic.Eav.WebApi.Sys.Install;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.WebApi.Sys;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using RealController = ToSic.Sxc.Backend.Sys.InstallControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Sys;
 
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class InstallController()
-    : DnnSxcControllerRoot(RealController.LogSuffix), IInstallController
+public class InstallController : DnnApiController, IInstallController
 {
+    #region WebApi Composition Infrastructure
+
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}");
+
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi + ".install");
+
+    #endregion
+
+
     private RealController Real => SysHlp.GetService<RealController>();
-
-    /// <summary>
-    /// Make sure that these requests don't land in the normal api-log.
-    /// Otherwise, each log-access would re-number what item we're looking at
-    /// </summary>
-    protected override string HistoryLogGroup => "web-api.install";
-
 
     /// <inheritdoc />
     [HttpGet]

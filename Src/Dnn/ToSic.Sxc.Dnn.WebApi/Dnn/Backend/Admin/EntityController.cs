@@ -1,8 +1,11 @@
-﻿using ToSic.Eav.ImportExport.Sys;
+﻿using System.Web.Http.Controllers;
+using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys.Options;
 using ToSic.Eav.WebApi.Admin.Sys;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Dnn.WebApi.Sys;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using Guid = System.Guid;
 using RealController = ToSic.Eav.WebApi.Admin.Sys.EntityControllerReal;
 
@@ -20,10 +23,29 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 /// Instead, each method must have all attributes, or do additional security checking.
 /// Security checking is possible, because the cookie still contains user information
 /// </remarks>
-[DnnLogExceptions]
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class EntityController() : DnnSxcControllerBase(RealController.LogSuffix), IEntityController
+public class EntityController : DnnApiController, IEntityController
 {
+    #region WebApi Composition Infrastructure
+
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}");
+
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
+
+    /// <summary>
+    /// The entity controller probably needs this for every request.
+    /// </summary>
+    /// <param name="controllerContext"></param>
+    protected override void Initialize(HttpControllerContext controllerContext)
+    {
+        base.Initialize(controllerContext);
+        new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, controllerContext.Request, Log);
+    }
+
+    #endregion
+
+
     private RealController Real => SysHlp.GetService<RealController>();
 
     /// <inheritdoc/>

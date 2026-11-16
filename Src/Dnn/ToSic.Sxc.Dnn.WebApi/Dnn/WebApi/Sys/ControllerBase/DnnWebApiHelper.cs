@@ -11,13 +11,13 @@ internal class DnnWebApiHelper : ServiceWithContext
 {
     #region Constructor & Destructor
 
-    public DnnWebApiHelper(IHasLog apiController, string historyLogGroup, string firstMessage = default, bool skipApiLogging = false) : base("Dnn.ApiHlp")
+    public DnnWebApiHelper(IHasLog apiController, string historyLogGroup, string firstMessage = default, bool logApiTimer = false) : base("Dnn.ApiHlp")
     {
         var scopedLogging = GetService<Generator<HttpRequestLoggingScoped, HttpRequestLoggingScoped.Options>>();
         var requestLogging = scopedLogging.New(new() { Segment = historyLogGroup ?? EavWebApiConstants.HistoryNameWebApi, RootName = "Dnn.Api" });
         this.LinkLog(requestLogging.RootLog);
         apiController.LinkLog(requestLogging.RootLog);
-        if (!skipApiLogging)
+        if (logApiTimer)
             WebApiLogging = new(requestLogging, firstMessage: firstMessage);
     }
 

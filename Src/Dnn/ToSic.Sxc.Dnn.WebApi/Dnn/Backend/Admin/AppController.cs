@@ -2,8 +2,10 @@
 using ToSic.Eav.Apps.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.WebApi.Admin.Sys;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Dnn.WebApi.Sys;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using RealController = ToSic.Sxc.Backend.Admin.AppControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
@@ -12,10 +14,19 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 // token, which fails in the cases where the url is called using get, which should result in a download
 // [ValidateAntiForgeryToken] because the exports are called by the browser directly (new tab) 
 // we can't set this globally (only needed for imports)
-[DnnLogExceptions]
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), IAppController
+public class AppController : DnnApiController, IAppController
 {
+    #region WebApi Composition Infrastructure
+
+    public ILog Log => field ??= LogFactory.Create("Api." + RealController.LogSuffix);
+
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
+
+    #endregion
+
+
     private RealController Real => SysHlp.GetService<RealController>();
 
     /// <inheritdoc />

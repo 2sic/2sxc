@@ -1,23 +1,18 @@
 ﻿using ToSic.Eav.Data.Versions.Sys;
-using ToSic.Eav.WebApi.Sys.Cms;
 
 namespace ToSic.Sxc.Backend.Cms;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class HistoryControllerReal(AppWorkQuick<WorkEntityVersionRestore> versioning)
-    : ServiceBase("Api.CmsHistoryRl", connect: [versioning]), IHistoryController
+    : ServiceBase("Api.CmsHistoryRl", connect: [versioning])
 {
     public const string LogSuffix = "Hist";
-
-    // 2026-09-01 not in use any more, replaced with #SysData
-    //public List<ToSic.Eav.Persistence.Versions.ItemHistory> Get(int appId, ItemIdentifier item)
-    //    => versioning.New(appId: appId).VersionHistory(item.EntityId);
 
 
     public bool Restore(int appId, int transactionId, ItemIdentifier item)
     {
-        versioning.New(appId: appId).VersionRestore(item.EntityId, transactionId);
+        versioning.New(appId).VersionRestore(item.EntityId, transactionId);
         return true;
     }
 }

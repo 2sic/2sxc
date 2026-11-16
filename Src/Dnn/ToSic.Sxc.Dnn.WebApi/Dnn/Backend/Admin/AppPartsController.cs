@@ -1,17 +1,29 @@
 ﻿using System.Web;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.WebApi.Admin.Sys;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Eav.WebApi.Sys.Dto;
 using ToSic.Sxc.Dnn.WebApi.Sys;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using RealController = ToSic.Sxc.Backend.Admin.AppPartsControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)] can't be used, because it forces the security
 // token, which fails in the cases where the url is called using get, which should result in a download
 
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppPartsController() : DnnSxcControllerRoot(RealController.LogSuffix), IAppPartsController
+public class AppPartsController: DnnApiController, IAppPartsController
 {
+    #region WebApi Composition Infrastructure
+
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}");
+
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
+
+    #endregion
+
+
     private RealController Real => SysHlp.GetService<RealController>();
 
     /// <inheritdoc />

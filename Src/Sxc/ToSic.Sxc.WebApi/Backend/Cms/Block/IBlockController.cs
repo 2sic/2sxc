@@ -1,9 +1,10 @@
 ﻿using ToSic.Eav.Apps.Inspect.Sys.UiDto;
+using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Sxc.Backend.InPage;
 
 namespace ToSic.Sxc.Backend.Cms;
 
-public interface IBlockController
+public interface IBlockController: IAppAdminWebApiController
 {
     /// <summary>
     /// used to be GET Module/GenerateContentBlock

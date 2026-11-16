@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.WebApi.Admin.Sys;
 
 namespace ToSic.Sxc.Backend.Admin;
 
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Backend.Admin;
 /// Instead, each method must have all attributes, or do additional security checking.
 /// Security checking is possible, because the cookie still contains user information
 /// </remarks>
-public interface IViewController
+public interface IViewController: IAppAdminWebApiController
 {
     // Replaced by DataSource System.Views through query System.SysData.
     //IEnumerable<ViewDetailsDto> All(int appId);

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.Backend.Cms.HistoryControllerReal;
@@ -21,14 +20,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 public class HistoryController() : OqtStatefulControllerBase(RealController.LogSuffix), IHistoryController
 {
     private RealController Real => GetService<RealController>();
-
-    // Replaced by DataSource System.ItemHistory through query System.SysData.
-    ///// <inheritdoc />
-    //[HttpPost]
-    ////[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    //[Authorize(Roles = RoleNames.Admin)]
-    //public List<ItemHistory> Get(int appId, [FromBody] ItemIdentifier item)
-    //    => Real.Get(appId, item);
 
 
     /// <inheritdoc />

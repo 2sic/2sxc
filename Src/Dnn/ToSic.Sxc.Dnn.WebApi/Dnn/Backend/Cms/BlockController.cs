@@ -1,16 +1,39 @@
-﻿using ToSic.Eav.Apps.Inspect.Sys.UiDto;
+﻿using System.Web.Http.Controllers;
+using ToSic.Eav.Apps.Inspect.Sys.UiDto;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Backend.Cms;
 using ToSic.Sxc.Backend.InPage;
 using ToSic.Sxc.Dnn.WebApi.Sys;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using RealController = ToSic.Sxc.Backend.Cms.BlockControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Cms;
 
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [ValidateAntiForgeryToken]
 // cannot use this, as most requests now come from a lone page [SupportedModules(DnnSupportedModuleNames)]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class BlockController() : DnnSxcControllerBase(RealController.LogSuffix), IBlockController
+public class BlockController : DnnApiController, IBlockController
 {
+    #region WebApi Composition Infrastructure
+
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}");
+
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
+
+    /// <summary>
+    /// The block controller needs this for every request.
+    /// </summary>
+    /// <param name="controllerContext"></param>
+    protected override void Initialize(HttpControllerContext controllerContext)
+    {
+        base.Initialize(controllerContext);
+        new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, controllerContext.Request, Log);
+    }
+
+    #endregion
+
+
     private RealController Real => SysHlp.GetService<RealController>();
 
     /// <inheritdoc />
@@ -64,7 +87,7 @@ public class BlockController() : DnnSxcControllerBase(RealController.LogSuffix),
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     public AjaxRenderDto Render([FromUri] int templateId, [FromUri] string lang, [FromUri] string edition) 
-        => Real.Set(DnnConstants.SysFolderRootVirtual.Trim('~')).Render(templateId, lang, edition);
+        => Real.Set(SysFolderRootVirtual.Trim('~')).Render(templateId, lang, edition);
 
     /// <inheritdoc />
     [HttpPost]

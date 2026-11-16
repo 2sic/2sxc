@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Oqt.Server.Controllers;
 
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 [Route(OqtWebApiConstants.AppRootPathOrLang)]
 [Route(OqtWebApiConstants.AppRootPathAndLang)]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class CacheController() : OqtStatefulControllerBase(CacheControllerReal.LogSuffix)
+public class CacheController() : OqtStatefulControllerBase(CacheControllerReal.LogSuffix), ICacheController
 {
     private CacheControllerReal Real => GetService<CacheControllerReal>();
 
