@@ -28,7 +28,7 @@ public class AppQueryController() : OqtStatefulControllerBase(RealController.Log
         [FromRoute] string appPath,
         [FromRoute] string name,
         [FromRoute] string stream = null
-    ) => Real.PublicQuery(appPath, name, stream);
+    ) => Real.PublicQuery(appPath: appPath, name: name, more: null, stream: stream);
 
     [HttpPost("{appPath}/" + AppParts.Query + "/{name}")]
     [HttpPost("{appPath}/" + AppParts.Query + "/{name}/{stream}")]
@@ -37,7 +37,7 @@ public class AppQueryController() : OqtStatefulControllerBase(RealController.Log
         [FromRoute] string name,
         QueryParametersDtoFromClient more,
         [FromRoute] string stream = null
-    ) => Real.PublicQueryPost(appPath, name, more, stream);
+    ) => Real.PublicQuery(appPath: appPath, name: name, more: more, stream: stream);
 
     [HttpGet($"{AppParts.Auto}/{AppParts.Query}" + "/{name}")]
     [HttpGet($"{AppParts.Auto}/{AppParts.Query}" + "/{name}/{stream?}")]
@@ -46,7 +46,7 @@ public class AppQueryController() : OqtStatefulControllerBase(RealController.Log
         [FromQuery] int? appId = null,
         [FromRoute] string stream = null,
         [FromQuery] bool? includeGuid = false
-    ) => Real.Query(name, appId, stream, includeGuid);
+    ) => Real.Query(name: name, more: null, appId: appId, stream: stream, includeGuid: includeGuid);
 
     [HttpPost($"{AppParts.Auto}/{AppParts.Query}" + "/{name}")]
     [HttpPost($"{AppParts.Auto}/{AppParts.Query}" + "/{name}/{stream?}")]
@@ -56,5 +56,5 @@ public class AppQueryController() : OqtStatefulControllerBase(RealController.Log
         [FromQuery] int? appId = null,
         [FromRoute] string stream = null,
         [FromQuery] bool? includeGuid = false
-    ) => Real.QueryPost(name, more, appId, stream, includeGuid);
+    ) => Real.Query(name: name, more: more, appId: appId, stream: stream, includeGuid: includeGuid);
 }

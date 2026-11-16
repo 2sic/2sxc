@@ -21,7 +21,7 @@ public class AppQueryController() : DnnSxcControllerBase(RealController.LogSuffi
         [FromUri] int? appId = null,
         [FromUri] string stream = null,
         [FromUri] bool? includeGuid = false
-    ) => Real.Query(name, appId, stream, includeGuid);
+    ) => Real.Query(name: name, more: null, appId: appId, stream: stream, includeGuid: includeGuid);
 
     [HttpPost]
     public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost
@@ -30,14 +30,14 @@ public class AppQueryController() : DnnSxcControllerBase(RealController.LogSuffi
         [FromUri] int? appId = null,
         [FromUri] string stream = null,
         [FromUri] bool? includeGuid = false
-    ) => Real.QueryPost(name, more, appId, stream, includeGuid);
+    ) => Real.Query(name: name, more: more, appId: appId, stream: stream, includeGuid: includeGuid);
 
     [HttpGet] 
     public IDictionary<string, IEnumerable<EavLightEntity>> PublicQuery(
         [FromUri] string appPath,
         [FromUri] string name,
         [FromUri] string stream = null
-    ) => Real.PublicQuery(appPath, name, stream);
+    ) => Real.PublicQuery(appPath: appPath, name: name, more: null, stream: stream);
 
     [HttpPost]
     public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost(
@@ -45,5 +45,5 @@ public class AppQueryController() : DnnSxcControllerBase(RealController.LogSuffi
         [FromUri] string name,
         [FromBody] QueryParametersDtoFromClient more,
         [FromUri] string stream = null
-    ) => Real.PublicQueryPost(appPath, name, more, stream);
+    ) => Real.PublicQuery(appPath: appPath, name: name, more: more, stream: stream);
 }

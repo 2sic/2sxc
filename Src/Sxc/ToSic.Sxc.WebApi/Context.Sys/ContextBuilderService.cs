@@ -19,7 +19,7 @@ internal class ContextBuilderService(ISite site, LazySvc<IHttp> http, LazySvc<Ap
         if (string.IsNullOrWhiteSpace(nameOrPath))
             return null;
         var zoneId = site.ZoneId;
-        var appId = GetAppIdFromAppPathOrName(zoneId, nameOrPath!, throwIfNotFound: false);
+        var appId = appFinder.Value.FindAppId(zoneId, nameOrPath, alsoCheckFolderName: true);
         return appId <= KnownAppsConstants.AppIdEmpty
             ? null
             : appCtxGenerator.New().Create(new AppIdentity(zoneId, appId));
@@ -36,22 +36,6 @@ internal class ContextBuilderService(ISite site, LazySvc<IHttp> http, LazySvc<Ap
     }
 
     #endregion
-
-    /// <summary>
-    /// Try to find the AppId based on the apps path or name.
-    /// Optionally throw an exception if not found (as of 2026-10 this is not used).
-    /// </summary>
-    /// <returns></returns>
-    private int GetAppIdFromAppPathOrName(int zoneId, string appPathOrName, bool throwIfNotFound)
-    {
-        var l = Log.Fn<int>($"{zoneId}, {appPathOrName}, {throwIfNotFound}");
-        // get app from AppName
-        var aid = appFinder.Value.FindAppId(zoneId, appPathOrName, alsoCheckFolderName: true);
-        if (aid <= KnownAppsConstants.AppIdEmpty && throwIfNotFound)
-            throw new($"App required but can't find App based on the name '{appPathOrName}'");
-
-        return l.Return(aid, $"found app:{aid}");
-    }
 
 
     /// <summary>
