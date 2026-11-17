@@ -109,6 +109,10 @@ public class DnnBusinessController : ModuleSearchBase, IHasLog
         try
         {
             var searchController = ServiceProvider.Build<SearchController>(Log);
+            // 1. The scheduler has no PortalSettings.Current, so prepare and share the module's site here.
+            ServiceProvider.Build<DnnModuleContextFactory>(Log).CreateFromModuleAndShare(moduleInfo, Log);
+            // 2. The module factory must be built after the share: it captures the shared site when it's created
+            // and uses that site's zone for the module.
             var mod = ServiceProvider.Build<DnnModuleFactory>(Log).Get(moduleInfo);
             return searchController.GetModifiedSearchDocuments(mod, beginDate);
         }
