@@ -15,6 +15,7 @@ using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Server.Polymorphism;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.Services;
+using ToSic.Sxc.Oqt.Server.Search;
 using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -44,6 +45,7 @@ partial class OqtRegisterServices
         services.AddTransient<IWorkBlockPublishingLookup, OqtWorkPublishingLookup>();
 
         services.TryAddTransient<OqtModuleHelper>();
+        services.TryAddTransient<OqtSearchController>();
 
         return services;
     }

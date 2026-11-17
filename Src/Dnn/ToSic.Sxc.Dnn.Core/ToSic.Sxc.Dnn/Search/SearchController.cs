@@ -1,7 +1,5 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search.Entities;
-using System.Text.RegularExpressions;
-using System.Web;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Context;
@@ -10,18 +8,12 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Blocks.Sys.Views;
-using ToSic.Sxc.Code.Sys;
-using ToSic.Sxc.Code.Sys.HotBuild;
-using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Render.Polymorphism.Sys;
 using ToSic.Sxc.Search;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Wrappers;
-using static System.StringComparer;
 
 namespace ToSic.Sxc.Dnn.Search;
 
@@ -30,21 +22,18 @@ namespace ToSic.Sxc.Dnn.Search;
 /// It's created once for each module which will be indexed
 /// </summary>
 /// <remarks>
-/// ATM it's DNN only (because Oqtane doesn't have search indexing)
-/// But the code is 99% clean, so it would be easy to split into dnn/Oqtane versions once ready.
-/// The only difference seems to be exception logging. 
+/// DNN context and documents stay here; search preparation is shared with Oqtane.
 /// </remarks>
 internal class SearchController(
     AppsCacheSwitch appsCache,
-    Generator<CodeCompiler> codeCompiler,
-    Generator<IExecutionContextFactory> exCtxFactory,
+    LazySvc<ToSic.Sxc.Search.Sys.SearchIndexing> searchIndexing,
     LazySvc<DnnModuleContextFactory> ctxOfModFac,
     LazySvc<BlockOfModule> moduleAndBlockBuilder,
     LazySvc<ILookUpEngineResolver> dnnLookUpEngineResolver,
     LazySvc<ILogStore> logStore,
     IEditionService editionSvc)
     : ServiceBase("DNN.Search",
-        connect: [appsCache, codeCompiler, exCtxFactory, ctxOfModFac, dnnLookUpEngineResolver, moduleAndBlockBuilder, logStore, editionSvc])
+        connect: [appsCache, searchIndexing, ctxOfModFac, dnnLookUpEngineResolver, moduleAndBlockBuilder, logStore, editionSvc])
 {
     /// <summary>
     /// Initialize all values which are needed - or return a text with the info why we must stop.
@@ -264,74 +253,15 @@ internal class SearchController(
     private KeyValuePair<string, IDataStream>[] GetStreamsToIndex()
     {
         var l = Log.Fn<KeyValuePair<string, IDataStream>[]>();
-        // Check if we should filter the streams - new in 12.02
-        var streamsToKeep = Block.View.SearchIndexingStreams
-            .CsvToArrayWithoutEmpty();
-
-        // Decide what streams to keep - new in 12.02
-        var streamsToIndex = Block.Data.Out
-            .Where(p => p.Key != ViewParts.Presentation && p.Key != ViewParts.ListPresentation)
-            .ToArray();
-
-        if (streamsToKeep.Any())
-            streamsToIndex = streamsToIndex
-                .Where(s => streamsToKeep.Contains(s.Key, InvariantCultureIgnoreCase))
-                .ToArray();
-
-        return l.Return(streamsToIndex, $"{streamsToIndex.Length}");
+        var streams = ToSic.Sxc.Search.Sys.SearchIndexing.Streams(Block.Data.Out, Block.View.SearchIndexingStreams);
+        return l.Return(streams, $"{streams.Length}");
     }
 
     private ICustomizeSearch CreateAndInitViewController(ISite site, IBlock block)
-    {
-        var l = Log.Fn<ICustomizeSearch>();
-        // 1. Get and compile the view.ViewController
-        var path = Path
-            .Combine(Block.View.IsShared ? site.SharedAppsRootRelative() : site.AppsRootPhysical, block.Context.AppReaderRequired.Specs.Folder)
-            .ForwardSlash();
-        l.A($"compile ViewController class on path: {path}/{Block.View.ViewController}");
-        var spec = new HotBuildSpec(block.AppId, _edition, block.App.AppSpecs.Name);
-        l.A($"prepare spec: {spec}");
-        var instance = codeCompiler.New().InstantiateClass(virtualPath: block.View.ViewController, spec: spec, className: null, relativePath: path, throwOnError: true);
-        l.A("got instance of compiled ViewController class");
+        => searchIndexing.Value.CreateViewController(block, _edition,
+            Path.Combine(block.View.IsShared ? site.SharedAppsRootRelative() : site.AppsRootPhysical,
+                block.Context.AppReaderRequired.Specs.Folder).ForwardSlash());
 
-        // 2. Check if it implements ToSic.Sxc.Search.ICustomizeSearch - otherwise just return the empty search results as shown above
-        if (instance is not ICustomizeSearch customizeSearch)
-            return l.ReturnNull("exit, class do not implements ICustomizeSearch");
-
-        // 3. Make sure it has the full context if it's based on DynamicCode (like Code12)
-        if (instance is INeedsExecutionContext instanceWithContext)
-        {
-            l.A($"attach DynamicCode context to class instance");
-            var parentDynamicCodeRoot = exCtxFactory.New().New(new()
-            {
-                OwnerOrNull = null,
-                BlockOrNull = block,
-                ParentLog = Log,
-                CompatibilityFallback = CompatibilityLevels.CompatibilityLevel10,
-            });
-            instanceWithContext.ConnectToRoot(parentDynamicCodeRoot);
-        }
-
-        return l.Return(customizeSearch, "instance ok");
-    }
-
-    private string StripHtmlAndHtmlDecode(string text) => HttpUtility.HtmlDecode(Regex.Replace(text, "<.*?>", string.Empty));
-
-    /// <summary>
-    /// Gets a string that represents all entities joined with a comma , separator
-    /// Does just include String and Number fields
-    /// </summary>
-    /// <param name="entity"></param>
-    /// <param name="language"></param>
-    /// <returns></returns>
     private string GetJoinedAttributes(IEntity entity, string language)
-    {
-        return string.Join(", ",
-            entity.Attributes
-                .Where(x => x.Value.Type is ValueTypes.String or ValueTypes.Number)
-                .Select(x => x.Value[language])
-                .Where(a => a != null)
-                .Select(a => StripHtmlAndHtmlDecode(a.ToString()))
-                .Where(x => !string.IsNullOrEmpty(x))) + " ";
-    }
+        => ToSic.Sxc.Search.Sys.SearchIndexing.Body(entity, language);
 }

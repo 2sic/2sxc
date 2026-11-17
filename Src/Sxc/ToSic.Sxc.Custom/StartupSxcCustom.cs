@@ -6,6 +6,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Sys.AppDataSources;
 using ToSic.Sxc.DataSources.Sys;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Search.Sys;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Run.Startup;
@@ -15,6 +16,7 @@ public static class StartupSxcCustom
 {
     public static IServiceCollection AddSxcCustom(this IServiceCollection services)
     {
+        services.TryAddTransient<SearchIndexing>();
         // Loader of AppDataSources
         services.TryAddTransient<IAppDataSourcesLoader, AppDataSourcesLoader>();
 

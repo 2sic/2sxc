@@ -5,13 +5,18 @@ using Oqtane.Databases.Interfaces;
 using Oqtane.Extensions;
 using Oqtane.Infrastructure;
 using ToSic.Eav.Persistence.Efc.Sys.DbContext;
+using ToSic.Sxc.Oqt.Server.Context;
 
 namespace ToSic.Sxc.Oqt.Server.Data;
 
-internal sealed class OqtEavDbContextConfigurator(ITenantManager tenantManager) : IEavDbContextConfigurator
+internal sealed class OqtEavDbContextConfigurator(ITenantManager tenantManager, IOqtTenantContext tenantContext) : IEavDbContextConfigurator
 {
     public void Configure(DbContextOptionsBuilder optionsBuilder, string connectionString)
-        => optionsBuilder.UseOqtaneDatabase(Database, connectionString);
+        // Background indexing initializes this scope's tenant explicitly. The global
+        // connection may belong to the startup database or an unrelated HTTP request.
+        => optionsBuilder.UseOqtaneDatabase(Database, OqtBackgroundTenantScope.TenantId.HasValue
+            ? tenantContext.GetRequired().ConnectionString
+            : connectionString);
 
     public string RewriteName(string name) => Database.RewriteName(name);
 

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using ToSic.Eav.Web.Http.Sys;
+using ToSic.Sxc.Oqt.Server.Context;
 
 namespace ToSic.Sxc.Oqt.Server.Plumbing;
 
@@ -27,6 +28,12 @@ internal class HttpBlazor(IHttpContextAccessor contextAccessor, NavigationManage
     {
         get
         {
+            // Indexing has no navigation URL and must not inherit a caller's query.
+            // Only the explicit background scope takes this path; requestless interactive
+            // Blazor still uses its initialized NavigationManager below.
+            if (OqtBackgroundTenantScope.TenantId.HasValue)
+                return [];
+
             // caching is disabled because in Blazor Interactive the query string parameters are changed after the page is created
             //if (_queryStringValues != null) return _queryStringValues;
 

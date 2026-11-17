@@ -19,6 +19,11 @@ internal sealed class OqtAppCacheKeyService(IHttpContextAccessor httpContextAcce
 
     private int GetTenantIdOrThrow()
     {
+        // A batch may run under an HTTP request belonging to another tenant. Its explicit
+        // background identity must win because the shared app cache spans DI scopes.
+        if (OqtBackgroundTenantScope.TenantId is { } backgroundTenantId)
+            return backgroundTenantId;
+
         var requestServices = httpContextAccessor?.HttpContext?.RequestServices;
         var context = requestServices?.GetService<IOqtTenantContext>()?.Get();
         return context?.TenantId
