@@ -43,7 +43,7 @@ public class DnnModuleContextFactory(IContextOfBlockFactory blockCtxFactory, Dnn
             return l.Return(siteShare.TempSiteContents, "no module");
         if (module.OwnerPortalID < 0)
             return l.Return(siteShare.TempSiteContents, "no change, owner < 0");
-        if (module.OwnerPortalID == siteShare.TempSiteContents.ZoneId)
+        if (module.OwnerPortalID == siteShare.TempSiteContents.Id)
             return l.Return(siteShare.TempSiteContents, "no change, owner = temp site");
 
         // Note: this does look a bit fishy, since creating the object will probably be missing
