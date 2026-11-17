@@ -9,7 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNetNuke.Abstractions" Version="10.1.0" />
     <PackageReference Include="DotNetNuke.Web" Version="10.1.0" />
+    <PackageReference Include="Moq" Version="4.20.72" />
   </ItemGroup>
 
   <ItemGroup>

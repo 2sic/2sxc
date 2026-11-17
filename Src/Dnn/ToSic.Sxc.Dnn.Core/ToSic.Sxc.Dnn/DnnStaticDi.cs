@@ -38,8 +38,12 @@ public static class DnnStaticDi
     /// </remarks>
     private static readonly Type ServiceScopeKey = typeof(IServiceScope);
 
+    /// <summary>Create an owned scope; the caller must dispose it when the operation finishes.</summary>
+    internal static IServiceScope CreateGlobalScope()
+        => GetGlobalServiceProvider().CreateScope();
+
     public static IServiceProvider GetGlobalScopedServiceProvider()
-        => GetGlobalServiceProvider().CreateScope().ServiceProvider;
+        => CreateGlobalScope().ServiceProvider;
 
     [PrivateApi("Very internal, to use at startup, so singletons are not lost")]
     private static IServiceProvider GetGlobalServiceProvider()
@@ -63,7 +67,7 @@ public static class DnnStaticDi
         // Scope service-provider based on request
         var httpCtx = HttpContext.Current;
         if (httpCtx == null)
-            return GetGlobalServiceProvider().CreateScope().ServiceProvider;
+            return CreateGlobalScope().ServiceProvider;
 
         DnnRequestLogCorrelation.Ensure(httpCtx.Items,
             completed => httpCtx.AddOnRequestCompleted(context => completed(context.Items)));
@@ -71,7 +75,7 @@ public static class DnnStaticDi
         // This only runs in Dnn 7.4.2 - Dnn 9.3, because Dnn 9.4 provides this in the http context
         if (!httpCtx.Items.Contains(ServiceScopeKey))
         {
-            httpCtx.Items[ServiceScopeKey] = GetGlobalServiceProvider().CreateScope();
+            httpCtx.Items[ServiceScopeKey] = CreateGlobalScope();
 
             // Make sure service provider is disposed after request finishes
             httpCtx.AddOnRequestCompleted(context => ((IDisposable)context.Items[ServiceScopeKey])?.Dispose());
