@@ -10,17 +10,16 @@ public class AppViewPickerBackend(
     PermissionCheckAction permCheckAction,
     IContextCompleteService ctxService,
     Generator<BlockUpdateTemplate> blockUpdateTemplate,
-    AppWorkChain<WorkBlockViewsGet> workBlockViews,
-    AppWorkContextService appWorkCtxService,
-    LazySvc<WorkViewsContentTypes> workViewsContentTypes)
-    : ServiceBase("Bck.ViwApp", connect: [permCheckAction, ctxService, blockUpdateTemplate, workBlockViews, appWorkCtxService, workViewsContentTypes])
+    AppWorkQuick<WorkBlockViewsGet> workBlockViews,
+    AppWorkQuick<WorkViewsContentTypes> workViewsContentTypes)
+    : ServiceBase("Bck.ViwApp", connect: [permCheckAction, ctxService, blockUpdateTemplate, workBlockViews, workViewsContentTypes])
 {
     public IEnumerable<TemplateUiInfo> Templates()
     {
         var block = ctxService.BlockRequired();
         return block.AppOrNull == null
             ? []
-            : workBlockViews.New(appWorkCtxService.ContextNew(block.Context.AppReaderRequired))
+            : workBlockViews.New(block.Context.AppReaderRequired)
                 .GetCompatibleViews(block);
     }
 
@@ -29,8 +28,7 @@ public class AppViewPickerBackend(
         var block = ctxService.BlockRequired();
         return block.AppOrNull is not {} app
             ? []
-            : workViewsContentTypes.Value.GetContentTypesWithStatus(
-                appWorkCtxService.ContextNew(block.Context.AppReaderRequired),
+            : workViewsContentTypes.New(block.Context.AppReaderRequired).GetContentTypesWithStatus(
                 app.AppPaths.Path ?? "",
                 app.AppPaths.PathShared ?? ""
             );
