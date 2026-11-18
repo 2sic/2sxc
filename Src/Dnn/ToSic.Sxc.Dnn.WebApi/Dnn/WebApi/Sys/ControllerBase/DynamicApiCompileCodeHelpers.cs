@@ -31,7 +31,7 @@ internal class DnnCustomWebApiHelper(DnnApiController ownerController, DnnWebApi
         // 1. Make sure we have the block (if it exists for this request)
         var request = controllerContext.Request;
         var currentCtxSvc = (sysHlp ?? throw new InvalidOperationException("System helper is not initialized"))
-            .GetService<ISxcCurrentContextService>();
+            .GetService<IContextCompleteService>();
         var block = currentCtxSvc.BlockOrNull; // InitBlockSpecs(request);
         l.A($"HasBlock: {block != null}");
 

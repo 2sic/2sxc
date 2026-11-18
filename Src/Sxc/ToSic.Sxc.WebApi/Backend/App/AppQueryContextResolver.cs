@@ -5,7 +5,7 @@ using ToSic.Eav.WebApi.App.Sys;
 namespace ToSic.Sxc.Backend.App;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppQueryContextResolver(ISxcCurrentContextService ctxService, IContextOfAppFactory appCtxSvc, IWebApiAppContextBuilderService ctxBuilder, LazySvc<ILookUpEngineResolver> lookupResolver)
+public class AppQueryContextResolver(IContextCompleteService ctxService, IContextOfAppFactory appCtxSvc, IWebApiAppContextBuilderService ctxBuilder, LazySvc<ILookUpEngineResolver> lookupResolver)
     : ServiceBase("App.QryRes", connect: [lookupResolver, ctxService, ctxBuilder])
 {
     public const string LogSuffix = "AppQry";
