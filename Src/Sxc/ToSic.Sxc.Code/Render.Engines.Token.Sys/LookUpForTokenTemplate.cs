@@ -48,7 +48,7 @@ internal partial class LookUpForTokenTemplate(
         // this is acceptable for now.
 #if NETFRAMEWORK
         // Create Toolbar if requested, even if dynEntity is null
-        if (key == ViewConstants.FieldToolbar)
+        if (key == SxcViewConstants.FieldToolbar)
 #pragma warning disable CS0618 // Type or member is obsolete
             return (dynEntity as ToSic.Sxc.Data.Sys.DynamicEntity)?.Toolbar.ToString();
 #pragma warning restore CS0618 // Type or member is obsolete

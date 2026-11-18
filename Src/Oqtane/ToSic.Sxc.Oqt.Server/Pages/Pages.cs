@@ -4,7 +4,8 @@ using Oqtane.Shared;
 using ToSic.Eav.Ui.Context.Sys.Dto;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Blocks.Sys.Views;
+using ToSic.Eav.Apps.Views.Sys;
+
 
 namespace ToSic.Sxc.Oqt.Server.Pages;
 

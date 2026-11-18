@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Apps.AppReader.Sys;
-using ToSic.Sxc.Blocks.Sys.Views;
+using ToSic.Eav.Apps.Views.Sys;
 using ToSic.Sys.Caching.PiggyBack;
 
 namespace ToSic.Sxc.Apps.Sys.Work;

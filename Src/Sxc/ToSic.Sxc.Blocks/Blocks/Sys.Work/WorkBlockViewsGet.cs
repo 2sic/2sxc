@@ -3,7 +3,7 @@ using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Metadata.Sys;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Apps.Sys.Work;
-using ToSic.Sxc.Blocks.Sys.Views;
+using ToSic.Eav.Apps.Views.Sys;
 
 // note: not sure if the final namespace should be Sxc.Apps or Sxc.Views
 namespace ToSic.Sxc.Blocks.Sys.Work;

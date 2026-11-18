@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using ToSic.Eav.Apps.Sys.Paths;
-using ToSic.Sxc.Blocks.Sys.Views;
+using ToSic.Eav.Apps.Views.Sys;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Apps.Sys.EditAssets;

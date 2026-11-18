@@ -1,8 +1,7 @@
 ﻿using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.Apps.Views.Sys;
 using ToSic.Eav.Data.Sys.ValueConverter;
-using ToSic.Sxc.Blocks.Sys.Views;
 using static System.StringComparison;
-using static ToSic.Eav.Apps.Sys.AppConstants;
 
 namespace ToSic.Sxc.Apps.Sys;
 
@@ -31,8 +30,8 @@ public class AppIconHelpers(LazySvc<IValueConverter> iconConverterLazy)
         if (view.Icon.HasValue())
         {
             // If we have the App:Path in front, replace as expected, but never on global
-            if (HasAppPathToken(view.Icon))
-                return AppPathTokenReplace(view.Icon, appPaths.PathSwitch(false, type), appPaths.PathSwitch(true, type));
+            if (AppPathTokenHelper.HasAppPathToken(view.Icon))
+                return AppPathTokenHelper.AppPathTokenReplace(view.Icon, appPaths.PathSwitch(false, type), appPaths.PathSwitch(true, type));
 
             // If not, we must assume it's file:## placeholder
             // URLs (Links) we can provide...
@@ -48,21 +47,4 @@ public class AppIconHelpers(LazySvc<IValueConverter> iconConverterLazy)
         return viewPath1.Substring(0, viewPath1.LastIndexOf(".", Ordinal)) + ".png";
     }
 
-    public static bool HasAppPathToken(string? value)
-    {
-        value ??= "";
-        return value.StartsWith(AppPathPlaceholder, InvariantCultureIgnoreCase)
-               || value.StartsWith(AppPathSharedPlaceholder, InvariantCultureIgnoreCase);
-    }
-
-    public static string AppPathTokenReplace(string? value, string appPath, string appPathShared)
-    {
-        value ??= "";
-        if (value.StartsWith(AppPathPlaceholder, InvariantCultureIgnoreCase))
-            return appPath + value.After(AppPathPlaceholder);
-        if (value.StartsWith(AppPathSharedPlaceholder, InvariantCultureIgnoreCase))
-            return appPathShared + value.After(AppPathSharedPlaceholder);
-        return value;
-    }
-        
 }
