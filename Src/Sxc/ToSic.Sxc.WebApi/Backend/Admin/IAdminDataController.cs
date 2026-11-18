@@ -25,14 +25,6 @@ public interface IAdminDataController: IHasLog
     /// </summary>
     bool BundleRestore(string fileName, int zoneId, int appId);
 
-    ///// <summary>
-    ///// Return all history entries, which can be recycled
-    ///// </summary>
-    ///// <param name="appId"></param>
-    ///// <returns></returns>
-    ///// <exception cref="NotImplementedException"></exception>
-    //public IReadOnlyList<RecycleBinItem> GetRecycleBin(int appId);
-
     /// <summary>
     /// Recycle a specific item
     /// </summary>

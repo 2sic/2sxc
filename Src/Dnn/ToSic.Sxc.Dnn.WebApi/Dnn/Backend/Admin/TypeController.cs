@@ -5,7 +5,7 @@ using ToSic.Eav.WebApi.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
-using RealController = ToSic.Sxc.Backend.Admin.TypeControllerReal;
+using RealController = ToSic.Eav.WebApi.Admin.Sys.TypeControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
