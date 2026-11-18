@@ -5,8 +5,8 @@ using ToSic.Sys.Security.Permissions;
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class SxcPagePublishing(AppWorkChain<ContentGroupList> contentGroupList, IPagePublishing pagePublishing, IAppsCatalog appsCatalog)
-    : ServiceWithSetup<IAppWorkContext>("Sxc.PgPubl", connect: [contentGroupList, pagePublishing, appsCatalog])
+public class SxcPagePublishing(AppWorkChain<ContentGroupList> contentGroupList, IPagePublishing pagePublishing)
+    : ServiceWithSetup<IAppWorkContext>("Sxc.PgPubl", connect: [contentGroupList, pagePublishing])
 {
 
     internal async Task<Dictionary<Guid, int>> SaveInPagePublishing(
@@ -35,7 +35,12 @@ public class SxcPagePublishing(AppWorkChain<ContentGroupList> contentGroupList, 
         if (partOfPage)
         {
             l.A("partOfPage - save with publishing");
-            pagePublishing.DoInsidePublishing(context, async void (_) => postSaveIds = await SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft));
+            pagePublishing.DoInsidePublishing(options =>
+            {
+                postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, options.ForceDraft || forceDraft)
+                    .GetAwaiter()
+                    .GetResult();
+            });
         }
         else
         {

@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Sys;
+﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Sys;
 using ToSic.Sxc.Backend.InPage;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Work;
@@ -16,7 +17,7 @@ namespace ToSic.Sxc.Backend.ContentBlocks;
 public class ContentBlockBackend(
     AppWorkChain<WorkViewsGet> workViews,
     IPagePublishing publishing,
-    AppWorkChain<WorkBlocksMod> workBlocksMod,
+    AppWorkQuick<WorkBlocksMod> workBlocksMod,
     ISxcCurrentContextService ctxService,
     LazySvc<IAssetsExtractor> optimizerLazy,
     AppWorkContextService appCtxSvc,
@@ -31,8 +32,7 @@ public class ContentBlockBackend(
     public IRenderResult NewBlockAndRender(int parentId, string field, int index, string app = "", Guid? guid = null)
     {
         var block = ctxService.BlockRequired();
-        var appWorkCtxDb = appCtxSvc.ContextNew(block.App);
-        var entityId = workBlocksMod.New(appWorkCtxDb).NewBlockReference(parentId, field, index, app, guid);
+        var entityId = workBlocksMod.New(block.PureIdentity()).NewBlockReference(parentId, field, index, app, guid);
 
         // now return a rendered instance
         var newContentBlock = entityBlockGenerator.New().GetBlockOfEntity(block, null, entityId);
@@ -42,14 +42,16 @@ public class ContentBlockBackend(
 
     public void AddItem(int? index = null)
     {
-        Log.A($"add order:{index}");
+        var l = Log.Fn($"add order:{index}");
 
         var block = ctxService.BlockRequired();
-        var appWorCtxDb = appCtxSvc.ContextNew(block.App);
 
         // use dnn versioning - this is always part of page
-        publishing.DoInsidePublishing(block.Context, _ 
-            => workBlocksMod.New(appWorCtxDb).AddEmptyItem(block.Configuration, index, block.Context.Publishing.ForceDraft));
+        publishing.DoInsidePublishing(options => workBlocksMod
+            .New(block.PureIdentity())
+            .AddEmptyItem(block.Configuration, index, options.ForceDraft));
+
+        l.Done();
     }
 
 

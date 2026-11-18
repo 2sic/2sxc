@@ -4,8 +4,8 @@ using ToSic.Eav.WebApi.Sys.Cms;
 namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class EditControllerReal(LazySvc<EditLoadBackend> load, LazySvc<EditSaveBackend> save, LazySvc<HyperlinkBackend> links, LazySvc<PublishWebApi> publish)
-    : ServiceBase("Api.EditRl", connect: [load, save, links, publish]), IEditController
+public class EditControllerReal(LazySvc<EditLoadBackend> load, LazySvc<EditSaveBackend> save, LazySvc<HyperlinkBackend> links, LazySvc<IContextCompleteService> ctxService, LazySvc<PublishWebApi> publish)
+    : ServiceBase("Api.EditRl", connect: [load, save, links, ctxService, publish]), IEditController
 {
     public const string LogSuffix = "Edit";
 
@@ -20,5 +20,5 @@ public class EditControllerReal(LazySvc<EditLoadBackend> load, LazySvc<EditSaveB
         => links.Value.LookupHyperlink(appId, link, contentType, guid, field);
 
     // TODO: we will need to make simpler implementation
-    public Task<bool> Publish(int id) => publish.Value.Publish(id);
+    public Task<bool> Publish(int id) => publish.Value.Publish(ctxService.Value.BlockRequired(), id);
 }

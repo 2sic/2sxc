@@ -2,40 +2,41 @@
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.Apps.Sys.Work;
-using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Data.Sys.Decorators;
-using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Dnn.Cms;
 
 internal partial class DnnPagePublishing(
-    LazySvc<AppWorkContextService> appWorkCtxSvc,
     LazySvc<DnnModuleContextFactory> ctxOfModFac,
     LazySvc<BlockOfModule> moduleAndBlockBuilder,
-    LazySvc<WorkEntityPublish> entPublish)
-    : ServiceBase("Dnn.Publsh", connect: [appWorkCtxSvc, ctxOfModFac, moduleAndBlockBuilder, entPublish]), IPagePublishing
+    AppWorkQuick<WorkEntityPublish> entPublish,
+    IContextCompleteService ctxSvc,
+    IUser user)
+    : ServiceBase("Dnn.Publsh", connect: [ctxOfModFac, moduleAndBlockBuilder, entPublish, ctxSvc]), IPagePublishing
 {
 
-    public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
+    public void DoInsidePublishing(Action<VersioningActionInfo> action)
     {
-        var possibleContextOfBlock = context as IContextOfModule;
-        var enabled = possibleContextOfBlock?.Publishing.ForceDraft ?? false;
-        var instanceId = possibleContextOfBlock?.Module.Id ?? EavConstants.IdNotInitialized;
-        var userId = context.User.Id;
-        Log.A($"DoInsidePublishing(module:{instanceId}, user:{userId}, enabled:{enabled})");
+        var blockCtxOrNull = ctxSvc.BlockContextOrNull();
+        var publishingEnabled = blockCtxOrNull?.Publishing.ForceDraft ?? false;
+        var modId = blockCtxOrNull?.Module.Id ?? EavConstants.IdNotInitialized;
+        
+        var userId = user.Id;
 
-        if (enabled)
+        var l = Log.Fn($"{nameof(modId)}:{modId}, user:{userId}, {nameof(publishingEnabled)}:{publishingEnabled}");
+
+        if (publishingEnabled)
         {
-            var moduleVersionSettings = new ModuleVersions(instanceId, Log);
+            var moduleVersionSettings = new ModuleVersions(modId, Log);
                 
             // Get an new version number and submit it to DNN
             // The submission must be made every time something changes, because a "discard" could have happened
@@ -47,9 +48,9 @@ internal partial class DnnPagePublishing(
             );
         }
 
-        var versioningActionInfo = new VersioningActionInfo();
+        var versioningActionInfo = new VersioningActionInfo { ForceDraft = publishingEnabled };
         action.Invoke(versioningActionInfo);
-        Log.A("/DoInsidePublishing");
+        l.Done();
     }
 
 
@@ -118,8 +119,7 @@ internal partial class DnnPagePublishing(
 
                 if (ids.Any())
                 {
-                    var ctx = appWorkCtxSvc.Value.ContextNew(cb.Context.AppReaderRequired);
-                    entPublish.Value.Publish(ctx, ids.ToArray());
+                    entPublish.New(cb.Context.AppReaderRequired).Publish([.. ids]);
                 }
                 else
                     l.A("no ids found, won\'t publish items");

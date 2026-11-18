@@ -6,11 +6,8 @@ using ToSic.Sys.Utils;
 namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ListActivityReplace(
-    AppWorkQuick<WorkFieldList> workFieldList,
-    Generator<IPagePublishing> publishing,
-    IContextCompleteService ctxService
-) : ServiceBase("Act.LsRpOp", connect: [workFieldList, ctxService, publishing])
+public class ListActivityReplace(AppWorkChain<WorkFieldList> workFieldList, Generator<IPagePublishing> publishing)
+    : ServiceWithSetup<IAppWorkContext>("Act.LsRpOp", connect: [workFieldList, publishing])
 {
     public record Options(
         Guid Guid,
@@ -25,27 +22,25 @@ public class ListActivityReplace(
         var l = Log.Fn($"options:{options}");
 
         // use dnn versioning - this is always part of page
-        var context = ctxService.BlockContextRequired();
-        publishing.New().DoInsidePublishing(context, _ => InternalSave(context, options));
+        publishing.New().DoInsidePublishing(opts => InternalSave(options, opts.ForceDraft));
 
         l.Done();
     }
 
-    private void InternalSave(IContextOfModule context, Options options)
+    private bool InternalSave(Options options, bool forceDraft)
     {
         var (guid, part, index, entityId, add) = options;
         var isContentPair = ViewParts.ContentLower.EqualsInsensitive(part);
-        var l = Log.Fn($"target:{guid}, {nameof(part)}:{part}, {nameof(isContentPair)}: {isContentPair}, {nameof(index)}:{index}, {nameof(entityId)}:{entityId}");
+        var l = Log.Fn<bool>($"target:{guid}, {nameof(part)}:{part}, {nameof(isContentPair)}: {isContentPair}, {nameof(index)}:{index}, {nameof(entityId)}:{entityId}");
 
-        var entity = context.AppReaderRequired.GetDraftOrPublished(guid)
+        var entity = MyOptions.AppReader.GetDraftOrPublished(guid)
                      ?? throw l.Done(new Exception($"Can't find item '{guid}'"));
 
         // Make sure we have the correct casing for the field names
         part = entity.Type[part]!.Name;
 
-        var fList = workFieldList.New(context.AppReaderRequired);
+        var fList = workFieldList.New(MyOptions);
 
-        var forceDraft = context.Publishing.ForceDraft;
         if (add)
         {
             var fields = isContentPair
@@ -58,6 +53,7 @@ public class ListActivityReplace(
         }
         else
             fList.FieldListReplaceIfModified(entity, [part], index, [entityId], forceDraft);
-        l.Done();
+
+        return l.ReturnTrue();
     }
 }

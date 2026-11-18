@@ -1,15 +1,17 @@
-﻿using ToSic.Eav.Context;
-using ToSic.Sxc.Cms.Publishing.Sys;
+﻿using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Cms;
 
-internal class OqtPagePublishing() : ServiceBase($"{OqtConstants.OqtLogPrefix}.Publsh"), IPagePublishing
+internal class OqtPagePublishing(IContextCompleteService ctxSvc)
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.Publsh", connect: [ctxSvc]),
+    IPagePublishing
 {
-    public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
+    public void DoInsidePublishing(Action<VersioningActionInfo> action)
     {
-        var containerId = (context as IContextOfModule)?.Module.Id ?? Eav.Sys.EavConstants.IdNotInitialized;
+        var blockCtxOrNull = ctxSvc.BlockContextOrNull();
+        var containerId = blockCtxOrNull?.Module.Id ?? Eav.Sys.EavConstants.IdNotInitialized;
         var userId = 0;
         var enabled = false;
         Log.A($"DoInsidePublishing(module:{containerId}, user:{userId}, enabled:{enabled})");
@@ -18,7 +20,7 @@ internal class OqtPagePublishing() : ServiceBase($"{OqtConstants.OqtLogPrefix}.P
             /* ignore */
         }
 
-        var versioningActionInfo = new VersioningActionInfo();
+        var versioningActionInfo = new VersioningActionInfo { ForceDraft = enabled };
         action.Invoke(versioningActionInfo);
         Log.A("/DoInsidePublishing");
     }

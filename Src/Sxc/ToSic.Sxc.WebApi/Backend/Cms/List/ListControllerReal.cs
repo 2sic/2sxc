@@ -8,15 +8,15 @@ namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ListControllerReal(
-    AppWorkChain<WorkFieldList> workFieldList,
     IContextCompleteService ctxService,
     LazySvc<AppWorkContextService> appCtxSvc,
     Generator<IPagePublishing> publishing,
-    LazySvc<ListActivityReplace> actReplace,
-    AppWorkChain<ListActivityReplaceOptions> actReplaceOptions,
-    LazySvc<ListActivityGetItems> actGetItems,
-    LazySvc<ListActivitySave> actSave,
-    AppWorkChain<ListActivityGetBlockHeader> actGetBlockHeader
+    AppWorkChain<WorkFieldList> workFieldList,
+    AppWorkChain<ListActivityReplace> actReplace,
+    AppDataChain<ListActivityReplaceOptions> actReplaceOptions,
+    AppDataChain<ListActivityGetItems> actGetItems,
+    AppWorkChain<ListActivitySave> actSave,
+    AppDataChain<ListActivityGetBlockHeader> actGetBlockHeader
         )
     : ServiceBase("Api.LstRl", connect: [workFieldList, publishing, ctxService, appCtxSvc, actReplace, actReplaceOptions, actGetItems, actSave, actGetBlockHeader]),
         IListController
@@ -26,16 +26,16 @@ public class ListControllerReal(
     private IAppWorkContext GetCtx() => appCtxSvc.Value.ContextNew(ctxService.BlockContextRequired().AppReaderRequired);
 
     public void Replace(Guid parent, string part, int index, int entityId, bool add = false)
-        => actReplace.Value.Replace(new(parent, part, index, entityId, add));
+        => actReplace.New(GetCtx()).Replace(new(parent, part, index, entityId, add));
 
     public ReplacementListDto ReplaceOptions(Guid parent, string part, int index, string? contentType = null)
         => actReplaceOptions.New(GetCtx()).ReplaceOptions(new(parent, part, index, contentType));
 
     public List<EntityInListDto> Items(Guid parent, string part)
-        => actGetItems.Value.ItemList(parent, part);
+        => actGetItems.New(GetCtx()).ItemList(parent, part);
     
     public bool Items(Guid parent, List<EntityInListDto> list, string part)
-        => actSave.Value.ItemList(parent, list, part);
+        => actSave.New(GetCtx()).ItemList(parent, list, part);
 
     public List<EntityInListDto> ContentBlockHeader(Guid parent)
         => actGetBlockHeader.New(GetCtx()).ContentBlockHeader(parent);
@@ -63,11 +63,10 @@ public class ListControllerReal(
     private void ModifyList(IEntity target, string fields, Action<IEntity, string[], bool> action)
     {
         // use dnn versioning - items here are always part of list
-        var context = ctxService.BlockContextRequired();
-        publishing.New().DoInsidePublishing(context, _ =>
+        publishing.New().DoInsidePublishing(options =>
         {
             // determine versioning
-            var forceDraft = context.Publishing.ForceDraft;
+            var forceDraft = options.ForceDraft;
             // check field list (default to content-block fields)
             var fieldList = fields is null or ViewParts.ContentLower
                 ? ViewParts.ContentPair

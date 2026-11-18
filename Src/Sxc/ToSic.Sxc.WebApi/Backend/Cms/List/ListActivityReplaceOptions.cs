@@ -10,9 +10,9 @@ namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ListActivityReplaceOptions(
-    AppWorkChain<WorkBlocks> appBlocks,
-    AppWorkChain<WorkEntities> workEntities
-) : ServiceWithSetup<IAppWorkContext>("Act.LstRep", connect: [appBlocks, workEntities])
+    AppDataChain<WorkBlocks> appBlocks,
+    AppDataChain<WorkEntities> workEntities
+) : ServiceWithSetup<IAppDataContext>("Act.LstRep", connect: [appBlocks, workEntities])
 {
     public record Options(
         Guid Parent,
@@ -31,7 +31,6 @@ public class ListActivityReplaceOptions(
         {
             TypeNames = options.TypeNames ?? FindTypeNameOnContentGroup(options)
         };
-        //var typeNameOfField = FindTypeNameOnContentGroup(appReader, options);
         var result = GetOptions(options);
         return l.Return(result);
     }

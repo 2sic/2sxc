@@ -107,5 +107,5 @@ public class BlockControllerReal(
 
     /// <inheritdoc />
     public Task<bool> Publish(string part, int index)
-        => publish.Value.PublishPart(part, index);
+        => publish.Value.PublishPart(ctxService.Value.BlockRequired(), part, index);
 }

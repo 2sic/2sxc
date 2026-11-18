@@ -4,10 +4,10 @@ namespace ToSic.Sxc.Cms.Publishing.Sys;
 
 internal class PagePublishingUnknown(WarnUseOfUnknown<PagePublishingUnknown> _) : ServiceBase($"{LogScopes.NotImplemented}.Publsh"), IPagePublishing
 {
-    public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
+    public void DoInsidePublishing(Action<VersioningActionInfo> action)
     {
         var l = Log.Fn();
-        var versioningActionInfo = new VersioningActionInfo();
+        var versioningActionInfo = new VersioningActionInfo { ForceDraft = false };
         action.Invoke(versioningActionInfo);
         l.Done();
     }

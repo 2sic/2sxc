@@ -10,9 +10,9 @@ public interface IPagePublishing: IHasLog
     /// <summary>
     /// Wraps an action and performs pre/post processing related to versioning of the environment.
     /// </summary>
-    /// <param name="context"></param>
     /// <param name="action"></param>
-    void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action);
+    void DoInsidePublishing(Action<VersioningActionInfo> action);
+    //void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action);
 
     ///// <summary>
     ///// Wraps an action inside publish of latest version.
