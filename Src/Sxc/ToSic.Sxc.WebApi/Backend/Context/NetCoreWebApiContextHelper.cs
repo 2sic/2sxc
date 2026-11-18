@@ -110,11 +110,6 @@ internal class NetCoreWebApiContextHelper: ServiceWithContext
 
     #endregion
 
-    #region Context Maker
-
-    public void SetupResponseMaker() => _helper.GetService<IResponseMaker>().Init(_owner);
-
-    #endregion
 
     #region Adam
 

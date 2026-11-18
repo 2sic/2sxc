@@ -31,11 +31,7 @@ public class DataController() : OqtStatefulControllerBase(DataControllerReal.Log
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public IActionResult BundleExport(int appId, Guid exportConfiguration, int indentation = 0)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        CtxHlp.SetupResponseMaker();
-        return Real.BundleExport(appId, exportConfiguration, indentation).ToHttpResponse();
-    }
+        => Real.BundleExport(appId, exportConfiguration, indentation).ToHttpResponse();
 
     /// <inheritdoc />
     [HttpPost]

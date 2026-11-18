@@ -1,6 +1,7 @@
 ﻿using System.Web;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.WebApi.Sys;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
@@ -45,11 +46,7 @@ public class ViewController : DnnApiController, IViewController
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public HttpResponseMessage Json(int appId, int viewId)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        using (this.InitializedResponseMaker())
-            return Real.Json(appId, viewId);
-    }
+        => Real.Json(appId, viewId).ToHttpResponse();
 
     /// <inheritdoc />
     [HttpPost]

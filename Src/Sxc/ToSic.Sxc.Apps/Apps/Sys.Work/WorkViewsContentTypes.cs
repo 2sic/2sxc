@@ -8,20 +8,20 @@ using ToSic.Eav.Metadata.Sys;
 namespace ToSic.Sxc.Apps.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class WorkViewsContentTypes(AppWorkChain<WorkViewsGet> workViews, IConvertToEavLight dataToFormatLight, LazySvc<IValueConverter> valConverterLazy, IAppWorkContext appWorkCtx)
-    : ServiceBase("Viw.Cts", connect: [workViews, dataToFormatLight, valConverterLazy, appWorkCtx])
+public class WorkViewsContentTypes(AppDataChain<WorkViewsGet> workViews, IConvertToEavLight dataToFormatLight, LazySvc<IValueConverter> valConverterLazy)
+    : ServiceWithSetup<IAppDataContext>("Viw.Cts", connect: [workViews, dataToFormatLight, valConverterLazy])
 {
-    public IList<ContentTypeUiInfo> GetContentTypesWithStatus(IAppWorkContext appWorkCtx, string appPath, string appPathShared)
+    public IList<ContentTypeUiInfo> GetContentTypesWithStatus(string appPath, string appPathShared)
     {
-        var templates = workViews.New(appWorkCtx).AllViews.ToList();
+        var templates = workViews.New(MyOptions).AllViews.ToList();
         var visible = templates.Where(t => !t.IsHidden).ToList();
 
         var valConverter = valConverterLazy.Value;
 
-        var result = appWorkCtx.AppReader.ContentTypes
+        var result = MyOptions.AppReader.ContentTypes
             .OfScope(ScopeConstants.Default)
             .Where(ct => templates.Any(t => t.ContentType == ct.NameId)) // must exist in at least 1 template
-            .OrderBy(ct => ct.Name)
+            .OrderBy(ct => ct.Name, StringComparer.OrdinalIgnoreCase)
             .Select(ct =>
             {
                 var details = ct.DetailsOrNull();

@@ -3,6 +3,7 @@ using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Eav.WebApi.Sys.Dto;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using RealController = ToSic.Sxc.Backend.Admin.AppPartsControllerReal;
@@ -38,12 +39,10 @@ public class AppPartsController: DnnApiController, IAppPartsController
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public HttpResponseMessage Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        using (this.InitializedResponseMaker())
-            return Real.Export(zoneId: zoneId, appId: appId, contentTypeIdsString: contentTypeIdsString,
-                entityIdsString: entityIdsString, templateIdsString: templateIdsString);
-    }
+        => Real
+            .Export(zoneId: zoneId, appId: appId, contentTypeIdsString: contentTypeIdsString,
+                entityIdsString: entityIdsString, templateIdsString: templateIdsString)
+            .ToHttpResponse();
 
 
     /// <inheritdoc />

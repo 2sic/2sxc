@@ -10,9 +10,8 @@ namespace ToSic.Sxc.Backend.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class InstallControllerReal(
     LazySvc<IEnvironmentInstaller> envInstallerLazy,
-    LazySvc<ImportFromRemote> impFromRemoteLazy,
-    IResponseMaker responseMaker)
-    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [envInstallerLazy, impFromRemoteLazy, responseMaker,])
+    LazySvc<ImportFromRemote> impFromRemoteLazy)
+    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [envInstallerLazy, impFromRemoteLazy])
 {
     public const string LogSuffix = "Install";
 
@@ -33,9 +32,9 @@ public class InstallControllerReal(
     /// <param name="container"></param>
     /// <param name="newName"></param>
     /// <returns></returns>
-    public THttpResponseType RemotePackage(string packageUrl, IModule container, string? newName = null)
+    public string? RemotePackage(string packageUrl, IModule container, string? newName = null)
     {
-        var l = Log.Fn<THttpResponseType>();
+        var l = Log.Fn<string>();
 
         var isApp = !container.IsContent;
 
@@ -48,14 +47,15 @@ public class InstallControllerReal(
         l.A($"install completed with success:{success}");
 
         return success 
-            ? l.ReturnAsOk(responseMaker.Ok()) 
-            : l.Return(responseMaker.InternalServerError(MessageBuilder(messages)), "error");
+            ? l.ReturnAsOk(null) 
+            : l.Return(MessageBuilder(messages));
     }
 
     private static string MessageBuilder(List<Message> messages)
     {
         var err = new StringBuilder();
-        foreach (var m in messages) err.AppendFormat("{0}", m.Text);
+        foreach (var m in messages)
+            err.AppendLine(m.Text);
         return err.ToString();
     }
 

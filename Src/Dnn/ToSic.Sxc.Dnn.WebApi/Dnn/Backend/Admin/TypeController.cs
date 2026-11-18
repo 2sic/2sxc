@@ -106,11 +106,7 @@ public class TypeController : DnnApiController, ITypeController
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public HttpResponseMessage Json(int appId, string name)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        using (this.InitializedResponseMaker())
-            return Real.Json(appId, name).ToHttpResponse();
-    }
+        => Real.Json(appId, name).ToHttpResponse();
 
 
     /// <summary>
@@ -138,10 +134,5 @@ public class TypeController : DnnApiController, ITypeController
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public HttpResponseMessage JsonBundleExport(int appId, Guid exportConfiguration, int indentation = 0)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        using (this.InitializedResponseMaker())
-            return Real.JsonBundleExport(appId, exportConfiguration, indentation).ToHttpResponse();
-    }
-
+        => Real.JsonBundleExport(appId, exportConfiguration, indentation).ToHttpResponse();
 }

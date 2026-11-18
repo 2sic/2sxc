@@ -28,18 +28,16 @@ public class ViewsExportImport(
     ISite site,
     AppIconHelpers appIconHelpers,
     Generator<ImpExpHelpers> impExpHelpers,
-    IResponseMaker responseMaker,
     Generator<QueryDefinitionFactory> qDefBuilder)
     : ServiceBase("Bck.Views",
         connect:
         [
-            workEntSave, serverPaths, envLogger, jsonReader, jsonWriter, appIconHelpers, impExpHelpers, responseMaker,
-            qDefBuilder, site
+            workEntSave, serverPaths, envLogger, jsonReader, jsonWriter, appIconHelpers, impExpHelpers, qDefBuilder, site
         ])
 {
-    public THttpResponseType DownloadViewAsJson(int appId, int viewId)
+    public FileResult DownloadViewAsJson(int appId, int viewId)
     {
-        var logCall = Log.Fn<THttpResponseType>($"{appId}, {viewId}");
+        var l = Log.Fn<FileResult>($"{appId}, {viewId}");
         var (appReader, appPaths) = impExpHelpers.New().GetReaderAndPathsAfterZoneSwitchPermissionCheck(site.ToAppIdentity(appId));
         var bundle = new BundleEntityWithAssets
         {
@@ -62,9 +60,18 @@ public class ViewsExportImport(
 
         var serialized = jsonWriter.Value.Serialize(bundle, 0);
 
-        return logCall.ReturnAsOk(responseMaker.File(serialized,
-            ("View" + "." + bundle.Entity.GetBestTitle() + ImpExpConstants.Extension(ImpExpConstants.Files.json))
-            .RemoveNonFilenameCharacters()));
+        var result = new FileResult
+        {
+            FileName = ("View" + "." + bundle.Entity.GetBestTitle() +
+                        ImpExpConstants.Extension(ImpExpConstants.Files.json))
+                .RemoveNonFilenameCharacters(),
+            ContentType = MimeTypeConstants.Json,
+            FileBytes = System.Text.Encoding.UTF8.GetBytes(serialized)
+        };
+        return l.Return(result);
+        //return logCall.ReturnAsOk(responseMaker.File(serialized,
+        //    ("View" + "." + bundle.Entity.GetBestTitle() + ImpExpConstants.Extension(ImpExpConstants.Files.json))
+        //    .RemoveNonFilenameCharacters()));
     }
 
     private BundleEntityWithAssets TryAddAsset(BundleEntityWithAssets bundle, string webPath, string relativePath)

@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.WebApi.Sys;
+﻿using System.Net;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Eav.WebApi.Sys.Install;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.WebApi.Sys;
@@ -36,8 +37,9 @@ public class InstallController : DnnApiController, IInstallController
     public HttpResponseMessage RemotePackage(string packageUrl, string newName = null)
     {
         this.PreventServerTimeout600();
-        // Make sure the Scoped ResponseMaker has this controller context
-        using (this.InitializedResponseMaker())
-            return Real.RemotePackage(packageUrl, SysHlp.GetService<DnnModuleFactory>().Get(ActiveModule), newName);
+        var result = Real.RemotePackage(packageUrl, SysHlp.GetService<DnnModuleFactory>().Get(ActiveModule), newName);
+        return result == null
+            ? Request.CreateResponse(HttpStatusCode.OK)
+            : Request.CreateErrorResponse(HttpStatusCode.InternalServerError, result);
     }
 }

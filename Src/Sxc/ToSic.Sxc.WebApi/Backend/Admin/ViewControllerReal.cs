@@ -9,8 +9,7 @@ public class ViewControllerReal(
     LazySvc<IContextOfSiteService> ctxSvc,
     AppWorkQuick<WorkViewDelete> workViewDelete,
     LazySvc<ViewsExportImport> viewExportImport)
-    : ServiceBase("Api.ViewRl", connect: [ctxSvc, workViewDelete, viewExportImport]),
-        IViewController
+    : ServiceBase("Api.ViewRl", connect: [ctxSvc, workViewDelete, viewExportImport])
 {
     public const string LogSuffix = "View";
 
@@ -18,7 +17,7 @@ public class ViewControllerReal(
     public bool Delete(int appId, int id) => workViewDelete.New(appId).DeleteViewWithSiteSwitchCheck(id);
 
     /// <inheritdoc />
-    public THttpResponseType Json(int appId, int viewId) => viewExportImport.Value.DownloadViewAsJson(appId, viewId);
+    public FileResult Json(int appId, int viewId) => viewExportImport.Value.DownloadViewAsJson(appId, viewId);
 
     /// <summary>
     /// This method is not implemented for ControllerReal, because ControllerReal implements Import(HttpUploadedFile uploadInfo, int zoneId, int appId)

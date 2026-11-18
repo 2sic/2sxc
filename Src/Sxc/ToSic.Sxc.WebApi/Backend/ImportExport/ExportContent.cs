@@ -13,10 +13,8 @@ public class ExportContent(
     AppWorkContextService appCtxSvc,
     AppWorkChain<WorkViewsGet> workViews,
     AppWorkChain<WorkEntities> workEntities,
-    Generator<ImpExpHelpers> impExpHelpers,
-    IResponseMaker responseMaker)
-    : ServiceBase("Bck.Export",
-        connect: [xmlExporter, appCtxSvc, workViews, workEntities, impExpHelpers, responseMaker])
+    Generator<ImpExpHelpers> impExpHelpers)
+    : ServiceBase("Bck.Export", connect: [xmlExporter, appCtxSvc, workViews, workEntities, impExpHelpers])
 {
 
     public ExportPartsOverviewDto PreExportSummary(int zoneId, int appId, string scope)
@@ -64,9 +62,9 @@ public class ExportContent(
     }
 
 
-    public THttpResponseType Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
+    public FileResult Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
     {
-        var l = Log.Fn<THttpResponseType>($"export content z#{zoneId}, a#{appId}, ids:{entityIdsString}, templId:{templateIdsString}");
+        var l = Log.Fn<FileResult>($"export content z#{zoneId}, a#{appId}, ids:{entityIdsString}, templId:{templateIdsString}");
 
         var specs = new AppExportSpecs(zoneId, appId);
         var currentApp = impExpHelpers.New().GetReaderAfterZoneSwitchPermissionCheck(specs);
@@ -77,7 +75,7 @@ public class ExportContent(
             entityIdsString?.Split(';') ?? []
         )).GenerateNiceXml();
 
-        var result = responseMaker.File(fileXml, fileName, "text/xml");
+        var result = new FileResult() { FileBytes = System.Text.Encoding.UTF8.GetBytes(fileXml), FileName = fileName, ContentType = "text/xml" };
         return l.Return(result);
     }
 }

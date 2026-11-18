@@ -54,11 +54,7 @@ public class EntityController() : OqtStatefulControllerBase(RealController.LogSu
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public IActionResult Json(int appId, int id, string prefix, bool withMetadata)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        CtxHlp.SetupResponseMaker();
-        return Real.Json(appId, id, prefix, withMetadata).ToHttpResponse();
-    }
+        => Real.Json(appId, id, prefix, withMetadata).ToHttpResponse();
 
 
     /// <inheritdoc/>
@@ -73,12 +69,8 @@ public class EntityController() : OqtStatefulControllerBase(RealController.LogSu
         ExportResourceReferenceMode resourcesReferences,
         ExportLanguageResolution languageReferences, 
         string selectedIds = null)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        CtxHlp.SetupResponseMaker();
-        return Real.Download(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
+        => Real.Download(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
             languageReferences, selectedIds).ToHttpResponse();
-    }
 
 
     /// <inheritdoc/>

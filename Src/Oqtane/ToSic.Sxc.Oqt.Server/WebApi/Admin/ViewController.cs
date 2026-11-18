@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.Backend.Admin.ViewControllerReal;
@@ -39,11 +40,7 @@ public class ViewController : OqtStatefulControllerBase, IViewController
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public IActionResult Json(int appId, int viewId)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        CtxHlp.SetupResponseMaker();
-        return Real.Json(appId, viewId);
-    }
+        => Real.Json(appId, viewId).ToHttpResponse();
 
     /// <inheritdoc />
     [HttpPost]

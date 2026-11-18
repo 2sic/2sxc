@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using System.Net;
 using ToSic.Eav.WebApi.Sys.Install;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
@@ -42,8 +43,10 @@ public class InstallController()
     public IActionResult RemotePackage(string packageUrl, string newName = null)
     {
         HotReloadEnabledCheck.Check(); // Ensure that Hot Reload is not enabled or try to disable it.
-        // Make sure the Scoped ResponseMaker has this controller context
-        CtxHlp.SetupResponseMaker();
-        return Real.RemotePackage(packageUrl, CtxHlp.BlockOptional?.Context.Module, newName);
+
+        var result = Real.RemotePackage(packageUrl, CtxHlp.BlockOptional?.Context.Module, newName);
+        return result == null
+            ? Ok()
+            : Problem(result, null, (int)HttpStatusCode.InternalServerError);
     }
 }

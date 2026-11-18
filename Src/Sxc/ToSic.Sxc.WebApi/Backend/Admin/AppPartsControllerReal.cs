@@ -9,33 +9,21 @@ public class AppPartsControllerReal(
     LazySvc<IContextOfSiteService> ctxSvc,
     LazySvc<ExportContent> exportContent,
     Generator<ImportContent> importContent)
-    : ServiceBase("Api.APartsRl", connect: [ctxSvc, exportContent, importContent]), IAppPartsController
+    : ServiceBase("Api.APartsRl", connect: [ctxSvc, exportContent, importContent])
 {
     public const string LogSuffix = "AParts";
 
 
     #region Parts Export/Import
 
-    /// <inheritdoc />
-    public ExportPartsOverviewDto Get(int zoneId, int appId, string scope) => exportContent.Value.PreExportSummary(zoneId: zoneId, appId: appId, scope: scope);
+    /// <inheritdoc cref="IAppPartsController.Get" />
+    public ExportPartsOverviewDto Get(int zoneId, int appId, string scope)
+        => exportContent.Value.PreExportSummary(zoneId: zoneId, appId: appId, scope: scope);
 
 
-    /// <inheritdoc />
-    public THttpResponseType Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
+    /// <inheritdoc cref="IAppPartsController.Export" />
+    public FileResult Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
         => exportContent.Value.Export(zoneId: zoneId, appId: appId, contentTypeIdsString: contentTypeIdsString, entityIdsString: entityIdsString, templateIdsString: templateIdsString);
-
-
-    /// <summary>
-    /// This method is not implemented for ControllerReal, because ControllerReal implements Import(HttpUploadedFile uploadInfo, int zoneId, int appId)
-    /// </summary>
-    /// <param name="zoneId"></param>
-    /// <param name="appId"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    public ImportResult Import(int zoneId, int appId)
-    {
-        throw new NotImplementedException();
-    }
 
 
     /// <summary>

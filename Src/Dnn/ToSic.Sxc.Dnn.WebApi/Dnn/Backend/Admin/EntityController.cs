@@ -60,11 +60,7 @@ public class EntityController : DnnApiController, IEntityController
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public HttpResponseMessage Json(int appId, int id, string prefix, bool withMetadata)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        using (this.InitializedResponseMaker())
-            return Real.Json(appId, id, prefix, withMetadata).ToHttpResponse();
-    }
+        => Real.Json(appId, id, prefix, withMetadata).ToHttpResponse();
 
 
     /// <inheritdoc/>
@@ -79,12 +75,8 @@ public class EntityController : DnnApiController, IEntityController
         ExportResourceReferenceMode resourcesReferences,
         ExportLanguageResolution languageReferences, 
         string selectedIds = null)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        using (this.InitializedResponseMaker())
-            return Real.Download(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
-                languageReferences, selectedIds).ToHttpResponse();
-    }
+        => Real.Download(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
+            languageReferences, selectedIds).ToHttpResponse();
 
 
     /// <inheritdoc/>
