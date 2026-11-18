@@ -39,15 +39,13 @@ public class EditController : DnnApiController, IEditController
 
     private RealController Real => SysHlp.GetService<RealController>();
 
-    private void PreShareAppStateWip(int appId)
-        => SysHlp.GetService<ISxcCurrentContextService>().ShareAppStateOptimized(appId);
 
     /// <inheritdoc />
     [HttpPost]
     [AllowAnonymous] // will check security internally, so assume no requirements
     public async Task<EditLoadDto> Load([FromBody] List<ItemIdentifier> items, int appId)
     {
-        PreShareAppStateWip(appId);
+        DnnSxcWebApiInitBlockContextAndShare.InitAppSpecs(SysHlp, appId);
         return await Real.Load(items, appId);
     }
 
@@ -57,7 +55,7 @@ public class EditController : DnnApiController, IEditController
     [AllowAnonymous] // will check security internally, so assume no requirements
     public async Task<Dictionary<Guid, int>> Save([FromBody] EditSaveDto package, int appId, bool partOfPage)
     {
-        PreShareAppStateWip(appId);
+        DnnSxcWebApiInitBlockContextAndShare.InitAppSpecs(SysHlp, appId);
         return await Real.Save(package, appId, partOfPage);
     }
 
@@ -66,7 +64,7 @@ public class EditController : DnnApiController, IEditController
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
     public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
     {
-        PreShareAppStateWip(appId);
+        DnnSxcWebApiInitBlockContextAndShare.InitAppSpecs(SysHlp, appId);
         return Real.LinkInfo(link, appId, contentType, guid, field);
     }
 

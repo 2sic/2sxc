@@ -28,4 +28,8 @@ internal class DnnSxcWebApiInitBlockContextAndShare()
     }
     private bool _blockContextInitialized;
 
+    public static void InitAppSpecs(DnnWebApiHelper sysHlp, int appId)
+    {
+        sysHlp.GetService<ISxcCurrentContextService>().ShareAppStateOptimized(appId);
+    }
 }

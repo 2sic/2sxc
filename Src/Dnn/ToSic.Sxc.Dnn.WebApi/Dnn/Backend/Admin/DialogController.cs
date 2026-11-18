@@ -34,6 +34,7 @@ public class DialogController : DnnApiController, IDialogController
 
     private RealController Real => SysHlp.GetService<RealController>();
 
+
     [HttpGet]
     public DialogContextStandaloneDto Settings(int appId)
     {
@@ -41,7 +42,7 @@ public class DialogController : DnnApiController, IDialogController
 
         // Only load specific App Context if the AppId is specified; otherwise rely on the block context above
         if (appId > KnownAppsConstants.AppIdEmpty)
-            SysHlp.GetService<ISxcCurrentContextService>().ShareAppStateOptimized(appId);
+            DnnSxcWebApiInitBlockContextAndShare.InitAppSpecs(SysHlp, appId);
         return Real.Settings(appId);
     }
 }

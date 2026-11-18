@@ -40,17 +40,13 @@ public class AdamController : DnnApiController, IAdamController<int>
 
     #endregion
 
-    private void PreShareAppStateWip(int appId) 
-        => SysHlp.GetService<ISxcCurrentContextService>().ShareAppStateOptimized(appId);
-
-
     private RealController Real => SysHlp.GetService<RealController>();
 
     [HttpPost]
     [HttpPut]
     public object Upload(int appId, string contentType, Guid guid, string field, [FromUri] string subFolder = "", bool usePortalRoot = false)
     {
-        PreShareAppStateWip(appId);
+        DnnSxcWebApiInitBlockContextAndShare.InitAppSpecs(SysHlp, appId);
         return Real.Upload(new(Request, HttpContext.Current.Request), appId, contentType, guid, field, subFolder,
             usePortalRoot);
     }
@@ -60,7 +56,7 @@ public class AdamController : DnnApiController, IAdamController<int>
     [HttpGet]
     public IEnumerable</*AdamItemDto*/object> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
     {
-        PreShareAppStateWip(appId);
+        DnnSxcWebApiInitBlockContextAndShare.InitAppSpecs(SysHlp, appId);
         return Real.Items(appId, contentType, guid, field, subfolder, usePortalRoot);
     }
 
@@ -68,7 +64,7 @@ public class AdamController : DnnApiController, IAdamController<int>
     [HttpPost]
     public IEnumerable</*AdamItemDto*/object> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
     {
-        PreShareAppStateWip(appId);
+        DnnSxcWebApiInitBlockContextAndShare.InitAppSpecs(SysHlp, appId);
         return Real.Folder(appId, contentType, guid, field, subfolder, newFolder, usePortalRoot);
     }
 
@@ -76,7 +72,7 @@ public class AdamController : DnnApiController, IAdamController<int>
     [HttpGet]
     public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot)
     {
-        PreShareAppStateWip(appId);
+        DnnSxcWebApiInitBlockContextAndShare.InitAppSpecs(SysHlp, appId);
         return Real.Delete(appId, contentType, guid, field, subfolder, isFolder, id, usePortalRoot);
     }
 
@@ -84,7 +80,7 @@ public class AdamController : DnnApiController, IAdamController<int>
     [HttpGet]
     public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot)
     {
-        PreShareAppStateWip(appId);
+        DnnSxcWebApiInitBlockContextAndShare.InitAppSpecs(SysHlp, appId);
         return Real.Rename(appId, contentType, guid, field, subfolder, isFolder, id, newName, usePortalRoot);
     }
 }
