@@ -6,7 +6,7 @@ using ToSic.Eav.WebApi.Sys.Dto;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
-using RealController = ToSic.Sxc.Backend.Admin.AppPartsControllerReal;
+using RealController = ToSic.Eav.WebApi.Admin.Sys.AppPartsControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)] can't be used, because it forces the security

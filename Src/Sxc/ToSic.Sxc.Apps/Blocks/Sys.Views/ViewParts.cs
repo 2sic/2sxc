@@ -1,7 +1,9 @@
-﻿namespace ToSic.Sxc.Blocks.Sys.Views;
+﻿using ToSic.Eav.Apps.Views.Sys;
+
+namespace ToSic.Sxc.Blocks.Sys.Views;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ViewParts
+public static class ViewParts
 {
     public const string ViewFieldInContentBlock = "Template";
     public const string TemplateContentType = "Template";
@@ -55,5 +57,16 @@ public class ViewParts
 
 
     #endregion
+
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    internal static string GetTypeStaticName(this IView view, string groupPart)
+        => groupPart.ToLowerInvariant() switch
+        {
+            ViewParts.ContentLower => view.ContentType,
+            ViewParts.PresentationLower => view.PresentationType,
+            ViewParts.ListContentLower => view.HeaderType,
+            ViewParts.ListPresentationLower => view.HeaderPresentationType,
+            _ => throw new NotSupportedException("Unknown group part: " + groupPart)
+        };
 
 }
