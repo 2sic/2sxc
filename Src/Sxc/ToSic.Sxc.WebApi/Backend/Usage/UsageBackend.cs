@@ -12,13 +12,13 @@ public class UsageBackend(
     AppWorkChain<WorkBlocks> appBlocks,
     AppWorkChain<WorkViewsGet> workViews,
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions,
-    ISxcCurrentContextService ctxService)
-    : ServiceBase("Bck.Usage", connect: [appCtxSvc, appPermissions, ctxService, workViews, appBlocks])
+    IContextOfAppFactory appContextFactory)
+    : ServiceBase("Bck.Usage", connect: [appCtxSvc, appPermissions, appContextFactory, workViews, appBlocks])
 {
     public (ICollection<IView> Views, ICollection<BlockConfiguration> BlockConfigs) ViewUsage(int appId, Guid guid)
     {
         var l = Log.Fn<(ICollection<IView>, ICollection<BlockConfiguration>)>($"{appId}, {guid}");
-        var context = ctxService.ShareAppStateOptimized(appId);
+        var context = appContextFactory.Create(appId);
 
         // extra security to only allow zone change if host user
         var permCheck = appPermissions.New(new() { SiteContext = context, App = context.AppReaderRequired });
