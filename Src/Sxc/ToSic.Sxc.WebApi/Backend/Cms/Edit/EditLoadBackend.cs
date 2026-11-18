@@ -4,6 +4,11 @@ using ToSic.Sxc.Backend.Cms.Load.Activities;
 using ToSic.Sxc.Backend.SaveHelpers;
 using ToSic.Sys.HookUp;
 using ToSic.Sys.Security.Permissions;
+#if NETCOREAPP
+using IContextGetServiceWip = ToSic.Sxc.Context.Sys.ISxcCurrentContextService;
+#else
+using IContextGetServiceWip = ToSic.Sxc.Context.Sys.IContextCompleteService;
+#endif
 
 
 namespace ToSic.Sxc.Backend.Cms;
@@ -12,7 +17,7 @@ namespace ToSic.Sxc.Backend.Cms;
 public class EditLoadBackend(
     AppWorkContextService workCtxSvc,
     EditLoadActionGetForEditing actGetForEditing,
-    ISxcCurrentContextService ctxService,
+    IContextGetServiceWip ctxService,
     Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> typesPermissions,
     LazySvc<DataValidatorContentTypeDataStore> valContentTypeDataStore,
 
@@ -41,7 +46,7 @@ public class EditLoadBackend(
     {
         var l = Log.Fn<EditLoadDto>($"load many a#{appId}, items⋮{items.Count}");
 
-        var appContext = ctxService.ShareAppStateOptimized(appId);
+        var appContext = ctxService.DnnGetAppStateOqtSetAndGet(appId);
 
         // Note 2026-02-26 2dm - changed this to use from context, should be identical, but maybe it's not? keep an eye on this till 2026-Q2
         var appReader = appContext.AppReaderRequired;

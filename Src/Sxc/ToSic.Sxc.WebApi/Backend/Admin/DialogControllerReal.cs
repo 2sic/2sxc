@@ -3,13 +3,18 @@ using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.Sys;
 using ToSic.Eav.Ui.Context.Sys;
 using ToSic.Eav.WebApi.Admin.Sys;
+#if NETCOREAPP
+using IContextGetServiceWip = ToSic.Sxc.Context.Sys.ISxcCurrentContextService;
+#else
+using IContextGetServiceWip = ToSic.Sxc.Context.Sys.IContextCompleteService;
+#endif
 
 namespace ToSic.Sxc.Backend.Admin;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class DialogControllerReal(
     ZoneSwitchPermissionCheck zoneSwitchPermissionCheck,
-    ISxcCurrentContextService ctxService,
+    IContextGetServiceWip ctxService,
     Generator<IUiContextService, IAppReader?> uiContextBuilder)
     : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [zoneSwitchPermissionCheck, ctxService, uiContextBuilder]),
         IDialogController
@@ -24,7 +29,7 @@ public class DialogControllerReal(
             appId = KnownAppsConstants.AppIdEmpty;
 
         var appContext = appId != KnownAppsConstants.AppIdEmpty
-            ? ctxService.ShareAppStateOptimized(appId)
+            ? ctxService.DnnGetAppStateOqtSetAndGet(appId)
             : null;
         var appReader = appContext?.AppReaderRequired;
 

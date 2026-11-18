@@ -3,6 +3,7 @@ using ToSic.Eav.Ui.Edit.Sys;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Eav.WebApi.Sys.Dto;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using RealController = ToSic.Sxc.Backend.Cms.EditControllerReal;
@@ -38,30 +39,42 @@ public class EditController : DnnApiController, IEditController
 
     private RealController Real => SysHlp.GetService<RealController>();
 
-    
+    private void PreShareAppStateWip(int appId)
+        => SysHlp.GetService<ISxcCurrentContextService>().ShareAppStateOptimized(appId);
 
     /// <inheritdoc />
     [HttpPost]
     [AllowAnonymous] // will check security internally, so assume no requirements
-    public async Task<EditLoadDto> Load([FromBody] List<ItemIdentifier> items, int appId) =>
-        await Real.Load(items, appId);
+    public async Task<EditLoadDto> Load([FromBody] List<ItemIdentifier> items, int appId)
+    {
+        PreShareAppStateWip(appId);
+        return await Real.Load(items, appId);
+    }
 
 
     /// <inheritdoc />
     [HttpPost]
     [AllowAnonymous] // will check security internally, so assume no requirements
-    public async Task<Dictionary<Guid, int>> Save([FromBody] EditSaveDto package, int appId, bool partOfPage) =>
-        await Real.Save(package, appId, partOfPage);
+    public async Task<Dictionary<Guid, int>> Save([FromBody] EditSaveDto package, int appId, bool partOfPage)
+    {
+        PreShareAppStateWip(appId);
+        return await Real.Save(package, appId, partOfPage);
+    }
 
     /// <inheritdoc />
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-    public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default) =>
-        Real.LinkInfo(link, appId, contentType, guid, field);
+    public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
+    {
+        PreShareAppStateWip(appId);
+        return Real.LinkInfo(link, appId, contentType, guid, field);
+    }
 
     /// <inheritdoc />
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
     public Task<bool> Publish(int id)
-        => Real.Publish(id);
+    {
+        return Real.Publish(id);
+    }
 }

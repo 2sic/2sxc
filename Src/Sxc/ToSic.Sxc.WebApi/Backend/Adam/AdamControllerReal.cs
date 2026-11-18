@@ -1,6 +1,11 @@
 ﻿using ToSic.Sxc.Adam.Sys;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Adam.Sys.Work;
+#if NETCOREAPP
+using IContextGetServiceWip = ToSic.Sxc.Context.Sys.ISxcCurrentContextService;
+#else
+using IContextGetServiceWip = ToSic.Sxc.Context.Sys.IContextCompleteService;
+#endif
 
 namespace ToSic.Sxc.Backend.Adam;
 
@@ -13,16 +18,11 @@ public class AdamControllerReal<TIdentifier>(
     Generator<AdamWorkDelete, AdamContext> adamDelete,
     Generator<AdamWorkRename, AdamContext> adamRename,
     Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> dtoMaker,
-    ISxcCurrentContextService ctxService)
+    IContextGetServiceWip ctxService
+    )
     : ServiceBase("Api.Adam", connect: [adamContextGen, adamUpload, adamWorkGet, adamFolders, adamDelete, adamRename])
 {
     public const string LogSuffix = "Adam";
-
-    // TODO: @2dm change to not changing the state
-    private IContextOfApp ShareAppStateOptimized(int appId)
-    {
-        return ctxService.ShareAppStateOptimized(appId);
-    }
     
     public AdamItemDto Upload(HttpUploadedFile uploadInfo, int appId, string contentType, Guid guid, string field, string subFolder = "", bool usePortalRoot = false)
     {
@@ -31,7 +31,7 @@ public class AdamControllerReal<TIdentifier>(
         try
         {
             // 1. Set the global context
-            var context = ShareAppStateOptimized(appId);
+            var context = ctxService.DnnGetAppStateOqtSetAndGet(appId);
             
             // Check if the request contains multipart/form-data.
             if (!uploadInfo.IsMultipart())
@@ -75,7 +75,7 @@ public class AdamControllerReal<TIdentifier>(
         var l = Log.Fn<IEnumerable<AdamItemDto>>($"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
 
         // 1. Set the global context
-        var context = ShareAppStateOptimized(appId);
+        var context = ctxService.DnnGetAppStateOqtSetAndGet(appId);
 
         var adamContext = adamContextGen.New(new(
             Context: context,
@@ -101,7 +101,7 @@ public class AdamControllerReal<TIdentifier>(
         var l = Log.Fn<IEnumerable<object>>();
 
         // 1. Set the global context
-        var context = ShareAppStateOptimized(appId);
+        var context = ctxService.DnnGetAppStateOqtSetAndGet(appId);
 
         var adamContext = adamContextGen.New(new(
             Context: context,
@@ -126,7 +126,7 @@ public class AdamControllerReal<TIdentifier>(
     public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, TIdentifier id, bool usePortalRoot)
     {
         // 1. Set the global context
-        var context = ShareAppStateOptimized(appId);
+        var context = ctxService.DnnGetAppStateOqtSetAndGet(appId);
 
         var adamContext = adamContextGen.New(new(
             Context: context,
@@ -142,7 +142,7 @@ public class AdamControllerReal<TIdentifier>(
         TIdentifier id, string newName, bool usePortalRoot)
     {
         // 1. Set the global context
-        var context = ShareAppStateOptimized(appId);
+        var context = ctxService.DnnGetAppStateOqtSetAndGet(appId);
 
         var adamContext = adamContextGen.New(new(
             Context: context,

@@ -6,13 +6,18 @@ using ToSic.Sxc.Adam.Sys.Security;
 using ToSic.Sxc.Adam.Sys.Work;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sys.Security.Permissions;
+#if NETCOREAPP
+using IContextGetServiceWip = ToSic.Sxc.Context.Sys.ISxcCurrentContextService;
+#else
+using IContextGetServiceWip = ToSic.Sxc.Context.Sys.IContextCompleteService;
+#endif
 
 namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class HyperlinkBackend(
     Generator<AdamContext, AdamContext.Options> adamCtxGen,
-    ISxcCurrentContextService ctxService,
+    IContextGetServiceWip ctxService,
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions,
     Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> adamDtoMaker,
     IValueConverter valueConverter)
@@ -26,7 +31,7 @@ public class HyperlinkBackend(
             if (string.IsNullOrEmpty(hyperlink))
                 return new() { Value = hyperlink };
 
-            var context = ctxService.ShareAppStateOptimized(appId);
+            var context = ctxService.DnnGetAppStateOqtSetAndGet(appId);
             // different security checks depending on the link-type
             var lookupPage = hyperlink.Trim().StartsWith(ValueConverterBase.PrefixPage, StringComparison.OrdinalIgnoreCase);
 
