@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Inspect.Sys.UiDto;
+// using ToSic.Eav.Apps.Inspect.Sys.UiDto; // Legacy block-option endpoints.
 using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Sxc.Backend.InPage;
 
@@ -23,24 +23,27 @@ public interface IBlockController: IAppAdminWebApiController
     /*new*/
     Task App(int? appId);
 
-    /// <summary>
-    /// used to be GET Module/GetSelectableApps
-    /// </summary>
-    /// <param name="apps"></param>
-    /// <returns></returns>
-    IEnumerable<AppUiInfo> Apps(string? apps = null);
-
-    /// <summary>
-    /// used to be GET Module/GetSelectableContentTypes
-    /// </summary>
-    /// <returns></returns>
-    IEnumerable<ContentTypeUiInfo> ContentTypes();
-
-    /// <summary>
-    /// used to be GET Module/GetSelectableTemplates
-    /// </summary>
-    /// <returns></returns>
-    IEnumerable<TemplateUiInfo> Templates();
+    // Legacy block-option endpoints, replaced by System.BlockConfigOptions.
+    // Keep these commented until we have confirmed that no external clients still depend on them.
+    //
+    // /// <summary>
+    // /// used to be GET Module/GetSelectableApps
+    // /// </summary>
+    // /// <param name="apps"></param>
+    // /// <returns></returns>
+    // IEnumerable<AppUiInfo> Apps(string? apps = null);
+    //
+    // /// <summary>
+    // /// used to be GET Module/GetSelectableContentTypes
+    // /// </summary>
+    // /// <returns></returns>
+    // IEnumerable<ContentTypeUiInfo> ContentTypes();
+    //
+    // /// <summary>
+    // /// used to be GET Module/GetSelectableTemplates
+    // /// </summary>
+    // /// <returns></returns>
+    // IEnumerable<TemplateUiInfo> Templates();
 
     /// <summary>
     /// Used in InPage.js
