@@ -10,10 +10,9 @@ namespace ToSic.Sxc.Blocks.Sys.Work;
 public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDefinitionFactory> qDefBuilder, AppDataChain<WorkEntities> workEntities)
     : ServiceWithSetup<IAppDataContext>("SxS.Blocks", connect: [cultureResolver, qDefBuilder, workEntities])
 {
-    public const string BlockTypeName = "2SexyContent-ContentGroup";
 
     private IImmutableList<IEntity> GetContentGroups()
-        => workEntities.New(MyOptions).Get(BlockTypeName).ToImmutableOpt();
+        => workEntities.New(MyOptions).Get(AppConstants.ContentGroupTypeName).ToImmutableOpt();
 
     public ICollection<BlockConfiguration> AllWithView()
     {

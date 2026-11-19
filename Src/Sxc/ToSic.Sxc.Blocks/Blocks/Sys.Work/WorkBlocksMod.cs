@@ -19,7 +19,7 @@ public class WorkBlocksMod(
             l.A($"doesn't exist, will create new CG with template#{templateId}");
             var guid = workEntCreate
                 .New(MyOptions)
-                .Create(WorkBlocks.BlockTypeName, new()
+                .Create(AppConstants.ContentGroupTypeName, new()
                 {
                     { ViewParts.TemplateContentType, new List<int> { templateId } },
                     { ViewParts.Content, new List<int>() },

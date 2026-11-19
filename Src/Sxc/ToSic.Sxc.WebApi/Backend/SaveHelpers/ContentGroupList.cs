@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.Sys.State;
+﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.Data.ContentTypes.Fields.Sys;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockEditor;
@@ -48,7 +49,7 @@ public class ContentGroupList(
                 continue;
 
             var parent = MyOptions.AppReader.GetDraftOrPublished(bundle.First().Header.GetParentEntityOrError())!;
-            var targetIsContentBlock = parent.Type.Name == WorkBlocks.BlockTypeName;
+            var targetIsContentBlock = parent.Type.Name == AppConstants.ContentGroupTypeName;
                 
             var primaryItem = targetIsContentBlock
                 ? FindContentItem(bundle)
@@ -227,7 +228,7 @@ public class ContentGroupList(
 
         // get the entity and determine if it's a content-block. If yes, that should affect the differences in load/save
         var entity = MyOptions.AppReader.List.GetOne(identifier.Parent.Value)!;
-        return l.Return(entity.Type.Name == WorkBlocks.BlockTypeName, "type name should match");
+        return l.Return(entity.Type.Name == AppConstants.ContentGroupTypeName, "type name should match");
     }
 
 

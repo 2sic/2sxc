@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.WebApi.Sys.Cms;
+﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Blocks.Sys.Work;
 
 namespace ToSic.Sxc.Backend.Cms;
@@ -14,14 +15,13 @@ public class ListActivityGetBlockHeader(AppDataChain<WorkBlocks> appBlocks)
     public List<EntityInListDto> ContentBlockHeader(Guid parent)
     {
         var l = Log.Fn<List<EntityInListDto>>($"header for:{parent}");
-        //var appCtx = appBlocks.CtxSvc.ContextPlus(ctxService.BlockContextRequired().AppReaderRequired);
         var cg = appBlocks.New(MyOptions).GetBlockConfig(parent);
 
         // new in v11 - this call might be run on a non-content-block, in which case we return null
         var ent = (cg as ICanBeEntity)?.Entity;
         if (ent == null!)
             return l.Return([],"No entity found");
-        if (ent.Type.Name != WorkBlocks.BlockTypeName)
+        if (ent.Type.Name != AppConstants.ContentGroupTypeName)
             return l.Return([],"Entity type mismatch");
 
         var header = cg.Header.FirstOrDefault();
