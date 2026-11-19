@@ -1,5 +1,5 @@
 ﻿using System.Web.Http.Controllers;
-using ToSic.Eav.Apps.Inspect.Sys.UiDto;
+// using ToSic.Eav.Apps.Inspect.Sys.UiDto; // Legacy block-option endpoints.
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Backend.Cms;
 using ToSic.Sxc.Backend.InPage;
@@ -56,25 +56,28 @@ public class BlockController : DnnApiController, IBlockController
     public Task App(int? appId)
         => Real.App(appId);
 
-    /// <inheritdoc />
-    [HttpGet]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public IEnumerable<AppUiInfo> Apps(string apps = null)
-        => Real.Apps(apps);
-
-
-    /// <inheritdoc />
-    [HttpGet]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public IEnumerable<ContentTypeUiInfo> ContentTypes()
-        => Real.ContentTypes();
-
-
-    /// <inheritdoc />
-    [HttpGet]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public IEnumerable<TemplateUiInfo> Templates()
-        => Real.Templates();
+    // Legacy block-option endpoints, replaced by System.BlockConfigOptions.
+    // Keep these commented until we have confirmed that no external clients still depend on them.
+    //
+    // /// <inheritdoc />
+    // [HttpGet]
+    // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    // public IEnumerable<AppUiInfo> Apps(string apps = null)
+    //     => Real.Apps(apps);
+    //
+    //
+    // /// <inheritdoc />
+    // [HttpGet]
+    // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    // public IEnumerable<ContentTypeUiInfo> ContentTypes()
+    //     => Real.ContentTypes();
+    //
+    //
+    // /// <inheritdoc />
+    // [HttpGet]
+    // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    // public IEnumerable<TemplateUiInfo> Templates()
+    //     => Real.Templates();
 
     /// <inheritdoc />
     [HttpPost]

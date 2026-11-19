@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.Apps.Inspect.Sys.UiDto;
+// using ToSic.Eav.Apps.Inspect.Sys.UiDto; // Legacy block-option endpoints.
 using ToSic.Sxc.Backend.Cms;
 using ToSic.Sxc.Backend.InPage;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -45,24 +45,27 @@ public class BlockController() : OqtStatefulControllerBase(RealController.LogSuf
     [Authorize(Roles = RoleNames.Admin)]
     public Task App(int? appId) => Real.App(appId);
 
-    /// <inheritdoc />
-    [HttpGet]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    [Authorize(Roles = RoleNames.Admin)]
-    public IEnumerable<AppUiInfo> Apps(string apps = null) => Real.Apps(apps);
-
-
-    /// <inheritdoc />
-    [HttpGet]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    [Authorize(Roles = RoleNames.Admin)]
-    public IEnumerable<ContentTypeUiInfo> ContentTypes() => Real.ContentTypes();
-
-    /// <inheritdoc />
-    [HttpGet]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    [Authorize(Roles = RoleNames.Admin)]
-    public IEnumerable<TemplateUiInfo> Templates() => Real.Templates();
+    // Legacy block-option endpoints, replaced by System.BlockConfigOptions.
+    // Keep these commented until we have confirmed that no external clients still depend on them.
+    //
+    // /// <inheritdoc />
+    // [HttpGet]
+    // //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    // [Authorize(Roles = RoleNames.Admin)]
+    // public IEnumerable<AppUiInfo> Apps(string apps = null) => Real.Apps(apps);
+    //
+    //
+    // /// <inheritdoc />
+    // [HttpGet]
+    // //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    // [Authorize(Roles = RoleNames.Admin)]
+    // public IEnumerable<ContentTypeUiInfo> ContentTypes() => Real.ContentTypes();
+    //
+    // /// <inheritdoc />
+    // [HttpGet]
+    // //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    // [Authorize(Roles = RoleNames.Admin)]
+    // public IEnumerable<TemplateUiInfo> Templates() => Real.Templates();
 
     /// <inheritdoc />
     [HttpPost]

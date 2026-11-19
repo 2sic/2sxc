@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Inspect.Sys.UiDto;
+// using ToSic.Eav.Apps.Inspect.Sys.UiDto; // Legacy block-option endpoints.
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Backend.ContentBlocks;
 using ToSic.Sxc.Backend.InPage;
@@ -9,14 +9,14 @@ namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockControllerReal(
-    LazySvc<IContextOfSiteService> ctxSvc,
+    // LazySvc<IContextOfSiteService> ctxSvc, // Legacy Apps endpoint dependency.
     LazySvc<ContentBlockBackend> blockBackend,
     LazySvc<AppViewPickerBackend> viewsBackend,
     LazySvc<PublishWebApi> publish,
-    LazySvc<WorkApps> workApps,
+    // LazySvc<WorkApps> workApps, // Legacy Apps endpoint dependency.
     LazySvc<IContextCompleteService> ctxService,
     Generator<BlockUpdateApp> blockUpdateApp)
-    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [ctxSvc, blockBackend, viewsBackend, publish, workApps, ctxService, blockUpdateApp])
+    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [blockBackend, viewsBackend, publish, ctxService, blockUpdateApp])
 {
     public const string LogSuffix = "Block";
 
@@ -51,34 +51,37 @@ public class BlockControllerReal(
     public Task App(int? appId)
         => blockUpdateApp.New().Handle(new(), (ctxService.Value.BlockRequired(), appId).ToPackage());
 
-    /// <summary>
-    /// used to be GET Module/GetSelectableApps
-    /// </summary>
-    /// <param name="apps"></param>
-    /// <returns></returns>
-    public IEnumerable<AppUiInfo> Apps(string? apps = null)
-    {
-        // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
-        var site = ctxSvc.Value.Context.Site;
-        return [.. workApps.Value.GetSelectableApps(site, apps)];
-    }
+    // Legacy block-option endpoints, replaced by System.BlockConfigOptions.
+    // Keep these commented until we have confirmed that no external clients still depend on them.
+    //
+    // /// <summary>
+    // /// used to be GET Module/GetSelectableApps
+    // /// </summary>
+    // /// <param name="apps"></param>
+    // /// <returns></returns>
+    // public IEnumerable<AppUiInfo> Apps(string? apps = null)
+    // {
+    //     // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
+    //     var site = ctxSvc.Value.Context.Site;
+    //     return [.. workApps.Value.GetSelectableApps(site, apps)];
+    // }
 
-    #endregion
+    // #endregion
 
-    #region Types
+    // #region Types
 
-    /// <inheritdoc />
-    public IEnumerable<ContentTypeUiInfo> ContentTypes() => viewsBackend.Value.ContentTypes();
+    // /// <inheritdoc />
+    // public IEnumerable<ContentTypeUiInfo> ContentTypes() => viewsBackend.Value.ContentTypes();
 
     #endregion
 
     #region Templates
 
-    /// <summary>
-    /// used to be GET Module/GetSelectableTemplates
-    /// </summary>
-    /// <returns></returns>
-    public IEnumerable<TemplateUiInfo> Templates() => viewsBackend.Value.Templates();
+    // /// <summary>
+    // /// used to be GET Module/GetSelectableTemplates
+    // /// </summary>
+    // /// <returns></returns>
+    // public IEnumerable<TemplateUiInfo> Templates() => viewsBackend.Value.Templates();
 
     /// <summary>
     /// Used in InPage.js
