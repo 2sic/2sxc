@@ -41,7 +41,7 @@ public class DnnBusinessController : ModuleSearchBase, IHasLog
 
     #region DNN Interface Members - search, upgrade, versionable
 
-    private IPagePublishing Publishing
+    private IModulePublishing Publishing
     {
         get
         {
@@ -49,7 +49,7 @@ public class DnnBusinessController : ModuleSearchBase, IHasLog
                 return Publishing;
 
             // if publishing is used, make sure it's in the log-history
-            field = ServiceProvider.Build<IPagePublishing>(Log);
+            field = ServiceProvider.Build<IModulePublishing>(Log);
             ServiceProvider.Build<ILogStore>().Add("dnn-publishing", Log);
             return field;
         }

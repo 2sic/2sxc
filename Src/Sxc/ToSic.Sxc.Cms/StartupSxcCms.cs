@@ -15,7 +15,7 @@ public static class StartupSxcCms
 {
     public static IServiceCollection AddSxcCms(this IServiceCollection services)
     {
-        services.TryAddTransient<IPagePublishing, PagePublishingUnknown>();
+        services.TryAddTransient<IModulePublishing, ModulePublishingUnknown>();
 
         // This must never have a TRY! but only an AddTransient, as many can be registered by this type
         // New v22 with IWork

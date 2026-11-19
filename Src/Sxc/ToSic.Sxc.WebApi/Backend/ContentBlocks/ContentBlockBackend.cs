@@ -1,10 +1,10 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Views.Sys;
+using ToSic.Eav.Data.Publishing.Sys;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Backend.InPage;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Work;
-using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sxc.Render.Block.Sys;
 using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.Render.Sys;
@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Backend.ContentBlocks;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentBlockBackend(
     AppWorkChain<WorkViewsGet> workViews,
-    IPagePublishing publishing,
+    IDataPublishingService publishing,
     AppWorkQuick<WorkBlocksMod> workBlocksMod,
     ISxcCurrentContextService ctxService,
     LazySvc<IAssetsExtractor> optimizerLazy,

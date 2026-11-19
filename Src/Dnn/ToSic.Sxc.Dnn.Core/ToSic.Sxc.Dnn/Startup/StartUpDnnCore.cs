@@ -4,6 +4,7 @@ using ToSic.Eav.Apps.Install.Sys;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneCulture;
 using ToSic.Eav.Context.Sys.ZoneMapper;
+using ToSic.Eav.Data.Publishing.Sys;
 using ToSic.Eav.Data.Sys.ValueConverter;
 using ToSic.Eav.ImportExport.Integration;
 using ToSic.Eav.ImportExport.Sys.XmlExport;
@@ -110,7 +111,8 @@ internal static class StartUpDnnCore
         services.TryAddSingleton<IPlatform, DnnPlatformContext>();
 
         // add page publishing
-        services.TryAddTransient<IPagePublishing, DnnPagePublishing>();
+        services.TryAddTransient<IDataPublishingService, DnnDataPublishingService>();
+        services.TryAddTransient<IModulePublishing, DnnModulePublishing>();
 
         // v13 option to not use page publishing... #SwitchServicePagePublishingResolver #2749
         services.AddTransient<IWorkBlockPublishingLookup, DnnWorkPublishingLookup>();

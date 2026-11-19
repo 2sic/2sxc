@@ -1,12 +1,12 @@
 ﻿using ToSic.Eav.Apps.Sys.State;
+using ToSic.Eav.Data.Publishing.Sys;
 using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Blocks.Sys.Views;
-using ToSic.Sxc.Cms.Publishing.Sys;
 
 namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ListActivitySave(AppWorkChain<WorkFieldList> workFieldList, LazySvc<IPagePublishing> publishing)
+public class ListActivitySave(AppWorkChain<WorkFieldList> workFieldList, LazySvc<IDataPublishingService> publishing)
     : ServiceWithSetup<IAppWorkContext>("Api.CntGrpRl", connect: [workFieldList, publishing])
 {
     public bool ItemList(Guid parent, List<EntityInListDto>? list,  string part)

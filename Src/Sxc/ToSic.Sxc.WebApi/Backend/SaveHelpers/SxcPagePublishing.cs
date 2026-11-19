@@ -1,11 +1,11 @@
-﻿using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Cms.Publishing.Sys;
+﻿using ToSic.Eav.Data.Publishing.Sys;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class SxcPagePublishing(AppWorkChain<ContentGroupList> contentGroupList, IPagePublishing pagePublishing)
+public class SxcPagePublishing(AppWorkChain<ContentGroupList> contentGroupList, IDataPublishingService pagePublishing)
     : ServiceWithSetup<IAppWorkContext>("Sxc.PgPubl", connect: [contentGroupList, pagePublishing])
 {
 

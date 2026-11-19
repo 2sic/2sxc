@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Context.Sys.ZoneMapper;
+using ToSic.Eav.Data.Publishing.Sys;
 using ToSic.Eav.Data.Sys.ValueConverter;
 using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Blocks.Sys.BlockBuilder;
@@ -41,7 +42,8 @@ partial class OqtRegisterServices
         services.TryAddTransient<IPlatformModuleUpdater, OqtModuleUpdater>();
             
         // Page publishing - ATM neutral objects which don't do much
-        services.TryAddTransient<IPagePublishing, OqtPagePublishing>();
+        services.TryAddTransient<IDataPublishingService, OqtDataPublishingService>();
+        services.TryAddTransient<IModulePublishing, OqtModulePublishing>();
         services.AddTransient<IWorkBlockPublishingLookup, OqtWorkPublishingLookup>();
 
         services.TryAddTransient<OqtModuleHelper>();

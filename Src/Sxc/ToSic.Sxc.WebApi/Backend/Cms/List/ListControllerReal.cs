@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Apps.Sys.State;
+using ToSic.Eav.Data.Publishing.Sys;
 using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Blocks.Sys.Views;
-using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.Cms;
@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Backend.Cms;
 public class ListControllerReal(
     IContextCompleteService ctxService,
     LazySvc<AppWorkContextService> appCtxSvc,
-    Generator<IPagePublishing> publishing,
+    Generator<IDataPublishingService> publishing,
     AppWorkChain<WorkFieldList> workFieldList,
     AppWorkChain<ListActivityReplace> actReplace,
     AppDataChain<ListActivityReplaceOptions> actReplaceOptions,

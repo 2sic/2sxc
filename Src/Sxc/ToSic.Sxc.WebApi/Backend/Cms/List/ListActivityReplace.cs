@@ -1,12 +1,12 @@
 ﻿using ToSic.Eav.Apps.Sys.State;
+using ToSic.Eav.Data.Publishing.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
-using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ListActivityReplace(AppWorkChain<WorkFieldList> workFieldList, Generator<IPagePublishing> publishing)
+public class ListActivityReplace(AppWorkChain<WorkFieldList> workFieldList, Generator<IDataPublishingService> publishing)
     : ServiceWithSetup<IAppWorkContext>("Act.LsRpOp", connect: [workFieldList, publishing])
 {
     public record Options(
