@@ -1,7 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.Data.Publishing.Sys;
-using ToSic.Sxc.Blocks.Sys.Views;
-using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.Cms;
 
@@ -11,7 +9,7 @@ public class ListActivityReplace(AppWorkChain<WorkFieldList> workFieldList, Gene
 {
     public record Options(
         Guid Guid,
-        string Part,
+        string[] Fields,
         int Index,
         int EntityId,
         bool Add
@@ -29,30 +27,26 @@ public class ListActivityReplace(AppWorkChain<WorkFieldList> workFieldList, Gene
 
     private bool InternalSave(Options options, bool forceDraft)
     {
-        var (guid, part, index, entityId, add) = options;
-        var isContentPair = ViewParts.ContentLower.EqualsInsensitive(part);
-        var l = Log.Fn<bool>($"target:{guid}, {nameof(part)}:{part}, {nameof(isContentPair)}: {isContentPair}, {nameof(index)}:{index}, {nameof(entityId)}:{entityId}");
+        var (guid, fields, index, entityId, add) = options;
+        var l = Log.Fn<bool>($"target:{guid}, {nameof(index)}:{index}, {nameof(entityId)}:{entityId}");
 
         var entity = MyOptions.AppReader.GetDraftOrPublished(guid)
                      ?? throw l.Done(new Exception($"Can't find item '{guid}'"));
 
         // Make sure we have the correct casing for the field names
-        part = entity.Type[part]!.Name;
+        fields = [.. fields.Select(f => entity.Type[f]!.Name)];
 
         var fList = workFieldList.New(MyOptions);
 
         if (add)
         {
-            var fields = isContentPair
-                ? ViewParts.ContentPair
-                : [part];
-            var values = isContentPair
+            var values = fields.Length > 1
                 ? [entityId, null]
                 : new int?[] { entityId };
             fList.FieldListAdd(entity, fields, index, values, forceDraft, false);
         }
         else
-            fList.FieldListReplaceIfModified(entity, [part], index, [entityId], forceDraft);
+            fList.FieldListReplaceIfModified(entity, [fields.First()], index, [entityId], forceDraft);
 
         return l.ReturnTrue();
     }

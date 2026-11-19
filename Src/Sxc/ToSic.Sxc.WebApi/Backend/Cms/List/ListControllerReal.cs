@@ -26,20 +26,40 @@ public class ListControllerReal(
     private IAppWorkContext GetCtx() => appCtxSvc.Value.ContextNew(ctxService.BlockContextRequired().AppReaderRequired);
 
     public void Replace(Guid parent, string part, int index, int entityId, bool add = false)
-        => actReplace.New(GetCtx()).Replace(new(parent, part, index, entityId, add));
+        => actReplace.New(GetCtx()).Replace(new(parent, ChangePartNameToFields(part), index, entityId, add));
 
     public ReplacementListDto ReplaceOptions(Guid parent, string part, int index, string? contentType = null)
         => actReplaceOptions.New(GetCtx()).ReplaceOptions(new(parent, part, index, contentType));
 
     public List<EntityInListDto> Items(Guid parent, string part)
         => actGetItems.New(GetCtx()).ItemList(parent, part);
-    
+
     public bool Items(Guid parent, List<EntityInListDto> list, string part)
-        => actSave.New(GetCtx()).ItemList(parent, list, part);
+        => actSave.New(GetCtx()).ItemList(parent, list, ChangePartNameToFields(part));
 
     public List<EntityInListDto> ContentBlockHeader(Guid parent)
         => actGetBlockHeader.New(GetCtx()).ContentBlockHeader(parent);
 
+    /// <summary>
+    /// 2026-11-19 2dm This is a leftover of old times, not sure if it's still needed.
+    /// Previously web requests simply asked for the part (Content, Header, etc.)
+    /// and the backend had to figure out which fields.
+    /// 
+    /// This is because a long time ago, lists were explicitly used for content blocks.
+    /// It's not sure if the UI already lists the exact names, in which case this would be obsolete.
+    /// </summary>
+    /// <param name="part"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    private string[] ChangePartNameToFields(string part)
+    {
+        var isContentPair = ViewParts.ContentLower.EqualsInsensitive(part);
+        var l = Log.Fn<string[]>($"part:{part}");
+        var fields = isContentPair
+            ? ViewParts.ContentPair
+            : [part ?? throw new ArgumentException(@"Part name cannot be null", nameof(part))];
+        return l.Return(fields);
+    }
 
     public void Move(Guid? parent, string fields, int index, int toIndex) 
     {
