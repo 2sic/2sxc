@@ -4,6 +4,7 @@ using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.WebApi.App.Sys;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 
@@ -13,11 +14,16 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 [Route(OqtWebApiConstants.AppRootPathAndLang)]
 
 [AllowAnonymous] // All functions will check security internally, so assume no requirements
+[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppQueryController() : OqtStatefulControllerBase(AppWebApiQueryRunSvc.LogSuffix), IAppQueryController
+public class AppQueryController : ControllerBase, IHasLog, IAppQueryController
 {
-    private AppWebApiQueryRunSvc Real => GetService<AppWebApiQueryRunSvc>();
-    private AppQueryContextResolver CtxResolver => GetService<AppQueryContextResolver>();
+    /// <inheritdoc />
+    public ILog Log => field ??= LogFactory.Create($"Api.{AppWebApiQueryRunSvc.LogSuffix}", null, GetType().Name);
+
+    private AppWebApiQueryRunSvc Real => this.GetApiService<AppWebApiQueryRunSvc>();
+    private AppQueryContextResolver CtxResolver => this.GetApiService<AppQueryContextResolver>();
 
     // GET is separated from POST to solve HttpResponseException that happens when
     // 'content-type' header is missing (or in GET request) on the endpoint that has [FromBody] in signature
@@ -48,8 +54,12 @@ public class AppQueryController() : OqtStatefulControllerBase(AppWebApiQueryRunS
         [FromQuery] int? appId = null,
         [FromRoute] string stream = null,
         [FromQuery] bool? includeGuid = false
-    ) => Real.RunQuery(CtxResolver.GetCtxAndLookupForAppIdOrContext(appId),
+    )
+    {
+        this.PrepareRequestBlock();
+        return Real.RunQuery(CtxResolver.GetCtxAndLookupForAppIdOrContext(appId),
         queryName: name, more: null, stream: stream, includeGuid: includeGuid);
+    }
 
     [HttpPost($"{AppParts.Auto}/{AppParts.Query}" + "/{name}")]
     [HttpPost($"{AppParts.Auto}/{AppParts.Query}" + "/{name}/{stream?}")]
@@ -59,6 +69,10 @@ public class AppQueryController() : OqtStatefulControllerBase(AppWebApiQueryRunS
         [FromQuery] int? appId = null,
         [FromRoute] string stream = null,
         [FromQuery] bool? includeGuid = false
-    ) => Real.RunQuery(CtxResolver.GetCtxAndLookupForAppIdOrContext(appId),
+    )
+    {
+        this.PrepareRequestBlock();
+        return Real.RunQuery(CtxResolver.GetCtxAndLookupForAppIdOrContext(appId),
         queryName: name, more: more, stream: stream, includeGuid: includeGuid);
+    }
 }

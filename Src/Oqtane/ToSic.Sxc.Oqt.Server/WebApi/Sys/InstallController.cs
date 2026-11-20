@@ -5,6 +5,7 @@ using System.Net;
 using ToSic.Eav.WebApi.Sys.Install;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 using RealController = ToSic.Sxc.Backend.Sys.InstallControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
@@ -14,18 +15,17 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + "/" + AreaRoutes.Sys)]
 
+[OqtLogWebApi("web-api.install"), OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class InstallController()
-    : OqtStatefulControllerBase(RealController.LogSuffix), IInstallController
+public class InstallController
+    : ControllerBase, IHasLog, IInstallController
 {
-    private RealController Real => GetService<RealController>();
+    /// <inheritdoc />
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
 
+    private RealController Real => this.GetApiService<RealController>();
 
-    /// <summary>
-    /// Make sure that these requests don't land in the normal api-log.
-    /// Otherwise each log-access would re-number what item we're looking at
-    /// </summary>
-    protected override string HistoryLogGroup { get; } = "web-api.install";
 
 
     /// <inheritdoc />
@@ -44,7 +44,8 @@ public class InstallController()
     {
         HotReloadEnabledCheck.Check(); // Ensure that Hot Reload is not enabled or try to disable it.
 
-        var result = Real.RemotePackage(packageUrl, CtxHlp.BlockOptional?.Context.Module, newName);
+        var block = this.PrepareRequestBlock().BlockOrNull;
+        var result = Real.RemotePackage(packageUrl, block?.Context.Module, newName);
         return result == null
             ? Ok()
             : Problem(result, null, (int)HttpStatusCode.InternalServerError);

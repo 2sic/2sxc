@@ -5,6 +5,7 @@ using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 
@@ -22,10 +23,15 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
 
+[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class DataController() : OqtStatefulControllerBase(DataControllerReal.LogSuffix), IAdminDataController
+public class DataController : ControllerBase, IHasLog, IAdminDataController
 {
-    private DataControllerReal Real => GetService<DataControllerReal>();
+    /// <inheritdoc />
+    public ILog Log => field ??= LogFactory.Create($"Api.{DataControllerReal.LogSuffix}", null, GetType().Name);
+
+    private DataControllerReal Real => this.GetApiService<DataControllerReal>();
 
     /// <inheritdoc />
     [HttpGet]

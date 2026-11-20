@@ -5,6 +5,7 @@ using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 using RealController = ToSic.Sxc.Backend.Admin.ViewControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
@@ -16,10 +17,15 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
+[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ViewController : OqtStatefulControllerBase, IViewController
+public class ViewController : ControllerBase, IHasLog, IViewController
 {
-    public ViewController(LazySvc<Pages.Pages> pages) : base(RealController.LogSuffix)
+    /// <inheritdoc />
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+
+    public ViewController(LazySvc<Pages.Pages> pages)
     {
         this.ConnectLogs([
             _pages = pages
@@ -27,7 +33,7 @@ public class ViewController : OqtStatefulControllerBase, IViewController
     }
     private readonly LazySvc<Pages.Pages> _pages;
 
-    private RealController Real => GetService<RealController>();
+    private RealController Real => this.GetApiService<RealController>();
     
     /// <inheritdoc />
     [HttpGet, HttpDelete]

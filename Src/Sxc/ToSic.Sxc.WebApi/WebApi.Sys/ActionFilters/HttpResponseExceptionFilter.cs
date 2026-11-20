@@ -4,9 +4,8 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ToSic.Sxc.WebApi.Sys.ActionFilters;
 /// <summary>
-/// Converts exceptions from Oqtane controller actions into HTTP responses.
-/// <see cref="HttpExceptionAbstraction"/> supplies the status and message. Other exceptions
-/// are returned as HTTP 400 with the exception as the response value.
+/// Converts exceptions from Oqtane controller actions into HTTP 400 responses,
+/// using the exception as the response value.
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
