@@ -27,7 +27,7 @@ public class ListController : DnnApiController, IListController
     protected override void Initialize(HttpControllerContext controllerContext)
     {
         base.Initialize(controllerContext);
-        SysHlp.PublishContextBlockOnly(Request, Log);
+        new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, controllerContext.Request, Log);
     }
 
     #endregion

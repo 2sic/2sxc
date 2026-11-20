@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Eav.WebApi.Sys;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using RealController = ToSic.Sxc.Backend.Admin.DialogControllerReal;
@@ -37,9 +38,11 @@ public class DialogController : DnnApiController, IDialogController
     [HttpGet]
     public DialogContextStandaloneDto Settings(int appId)
     {
+        new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, Request, Log);
+
         // Only load specific App Context if the AppId is specified; otherwise rely on the block context above
-        var tryApp = appId > KnownAppsConstants.AppIdEmpty;
-        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: tryApp, AppId: appId), Log);
+        if (appId > KnownAppsConstants.AppIdEmpty)
+            DnnSxcWebApiInitBlockContextAndShare.InitAppSpecs(SysHlp, appId);
         return Real.Settings(appId);
     }
 }

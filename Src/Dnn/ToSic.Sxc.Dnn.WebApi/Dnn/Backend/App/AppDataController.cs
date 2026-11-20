@@ -26,7 +26,7 @@ public class AppDataController : DnnApiController, IAppDataController
     protected override void Initialize(HttpControllerContext controllerContext)
     {
         base.Initialize(controllerContext);
-        SysHlp.PublishContextBlockOnly(Request, Log);
+        new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, controllerContext.Request, Log);
     }
 
     #endregion

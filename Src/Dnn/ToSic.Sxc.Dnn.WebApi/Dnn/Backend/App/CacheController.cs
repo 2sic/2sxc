@@ -27,10 +27,7 @@ public class CacheController : DnnApiController, ICacheController
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public bool Flush([FromBody] AppCacheFlushSpecs specs, [FromUri] int? appId = null)
-    {
-        SysHlp.PublishContextBlockOnly(Request, Log);
-        return Real.FlushAuto(appId, specs);
-    }
+        => Real.FlushAuto(appId, specs);
 
     // Handles the named-app route app/{appPath}/cache/flush for callers outside of a block context.
     [HttpPost]
@@ -40,7 +37,7 @@ public class CacheController : DnnApiController, ICacheController
     public bool Flush([FromUri] string appPath, [FromBody] AppCacheFlushSpecs specs)
     {
         // Flush-auto needs the current block context
-        SysHlp.PublishContextBlockOnly(Request, Log);
+        new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, Request, Log);
         return Real.Flush(appPath, specs);
     }
 }

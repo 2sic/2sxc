@@ -33,31 +33,34 @@ public class EntityController : DnnApiController, IEntityController
 
     private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
 
+    /// <summary>
+    /// The entity controller probably needs this for every request.
+    /// </summary>
+    /// <param name="controllerContext"></param>
+    protected override void Initialize(HttpControllerContext controllerContext)
+    {
+        base.Initialize(controllerContext);
+        new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, controllerContext.Request, Log);
+    }
+
     #endregion
 
 
     private RealController Real => SysHlp.GetService<RealController>();
-
 
     /// <inheritdoc/>
     [HttpDelete]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     public void Delete(string contentType, int appId, int? id = null, Guid? guid = null, bool force = false, int? parentId = null, string parentField = null)
-    {
-        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
-        Real.Delete(contentType, appId, id, guid, force, parentId, parentField);
-    }
+        => Real.Delete(contentType, appId, id, guid, force, parentId, parentField);
 
 
     /// <inheritdoc/>
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public HttpResponseMessage Json(int appId, int id, string prefix, bool withMetadata)
-    {
-        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
-        return Real.Json(appId, id, prefix, withMetadata).ToHttpResponse();
-    }
+        => Real.Json(appId, id, prefix, withMetadata).ToHttpResponse();
 
 
     /// <inheritdoc/>
@@ -72,11 +75,8 @@ public class EntityController : DnnApiController, IEntityController
         ExportResourceReferenceMode resourcesReferences,
         ExportLanguageResolution languageReferences, 
         string selectedIds = null)
-    {
-        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
-        return Real.Download(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
+        => Real.Download(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
             languageReferences, selectedIds).ToHttpResponse();
-    }
 
 
     /// <inheritdoc/>
@@ -84,10 +84,7 @@ public class EntityController : DnnApiController, IEntityController
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     public ContentImportResult XmlPreview(ContentFileImportOptions args)
-    {
-        SysHlp.PublishContextBlockOnly(Request, Log);
-        return Real.XmlPreview(args);
-    }
+        => Real.XmlPreview(args);
 
 
     /// <inheritdoc/>
@@ -95,10 +92,7 @@ public class EntityController : DnnApiController, IEntityController
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     public ContentImportResult XmlUpload(ContentFileImportOptions args)
-    {
-        SysHlp.PublishContextBlockOnly(Request, Log);
-        return Real.XmlUpload(args);
-    }
+        => Real.XmlUpload(args);
 
 
     /// <inheritdoc/>
@@ -106,8 +100,5 @@ public class EntityController : DnnApiController, IEntityController
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     public bool Upload(DataFileImportOptions args)
-    {
-        SysHlp.PublishContextBlockOnly(Request, Log);
-        return Real.Upload(args);
-    }
+        => Real.Upload(args);
 }

@@ -37,7 +37,7 @@ public class QueryController : DnnApiController, IQueryController
     public QueryRunDto RunDev(int appId, int id, int top = 0)
     {
         // The block is required, so that queries can resolve things such as Module.Id etc.
-        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
+        new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, Request, Log);
         return Real.RunDev(appId, id, top);
     }
 
@@ -45,19 +45,19 @@ public class QueryController : DnnApiController, IQueryController
     public QueryRunDto DebugStream(int appId, int id, string from, string @out, int top = 25)
     {
         // The block is required, so that queries can resolve things such as Module.Id etc.
-        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
+        new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, Request, Log);
         return Real.DebugStream(appId, id, from, @out, top);
     }
 
     [HttpGet]
-    public void Clone(int appId, int id)
-        => Real.Clone(appId, id);
+    public void Clone(int appId, int id) =>
+        Real.Clone(appId, id);
 
     [HttpDelete]
-    public bool Delete(int appId, int id)
-        => Real.DeleteIfUnused(appId, id);
+    public bool Delete(int appId, int id) =>
+        Real.DeleteIfUnused(appId, id);
 
     [HttpPost]
-    public bool Import(DataFileImportOptions args)
-        => Real.Import(args);
+    public bool Import(DataFileImportOptions args) =>
+        Real.Import(args);
 }

@@ -21,6 +21,16 @@ public class BlockController : DnnApiController, IBlockController
 
     private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
 
+    /// <summary>
+    /// The block controller needs this for every request.
+    /// </summary>
+    /// <param name="controllerContext"></param>
+    protected override void Initialize(HttpControllerContext controllerContext)
+    {
+        base.Initialize(controllerContext);
+        new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, controllerContext.Request, Log);
+    }
+
     #endregion
 
 
@@ -30,57 +40,61 @@ public class BlockController : DnnApiController, IBlockController
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     public string Block(int parentId, string field, int index, string app = "", Guid? guid = null)
-    {
-        SysHlp.PublishContextBlockOnly(Request, Log); 
-        return Real.Block(parentId, field, index, app, guid);
-    }
+        => Real.Block(parentId, field, index, app, guid);
 
 
     /// <inheritdoc />
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     public void Item([FromUri] int? index = null)
-    {
-        SysHlp.PublishContextBlockOnly(Request, Log);
-        Real.Item(index);
-    }
+        => Real.Item(index);
 
 
     /// <inheritdoc />
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     public Task App(int? appId)
-    {
-        SysHlp.PublishContextBlockOnly(Request, Log);
-        return Real.App(appId);
-    }
+        => Real.App(appId);
 
+    // Legacy block-option endpoints, replaced by System.BlockConfigOptions.
+    // Keep these commented until we have confirmed that no external clients still depend on them.
+    //
+    // /// <inheritdoc />
+    // [HttpGet]
+    // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    // public IEnumerable<AppUiInfo> Apps(string apps = null)
+    //     => Real.Apps(apps);
+    //
+    //
+    // /// <inheritdoc />
+    // [HttpGet]
+    // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    // public IEnumerable<ContentTypeUiInfo> ContentTypes()
+    //     => Real.ContentTypes();
+    //
+    //
+    // /// <inheritdoc />
+    // [HttpGet]
+    // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    // public IEnumerable<TemplateUiInfo> Templates()
+    //     => Real.Templates();
 
     /// <inheritdoc />
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
     public Task<Guid?> Template(int templateId, bool forceCreateContentGroup)
-    {
-        SysHlp.PublishContextBlockOnly(Request, Log);
-        return Real.Template(templateId, forceCreateContentGroup);
-    }
+        => Real.Template(templateId, forceCreateContentGroup);
 
 
     /// <inheritdoc />
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public AjaxRenderDto Render([FromUri] int templateId, [FromUri] string lang, [FromUri] string edition)
-    {
-        SysHlp.PublishContextBlockOnly(Request, Log);
-        return Real.Set(SysFolderRootVirtual.Trim('~')).Render(templateId, lang, edition);
-    }
+    public AjaxRenderDto Render([FromUri] int templateId, [FromUri] string lang, [FromUri] string edition) 
+        => Real.Set(SysFolderRootVirtual.Trim('~')).Render(templateId, lang, edition);
 
     /// <inheritdoc />
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     public async Task<bool> Publish(string part, int index)
-    {
-        SysHlp.PublishContextBlockOnly(Request, Log);
-        return await Real.Publish(part, index);
-    }
+        => await Real.Publish(part, index);
 }

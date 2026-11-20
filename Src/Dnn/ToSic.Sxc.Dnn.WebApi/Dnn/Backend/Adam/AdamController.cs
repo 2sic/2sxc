@@ -28,17 +28,25 @@ public class AdamController : DnnApiController, IAdamController<int>
 
     private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
 
+    /// <summary>
+    /// The entity controller probably needs this for every request.
+    /// </summary>
+    /// <param name="controllerContext"></param>
+    protected override void Initialize(HttpControllerContext controllerContext)
+    {
+        base.Initialize(controllerContext);
+        new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, controllerContext.Request, Log);
+    }
+
     #endregion
 
-
     private RealController Real => SysHlp.GetService<RealController>();
-
 
     [HttpPost]
     [HttpPut]
     public object Upload(int appId, string contentType, Guid guid, string field, [FromUri] string subFolder = "", bool usePortalRoot = false)
     {
-        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
+        DnnSxcWebApiInitBlockContextAndShare.InitAppSpecs(SysHlp, appId);
         return Real.Upload(new(Request, HttpContext.Current.Request), appId, contentType, guid, field, subFolder,
             usePortalRoot);
     }
@@ -48,7 +56,7 @@ public class AdamController : DnnApiController, IAdamController<int>
     [HttpGet]
     public IEnumerable</*AdamItemDto*/object> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
     {
-        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
+        DnnSxcWebApiInitBlockContextAndShare.InitAppSpecs(SysHlp, appId);
         return Real.Items(appId, contentType, guid, field, subfolder, usePortalRoot);
     }
 
@@ -56,7 +64,7 @@ public class AdamController : DnnApiController, IAdamController<int>
     [HttpPost]
     public IEnumerable</*AdamItemDto*/object> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
     {
-        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
+        DnnSxcWebApiInitBlockContextAndShare.InitAppSpecs(SysHlp, appId);
         return Real.Folder(appId, contentType, guid, field, subfolder, newFolder, usePortalRoot);
     }
 
@@ -64,7 +72,7 @@ public class AdamController : DnnApiController, IAdamController<int>
     [HttpGet]
     public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot)
     {
-        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
+        DnnSxcWebApiInitBlockContextAndShare.InitAppSpecs(SysHlp, appId);
         return Real.Delete(appId, contentType, guid, field, subfolder, isFolder, id, usePortalRoot);
     }
 
@@ -72,7 +80,7 @@ public class AdamController : DnnApiController, IAdamController<int>
     [HttpGet]
     public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot)
     {
-        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
+        DnnSxcWebApiInitBlockContextAndShare.InitAppSpecs(SysHlp, appId);
         return Real.Rename(appId, contentType, guid, field, subfolder, isFolder, id, newName, usePortalRoot);
     }
 }
