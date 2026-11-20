@@ -59,11 +59,12 @@ public abstract partial class SxcApiController() :
     public SxcHelper Sxc => field
         ??= new(CodeApi?.Block?.Context?.Permissions.IsContentAdmin ?? false, SysHlp.GetService<IConvertToEavLight> ());
 
-    /// <summary>
-    /// Old API - probably never used, but we shouldn't remove it as we could break some existing code out there
-    /// </summary>
-    [PrivateApi]
-    public IBlock? Block => SysHlp.GetBlockAndContext(Request);
+    // 2026-11-20 2dm v22.02 - removing this, truly believe it was never used
+    ///// <summary>
+    ///// Old API - probably never used, but we shouldn't remove it as we could break some existing code out there
+    ///// </summary>
+    //[PrivateApi]
+    //public IBlock? Block => field ??= SysHlp.GetBlockFromRequest(Request);
 
     [PrivateApi] public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel9Old;
 

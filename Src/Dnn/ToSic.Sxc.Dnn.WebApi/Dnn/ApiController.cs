@@ -37,13 +37,14 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
 
     internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
 
-    /// <remarks>
-    /// Probably obsolete, but a bit risky to just remove
-    /// We will only add it to ApiController but not to Api12, because no new code should ever use that.
-    /// </remarks>
-    [PrivateApi]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    public IBlock? Block => SysHlp.GetBlockAndContext(Request);
+    // 2026-11-20 2dm v22.02 - removing this, truly believe it was never used
+    ///// <remarks>
+    ///// Probably obsolete, but a bit risky to just remove
+    ///// We will only add it to ApiController but not to Api12, because no new code should ever use that.
+    ///// </remarks>
+    //[PrivateApi]
+    //[ShowApiWhenReleased(ShowApiMode.Never)]
+    //public IBlock? Block => field ??= SysHlp.GetBlockFromRequest(Request);
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
