@@ -40,8 +40,7 @@ public class AdamCode(Generator<AdamWorkUpload, AdamContext.Options> adamUpload,
         //            ?? ExCtx.GetApp()?.AppId
         //            ?? throw l.Ex(new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known."));
         var context = ExCtx.TryGetContextOfBlock()
-                      ?? ctxSvc.AppContextOrNull
-                      ?? throw l.Ex(new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known."));
+                      ?? ctxSvc.AppContextRequired("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
         var adamUploader = adamUpload.New(new(
             Context: context,
             ContentType: contentType,

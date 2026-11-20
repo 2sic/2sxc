@@ -27,10 +27,6 @@ public class SxcPagePublishing(AppWorkChain<ContentGroupList> contentGroupList, 
         // list of saved IDs
         Dictionary<Guid, int>? postSaveIds = null;
 
-        // The internal call which will be used further down
-        var groupList = contentGroupList.New(MyOptions);
-
-
         // use dnn versioning if partOfPage
         if (partOfPage)
         {
@@ -53,6 +49,9 @@ public class SxcPagePublishing(AppWorkChain<ContentGroupList> contentGroupList, 
 
         async Task<Dictionary<Guid, int>> SaveAndSaveGroupsInnerCall(Func<bool, Dictionary<Guid, int>> call, bool forceSaveAsDraft)
         {
+            // The internal call which will be used further down
+            var groupList = contentGroupList.New(MyOptions);
+
             var ids = call.Invoke(forceSaveAsDraft);
             // now assign all content-groups as needed
             await groupList.IfChangesAffectListUpdateIt(blockOrNull, items, ids);
