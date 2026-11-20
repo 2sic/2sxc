@@ -8,26 +8,48 @@ namespace ToSic.Sxc.Oqt.Server.Controllers;
 internal sealed class OqtLogWebApiAttribute(string historyLogGroup = EavWebApiConstants.HistoryNameWebApi)
     : Attribute, IAsyncActionFilter, IOrderedFilter
 {
+    private static readonly object RequestLoggingKey = new();
+
     public int Order => int.MinValue;
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
-        if (context.Controller is not IHasLog { Log: { } log })
+        var http = context.HttpContext;
+        // The first filter owns logging even when the attribute is also declared on the action.
+        if (context.Controller is not IHasLog owner || !http.Items.TryAdd(RequestLoggingKey, true))
         {
             await next();
             return;
         }
 
-        var http = context.HttpContext;
-        var timer = log.Fn($"action executing url: {http.Request.GetDisplayUrl()}", timer: true);
+        ILogCall? timer = null;
         try
         {
-            http.RequestServices.Build<ILogStore>(log).Add(historyLogGroup, log);
+            if (owner.Log is { } log)
+            {
+                timer = log.Fn($"action executing url: {http.Request.GetDisplayUrl()}", timer: true);
+                http.RequestServices.Build<ILogStore>(log).Add(historyLogGroup, log);
+            }
+        }
+        catch
+        {
+            // Insights is best-effort. A logging failure must still let the action run.
+        }
+
+        try
+        {
             await next();
         }
         finally
         {
-            timer.Done();
+            try
+            {
+                timer.Done();
+            }
+            catch
+            {
+                // A logging failure must preserve the action result or its original exception.
+            }
         }
     }
 }
