@@ -1,4 +1,5 @@
 ﻿using ToSic.Sxc.Context.Sys;
+using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys;
@@ -22,12 +23,16 @@ internal static class DnnSxcWebApiContextExtensions
         // If we want the block, do that first
         if (specs.TryBlock)
         {
-            var block = apiHelper.GetBlockFromRequest(request);
+            // Try to get the block from the request, and if found, share it with the current context
+            var block = apiHelper.GetService<DnnGetBlock>()
+                .TryGetBlockSpecsUsingModuleAndContentBlockHeaders(request);
             if (block != null)
-                apiHelper.GetService<ISxcCurrentContextService>().ShareBlockSpecs(block);
+                apiHelper.GetService<ISxcCurrentContextService>()
+                    .ShareBlockSpecs(block);
         }
         
         if (specs.TryApp)
-            apiHelper.GetService<ISxcCurrentContextService>().ShareAppStateOptimized(specs.AppId);
+            apiHelper.GetService<ISxcCurrentContextService>()
+                .ShareAppStateOptimized(specs.AppId);
     }
 }       

@@ -52,9 +52,3 @@ internal class DnnWebApiHelper : ServiceWithContext, ICanGetService
 
     public ICodeLog CodeLog => field ??= new CodeLog(Log);
 }
-
-public static class DnnGetBlockExtensions
-{
-    public static IBlock? GetBlockFromRequest(this ICanGetService helper, HttpRequestMessage request)
-        => helper.GetService<DnnGetBlock>().TryGetBlockSpecsUsingModuleAndContentBlockHeaders(request);
-}
