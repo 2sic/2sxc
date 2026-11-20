@@ -4,8 +4,13 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ToSic.Sxc.WebApi.Sys.ActionFilters;
 /// <summary>
-/// TODO: @STV pls document what this is for
+/// Converts exceptions from ASP.NET Core Web API actions into HTTP responses for 2sxc clients.
 /// </summary>
+/// <remarks>
+/// An <see cref="HttpExceptionAbstraction"/> supplies the response status and message.
+/// Other exceptions produce HTTP 400 with the exception as the response value,
+/// preserving the Web API error contract.
+/// </remarks>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class HttpResponseExceptionFilter : IActionFilter, IOrderedFilter
