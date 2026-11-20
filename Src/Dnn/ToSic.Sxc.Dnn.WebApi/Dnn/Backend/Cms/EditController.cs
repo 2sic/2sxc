@@ -1,9 +1,7 @@
-﻿using System.Web.Http.Controllers;
-using ToSic.Eav.Ui.Edit.Sys;
+﻿using ToSic.Eav.Ui.Edit.Sys;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Eav.WebApi.Sys.Dto;
-using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using RealController = ToSic.Sxc.Backend.Cms.EditControllerReal;
@@ -22,18 +20,7 @@ public class EditController : DnnApiController, IEditController
 
     private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
 
-    /// <summary>
-    /// The edit controller probably needs this for every request.
-    /// </summary>
-    /// <param name="controllerContext"></param>
-    protected override void Initialize(HttpControllerContext controllerContext)
-    {
-        base.Initialize(controllerContext);
-        new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, controllerContext.Request, Log);
-    }
-
     #endregion
-
 
 
 
@@ -45,7 +32,7 @@ public class EditController : DnnApiController, IEditController
     [AllowAnonymous] // will check security internally, so assume no requirements
     public async Task<EditLoadDto> Load([FromBody] List<ItemIdentifier> items, int appId)
     {
-        DnnSxcWebApiInitBlockContextAndShare.InitAppSpecs(SysHlp, appId);
+        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
         return await Real.Load(items, appId);
     }
 
@@ -55,7 +42,7 @@ public class EditController : DnnApiController, IEditController
     [AllowAnonymous] // will check security internally, so assume no requirements
     public async Task<Dictionary<Guid, int>> Save([FromBody] EditSaveDto package, int appId, bool partOfPage)
     {
-        DnnSxcWebApiInitBlockContextAndShare.InitAppSpecs(SysHlp, appId);
+        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
         return await Real.Save(package, appId, partOfPage);
     }
 
@@ -64,7 +51,7 @@ public class EditController : DnnApiController, IEditController
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
     public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
     {
-        DnnSxcWebApiInitBlockContextAndShare.InitAppSpecs(SysHlp, appId);
+        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
         return Real.LinkInfo(link, appId, contentType, guid, field);
     }
 
@@ -73,6 +60,7 @@ public class EditController : DnnApiController, IEditController
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
     public Task<bool> Publish(int id)
     {
+        SysHlp.PublishContextBlockOnly(Request, Log);
         return Real.Publish(id);
     }
 }

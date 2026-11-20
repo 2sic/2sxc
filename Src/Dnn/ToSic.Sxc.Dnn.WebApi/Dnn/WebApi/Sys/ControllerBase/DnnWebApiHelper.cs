@@ -4,10 +4,11 @@ using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.Services.Sys;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
-internal class DnnWebApiHelper : ServiceWithContext
+internal class DnnWebApiHelper : ServiceWithContext, ICanGetService
 {
     #region Constructor & Destructor
 
@@ -49,10 +50,11 @@ internal class DnnWebApiHelper : ServiceWithContext
 
     #endregion
 
-    public IBlock? GetBlockAndContext(HttpRequestMessage request) 
-        => _blcCtx.Get(() => GetService<DnnGetBlock>().TryGetBlockSpecsUsingModuleAndContentBlockHeaders(request));
-    private readonly LazyGet<IBlock?> _blcCtx = new();
-
-
     public ICodeLog CodeLog => field ??= new CodeLog(Log);
+}
+
+public static class DnnGetBlockExtensions
+{
+    public static IBlock? GetBlockFromRequest(this ICanGetService helper, HttpRequestMessage request)
+        => helper.GetService<DnnGetBlock>().TryGetBlockSpecsUsingModuleAndContentBlockHeaders(request);
 }
