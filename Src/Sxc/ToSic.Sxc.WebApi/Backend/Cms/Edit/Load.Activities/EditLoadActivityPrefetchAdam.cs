@@ -1,15 +1,30 @@
 ﻿using ToSic.Eav.Ui.Edit.Sys;
+using ToSic.Eav.Ui.Edit.Sys.Load.Prefetch;
+using ToSic.Sxc.Adam.Sys.Manager;
+using ToSic.Sxc.Backend.Adam;
+using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
-partial class EditLoadActivityAddPrefetch
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public class EditLoadActivityPrefetchAdam(Generator<IAdamPrefetchHelper, AdamContext.Options> adamTransGetItems, IContextCompleteService ctxService)
+    : ServiceBase(SxcLogName + ".Prefetch", connect: [adamTransGetItems, ctxService]),
+        IEditLoadPrefetchProvider
 {
-    private Dictionary<string, Dictionary<string, IEnumerable< /*AdamItemDto*/object>>> PrefetchAdam(int appId, EditLoadDto editData)
+    public const string NameId = "Adam";
+
+    public Task<Package<object>> Handle(WorkContext mainCtx, Package<EditLoadDto> package)
+    {
+        var result = PrefetchAdam(package.Data);
+        return Task.FromResult(package.RePackage(result as object));
+    }
+
+    public Dictionary<string, Dictionary<string, IEnumerable< /*AdamItemDto*/object>>> PrefetchAdam(EditLoadDto editData)
     {
         var l = Log.Fn<Dictionary<string, Dictionary<string, IEnumerable<object>>>>();
 
         // Step 1: try to find hyperlink fields
-        var bundlesHavingLinks = BundleWithLinkFields(editData, true);
+        var bundlesHavingLinks = BundleWithLinkField.ExtractLinkFields(editData, true);
 
         var bundlesWithAllKeys = bundlesHavingLinks
             .Select(set =>
@@ -36,7 +51,7 @@ partial class EditLoadActivityAddPrefetch
                         .Select(key => new
                         {
                             Key = key,
-                            Dic = GetAdamListOfItems(appId, bundle.Set, key) as IEnumerable<object>,
+                            Dic = GetAdamListOfItems(bundle.Set, key) as IEnumerable<object>,
                         })
                     )
                     // skip empty bits to avoid UI from relying on these nodes to always exist
@@ -48,7 +63,7 @@ partial class EditLoadActivityAddPrefetch
         return l.Return(links);
     }
 
-    private IEnumerable<AdamItemDto> GetAdamListOfItems(int appId, BundleWithLinkField set, string key)
+    private IEnumerable<AdamItemDto> GetAdamListOfItems(BundleWithLinkField set, string key)
     {
         var l = Log.Fn<IEnumerable<AdamItemDto>>();
         var adamListMaker = adamTransGetItems.New(new(
@@ -61,4 +76,6 @@ partial class EditLoadActivityAddPrefetch
         var list = adamListMaker.GetAdamItemsForPrefetch(string.Empty, false);
         return l.Return(list);
     }
+
+
 }

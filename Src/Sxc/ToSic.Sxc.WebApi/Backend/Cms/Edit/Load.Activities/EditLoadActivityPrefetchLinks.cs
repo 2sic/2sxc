@@ -1,17 +1,30 @@
 ﻿using ToSic.Eav.Data.Sys.ValueConverter;
 using ToSic.Eav.Ui.Edit.Sys;
 using ToSic.Eav.Ui.Edit.Sys.Load;
+using ToSic.Eav.Ui.Edit.Sys.Load.Prefetch;
+using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
-partial class EditLoadActivityAddPrefetch
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public class EditLoadActivityPrefetchLinks(Generator<HyperlinkBackend> hyperlinkBackend)
+    : ServiceBase(SxcLogName + ".Prefetch", connect: [hyperlinkBackend]),
+        IEditLoadPrefetchProvider
 {
-    private Dictionary<string, LinkInfoDto> PrefetchLinks(int appId, EditLoadDto editData)
+    public const string NameId = "Links";
+
+    public Task<Package<object>> Handle(WorkContext mainCtx, Package<EditLoadDto> package)
+    {
+        var result = PrefetchLinks(mainCtx.Get<int>(EditLoadContextConstants.AppId), package.Data);
+        return Task.FromResult(package.RePackage(result as object));
+    }
+
+    public Dictionary<string, LinkInfoDto> PrefetchLinks(int appId, EditLoadDto editData)
     {
         try
         {
             // Step 1: try to find hyperlink fields
-            var bundlesHavingLinks = BundleWithLinkFields(editData);
+            var bundlesHavingLinks = BundleWithLinkField.ExtractLinkFields(editData);
 
             var links = bundlesHavingLinks
                 .SelectMany(set => (set.HyperlinkFields ?? [])
@@ -59,34 +72,4 @@ partial class EditLoadActivityAddPrefetch
         }
     }
     private readonly LazyGet<HyperlinkBackend> _hyperlinkBackend = new();
-
-
-    private static List<BundleWithLinkField> BundleWithLinkFields(EditLoadDto editData, bool includeStringFields = false)
-    {
-        var bundlesHavingLinks = editData.Items
-            // Only these with hyperlinks
-            .Where(b =>
-            {
-                var hasLinks = b.Entity?.Attributes?.Hyperlink?.Any() ?? false;
-                var hasString = includeStringFields && (b.Entity?.Attributes?.String?.Any() ?? false);
-                return hasLinks || hasString;
-            })
-            .Select(b => new BundleWithLinkField
-            {
-                Guid = b.Entity!.Guid,
-                HyperlinkFields = b.Entity.Attributes.Hyperlink!,
-                StringFields = b.Entity.Attributes.String!,
-                ContentTypeName = b.Entity.Type.Name,
-            });
-        return bundlesHavingLinks.ToList();
-    }
-
-    private class BundleWithLinkField
-    {
-        //public int AppId;
-        public required Guid Guid;
-        public required string ContentTypeName;
-        public required Dictionary<string, Dictionary<string, string>>? HyperlinkFields;
-        public required Dictionary<string, Dictionary<string, string>>? StringFields;
-    }
 }

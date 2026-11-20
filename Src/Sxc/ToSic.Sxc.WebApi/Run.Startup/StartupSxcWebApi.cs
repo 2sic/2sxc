@@ -9,6 +9,7 @@ using ToSic.Eav.DataSource.DataProviders;
 using ToSic.Eav.Sys.Insights;
 using ToSic.Eav.Ui.Context.Sys;
 using ToSic.Eav.Ui.Edit.Sys.Load.Activities;
+using ToSic.Eav.Ui.Edit.Sys.Load.Prefetch;
 using ToSic.Eav.Ui.Edit.Sys.Load.Settings;
 using ToSic.Eav.Ui.Edit.Sys.Save;
 using ToSic.Eav.WebApi.Admin.Sys;
@@ -159,6 +160,8 @@ public static class StartupSxcWebApi
 
         services.AddSxcInsights();
 
+        services.AddSxcEditLoadPrefetch();
+
         services.AddFallbacks();
 
         return services;
@@ -206,6 +209,14 @@ public static class StartupSxcWebApi
         services.AddTransient<ILoadSettingsProvider, LoadSettingsForWysiwygDefaults>(); // new v21
         return services;
     }
+
+    public static IServiceCollection AddSxcEditLoadPrefetch(this IServiceCollection services)
+    {
+        services.TryAddKeyedTransient<IEditLoadPrefetchProvider, EditLoadActivityPrefetchLinks>(EditLoadActivityPrefetchLinks.NameId);
+        services.TryAddKeyedTransient<IEditLoadPrefetchProvider, EditLoadActivityPrefetchAdam>(EditLoadActivityPrefetchAdam.NameId);
+        return services;
+    }
+
 
     public static IServiceCollection AddAdamWebApi<TFolder, TFile>(this IServiceCollection services)
     {
