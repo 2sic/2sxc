@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
 internal static class UniqueValueValidationRules
@@ -45,16 +47,12 @@ internal static class UniqueValueValidationRules
 
     private static string NormalizeDateTimeValue(string value)
     {
-        // 2026-08-07 2dm TODO: @STV - THIS IS NOT MEANT FOR static use
-        // TODO: pls recheck, and make something simpler, this feels like overkill
-        return value;
-        
-        //// Edit UI sends ISO UTC strings like 2026-05-21T00:00:00.000Z, but uniqueness lookup must compare
-        //// against EAV's short DateTime serialization without shifting the wall-clock value through local time.
-        //if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var dto))
-        //    return ScalarValueAssembler.DateTime(dto.DateTime, DataConstants.NoLanguages).Serialized ?? value;
+        const string dateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss.FFFFFFF";
 
-        //return ScalarValueAssembler.Create(ValueTypes.DateTime, value).Serialized ?? value;
+        // ValueFilter compares the stored wall-clock time. Strip the ISO offset before it parses the value.
+        return DateTimeOffset.TryParseExact(value, dateTimeFormat + "K", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date)
+            ? date.DateTime.ToString(dateTimeFormat, CultureInfo.InvariantCulture)
+            : value;
     }
 
     internal static string LanguageKey(IValue raw)

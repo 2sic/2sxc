@@ -71,8 +71,11 @@ public class UniqueValueValidationTests
         Assert.Equal("blank", result.Reason);
     }
 
-    [Fact]
-    public void DuplicateExistingDateValue_WithUiIsoRequest_ReturnsDuplicateConflict()
+    [Theory]
+    [InlineData("2026-05-20T00:00:00.000Z")]
+    [InlineData("2026-05-20T00:00:00-05:00")]
+    [InlineData("2026-05-20T00:00:00")]
+    public void DuplicateExistingDateValue_WithUiIsoRequest_ReturnsDuplicateConflict(string value)
     {
         using var ctx = CreateContext();
         var date = new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Unspecified);
@@ -84,7 +87,7 @@ public class UniqueValueValidationTests
             ctx.InvariantAttribute("Title", ValueTypes.String, "Existing"),
             ctx.InvariantAttribute("PublishDate", ValueTypes.DateTime, date));
 
-        var result = Validate(ctx, [type], [existing], new(type.NameId, "PublishDate", "2026-05-20T00:00:00.000Z"));
+        var result = Validate(ctx, [type], [existing], new(type.NameId, "PublishDate", value));
 
         Assert.False(result.IsValid);
         Assert.Equal("duplicate", result.Reason);
