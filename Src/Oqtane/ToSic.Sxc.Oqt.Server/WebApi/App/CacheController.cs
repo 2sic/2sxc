@@ -4,19 +4,24 @@ using Oqtane.Shared;
 using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 
 [Route(OqtWebApiConstants.AppRootNoLanguage)]
 [Route(OqtWebApiConstants.AppRootPathOrLang)]
 [Route(OqtWebApiConstants.AppRootPathAndLang)]
+[OqtApiRequest]
+[SystemTextJsonFormatter]
+[ServiceFilter(typeof(OptionalBodyFilter))]
+[ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class CacheController() : OqtControllerBase(false, CacheControllerReal.LogSuffix), ICacheController
+public class CacheController : ControllerBase, IHasLog, ICacheController
 {
     /// <inheritdoc />
-    public override ILog Log => field ??= LogFactory.Create($"Api.{CacheControllerReal.LogSuffix}", null, GetType().Name);
+    public ILog Log => field ??= LogFactory.Create($"Api.{CacheControllerReal.LogSuffix}", null, GetType().Name);
 
-    private CacheControllerReal Real => GetService<CacheControllerReal>();
+    private CacheControllerReal Real => this.GetApiService<CacheControllerReal>();
 
     [HttpPost("{appPath}/{controller}/{action}")]
     [ValidateAntiForgeryToken]

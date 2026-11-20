@@ -6,6 +6,7 @@ using ToSic.Sxc.Backend.Cms;
 using ToSic.Sxc.Backend.InPage;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 using RealController = ToSic.Sxc.Backend.Cms.BlockControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
@@ -18,14 +19,18 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 [ValidateAntiForgeryToken]
 [ApiController]
 // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
+[OqtApiRequest]
+[SystemTextJsonFormatter]
+[ServiceFilter(typeof(OptionalBodyFilter))]
+[ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [OqtPrepareBlockContext]
-public class BlockController() : OqtControllerBase(false, RealController.LogSuffix), IBlockController
+public class BlockController : ControllerBase, IHasLog, IBlockController
 {
     /// <inheritdoc />
-    public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
 
-    private RealController Real => GetService<RealController>();
+    private RealController Real => this.GetApiService<RealController>();
 
 
 

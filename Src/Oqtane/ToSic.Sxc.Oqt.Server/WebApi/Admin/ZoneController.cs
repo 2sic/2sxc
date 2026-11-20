@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 using RealController = ToSic.Eav.WebApi.Admin.Sys.ZoneControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
@@ -17,13 +18,17 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
+[OqtApiRequest]
+[SystemTextJsonFormatter]
+[ServiceFilter(typeof(OptionalBodyFilter))]
+[ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ZoneController() : OqtControllerBase(false, RealController.LogSuffix), IZoneController
+public class ZoneController : ControllerBase, IHasLog, IZoneController
 {
     /// <inheritdoc />
-    public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
 
-    private RealController Real => GetService<RealController>();
+    private RealController Real => this.GetApiService<RealController>();
 
 
     /// <inheritdoc />

@@ -7,6 +7,7 @@ using ToSic.Sxc.Apps.Extensions.Sys.Preflight;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 using RealController = ToSic.Sxc.Backend.Admin.AppExtensionsControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
@@ -16,13 +17,17 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
+[OqtApiRequest]
+[SystemTextJsonFormatter]
+[ServiceFilter(typeof(OptionalBodyFilter))]
+[ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppExtensionsController() : OqtControllerBase(false, RealController.LogSuffix), IAppExtensionsController
+public class AppExtensionsController : ControllerBase, IHasLog, IAppExtensionsController
 {
     /// <inheritdoc />
-    public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
 
-    private RealController Real => GetService<RealController>();
+    private RealController Real => this.GetApiService<RealController>();
 
     /// <inheritdoc />
     [HttpPost]

@@ -6,6 +6,7 @@ using ToSic.Eav.ImportExport.Sys.Options;
 using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 using RealController = ToSic.Eav.WebApi.Admin.Sys.EntityControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
@@ -29,13 +30,17 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
+[OqtApiRequest]
+[SystemTextJsonFormatter]
+[ServiceFilter(typeof(OptionalBodyFilter))]
+[ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class EntityController() : OqtControllerBase(false, RealController.LogSuffix), IEntityController
+public class EntityController : ControllerBase, IHasLog, IEntityController
 {
     /// <inheritdoc />
-    public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
 
-    private RealController Real => GetService<RealController>();
+    private RealController Real => this.GetApiService<RealController>();
 
 
     /// <inheritdoc/>

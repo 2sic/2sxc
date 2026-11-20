@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 using RealController = ToSic.Sxc.Backend.Admin.DialogControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
@@ -22,13 +23,17 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 
 [ApiController]
 
+[OqtApiRequest]
+[SystemTextJsonFormatter]
+[ServiceFilter(typeof(OptionalBodyFilter))]
+[ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class DialogController() : OqtControllerBase(false, RealController.LogSuffix), IDialogController
+public class DialogController : ControllerBase, IHasLog, IDialogController
 {
     /// <inheritdoc />
-    public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
 
-    private RealController Real => GetService<RealController>();
+    private RealController Real => this.GetApiService<RealController>();
 
 
     [HttpGet]

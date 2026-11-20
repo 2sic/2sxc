@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.WebApi.App.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 using RealController = ToSic.Sxc.Backend.App.AppDataControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.App;
@@ -18,14 +19,18 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 [Route(OqtWebApiConstants.AppRootPathOrLang + "/{appPath}/data")] // new, v13
 [Route(OqtWebApiConstants.AppRootPathAndLang + "/{appPath}/data")] // new, v13
 
+[OqtApiRequest]
+[SystemTextJsonFormatter]
+[ServiceFilter(typeof(OptionalBodyFilter))]
+[ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [OqtPrepareBlockContext]
-public class AppDataController() : OqtControllerBase(false, RealController.LogSuffix), IAppDataController
+public class AppDataController : ControllerBase, IHasLog, IAppDataController
 {
     /// <inheritdoc />
-    public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
 
-    private RealController Real => GetService<RealController>();
+    private RealController Real => this.GetApiService<RealController>();
 
 
     #region Get List / all of a certain content-type

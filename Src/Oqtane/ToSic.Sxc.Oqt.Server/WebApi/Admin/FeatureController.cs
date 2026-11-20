@@ -5,6 +5,7 @@ using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Eav.WebApi.Sys.Licenses;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sys.Capabilities.Features;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 using RealController = ToSic.Eav.WebApi.Admin.Sys.FeatureControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
@@ -16,13 +17,17 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
+[OqtApiRequest]
+[SystemTextJsonFormatter]
+[ServiceFilter(typeof(OptionalBodyFilter))]
+[ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class FeatureController() : OqtControllerBase(false, RealController.LogSuffix), IFeatureController
+public class FeatureController : ControllerBase, IHasLog, IFeatureController
 {
     /// <inheritdoc />
-    public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
 
-    private RealController Real => GetService<RealController>();
+    private RealController Real => this.GetApiService<RealController>();
 
     [HttpGet]
     [Authorize(Roles = RoleNames.Admin)]

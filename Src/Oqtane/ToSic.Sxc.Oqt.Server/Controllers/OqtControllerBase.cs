@@ -20,12 +20,15 @@ public abstract class OqtControllerBase : ControllerBase, IHasLog, IActionFilter
     #region Setup
 
     private readonly bool _withBlockContext;
-    private readonly string _logSuffix;
 
     protected OqtControllerBase(bool withBlockContext, string logSuffix)
     {
         _withBlockContext = withBlockContext;
-        _logSuffix = logSuffix;
+        Log = LogFactory.Create($"Api.{logSuffix}", null, GetType().Name);
+        _helper = new(this);
+
+        if (withBlockContext)
+            CtxHlp = new(this, _helper);
     }
 
     #endregion
@@ -38,12 +41,12 @@ public abstract class OqtControllerBase : ControllerBase, IHasLog, IActionFilter
     protected virtual string HistoryLogGroup => EavWebApiConstants.HistoryNameWebApi;
 
     /// <inheritdoc />
-    public virtual ILog Log => field ??= LogFactory.Create($"Api.{_logSuffix}", null, GetType().Name);
+    public ILog Log { get; }
         
     /// <summary>
     /// The helper to assist in timing and common operations of WebApi Controllers
     /// </summary>
-    private NetCoreControllersHelper Helper => field ??= new(this);
+    private readonly NetCoreControllersHelper _helper;
 
     /// <summary>
     /// Special helper to move all Razor logic into a separate class.
@@ -51,9 +54,7 @@ public abstract class OqtControllerBase : ControllerBase, IHasLog, IActionFilter
     /// </summary>
     [PrivateApi]
     internal NetCoreWebApiContextHelper CtxHlp 
-        => _withBlockContext
-            ? field ??= new(this, Helper)
-            : throw new($"This controller doesn't have a {nameof(CtxHlp)}. Check your constructor.");
+        => field ?? throw new($"This controller doesn't have a {nameof(CtxHlp)}. Check your constructor.");
 
     /// <summary>
     /// Initializer - just ensure SiteState is initialized thanks to our paths
@@ -63,7 +64,7 @@ public abstract class OqtControllerBase : ControllerBase, IHasLog, IActionFilter
     public virtual void OnActionExecuting(ActionExecutingContext context)
     {
         var l = Log.Fn();
-        Helper.OnActionExecuting(context, HistoryLogGroup);
+        _helper.OnActionExecuting(context, HistoryLogGroup);
 
         // background processes can pass in an alias using the SiteState service
         GetService<AliasResolver>().InitIfEmpty();
@@ -79,10 +80,10 @@ public abstract class OqtControllerBase : ControllerBase, IHasLog, IActionFilter
     public virtual void OnActionExecuted(ActionExecutedContext context)
     {
         var l = Log.Fn();
-        Helper.OnActionExecuted(context);
+        _helper.OnActionExecuted(context);
         l.Done();
     }
 
     protected TService GetService<TService>() where TService : class
-        => Helper.GetService<TService>();
+        => _helper.GetService<TService>();
 }

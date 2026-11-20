@@ -5,6 +5,7 @@ using System.Net;
 using ToSic.Eav.WebApi.Sys.Install;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 using RealController = ToSic.Sxc.Backend.Sys.InstallControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
@@ -14,21 +15,19 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + "/" + AreaRoutes.Sys)]
 
+[OqtApiRequest("web-api.install")]
+[SystemTextJsonFormatter]
+[ServiceFilter(typeof(OptionalBodyFilter))]
+[ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class InstallController()
-    : OqtControllerBase(false, RealController.LogSuffix), IInstallController
+public class InstallController
+    : ControllerBase, IHasLog, IInstallController
 {
     /// <inheritdoc />
-    public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
 
-    private RealController Real => GetService<RealController>();
+    private RealController Real => this.GetApiService<RealController>();
 
-
-    /// <summary>
-    /// Make sure that these requests don't land in the normal api-log.
-    /// Otherwise each log-access would re-number what item we're looking at
-    /// </summary>
-    protected override string HistoryLogGroup { get; } = "web-api.install";
 
 
     /// <inheritdoc />

@@ -9,8 +9,7 @@ internal static class OqtRequestContext
 {
     /// <summary>Builds and publishes the block for this request when module and page IDs are available.</summary>
     internal static IContextCompleteService PrepareRequestBlock(this ControllerBase controller)
-        => controller.HttpContext.RequestServices.Build<IWebApiContextBuilder>((controller as IHasLog)?.Log)
-            .PrepareContextResolverForApiRequest();
+        => controller.GetApiService<IWebApiContextBuilder>().PrepareContextResolverForApiRequest();
 }
 
 /// <summary>Prepares the optional block when every action on a controller uses it.</summary>

@@ -4,6 +4,7 @@ using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.WebApi.App.Sys;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 
@@ -13,14 +14,18 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 [Route(OqtWebApiConstants.AppRootPathAndLang)]
 
 [AllowAnonymous] // All functions will check security internally, so assume no requirements
+[OqtApiRequest]
+[SystemTextJsonFormatter]
+[ServiceFilter(typeof(OptionalBodyFilter))]
+[ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppQueryController() : OqtControllerBase(false, AppWebApiQueryRunSvc.LogSuffix), IAppQueryController
+public class AppQueryController : ControllerBase, IHasLog, IAppQueryController
 {
     /// <inheritdoc />
-    public override ILog Log => field ??= LogFactory.Create($"Api.{AppWebApiQueryRunSvc.LogSuffix}", null, GetType().Name);
+    public ILog Log => field ??= LogFactory.Create($"Api.{AppWebApiQueryRunSvc.LogSuffix}", null, GetType().Name);
 
-    private AppWebApiQueryRunSvc Real => GetService<AppWebApiQueryRunSvc>();
-    private AppQueryContextResolver CtxResolver => GetService<AppQueryContextResolver>();
+    private AppWebApiQueryRunSvc Real => this.GetApiService<AppWebApiQueryRunSvc>();
+    private AppQueryContextResolver CtxResolver => this.GetApiService<AppQueryContextResolver>();
 
     // GET is separated from POST to solve HttpResponseException that happens when
     // 'content-type' header is missing (or in GET request) on the endpoint that has [FromBody] in signature

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 using RealController = ToSic.Eav.Sys.Insights.InsightsControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
@@ -10,13 +11,17 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + "/sys/[controller]/")]
     
 [ApiController]
+[OqtApiRequest("web-api.insights")]
+[SystemTextJsonFormatter]
+[ServiceFilter(typeof(OptionalBodyFilter))]
+[ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class InsightsController() : OqtControllerBase(false, RealController.LogSuffix)
+public class InsightsController : ControllerBase, IHasLog
 {
     /// <inheritdoc />
-    public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
 
-    private RealController Real => GetService<RealController>();
+    private RealController Real => this.GetApiService<RealController>();
 
 
     private ContentResult Wrap(string contents) => base.Content(contents, "text/html");
@@ -28,12 +33,6 @@ public class InsightsController() : OqtControllerBase(false, RealController.LogS
         => Wrap(Real.Details(view, appId, key, position, type, toggle, nameId, filter));
 
     #region Logging aspects
-
-    /// <summary>
-    /// Make sure that these requests don't land in the normal api-log.
-    /// Otherwise each log-access would re-number what item we're looking at
-    /// </summary>
-    protected override string HistoryLogGroup => "web-api.insights";
 
     /// <summary>
     /// Enable/disable logging of access to insights

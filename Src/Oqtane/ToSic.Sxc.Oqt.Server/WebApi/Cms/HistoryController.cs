@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 using RealController = ToSic.Sxc.Backend.Cms.HistoryControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
@@ -16,13 +17,17 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Cms}")]
 [PrivateApi]
 [ValidateAntiForgeryToken]
+[OqtApiRequest]
+[SystemTextJsonFormatter]
+[ServiceFilter(typeof(OptionalBodyFilter))]
+[ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class HistoryController() : OqtControllerBase(false, RealController.LogSuffix), IHistoryController
+public class HistoryController : ControllerBase, IHasLog, IHistoryController
 {
     /// <inheritdoc />
-    public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
 
-    private RealController Real => GetService<RealController>();
+    private RealController Real => this.GetApiService<RealController>();
 
 
     /// <inheritdoc />
