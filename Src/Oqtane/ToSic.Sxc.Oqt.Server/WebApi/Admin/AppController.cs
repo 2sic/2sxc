@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.Apps.ImportExport.Sys;
+using ToSic.Eav.Context;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
-using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.WebApi.Sys.ActionFilters;
@@ -80,7 +80,7 @@ public class AppController : ControllerBase, IHasLog, IAppController
     [Authorize(Roles = RoleNames.Host)]
     [ValidateAntiForgeryToken]
     public Task<ImportResult> Reset(int zoneId, int appId, bool withPortalFiles = false) 
-        => Real.Reset(zoneId, appId, this.PrepareRequestBlock().BlockRequired().Context.Site.DefaultCultureCode, withPortalFiles);
+        => Real.Reset(zoneId, appId, this.GetApiService<ISite>().DefaultCultureCode, withPortalFiles);
 
 
 
