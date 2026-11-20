@@ -40,7 +40,7 @@ public class AppQueryController : DnnApiController, IAppQueryController, IHasLog
         // Experimental: move block context availability to the specific call, instead of on the whole controller.
         // This is the query with /auto/, so it should be able to auto-detect the current specs
         // The block is required, so that queries can resolve things such as Module.Id etc.
-        new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, Request, Log);
+        SysHlp.PublishContextBlockOnly(Request, Log);
         return Real.RunQuery(CtxResolver.GetCtxAndLookupForAppIdOrContext(appId),
             queryName: name, more: null, stream: stream, includeGuid: includeGuid);
     }
@@ -56,12 +56,12 @@ public class AppQueryController : DnnApiController, IAppQueryController, IHasLog
     {
         // Experimental: move block context availability to the specific call, instead of on the whole controller.
         // The block is required, so that queries can resolve things such as Module.Id etc.
-        new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, Request, Log);
+        SysHlp.PublishContextBlockOnly(Request, Log);
         return Real.RunQuery(CtxResolver.GetCtxAndLookupForAppIdOrContext(appId),
             queryName: name, more: more, stream: stream, includeGuid: includeGuid);
     }
 
-    [HttpGet] 
+    [HttpGet]
     public IDictionary<string, IEnumerable<EavLightEntity>> PublicQuery(
         [FromUri] string appPath,
         [FromUri] string name,
@@ -77,7 +77,4 @@ public class AppQueryController : DnnApiController, IAppQueryController, IHasLog
         [FromUri] string stream = null
     ) => Real.RunQuery(CtxResolver.GetCtxAndLookupForAppPath(appPath),
         queryName: name, more: more, stream: stream);
-
-
-
 }
