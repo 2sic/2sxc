@@ -6,12 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 
-// TODO: @STV - PLS EXPLAIN what this does / what it's for
-/**
-     * This is adjusted version of Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.
-     * For reference, original AuthorizationMiddleware class is commented on the bottom of this file.
-     * Our version is made because endpoint metadata is provided from our custom ActionContext.
-     */
+/// <summary>
+/// Applies ASP.NET Core authorization before invoking a dynamically selected app API action.
+/// Oqtane routes app API requests to <see cref="AppApiMiddleware"/>. The selected action's
+/// descriptor provides its authorization policies and anonymous-access metadata.
+/// </summary>
 internal class AppApiAuthorization: IHasLog
 {
     public AppApiAuthorization(ILogStore logStore)
