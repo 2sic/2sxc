@@ -1,10 +1,11 @@
 ﻿using ToSic.Eav.Apps.Sys.State;
+using ToSic.Eav.Data.ListSlots.Sys;
 using ToSic.Eav.Data.Publishing.Sys;
 
 namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ListActivitySave(AppWorkChain<WorkFieldList> workFieldList, LazySvc<IDataPublishingService> publishing)
+public class ListActivitySave(AppWorkChain<WorkListSlots> workFieldList, LazySvc<IDataPublishingService> publishing)
     : ServiceWithSetup<IAppWorkContext>("Api.CntGrpRl", connect: [workFieldList, publishing])
 {
     public bool ItemList(Guid parent, List<ListSlotContentsInfo>? list,  string[] fields)
@@ -23,7 +24,7 @@ public class ListActivitySave(AppWorkChain<WorkFieldList> workFieldList, LazySvc
                 .Select(i => i.Index)
                 .ToArray();
             workFieldList.New(MyOptions)
-                .FieldListReorder(entity!, fields, sequence, options.ForceDraft);
+                .ReorderSlots(entity!, fields, sequence, options.ForceDraft);
         });
 
         return l.ReturnTrue();

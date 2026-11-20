@@ -1,10 +1,11 @@
 ﻿using ToSic.Eav.Apps.Sys.State;
+using ToSic.Eav.Data.ListSlots.Sys;
 using ToSic.Eav.Data.Publishing.Sys;
 
 namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ListActivityReplace(AppWorkChain<WorkFieldList> workFieldList, Generator<IDataPublishingService> publishing)
+public class ListActivityReplace(AppWorkChain<WorkListSlots> workFieldList, Generator<IDataPublishingService> publishing)
     : ServiceWithSetup<IAppWorkContext>("Act.LsRpOp", connect: [workFieldList, publishing])
 {
     public record Options(
@@ -43,10 +44,10 @@ public class ListActivityReplace(AppWorkChain<WorkFieldList> workFieldList, Gene
             var values = fields.Length > 1
                 ? [entityId, null]
                 : new int?[] { entityId };
-            fList.FieldListAdd(entity, fields, index, values, forceDraft, false);
+            fList.AddSlot(entity, fields, index, values, forceDraft, false);
         }
         else
-            fList.FieldListReplaceIfModified(entity, [fields.First()], index, [entityId], forceDraft);
+            fList.ReplaceSlot(entity, [fields.First()], index, [entityId], forceDraft);
 
         return l.ReturnTrue();
     }

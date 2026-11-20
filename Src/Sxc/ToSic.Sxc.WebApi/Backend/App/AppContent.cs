@@ -4,6 +4,7 @@ using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.Context.Sys;
+using ToSic.Eav.Data.ListSlots.Sys;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataFormats.EavLight;
@@ -25,7 +26,7 @@ public class AppContent(
     IWebApiAppContextBuilderService ctxBuilder,
     AppWorkQuick<WorkTypePermissions> typePermissions,
     Generator<MultiPermissionsItems, MultiPermissionsItems.Options> itemsPermissions,
-    AppWorkQuick<WorkFieldList> workFieldList,
+    AppWorkQuick<WorkListSlots> workFieldList,
     AppWorkQuick<WorkEntities> workEntities,
     AppWorkQuick<WorkEntityDelete> entDelete,
     Generator<SimpleDataEditService, SimpleDataEditService.Options> dataControllerLazy)
@@ -178,7 +179,7 @@ public class AppContent(
         var field = (string)parentRelationship[ParentRelField]!;
         var fields = new[] { field };
 
-        workFieldList.New(AppReader).FieldListAdd(parentEntity, fields, index, ids, asDraft: false, forceAddToEnd: false);
+        workFieldList.New(AppReader).AddSlot(parentEntity, fields, index, ids, asDraft: false, forceAddToEnd: false);
 
         return l.ReturnTrue($"new ParentRelationship p:{parentGuid},f:{field},i:{index}");
     }

@@ -18,14 +18,15 @@ namespace ToSic.Sxc.Backend.ContentBlocks;
 public class ContentBlockBackend(
     AppWorkChain<WorkViewsGet> workViews,
     IDataPublishingService publishing,
-    AppWorkQuick<WorkBlocksMod> workBlocksMod,
+    AppWorkQuick<WorkBlocksCreate> workBlocksCreate,
+    AppWorkQuick<WorkBlocksAddSlot> workBlocksAddSlot,
     ISxcCurrentContextService ctxService,
     LazySvc<IAssetsExtractor> optimizerLazy,
     AppWorkContextService appCtxSvc,
     Generator<BlockOfEntity> entityBlockGenerator,
     Generator<IBlockRenderer> blockBuilderGenerator)
     : ServiceBase("Bck.FldLst",
-        connect: [workViews, publishing, workBlocksMod, ctxService, optimizerLazy, appCtxSvc, entityBlockGenerator, blockBuilderGenerator])
+        connect: [workViews, publishing, workBlocksCreate, workBlocksAddSlot, ctxService, optimizerLazy, appCtxSvc, entityBlockGenerator, blockBuilderGenerator])
 {
 
     private const bool DebugDetails = true;
@@ -33,7 +34,7 @@ public class ContentBlockBackend(
     public IRenderResult NewBlockAndRender(int parentId, string field, int index, string app = "", Guid? guid = null)
     {
         var block = ctxService.BlockRequired();
-        var entityId = workBlocksMod.New(block.PureIdentity()).NewBlockReference(parentId, field, index, app, guid);
+        var entityId = workBlocksCreate.New(block.PureIdentity()).NewBlockReference(parentId, field, index, app, guid);
 
         // now return a rendered instance
         var newContentBlock = entityBlockGenerator.New().GetBlockOfEntity(block, null, entityId);
@@ -48,7 +49,7 @@ public class ContentBlockBackend(
         var block = ctxService.BlockRequired();
 
         // use dnn versioning - this is always part of page
-        publishing.DoInsidePublishing(options => workBlocksMod
+        publishing.DoInsidePublishing(options => workBlocksAddSlot
             .New(block.PureIdentity())
             .AddEmptyItem(block.Configuration, index, options.ForceDraft));
 

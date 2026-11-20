@@ -50,7 +50,9 @@ public static class StartupSxcBlocks
 
         // Work
         services.TryAddTransient<WorkBlocks>();
-        services.TryAddTransient<WorkBlocksMod>();
+        services.TryAddTransient<WorkBlocksCreate>();
+        services.TryAddTransient<WorkBlocksUpdate>();
+        services.TryAddTransient<WorkBlocksAddSlot>();
         services.TryAddTransient<WorkBlockViewsGet>();
 
         services.AddSxcBlocksFallbacks();

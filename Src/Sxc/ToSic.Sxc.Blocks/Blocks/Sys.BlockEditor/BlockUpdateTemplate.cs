@@ -4,24 +4,30 @@ using ToSic.Sys.HookUp;
 namespace ToSic.Sxc.Blocks.Sys.BlockEditor;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class BlockUpdateTemplate(LazySvc<AppWorkContextService> appWorkCtxSvc, AppWorkChain<WorkBlocksMod> workBlocksMod, BlockSavePicker savePicker)
-    : ServiceBase("Sxc.BlkEdt", connect: [appWorkCtxSvc, workBlocksMod, savePicker]), IWork<(IBlock block, int templateId, bool forceCreateContentGroup), Guid?>
+public class BlockUpdateTemplate(LazySvc<AppWorkContextService> appWorkCtxSvc, AppWorkChain<WorkBlocksUpdate> workBlocksMod, BlockSavePicker savePicker)
+    : ServiceBase("Sxc.BlkEdt", connect: [appWorkCtxSvc, workBlocksMod, savePicker]), IWork<BlockUpdateTemplate.Parameters, Guid?>
 {
-    public Task<Package<Guid?>> Handle(WorkContext mainCtx, Package<(IBlock block, int templateId, bool forceCreateContentGroup)> package)
+    /// <summary>
+    /// Parameters for this Work.
+    /// </summary>
+    /// <param name="Block">The block to update.</param>
+    /// <param name="TemplateId">The ID of the template to save.</param>
+    /// <param name="ForceCreateContentGroup">Whether to force the creation of a content group.</param>
+    public record Parameters(IBlock Block, int TemplateId, bool ForceCreateContentGroup);
+
+    public Task<Package<Guid?>> Handle(WorkContext mainCtx, Package<Parameters> package)
     {
-        var (block, templateId, forceCreateContentGroup) = package.Data;
-        var result = SaveTemplateId(block, templateId, forceCreateContentGroup);
-        return Task.FromResult(new Package<Guid?>(result));
+        var result = SaveTemplateId(package.Data);
+        return Task.FromResult(package.RePackage(result));
     }
 
     /// <summary>
     /// Lookup the template and update the stored data; if necessary, create the content-group.
     /// </summary>
-    /// <param name="templateId"></param>
-    /// <param name="forceCreateContentGroup"></param>
-    /// <returns></returns>
-    private Guid? SaveTemplateId(IBlock block, int templateId, bool forceCreateContentGroup)
+    /// <returns>The GUID of the content group, or null if only a preview was set.</returns>
+    private Guid? SaveTemplateId(Parameters packageData)
     {
+        var (block, templateId, forceCreateContentGroup) = packageData;
         var blockConfig = block.Configuration;
         var updater = savePicker.PickUpdater(block);
         var l = Log.Fn<Guid?>($"save template#{templateId}, CG-exists:{blockConfig.Exists} forceCreateCG:{forceCreateContentGroup}");
@@ -45,5 +51,4 @@ public class BlockUpdateTemplate(LazySvc<AppWorkContextService> appWorkCtxSvc, A
         updater.SetPreview(block.Context.Module.Id, templateGuid);
         return l.Return(null, "only set preview, return null");
     }
-
 }

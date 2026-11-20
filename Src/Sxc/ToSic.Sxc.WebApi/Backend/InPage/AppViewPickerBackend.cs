@@ -41,7 +41,7 @@ public class AppViewPickerBackend(
         var block = ctxService.BlockRequired();
         await permCheckAction.Handle(new(), new((block.Context, GrantSets.WriteSomething)));
         var result = await blockUpdateTemplate.New()
-            .Handle(new(), new((block, templateId, forceCreateContentGroup)));
+            .Handle(new(), new(new(block, templateId, forceCreateContentGroup)));
         return l.Return(result.Data);
     }
 }

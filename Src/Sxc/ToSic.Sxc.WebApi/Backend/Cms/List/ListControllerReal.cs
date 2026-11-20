@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.State;
+using ToSic.Eav.Data.ListSlots.Sys;
 using ToSic.Eav.Data.Publishing.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sys.Utils;
@@ -10,7 +11,7 @@ public class ListControllerReal(
     IContextCompleteService ctxService,
     LazySvc<AppWorkContextService> appCtxSvc,
     Generator<IDataPublishingService> publishing,
-    AppWorkChain<WorkFieldList> workFieldList,
+    AppWorkChain<WorkListSlots> workFieldList,
     AppWorkChain<ListActivityReplace> actReplace,
     AppDataChain<ListActivityReplaceOptions> actReplaceOptions,
     AppDataChain<ListActivityGetItems> actGetItems,
@@ -65,7 +66,7 @@ public class ListControllerReal(
         var l = Log.Fn($"parent:{parent}, fields:{fields}, index:{index}, toIndex:{toIndex}");
         var fList = workFieldList.New(GetCtx());
         ModifyList(FindOrThrow(parent), fields,
-            (entity, fieldList, versioning) => fList.FieldListMove(entity, fieldList, index, toIndex, versioning));
+            (entity, fieldList, versioning) => fList.MoveSlot(entity, fieldList, index, toIndex, versioning));
         l.Done();
     }
 
@@ -75,7 +76,7 @@ public class ListControllerReal(
         var l = Log.Fn($"parent:{parent}, fields:{part}, index:{index}");
         var fList = workFieldList.New(GetCtx());
         ModifyList(FindOrThrow(parent), part,
-            (entity, fieldList, versioning) => fList.FieldListRemove(entity, fieldList, index, versioning));
+            (entity, fieldList, versioning) => fList.RemoveSlot(entity, fieldList, index, versioning));
         l.Done();
     }
 

@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.Data.ContentTypes.Fields.Sys;
+using ToSic.Eav.Data.ListSlots.Sys;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockEditor;
 using ToSic.Sxc.Blocks.Sys.Views;
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Backend.SaveHelpers;
 public class ContentGroupList(
     AppWorkChain<WorkBlocks> blocks,
     Generator<BlockUpdateTitle> blockEditor,
-    AppWorkChain<WorkFieldList> workFieldList)
+    AppWorkChain<WorkListSlots> workFieldList)
     : ServiceWithSetup<IAppWorkContext>("Api.GrpPrc", connect: [blocks, workFieldList, blockEditor])
 {
 
@@ -81,10 +82,10 @@ public class ContentGroupList(
                 if (!parent.Children(fieldPair.First()).Any() && !targetIsContentBlock)
                     indexNullAddToEnd = true;
                     
-                fieldList.FieldListAdd(parent, fieldPair, index, ids, block.Context.Publishing.ForceDraft, indexNullAddToEnd, targetIsContentBlock);
+                fieldList.AddSlot(parent, fieldPair, index, ids, block.Context.Publishing.ForceDraft, indexNullAddToEnd, targetIsContentBlock);
             }
             else
-                fieldList.FieldListReplaceIfModified(parent, fieldPair, index, ids, block.Context.Publishing.ForceDraft);
+                fieldList.ReplaceSlot(parent, fieldPair, index, ids, block.Context.Publishing.ForceDraft);
 
         }
 

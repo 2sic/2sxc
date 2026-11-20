@@ -2,8 +2,6 @@
 using ToSic.Eav.Apps.Inspect.Sys.UiDto;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Metadata.Sys;
-using ToSic.Sxc.Apps.Sys;
-using ToSic.Sxc.Apps.Sys.Work;
 using ToSic.Eav.Apps.Views.Sys;
 
 // note: not sure if the final namespace should be Sxc.Apps or Sxc.Views
