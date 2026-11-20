@@ -133,9 +133,6 @@ public class OqtStartup : IServerStartup
         // Clean the App_Data/2sxc.bin folder
         serviceProvider.Build<Util>().CleanTempAssemblyFolder();
 
-        //if (env.IsDevelopment())
-        //    app.UsePageResponseRewriteMiddleware();
-
         // Configure Sxc endpoints and dialogs
         app.UseEndpoints(endpoints =>
         {
