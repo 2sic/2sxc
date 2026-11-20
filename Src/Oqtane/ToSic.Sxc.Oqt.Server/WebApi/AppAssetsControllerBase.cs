@@ -10,12 +10,8 @@ using ToSic.Sxc.WebApi.Sys.ActionFilters;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi;
 
-[OqtLogWebApi]
-[OqtInitializeAlias]
-[NoContentForEmptyAction]
-[SystemTextJsonFormatter]
-[ServiceFilter(typeof(OptionalBodyFilter))]
-[ServiceFilter(typeof(HttpResponseExceptionFilter))]
+[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class AppAssetsControllerBase : ControllerBase, IHasLog
 {

@@ -13,12 +13,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
 [ValidateAntiForgeryToken]
-[OqtLogWebApi]
-[OqtInitializeAlias]
-[NoContentForEmptyAction]
-[SystemTextJsonFormatter]
-[ServiceFilter(typeof(OptionalBodyFilter))]
-[ServiceFilter(typeof(HttpResponseExceptionFilter))]
+[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeController : ControllerBase, IHasLog
 {

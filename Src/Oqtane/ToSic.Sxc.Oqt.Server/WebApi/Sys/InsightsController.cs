@@ -11,12 +11,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + "/sys/[controller]/")]
     
 [ApiController]
-[OqtLogWebApi("web-api.insights")]
-[OqtInitializeAlias]
-[NoContentForEmptyAction]
-[SystemTextJsonFormatter]
-[ServiceFilter(typeof(OptionalBodyFilter))]
-[ServiceFilter(typeof(HttpResponseExceptionFilter))]
+[OqtLogWebApi("web-api.insights"), OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class InsightsController : ControllerBase, IHasLog
 {

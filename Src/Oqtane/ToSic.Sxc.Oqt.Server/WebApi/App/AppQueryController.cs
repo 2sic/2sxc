@@ -14,12 +14,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 [Route(OqtWebApiConstants.AppRootPathAndLang)]
 
 [AllowAnonymous] // All functions will check security internally, so assume no requirements
-[OqtLogWebApi]
-[OqtInitializeAlias]
-[NoContentForEmptyAction]
-[SystemTextJsonFormatter]
-[ServiceFilter(typeof(OptionalBodyFilter))]
-[ServiceFilter(typeof(HttpResponseExceptionFilter))]
+[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppQueryController : ControllerBase, IHasLog, IAppQueryController
 {

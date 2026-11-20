@@ -17,12 +17,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Cms}")]
 [PrivateApi]
 [ValidateAntiForgeryToken]
-[OqtLogWebApi]
-[OqtInitializeAlias]
-[NoContentForEmptyAction]
-[SystemTextJsonFormatter]
-[ServiceFilter(typeof(OptionalBodyFilter))]
-[ServiceFilter(typeof(HttpResponseExceptionFilter))]
+[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class HistoryController : ControllerBase, IHasLog, IHistoryController
 {
