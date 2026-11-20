@@ -6,9 +6,6 @@ internal static class UniqueValueValidationRules
     internal const string StringUrlPathInputType = "string-url-path";
     internal const string InvariantLanguage = "";
     internal const string DefaultLanguageWildcard = "*";
-    
-    // 2026-08-07 2dm TODO: @STV - THIS IS NOT MEANT FOR static use
-    //private static readonly ValueAssembler ScalarValueAssembler = new();
 
     internal static IContentTypeField[] UniqueFields(IContentType contentType)
         // Url-path fields are unique by default unless metadata explicitly overrides that behavior.
