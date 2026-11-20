@@ -16,19 +16,7 @@ public class WorkBlocksAddSlot(AppWorkChain<WorkListSlots> workSlots)
         // Check how many rows to add - depending on if (+) was used the first time or later
         // hitting (+) if the list is empty add two demo items (because we already see one demo item)
         var existingRows = entity.Children(ViewParts.Content);
-        var rowsToAdd = existingRows.Any() ? 1 : 2; // if no rows, add 2, otherwise add 1
-        slotWork
-            .FieldListUpdate(
-                entity,
-                ViewParts.ContentPair,
-                forceDraft,
-                lists =>
-                {
-                    // Add as many rows as rowsToAdd
-                    for (var i = 0; i < rowsToAdd; i++)
-                        lists.Add(index, [null, null]);
-
-                    return lists.Lists;
-                });
+        var finalIndex = existingRows.Any() ? index ?? 0 : 1;
+        slotWork.AddSlot(target: entity, fields: ViewParts.ContentPair, index: finalIndex, values: [null, null], asDraft: forceDraft, forceAddToEnd: false, padWithNulls: true);
     }
 }
