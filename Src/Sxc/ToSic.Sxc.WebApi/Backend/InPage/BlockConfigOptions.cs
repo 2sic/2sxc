@@ -1,5 +1,3 @@
-using ToSic.Eav.Apps.Sys.Work;
-using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 
@@ -31,19 +29,13 @@ public class BlockConfigOptions : CustomDataSource
         : base(services, "Sxc.BlkCfgOpt", connect: [viewPicker, workApps, siteContext])
     {
         ProvideOutRaw(
-            () => viewPicker.Value.Templates(),
             name: "Templates",
-            options: Options);
+            data: () => viewPicker.Value.Templates());
         ProvideOutRaw(
-            () => viewPicker.Value.ContentTypes(),
             name: "ContentTypes",
-            options: Options);
+            data: () => viewPicker.Value.ContentTypes());
         ProvideOutRaw(
-            () => workApps.Value
-                .GetSelectableApps(siteContext.Value.Context.Site, Apps),
             name: "Apps",
-            options: Options);
+            data: () => workApps.Value.GetSelectableApps(siteContext.Value.Context.Site, Apps));
     }
-
-    private static DataFactoryOptions Options() => new() { AutoId = true };
 }
