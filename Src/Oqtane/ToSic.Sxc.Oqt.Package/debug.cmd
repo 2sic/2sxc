@@ -3,11 +3,14 @@ ECHO(
 ECHO the build folder (Debug or DebugOqtane) must be passed in as a parameter
 
 SET BuildFolder=%1
-SET OqtaneTarget=%2
+SET "OqtaneTarget=%~2"
 SET ModuleTargetFramework=%3
 REM ModuleTargetFramework is sometimes older than OqtaneTargetFramework to preserve compatibility with older Oqtane versions.
-REM Change the OqtaneTargetFramework to TargetFramework from Oqtane.Server.csproj
-SET OqtaneTargetFramework=net10.0
+SET OqtaneTargetFramework=%4
+IF NOT DEFINED OqtaneTargetFramework (
+    ECHO Pass the Oqtane host target framework as the fourth argument.
+    EXIT /B 1
+)
 
 REM Displaying the parameters received
 ECHO BuildFolder=%BuildFolder%
@@ -35,7 +38,6 @@ ECHO 2sxc Oqtane - Server Framework DLLs
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\%ModuleTargetFramework%\Microsoft.AspNetCore.Mvc.Razor.*.dll" "%OqtaneBin%\" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\%ModuleTargetFramework%\Microsoft.AspNetCore.Razor.*" "%OqtaneBin%\" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\%ModuleTargetFramework%\Microsoft.CodeAnalys*.*" "%OqtaneBin%\" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\%ModuleTargetFramework%\Microsoft.Extensions.DependencyModel.dll" "%OqtaneBin%\" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\%ModuleTargetFramework%\System.Runtime.Caching.dll" "%OqtaneBin%\" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\%ModuleTargetFramework%\System.Configuration.ConfigurationManager.dll" "%OqtaneBin%\" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\%ModuleTargetFramework%\System.Security.Cryptography.ProtectedData.dll" "%OqtaneBin%\" /Y
@@ -58,7 +60,8 @@ ECHO nuget dependencies - oqt-imageflow
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\%ModuleTargetFramework%\Imageflow.*" "%OqtaneBin%\" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\%ModuleTargetFramework%\Imazen.*" "%OqtaneBin%\" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\%ModuleTargetFramework%\Microsoft.IO.*" "%OqtaneBin%\" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\%ModuleTargetFramework%\runtimes\*" "%OqtaneBin%\runtimes\" /S /C /Y
+REM Match the install package and leave SQL provider runtimes to the host.
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\%ModuleTargetFramework%\runtimes\*imageflow-*" "%OqtaneBin%\runtimes\" /S /C /Y
 
 ECHO(
 ECHO Copy Koi DLLs

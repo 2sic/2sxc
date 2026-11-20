@@ -9,7 +9,11 @@ using ToSic.Eav.WebApi.Sys.Helpers.Http;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 
-// TODO: @STV - PLS EXPLAIN what this does / what it's for
+/// <summary>
+/// Builds the MVC action context for a dynamically compiled app API controller.
+/// Finds candidate actions in the app's assembly, lets MVC select the action using its constraints,
+/// and supplies query-string values for action parameters that have no route value.
+/// </summary>
 internal class AppApiActionContext : IHasLog
 {
     public AppApiActionContext(ILogStore logStore)

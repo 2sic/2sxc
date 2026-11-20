@@ -54,7 +54,29 @@
       <CurrentOqtaneRoot>%(OqtaneRoot.Identity)</CurrentOqtaneRoot>
     </PropertyGroup>
     <Message Text="CurrentOqtaneRoot='$(CurrentOqtaneRoot)'" Importance="High"/>
-    <Exec Command="debug.cmd $(ConfigurationName) $(CurrentOqtaneRoot) $(TargetFramework)" />
+    <MSBuild Projects="$(CurrentOqtaneRoot)Oqtane.Server.csproj" Targets="GetTargetFrameworks" RemoveProperties="TargetFramework;TargetFrameworks">
+      <Output TaskParameter="TargetOutputs" ItemName="OqtaneHostFramework" />
+    </MSBuild>
+    <Error Condition="'@(OqtaneHostFramework->'%(HasSingleTargetFramework)')' != 'true'" Text="Expected a single target framework in $(CurrentOqtaneRoot)Oqtane.Server.csproj." />
+    <PropertyGroup>
+      <OqtaneHostTargetFramework>@(OqtaneHostFramework->'%(TargetFrameworks)')</OqtaneHostTargetFramework>
+      <ModuleDependencyModelPath>$(MSBuildProjectDirectory)\..\ToSic.Sxc.Oqt.Server\bin\$(ConfigurationName)\$(TargetFramework)\Microsoft.Extensions.DependencyModel.dll</ModuleDependencyModelPath>
+      <HostDependencyModelPath>$(CurrentOqtaneRoot)bin\$(ConfigurationName)\$(OqtaneHostTargetFramework)\Microsoft.Extensions.DependencyModel.dll</HostDependencyModelPath>
+    </PropertyGroup>
+    <!-- RuntimeCompilation can require a newer DependencyModel than older Oqtane hosts provide. -->
+    <GetAssemblyIdentity AssemblyFiles="$(ModuleDependencyModelPath)">
+      <Output TaskParameter="Assemblies" ItemName="ModuleDependencyModel" />
+    </GetAssemblyIdentity>
+    <GetAssemblyIdentity AssemblyFiles="$(HostDependencyModelPath)" Condition="Exists('$(HostDependencyModelPath)')">
+      <Output TaskParameter="Assemblies" ItemName="HostDependencyModel" />
+    </GetAssemblyIdentity>
+    <PropertyGroup>
+      <ModuleDependencyModelVersion>@(ModuleDependencyModel->'%(Version)')</ModuleDependencyModelVersion>
+      <HostDependencyModelVersion>@(HostDependencyModel->'%(Version)')</HostDependencyModelVersion>
+    </PropertyGroup>
+    <Copy SourceFiles="$(ModuleDependencyModelPath)" DestinationFiles="$(HostDependencyModelPath)"
+          Condition="'$(HostDependencyModelVersion)' == '' Or $([MSBuild]::VersionLessThan('$(HostDependencyModelVersion)', '$(ModuleDependencyModelVersion)'))" />
+    <Exec Command="debug.cmd $(ConfigurationName) &quot;$(CurrentOqtaneRoot)&quot; $(TargetFramework) $(OqtaneHostTargetFramework)" />
   </Target>
 
   <Target Name="BuildConfigTarget2" AfterTargets="Build" DependsOnTargets="BuildConfigTarget" Condition=" '$(OqtaneExist)' == 'true'">
