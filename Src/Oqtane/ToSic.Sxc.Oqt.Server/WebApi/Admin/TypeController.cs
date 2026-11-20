@@ -24,7 +24,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
 
-[OqtApiRequest]
+[OqtLogWebApi]
+[OqtInitializeAlias]
+[NoContentForEmptyAction]
 [SystemTextJsonFormatter]
 [ServiceFilter(typeof(OptionalBodyFilter))]
 [ServiceFilter(typeof(HttpResponseExceptionFilter))]

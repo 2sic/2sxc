@@ -23,7 +23,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 
 [ApiController]
 
-[OqtApiRequest]
+[OqtLogWebApi]
+[OqtInitializeAlias]
+[NoContentForEmptyAction]
 [SystemTextJsonFormatter]
 [ServiceFilter(typeof(OptionalBodyFilter))]
 [ServiceFilter(typeof(HttpResponseExceptionFilter))]

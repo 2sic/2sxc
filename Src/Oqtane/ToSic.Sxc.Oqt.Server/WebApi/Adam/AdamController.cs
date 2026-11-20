@@ -23,7 +23,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam;
 [Route(OqtWebApiConstants.AppRootNoLanguage + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
 [Route(OqtWebApiConstants.AppRootPathOrLang + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
 [Route(OqtWebApiConstants.AppRootPathAndLang + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
-[OqtApiRequest]
+[OqtLogWebApi]
+[OqtInitializeAlias]
+[NoContentForEmptyAction]
 [SystemTextJsonFormatter]
 [ServiceFilter(typeof(OptionalBodyFilter))]
 [ServiceFilter(typeof(HttpResponseExceptionFilter))]

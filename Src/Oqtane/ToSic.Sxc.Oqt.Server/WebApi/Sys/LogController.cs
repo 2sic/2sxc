@@ -16,7 +16,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
 
 // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [Authorize(Roles = RoleNames.Admin)]
-[OqtApiRequest]
+[OqtLogWebApi]
+[OqtInitializeAlias]
+[NoContentForEmptyAction]
 [SystemTextJsonFormatter]
 [ServiceFilter(typeof(OptionalBodyFilter))]
 [ServiceFilter(typeof(HttpResponseExceptionFilter))]

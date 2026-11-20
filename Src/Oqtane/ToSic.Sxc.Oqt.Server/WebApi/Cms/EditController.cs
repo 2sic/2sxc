@@ -17,7 +17,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 [ValidateAntiForgeryToken]
 
 [ApiController]
-[OqtApiRequest]
+[OqtLogWebApi]
+[OqtInitializeAlias]
+[NoContentForEmptyAction]
 [SystemTextJsonFormatter]
 [ServiceFilter(typeof(OptionalBodyFilter))]
 [ServiceFilter(typeof(HttpResponseExceptionFilter))]

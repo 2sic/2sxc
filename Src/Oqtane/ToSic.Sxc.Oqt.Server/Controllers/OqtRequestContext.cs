@@ -16,7 +16,7 @@ internal static class OqtRequestContext
 [AttributeUsage(AttributeTargets.Class)]
 internal sealed class OqtPrepareBlockContextAttribute : ActionFilterAttribute
 {
-    public OqtPrepareBlockContextAttribute() => Order = int.MinValue + 1;
+    public OqtPrepareBlockContextAttribute() => Order = int.MinValue + 3;
 
     public override void OnActionExecuting(ActionExecutingContext context)
         => ((ControllerBase)context.Controller).PrepareRequestBlock();

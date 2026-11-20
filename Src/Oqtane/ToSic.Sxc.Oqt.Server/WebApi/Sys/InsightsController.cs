@@ -11,7 +11,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + "/sys/[controller]/")]
     
 [ApiController]
-[OqtApiRequest("web-api.insights")]
+[OqtLogWebApi("web-api.insights")]
+[OqtInitializeAlias]
+[NoContentForEmptyAction]
 [SystemTextJsonFormatter]
 [ServiceFilter(typeof(OptionalBodyFilter))]
 [ServiceFilter(typeof(HttpResponseExceptionFilter))]
