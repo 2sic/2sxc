@@ -52,7 +52,7 @@ partial class EditLoadActivityAddPrefetch
     {
         var l = Log.Fn<IEnumerable<AdamItemDto>>();
         var adamListMaker = adamTransGetItems.New(new(
-            Context: ctxService.AppContextOrNull ?? throw new InvalidOperationException("Context is required"),
+            Context: ctxService.AppContextRequired(),
             ContentType: set.ContentTypeName,
             EntityGuid: set.Guid,
             FieldName: key,

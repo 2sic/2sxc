@@ -20,3 +20,9 @@ public interface IContextCompleteService: IContextOfSiteService
     /// </summary>
     IBlock? BlockOrNull { get; }
 }
+
+public static class ContextCompleteExtensions
+{
+    public static IContextOfApp AppContextRequired(this IContextCompleteService service) => 
+        service.AppContextOrNull ?? throw new InvalidOperationException("App context is required but not available.");
+}

@@ -6,14 +6,13 @@ using ToSic.Sxc.Adam.Sys.Security;
 using ToSic.Sxc.Adam.Sys.Work;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sys.Security.Permissions;
-using IContextGetServiceWip = ToSic.Sxc.Context.Sys.IContextCompleteService;
 
 namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class HyperlinkBackend(
     Generator<AdamContext, AdamContext.Options> adamCtxGen,
-    IContextGetServiceWip ctxService,
+    IContextCompleteService ctxService,
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions,
     Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> adamDtoMaker,
     IValueConverter valueConverter)
@@ -27,7 +26,7 @@ public class HyperlinkBackend(
             if (string.IsNullOrEmpty(hyperlink))
                 return new() { Value = hyperlink };
 
-            var context = ctxService.DnnGetAppStateOqtSetAndGet(appId);
+            var context = ctxService.AppContextRequired();
             // different security checks depending on the link-type
             var lookupPage = hyperlink.Trim().StartsWith(ValueConverterBase.PrefixPage, StringComparison.OrdinalIgnoreCase);
 

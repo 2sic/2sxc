@@ -1,7 +1,6 @@
 ﻿using ToSic.Sxc.Adam.Sys;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Adam.Sys.Work;
-using IContextGetServiceWip = ToSic.Sxc.Context.Sys.IContextCompleteService;
 
 namespace ToSic.Sxc.Backend.Adam;
 
@@ -14,7 +13,7 @@ public class AdamControllerReal<TIdentifier>(
     Generator<AdamWorkDelete, AdamContext> adamDelete,
     Generator<AdamWorkRename, AdamContext> adamRename,
     Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> dtoMaker,
-    IContextGetServiceWip ctxService
+    IContextCompleteService ctxService
     )
     : ServiceBase("Api.Adam", connect: [adamContextGen, adamUpload, adamWorkGet, adamFolders, adamDelete, adamRename])
 {
@@ -27,7 +26,7 @@ public class AdamControllerReal<TIdentifier>(
         try
         {
             // 1. Set the global context
-            var context = ctxService.DnnGetAppStateOqtSetAndGet(appId);
+            var context = ctxService.AppContextRequired();
             
             // Check if the request contains multipart/form-data.
             if (!uploadInfo.IsMultipart())
@@ -71,7 +70,7 @@ public class AdamControllerReal<TIdentifier>(
         var l = Log.Fn<IEnumerable<AdamItemDto>>($"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
 
         // 1. Set the global context
-        var context = ctxService.DnnGetAppStateOqtSetAndGet(appId);
+        var context = ctxService.AppContextRequired();
 
         var adamContext = adamContextGen.New(new(
             Context: context,
@@ -97,7 +96,7 @@ public class AdamControllerReal<TIdentifier>(
         var l = Log.Fn<IEnumerable<object>>();
 
         // 1. Set the global context
-        var context = ctxService.DnnGetAppStateOqtSetAndGet(appId);
+        var context = ctxService.AppContextRequired();
 
         var adamContext = adamContextGen.New(new(
             Context: context,
@@ -122,7 +121,7 @@ public class AdamControllerReal<TIdentifier>(
     public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, TIdentifier id, bool usePortalRoot)
     {
         // 1. Set the global context
-        var context = ctxService.DnnGetAppStateOqtSetAndGet(appId);
+        var context = ctxService.AppContextRequired();
 
         var adamContext = adamContextGen.New(new(
             Context: context,
@@ -138,7 +137,7 @@ public class AdamControllerReal<TIdentifier>(
         TIdentifier id, string newName, bool usePortalRoot)
     {
         // 1. Set the global context
-        var context = ctxService.DnnGetAppStateOqtSetAndGet(appId);
+        var context = ctxService.AppContextRequired();
 
         var adamContext = adamContextGen.New(new(
             Context: context,

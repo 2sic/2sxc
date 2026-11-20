@@ -7,7 +7,6 @@ using ToSic.Eav.Ui.Edit.Sys.Save;
 using ToSic.Sxc.Backend.SaveHelpers;
 using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Utils;
-using IContextGetServiceWip = ToSic.Sxc.Context.Sys.IContextCompleteService;
 
 namespace ToSic.Sxc.Backend.Cms;
 
@@ -16,7 +15,7 @@ public class EditSaveBackend(
     AppWorkContextService appCtxSvc,
     AppWorkChain<SxcPagePublishing> pagePublishing,
     AppDataChain<WorkEntities> workEntities,
-    IContextGetServiceWip ctxService,
+    IContextCompleteService ctxService,
     Generator<IJsonDataReader, IJsonDataReader.Options> jsonReaderGen,
     SaveSecurity saveSecurity,
     AppWorkChain<SaveHelperSaveBundles> saveBackendHelper,
@@ -32,7 +31,7 @@ public class EditSaveBackend(
 
         // The context should be from the block if there is one, because it affects saving/publishing
         // Basically it can result in things being saved draft or titles being updated
-        var appCtx = ctxService.DnnGetAppStateOqtSetAndGet(appId);
+        var appCtx = ctxService.AppContextRequired();
 
 
         // perform some basic validation checks
