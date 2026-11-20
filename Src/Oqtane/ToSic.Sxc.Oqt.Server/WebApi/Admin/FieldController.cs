@@ -19,6 +19,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class FieldController() : OqtStatefulControllerBase(RealController.LogSuffix), IFieldController
 {
+    /// <inheritdoc />
+    public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+
     private RealController Real => GetService<RealController>();
 
     #region Fields - Get, Reorder, Data-Types (for dropdown), etc.

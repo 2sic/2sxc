@@ -19,6 +19,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ViewController : OqtStatefulControllerBase, IViewController
 {
+    /// <inheritdoc />
+    public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+
     public ViewController(LazySvc<Pages.Pages> pages) : base(RealController.LogSuffix)
     {
         this.ConnectLogs([

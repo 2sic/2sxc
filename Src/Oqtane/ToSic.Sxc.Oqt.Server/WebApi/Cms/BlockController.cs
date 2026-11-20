@@ -21,6 +21,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockController() : OqtStatefulControllerBase(RealController.LogSuffix), IBlockController
 {
+    /// <inheritdoc />
+    public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+
     private RealController Real => GetService<RealController>();
 
 

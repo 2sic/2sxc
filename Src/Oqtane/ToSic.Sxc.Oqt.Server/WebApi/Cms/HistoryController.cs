@@ -19,6 +19,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class HistoryController() : OqtStatefulControllerBase(RealController.LogSuffix), IHistoryController
 {
+    /// <inheritdoc />
+    public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+
     private RealController Real => GetService<RealController>();
 
 

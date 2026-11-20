@@ -13,6 +13,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CacheController() : OqtStatefulControllerBase(CacheControllerReal.LogSuffix), ICacheController
 {
+    /// <inheritdoc />
+    public override ILog Log => field ??= LogFactory.Create($"Api.{CacheControllerReal.LogSuffix}", null, GetType().Name);
+
     private CacheControllerReal Real => GetService<CacheControllerReal>();
 
     [HttpPost("{appPath}/{controller}/{action}")]

@@ -21,6 +21,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppDataController() : OqtStatefulControllerBase(RealController.LogSuffix), IAppDataController
 {
+    /// <inheritdoc />
+    public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+
     private RealController Real => GetService<RealController>();
 
 

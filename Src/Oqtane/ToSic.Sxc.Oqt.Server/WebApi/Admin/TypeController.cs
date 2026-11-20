@@ -26,6 +26,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class TypeController() : OqtStatefulControllerBase(RealController.LogSuffix), ITypeController
 {
+    /// <inheritdoc />
+    public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+
     private RealController Real => GetService<RealController>();
     
     [HttpDelete]

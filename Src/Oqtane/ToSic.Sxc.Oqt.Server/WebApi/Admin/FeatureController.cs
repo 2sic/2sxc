@@ -19,6 +19,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class FeatureController() : OqtStatefulControllerBase(RealController.LogSuffix), IFeatureController
 {
+    /// <inheritdoc />
+    public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+
     private RealController Real => GetService<RealController>();
 
     [HttpGet]

@@ -23,6 +23,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class QueryController() : OqtStatefulControllerBase(RealController.LogSuffix), IQueryController
 {
+    /// <inheritdoc />
+    public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+
     private RealController Real => GetService<RealController>();
 
     [HttpPost]

@@ -16,6 +16,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppQueryController() : OqtStatefulControllerBase(AppWebApiQueryRunSvc.LogSuffix), IAppQueryController
 {
+    /// <inheritdoc />
+    public override ILog Log => field ??= LogFactory.Create($"Api.{AppWebApiQueryRunSvc.LogSuffix}", null, GetType().Name);
+
     private AppWebApiQueryRunSvc Real => GetService<AppWebApiQueryRunSvc>();
     private AppQueryContextResolver CtxResolver => GetService<AppQueryContextResolver>();
 

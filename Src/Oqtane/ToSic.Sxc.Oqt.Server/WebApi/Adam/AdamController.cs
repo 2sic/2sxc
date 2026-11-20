@@ -25,6 +25,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamController() : OqtStatefulControllerBase("Adam"), IAdamController<int>
 {
+    /// <inheritdoc />
+    public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+
     private RealController Real => GetService<RealController>();
 
     // Note: #AdamItemDto - as of now, we must use object because System.Io.Text.Json will otherwise not convert the object correctly :(
