@@ -23,7 +23,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam;
 [Route(OqtWebApiConstants.AppRootPathOrLang + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
 [Route(OqtWebApiConstants.AppRootPathAndLang + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamController() : OqtStatefulControllerBase("Adam"), IAdamController<int>
+[OqtPrepareBlockContext]
+public class AdamController() : OqtControllerBase(false, "Adam"), IAdamController<int>
 {
     /// <inheritdoc />
     public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);

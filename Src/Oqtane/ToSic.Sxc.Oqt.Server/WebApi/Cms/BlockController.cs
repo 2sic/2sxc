@@ -19,7 +19,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 [ApiController]
 // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class BlockController() : OqtStatefulControllerBase(RealController.LogSuffix), IBlockController
+[OqtPrepareBlockContext]
+public class BlockController() : OqtControllerBase(false, RealController.LogSuffix), IBlockController
 {
     /// <inheritdoc />
     public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);

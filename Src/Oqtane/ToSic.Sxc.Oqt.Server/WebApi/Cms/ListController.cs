@@ -17,7 +17,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
 [Authorize(Roles = RoleNames.Admin)]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ListController() : OqtStatefulControllerBase(RealController.LogSuffix), IListController
+[OqtPrepareBlockContext]
+public class ListController() : OqtControllerBase(false, RealController.LogSuffix), IListController
 {
     /// <inheritdoc />
     public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);

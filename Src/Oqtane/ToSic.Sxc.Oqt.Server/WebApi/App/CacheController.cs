@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 [Route(OqtWebApiConstants.AppRootPathOrLang)]
 [Route(OqtWebApiConstants.AppRootPathAndLang)]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class CacheController() : OqtStatefulControllerBase(CacheControllerReal.LogSuffix), ICacheController
+public class CacheController() : OqtControllerBase(false, CacheControllerReal.LogSuffix), ICacheController
 {
     /// <inheritdoc />
     public override ILog Log => field ??= LogFactory.Create($"Api.{CacheControllerReal.LogSuffix}", null, GetType().Name);
@@ -28,5 +28,9 @@ public class CacheController() : OqtStatefulControllerBase(CacheControllerReal.L
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
     public bool Flush([FromBody] AppCacheFlushSpecs specs, [FromQuery] int? appId = null)
-        => Real.FlushAuto(appId, specs);
+    {
+        if (appId == null)
+            this.PrepareRequestBlock();
+        return Real.FlushAuto(appId, specs);
+    }
 }

@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 [PrivateApi]
 [ValidateAntiForgeryToken]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class HistoryController() : OqtStatefulControllerBase(RealController.LogSuffix), IHistoryController
+public class HistoryController() : OqtControllerBase(false, RealController.LogSuffix), IHistoryController
 {
     /// <inheritdoc />
     public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);

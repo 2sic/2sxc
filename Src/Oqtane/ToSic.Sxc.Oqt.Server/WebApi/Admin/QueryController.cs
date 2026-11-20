@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class QueryController() : OqtStatefulControllerBase(RealController.LogSuffix), IQueryController
+public class QueryController() : OqtControllerBase(false, RealController.LogSuffix), IQueryController
 {
     /// <inheritdoc />
     public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
@@ -33,12 +33,18 @@ public class QueryController() : OqtStatefulControllerBase(RealController.LogSuf
         Real.Save(data, appId, id);
 
     [HttpGet]
-    public QueryRunDto RunDev(int appId, int id, int top = 0) =>
-        Real.RunDev(appId, id, top);
+    public QueryRunDto RunDev(int appId, int id, int top = 0)
+    {
+        this.PrepareRequestBlock();
+        return Real.RunDev(appId, id, top);
+    }
 
     [HttpGet]
-    public QueryRunDto DebugStream(int appId, int id, string from, string @out, int top = 25) =>
-        Real.DebugStream(appId, id, @from, @out, top);
+    public QueryRunDto DebugStream(int appId, int id, string from, string @out, int top = 25)
+    {
+        this.PrepareRequestBlock();
+        return Real.DebugStream(appId, id, @from, @out, top);
+    }
 
     [HttpGet]
     public void Clone(int appId, int id) =>

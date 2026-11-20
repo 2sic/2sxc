@@ -5,6 +5,7 @@ using ToSic.Eav.Apps.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
 using RealController = ToSic.Eav.WebApi.Admin.Sys.AppControllerReal;
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppController() : OqtStatefulControllerBase(RealController.LogSuffix), IAppController
+public class AppController() : OqtControllerBase(false, RealController.LogSuffix), IAppController
 {
     /// <inheritdoc />
     public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
@@ -74,7 +75,7 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
     [Authorize(Roles = RoleNames.Host)]
     [ValidateAntiForgeryToken]
     public Task<ImportResult> Reset(int zoneId, int appId, bool withPortalFiles = false) 
-        => Real.Reset(zoneId, appId, CtxHlp.BlockOptional.Context.Site.DefaultCultureCode, withPortalFiles);
+        => Real.Reset(zoneId, appId, this.PrepareRequestBlock().BlockRequired().Context.Site.DefaultCultureCode, withPortalFiles);
 
 
 

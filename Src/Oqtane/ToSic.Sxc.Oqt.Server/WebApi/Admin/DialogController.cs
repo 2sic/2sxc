@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [ApiController]
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class DialogController() : OqtStatefulControllerBase(RealController.LogSuffix), IDialogController
+public class DialogController() : OqtControllerBase(false, RealController.LogSuffix), IDialogController
 {
     /// <inheritdoc />
     public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
@@ -32,6 +32,10 @@ public class DialogController() : OqtStatefulControllerBase(RealController.LogSu
 
 
     [HttpGet]
-    public DialogContextStandaloneDto Settings(int appId) => Real.Settings(appId);
+    public DialogContextStandaloneDto Settings(int appId)
+    {
+        this.PrepareRequestBlock();
+        return Real.Settings(appId);
+    }
         
 }

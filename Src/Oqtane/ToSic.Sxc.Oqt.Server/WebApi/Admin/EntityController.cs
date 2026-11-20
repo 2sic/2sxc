@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class EntityController() : OqtStatefulControllerBase(RealController.LogSuffix), IEntityController
+public class EntityController() : OqtControllerBase(false, RealController.LogSuffix), IEntityController
 {
     /// <inheritdoc />
     public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
@@ -49,8 +49,11 @@ public class EntityController() : OqtStatefulControllerBase(RealController.LogSu
         [FromQuery] Guid? guid = null,
         [FromQuery] bool force = false,
         [FromQuery] int? parentId = null,
-        [FromQuery] string parentField = null) =>
+        [FromQuery] string parentField = null)
+    {
+        this.PrepareRequestBlock();
         Real.Delete(contentType, appId, id, guid, force, parentId, parentField);
+    }
 
 
     /// <inheritdoc/>

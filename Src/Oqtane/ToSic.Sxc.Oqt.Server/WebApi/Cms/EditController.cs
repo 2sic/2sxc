@@ -17,7 +17,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 
 [ApiController]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class EditController() : OqtStatefulControllerBase(RealController.LogSuffix), IEditController
+[OqtPrepareBlockContext]
+public class EditController() : OqtControllerBase(false, RealController.LogSuffix), IEditController
 {
     /// <inheritdoc />
     public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);

@@ -17,12 +17,12 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ViewController : OqtStatefulControllerBase, IViewController
+public class ViewController : OqtControllerBase, IViewController
 {
     /// <inheritdoc />
     public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
 
-    public ViewController(LazySvc<Pages.Pages> pages) : base(RealController.LogSuffix)
+    public ViewController(LazySvc<Pages.Pages> pages) : base(false, RealController.LogSuffix)
     {
         this.ConnectLogs([
             _pages = pages

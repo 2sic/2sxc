@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 
 [AllowAnonymous] // All functions will check security internally, so assume no requirements
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppQueryController() : OqtStatefulControllerBase(AppWebApiQueryRunSvc.LogSuffix), IAppQueryController
+public class AppQueryController() : OqtControllerBase(false, AppWebApiQueryRunSvc.LogSuffix), IAppQueryController
 {
     /// <inheritdoc />
     public override ILog Log => field ??= LogFactory.Create($"Api.{AppWebApiQueryRunSvc.LogSuffix}", null, GetType().Name);
@@ -51,8 +51,12 @@ public class AppQueryController() : OqtStatefulControllerBase(AppWebApiQueryRunS
         [FromQuery] int? appId = null,
         [FromRoute] string stream = null,
         [FromQuery] bool? includeGuid = false
-    ) => Real.RunQuery(CtxResolver.GetCtxAndLookupForAppIdOrContext(appId),
+    )
+    {
+        this.PrepareRequestBlock();
+        return Real.RunQuery(CtxResolver.GetCtxAndLookupForAppIdOrContext(appId),
         queryName: name, more: null, stream: stream, includeGuid: includeGuid);
+    }
 
     [HttpPost($"{AppParts.Auto}/{AppParts.Query}" + "/{name}")]
     [HttpPost($"{AppParts.Auto}/{AppParts.Query}" + "/{name}/{stream?}")]
@@ -62,6 +66,10 @@ public class AppQueryController() : OqtStatefulControllerBase(AppWebApiQueryRunS
         [FromQuery] int? appId = null,
         [FromRoute] string stream = null,
         [FromQuery] bool? includeGuid = false
-    ) => Real.RunQuery(CtxResolver.GetCtxAndLookupForAppIdOrContext(appId),
+    )
+    {
+        this.PrepareRequestBlock();
+        return Real.RunQuery(CtxResolver.GetCtxAndLookupForAppIdOrContext(appId),
         queryName: name, more: more, stream: stream, includeGuid: includeGuid);
+    }
 }

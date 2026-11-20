@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class InstallController()
-    : OqtStatefulControllerBase(RealController.LogSuffix), IInstallController
+    : OqtControllerBase(false, RealController.LogSuffix), IInstallController
 {
     /// <inheritdoc />
     public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
@@ -47,7 +47,8 @@ public class InstallController()
     {
         HotReloadEnabledCheck.Check(); // Ensure that Hot Reload is not enabled or try to disable it.
 
-        var result = Real.RemotePackage(packageUrl, CtxHlp.BlockOptional?.Context.Module, newName);
+        var block = this.PrepareRequestBlock().BlockOrNull;
+        var result = Real.RemotePackage(packageUrl, block?.Context.Module, newName);
         return result == null
             ? Ok()
             : Problem(result, null, (int)HttpStatusCode.InternalServerError);

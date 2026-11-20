@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class DataController() : OqtStatefulControllerBase(DataControllerReal.LogSuffix), IAdminDataController
+public class DataController() : OqtControllerBase(false, DataControllerReal.LogSuffix), IAdminDataController
 {
     /// <inheritdoc />
     public override ILog Log => field ??= LogFactory.Create($"Api.{DataControllerReal.LogSuffix}", null, GetType().Name);

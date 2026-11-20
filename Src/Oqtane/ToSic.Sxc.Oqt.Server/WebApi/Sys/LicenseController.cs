@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + "/" + AreaRoutes.Sys)]
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class LicenseController() : OqtStatefulControllerBase("License"), ILicenseController
+public class LicenseController() : OqtControllerBase(false, "License"), ILicenseController
 {
     /// <inheritdoc />
     public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);

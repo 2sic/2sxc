@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppPartsController() : OqtStatefulControllerBase(RealController.LogSuffix), IAppPartsController
+public class AppPartsController() : OqtControllerBase(false, RealController.LogSuffix), IAppPartsController
 {
     /// <inheritdoc />
     public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);

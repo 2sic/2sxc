@@ -19,7 +19,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 [Route(OqtWebApiConstants.AppRootPathAndLang + "/{appPath}/data")] // new, v13
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppDataController() : OqtStatefulControllerBase(RealController.LogSuffix), IAppDataController
+[OqtPrepareBlockContext]
+public class AppDataController() : OqtControllerBase(false, RealController.LogSuffix), IAppDataController
 {
     /// <inheritdoc />
     public override ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
