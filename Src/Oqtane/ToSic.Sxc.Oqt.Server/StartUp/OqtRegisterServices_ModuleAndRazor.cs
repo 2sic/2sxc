@@ -46,7 +46,6 @@ partial class OqtRegisterServices
         services.TryAddTransient<IModulePublishing, OqtModulePublishing>();
         services.AddTransient<IWorkBlockPublishingLookup, OqtWorkPublishingLookup>();
 
-        services.TryAddTransient<OqtModuleHelper>();
         services.TryAddTransient<OqtSearchController>();
 
         return services;
