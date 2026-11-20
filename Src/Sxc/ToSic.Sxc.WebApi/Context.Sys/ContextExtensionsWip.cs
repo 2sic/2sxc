@@ -1,8 +1,4 @@
-﻿#if NETCOREAPP
-using IContextGetServiceWip = ToSic.Sxc.Context.Sys.ISxcCurrentContextService;
-#else
-using IContextGetServiceWip = ToSic.Sxc.Context.Sys.IContextCompleteService;
-#endif
+﻿using IContextGetServiceWip = ToSic.Sxc.Context.Sys.IContextCompleteService;
 
 namespace ToSic.Sxc.Context.Sys;
 
@@ -20,15 +16,15 @@ namespace ToSic.Sxc.Context.Sys;
 /// </remarks>
 public static class ContextExtensionsWip
 {
-#if NETCOREAPP
+//#if NETCOREAPP
     
-    public static IContextOfApp DnnGetAppStateOqtSetAndGet(this IContextGetServiceWip ctxService, int appId)
-    {
-        // Temporary workaround - DNN should already have the context prepared in the real controller, Oqtane probably not yet
-        return ctxService.ShareAppStateOptimized(appId);
-    }
+    //public static IContextOfApp DnnGetAppStateOqtSetAndGet(this IContextGetServiceWip ctxService, int appId)
+    //{
+    //    // Temporary workaround - DNN should already have the context prepared in the real controller, Oqtane probably not yet
+    //    return ctxService.ShareAppStateOptimized(appId);
+    //}
 
-#else
+//#else
 
     public static IContextOfApp DnnGetAppStateOqtSetAndGet(this IContextGetServiceWip ctxService, int appId)
     {
@@ -36,5 +32,5 @@ public static class ContextExtensionsWip
         return ctxService.AppContextOrNull ?? throw new InvalidOperationException("AppContext is null");
     }
 
-#endif
+//#endif
 }

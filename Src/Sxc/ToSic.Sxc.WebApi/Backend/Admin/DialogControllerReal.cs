@@ -4,11 +4,7 @@ using ToSic.Eav.Sys;
 using ToSic.Eav.Ui.Context.Sys;
 using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Sys.Security.Permissions;
-#if NETCOREAPP
-using IContextGetServiceWip = ToSic.Sxc.Context.Sys.ISxcCurrentContextService;
-#else
 using IContextGetServiceWip = ToSic.Sxc.Context.Sys.IContextCompleteService;
-#endif
 
 namespace ToSic.Sxc.Backend.Admin;
 

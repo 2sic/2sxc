@@ -4,12 +4,7 @@ using ToSic.Sxc.Backend.Cms.Load.Activities;
 using ToSic.Sxc.Backend.SaveHelpers;
 using ToSic.Sys.HookUp;
 using ToSic.Sys.Security.Permissions;
-#if NETCOREAPP
-using IContextGetServiceWip = ToSic.Sxc.Context.Sys.ISxcCurrentContextService;
-#else
 using IContextGetServiceWip = ToSic.Sxc.Context.Sys.IContextCompleteService;
-#endif
-
 
 namespace ToSic.Sxc.Backend.Cms;
 

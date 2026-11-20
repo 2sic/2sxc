@@ -6,11 +6,7 @@ using ToSic.Sxc.Adam.Sys.Security;
 using ToSic.Sxc.Adam.Sys.Work;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sys.Security.Permissions;
-#if NETCOREAPP
-using IContextGetServiceWip = ToSic.Sxc.Context.Sys.ISxcCurrentContextService;
-#else
 using IContextGetServiceWip = ToSic.Sxc.Context.Sys.IContextCompleteService;
-#endif
 
 namespace ToSic.Sxc.Backend.Cms;
 

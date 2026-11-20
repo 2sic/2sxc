@@ -7,11 +7,7 @@ using ToSic.Eav.Ui.Edit.Sys.Save;
 using ToSic.Sxc.Backend.SaveHelpers;
 using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Utils;
-#if NETCOREAPP
-using IContextGetServiceWip = ToSic.Sxc.Context.Sys.ISxcCurrentContextService;
-#else
 using IContextGetServiceWip = ToSic.Sxc.Context.Sys.IContextCompleteService;
-#endif
 
 namespace ToSic.Sxc.Backend.Cms;
 

@@ -1,11 +1,7 @@
 ﻿using ToSic.Sxc.Adam.Sys;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Adam.Sys.Work;
-#if NETCOREAPP
-using IContextGetServiceWip = ToSic.Sxc.Context.Sys.ISxcCurrentContextService;
-#else
 using IContextGetServiceWip = ToSic.Sxc.Context.Sys.IContextCompleteService;
-#endif
 
 namespace ToSic.Sxc.Backend.Adam;
 
