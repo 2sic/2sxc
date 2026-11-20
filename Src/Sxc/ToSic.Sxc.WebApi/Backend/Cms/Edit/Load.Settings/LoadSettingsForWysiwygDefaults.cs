@@ -1,17 +1,18 @@
-﻿using ToSic.Sxc.Cms.Settings.InputFields;
+﻿using ToSic.Eav.Ui.Edit.Sys.Load.Settings;
+using ToSic.Sxc.Cms.Settings.InputFields;
 
 namespace ToSic.Sxc.Backend.Cms.Load.Settings;
 
 internal class LoadSettingsForWysiwygDefaults()
-    : LoadSettingsForBase($"{SxcLogName}.LdGpsD", connect: [])
+    : ServiceBase($"{SxcLogName}.LdGpsD", connect: []), ILoadSettingsProvider
 {
-    public override Dictionary<string, object> GetSettings(LoadSettingsProviderParameters parameters) =>
-        GetSettings<StringWysiwyg, StringWysiwyg>(
-            parameters,
-            StringWysiwyg.Defaults,
-            false,
-            StringWysiwyg.SettingsPath,
-            StringWysiwyg.SettingsPath,
-            model => model
-        );
+    public Dictionary<string, object> GetSettings(LoadSettingsProviderParameters parameters) =>
+        LoadSettingsForBase.GetSettings<StringWysiwyg, StringWysiwyg>(
+            appSettings: parameters.ContextOfApp.AppSettings,
+            defaults: StringWysiwyg.Defaults,
+            forceDefaults: false,
+            lookupPath: StringWysiwyg.SettingsPath,
+            outputPath: StringWysiwyg.SettingsPath,
+            modelConverter: model => model,
+            log: Log);
 }

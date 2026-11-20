@@ -8,6 +8,8 @@ using ToSic.Eav.DataFormats.EavLight.Sys;
 using ToSic.Eav.DataSource.DataProviders;
 using ToSic.Eav.Sys.Insights;
 using ToSic.Eav.Ui.Context.Sys;
+using ToSic.Eav.Ui.Edit.Sys.Load.Activities;
+using ToSic.Eav.Ui.Edit.Sys.Load.Settings;
 using ToSic.Eav.Ui.Edit.Sys.Save;
 using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Eav.WebApi.App.Sys;
@@ -196,11 +198,12 @@ public static class StartupSxcWebApi
 
     public static IServiceCollection AddLoadSettingsProviders(this IServiceCollection services)
     {
-        services.AddTransient<ILoadSettingsProvider, LoadSettingsForGpsDefaults>();
+        services.AddTransient<ILoadSettingsContentTypesProvider, LoadSettingsForPickerSources>();
         services.AddTransient<ILoadSettingsProvider, LoadSettingsForContentType>();
+
+        services.AddTransient<ILoadSettingsProvider, LoadSettingsForGpsDefaults>();
         services.AddTransient<ILoadSettingsProvider, LoadSettingsApiKeys>();
         services.AddTransient<ILoadSettingsProvider, LoadSettingsForWysiwygDefaults>(); // new v21
-        services.AddTransient<ILoadSettingsContentTypesProvider, LoadSettingsForPickerSources>();
         return services;
     }
 
