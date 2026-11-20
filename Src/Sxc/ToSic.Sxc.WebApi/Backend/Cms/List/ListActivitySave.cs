@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.Data.Publishing.Sys;
-using ToSic.Eav.WebApi.Sys.Cms;
 
 namespace ToSic.Sxc.Backend.Cms;
 
@@ -8,7 +7,7 @@ namespace ToSic.Sxc.Backend.Cms;
 public class ListActivitySave(AppWorkChain<WorkFieldList> workFieldList, LazySvc<IDataPublishingService> publishing)
     : ServiceWithSetup<IAppWorkContext>("Api.CntGrpRl", connect: [workFieldList, publishing])
 {
-    public bool ItemList(Guid parent, List<EntityInListDto>? list,  string[] fields)
+    public bool ItemList(Guid parent, List<ListSlotContentsInfo>? list,  string[] fields)
     {
         var l = Log.Fn<bool>($"list for:{parent}, items:{list?.Count}");
         if (list == null)

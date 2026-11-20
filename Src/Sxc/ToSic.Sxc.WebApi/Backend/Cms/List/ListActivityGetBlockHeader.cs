@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps.Sys;
-using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Blocks.Sys.Work;
 
 namespace ToSic.Sxc.Backend.Cms;
@@ -12,9 +11,9 @@ namespace ToSic.Sxc.Backend.Cms;
 public class ListActivityGetBlockHeader(AppDataChain<WorkBlocks> appBlocks)
     : ServiceWithSetup<IAppDataContext>("Api.CntGrpRl", connect: [appBlocks])
 {
-    public List<EntityInListDto> ContentBlockHeader(Guid parent)
+    public List<ListSlotContentsInfo> ContentBlockHeader(Guid parent)
     {
-        var l = Log.Fn<List<EntityInListDto>>($"header for:{parent}");
+        var l = Log.Fn<List<ListSlotContentsInfo>>($"header for:{parent}");
         var cg = appBlocks.New(MyOptions).GetBlockConfig(parent);
 
         // new in v11 - this call might be run on a non-content-block, in which case we return null

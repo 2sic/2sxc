@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.Data.ContentTypes.Fields.Sys;
-using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Blocks.Sys.Work;
 using ToSic.Sys.Utils;
@@ -24,9 +23,9 @@ public class ListActivityReplaceOptions(
     /// <summary>
     /// Special Replace just like list-replace, but with content type name coming from View definition
     /// </summary>
-    public ReplacementListDto ReplaceOptions(Options options)
+    public ListSlotSwapInfo ReplaceOptions(Options options)
     {
-        var l = Log.Fn<ReplacementListDto>($"{options}");
+        var l = Log.Fn<ListSlotSwapInfo>($"{options}");
         options = options with
         {
             TypeNames = options.TypeNames ?? FindTypeNameOnContentGroup(options)
@@ -56,9 +55,9 @@ public class ListActivityReplaceOptions(
         return l.Return(typeNameForField);
     }
 
-    private ReplacementListDto GetOptions(Options options)
+    private ListSlotSwapInfo GetOptions(Options options)
     {
-        var l = Log.Fn<ReplacementListDto>($"{options}");
+        var l = Log.Fn<ListSlotSwapInfo>($"{options}");
 
         var (existingItemsInField, typeNameOfField) = FindItemAndFieldTypeName(MyOptions.AppReader, options);
 
@@ -94,15 +93,17 @@ public class ListActivityReplaceOptions(
             ? existingItemsInField[options.Index]?.EntityId
             : null;
 
-        var result = new ReplacementListDto
+        var result = new ListSlotSwapInfo
         {
             SelectedId = selectedId,
-            Items = preferDraft.Select(e => new ReplacementListItemDto
-            {
-                Id = e.EntityId,
-                Title = e.GetBestTitle() ?? "(no title)",
-                ContentType = e.Type.Name,
-            })
+            Items = preferDraft
+                .Select(e => new ListSlotSwapCandidate
+                {
+                    Id = e.EntityId,
+                    Title = e.GetBestTitle() ?? "(no title)",
+                    ContentType = e.Type.Name,
+                })
+                .ToListOpt()
         };
         return l.Return(result);
     }

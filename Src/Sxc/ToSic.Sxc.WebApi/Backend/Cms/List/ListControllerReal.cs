@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.Data.Publishing.Sys;
-using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sys.Utils;
 
@@ -28,16 +27,16 @@ public class ListControllerReal(
     public void Replace(Guid parent, string part, int index, int entityId, bool add = false)
         => actReplace.New(GetCtx()).Replace(new(parent, ChangePartNameToFields(part), index, entityId, add));
 
-    public ReplacementListDto ReplaceOptions(Guid parent, string part, int index, string? contentType = null)
+    public ListSlotSwapInfo ReplaceOptions(Guid parent, string part, int index, string? contentType = null)
         => actReplaceOptions.New(GetCtx()).ReplaceOptions(new(parent, part, index, contentType));
 
-    public List<EntityInListDto> Items(Guid parent, string part)
+    public List<ListSlotContentsInfo> Items(Guid parent, string part)
         => actGetItems.New(GetCtx()).ItemList(parent, part);
 
-    public bool Items(Guid parent, List<EntityInListDto> list, string part)
+    public bool Items(Guid parent, List<ListSlotContentsInfo> list, string part)
         => actSave.New(GetCtx()).ItemList(parent, list, ChangePartNameToFields(part));
 
-    public List<EntityInListDto> ContentBlockHeader(Guid parent)
+    public List<ListSlotContentsInfo> ContentBlockHeader(Guid parent)
         => actGetBlockHeader.New(GetCtx()).ContentBlockHeader(parent);
 
     /// <summary>

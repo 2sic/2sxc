@@ -1,6 +1,7 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Eav.WebApi.Sys.Cms;
+using ToSic.Sxc.Backend.Cms;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using RealController = ToSic.Sxc.Backend.Cms.ListControllerReal;
@@ -42,7 +43,7 @@ public class ListController : DnnApiController, IListController
 
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public ReplacementListDto ReplaceOptions(Guid parent, string part, int index, string? contentType = null)
+    public ListSlotSwapInfo ReplaceOptions(Guid parent, string part, int index, string? contentType = null)
         => Real.ReplaceOptions(parent, part, index, contentType);
 
     /// <inheritdoc />
@@ -64,19 +65,19 @@ public class ListController : DnnApiController, IListController
 
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public List<EntityInListDto> Items(Guid parent, string part)
+    public List<ListSlotContentsInfo> Items(Guid parent, string part)
         => Real.Items(parent, part);
 
 
     // TODO: part should be handed in with all the relevant names! atm it's "content" in the content-block scenario
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public bool Items([FromUri] Guid parent, List<EntityInListDto> list, [FromUri] string part)
+    public bool Items([FromUri] Guid parent, List<ListSlotContentsInfo> list, [FromUri] string part)
         => Real.Items(parent, list, part);
 
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public List<EntityInListDto> ContentBlockHeader(Guid parent)
+    public List<ListSlotContentsInfo> ContentBlockHeader(Guid parent)
         => Real.ContentBlockHeader(parent);
 
 }
