@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.WebApi.Sys.Helpers.Http;
-using ToSic.Sxc.Adam.Sys.Manager;
+﻿using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Adam.Sys.Security;
@@ -16,7 +15,7 @@ public interface IAdamSecurityCheckService: IServiceWithSetup<AdamContext>
     bool FieldPermissionOk(List<Grants> requiredGrant);
 
     //bool ExtensionIsOk(string fileName, out HttpExceptionAbstraction preparedException);
-    bool ExtensionIsNotOk(string fileName, [NotNullWhen(true)] out HttpExceptionAbstraction? preparedException);
+    bool ExtensionIsNotOk(string fileName, [NotNullWhen(true)] out Exception? preparedException);
 
     ///// <summary>
     ///// Returns true if user isn't restricted, or if the restricted user is accessing a draft item
@@ -25,20 +24,20 @@ public interface IAdamSecurityCheckService: IServiceWithSetup<AdamContext>
     /// <summary>
     /// Returns true if user is restricted, or if the accessed item is missing or published (not draft).
     /// </summary>
-    bool UserIsRestrictedOrItemIsNotDraft(Guid guid, [NotNullWhen(true)] out HttpExceptionAbstraction? exp);
+    bool UserIsRestrictedOrItemIsNotDraft(Guid guid, [NotNullWhen(true)] out Exception? exp);
 
     //bool FileTypeIsOkForThisField(out HttpExceptionAbstraction preparedException);
-    bool FieldDoesNotSupportFiles([NotNullWhen(true)] out HttpExceptionAbstraction? preparedException);
+    bool FieldDoesNotSupportFiles([NotNullWhen(true)] out Exception? preparedException);
 
     //bool UserIsPermittedOnField(List<Grants> requiredPermissions, [NotNullWhen(true)] out HttpExceptionAbstraction? preparedException);
 
-    bool UserNotPermittedOnField(List<Grants> requiredPermissions, [NotNullWhen(true)] out HttpExceptionAbstraction? preparedException);
+    bool UserNotPermittedOnField(List<Grants> requiredPermissions, [NotNullWhen(true)] out Exception? preparedException);
 
-    bool MustThrowIfAccessingRootButNotAllowed(bool usePortalRoot, [NotNullWhen(true)] out HttpExceptionAbstraction? preparedException);
+    bool MustThrowIfAccessingRootButNotAllowed(bool usePortalRoot, [NotNullWhen(true)] out Exception? preparedException);
     bool UserIsRestricted { get; }
 
     AdamContext AdamContext { get; }
 
     //bool SuperUserOrAccessingItemFolder(string path, out HttpExceptionAbstraction? preparedException);
-    bool UserIsRestrictedAndAccessingItemOutsideOfFolder([NotNullWhen(false)]  string? path, [NotNullWhen(true)] out HttpExceptionAbstraction? preparedException);
+    bool UserIsRestrictedAndAccessingItemOutsideOfFolder([NotNullWhen(false)]  string? path, [NotNullWhen(true)] out Exception? preparedException);
 }

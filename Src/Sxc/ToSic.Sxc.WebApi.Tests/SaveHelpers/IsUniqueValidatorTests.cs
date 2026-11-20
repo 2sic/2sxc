@@ -57,8 +57,8 @@ public class IsUniqueValidatorTests
         var exception = ctx.CreateValidator(existing).UniqueValuesOnlyTac([pending]);
 
         Assert.NotNull(exception);
-        Assert.Contains("Article.Slug", exception.Value);
-        Assert.Contains("saved entity", exception.Value);
+        Assert.Contains("Article.Slug", exception.Message);
+        Assert.Contains("saved entity", exception.Message);
     }
 
     [Fact]
@@ -132,9 +132,9 @@ public class IsUniqueValidatorTests
         var exception = ctx.CreateValidator(firstExisting, secondExisting).UniqueValuesOnlyTac([pendingFirst]);
 
         Assert.NotNull(exception);
-        Assert.Contains("Article.Slug", exception.Value);
-        Assert.Contains("saved entity", exception.Value);
-        Assert.Contains(secondExisting.EntityId.ToString(), exception.Value);
+        Assert.Contains("Article.Slug", exception.Message);
+        Assert.Contains("saved entity", exception.Message);
+        Assert.Contains(secondExisting.EntityId.ToString(), exception.Message);
     }
 
     #endregion
@@ -159,7 +159,7 @@ public class IsUniqueValidatorTests
         var exception = ctx.CreateValidator().UniqueValuesOnlyTac([first, second]);
 
         Assert.NotNull(exception);
-        Assert.Contains("same request", exception.Value);
+        Assert.Contains("same request", exception.Message);
     }
 
     [Fact]
@@ -184,8 +184,8 @@ public class IsUniqueValidatorTests
         var exception = ctx.CreateValidator(existing).UniqueValuesOnlyTac([updated, second]);
 
         Assert.NotNull(exception);
-        Assert.Contains("same request", exception.Value);
-        Assert.DoesNotContain("saved entity", exception.Value);
+        Assert.Contains("same request", exception.Message);
+        Assert.DoesNotContain("saved entity", exception.Message);
     }
 
     #endregion
@@ -215,7 +215,7 @@ public class IsUniqueValidatorTests
 
         Assert.Null(noConflict);
         Assert.NotNull(conflict);
-        Assert.Contains("language: en-us", conflict.Value);
+        Assert.Contains("language: en-us", conflict.Message);
     }
 
     [Fact]
@@ -236,7 +236,7 @@ public class IsUniqueValidatorTests
         var exception = ctx.CreateValidator(existing).UniqueValuesOnlyTac([pending]);
 
         Assert.NotNull(exception);
-        Assert.Contains("Article.Slug", exception.Value);
+        Assert.Contains("Article.Slug", exception.Message);
     }
 
     [Fact]
@@ -318,7 +318,7 @@ public class IsUniqueValidatorTests
         var exception = ctx.CreateValidator(existing).UniqueValuesOnlyTac([pending]);
 
         Assert.NotNull(exception);
-        Assert.Contains("Article.Slug", exception.Value);
+        Assert.Contains("Article.Slug", exception.Message);
     }
 
     [Fact]
@@ -384,7 +384,7 @@ public class IsUniqueValidatorTests
         var exception = ctx.CreateValidator(existing).UniqueValuesOnlyTac([pending]);
 
         Assert.NotNull(exception);
-        Assert.Contains("Article.UniqueValue", exception.Value);
+        Assert.Contains("Article.UniqueValue", exception.Message);
     }
 
     [Theory]

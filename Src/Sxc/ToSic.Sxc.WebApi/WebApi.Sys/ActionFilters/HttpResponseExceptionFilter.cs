@@ -18,16 +18,17 @@ public class HttpResponseExceptionFilter : IActionFilter, IOrderedFilter
 
     public void OnActionExecuted(ActionExecutedContext context)
     {
-        if (context.Exception is HttpExceptionAbstraction exception)
-        {
-            context.Result = new ObjectResult(exception.Status)
-            {
-                StatusCode = exception.Status,
-                Value = exception.Message,
-            };
-            context.ExceptionHandled = true;
-        }
-        else if (context.Exception is { } anyException)
+        //if (context.Exception is Exception exception)
+        //{
+        //    context.Result = new ObjectResult(500)
+        //    {
+        //        StatusCode = 500,
+        //        Value = exception.Message,
+        //    };
+        //    context.ExceptionHandled = true;
+        //}
+        //else 
+        if (context.Exception is { } anyException)
         {
             context.Result = new ObjectResult(500)
             {

@@ -1,5 +1,4 @@
 using ToSic.Eav.Data;
-using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.Backend.SaveHelpers;
 
 namespace ToSic.Sxc.WebApi.Tests.SaveHelpers;
@@ -13,6 +12,6 @@ internal static class IsUniqueValidatorTestAccessors
     /// <summary>
     /// Test accessor for <see cref="IsUniqueValidator.UniqueValuesOnly"/>.
     /// </summary>
-    public static HttpExceptionAbstraction? UniqueValuesOnlyTac(this IsUniqueValidator validator, IReadOnlyCollection<IEntity> pendingEntities)
+    public static Exception? UniqueValuesOnlyTac(this IsUniqueValidator validator, IReadOnlyCollection<IEntity> pendingEntities)
         => validator.UniqueValuesOnly(pendingEntities);
 }

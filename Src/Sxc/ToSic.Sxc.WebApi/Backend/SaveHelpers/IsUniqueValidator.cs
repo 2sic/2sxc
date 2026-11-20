@@ -8,9 +8,9 @@ namespace ToSic.Sxc.Backend.SaveHelpers;
 /// </summary>
 internal class IsUniqueValidator(UniqueValueLookup lookup, IDataSource appData, ILog parentLog) : HelperBase(parentLog, "Val.UnqOk")
 {
-    internal HttpExceptionAbstraction? UniqueValuesOnly(IReadOnlyCollection<IEntity> pendingEntities)
+    internal Exception? UniqueValuesOnly(IReadOnlyCollection<IEntity> pendingEntities)
     {
-        var l = Log.Fn<HttpExceptionAbstraction?>($"{nameof(pendingEntities)}:{pendingEntities.Count}", timer: true);
+        var l = Log.Fn<Exception?>($"{nameof(pendingEntities)}:{pendingEntities.Count}", timer: true);
         
         if (pendingEntities.Count == 0)
             return l.ReturnNull("no pending entities");
@@ -91,7 +91,7 @@ internal class IsUniqueValidator(UniqueValueLookup lookup, IDataSource appData, 
         return null;
     }
 
-    private HttpExceptionAbstraction? DuplicateException(ILogCall<HttpExceptionAbstraction?>? l, PendingValue entry, IEntity conflict, int? requestIndex, string source)
+    private Exception? DuplicateException(ILogCall<Exception?>? l, PendingValue entry, IEntity conflict, int? requestIndex, string source)
     {
         var language = entry.Language == UniqueValueValidationRules.InvariantLanguage ? "invariant" : entry.Language;
         var target = requestIndex.HasValue

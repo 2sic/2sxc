@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.Security.Files;
-using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sys.Security.Permissions;
 
@@ -43,17 +42,17 @@ public class AdamSecurityCheckService(LazySvc<PermissionCheckFactory> permCheckF
 
     #endregion
 
-    public bool ExtensionIsNotOk(string fileName, [NotNullWhen(true)] out HttpExceptionAbstraction? preparedException)
+    public bool ExtensionIsNotOk(string fileName, [NotNullWhen(true)] out Exception? preparedException)
     {
         if (!securityCheckEnvironment.SiteAllowsExtension(this, fileName))
         {
-            preparedException = HttpException.NotAllowedFileType(fileName, "Not in whitelisted CMS file types.");
+            preparedException = new NotAllowedFileTypeException(fileName, "Not in whitelisted CMS file types.");
             return true;
         }
 
         if (FileNames.IsKnownRiskyExtension(fileName))
         {
-            preparedException = HttpException.NotAllowedFileType(fileName, "This is a known risky file type.");
+            preparedException = new NotAllowedFileTypeException(fileName, "This is a known risky file type.");
             return true;
         }
         preparedException = null;
@@ -64,7 +63,7 @@ public class AdamSecurityCheckService(LazySvc<PermissionCheckFactory> permCheckF
     /// <summary>
     /// Returns true if user isn't restricted, or if the restricted user is accessing a draft item
     /// </summary>
-    public bool UserIsRestrictedOrItemIsNotDraft(Guid guid, [NotNullWhen(true)] out HttpExceptionAbstraction? exp)
+    public bool UserIsRestrictedOrItemIsNotDraft(Guid guid, [NotNullWhen(true)] out Exception? exp)
     {
         var l = Log.Fn<bool>($"is restricted ({UserIsRestricted}) or if the item '{guid}' is draft");
         exp = null;
@@ -79,11 +78,11 @@ public class AdamSecurityCheckService(LazySvc<PermissionCheckFactory> permCheckF
 
         const string msg = "User is restricted and may not see published, but item exists and is published - not allowed";
         l.A(msg);
-        exp = HttpException.PermissionDenied(msg);
+        exp = new PermissionDeniedException(msg);
         return l.ReturnTrue("conditions not met");
     }
 
-    public bool FieldDoesNotSupportFiles([NotNullWhen(true)] out HttpExceptionAbstraction? preparedException)
+    public bool FieldDoesNotSupportFiles([NotNullWhen(true)] out Exception? preparedException)
     {
         var l = Log.Fn<bool>();
         var fieldDef = AdamContext.Attribute;
@@ -91,7 +90,7 @@ public class AdamSecurityCheckService(LazySvc<PermissionCheckFactory> permCheckF
         if (fieldDef == null || !(fieldDef.Type != ValueTypes.Hyperlink ||
                                   fieldDef.Type != ValueTypes.String))
         {
-            preparedException = HttpException.BadRequest("Requested field '" + AdamContext.ItemFieldName + "' type doesn't allow upload");
+            preparedException = new("Requested field type doesn't allow upload");
             return l.ReturnTrue($"field type:{fieldDef?.Type} - does not allow files");
         }
 
@@ -100,12 +99,12 @@ public class AdamSecurityCheckService(LazySvc<PermissionCheckFactory> permCheckF
     }
 
 
-    public bool UserNotPermittedOnField(List<Grants> requiredPermissions, [NotNullWhen(true)] out HttpExceptionAbstraction? preparedException)
+    public bool UserNotPermittedOnField(List<Grants> requiredPermissions, [NotNullWhen(true)] out Exception? preparedException)
     {
         // check field permissions, but only for non-publish-data
         if (UserIsRestricted && !FieldPermissionOk(requiredPermissions))
         {
-            preparedException = HttpException.PermissionDenied("this field is not configured to allow uploads by the current user");
+            preparedException = new PermissionDeniedException("this field is not configured to allow uploads by the current user");
             return true;
         }
         preparedException = null;
@@ -125,7 +124,7 @@ public class AdamSecurityCheckService(LazySvc<PermissionCheckFactory> permCheckF
         return fieldPermissions.UserMay(requiredGrant).Allowed;
     }
 
-    public bool UserIsRestrictedAndAccessingItemOutsideOfFolder(string? path, [NotNullWhen(true)] out HttpExceptionAbstraction? preparedException)
+    public bool UserIsRestrictedAndAccessingItemOutsideOfFolder(string? path, [NotNullWhen(true)] out Exception? preparedException)
     {
         if (UserIsRestricted)
             return DestinationIsNotInItem(AdamContext.ItemGuid, AdamContext.ItemFieldName, path, out preparedException);
@@ -134,23 +133,23 @@ public class AdamSecurityCheckService(LazySvc<PermissionCheckFactory> permCheckF
         return false; // not restricted, so no problem
     }
 
-    private static bool DestinationIsNotInItem(Guid guid, string? field, string? path, [NotNullWhen(true)] out HttpExceptionAbstraction? preparedException)
+    private static bool DestinationIsNotInItem(Guid guid, string? field, string? path, [NotNullWhen(true)] out Exception? preparedException)
     {
         if (AdamSecurity.PathIsInItemAdam(guid, field, path))
         {
             preparedException = null;
             return false;
         }
-        preparedException = HttpException.PermissionDenied("Can't access a resource which is not part of this item.");
+        preparedException = new PermissionDeniedException("Can't access a resource which is not part of this item.");
         return true;
     }
 
 
-    public bool MustThrowIfAccessingRootButNotAllowed(bool usePortalRoot, [NotNullWhen(true)] out HttpExceptionAbstraction? preparedException)
+    public bool MustThrowIfAccessingRootButNotAllowed(bool usePortalRoot, [NotNullWhen(true)] out Exception? preparedException)
     {
         if (usePortalRoot && UserIsRestricted)
         {
-            preparedException = HttpException.BadRequest("you may only create draft-data, so file operations outside of ADAM is not allowed");
+            preparedException = new("you may only create draft-data, so file operations outside of ADAM is not allowed");
             return true;
         }
 

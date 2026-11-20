@@ -7,6 +7,7 @@ using ToSic.Sxc.Adam.Sys.Security;
 using ToSic.Sxc.Adam.Sys.Storage;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sys.Capabilities.Features;
+using ToSic.Sys.Security.Permissions;
 using static ToSic.Sys.Capabilities.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Adam.Sys.Manager;
@@ -80,8 +81,7 @@ public class AdamContext(
         if (Security.UserIsRestricted && !featuresSvc.Value.IsEnabled(FeaturesForRestrictedUsers))
         {
             var msg = featuresSvc.Value.MsgMissingSome(FeaturesForRestrictedUsers);
-            throw HttpException.PermissionDenied(
-                $"low-permission users may not access this - {msg}");
+            throw l.Ex(new PermissionDeniedException($"low-permission users may not access this - {msg}"));
 
         }
 

@@ -13,7 +13,7 @@ public class PermissionCheckAction(Generator<MultiPermissionsApp, MultiPermissio
         var (context, requiredGrants) = package.Data;
         var permCheck = permCheckGen.New(new() { SiteContext = context, App = /*alternateApp ??*/ context.AppReaderRequired });
         if (permCheck.EnsureAll(requiredGrants) is { Allowed: false } pcResult)
-            throw HttpException.PermissionDenied(pcResult.ErrorMessage);
+            throw new PermissionDeniedException(pcResult.ErrorMessage!);
         return Task.FromResult(true.ToPackage());
     }
 }

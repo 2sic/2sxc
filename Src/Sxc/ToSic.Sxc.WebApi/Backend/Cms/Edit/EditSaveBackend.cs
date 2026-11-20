@@ -69,7 +69,7 @@ public class EditSaveBackend(
                     : appEntities.Get(i.Entity.Id) // otherwise id
             );
         if (foundItems.Any(i => i != null) && permCheck.EnsureAll(GrantSets.UpdateSomething) is { Allowed: false } pcResult)
-            throw HttpException.PermissionDenied(pcResult.ErrorMessage);
+            throw new PermissionDeniedException(pcResult.ErrorMessage);
 
         #endregion
 
@@ -102,7 +102,7 @@ public class EditSaveBackend(
                 if (procException != null)
                     throw procException;
 
-                ent = returnEntity ?? throw HttpException.BadRequest($"Failed to process entity on index {index}");
+                ent = returnEntity ?? throw new Exception($"Failed to process entity on index {index}");
 
                 // If update check everything is ok, and if the ID needs to be reset
                 var validatorResult = updateValidator.IfUpdateValidateAndCorrectIds(appEntities, index, ent);

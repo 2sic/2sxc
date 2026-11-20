@@ -64,7 +64,7 @@ internal class AppApiActionContext : IHasLog
             ? $"ok, have candidates: {candidates.Count}"
             : $"error, missing candidates: {candidates.Count}, can't find right method for action: {values["action"]} on controller: {values["controller"]}.");
 
-        if (candidates.Count == 0) throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, $"Can't find right method for action: {values["action"]} on controller: {values["controllerTypeName"]}.", "Not Found");
+        if (candidates.Count == 0) throw new KeyNotFoundException($"Can't find right method for action: {values["action"]} on controller: {values["controllerTypeName"]}.");
 
         Log.A($"actionDescriptor SelectBestCandidate");
         var actionDescriptor = actionSelector.SelectBestCandidate(routeContext, candidates);

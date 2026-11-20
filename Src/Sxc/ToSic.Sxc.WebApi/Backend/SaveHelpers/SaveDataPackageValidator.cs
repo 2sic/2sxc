@@ -29,9 +29,9 @@ internal class SaveDataPackageValidator(ILog parentLog) : HelperBase(parentLog, 
     /// or that invalid combinations get back here
     /// </summary>
     /// <returns></returns>
-    internal HttpExceptionAbstraction? ContainsOnlyExpectedNodes(EditSaveDto package)
+    internal Exception? ContainsOnlyExpectedNodes(EditSaveDto package)
     {
-        var l = Log.Fn<HttpExceptionAbstraction?>();
+        var l = Log.Fn<Exception?>();
 
         // check that items are mostly intact
         if (package.Items == null! || package.Items.Count == 0)

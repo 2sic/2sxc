@@ -87,12 +87,12 @@ internal sealed class OqtAdamSecCheckEnvironmentTestContext : IDisposable
         public void Setup(AdamContext options) => throw new NotSupportedException();
         public bool CanEditFolder(IAsset? item) => throw new NotSupportedException();
         public bool FieldPermissionOk(List<Grants> requiredGrant) => throw new NotSupportedException();
-        public bool ExtensionIsNotOk(string fileName, out HttpExceptionAbstraction? preparedException) => throw new NotSupportedException();
-        public bool UserIsRestrictedOrItemIsNotDraft(Guid guid, out HttpExceptionAbstraction? exp) => throw new NotSupportedException();
-        public bool FieldDoesNotSupportFiles(out HttpExceptionAbstraction? preparedException) => throw new NotSupportedException();
-        public bool UserNotPermittedOnField(List<Grants> requiredPermissions, out HttpExceptionAbstraction? preparedException) => throw new NotSupportedException();
-        public bool MustThrowIfAccessingRootButNotAllowed(bool usePortalRoot, out HttpExceptionAbstraction? preparedException) => throw new NotSupportedException();
-        public bool UserIsRestrictedAndAccessingItemOutsideOfFolder(string? path, out HttpExceptionAbstraction? preparedException) => throw new NotSupportedException();
+        public bool ExtensionIsNotOk(string fileName, out Exception? preparedException) => throw new NotSupportedException();
+        public bool UserIsRestrictedOrItemIsNotDraft(Guid guid, out Exception? exp) => throw new NotSupportedException();
+        public bool FieldDoesNotSupportFiles(out Exception? preparedException) => throw new NotSupportedException();
+        public bool UserNotPermittedOnField(List<Grants> requiredPermissions, out Exception? preparedException) => throw new NotSupportedException();
+        public bool MustThrowIfAccessingRootButNotAllowed(bool usePortalRoot, out Exception? preparedException) => throw new NotSupportedException();
+        public bool UserIsRestrictedAndAccessingItemOutsideOfFolder(string? path, out Exception? preparedException) => throw new NotSupportedException();
     }
 
     private sealed class FakeFolderRepository(Dictionary<int, Folder> folders) : IFolderRepository

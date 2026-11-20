@@ -286,7 +286,7 @@ public class AppContent(
             throw new ArgumentNullException(nameof(itm), @"Item must not be null to check it's security.");
         var permCheck = itemsPermissions.New(new() { SiteContext = Context, App = appIdentity, Entities = [itm] });
         if (permCheck.EnsureAll(requiredGrants) is { Allowed: false } result)
-            throw HttpException.PermissionDenied(result.ErrorMessage);
+            throw new PermissionDeniedException(result.ErrorMessage!);
         return permCheck;
     }
 

@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.WebApi.Sys.Helpers.Http;
-using ToSic.Sxc.Adam.Sys.Manager;
+﻿using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Adam.Sys.Work;
@@ -23,7 +22,7 @@ public class AdamWorkFolderCreate() : ServiceWithSetup<AdamContext>("Adm.TrnFld"
 
         // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
         if (adamCtx.UseSiteRoot && !adamCtx.Security.CanEditFolder(folder))
-            throw HttpException.PermissionDenied("can't create new folder - permission denied");
+            throw l.Ex(new PermissionDeniedException("can't create new folder - permission denied"));
 
         var newFolderPath = string.IsNullOrEmpty(parentSubfolder)
             ? newFolder

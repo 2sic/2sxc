@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.Adam.Sys.Manager;
+using ToSic.Sxc.Adam.Sys.Security;
 using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Adam.Sys.Work;
@@ -57,7 +58,7 @@ public partial class AdamWorkUpload(Generator<AdamContext, AdamContext.Options> 
 
         // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
         if (adamCtx.UseSiteRoot && !adamCtx.Security.CanEditFolder(parentFolder))
-            throw HttpException.PermissionDenied("can't upload - permission denied");
+            throw new PermissionDeniedException("can't upload");
 
         // we only upload into valid adam if that's the scenario
         if (adamCtx.Security.UserIsRestrictedAndAccessingItemOutsideOfFolder(parentFolder?.Path, out var expNotAllowed))
@@ -74,7 +75,7 @@ public partial class AdamWorkUpload(Generator<AdamContext, AdamContext.Options> 
         // note 2018-04-20 2dm: can't do this for wysiwyg, as it doesn't have a setting for allowed file-uploads
         var additionalFilter = adamCtx.Attribute!.Metadata.Get<string>("FileFilter");
         if (!string.IsNullOrWhiteSpace(additionalFilter) && !CustomFileFilterOk(additionalFilter!, fileName))
-            throw HttpException.NotAllowedFileType(fileName, "field has custom file-filter, which doesn't match");
+            throw new NotAllowedFileTypeException(fileName, "field has custom file-filter, which doesn't match");
 
         #endregion
 

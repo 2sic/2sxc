@@ -73,8 +73,7 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
                 // but as a transient dependency from the request service provider
                 var aliasResolver = serviceProvider.Build<AliasResolver>();
                 alias = aliasResolver.Alias
-                        ?? throw new HttpExceptionAbstraction(HttpStatusCode.NotFound,
-                            $"Error: missing required 'alias' route value.", "Not Found");
+                        ?? throw new KeyNotFoundException("Error: missing required 'alias' route value.");
             }
 
             var contentSiteId = _oqtSiteGroup.GetPrimaryLocalizationSiteId(alias.SiteId);
@@ -84,8 +83,7 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
 
             // Ensure required route values: alias, appFolder, controller, action.
             if (!values.ContainsKey("appFolder"))
-                throw new HttpExceptionAbstraction(HttpStatusCode.NotFound,
-                    $"Error: missing required 'appFolder' route value.", "Not Found");
+                throw new KeyNotFoundException("Error: missing required 'appFolder' route value.");
             var appFolder = (string) values["appFolder"];
             if (appFolder == OqtWebApiConstants.Auto)
             {
@@ -106,13 +104,11 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
             }
 
             if (!values.ContainsKey("controller"))
-                throw new HttpExceptionAbstraction(HttpStatusCode.NotFound,
-                    $"Error: missing required 'controller' route value.", "Not Found");
+                throw new KeyNotFoundException("Error: missing required 'controller' route value.");
             var controller = (string) values["controller"];
 
             if (!values.ContainsKey("action"))
-                throw new HttpExceptionAbstraction(HttpStatusCode.NotFound,
-                    $"Error: missing required 'action' route value.", "Not Found");
+                throw new KeyNotFoundException("Error: missing required 'action' route value.");
             var action = (string) values["action"];
 
             l.A(

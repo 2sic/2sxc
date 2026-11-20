@@ -12,9 +12,9 @@ internal class SaveDataValidator(ILog parentLog) : HelperBase(parentLog, "Val.En
     /// <param name="index"></param>
     /// <param name="newEntity"></param>
     /// <returns></returns>
-    internal HttpExceptionAbstraction? EntityNotNullAndAttributeCountOk(int index, IEntity? newEntity)
+    internal Exception? EntityNotNullAndAttributeCountOk(int index, IEntity? newEntity)
     {
-        var l = Log.Fn<HttpExceptionAbstraction?>();
+        var l = Log.Fn<Exception?>();
         if (newEntity == null)
         {
             var preparedException = ValidatorErrors.BuildExceptionIfHasIssues($"entity {index} couldn't deserialize", l);

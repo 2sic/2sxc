@@ -22,16 +22,15 @@ public class SaveSecurity(Generator<MultiPermissionsTypes, MultiPermissionsTypes
             App = appReader,
             ContentTypes = new SavePermissionDataHelper(Log).ExtractTypeNamesFromItems(
                 appReader,
-                list.Select(i => i.Header).ToList()
+                [.. list.Select(i => i.Header)]
             )
         });
         
         if (permCheck.EnsureAll(GrantSets.WriteSomething) is { Allowed: false } pcResult)
-            throw HttpException.PermissionDenied(pcResult.ErrorMessage);
-        
-        if (!permCheck.UserCanWriteAndPublicFormsEnabled(sysFeatSvc, out _, out var error))
-            throw HttpException.PermissionDenied(error);
+            throw l.Ex(new PermissionDeniedException(pcResult.ErrorMessage ?? "Unspecified error"));
 
-        return l.Return(permCheck, "passed security checks");
+        return permCheck.UserCanWriteAndPublicFormsEnabled(sysFeatSvc, out var exception) 
+            ? l.Return(permCheck, "passed security checks")
+            : throw l.Ex(exception);
     }
 }

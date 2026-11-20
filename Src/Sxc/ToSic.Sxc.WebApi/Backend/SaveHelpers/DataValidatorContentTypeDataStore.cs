@@ -85,7 +85,7 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBas
 
         // Preprocessor exists, and supports pre-save and post-save, so execute it
         var result = await dataProcessor.Handle(new(), new(new PermissionCheckPayload(action, ent, UserElevation.SiteAdmin)));
-        var exception = HttpExceptionAbstraction.FromPossibleException(result.Exceptions.FirstOrDefault(), HttpStatusCode.Forbidden);
+        var exception = result.Exceptions.FirstOrDefault();
         return l.Return(new(result.Data, decorator, exception, dataProcessor), $"action: {action}, {(exception != null ? "with exception" : "")}");
 
 
@@ -98,7 +98,7 @@ public class DataValidatorContentTypeDataStore(IServiceProvider sp) : ServiceBas
     public record Result(
         IEntity? Entity,
         DataStorageDecorator? Decorator,
-        HttpExceptionAbstraction? Exception = null,
+        Exception? Exception = null,
         IWorkEntityAction? Processor = null
     );
 }

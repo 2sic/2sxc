@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.WebApi.Sys.Helpers.Http;
-using ToSic.Sxc.Adam.Sys.Manager;
+﻿using ToSic.Sxc.Adam.Sys.Manager;
+using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Adam.Sys.Work;
 
@@ -16,7 +16,7 @@ public static class AdamWorkSecHelper
     {
         // In case the primary file system is used (usePortalRoot) then also check higher permissions
         if (adamCtx.UseSiteRoot && !adamCtx.Security.CanEditFolder(target)) 
-            throw HttpException.PermissionDenied(errPrefix + " - permission denied");
+            throw new PermissionDeniedException(errPrefix);
 
         if (adamCtx.Security.UserIsRestrictedAndAccessingItemOutsideOfFolder(target.Path, out var exp))
             throw exp;
@@ -24,7 +24,7 @@ public static class AdamWorkSecHelper
         //if (!EqualityComparer<TFolderId>.Default.Equals(((IAssetWithParentSysId<TFolderId>)target).ParentSysId,
         //        ((IAssetSysId<TFolderId>)parentFolder).SysId))
         if (parentFolder == null || !adamGenericHelper.AssetIsChildOfFolder(parentFolder, target))
-            throw HttpException.BadRequest(errPrefix + " - not found in folder");
+            throw new(errPrefix + " - not found in folder");
     }
 
 }

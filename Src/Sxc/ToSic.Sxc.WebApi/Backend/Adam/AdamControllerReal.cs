@@ -56,11 +56,11 @@ public class AdamControllerReal<TIdentifier>(
             var dtoMake = dtoMaker.New(new() { AdamContext = adamContext, });
             return dtoMake.Create(file);
         }
-        catch (HttpExceptionAbstraction he)
-        {
-            // Our abstraction places an extra message in the value, not sure if this is right, but that's how it is. 
-            return l.ReturnAsError(new(he.Message + "\n" + he.Value));
-        }
+        //catch (Exception he)
+        //{
+        //    // Our abstraction places an extra message in the value, not sure if this is right, but that's how it is. 
+        //    return l.ReturnAsError(new(he.Message + "\n" + he.Value));
+        //}
         catch (Exception e)
         {
             return l.ReturnAsError(new(e.Message + "\n" + e.Message));

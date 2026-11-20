@@ -3,6 +3,7 @@ using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.Sys;
 using ToSic.Eav.Ui.Context.Sys;
 using ToSic.Eav.WebApi.Admin.Sys;
+using ToSic.Sys.Security.Permissions;
 #if NETCOREAPP
 using IContextGetServiceWip = ToSic.Sxc.Context.Sys.ISxcCurrentContextService;
 #else
@@ -36,7 +37,7 @@ public class DialogControllerReal(
         // If we have an appid check permissions
         // This will be missing in install-app scenarios and other calls where the app is not set yet
         if (appReader != null && !zoneSwitchPermissionCheck.Check(appReader, out var error))
-            throw HttpException.PermissionDenied(error);
+            throw new PermissionDeniedException(error!);
 
         var cb = uiContextBuilder.New(appReader);
 

@@ -20,9 +20,9 @@ internal class SaveDataUpdateValidator(ILog parentLog) : HelperBase(parentLog, "
         l.Done();
     }
 
-    internal (int? ResetId, HttpExceptionAbstraction? Exception) IfUpdateValidateAndCorrectIds(WorkEntities workEntities, int count, IEntity newEntity)
+    internal (int? ResetId, Exception? Exception) IfUpdateValidateAndCorrectIds(WorkEntities workEntities, int count, IEntity newEntity)
     {
-        var l = Log.Fn<(int?, HttpExceptionAbstraction?)>();
+        var l = Log.Fn<(int?, Exception?)>();
         var previousEntity = workEntities.Get(newEntity.EntityId)
                              ?? workEntities.Get(newEntity.EntityGuid);
 

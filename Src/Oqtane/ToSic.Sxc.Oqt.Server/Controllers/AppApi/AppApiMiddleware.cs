@@ -30,7 +30,7 @@ internal static class AppApiMiddleware
     // Compile and register dyncode app api controller.
     var appApiControllerManager = context.RequestServices.GetService<AppApiControllerManager>();
     if (!await appApiControllerManager.PrepareController(values))
-      throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, "Error, can't compile controller.", "Not Found");
+      throw new KeyNotFoundException("Error, can't compile controller.");
 
     // Provide ActionContext.
     var appApiActionContext = context.RequestServices.GetService<AppApiActionContext>();
