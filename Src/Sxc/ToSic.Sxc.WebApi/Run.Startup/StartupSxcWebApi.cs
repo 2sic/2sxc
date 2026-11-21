@@ -32,7 +32,6 @@ using ToSic.Sxc.Backend.Cms.Load.Settings;
 using ToSic.Sxc.Backend.ContentBlocks;
 using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Backend.InPage;
-using ToSic.Sxc.Backend.OutputCache;
 using ToSic.Sxc.Backend.SaveHelpers;
 using ToSic.Sxc.Backend.Sys;
 using ToSic.Sxc.Backend.Usage;
@@ -115,7 +114,6 @@ public static class StartupSxcWebApi
         services.TryAddTransient<AppDataControllerReal>();
         services.TryAddTransient<AppQueryContextResolver>();
         services.TryAddTransient<WorkQueryDeleteIfUnused>();
-        services.TryAddTransient<CacheControllerReal>();
         services.TryAddTransient<EditControllerReal>();
         services.TryAddTransient<ListControllerReal>();
         services.TryAddTransient<InstallControllerReal>();
@@ -125,6 +123,8 @@ public static class StartupSxcWebApi
 
         services.TryAddTransient<AssetTemplates>();
 
+        // #OutputCacheControllerSeemsUnused2026-11-21 Probably delete ca. 2027-Q1
+        //services.TryAddTransient<CacheControllerReal>();
 
         // Separate list Activities into isolated classes v22
         services.TryAddTransient<ListActivityReplaceOptions>();

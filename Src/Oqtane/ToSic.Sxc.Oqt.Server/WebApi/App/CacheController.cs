@@ -1,39 +1,40 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Oqtane.Shared;
-using ToSic.Eav.WebApi.Admin.Sys;
-using ToSic.Sxc.Backend.App;
-using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.WebApi.Sys.ActionFilters;
+// #OutputCacheControllerSeemsUnused2026-11-21 Probably delete ca. 2027-Q1
 
-namespace ToSic.Sxc.Oqt.Server.WebApi.App;
+//using Microsoft.AspNetCore.Authorization;
+//using Microsoft.AspNetCore.Mvc;
+//using Oqtane.Shared;
+//using ToSic.Sxc.Backend.OutputCache;
+//using ToSic.Sxc.Oqt.Server.Controllers;
+//using ToSic.Sxc.WebApi.Sys.ActionFilters;
 
-[Route(OqtWebApiConstants.AppRootNoLanguage)]
-[Route(OqtWebApiConstants.AppRootPathOrLang)]
-[Route(OqtWebApiConstants.AppRootPathAndLang)]
-[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
-[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public class CacheController : ControllerBase, IHasLog, ICacheController
-{
-    /// <inheritdoc />
-    public ILog Log => field ??= LogFactory.Create($"Api.{CacheControllerReal.LogSuffix}", null, GetType().Name);
+//namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 
-    private CacheControllerReal Real => this.GetApiService<CacheControllerReal>();
+//[Route(OqtWebApiConstants.AppRootNoLanguage)]
+//[Route(OqtWebApiConstants.AppRootPathOrLang)]
+//[Route(OqtWebApiConstants.AppRootPathAndLang)]
+//[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
+//[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
+//[ShowApiWhenReleased(ShowApiMode.Never)]
+//public class CacheController : ControllerBase, IHasLog, ICacheController
+//{
+//    /// <inheritdoc />
+//    public ILog Log => field ??= LogFactory.Create($"Api.{CacheControllerReal.LogSuffix}", null, GetType().Name);
 
-    [HttpPost("{appPath}/{controller}/{action}")]
-    [ValidateAntiForgeryToken]
-    [Authorize(Roles = RoleNames.Admin)]
-    public bool Flush([FromRoute] string appPath, [FromBody] AppCacheFlushSpecs specs)
-        => Real.Flush(appPath, specs);
+//    private CacheControllerReal Real => this.GetApiService<CacheControllerReal>();
 
-    [HttpPost($"{AppParts.Auto}/{{controller}}/{{action}}")]
-    [ValidateAntiForgeryToken]
-    [Authorize(Roles = RoleNames.Admin)]
-    public bool Flush([FromBody] AppCacheFlushSpecs specs, [FromQuery] int? appId = null)
-    {
-        if (appId == null)
-            this.PrepareRequestBlock();
-        return Real.FlushAuto(appId, specs);
-    }
-}
+//    [HttpPost("{appPath}/{controller}/{action}")]
+//    [ValidateAntiForgeryToken]
+//    [Authorize(Roles = RoleNames.Admin)]
+//    public bool Flush([FromRoute] string appPath, [FromBody] AppCacheFlushSpecs specs)
+//        => Real.Flush(appPath, specs);
+
+//    [HttpPost($"{AppParts.Auto}/{{controller}}/{{action}}")]
+//    [ValidateAntiForgeryToken]
+//    [Authorize(Roles = RoleNames.Admin)]
+//    public bool Flush([FromBody] AppCacheFlushSpecs specs, [FromQuery] int? appId = null)
+//    {
+//        if (appId == null)
+//            this.PrepareRequestBlock();
+//        return Real.FlushAuto(appId, specs);
+//    }
+//}
