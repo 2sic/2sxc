@@ -13,7 +13,7 @@ public class AdamControllerReal<TIdentifier>(
     Generator<AdamWorkDelete, AdamContext> adamDelete,
     Generator<AdamWorkRename, AdamContext> adamRename,
     Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> dtoMaker,
-    IContextCompleteService ctxService
+    IContextOfAppService ctxService
     )
     : ServiceBase("Api.Adam", connect: [adamContextGen, adamUpload, adamWorkGet, adamFolders, adamDelete, adamRename])
 {

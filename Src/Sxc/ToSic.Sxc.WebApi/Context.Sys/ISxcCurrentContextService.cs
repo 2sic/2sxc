@@ -9,7 +9,11 @@ namespace ToSic.Sxc.Context.Sys;
 /// Note that it's important to always make this **Scoped**, not transient, as there is some re-use after initialization
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface ISxcCurrentContextService: IContextCompleteService, IContextOfSiteService, IContextService
+public interface ISxcCurrentContextService
+    : IContextCompleteService,
+        IContextOfAppService,
+        IContextOfSiteService,
+        IContextService
 {
     /// <summary>
     /// Return the block if known, or an app context if not

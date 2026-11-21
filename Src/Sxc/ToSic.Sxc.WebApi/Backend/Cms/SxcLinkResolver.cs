@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Backend.Cms;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class SxcLinkResolver(
     Generator<AdamContext, AdamContext.Options> adamCtxGen,
-    IContextCompleteService ctxService,
+    IContextOfAppService ctxService,
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions,
     Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> adamDtoMaker,
     IValueConverter valueConverter)

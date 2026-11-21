@@ -1,12 +1,11 @@
 using ToSic.Eav.Context.Sys;
-using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Sxc.Services.OutputCache;
 
-namespace ToSic.Sxc.Backend.App;
+namespace ToSic.Sxc.Backend.OutputCache;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CacheControllerReal(
-    IContextCompleteService ctxService,
+    IContextOfAppService ctxService,
     IWebApiAppContextBuilderService ctxBuilder,
     LazySvc<IOutputCacheManagementService> outputCacheManagement)
     : ServiceBase("Sxc.ApiApCac", connect: [ctxService, ctxBuilder, outputCacheManagement])
@@ -14,13 +13,17 @@ public class CacheControllerReal(
     public const string LogSuffix = "AppCac";
 
     // 2026-10-20 2dm - previously used ctxService.SetAppFromPathOrGetExistingBlock
-    public bool Flush(string appPath, AppCacheFlushSpecs? request)
-        => FlushInternal((ctxBuilder.TryFindAppFromPath(appPath) ?? throw new ArgumentException($"App not found for folder '{appPath}'. Can't flush cache.")).AppReaderRequired.AppId, request);
+    public bool Flush(string appPath, AppCacheFlushSpecs? specs)
+    {
+        var appCtx = ctxBuilder.TryFindAppFromPath(appPath)
+                     ?? throw new ArgumentException($"App not found for folder '{appPath}'. Can't flush cache.");
+        return FlushInternal(appCtx.AppReaderRequired.AppId, specs);
+    }
 
-    public bool FlushAuto(int? appId, AppCacheFlushSpecs? request)
+    public bool FlushAuto(int? appId, AppCacheFlushSpecs? specs)
         => FlushInternal(
-            appId ?? ctxService.BlockContextRequired().AppReaderRequired.AppId,
-            request
+            appId ?? ctxService.AppContextRequired().AppReaderRequired.AppId,
+            specs
         );
 
     private bool FlushInternal(int appId, AppCacheFlushSpecs? specs)
@@ -33,11 +36,9 @@ public class CacheControllerReal(
         //    throw l.Done(new HttpExceptionAbstraction(HttpStatusCode.Unauthorized, message, "Request not allowed"));
         //}
 
-        var touched = OutputCacheManagement.Flush(appId, dependencies: specs?.Dependencies);
+        var touched = outputCacheManagement.Value.Flush(appId, dependencies: specs?.Dependencies);
         return touched == 0
             ? l.ReturnTrue("app-wide cache dependency touched")
             : l.ReturnTrue($"{touched} dependencies touched");
     }
-
-    private IOutputCacheManagementService OutputCacheManagement => outputCacheManagement.Value;
 }

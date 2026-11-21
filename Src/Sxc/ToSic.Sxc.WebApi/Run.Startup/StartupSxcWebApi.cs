@@ -32,6 +32,7 @@ using ToSic.Sxc.Backend.Cms.Load.Settings;
 using ToSic.Sxc.Backend.ContentBlocks;
 using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Backend.InPage;
+using ToSic.Sxc.Backend.OutputCache;
 using ToSic.Sxc.Backend.SaveHelpers;
 using ToSic.Sxc.Backend.Sys;
 using ToSic.Sxc.Backend.Usage;
@@ -184,6 +185,7 @@ public static class StartupSxcWebApi
         services.TryAddScoped<ISxcCurrentContextService, SxcCurrentContextService>();
         services.TryAddScoped<IContextService>(x => x.GetRequiredService<ISxcCurrentContextService>());
         services.TryAddScoped<IContextOfSiteService>(x => x.GetRequiredService<ISxcCurrentContextService>());
+        services.TryAddScoped<IContextOfAppService>(x => x.GetRequiredService<ISxcCurrentContextService>());
         services.TryAddScoped<IContextCompleteService>(x => x.GetRequiredService<ISxcCurrentContextService>());
 
         return services;

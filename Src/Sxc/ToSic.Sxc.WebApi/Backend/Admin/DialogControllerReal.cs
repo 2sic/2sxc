@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Backend.Admin;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class DialogControllerReal(
     ZoneSwitchPermissionCheck zoneSwitchPermissionCheck,
-    IContextCompleteService ctxService,
+    IContextOfAppService ctxService,
     Generator<IUiContextService, IAppReader?> uiContextBuilder)
     : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [zoneSwitchPermissionCheck, ctxService, uiContextBuilder]),
         IDialogController
@@ -20,7 +20,7 @@ public class DialogControllerReal(
     ///<inheritdoc />
     public DialogContextStandaloneDto Settings(int appId)
     {            
-        // reset app-id if we get a info-token like -100
+        // reset app-id if we get an info-token like -100
         if (appId < 0)
             appId = KnownAppsConstants.AppIdEmpty;
 

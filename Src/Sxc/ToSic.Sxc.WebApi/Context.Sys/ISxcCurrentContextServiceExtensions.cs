@@ -27,8 +27,5 @@ public static class ISxcCurrentContextServiceExtensions
         /// <returns>The current block or null</returns>
         public IContextOfModule? BlockContextOrNull()
             => ctx.BlockOrNull?.Context;
-
-        public IContextOfApp AppContextRequired(string? errorMessage = null) =>
-            ctx.AppContextOrNull ?? throw new InvalidOperationException(errorMessage ?? "App context is required but not available.");
     }
 }

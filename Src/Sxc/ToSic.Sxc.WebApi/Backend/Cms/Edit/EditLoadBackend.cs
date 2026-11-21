@@ -3,7 +3,6 @@ using ToSic.Eav.Ui.Edit.Sys;
 using ToSic.Eav.Ui.Edit.Sys.Load.Activities;
 using ToSic.Eav.Ui.Edit.Sys.Load.Prefetch;
 using ToSic.Eav.Ui.Edit.Sys.Save;
-using ToSic.Sxc.Backend.Cms.Load.Activities;
 using ToSic.Sys.HookUp;
 using ToSic.Sys.Security.Permissions;
 
@@ -13,7 +12,7 @@ namespace ToSic.Sxc.Backend.Cms;
 public class EditLoadBackend(
     AppWorkContextService workCtxSvc,
     EditLoadActionGetForEditing actGetForEditing,
-    IContextCompleteService ctxService,
+    IContextOfAppService ctxService,
     Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> typesPermissions,
     LazySvc<DataValidatorContentTypeDataStore> valContentTypeDataStore,
 
