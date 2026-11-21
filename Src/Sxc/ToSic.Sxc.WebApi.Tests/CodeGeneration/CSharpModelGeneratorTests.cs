@@ -10,7 +10,6 @@ namespace ToSic.Sxc.WebApi.Tests.CodeGeneration;
 
 [Startup(typeof(StartupCodeGenerationTests))]
 public class CSharpModelGeneratorTests(
-    LazySvc<IEnumerable<IFileGenerator>> generators,
     ContentTypeAssemblyKit ctAssemblyKit,
     DataAssembler dataAssembler,
     ContentTypesFromCodeManager ctsFromCodeManager,
@@ -35,7 +34,7 @@ public class CSharpModelGeneratorTests(
     [Fact]
     public async Task AutoGenerate_MatchingConfiguration_CompletesWithoutExceptions()
     {
-        using var context = AutoGenerateTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder, generators);
+        using var context = AutoGenerateTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder);
 
         var result = await context.RunAsync();
 
@@ -45,7 +44,7 @@ public class CSharpModelGeneratorTests(
     [Fact]
     public async Task AutoGenerate_MatchingConfiguration_InvokesGeneratorOnce()
     {
-        using var context = AutoGenerateTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder, generators);
+        using var context = AutoGenerateTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder);
 
         await context.RunAsync();
 
@@ -55,7 +54,7 @@ public class CSharpModelGeneratorTests(
     [Fact]
     public async Task AutoGenerate_MatchingConfiguration_PassesAppId()
     {
-        using var context = AutoGenerateTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder, generators);
+        using var context = AutoGenerateTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder);
 
         await context.RunAsync();
 
@@ -66,7 +65,7 @@ public class CSharpModelGeneratorTests(
     [Fact]
     public async Task AutoGenerate_MatchingConfiguration_PassesContentType()
     {
-        using var context = AutoGenerateTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder, generators);
+        using var context = AutoGenerateTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder);
 
         await context.RunAsync();
 
@@ -82,7 +81,7 @@ public class CSharpModelGeneratorTests(
     public async Task AutoGenerate_EntityField_KeepsTypedChildReference()
     {
         // Configuration with no explicit content types = the default set, which is the common setup
-        using var context = AutoGenerateTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder, generators, configuredContentTypes: "");
+        using var context = AutoGenerateTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder, configuredContentTypes: "");
 
         await context.RunAsync();
 
@@ -114,7 +113,7 @@ public class CSharpModelGeneratorTests(
     [Fact]
     public async Task AutoGenerate_MatchingConfiguration_WritesGeneratedFile()
     {
-        using var context = AutoGenerateTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder, generators);
+        using var context = AutoGenerateTestContext.Create(ctAssemblyKit, dataAssembler, ctsFromCodeManager, dataFactory, appStateBuilder);
 
         await context.RunAsync();
 

@@ -46,7 +46,7 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
         IJsonService jsonSvc,
         IGlobalConfiguration globalConfiguration,
         ExtensionManifestService manifestService,
-        LazySvc<ExtensionInspectBackend> inspectorLazy,
+        LazySvc<ExtensionInspectBackend> inspectorLazyX,
         IDataSourceGenerator<AppEditions> appEditions,
         LazySvc<AppCachePurger> appCachePurgerLazy,
         ExtensionsTestAppJsonConfigurationService appJsonService)
@@ -58,7 +58,7 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
 
         var site = MockSiteTestHelpers.CreateSite(tempRoot);
         var appPathSvc = new MockAppPathsMicroSvc(tempRoot);
-        inspectorLazy.Inject(new ExtensionInspectBackend(appReadersLazy, site, appPathSvc));
+        var inspectorLazy = new LazySvcInjectable<ExtensionInspectBackend>(new(appReadersLazy, site, appPathSvc));
 
         var reader = new ExtensionReaderBackend(appReadersLazy, site, appPathSvc, jsonLazy, manifestService, appEditions);
         var writer = new ExtensionWriterBackend(appReadersLazy, site, appPathSvc);

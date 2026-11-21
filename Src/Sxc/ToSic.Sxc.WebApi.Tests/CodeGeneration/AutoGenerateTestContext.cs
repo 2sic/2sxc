@@ -42,7 +42,6 @@ internal sealed class AutoGenerateTestContext : IDisposable
         ContentTypesFromCodeManager ctsFromCodeManager,
         IDataFactory dataFactory,
         IAppStateBuilder appStateBuilder,
-        LazySvc<IEnumerable<IFileGenerator>> generators,
         string? configuredContentTypes = null)
     {
         var codeContext = CodeGeneratorTestContext.CreateWithAutoGenerateConfiguration(
@@ -56,11 +55,11 @@ internal sealed class AutoGenerateTestContext : IDisposable
         var appRoot = Path.Combine(Path.GetTempPath(), $"{nameof(CSharpModelGeneratorTests)}-{Guid.NewGuid():N}");
         Directory.CreateDirectory(appRoot);
         var generator = new TestAutoGenerateFileGenerator();
-        generators.Inject([generator]);
+        var generators2 = new LazySvcInjectable<IEnumerable<IFileGenerator>>([generator]);
 
         return new(
             codeContext,
-            CreateAction(appRoot, codeContext, generators),
+            CreateAction(appRoot, codeContext, generators2),
             new ContentTypeChange(CodeGeneratorTestContext.AppId, codeContext.ContentType.NameId, ContentTypeChangeSources.ContentType),
             generator,
             appRoot,

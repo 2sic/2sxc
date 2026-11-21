@@ -1,12 +1,11 @@
+using Microsoft.AspNetCore.Http;
+using Oqtane.Infrastructure;
+using Oqtane.Repository;
+using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Oqtane.Infrastructure;
-using Oqtane.Repository;
-using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sys.DI;
 using DimensionDefinition = ToSic.Eav.Data.Sys.Dimensions.DimensionDefinition;
@@ -211,9 +210,9 @@ public class OqtCultureTests
         var siteGroupProvider = CreateSiteGroupProvider(sites, siteGroupMembers);
 
         return new(
-            CreateLazy(localizationManager),
-            CreateLazy(languageRepository),
-            CreateLazy(siteGroupProvider),
+            new LazySvcInjectable<ILocalizationManager>(localizationManager),
+            new LazySvcInjectable<ILanguageRepository>(languageRepository),
+            new LazySvcInjectable<Server.Context.OqtSiteGroup>(siteGroupProvider),
             httpContextAccessor
         );
     }
@@ -226,15 +225,6 @@ public class OqtCultureTests
             new FakeSiteGroupMemberRepository(siteGroupMembers ?? [])
         );
 
-    private static readonly ServiceProvider EmptyServices = new ServiceCollection().BuildServiceProvider();
-
-    private static LazySvc<T> CreateLazy<T>(T service)
-        where T : class
-    {
-        var lazy = new LazySvc<T>(EmptyServices);
-        lazy.Inject(service);
-        return lazy;
-    }
 
     private static OqtSite Site(int siteId, string cultureCode, List<OqtLanguage>? languages = null)
         => new()
