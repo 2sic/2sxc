@@ -33,11 +33,19 @@ public class AppForCode(
     /// <param name="DataSpecs">The data specifications for the app.</param>
     public record Options(ISite? ReplaceSite, IAppIdentityPure AppIdentity, AppDataConfigSpecs? DataSpecs);
 
+
+
+    #region AppIdentity
+
     /// <inheritdoc />
     public int ZoneId => MyOptions.AppIdentity.ZoneId;
 
     /// <inheritdoc />
     public int AppId => MyOptions.AppIdentity.AppId;
+    
+    #endregion
+
+
 
     #region AppReader and all derived properties of the AppReader
 
@@ -48,6 +56,10 @@ public class AppForCode(
 
     IAppPaths IAppForCode.AppPaths => field ??= appPathSvc.Get(AppReader, AppSite);
 
+    #endregion
+
+
+
     #region Settings, Config, Metadata
 
     IEntity? IAppForCode.SettingsEntity => AppSpecs.Settings.MetadataItem;
@@ -57,8 +69,12 @@ public class AppForCode(
 
     #endregion
 
-    #endregion
 
+
+    /// <summary>
+    /// The site, only used for the AppPaths. Usually the default, but can be overriden by the setup.
+    /// </summary>
+    private ISite AppSite { get; set; } = site;
 
     public override void Setup(Options options)
     {
@@ -83,11 +99,4 @@ public class AppForCode(
         
         l.Done();
     }
-
-    #region Environment & Physical Path
-
-    internal ISite AppSite { get; set; } = site;
-
-
-    #endregion
 }
