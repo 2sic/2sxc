@@ -3,7 +3,7 @@
   <Import Project="../../SharedImports/CsProj.Props/AllImportsForTestCode.props" />
 
   <PropertyGroup>
-    <RootNamespace>Tests.ToSic.ToSxc.WebApi</RootNamespace>
+    <RootNamespace>ToSic.Sxc</RootNamespace>
     <AssemblyName>2sxc.WebApi.Tests</AssemblyName>
   </PropertyGroup>
 

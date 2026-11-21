@@ -8,7 +8,7 @@ using ToSic.Eav.Data.Sys;
 using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sys.Users;
 
-namespace ToSic.Sxc.WebApi.Tests.CodeGeneration;
+namespace ToSic.Sxc.Code.Generate.Tests;
 
 internal sealed class CodeGeneratorTestContext
 {

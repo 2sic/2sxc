@@ -1,6 +1,6 @@
 using ToSic.Sxc.Code.Generate.Sys;
 
-namespace ToSic.Sxc.WebApi.Tests.CodeGeneration;
+namespace ToSic.Sxc.Code.Generate.Tests;
 
 internal sealed class TestAutoGenerateFileGenerator : IFileGenerator
 {

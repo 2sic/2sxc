@@ -3,6 +3,7 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Build.Sys;
 using ToSic.Sxc.Code.Generate.Data;
 using ToSic.Sxc.Code.Generate.Sys;
+using ToSic.Sxc.Code.Generate.Tests;
 using Xunit.DependencyInjection;
 
 // ReSharper disable once CheckNamespace

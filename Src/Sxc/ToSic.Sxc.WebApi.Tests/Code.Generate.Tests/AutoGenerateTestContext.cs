@@ -5,9 +5,11 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Build.Sys;
 using ToSic.Eav.Data.Processing;
 using ToSic.Sxc.Code.Generate.Sys;
+using ToSic.Sxc.WebApi.Tests;
+using ToSic.Sxc.WebApi.Tests.CodeGeneration;
 using ToSic.Sys.HookUp;
 
-namespace ToSic.Sxc.WebApi.Tests.CodeGeneration;
+namespace ToSic.Sxc.Code.Generate.Tests;
 
 internal sealed class AutoGenerateTestContext : IDisposable
 {

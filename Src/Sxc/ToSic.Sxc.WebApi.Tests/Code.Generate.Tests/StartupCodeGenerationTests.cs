@@ -3,7 +3,7 @@ using ToSic.Eav;
 using ToSic.Eav.Run.Startup;
 using ToSic.Sxc.Run.Startup;
 
-namespace ToSic.Sxc.WebApi.Tests.CodeGeneration;
+namespace ToSic.Sxc.Code.Generate.Tests;
 
 public class StartupCodeGenerationTests : StartupTestsEavDataBuild
 {
