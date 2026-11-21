@@ -19,13 +19,10 @@ public record BlockConfiguration: ModelFromEntityFull, IAppIdentity
 
     public IBlockIdentifier? BlockIdentifierOrNull { get; set; }
 
-    private readonly Generator<QueryDefinitionFactory> _qDefBuilder;
-
     public BlockConfiguration(IEntity? entity, IAppIdentity appIdentity, IEntity? previewViewEntity, Generator<QueryDefinitionFactory> qDefBuilder, string languageCode, ILog parentLog):
         base(entity!, [languageCode])
     {
         parentLog.SubLogOrNull("Blk.Config").A("Entity is " + (entity == null ? "" : "not") + " null");
-        _qDefBuilder = qDefBuilder;
         ZoneId = appIdentity.ZoneId;
         AppId = appIdentity.AppId;
         PreviewViewEntity = previewViewEntity;
@@ -84,10 +81,12 @@ public record BlockConfiguration: ModelFromEntityFull, IAppIdentity
     {
         get
         {
+            if (field!= null)
+                return field;
             if (Entity == null!)
-                return [null];
+                return field = [null];
             var list = Entity.Children(ViewParts.Content).ToListOpt();
-            return list.Count > 0
+            return field = list.Count > 0
                 ? list
                 : [null];
         }
@@ -100,14 +99,14 @@ public record BlockConfiguration: ModelFromEntityFull, IAppIdentity
 
     public IList<IEntity?> HeaderPresentation => Entity?.Children(ViewParts.ListPresentation).ToListOpt() ?? [];
 
-    public IList<IEntity> this[string type] =>
+    public IList<IEntity> GetPart(string type) =>
         type.ToLowerInvariant() switch
         {
             ViewParts.ContentLower => Content,
             ViewParts.PresentationLower => Presentation,
             ViewParts.ListContentLower => Header,
             ViewParts.ListPresentationLower => HeaderPresentation,
-            _ => throw new("Type " + type + " not allowed")
+            _ => throw new($"Type {type} not allowed")
         };
 
     #endregion

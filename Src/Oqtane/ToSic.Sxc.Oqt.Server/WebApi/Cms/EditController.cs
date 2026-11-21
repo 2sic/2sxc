@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.Ui.Edit.Sys;
 using ToSic.Eav.Ui.Edit.Sys.Load;
-using ToSic.Eav.WebApi.Sys.Cms;
+using ToSic.Eav.Ui.Edit.Sys.Load.Links;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi.Sys.ActionFilters;
 using RealController = ToSic.Sxc.Backend.Cms.EditControllerReal;
@@ -47,7 +47,7 @@ public class EditController : ControllerBase, IHasLog, IEditController
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
     //[Authorize(Roles = RoleNames.Everyone)] commented because of http403 issue
     // TODO: 2DM please check permissions
-    public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
+    public Task<LinkInfoDto> LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
         => Real.LinkInfo(link, appId, contentType, guid, field);
 
     /// <inheritdoc />

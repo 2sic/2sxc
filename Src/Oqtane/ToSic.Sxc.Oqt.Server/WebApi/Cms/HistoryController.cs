@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi.Sys.Cms;
+using ToSic.Eav.Ui.Edit.Sys;
+using ToSic.Eav.Ui.History.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi.Sys.ActionFilters;
-using RealController = ToSic.Sxc.Backend.Cms.HistoryControllerReal;
+using RealController = ToSic.Eav.Ui.History.Sys.HistoryControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 

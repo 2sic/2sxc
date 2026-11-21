@@ -3,18 +3,16 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.Inspect.Sys;
 using ToSic.Eav.Apps.Inspect.Sys.WebApi;
 using ToSic.Eav.Apps.Install.Sys;
-using ToSic.Eav.Context.Sys;
 using ToSic.Eav.DataFormats.EavLight.Sys;
 using ToSic.Eav.DataSource.DataProviders;
 using ToSic.Eav.Sys.Insights;
 using ToSic.Eav.Ui.Context.Sys;
-using ToSic.Eav.Ui.Edit.Sys.Load.Activities;
+using ToSic.Eav.Ui.Edit.Sys;
+using ToSic.Eav.Ui.Edit.Sys.Load.Links;
 using ToSic.Eav.Ui.Edit.Sys.Load.Prefetch;
 using ToSic.Eav.Ui.Edit.Sys.Load.Settings;
 using ToSic.Eav.Ui.Edit.Sys.Save;
 using ToSic.Eav.WebApi.Admin.Sys;
-using ToSic.Eav.WebApi.App.Sys;
-using ToSic.Eav.WebApi.Sys.App;
 using ToSic.Sxc.Apps.Extensions.Sys;
 using ToSic.Sxc.Apps.Extensions.Sys.Export;
 using ToSic.Sxc.Apps.Extensions.Sys.Inspect;
@@ -73,14 +71,6 @@ public static class StartupSxcWebApi
         //services.TryAddTransient<EntityBackend>();
 
         services.TryAddTransient<EditLoadBackend>();
-        services.TryAddTransient<EditLoadActivityAddContentTypes>();
-        services.TryAddTransient<EditLoadActivityAddNecessaryInputTypes>();
-        services.TryAddTransient<EditLoadActivityAddContext>();
-        services.TryAddTransient<EditLoadActivityAddRequiredFeatures>();
-        services.TryAddTransient<EditLoadActivityAddPrefetch>();
-        services.TryAddTransient<EditLoadActivitySettingsHelper>();
-        services.TryAddTransient<EditLoadActivityCleanupRequest>();
-        services.TryAddTransient<EditLoadActivityConvertRequest>();
 
 
         services.TryAddTransient<EditSaveBackend>();
@@ -100,6 +90,9 @@ public static class StartupSxcWebApi
 
         // Small WebApi Helpers
         services.TryAddTransient<ContentGroupList>();
+        services.AddTransient<IEditLoadIdentifierProvider, EditIdentifierProviderContentGroupIndexToId>();
+        services.AddTransient<IEditLoadIdentifierProvider, EditIdentifierProviderContentGroupModeDetection>();
+
 
         // js context / UI
         services.TryAddTransient<SxcUiContextPartsService>();  // v22 - default implementation, for re-implementations
@@ -123,7 +116,6 @@ public static class StartupSxcWebApi
         services.TryAddTransient<WorkQueryDeleteIfUnused>();
         services.TryAddTransient<CacheControllerReal>();
         services.TryAddTransient<EditControllerReal>();
-        services.TryAddTransient<HistoryControllerReal>();
         services.TryAddTransient<ListControllerReal>();
         services.TryAddTransient<InstallControllerReal>();
         services.TryAddTransient<BlockControllerReal>();
@@ -132,8 +124,6 @@ public static class StartupSxcWebApi
 
         services.TryAddTransient<AssetTemplates>();
 
-        // SaveData PreSave
-        services.TryAddTransient<DataValidatorContentTypeDataStore>();
 
         // Separate list Activities into isolated classes v22
         services.TryAddTransient<ListActivityReplaceOptions>();
@@ -201,8 +191,6 @@ public static class StartupSxcWebApi
 
     public static IServiceCollection AddLoadSettingsProviders(this IServiceCollection services)
     {
-        services.AddTransient<ILoadSettingsContentTypesProvider, LoadSettingsForPickerSources>();
-        services.AddTransient<ILoadSettingsProvider, LoadSettingsForContentType>();
 
         services.AddTransient<ILoadSettingsProvider, LoadSettingsForGpsDefaults>();
         services.AddTransient<ILoadSettingsProvider, LoadSettingsApiKeys>();
@@ -212,8 +200,7 @@ public static class StartupSxcWebApi
 
     public static IServiceCollection AddSxcEditLoadPrefetch(this IServiceCollection services)
     {
-        services.TryAddKeyedTransient<IEditLoadPrefetchProvider, EditLoadActivityPrefetchLinks>(EditLoadActivityPrefetchLinks.NameId);
-        services.TryAddKeyedTransient<IEditLoadPrefetchProvider, EditLoadActivityPrefetchAdam>(EditLoadActivityPrefetchAdam.NameId);
+        services.TryAddKeyedTransient<IEditLoadPrefetchProvider, EditLoadPrefetchProviderAdam>(EditLoadPrefetchProviderAdam.NameId);
         return services;
     }
 
@@ -221,7 +208,7 @@ public static class StartupSxcWebApi
     public static IServiceCollection AddAdamWebApi<TFolder, TFile>(this IServiceCollection services)
     {
         // Adam Controllers etc.
-        services.TryAddTransient(typeof(HyperlinkBackend));
+        services.TryAddTransient<ILinkResolver, SxcLinkResolver>();
         services.TryAddTransient(typeof(AdamItemDtoMaker<,>));
 
         // Default `int` implementation, the platform must specify a different type before this if it needs another identity type

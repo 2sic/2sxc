@@ -9,11 +9,11 @@ public class BlockPublishAction(AppWorkQuick<WorkEntityPublish> publisher)
     public bool Publish(BlockConfiguration blockConfig, string part, int index)
     {
         var l = Log.Fn<bool>($"publish part{part}, order:{index}");
-        var contEntity = blockConfig[part][index];
+        var contEntity = blockConfig.GetPart(part)[index];
         var presKey = part.ToLowerInvariant() == ViewParts.ContentLower
             ? ViewParts.PresentationLower
             : ViewParts.ListPresentationLower;
-        var presEntity = blockConfig[presKey][index];
+        var presEntity = blockConfig.GetPart(presKey)[index];
 
         var appReader = MyOptions.AppReader;
         var publishIds = new[] { contEntity, presEntity }

@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Ui.Edit.Sys;
-using ToSic.Eav.Ui.Edit.Sys.Load;
+using ToSic.Eav.Ui.Edit.Sys.Load.Links;
 using ToSic.Eav.WebApi.Sys;
-using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Eav.WebApi.Sys.Dto;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
@@ -50,10 +49,10 @@ public class EditController : DnnApiController, IEditController
     /// <inheritdoc />
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-    public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
+    public async Task<LinkInfoDto> LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
     {
         SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
-        return Real.LinkInfo(link, appId, contentType, guid, field);
+        return await Real.LinkInfo(link, appId, contentType, guid, field);
     }
 
     /// <inheritdoc />

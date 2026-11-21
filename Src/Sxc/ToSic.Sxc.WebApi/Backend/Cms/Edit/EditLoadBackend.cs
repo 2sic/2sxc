@@ -17,7 +17,7 @@ public class EditLoadBackend(
     Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> typesPermissions,
     LazySvc<DataValidatorContentTypeDataStore> valContentTypeDataStore,
 
-    EditLoadActivityCleanupRequest actCleanupRequest,
+    EditLoadIdentifierProviders actCleanupRequest,
     EditLoadActivityConvertRequest actConvertRequest,
     EditLoadActivityAddContentTypes actAddContentTypes,
     EditLoadActivityAddNecessaryInputTypes actAddNecessaryInputTypes,

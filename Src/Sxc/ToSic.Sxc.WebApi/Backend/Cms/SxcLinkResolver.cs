@@ -1,26 +1,38 @@
 ﻿using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.Data.Sys.ValueConverter;
-using ToSic.Eav.Ui.Edit.Sys.Load;
+using ToSic.Eav.Ui.Edit.Sys.Load.Links;
 using ToSic.Sxc.Adam.Sys;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Adam.Sys.Security;
 using ToSic.Sxc.Adam.Sys.Work;
 using ToSic.Sxc.Backend.Adam;
+using ToSic.Sys.HookUp;
 using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Backend.Cms;
 
+/// <summary>
+/// 2sxc implementation of the link resolver - aware of page and ADAM links.
+/// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class HyperlinkBackend(
+public class SxcLinkResolver(
     Generator<AdamContext, AdamContext.Options> adamCtxGen,
     IContextCompleteService ctxService,
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions,
     Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> adamDtoMaker,
     IValueConverter valueConverter)
-    : ServiceBase("Bck.HypLnk", connect: [adamCtxGen, appPermissions, ctxService, adamDtoMaker, valueConverter])
+    : ServiceBase("Bck.HypLnk", connect: [adamCtxGen, appPermissions, ctxService, adamDtoMaker, valueConverter]),
+        ILinkResolver
 {
-    public LinkInfoDto LookupHyperlink(int appId, string hyperlink, string? contentType, Guid guid, string? field)
+    public async Task<Package<LinkInfoDto>> Handle(WorkContext mainCtx, Package<ILinkResolver.Parameters> package)
     {
+        return package.RePackage(LookupHyperlink(package.Data));
+    }
+
+
+    public LinkInfoDto LookupHyperlink(ILinkResolver.Parameters parameters)
+    {
+        var (hyperlink, contentType, guid, field) = parameters;
         try
         {
             // nothing to resolve

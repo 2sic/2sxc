@@ -7,7 +7,7 @@ using ToSic.Sys.HookUp;
 namespace ToSic.Sxc.Backend.Cms.Load.Activities;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class EditLoadActivityPrefetchAdam(Generator<IAdamPrefetchHelper, AdamContext.Options> adamTransGetItems, IContextCompleteService ctxService)
+public class EditLoadPrefetchProviderAdam(Generator<IAdamPrefetchHelper, AdamContext.Options> adamTransGetItems, IContextCompleteService ctxService)
     : ServiceBase(SxcLogName + ".Prefetch", connect: [adamTransGetItems, ctxService]),
         IEditLoadPrefetchProvider
 {
