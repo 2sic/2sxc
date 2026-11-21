@@ -4,7 +4,7 @@ using Oqtane.Shared;
 using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi.Sys.ActionFilters;
-using RealController = ToSic.Sxc.Backend.Admin.DialogControllerReal;
+using RealController = ToSic.Eav.WebApi.Admin.Sys.DialogControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 
@@ -40,5 +40,4 @@ public class DialogController : ControllerBase, IHasLog, IDialogController
         this.PrepareRequestBlock();
         return Real.Settings(appId);
     }
-        
 }

@@ -3,7 +3,7 @@ using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
-using RealController = ToSic.Sxc.Backend.Admin.DialogControllerReal;
+using RealController = ToSic.Eav.WebApi.Admin.Sys.DialogControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
