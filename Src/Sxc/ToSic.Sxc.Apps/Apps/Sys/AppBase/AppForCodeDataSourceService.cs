@@ -11,6 +11,11 @@ namespace ToSic.Sxc.Apps.Sys;
 public class AppForCodeDataSourceService(IDataSourcesService dsFactory, IAppDataConfigProvider dataConfigProvider)
     : ServiceWithSetup<AppForCodeDataSourceService.Options>("App.PrvData", connect: [dsFactory, dataConfigProvider])
 {
+    /// <summary>
+    /// Options, setup is required.
+    /// </summary>
+    /// <param name="App">App, required</param>
+    /// <param name="DataConfigSpecs">Specs - optional, but usually provided</param>
     public record Options(IAppForCode App, AppDataConfigSpecs? DataConfigSpecs);
 
     public ILookUpEngine LookUpEngine => field
@@ -18,10 +23,10 @@ public class AppForCodeDataSourceService(IDataSourcesService dsFactory, IAppData
            ?? throw new("Cannot provide Data for the object App as crucial information is missing. " +
                         "Please call InitData first to provide this data.");
 
-    protected internal IAppDataConfiguration AppDataConfig => field ??= new Func<IAppDataConfiguration>(() =>
+    private IAppDataConfiguration AppDataConfig => field ??= new Func<IAppDataConfiguration>(() =>
     {
-        // New v17
-        var config = dataConfigProvider.GetDataConfiguration(MyOptions.App, DataConfigSpecs);
+        var configSpecs = MyOptions.DataConfigSpecs ?? new AppDataConfigSpecs();
+        var config = dataConfigProvider.GetDataConfiguration(MyOptions.App, configSpecs);
 
         // needed to initialize data - must always happen a bit later because the show-draft info isn't available when creating the first App-object.
         // todo: later this should be moved to initialization of this object
@@ -29,12 +34,6 @@ public class AppForCodeDataSourceService(IDataSourcesService dsFactory, IAppData
         return config;
 
     })();
-
-    /// <summary>
-    /// for deferred initialization as needed
-    /// </summary>
-    private AppDataConfigSpecs DataConfigSpecs => field ??= MyOptions.DataConfigSpecs ?? new AppDataConfigSpecs();
-
     
     [PrivateApi]
     public TResult BuildData<TDataSource, TResult>(IAppIdentity pureIdentity)

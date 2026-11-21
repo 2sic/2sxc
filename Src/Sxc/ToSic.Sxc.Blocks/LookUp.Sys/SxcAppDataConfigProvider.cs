@@ -29,9 +29,7 @@ internal class SxcAppDataConfigProvider(LazySvc<ILookUpEngineResolver> getEngine
     }
 
 
-    // note: not sure yet where the best place for this method is, so it's here for now
-    // will probably move again some day
-    internal LookUpEngine GetLookupEngineForContext(IContextOfSite? context, IAppForCode? appForLookup, IBlock? blockForLookupOrNull)
+    private LookUpEngine GetLookupEngineForContext(IContextOfSite? context, IAppForCode? appForLookup, IBlock? blockForLookupOrNull)
     {
         var maybeModuleId = (context as IContextOfModule)?.Module.Id;
         var l = Log.Fn<LookUpEngine>($"module: {maybeModuleId}, app: {appForLookup?.AppId} ..., ...");

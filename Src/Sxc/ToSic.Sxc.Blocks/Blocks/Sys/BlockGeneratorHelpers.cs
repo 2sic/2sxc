@@ -14,8 +14,8 @@ public class BlockGeneratorHelpers(
     AppWorkChain<WorkAppViewSwitch> workViews,
     AppWorkChain<WorkBlocks> appBlocks,
     LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
-    Generator<AppForCode, AppForCode.Options> appLazy)
-    : ServiceBase("Eav.BlGenH", connect: [bdsFactoryLazy, appLazy, workViews, appBlocks])
+    Generator<AppForCode, AppForCode.Options> appForCodeGen)
+    : ServiceBase("Eav.BlGenH", connect: [bdsFactoryLazy, appForCodeGen, workViews, appBlocks])
 {
     public BlockSpecs CompleteInit(BlockSpecs currentSpecs, IBlock? parentOrNull, IBlockIdentifier blockIdentifier, int blockId)
     {
@@ -62,7 +62,7 @@ public class BlockGeneratorHelpers(
             return l.Return(specs, $"DataIsMissing a:{specs.AppId}, container:{specs.ParentId}, content-group:{config.Id}");
 
         // Get App for this block
-        var app = appLazy.New(new(specs.Context.Site, specs.PureIdentity(), new SxcAppDataConfigSpecs { BlockForLookupOrNull = specs }));
+        var app = appForCodeGen.New(new(specs.Context.Site, specs.PureIdentity(), new SxcAppDataConfigSpecs { BlockForLookupOrNull = specs }));
         specs = specs with
         {
             AppOrNull = app,
