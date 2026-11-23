@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Dnn.Compile.Sys;
 
 [PrivateApi]
 internal class CodeCompilerNetFull(
-    IServiceProvider serviceProvider,
+    ISysServiceProvider serviceProvider,
     IRoslynBuildManager roslynBuildManager,
     LazySvc<SourceAnalyzer> sourceAnalyzer,
     LazySvc<IAppJsonConfigurationService> appJson)

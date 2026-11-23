@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Services;
 /// Not sure how to get this to work, since normally we always start with a code-file, and here we don't have one!
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class TypedApiService(IServiceProvider serviceProvider, LazySvc<ILogStore> logStore, ISite site, LazySvc<IZoneOfSiteSvc> zoneFinder, LazySvc<IAppsCatalog> appsCatalog)
+internal class TypedApiService(ISysServiceProvider serviceProvider, LazySvc<ILogStore> logStore, ISite site, LazySvc<IZoneOfSiteSvc> zoneFinder, LazySvc<IAppsCatalog> appsCatalog)
     : ServiceBase($"{SxcLogName}.TypeCS", connect: [/* never! serviceProvider */ logStore, zoneFinder, appsCatalog]),
         ITypedApiService,
         ILogWasConnected
@@ -28,7 +28,7 @@ internal class TypedApiService(IServiceProvider serviceProvider, LazySvc<ILogSto
     #region Dependencies
 
     public record Dependencies(
-        IServiceProvider ServiceProvider,
+        ISysServiceProvider ServiceProvider,
         LazySvc<ILogStore> LogStore,
         IUser User,
         ISite Site,
@@ -87,8 +87,8 @@ internal class TypedApiService(IServiceProvider serviceProvider, LazySvc<ILogSto
     /// It's important to understand that everything in here will use the scoped service provider.
     /// </summary>
     [field: AllowNull, MaybeNull]
-    protected IServiceProvider ScopedServiceProvider => field
-        ??= serviceProvider.CreateScope().ServiceProvider;
+    protected ISysServiceProvider ScopedServiceProvider => field
+        ??= serviceProvider.CreateScope().GetSysServiceProvider();
 
     [field: AllowNull, MaybeNull]
     private ScopedDependencies ServicesScoped => field

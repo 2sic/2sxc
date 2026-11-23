@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Oqt.Server.Context;
 
@@ -24,7 +25,7 @@ internal sealed class OqtAppCacheKeyService(IHttpContextAccessor httpContextAcce
         if (OqtBackgroundTenantScope.TenantId is { } backgroundTenantId)
             return backgroundTenantId;
 
-        var requestServices = httpContextAccessor?.HttpContext?.RequestServices;
+        var requestServices = httpContextAccessor?.HttpContext?.GetSysRequestServices();
         var context = requestServices?.GetService<IOqtTenantContext>()?.Get();
         return context?.TenantId
                ?? throw new InvalidOperationException("Tenant not found");

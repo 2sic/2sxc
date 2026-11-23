@@ -137,7 +137,7 @@ public sealed class DnnSearchProbe : MarshalByRefObject
         var root = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
         // The setter is internal to DNN. This AppDomain is owned exclusively by this one test.
         typeof(Globals).GetProperty("DependencyProvider", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, root);
-        DnnStaticDi.StaticDiReady(() => root);
+        DnnStaticDi.StaticDiReady(root.GetRequiredService<ISysServiceProvider>);
         // Avoid native event logging in the isolated fixture; increments still reveal swallowed initialization errors.
         DnnEnvironmentLogger.SearchErrorsCount = DnnEnvironmentLogger.SearchErrorsMax + 1;
         return root;

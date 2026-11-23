@@ -7,6 +7,7 @@ using System.Text;
 using ToSic.Sxc.Oqt.Server.Blocks.Output;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Render.JsContext.Sys;
+using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Sys.EditUi;
 using ToSic.Sys.Caching;
 using ToSic.Sys.Utils;
@@ -21,7 +22,7 @@ internal class EditUiMiddleware
     {
         context.Response.Headers.TryAdd("test-dev", "2sxc");
 
-        var sp = context.RequestServices;
+        var sp = context.GetSysRequestServices();
 
         var key = CacheKey(virtualPath);
         var memoryCacheService = sp.GetService<MemoryCacheService>();
@@ -96,7 +97,7 @@ internal class EditUiMiddleware
     /// <param name="sp"></param>
     /// <returns>siteId or NULL</returns>
     /// <remarks>internally find correct alias and store it in SiteState.Alias for reuse</remarks>
-    private static int? EnsureCorrectAliasAndGetSiteIdFromPageId(int tenantId, int aliasId, int pageId, AliasResolver aliasResolver, IServiceProvider sp)
+    private static int? EnsureCorrectAliasAndGetSiteIdFromPageId(int tenantId, int aliasId, int pageId, AliasResolver aliasResolver, ISysServiceProvider sp)
     {
         if (tenantId == UnknownId) return null;
         if (aliasId == UnknownId) return null;

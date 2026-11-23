@@ -103,7 +103,7 @@ public class OqtStartup : IServerStartup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        var serviceProvider = app.ApplicationServices;
+        var serviceProvider = app.ApplicationServices.GetRequiredService<ISysServiceProvider>();
         LogFactory.Bind(serviceProvider);
 
         var globalConfig = serviceProvider.Build<IGlobalConfiguration>();

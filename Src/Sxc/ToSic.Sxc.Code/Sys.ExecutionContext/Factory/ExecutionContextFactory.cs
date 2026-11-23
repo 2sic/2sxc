@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 /// Note that there is currently not IHasKit[Model, Kit] - so the model is always `object` for now.
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExecutionContextFactory(IServiceProvider serviceProvider)
+public class ExecutionContextFactory(ISysServiceProvider serviceProvider)
     : ServiceBase($"{SxcLogName}.ExCtxF", connect: [/* never! serviceProvider */]), IExecutionContextFactory
 {
 

@@ -13,9 +13,9 @@ namespace ToSic.Sxc.Dnn;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public static class DnnStaticDi
 {
-    private static Func<IServiceProvider> _getGlobalDnnServiceProvider;
+    private static Func<ISysServiceProvider> _getGlobalDnnServiceProvider;
 
-    public static void StaticDiReady(Func<IServiceProvider> spFunc = null) 
+    public static void StaticDiReady(Func<ISysServiceProvider> spFunc = null) 
         => _getGlobalDnnServiceProvider = spFunc ?? throw new("Can't start Static DI for old Dnn, because the ServiceCollection is null.");
 
     /// <summary>
@@ -42,11 +42,11 @@ public static class DnnStaticDi
     internal static IServiceScope CreateGlobalScope()
         => GetGlobalServiceProvider().CreateScope();
 
-    public static IServiceProvider GetGlobalScopedServiceProvider()
-        => CreateGlobalScope().ServiceProvider;
+    public static ISysServiceProvider GetGlobalScopedServiceProvider()
+        => CreateGlobalScope().GetSysServiceProvider();
 
     [PrivateApi("Very internal, to use at startup, so singletons are not lost")]
-    private static IServiceProvider GetGlobalServiceProvider()
+    private static ISysServiceProvider GetGlobalServiceProvider()
         => Sp.Get(() =>
         {
             var serviceProvider = _getGlobalDnnServiceProvider?.Invoke() ?? throw new("can't access global DNN service provider");
@@ -54,10 +54,10 @@ public static class DnnStaticDi
             LogFactory.Bind(serviceProvider);
             return serviceProvider;
         });
-    private static readonly LazyGet<IServiceProvider> Sp = new();
+    private static readonly LazyGet<ISysServiceProvider> Sp = new();
 
     [PrivateApi("This is just a temporary solution - shouldn't be used long term")]
-    public static IServiceProvider GetPageScopedServiceProvider()
+    public static ISysServiceProvider GetPageScopedServiceProvider()
     {
         // Because 2sxc runs inside DNN as a webforms project and not asp.net core mvc, we have
         // to make sure the service-provider object is disposed correctly. If we don't do this,
@@ -67,12 +67,13 @@ public static class DnnStaticDi
         // Scope service-provider based on request
         var httpCtx = HttpContext.Current;
         if (httpCtx == null)
-            return CreateGlobalScope().ServiceProvider;
+            return CreateGlobalScope().GetSysServiceProvider();
 
         DnnRequestLogCorrelation.Ensure(httpCtx.Items,
             completed => httpCtx.AddOnRequestCompleted(context => completed(context.Items)));
 
         // This only runs in Dnn 7.4.2 - Dnn 9.3, because Dnn 9.4 provides this in the http context
+        // As 2sxc v22 is only DNN 10+, this should actually never run
         if (!httpCtx.Items.Contains(ServiceScopeKey))
         {
             httpCtx.Items[ServiceScopeKey] = CreateGlobalScope();
@@ -81,14 +82,16 @@ public static class DnnStaticDi
             httpCtx.AddOnRequestCompleted(context => ((IDisposable)context.Items[ServiceScopeKey])?.Dispose());
         }
 
-        return httpCtx.Items[ServiceScopeKey] is IServiceScope scope ? scope.ServiceProvider : null;
+        return httpCtx.Items[ServiceScopeKey] is IServiceScope scope
+            ? scope.GetSysServiceProvider()
+            : null;
     }
 
     [PrivateApi]
-    public static IServiceProvider CreateModuleScopedServiceProvider()
+    public static ISysServiceProvider CreateModuleScopedServiceProvider()
     {
         var pageSp = GetPageScopedServiceProvider();
-        var moduleSp = pageSp.CreateScope().ServiceProvider;
+        var moduleSp = pageSp.CreateScope().GetSysServiceProvider();
 
         // In the module scope, we initialize the scoped PageScope Accessor and give it the parent scope
         // This is necessary for it to be able to give page-scoped objects

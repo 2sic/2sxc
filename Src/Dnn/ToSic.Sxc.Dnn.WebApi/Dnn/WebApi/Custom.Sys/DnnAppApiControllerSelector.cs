@@ -111,7 +111,7 @@ public class DnnAppApiControllerSelector(HttpConfiguration configuration) : IHtt
     }
 
 
-    private static void AddToInsightsHistory(IServiceProvider sp, string urlOrNull, ILog log)
+    private static void AddToInsightsHistory(ISysServiceProvider sp, string urlOrNull, ILog log)
     {
         // Note: This should never error, but it's too important risk breaking just for logging
         try

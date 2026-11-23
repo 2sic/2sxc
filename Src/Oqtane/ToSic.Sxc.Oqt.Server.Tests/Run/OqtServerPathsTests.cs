@@ -9,6 +9,7 @@ using Oqtane.Shared;
 using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sys.DI;
+using ToSic.Sys.Run.Startup;
 
 namespace ToSic.Sxc.Oqt.Run;
 
@@ -21,9 +22,12 @@ public class OqtServerPathsTests
     {
         var files = new OqtImportExportEnvironmentTestContext.FakeFileRepository();
         files.Files.Add(new() { FileId = 23, Name = "photo.jpg", Folder = new Folder { SiteId = 7, Path = "images/", Type = storageType } });
-        using var services = new ServiceCollection().AddSingleton<IFileRepository>(files).AddSingleton<ITenantManager, FakeTenantManager>().BuildServiceProvider();
+        using var services = new ServiceCollection()
+            .AddSysCoreDi()
+            .AddSingleton<IFileRepository>(files).AddSingleton<ITenantManager, FakeTenantManager>()
+            .BuildServiceProvider();
         var hosting = new FakeWebHostEnvironment();
-        var sut = CreateServerPaths(services, hosting);
+        var sut = CreateServerPaths(services.GetSysServiceProvider(), hosting);
 
         var path = sut.FullPathOfReference("file:23");
 
@@ -34,9 +38,10 @@ public class OqtServerPathsTests
     public void FullPathOfReference_PreservesReference_WhenFileDoesNotExist()
     {
         using var services = new ServiceCollection()
+            .AddSysCoreDi()
             .AddSingleton<IFileRepository>(new OqtImportExportEnvironmentTestContext.FakeFileRepository())
             .BuildServiceProvider();
-        var sut = CreateServerPaths(services, new FakeWebHostEnvironment());
+        var sut = CreateServerPaths(services.GetSysServiceProvider(), new FakeWebHostEnvironment());
 
         Equal("file:23", sut.FullPathOfReference("file:23"));
     }
@@ -46,14 +51,17 @@ public class OqtServerPathsTests
     {
         var files = new OqtImportExportEnvironmentTestContext.FakeFileRepository();
         files.Files.Add(new() { FileId = 23, Name = "photo.jpg", Folder = new Folder { SiteId = 7, Path = "images/", Type = "Custom" } });
-        using var services = new ServiceCollection().AddSingleton<IFileRepository>(files).AddSingleton<ITenantManager, FakeTenantManager>().BuildServiceProvider();
-        var sut = CreateServerPaths(services, new FakeWebHostEnvironment());
+        using var services = new ServiceCollection()
+            .AddSysCoreDi()
+            .AddSingleton<IFileRepository>(files).AddSingleton<ITenantManager, FakeTenantManager>()
+            .BuildServiceProvider();
+        var sut = CreateServerPaths(services.GetSysServiceProvider(), new FakeWebHostEnvironment());
 
         Equal("file:23", sut.FullPathOfReference("file:23"));
     }
 
-    private static OqtServerPaths CreateServerPaths(System.IServiceProvider services, IWebHostEnvironment hosting)
-        => new(hosting, new LazySvc<IFileRepository>(services), new LazySvc<ITenantManager>(services));
+    private static OqtServerPaths CreateServerPaths(ISysServiceProvider sp, IWebHostEnvironment hosting)
+        => new(hosting, sp.GetRequiredService<LazySvc<IFileRepository>>(), sp.GetRequiredService<LazySvc<ITenantManager>>());
 
     [Fact]
     public void FullContentPath_WorksFromSingleton_WithoutResolvingScopedTenantState()

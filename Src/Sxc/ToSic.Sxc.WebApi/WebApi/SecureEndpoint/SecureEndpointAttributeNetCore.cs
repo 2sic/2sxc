@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text;
 using System.Text.Json;
+using ToSic.Sxc.Web;
 using ToSic.Sys.Security.Encryption;
 using JsonOptions = ToSic.Eav.Serialization.Sys.Json.JsonOptions;
 
@@ -58,7 +59,7 @@ public class SecureEndpointAttribute : ActionFilterAttribute
         try
         {
             // Decrypt data
-            var decryptedData = Decrypt(context.HttpContext.RequestServices, encryptedData);
+            var decryptedData = Decrypt(context.HttpContext.GetSysRequestServices(), encryptedData);
 
             // Validate that decrypted data is valid JSON
             var formData = JsonSerializer.Deserialize(decryptedData, parameter.ParameterType,
@@ -99,7 +100,7 @@ public class SecureEndpointAttribute : ActionFilterAttribute
     /// </summary>
     /// <param name="request">The HTTP request message.</param>
     /// <param name="jsonString">The JSON string to set as the request content.</param>
-    private void SetRequestContentStream(HttpRequest request, string jsonString)
+    private static void SetRequestContentStream(HttpRequest request, string jsonString)
     {
         var newStream = new MemoryStream(Encoding.UTF8.GetBytes(jsonString));
         request.Body = newStream;
@@ -113,7 +114,7 @@ public class SecureEndpointAttribute : ActionFilterAttribute
     /// <param name="serviceProvider"></param>
     /// <param name="encryptedData"></param>
     /// <returns></returns>
-    private static string Decrypt(IServiceProvider serviceProvider, EncryptedData encryptedData)
+    private static string Decrypt(ISysServiceProvider serviceProvider, EncryptedData encryptedData)
     {
         var cryptoService = serviceProvider.GetRequiredService<AesHybridCryptographyService>();
         return cryptoService.Decrypt(encryptedData);

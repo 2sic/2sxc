@@ -35,7 +35,7 @@ public class DnnBusinessController : ModuleSearchBase, IHasLog
     /// Get the service provider only once - ideally in Dnn9.4 we will get it from Dnn
     /// If we would get it multiple times, there are edge cases where it could be different each time! #2614
     /// </summary>
-    private IServiceProvider ServiceProvider => field ??= DnnStaticDi.GetPageScopedServiceProvider();
+    private ISysServiceProvider ServiceProvider => field ??= DnnStaticDi.GetPageScopedServiceProvider();
 
     #endregion
 
@@ -110,7 +110,7 @@ public class DnnBusinessController : ModuleSearchBase, IHasLog
         {
             // Search owns its scope and disposes it when done, so the site shared below never reaches another scope.
             using var scope = DnnStaticDi.CreateGlobalScope();
-            var services = scope.ServiceProvider;
+            var services = scope.GetSysServiceProvider();
             var searchController = services.Build<SearchController>(Log);
             // 1. The scheduler has no PortalSettings.Current, so prepare and share the module's site here.
             services.Build<DnnModuleContextFactory>(Log).CreateFromModuleAndShare(moduleInfo, Log);

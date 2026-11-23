@@ -32,9 +32,9 @@ public class OqtGetBlockWithoutHeadersTests
 
         var http = new HttpContextAccessor { HttpContext = new DefaultHttpContext() }; // no ModuleId / PageId
         var getBlock = new OqtGetBlock(null!, new(http),
-            scope.ServiceProvider.GetRequiredService<ISxcCurrentContextService>(), null!, null!, null!);
+            scope.GetSysServiceProvider().GetRequiredService<ISxcCurrentContextService>(), null!, null!, null!);
 
-        var ex = Record.Exception(() => getBlock.PrepareContextResolverForApiRequest());
+        var ex = Record.Exception(getBlock.PrepareContextResolverForApiRequest);
 
         Null(ex);
     }

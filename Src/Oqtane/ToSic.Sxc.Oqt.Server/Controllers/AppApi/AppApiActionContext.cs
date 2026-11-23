@@ -4,8 +4,7 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using System.Net;
-using ToSic.Eav.WebApi.Sys.Helpers.Http;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 
@@ -33,9 +32,10 @@ internal class AppApiActionContext : IHasLog
 
         var routeData = new RouteData(values);
 
-        var actionDescriptorCollectionProvider = context.RequestServices.GetRequiredService<IActionDescriptorCollectionProvider>();
+        var sp = context.GetSysRequestServices();
+        var actionDescriptorCollectionProvider = sp.GetRequiredService<IActionDescriptorCollectionProvider>();
 
-        var actionSelector = context.RequestServices.GetRequiredService<IActionSelector>();
+        var actionSelector = sp.GetRequiredService<IActionSelector>();
 
         var routeContext = new RouteContext(context)
         {

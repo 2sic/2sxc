@@ -55,6 +55,6 @@ public static class DnnExtensions
 #pragma warning disable CS0618
             ? DnnStaticDi.StaticBuild<T>() // handles edge case for 404 page in DNN where scope is missing, fix https://github.com/2sic/2sxc/issues/2986
 #pragma warning restore CS0618
-            : serviceScope.ServiceProvider.Build<T>();
+            : serviceScope.GetSysServiceProvider().Build<T>();
     }
 }

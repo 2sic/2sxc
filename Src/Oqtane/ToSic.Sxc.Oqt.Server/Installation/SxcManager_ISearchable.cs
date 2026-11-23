@@ -28,9 +28,9 @@ public partial class SxcManager : ISearchable
         // Keep the tenant marker alive until the child services have been disposed.
         using var tenantScope = new OqtBackgroundTenantScope(alias.TenantId);
         await using var scope = serviceScopeFactory.CreateAsyncScope();
-        scope.ServiceProvider.GetRequiredService<ITenantManager>().SetAlias(alias);
+        scope.GetSysServiceProvider().GetRequiredService<ITenantManager>().SetAlias(alias);
 
-        return scope.ServiceProvider.GetRequiredService<OqtSearchController>()
+        return scope.GetSysServiceProvider().GetRequiredService<OqtSearchController>()
             .GetSearchContents(pageModule, lastIndexedOn);
     }
 }

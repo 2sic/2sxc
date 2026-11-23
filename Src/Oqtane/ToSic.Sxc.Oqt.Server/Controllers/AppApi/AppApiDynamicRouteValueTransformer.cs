@@ -16,6 +16,7 @@ using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi.Sys;
 using ToSic.Sys.Utils;
 
@@ -68,7 +69,7 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
             }
             else
             {
-                var serviceProvider = httpContext.RequestServices;
+                var serviceProvider = httpContext.GetSysRequestServices();
                 // this transient dependency is not provided as usual constructor provided lazy/generator dependency (from root service provider)
                 // but as a transient dependency from the request service provider
                 var aliasResolver = serviceProvider.Build<AliasResolver>();
@@ -90,14 +91,15 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
                 // before trying to get the AppFolder, we must init the ICmsContext as this will
                 // this transient dependencies are not provided as usual constructor provided lazy/generator dependencies (from root service provider)
                 // but as a transient dependencies from the request service provider
-                var blockInitializer = httpContext.RequestServices.Build<IWebApiContextBuilder>();
+                var serviceProvider = httpContext.GetSysRequestServices();
+                var blockInitializer = serviceProvider.Build<IWebApiContextBuilder>();
                 blockInitializer.PrepareContextResolverForApiRequest();
                 // Note 2026-10-18 2dm: #NoLookupSideEffects
                 // the next line used to have a side effect of sharing the found app-context
                 // ...but it should already be handled in the previous PrepareContextResolverForApiRequest() call
                 // This has been removed; it may break something, in which case sharing must be added explicitly
-                var builder = httpContext.RequestServices.Build<IWebApiAppContextBuilderService>();
-                var ctxSvc = httpContext.RequestServices.Build<IContextCompleteService>();
+                var builder = serviceProvider.Build<IWebApiAppContextBuilderService>();
+                var ctxSvc = serviceProvider.Build<IContextCompleteService>();
                 appFolder = ctxSvc.FindAppFolderFromScopeOrThrow(builder);
                 // Compilation needs the resolved app folder, not the original "auto" route value.
                 values["appFolder"] = appFolder;

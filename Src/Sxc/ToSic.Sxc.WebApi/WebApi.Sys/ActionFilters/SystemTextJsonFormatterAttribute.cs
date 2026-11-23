@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using ToSic.Sxc.Web;
 using JsonOptions = ToSic.Eav.Serialization.Sys.Json.JsonOptions;
 
 
@@ -72,7 +73,7 @@ public class SystemTextJsonFormatterAttribute : ActionFilterAttribute, IControll
         // creating JsonConverter, JsonOptions and SystemTextJsonOutputFormatter per request
         // instead of using global, static, singleton version because this is for API only
         return JsonConverterFactoryHelpers.CreateNewFormatterFactory(
-            context.HttpContext.RequestServices,
+            context.HttpContext.GetSysRequestServices(),
             effectiveJsonFormatterAttribute,
             () => Casing.Unspecified,
             jsonSerializerOptions => new SystemTextJsonOutputFormatter(jsonSerializerOptions)

@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
-using System.Net;
-using ToSic.Eav.WebApi.Sys.Helpers.Http;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 
@@ -24,27 +23,29 @@ internal static class AppApiMiddleware
   internal static async Task InvokeAsync(HttpContext context)
   {
     // Transform route values.
-    var appApiDynamicRouteValueTransformer = context.RequestServices.GetService<AppApiDynamicRouteValueTransformer>();
+    var sp = context.GetSysRequestServices();
+
+    var appApiDynamicRouteValueTransformer = sp.GetService<AppApiDynamicRouteValueTransformer>();
     var values = await appApiDynamicRouteValueTransformer.TransformAsync(context, context.Request.RouteValues);
 
     // Compile and register dyncode app api controller.
-    var appApiControllerManager = context.RequestServices.GetService<AppApiControllerManager>();
+    var appApiControllerManager = sp.GetService<AppApiControllerManager>();
     if (!await appApiControllerManager.PrepareController(values))
       throw new KeyNotFoundException("Error, can't compile controller.");
 
     // Provide ActionContext.
-    var appApiActionContext = context.RequestServices.GetService<AppApiActionContext>();
+    var appApiActionContext = sp.GetService<AppApiActionContext>();
     var actionContext = appApiActionContext.Provide(context, values);
 
     async Task InvokeActionAfterAuthorization(HttpContext context)
     {
       // Invoke controller action.
-      var appApiActionInvoker = context.RequestServices.GetService<AppApiActionInvoker>();
+      var appApiActionInvoker = sp.GetService<AppApiActionInvoker>();
       await appApiActionInvoker.Invoke(actionContext);
     }
 
     // Check security.
-    var appApiAuthorization = context.RequestServices.GetService<AppApiAuthorization>().Init(InvokeActionAfterAuthorization);
+    var appApiAuthorization = sp.GetService<AppApiAuthorization>().Init(InvokeActionAfterAuthorization);
     await appApiAuthorization.Invoke(actionContext);
   }
 }

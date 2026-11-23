@@ -38,7 +38,7 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
     /// </summary>
     [PrivateApi]
     public record Dependencies(
-        IServiceProvider ServiceProvider,
+        ISysServiceProvider ServiceProvider,
         AppDataStackService DataStackService,
         LazySvc<ExCtxDataSourceService> DataSources,
         ICodeDataFactory Cdf,

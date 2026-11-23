@@ -103,7 +103,7 @@ public partial class SxcManager(
         using var scope = serviceScopeFactory.CreateScope();
 
         // Set the current tenant context for the upgrade
-        scope.ServiceProvider.GetRequiredService<ITenantManager>()
+        scope.GetSysServiceProvider().GetRequiredService<ITenantManager>()
             .SetTenant(tenant.TenantId);
 
         switch (version.Replace(".", "-"))

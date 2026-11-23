@@ -12,6 +12,7 @@ using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sys.DI;
+using ToSic.Sys.Run.Startup;
 using File = Oqtane.Models.File;
 
 namespace ToSic.Sxc.Oqt.Run;
@@ -86,10 +87,11 @@ internal sealed class OqtImportExportEnvironmentTestContext : IDisposable
         Directory.CreateDirectory(Source);
         System.IO.File.WriteAllText(SourceFile, "imported");
         _services = new ServiceCollection()
+            .AddSysCoreDi()
             .AddSingleton(new OqtSiteGroup(null!, new FakeSiteGroupMemberRepository()))
             .BuildServiceProvider();
         var aliasResolver = new AliasResolver(new SiteState { Alias = new Alias { AliasId = 1, TenantId = 1, SiteId = 7 } }, null!, null!, null!, null!);
-        var site = new OqtSite(aliasResolver, null!, null!, null!, null!, new LazySvc<OqtSiteGroup>(_services), null!)
+        var site = new OqtSite(aliasResolver, null!, null!, null!, null!, _services.GetRequiredService<LazySvc<OqtSiteGroup>>(), null!)
             .Init(new Site { SiteId = 7 });
         Environment = new(new(site, null!, null!, null!), site, new FakeServerPaths(Path.Combine(_root, "content")), Files, Folders);
     }

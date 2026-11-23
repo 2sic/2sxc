@@ -3,7 +3,7 @@ using ToSic.Sxc.Services.Cms.Sys;
 
 namespace ToSic.Sxc.ServicesTests.CmsService.ImageExtractor;
 
-public class CmsServiceImageExtractorTests(IServiceProvider sp)
+public class CmsServiceImageExtractorTests(ISysServiceProvider sp)
 {
     /// <summary>
     /// Must get it like this, because the extractor is internal.

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.Filters;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers;
 
@@ -28,7 +29,7 @@ internal sealed class OqtLogWebApiAttribute(string historyLogGroup = EavWebApiCo
             if (owner.Log is { } log)
             {
                 timer = log.Fn($"action executing url: {http.Request.GetDisplayUrl()}", timer: true);
-                http.RequestServices.Build<ILogStore>(log).Add(historyLogGroup, log);
+                http.GetSysRequestServices().Build<ILogStore>(log).Add(historyLogGroup, log);
             }
         }
         catch

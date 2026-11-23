@@ -25,7 +25,7 @@ internal partial class DnnDynamicCodeService : ServiceBase<DnnDynamicCodeService
     #region Dependencies
 
     public record Dependencies(
-        IServiceProvider ServiceProvider,
+        ISysServiceProvider ServiceProvider,
         LazySvc<ILogStore> LogStore,
         IUser User,
         ISite Site,
@@ -112,8 +112,8 @@ internal partial class DnnDynamicCodeService : ServiceBase<DnnDynamicCodeService
     /// It's important to understand that everything in here will use the scoped service provider.
     /// </summary>
     //[field: AllowNull, MaybeNull]
-    protected IServiceProvider ScopedServiceProvider => field
-        ??= Services.ServiceProvider.CreateScope().ServiceProvider;
+    protected ISysServiceProvider ScopedServiceProvider => field
+        ??= Services.ServiceProvider.CreateScope().GetSysServiceProvider();
 
     //[field: AllowNull, MaybeNull]
     private ScopedDependencies ServicesScoped => field

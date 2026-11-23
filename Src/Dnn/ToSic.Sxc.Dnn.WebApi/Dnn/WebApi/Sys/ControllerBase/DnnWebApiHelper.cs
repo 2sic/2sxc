@@ -46,7 +46,7 @@ internal class DnnWebApiHelper : ServiceWithContext, ICanGetService
         => ExCtxOrNull?.GetService<TService>()
             ?? _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>(Log);
     // Must cache it, to be really sure we use the same ServiceProvider in the same request
-    private readonly LazyGet<IServiceProvider> _serviceProvider = new();
+    private readonly LazyGet<ISysServiceProvider> _serviceProvider = new();
 
     #endregion
 

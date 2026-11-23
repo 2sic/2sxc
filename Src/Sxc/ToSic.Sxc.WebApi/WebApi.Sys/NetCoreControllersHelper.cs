@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi.Sys.ActionFilters;
 
 namespace ToSic.Sxc.WebApi.Sys;
@@ -15,8 +16,8 @@ public class NetCoreControllersHelper(ControllerBase parent) : ICanGetService
 
     private ILogCall? _actionTimerWrap; // it is used across events to track action execution total time
 
-    public IServiceProvider ServiceProvider => _serviceProvider ?? throw new($"{nameof(ServiceProvider)} is only available after calling {nameof(OnActionExecuting)}");
-    private IServiceProvider? _serviceProvider;
+    public ISysServiceProvider ServiceProvider => _serviceProvider ?? throw new($"{nameof(ServiceProvider)} is only available after calling {nameof(OnActionExecuting)}");
+    private ISysServiceProvider? _serviceProvider;
 
 
     public void OnActionExecuting(ActionExecutingContext context, string historyLogGroup)
@@ -25,7 +26,7 @@ public class NetCoreControllersHelper(ControllerBase parent) : ICanGetService
         _actionTimerWrap = LogOrNull.Fn($"action executing url: {context.HttpContext.Request.GetDisplayUrl()}", timer: true);
 
         // Get the ServiceProvider of the current request
-        _serviceProvider = context.HttpContext.RequestServices;
+        _serviceProvider = context.HttpContext.GetSysRequestServices();
 
         // Add to Log History
         if (LogOrNull != null)

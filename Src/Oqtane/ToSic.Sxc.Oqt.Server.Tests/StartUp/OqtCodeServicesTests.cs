@@ -9,6 +9,7 @@ using ToSic.Sxc.Run.Startup;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sys.DI;
 using Log = ToSic.Sys.Logging.Log;
 
 namespace ToSic.Sxc.Oqt.StartUp;
@@ -25,7 +26,7 @@ public class OqtCodeServicesTests
         using var provider = CreateServices();
         using var scope = provider.CreateScope();
 
-        var service = scope.ServiceProvider.GetRequiredService<ITypedApiService>();
+        var service = scope.GetSysServiceProvider().GetRequiredService<ITypedApiService>();
 
         NotNull(service);
     }
@@ -41,7 +42,7 @@ public class OqtCodeServicesTests
         using var provider = CreateServices();
         using var scope = provider.CreateScope();
 
-        var context = scope.ServiceProvider.GetRequiredService<IExecutionContextFactory>().New(new()
+        var context = scope.GetSysServiceProvider().GetRequiredService<IExecutionContextFactory>().New(new()
         {
             OwnerOrNull = new LegacyCode(),
             ParentLog = new Log("Test.Legacy"),
@@ -61,7 +62,7 @@ public class OqtCodeServicesTests
         using var provider = CreateServices();
         using var scope = provider.CreateScope();
 
-        var context = scope.ServiceProvider.GetRequiredService<IExecutionContextFactory>().New(new()
+        var context = scope.GetSysServiceProvider().GetRequiredService<IExecutionContextFactory>().New(new()
         {
             OwnerOrNull = new TypedCode(),
             ParentLog = new Log("Test.Typed"),

@@ -10,8 +10,11 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sxc.Web;
+using ToSic.Sxc.WebApi.Sys;
 
 namespace ToSic.Sxc.Backend.Context;
+
 internal class NetCoreWebApiContextHelper: ServiceWithContext
 {
     private readonly ControllerBase _owner;
@@ -41,7 +44,7 @@ internal class NetCoreWebApiContextHelper: ServiceWithContext
     {
         // Use the ServiceProvider of the current request to build DynamicCodeRoot
         // Note that BlockOptional was already retrieved in the base class
-        var exCtx = context.HttpContext.RequestServices
+        var exCtx = context.HttpContext.GetSysRequestServices()
             .Build<IExecutionContextFactory>()
             .New(new()
             {

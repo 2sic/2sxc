@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ToSic.Sxc.Oqt.Server.Configuration;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sys.Configuration;
+using ToSic.Sys.DI;
 
 namespace ToSic.Sxc.Oqt.Configuration;
 
@@ -27,7 +28,7 @@ public class OqtGlobalConfigurationTests
 
         using var serviceProvider = services.BuildServiceProvider();
         using var scope = serviceProvider.CreateScope();
-        var httpContext = new DefaultHttpContext { RequestServices = scope.ServiceProvider };
+        var httpContext = new DefaultHttpContext { RequestServices = scope.GetSysServiceProvider() };
         var httpContextAccessor = new HttpContextAccessor { HttpContext = httpContext };
 
         var sut = new OqtGlobalConfiguration(httpContextAccessor);

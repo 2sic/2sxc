@@ -28,6 +28,8 @@ using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Render.Polymorphism.Sys;
 using ToSic.Sxc.Sys;
+using ToSic.Sxc.Web;
+using ToSic.Sxc.WebApi.Sys;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Razor.DotNetOverrides;
@@ -465,7 +467,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
             return new(fallback.appRelativePath, fallback.edition, "fallback:no-http-context");
         }
         
-        var sp = _httpContextAccessor.HttpContext.RequestServices;
+        var sp = _httpContextAccessor.HttpContext.GetSysRequestServices();
 
         // 2026-10-20 2dm for @STV
         // I'm reworking the ISxcCurrentContextService since in DNN it's only used in WebAPI

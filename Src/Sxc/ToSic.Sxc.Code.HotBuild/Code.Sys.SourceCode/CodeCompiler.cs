@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Code.Sys.SourceCode;
 /// </remarks>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class CodeCompiler(IServiceProvider serviceProvider, object[]? connect = default) : ServiceBase("Sys.CsCmpl", connect: connect /* never! serviceProvider */), IClassCompiler
+public abstract class CodeCompiler(ISysServiceProvider serviceProvider, object[]? connect = default) : ServiceBase("Sys.CsCmpl", connect: connect /* never! serviceProvider */), IClassCompiler
 {
     public object? InstantiateClass(string virtualPath, HotBuildSpec spec, string? className = null, string? relativePath = null, bool throwOnError = true)
     {

@@ -20,9 +20,12 @@ public class StartupDnn9 : IDnnStartup
         // When we do start-up and use singletons.
         // Otherwise singletons won't be properly registered. 
         // https://github.com/dnnsoftware/Dnn.Platform/blob/9f83285a15d23203cbaad72d62add864ab5b8c7f/DNN%20Platform/DotNetNuke.Web/Common/LazyServiceProvider.cs#L28
-        IServiceProvider GetPreparedServiceProvider() => typeof(DotNetNuke.Common.Globals)
-            .GetProperty("DependencyProvider", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)
-            ?.GetValue(null) as IServiceProvider;
+        static ISysServiceProvider GetPreparedServiceProvider()
+            => (typeof(DotNetNuke.Common.Globals)
+                    .GetProperty("DependencyProvider",
+                        System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)
+                    ?.GetValue(null) as IServiceProvider)
+                ?.GetRequiredService<ISysServiceProvider>();
 
         // Now activate the Service Provider, because some Dnn code still needs the static implementation
         DnnStaticDi.StaticDiReady(GetPreparedServiceProvider);

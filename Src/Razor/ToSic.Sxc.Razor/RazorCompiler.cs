@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using ToSic.Eav.Apps;
-using ToSic.Sxc.Apps;
-using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Sys;
@@ -17,7 +15,7 @@ namespace ToSic.Sxc.Razor;
 internal class RazorCompiler(
     ApplicationPartManager applicationPartManager,
     IRazorViewEngine viewEngine,
-    IServiceProvider serviceProvider,
+    ISysServiceProvider serviceProvider,
     IHttpContextAccessor httpContextAccessor,
     IActionContextAccessor actionContextAccessor,
     LazySvc<AppCodeLoader> appCodeLoader,

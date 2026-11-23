@@ -9,9 +9,9 @@ namespace ToSic.Sys.DI;
 /// </remarks>
 /// <param name="serviceProvider"></param>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class PageScopeAccessor(IServiceProvider serviceProvider)
+public class PageScopeAccessor(ISysServiceProvider serviceProvider)
 {
-    public void InitPageOfModule(IServiceProvider pageServiceProvider)
+    public void InitPageOfModule(ISysServiceProvider pageServiceProvider)
     {
         ServiceProvider = pageServiceProvider;
         ProvidedInModule = true;
@@ -20,7 +20,7 @@ public class PageScopeAccessor(IServiceProvider serviceProvider)
     /// <summary>
     /// The page level ServiceProvider
     /// </summary>
-    internal IServiceProvider ServiceProvider { get; private set; } = serviceProvider;
+    internal ISysServiceProvider ServiceProvider { get; private set; } = serviceProvider;
 
 
     /// <summary>

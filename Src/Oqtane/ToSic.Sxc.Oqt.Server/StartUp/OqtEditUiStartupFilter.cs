@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Oqtane.Infrastructure;
 using Oqtane.Repository;
 using ToSic.Sxc.Oqt.Server.WebApi;
+using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Sys.EditUi;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;
@@ -47,12 +48,14 @@ internal class OqtEditUiStartupFilter : IStartupFilter
             || !int.TryParse(request.Query[HtmlDialog.TenantIdInUrl], out var tenantId))
             return;
 
-        var alias = context.RequestServices.GetRequiredService<IAliasRepository>().GetAlias(aliasId, tracking: false);
+        var sp = context.GetSysRequestServices();
+
+        var alias = sp.GetRequiredService<IAliasRepository>().GetAlias(aliasId, tracking: false);
         if (alias == null || alias.TenantId != tenantId)
             return;
 
         // Seed the request-scoped SiteState so TenantMiddleware can load the correct site's settings.
         // Leave HttpContext.Items to TenantMiddleware: it adds the alias key itself, before authentication.
-        context.RequestServices.GetRequiredService<ITenantManager>().SetAlias(alias);
+        sp.GetRequiredService<ITenantManager>().SetAlias(alias);
     }
 }

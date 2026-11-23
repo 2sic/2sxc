@@ -15,6 +15,8 @@ using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Server.StartUp;
+using ToSic.Sxc.Web;
+using ToSic.Sys.DI;
 
 namespace ToSic.Sxc.Oqt.StartUp;
 
@@ -56,12 +58,12 @@ public class OqtEditUiStartupFilterTests
     {
         using var provider = CreateServices();
         using var scope = provider.CreateScope();
-        var context = CreateContext(scope.ServiceProvider, path, query);
+        var context = CreateContext(scope.GetSysServiceProvider(), path, query);
         var app = new ApplicationBuilder(provider);
         var observedSiteId = 0;
         provider.GetRequiredService<IStartupFilter>().Configure(builder => builder.Run(http =>
         {
-            var alias = http.RequestServices.GetRequiredService<ITenantManager>().GetAlias();
+            var alias = http.GetSysRequestServices().GetRequiredService<ITenantManager>().GetAlias();
             // Oqtane's tenant middleware owns this key; an early duplicate would throw here.
             http.Items.Add(Constants.HttpContextAliasKey, alias);
             observedSiteId = alias.SiteId;
@@ -82,7 +84,7 @@ public class OqtEditUiStartupFilterTests
         using var provider = CreateServices();
         var cookie = await SignIn(provider, "1editor");
         using var scope = provider.CreateScope();
-        var context = CreateContext(scope.ServiceProvider, EditorPath, EditorQuery);
+        var context = CreateContext(scope.GetSysServiceProvider(), EditorPath, EditorQuery);
         context.Request.Headers.Cookie = cookie;
 
         await CreateAuthenticatedPipeline(provider, withFilter)(context);
@@ -97,7 +99,7 @@ public class OqtEditUiStartupFilterTests
     {
         using var provider = CreateServices();
         using var scope = provider.CreateScope();
-        var context = CreateContext(scope.ServiceProvider, EditorPath, EditorQuery);
+        var context = CreateContext(scope.GetSysServiceProvider(), EditorPath, EditorQuery);
         if (username != null)
             context.Request.Headers.Cookie = await SignIn(provider, username);
 
@@ -119,7 +121,7 @@ public class OqtEditUiStartupFilterTests
             .AddCookie(options => options.Events.OnValidatePrincipal = context =>
             {
                 // Model Oqtane's per-site cookie validation with the real ASP.NET Core cookie handler.
-                var alias = context.HttpContext.RequestServices.GetRequiredService<ITenantManager>().GetAlias();
+                var alias = context.HttpContext.GetSysRequestServices().GetRequiredService<ITenantManager>().GetAlias();
                 if (alias.SiteId != EditorSiteId || context.Principal?.Identity?.Name != "1editor")
                     context.RejectPrincipal();
                 return Task.CompletedTask;
@@ -150,7 +152,7 @@ public class OqtEditUiStartupFilterTests
     private static async Task<string> SignIn(IServiceProvider provider, string username)
     {
         using var scope = provider.CreateScope();
-        var context = CreateContext(scope.ServiceProvider, "/t79/login", "");
+        var context = CreateContext(scope.GetSysServiceProvider(), "/t79/login", "");
         var principal = new ClaimsPrincipal(new ClaimsIdentity(
             [new Claim(ClaimTypes.Name, username), new Claim(ClaimTypes.Role, "Registered Users")],
             CookieAuthenticationDefaults.AuthenticationScheme));

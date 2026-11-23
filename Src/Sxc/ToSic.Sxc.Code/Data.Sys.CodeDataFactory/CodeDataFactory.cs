@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class CodeDataFactory(
-    IServiceProvider serviceProvider,
+    ISysServiceProvider serviceProvider,
     LazySvc<CodeDataServices> codeDataServices,
     Generator<AdamManager, AdamManager.Options> adamManager,
     LazySvc<IContextOfAppFactory> appCtxFactory,
