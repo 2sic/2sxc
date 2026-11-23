@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.Data.Sys.CodeDataFactory;
-using ToSic.Sxc.Data.Sys.Factory;
+﻿using ToSic.Sxc.Data.Sys.Factory;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
 
@@ -8,8 +7,9 @@ public partial class ExecutionContext: IWrapper<ICodeDataFactory>
     [PrivateApi]
     internal ICodeDataFactory Cdf => field ??= new Func<ICodeDataFactory>(() =>
     {
-        ((CodeDataFactory)Services.Cdf).ConnectToRoot(this);
-        return Services.Cdf;
+        var cd = GetService<ICodeDataFactory>();
+        ((INeedsExecutionContext)cd).ConnectToRoot(this);
+        return cd;
     })();
 
     ICodeDataFactory IWrapper<ICodeDataFactory>.GetContents()

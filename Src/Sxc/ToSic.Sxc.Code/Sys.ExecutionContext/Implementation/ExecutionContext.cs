@@ -24,6 +24,7 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 [PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.Dependencies>,
+    IInjectExcCtx,
     IExecutionContext,
     IExecutionContextWithApp,
     IExecutionContextWithBlock,
@@ -41,10 +42,11 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
         ISysServiceProvider ServiceProvider,
         AppDataStackService DataStackService,
         LazySvc<ExCtxDataSourceService> DataSources,
-        ICodeDataFactory Cdf,
+        // 2026-11-23 2dm - WIP - removed, as we want to create it from the CreateServices and ensure it's connected
+        //ICodeDataFactory Cdf,
         IEditionService EditionSvc)
         : DependenciesBase(connect:
-            [/* never! serviceProvider */ DataStackService, DataSources, Cdf, EditionSvc]);
+            [/* never! serviceProvider */ DataStackService, DataSources, /*Cdf,*/ EditionSvc]);
 
     [PrivateApi]
     protected internal ExecutionContext(Dependencies services, string logPrefix) : base(services, logPrefix + ".DynCdR")

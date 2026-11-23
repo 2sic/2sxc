@@ -4,7 +4,6 @@ using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Render.Block.Sys;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 
@@ -18,13 +17,13 @@ namespace ToSic.Sxc.Render.Sys;
 [PrivateApi("Hide Implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class RenderService(
-    Generator<IEditService> editGenerator,
     LazySvc<IBlockBuilder> builderSvc,
     Generator<SimpleRenderer> simpleRendererGen,
     Generator<InTextContentBlockRenderer> inTextRenderer,
     Generator<IBlockRenderer> blockBuilderGenerator,
-    LazySvc<ILogStore> logStore)
-    : ServiceWithContext("Sxc.RndSvc", connect: [editGenerator, builderSvc, simpleRendererGen, inTextRenderer, logStore, blockBuilderGenerator]),
+    LazySvc<ILogStore> logStore,
+    IInjectExcCtx exCtx)
+    : ServiceBase("Sxc.RndSvc", connect: [builderSvc, simpleRendererGen, inTextRenderer, logStore, blockBuilderGenerator]),
     IRenderService
 {
     /// <summary>
@@ -48,7 +47,7 @@ public class RenderService(
         Guid? newGuid = null)
     {
         item ??= parent.Item;
-        var block = ExCtx.GetBlock();
+        var block = exCtx.GetBlock();
         var simpleRenderer = simpleRendererGen.New();
         return Tag.Custom(field == null
             ? simpleRenderer.Render(block, item.Entity, data: data) // without field edit-context
@@ -79,7 +78,7 @@ public class RenderService(
         if (string.IsNullOrWhiteSpace(field))
             throw new ArgumentNullException("To render all items, you must specify a field where the items are stored.", nameof(field));
 
-        var block = ExCtx.GetBlock();
+        var block = exCtx.GetBlock();
         var editService = GetEditService();
         return Tag.Custom(merge == null
             ? simpleRendererGen.New().RenderListWithContext(block, parent.Entity, field, apps, max, editService)
@@ -95,7 +94,7 @@ public class RenderService(
 
         // This service is often used from a theme/skin, in which case it doesn't have a ExecutionContext,
         // which also means that it was not logged - which we're doing here.
-        if (ExCtxOrNull == null)
+        if (exCtx is IIsUnknown)
             logStore.Value.Add("render-service", Log);
 
         var moduleBlock = builderSvc.Value.BuildBlock(pageId, moduleId);
@@ -111,5 +110,5 @@ public class RenderService(
     /// create edit-object which is necessary for context attributes
     /// We need a new one for each parent
     /// </summary>
-    private IEditService GetEditService() => ExCtx.GetService<IEditService>(reuse: true);
+    private IEditService GetEditService() => exCtx.GetService<IEditService>(reuse: true);
 }

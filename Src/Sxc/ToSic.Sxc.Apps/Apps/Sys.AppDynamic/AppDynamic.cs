@@ -3,11 +3,9 @@ using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.Metadata;
-using ToSic.Sxc.Apps.Sys.Assets;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Data.Sys.Factory;
-using ToSic.Sxc.Services.DataService.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Wrappers;
 
@@ -23,20 +21,15 @@ namespace ToSic.Sxc.Apps.Sys.AppDynamic;
 /// </remarks>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppDynamic(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryBuilder<Query>> queryManager, LazySvc<AppDynamicQueries> appDynamicQueries)
+public class AppDynamic(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryBuilder<Query>> queryManager, LazySvc<AppDynamicQueries> appDynamicQueries, IInjectExcCtx exCtx)
     // Note: If this is ever changed to not inherit from the EavApp, make sure you correct/update the LightSpeed code as well as it checks for this base class
     : ServiceWithSetup<IAppForCode>("App.SxcApp", connect: [globalPaths, queryManager, appDynamicQueries]),
         IAppDynamic,
-        IWrapper<IAppForCode>,
-        INeedsExecutionContext
+        IWrapper<IAppForCode>
 {
     #region Setup Execution Context - for Cdf and data wrapping to DynamicEntity
 
-    public void ConnectToRoot(IExecutionContext exCtx) => ExCtx = exCtx;
-
-    private IExecutionContext? ExCtx { get; set; }
-
-    private ICodeDataFactory Cdf => field ??= (ExCtx ?? throw new InvalidOperationException("ExecutionContext is not set")).GetCdf();
+    private ICodeDataFactory Cdf => field ??= (exCtx ?? throw new InvalidOperationException("ExecutionContext is not set")).GetCdf();
 
     #endregion
 

@@ -6,10 +6,18 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 
 public partial class ExecutionContext: ICanGetService
 {
+    private ISysServiceProvider SpWithOverrides => GetSpWithOverrides();
+
+    private ISysServiceProvider GetSpWithOverrides()
+    {
+        using (OverrideService<IInjectExcCtx>.Use(this))
+            return Services.ServiceProvider.GetSysServiceProvider();
+    }
+
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class
     {
-        var newService = Services.ServiceProvider.Build<TService>(Log);
+        var newService = SpWithOverrides.Build<TService>(Log);
         if (newService is INeedsExecutionContext newWithNeeds)
             newWithNeeds.ConnectToRoot(this);
         return newService;
@@ -38,8 +46,8 @@ public partial class ExecutionContext: ICanGetService
         TService BuildWithOptionalType()
         {
             var newService = type == null 
-                ? Services.ServiceProvider.Build<TService>(Log)
-                : Services.ServiceProvider.Build<TService>(type, Log);
+                ? SpWithOverrides.Build<TService>(Log)
+                : SpWithOverrides.Build<TService>(type, Log);
 
             if (newService is INeedsExecutionContext newWithNeeds)
                 newWithNeeds.ConnectToRoot(this);
