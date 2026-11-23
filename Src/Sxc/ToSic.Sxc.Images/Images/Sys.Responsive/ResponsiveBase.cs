@@ -189,7 +189,7 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     private IToolbarBuilder? ToolbarOrNull()
     {
         // attach edit if we are in edit-mode and the link was generated through a call
-        if (ImgService.EditOrNull?.Enabled != true)
+        if (!ImgService.Edit.Enabled)
             return null;
         if (Target.FieldOrNull?.Parent == null)
             return null;

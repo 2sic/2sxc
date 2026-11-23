@@ -12,10 +12,9 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
     internal ImgResizeLinker ImgLinker { get; } = imgLinker;
     internal IFeaturesService Features { get; } = features;
 
-    internal IEditService? EditOrNull => ExCtx.GetService<IEditService>(reuse: true);
+    internal IEditService Edit => ExCtx.GetService<IEditService>(reuse: true);
 
-    internal IToolbarService? ToolbarOrNull => _toolbarSvc.Get(() => ExCtx.GetService<IToolbarService>(reuse: true));
-    private readonly LazyGet<IToolbarService?> _toolbarSvc = new();
+    internal IToolbarService Toolbar => field ??= ExCtx.GetService<IToolbarService>(reuse: true);
 
     [field: AllowNull, MaybeNull]
     private IPageService PageService => field ??= ExCtx.GetService<IPageService>(reuse: true);

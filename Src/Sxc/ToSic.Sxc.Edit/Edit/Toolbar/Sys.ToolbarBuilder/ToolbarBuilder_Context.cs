@@ -3,6 +3,7 @@ using ToSic.Eav.Apps.Sys.Catalog;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Metadata.Sys;
 using ToSic.Sxc.Edit.Toolbar.Sys.Rules;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
@@ -43,8 +44,8 @@ partial record ToolbarBuilder : IToolbarBuilderInternal
         if (context.EqualsInsensitive(false.ToString()))
             return l.ReturnNull("context=false");
         var appsCatalog = Services.AppsCatalog.Value;
-        if (appsCatalog == null)
-            return l.ReturnNull("no AppStates");
+        //if (appsCatalog == null)
+        //    return l.ReturnNull("no AppStates");
 
         // Try to find the context
         var appId = FindContextAppId(target);
@@ -59,7 +60,7 @@ partial record ToolbarBuilder : IToolbarBuilderInternal
         // If we're not forcing the context "true" then check cases where it's not needed
         if (!context.EqualsInsensitive(true.ToString()))
             // If we're still on the same app, and we didn't force the context, return null
-            if (CurrentAppIdentity?.AppId == identity.AppId)
+            if (Services.ExCtx.GetApp().AppId /*CurrentAppIdentity?.AppId*/ == identity.AppId)
             {
                 // ensure we're not in a global context where the current-context is already special
                 var globalAppId = appsCatalog.GetPrimaryAppOfAppId(appId, Log);

@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Sys;
 using ToSic.Sxc.Edit.Toolbar.Sys.Rules;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Sys.Html;
@@ -22,7 +21,7 @@ namespace ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public partial record ToolbarBuilder(ToolbarBuilder.MyServices Services)
-    : HybridHtmlString, IEnumerable<string>, IToolbarBuilder, INeedsExecutionContext
+    : HybridHtmlString, IEnumerable<string>, IToolbarBuilder, IWillInjectExecutionContext
 {
 
     #region Constructors and Init
@@ -32,31 +31,11 @@ public partial record ToolbarBuilder(ToolbarBuilder.MyServices Services)
     /// </summary>
     public sealed record MyServices(
         LazySvc<ToolbarButtonDecoratorHelper> ToolbarButtonHelper,
-        LazySvc<IAppsCatalog> AppsCatalog)
+        LazySvc<IAppsCatalog> AppsCatalog,
+        IInjectExcCtx ExCtx)
         : DependenciesBase(connect: [ToolbarButtonHelper, AppsCatalog]);
 
     public ILog Log { get; } = LogFactory.Create(SxcLogName + ".TlbBld");
-    
-
-    public void ConnectToRoot(IExecutionContext? exCtx)
-    {
-        if (exCtx == null)
-            return;
-        ExCtx = exCtx;
-        CurrentAppIdentity = exCtx.GetApp().PureIdentity();
-
-        // Also connect any logs
-        Services.ConnectServices(Log);
-        Services.ToolbarButtonHelper.Value.MainAppIdentity = CurrentAppIdentity;
-    }
-
-    private IAppIdentity? CurrentAppIdentity { get; set; }
-
-    /// <summary>
-    /// Execution context, initialized on setup.
-    /// Can usually not be null, as the toolbar is only used in razor, within an execution context.
-    /// </summary>
-    private IExecutionContext ExCtx { get; set; } = null!;
 
     #endregion
 
