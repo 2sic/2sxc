@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Data.Sys.DynamicJacket;
 using ToSic.Sxc.Data.Sys.Typed;
 using ToSic.Sxc.Data.Sys.Wrappers;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Run.Startup;
@@ -23,5 +24,12 @@ public static class StartupSxcData
     }
 
 
-        
+    public static IServiceCollection AddSxcExecutionContext(this IServiceCollection services)
+    {
+
+        // v16 DynamicJacket and DynamicRead factories
+        services.TryAddTransient(OverrideService<IInjectExcCtx>.Register<ExecutionContextMissing>());
+        return services;
+    }
+
 }

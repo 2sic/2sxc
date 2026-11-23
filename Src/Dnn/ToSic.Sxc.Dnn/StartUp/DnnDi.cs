@@ -60,6 +60,7 @@ public static class DnnDi
             .AddSxcImages()
             .AddSxcApps()
             .AddSxcEdit()
+            .AddSxcExecutionContext()
             .AddSxcData()
             .AddSxcAdam()
             .AddSxcAdamWork<int, int>()

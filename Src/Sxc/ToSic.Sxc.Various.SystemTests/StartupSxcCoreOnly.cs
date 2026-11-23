@@ -31,6 +31,7 @@ public class StartupSxcCoreOnly
             // 2sxc core
             .AddSxcApps()
             .AddSxcEdit()
+            .AddSxcExecutionContext()
             .AddSxcData()
             .AddSxcAdam()
             .AddSxcAdamWork<int, int>()

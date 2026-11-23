@@ -28,6 +28,7 @@ public class StartupSxcWithDb
             .AddSxcCore()
             .AddSxcApps()
             .AddSxcEdit()
+            .AddSxcExecutionContext()
             .AddSxcData()
             .AddSxcAdam()
             .AddSxcAdamWork<int, int>()

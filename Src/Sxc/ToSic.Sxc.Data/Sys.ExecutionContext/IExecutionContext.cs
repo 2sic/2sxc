@@ -40,4 +40,3 @@ public interface IExecutionContext: ICanGetService, IHasPiggyBack, IHasLog
     ITypedStack AllSettings { get; }
     ITypedStack AllResources { get; }
 }
-

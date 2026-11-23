@@ -81,6 +81,7 @@ public class OqtCodeServicesTests
             .AddSxcOqtane()
             .AddSxcCode()
             .AddSxcApps()
+            .AddSxcExecutionContext()
             .AddSxcData()
             .AddSxcCore()
             .AddSxcRender()
