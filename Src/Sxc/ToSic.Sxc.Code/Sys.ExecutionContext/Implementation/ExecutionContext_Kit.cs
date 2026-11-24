@@ -14,7 +14,8 @@ public partial class ExecutionContext: ICanGetService
         // Some services such as the Cdf cannot be created at first,
         // as they also use the GetService to be created; so they must be delayed
 
-        // 1. Main service
+        // 1. Main / full context
+        using (Ctx<IExCtxComplete>.Use(this))
         using (Ctx<IExecutionContext>.Use(this))
         // 2. Cdf service
         using (Ctx<ICodeDataFactory>.Use(() => Cdf))

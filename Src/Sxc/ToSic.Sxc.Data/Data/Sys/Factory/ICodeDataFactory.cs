@@ -63,7 +63,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog, IServiceWithSetup<IC
     /// </remarks>
     List<string> SiteCultures { get; }
 
-    bool Debug { get; set; }
+    //bool Debug { get; set; }
 
     /// <summary>
     /// List of dimensions for value lookup, incl. priorities etc. and null-trailing.

@@ -78,14 +78,16 @@ partial class CodeDataFactory: ICodeDataFactoryDeepWip
                 return l.Return(typedDynObject, "DynamicObject");
             default:
                 // Check value types - note that it won't catch strings, but these were handled above
-                if (dynObject.GetType().IsValueType) return l.Return(dynObject, "bad call - value type");
+                if (dynObject.GetType().IsValueType)
+                    return l.Return(dynObject, "bad call - value type");
 
                 // 2021-09-14 new - just convert to a DynamicReadObject
                 var result = codeDataWrapper.Value.ChildNonJsonWrapIfPossible(data: dynObject,
                     // 2023-08-08 2dm - changed `wrapNonAnon` to true, I'm not sure why it was false, but I'm certain that's wrong
                     wrapNonAnon: true /* false, */,
                     WrapperSettings.Dyn(children: true, realObjectsToo: false));
-                if (result is not null) return l.Return(result, "converted to dyn-read");
+                if (result is not null)
+                    return l.Return(result, "converted to dyn-read");
 
                 // Note 2dm 2021-09-14 returning the original object was actually the default till now.
                 // Unknown conversion, just return the original and see what happens/breaks

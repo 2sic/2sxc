@@ -76,15 +76,7 @@ partial class ImageService
 
 
     internal ICanGetByName? GetSettingsByName(string strName)
-        => ResizeParamMerger.GetImageSettingsByName(ExCtxOrNull, strName, Debug, Log);
-
-    // 2025-06 2dm - doesn't seem to be used; believe it was a feature that was never finished
-    ///// <summary>
-    ///// Convert to Multi-Resize Settings
-    ///// </summary>
-    ///// <param name="value"></param>
-    ///// <returns></returns>
-    //private AdvancedSettings? ToAdv(object value) => AdvancedSettings.Parse(value);
+        => ResizeParamMerger.GetImageSettingsByName(ctxExCtx.Value, strName, Debug, Log);
 
     #endregion
 

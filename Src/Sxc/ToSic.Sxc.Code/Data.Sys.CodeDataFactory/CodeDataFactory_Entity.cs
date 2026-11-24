@@ -2,7 +2,6 @@
 using ToSic.Eav.Data.Build.Sys;
 using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Data.Sys.Typed;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 
@@ -44,7 +43,7 @@ partial class CodeDataFactory
 
 
     #region Publishing
-    private IAppReader AppReader => field ??= ExCtx.GetApp().AppReader;
+    private IAppReader AppReader => field ??= ctxExCtx.Value.App!.AppReader;
 
     public IEntity? GetDraft(IEntity entity) => AppReader.GetDraft(entity);
 

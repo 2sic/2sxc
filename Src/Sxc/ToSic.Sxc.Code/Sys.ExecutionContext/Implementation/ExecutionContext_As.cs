@@ -8,7 +8,7 @@ public partial class ExecutionContext: IWrapper<ICodeDataFactory>
     internal ICodeDataFactory Cdf => field ??= new Func<ICodeDataFactory>(() =>
     {
         var cd = GetService<ICodeDataFactory>();
-        ((INeedsExecutionContext)cd).ConnectToRoot(this);
+        // ((INeedsExecutionContext)cd).ConnectToRoot(this);
         return cd;
     })();
 

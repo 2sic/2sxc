@@ -3,7 +3,6 @@ using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Render.Polymorphism.Sys;
 using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 using ToSic.Sys.Caching.PiggyBack;
@@ -24,6 +23,7 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 [PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.Dependencies>,
+    IExCtxComplete,
     IExecutionContext,
     IExecutionContextWithApp,
     IExecutionContextWithBlock,

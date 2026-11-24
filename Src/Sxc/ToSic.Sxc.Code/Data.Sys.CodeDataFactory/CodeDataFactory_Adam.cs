@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps.Sys;
-using ToSic.Eav.Context;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Sys;
@@ -9,7 +8,6 @@ using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Sys.Cms;
 using ToSic.Sxc.Services.Tweaks;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 
@@ -30,14 +28,14 @@ partial class CodeDataFactory
     private AdamManager GetAdamManager()
     {
         // Throw if we don't even have an ExecutionContext (like when exporting from a neutral WebAPI)
-        if (ExCtxOrNull is null)
+        if (ctxExCtx.ValueOptional is null)
             throw new($"Can't create App Context for {nameof(AdamManager)} in {nameof(ICodeDataFactory)} - no block, no App");
 
         // Try to use the block context, as it would allow for more permission checks
         // Note: the block context could be null in WebApis which are App only (no block)
-        var contextOfApp = ExCtx.TryGetContextOfBlock()
+        var contextOfApp = ctxExCtx.ValueOptional?.Block?.Context
                            ?? appCtxFactory.Value.Create(
-                               (ExCtx.GetApp()
+                               (ctxExCtx.Value.App
                                 ?? throw new("Can't create App Context for ADAM - no block, no App"))
                                .PureIdentity());
 
@@ -48,7 +46,7 @@ partial class CodeDataFactory
     public IFile File(int id)
         => AdamManager.AdamFs.GetFile(AdamAssetIdentifier.Create(id));
 
-    private ExecutionContext ExCtxReal => (ExCtxOrNull as ExecutionContext)!;
+    private ExecutionContext ExCtxReal => (ctxExCtx.Value as ExecutionContext)!;
 
     [field: AllowNull, MaybeNull]
     private ServiceKit16 ServiceKit16 => field ??= ExCtxReal.GetKit<ServiceKit16>();
