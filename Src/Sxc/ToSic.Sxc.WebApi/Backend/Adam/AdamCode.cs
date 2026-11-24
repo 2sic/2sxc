@@ -1,7 +1,6 @@
 ﻿using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Adam.Sys.Work;
-using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.WebApi;
 using ToSic.Sys.Capabilities.Features;
@@ -15,8 +14,8 @@ namespace ToSic.Sxc.Backend.Adam;
 /// </summary>
 [PrivateApi("Used by DynamicApiController and Hybrid.Api12_DynCode")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamCode(Generator<AdamWorkUpload, AdamContext.Options> adamUpload, LazySvc<ISysFeaturesService> features, IContextOfAppService ctxSvc)
-    : ServiceWithContext("AdamCode", connect: [adamUpload, features])
+public class AdamCode(Ctx<IExCtxComplete> exCtx, Generator<AdamWorkUpload, AdamContext.Options> adamUpload, LazySvc<ISysFeaturesService> features, IContextOfAppService ctxSvc)
+    : ServiceBase("AdamCode", connect: [adamUpload, features])
 {
     public IFile SaveInAdam(NoParamOrder npo = default,
         Stream? stream = null,
@@ -36,10 +35,7 @@ public class AdamCode(Generator<AdamWorkUpload, AdamContext.Options> adamUpload,
         if (!features.Value.IsEnabled(feats, "can't save in ADAM", out var exp))
             throw l.Ex(exp);
 
-        //var appId = ExCtx.GetBlock()?.AppId
-        //            ?? ExCtx.GetApp()?.AppId
-        //            ?? throw l.Ex(new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known."));
-        var context = ExCtx.TryGetContextOfBlock()
+        var context = exCtx.Value.Block?.Context
                       ?? ctxSvc.AppContextRequired("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
         var adamUploader = adamUpload.New(new(
             Context: context,

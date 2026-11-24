@@ -11,6 +11,4 @@ public static class ExecutionContextExtensions
 
     public static IContextOfModule GetContextOfBlock(this IExecutionContext exCtx)
         => (exCtx as IExecutionContextWithBlock)?.Block?.Context!;
-    public static IContextOfModule? TryGetContextOfBlock(this IExecutionContext exCtx)
-        => (exCtx as IExecutionContextWithBlock)?.Block?.Context;
 }
