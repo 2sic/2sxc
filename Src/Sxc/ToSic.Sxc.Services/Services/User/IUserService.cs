@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Services;
 /// History: Released in 19.02 after being internal since 15.03.
 /// </remarks>
 [PublicApi]
-public interface IUserService: INeedsExecutionContext
+public interface IUserService // : INeedsExecutionContext
 {
     /// <summary>
     /// Get current user.

@@ -2,7 +2,6 @@
 using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Services.Sys;
 using ToSic.Sys.Utils;
 using static System.StringComparison;
 
@@ -10,7 +9,7 @@ namespace ToSic.Sxc.Services.User.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class UserService(LazySvc<IContextOfSiteService> ctxSvc, LazySvc<IUsersProvider> usersSvc, LazySvc<IUserRolesProvider> rolesSvc)
-    : ServiceWithContext($"{SxcLogName}.UsrSrv", connect: [ctxSvc, usersSvc]), IUserService
+    : ServiceBase($"{SxcLogName}.UsrSrv", connect: [ctxSvc, usersSvc]), IUserService
 {
     #region GetCurrentUser
 

@@ -1,23 +1,22 @@
 ﻿using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
-using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Services.Sys.ConvertService;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Services;
 
 [PrivateApi("Hide implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class ConvertService16(
+    Ctx<ICodeDataFactory> ctxCdf,
     ConvertValueService cnvSvc,
     LazySvc<ConvertForCodeService> code,
     LazySvc<IJsonService> json)
-    : ServiceWithContext("Sxc.CnvSrv", connect: [cnvSvc, code, json]), IConvertService16
+    : ServiceBase("Sxc.CnvSrv", connect: [cnvSvc, code, json]), IConvertService16
 {
 
 
     [field: AllowNull, MaybeNull]
-    private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
+    private ICodeDataFactory Cdf => field ??= ctxCdf.Value;
 
     #region ToMock() new v21
 
