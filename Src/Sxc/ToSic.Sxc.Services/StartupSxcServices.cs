@@ -60,7 +60,7 @@ public static class StartupSxcServices
         services.TryAddTransient<IOutputCacheManagementService, OutputCacheManagementService>();    // v21.06-00
 
         // Kits v14 - v16
-        services.TryAddTransient<ServiceKit>();
+        services.TryAddTransient<ServiceKit>();     // Placeholder service kit, may need to be created?
         services.TryAddTransient<ServiceKit14>();
         services.TryAddTransient<ServiceKit16>();
 

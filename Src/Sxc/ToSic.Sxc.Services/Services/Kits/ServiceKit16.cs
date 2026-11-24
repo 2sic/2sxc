@@ -4,6 +4,7 @@ using ToSic.Sxc.Services.OutputCache;
 using ToSic.Sxc.Services.PageShield;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Services.Sys.Cms;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Services;
 
@@ -23,8 +24,20 @@ namespace ToSic.Sxc.Services;
 /// </remarks>
 [PublicApi]
 [method: PrivateApi("Public constructor for DI")]
-public class ServiceKit16() : ServiceKit("Sxc.Kit16")
+public class ServiceKit16(Ctx<IContextServiceProvider> ctxSp) : ServiceKit("Sxc.Kit16")
 {
+    /// <summary>
+    /// All the services provided by this kit must come from the code root, so they are properly initialized.
+    ///
+    /// Will first try to use the GetService method to ensure that changes in the Kit (like 16/14) still return
+    /// the identical sub-services.
+    /// </summary>
+    /// <typeparam name="TService"></typeparam>
+    /// <returns></returns>
+    [PrivateApi]
+    private TService GetKitService<TService>() where TService : class
+        => ctxSp.Value.GetService<TService>(reuse: true);
+
     #region Same as v14
 
     /// <inheritdoc cref="ServiceKit14.Adam"/>

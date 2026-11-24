@@ -13,14 +13,11 @@ namespace ToSic.Sxc.Code.Sys.CodeRunHelpers;
 /// but when used in APIs it only provides the GetCode and CreateInstance methods.
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class CompileCodeHelper() : ServiceWithContext("Sxc.CdHlp"), IServiceWithSetup<IGetCodePath>
+public class CompileCodeHelper() : ServiceBase("Sxc.CdHlp"), IServiceWithSetup<IGetCodePath>
 {
     #region Setup
 
-    public void Setup(IGetCodePath parent)
-    {
-        _parent = parent;
-    }
+    public void Setup(IGetCodePath parent) => _parent = parent;
 
     private IGetCodePath _parent = null!;
 
@@ -32,11 +29,11 @@ public class CompileCodeHelper() : ServiceWithContext("Sxc.CdHlp"), IServiceWith
     #region GetCode / CreateInstance
 
     [PrivateApi("Hidden, as not supported any more going forward")]
-    public object? GetCode(string path, NoParamOrder npo = default, string? className = default) 
-        => CreateInstance(path, name: className);
+    public object? GetCode(ICodeDynamicApiHelper dynApi, string path, NoParamOrder npo = default, string? className = default) 
+        => CreateInstance(dynApi, path, name: className);
 
     /// <inheritdoc />
-    public object? CreateInstance(string virtualPath, NoParamOrder npo = default, string? name = null, string? relativePath = null, bool throwOnError = true)
+    public object? CreateInstance(ICodeDynamicApiHelper dynApi, string virtualPath, NoParamOrder npo = default, string? name = null, string? relativePath = null, bool throwOnError = true)
     {
         var l = Log.Fn<object?>();
 
@@ -44,8 +41,8 @@ public class CompileCodeHelper() : ServiceWithContext("Sxc.CdHlp"), IServiceWith
         CodeRunThrowIfParentIsInsideAppCode(_parent);
 
         // usually we don't have a relative path, so we use the preset path from when this class was instantiated
-        relativePath ??= _parent?.CreateInstancePath;
-        object? instance = ExCtxOrNull?.GetDynamicApi()?.CreateInstance(virtualPath, npo, name, relativePath, throwOnError);
+        relativePath ??= _parent.CreateInstancePath;
+        object? instance = dynApi.CreateInstance(virtualPath, npo, name, relativePath, throwOnError);
         return l.Return(instance);
     }
 

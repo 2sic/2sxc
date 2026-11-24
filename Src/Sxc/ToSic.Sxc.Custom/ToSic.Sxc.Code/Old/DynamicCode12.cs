@@ -95,7 +95,7 @@ public abstract class DynamicCode12(): CustomCodeBase("Sxc.DynCod"), IHasCodeLog
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance(string, NoParamOrder, string, string, bool)" />
     public dynamic? CreateInstance(string virtualPath, NoParamOrder npo = default, string? name = null, string? relativePath = null, bool throwOnError = true) =>
-        CompileCodeHlp.CreateInstance(virtualPath, npo, name, relativePath, throwOnError);
+        CompileCodeHlp.CreateInstance(CodeApi, virtualPath, npo, name, relativePath, throwOnError);
 
     #endregion
 

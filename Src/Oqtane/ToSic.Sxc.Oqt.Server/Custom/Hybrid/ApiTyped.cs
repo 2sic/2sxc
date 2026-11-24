@@ -170,7 +170,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     /// <inheritdoc cref="ITypedCode16.GetCode"/>
     [PrivateApi("Hidden, as not supported any more going forward")]
     public dynamic GetCode(string path, NoParamOrder npo = default, string className = default)
-        => CompileCodeHlp.CreateInstance(path /*relativePath: (this as IGetCodePath).CreateInstancePath*/, name: className);
+        => CompileCodeHlp.CreateInstance(CtxHlp.ExCtxOrNull!.GetDynamicApi(), path /*relativePath: (this as IGetCodePath).CreateInstancePath*/, name: className);
 
     #region MyContext & UniqueKey
 

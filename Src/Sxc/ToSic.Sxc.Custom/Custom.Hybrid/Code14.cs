@@ -103,13 +103,13 @@ public abstract class Code14()
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance" />
     public dynamic? CreateInstance(string virtualPath, NoParamOrder npo = default, string? name = null, string? relativePath = null, bool throwOnError = true) =>
-        CompileCodeHlp.CreateInstance(virtualPath: virtualPath, name: name, relativePath: relativePath, throwOnError: throwOnError);
+        CompileCodeHlp.CreateInstance(CodeApi, virtualPath: virtualPath, name: name, relativePath: relativePath, throwOnError: throwOnError);
 
     /// <inheritdoc cref="ITypedCode16.GetCode"/>
     [PrivateApi("added in 16.05, but not sure if it should be public")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public dynamic? GetCode(string path, NoParamOrder npo = default, string? className = default)
-        => CompileCodeHlp.GetCode(path: path, className: className);
+        => CompileCodeHlp.GetCode(CodeApi, path: path, className: className);
 
     #endregion
 

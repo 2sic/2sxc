@@ -186,7 +186,7 @@ public abstract partial class SxcApiController() :
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
     public dynamic CreateInstance(string virtualPath, NoParamOrder npo = default, string name = null, string relativePath = null, bool throwOnError = true)
-        => CompileCodeHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
+        => CompileCodeHlp.CreateInstance(CodeApi, virtualPath: virtualPath, name: name, throwOnError: throwOnError);
 
     #endregion
 

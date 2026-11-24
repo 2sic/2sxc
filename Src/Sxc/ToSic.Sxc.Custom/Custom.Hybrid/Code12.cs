@@ -96,7 +96,7 @@ public abstract class Code12() : CustomCodeBase("Sxc.Code12"), IHasCodeLog, IDyn
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance" />
     public dynamic? CreateInstance(string virtualPath, NoParamOrder npo = default, string? name = null, string? relativePath = null, bool throwOnError = true) =>
-        CompileCodeHlp.CreateInstance(virtualPath, npo, name, relativePath, throwOnError);
+        CompileCodeHlp.CreateInstance(CodeApi, virtualPath, npo, name, relativePath, throwOnError);
 
     #endregion
 

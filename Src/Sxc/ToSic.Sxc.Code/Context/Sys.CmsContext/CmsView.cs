@@ -40,19 +40,16 @@ internal class CmsView(CmsContext cmsContext, IBlock block) : CmsContextPartBase
     private IFolder FolderAdvanced(NoParamOrder npo = default, string? location = default)
         => new CmsViewFolder(this, block.App.AppPaths, AppAssetsHelpers.DetermineShared(location) ?? _view.IsShared);
 
-    [field: AllowNull, MaybeNull]
-    private ICodeDataFactory Cdf => field ??= CmsContext.ExCtx.GetCdf();
-
     /// <summary>
     /// Note: this is an explicit implementation, so in Dynamic Razor it won't work. This is by design.
     /// </summary>
-    ITypedItem? ICmsView.Settings => _settings.Get(() => Cdf.AsItem(_view.Settings, new() { ItemIsStrict = true }));
+    ITypedItem? ICmsView.Settings => _settings.Get(() => CmsContext.Cdf.AsItem(_view.Settings, new() { ItemIsStrict = true }));
     private readonly LazyGet<ITypedItem?> _settings = new();
 
     /// <summary>
     /// Note: this is an explicit implementation, so in Dynamic Razor it won't work. This is by design.
     /// </summary>
-    ITypedItem? ICmsView.Resources => _resources.Get(() => Cdf.AsItem(_view.Resources, new() { ItemIsStrict = true }));
+    ITypedItem? ICmsView.Resources => _resources.Get(() => CmsContext.Cdf.AsItem(_view.Resources, new() { ItemIsStrict = true }));
     private readonly LazyGet<ITypedItem?> _resources = new();
 
     /// <inheritdoc />

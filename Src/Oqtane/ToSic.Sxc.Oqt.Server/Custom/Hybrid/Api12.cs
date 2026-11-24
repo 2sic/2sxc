@@ -183,7 +183,7 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
     [NonAction]
     public dynamic CreateInstance(string virtualPath, NoParamOrder npo = default, string name = null, string relativePath = null, bool throwOnError = true)
-        => CompileCodeHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
+        => CompileCodeHlp.CreateInstance(CodeApi, virtualPath: virtualPath, name: name, throwOnError: throwOnError);
 
     #endregion
 

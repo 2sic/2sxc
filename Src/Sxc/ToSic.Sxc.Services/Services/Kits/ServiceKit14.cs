@@ -2,6 +2,7 @@
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Services.PageShield;
 using ToSic.Sxc.Services.Sys;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Services;
 
@@ -14,8 +15,21 @@ namespace ToSic.Sxc.Services;
 /// </remarks>
 [PublicApi]
 [method: PrivateApi("Public constructor for DI")]
-public class ServiceKit14() : ServiceKit("Sxc.Kit14")
+public class ServiceKit14(Ctx<IContextServiceProvider> ctxSp) : ServiceKit("Sxc.Kit14")
 {
+
+    /// <summary>
+    /// All the services provided by this kit must come from the code root, so they are properly initialized.
+    ///
+    /// Will first try to use the GetService method to ensure that changes in the Kit (like 16/14) still return
+    /// the identical sub-services.
+    /// </summary>
+    /// <typeparam name="TService"></typeparam>
+    /// <returns></returns>
+    [PrivateApi]
+    private TService GetKitService<TService>() where TService : class
+        => ctxSp.Value.GetService<TService>(reuse: true);
+
     /// <summary>
     /// The ADAM Service, used to retrieve files and maybe more. 
     /// </summary>

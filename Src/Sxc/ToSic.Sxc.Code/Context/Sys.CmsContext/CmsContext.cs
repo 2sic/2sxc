@@ -2,8 +2,8 @@
 using ToSic.Eav.Context;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context.Sys.Module;
+using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Context.Sys.CmsContext;
@@ -15,11 +15,12 @@ namespace ToSic.Sxc.Context.Sys.CmsContext;
 [PrivateApi("we only show the interface in the docs")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CmsContext(
+    Ctx<IExCtxComplete> ctxExCtx,
     IPlatform platform,
     IContextOfSiteService ctxSvcFallback,
     LazySvc<IPage> pageLazy,
     IAppReaderFactory appReaders)
-    : ServiceWithContext(SxcLogName + ".CmsCtx",
+    : ServiceBase(SxcLogName + ".CmsCtx",
         connect: [ctxSvcFallback, pageLazy, appReaders, platform]), ICmsContext
 {
     #region Internal context
@@ -27,10 +28,10 @@ internal class CmsContext(
     /// <summary>
     /// Provide the Execution Context to the parts
     /// </summary>
-    internal new IExecutionContext ExCtx => base.ExCtx;
+    internal ICodeDataFactory Cdf => ctxExCtx.Value.Cdf;
 
     // Note: Internal so it can be used for View<T, T>
-    internal IBlock BlockInternal => field ??= ExCtx.GetBlock();
+    internal IBlock BlockInternal => field ??= ctxExCtx.Value.Block!;
 
     internal IContextOfModule? CtxBlockOrNull => _ctxBlock.Get(() => BlockInternal?.Context);
     private readonly LazyGet<IContextOfModule?> _ctxBlock = new();
@@ -63,7 +64,7 @@ internal class CmsContext(
             module: BlockInternal?.Context?.Module
                     // If that's unknown, try to see if the execution context has an alternate module
                     // like when used on a container which is not a 2sxc module
-                    ?? (ExCtx as ExecutionContext)?.ModuleIfBlockUnknown
+                    ?? (ctxExCtx.Value as ExecutionContext)?.ModuleIfBlockUnknown
                     // Fallback: just make sure don't have errors
                     ?? new ModuleUnknown(null!),
             rootBlock: BlockInternal?.RootBlock,
@@ -76,7 +77,7 @@ internal class CmsContext(
 
     private ICmsUser CreateCurrentUser()
     {
-        var userSvc = ExCtx.GetService<IUserService>(reuse: true);
+        var userSvc = ctxExCtx.Value.GetService<IUserService>(reuse: true);
         var userModel = userSvc.GetCurrentUser();
         return new CmsUser(this, userModel, SiteAppReader.Metadata);
     }

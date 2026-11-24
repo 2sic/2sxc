@@ -14,7 +14,7 @@ internal abstract class CmsContextPartBase<T>(CmsContext cmsContext, T contents)
     /// <summary>
     /// Typed IMetadata accessor to all the metadata of this object.
     /// </summary>
-    public ITypedMetadata Metadata => field ??= CmsContext.ExCtx.GetCdf().MetadataTyped(MetadataRaw);
+    public ITypedMetadata Metadata => field ??= CmsContext.Cdf.MetadataTyped(MetadataRaw);
 
     [JsonIgnore] // ignore, as it's published through the Metadata property which is better typed.
     IMetadata IHasMetadata.Metadata => MetadataRaw;

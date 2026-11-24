@@ -137,7 +137,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     /// <inheritdoc cref="ITypedCode16.GetCode"/>
     [PrivateApi("Hidden, as not supported any more going forward")]
     public dynamic GetCode(string path, NoParamOrder npo = default, string className = default)
-        => CompileCodeHlp.GetCode(path, className: className);
+        => CompileCodeHlp.GetCode(ExCtx.GetDynamicApi(), path, className: className);
 
     #endregion
 
