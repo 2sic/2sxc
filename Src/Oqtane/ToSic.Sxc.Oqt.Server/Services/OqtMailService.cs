@@ -3,13 +3,13 @@ using Oqtane.Shared;
 using System.Configuration;
 using System.Net;
 using System.Net.Mail;
+using ToSic.Eav.Context;
 using ToSic.Sxc.Services.Mail.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Oqt.Server.Services;
 
-internal class OqtMailService(LazySvc<ISettingRepository> settingRepositoryLazy, LazySvc<IUser> userLazy)
+internal class OqtMailService(ISite site, LazySvc<ISettingRepository> settingRepositoryLazy, LazySvc<IUser> userLazy)
     : MailServiceBase(userLazy, connect: [settingRepositoryLazy])
 {
     protected override SmtpClient SmtpClient()
@@ -48,7 +48,6 @@ internal class OqtMailService(LazySvc<ISettingRepository> settingRepositoryLazy,
 
     private Dictionary<string, string> GetSettings()
     {
-        var site = ExCtx.GetContextOfBlock().Site;
         var settings = settingRepositoryLazy.Value
             .GetSettings(EntityNames.Site, site.Id)
             .ToList();

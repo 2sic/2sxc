@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Services;
 /// History: New in 2sxc 12.05
 /// </remarks>
 [PublicApi]
-public interface IMailService: INeedsExecutionContext
+public interface IMailService // : INeedsExecutionContext
 {
     /// <summary>
     /// Quickly create a MailMessage object for further modification and then sending using <see cref="Send(MailMessage)"/>

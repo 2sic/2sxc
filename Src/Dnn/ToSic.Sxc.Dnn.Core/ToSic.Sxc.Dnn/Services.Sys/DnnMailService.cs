@@ -42,8 +42,7 @@ internal class DnnMailService(
                     if (!string.IsNullOrEmpty(smtpUsername) && !string.IsNullOrEmpty(smtpPassword))
                     {
                         client.UseDefaultCredentials = false;
-                        client.Credentials = (ICredentialsByHost)new NetworkCredential(smtpUsername, smtpPassword);
-                        break;
+                        client.Credentials = new NetworkCredential(smtpUsername, smtpPassword);
                     }
                     break;
                 case "2":

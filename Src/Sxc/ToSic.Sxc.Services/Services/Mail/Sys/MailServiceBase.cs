@@ -2,7 +2,6 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Apps.Assets;
-using ToSic.Sxc.Services.Sys;
 using ToSic.Sys.Users;
 using ToSic.Sys.Utils;
 using MailMessage = System.Net.Mail.MailMessage;
@@ -11,7 +10,7 @@ namespace ToSic.Sxc.Services.Mail.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class MailServiceBase(LazySvc<IUser> userLazy, object[]? connect = default)
-    : ServiceWithContext($"{SxcLogName}.MailSrv", connect: [..connect ?? [], userLazy]), IMailService
+    : ServiceBase($"{SxcLogName}.MailSrv", connect: [..connect ?? [], userLazy]), IMailService
 {
     private static readonly Regex HtmlDetectionRegex = new("<(.*\\s*)>", RegexOptions.Compiled);
     
