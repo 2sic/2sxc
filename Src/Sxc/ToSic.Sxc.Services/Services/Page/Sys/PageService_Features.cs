@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
+﻿using ToSic.Sxc.Sys.ExecutionContext;
 using static ToSic.Sxc.Web.Sys.WebResources.WebResourceConstants;
 
 namespace ToSic.Sxc.Services.Page.Sys;
@@ -33,7 +31,7 @@ partial class PageService
         // This must happen in the IPageService which is per-module
         // The PageServiceShared cannot do this, because it doesn't have the WebResources which vary by module
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        if (ExCtx.AllSettings is not null /* paranoid */) // important: DynamicEntity null-compare isn't quite right, **do not** use `!=`
+        if (ctxExCtx.Value.AllSettings is not null /* paranoid */) // important: DynamicEntity null-compare isn't quite right, **do not** use `!=`
             keys = AddResourcesFromSettings(keys);
 
         // 2. If any keys are left, they are probably preconfigured keys, so add them now
@@ -48,7 +46,7 @@ partial class PageService
             Listeners.Activate(added);
 
         // also add to this specific module, as we need a few module-level features to activate in case...
-        ExCtxOrNull?.GetBlock()?.BlockFeatureKeys.AddRange(added);
+        ctxExCtx.ValueOptional?.GetBlock()?.BlockFeatureKeys.AddRange(added);
 
         return l.ReturnAsOk(""); // empty string, just so it can be used as `@Kit.Page.Activate(...)` and not produce anything
     }
@@ -74,7 +72,7 @@ partial class PageService
         {
             l.A($"Key: {key}");
             //var temp = WebResourcesTyped.Child($"Settings.{WebResourcesNode}.{key}");
-            if (ExCtx.AllSettings.Get($"Settings.{WebResourcesNode}.{key}") is not ICanBeEntity webRes)
+            if (ctxExCtx.Value.AllSettings.Get($"Settings.{WebResourcesNode}.{key}") is not ICanBeEntity webRes)
             //if (WebResources.Get(key) is not DynamicEntity webRes) // special problem: DynamicEntity null-compare isn't quite right, don't! use ==
                 continue;
 
@@ -104,7 +102,7 @@ partial class PageService
     public List<string> FeatureKeysAdded { get; } = [];
 
 
-    private string? CdnSource => _cdnSource.Get(() => ExCtx.AllSettings.Get<string>($"Settings.{WebResourcesNode}.{CdnSourcePublicField}"));
+    private string? CdnSource => _cdnSource.Get(() => ctxExCtx.Value.AllSettings.Get<string>($"Settings.{WebResourcesNode}.{CdnSourcePublicField}"));
     private readonly LazyGet<string?> _cdnSource = new();
 
 }

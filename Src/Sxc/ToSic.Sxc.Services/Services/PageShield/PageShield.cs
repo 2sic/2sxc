@@ -1,6 +1,6 @@
 ﻿using ToSic.Razor.Blade;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Sys.Render.PageContext;
@@ -10,13 +10,13 @@ using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Services.PageShield;
 
-internal class PageShield(IPageServiceShared pageServiceShared, IUser user, IHttpContextService httpContextService, ISysFeaturesService features)
-    : ServiceWithContext("Sxc.OutCac", connect: [pageServiceShared, httpContextService, features]), IPageShield
+internal class PageShield(Ctx<IExecutionContext> ctxExCtx, Ctx<IBlock> ctxBlock, IPageServiceShared pageServiceShared, IUser user, IHttpContextService httpContextService, ISysFeaturesService features)
+    : ServiceBase("Sxc.OutCac", connect: [pageServiceShared, httpContextService, features]), IPageShield
 {
 
     private IPageServiceSharedInternal PssInternal => (IPageServiceSharedInternal)pageServiceShared;
 
-    private ILinkService LinkSvc => field ??= ExCtx.GetService<ILinkService>(reuse: true);
+    private ILinkService LinkSvc => field ??= ctxExCtx.Value.GetService<ILinkService>(reuse: true);
 
     public string Allow(string keys, string? values = null)
     {
@@ -43,7 +43,7 @@ internal class PageShield(IPageServiceShared pageServiceShared, IUser user, IHtt
         PssInternal.UrlSpecs.GetValid(PageParametersSafe);
 
     private IParameters PageParametersSafe =>
-        ExCtxOrNull?.GetBlock().Context.Page.Parameters ?? new Context.Sys.Parameters();
+        ctxBlock.ValueOptional?.Context.Page.Parameters ?? new Context.Sys.Parameters();
 
     [Obsolete]
     public IHtmlTag? Enforce(ILinkService link, string? prioritize = null) =>

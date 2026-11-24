@@ -44,6 +44,6 @@ partial class PageService
         return l.ReturnNull("ok");
     }
 
-    private int ModuleId => _moduleId ??= ExCtx.GetCmsContext().Module.Id;
+    private int ModuleId => _moduleId ??= ctxExCtx.Value.GetCmsContext().Module.Id;
     private int? _moduleId;
 }
