@@ -27,7 +27,7 @@ public class AppFilesController : DnnApiController, IAppFilesController
     #endregion
 
 
-    private RealController Real => SysHlp.GetService<RealController>();
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     [HttpGet]
     public ICollection<string> All(int appId, bool global, string path = null, string mask = "*.*",

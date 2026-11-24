@@ -25,7 +25,7 @@ public class FieldController : DnnApiController, IFieldController
     #endregion
 
 
-    private RealController Real => SysHlp.GetService<RealController>();
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     #region Fields - Get, Reorder, Data-Types (for dropdown), etc.
 

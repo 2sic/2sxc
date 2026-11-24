@@ -1,19 +1,20 @@
-﻿using ToSic.Eav.Data;
-using ToSic.Sxc.Apps;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Data;
-using ToSic.Sxc.Services;
-using ToSic.Sxc.Context;
-using System.Web.Http.Results;
+﻿using System.Web.Http.Results;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.Models;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.Backend.Adam;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
+using ToSic.Sxc.Context;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys.Compatibility;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 
@@ -68,7 +69,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     #region Link & Edit - added to API in 2sxc 10.01; CmsContext, Resources, Settings (v12)
 
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
-    public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
+    public TService GetService<TService>() where TService : class => ExCtx.GetService<TService>();
 
     /// <inheritdoc cref="ITypedCode16.GetService{TService}(NoParamOrder, string?)"/>
     // ReSharper disable once MethodOverloadWithOptionalParameter
@@ -109,7 +110,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     /// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
     public IFile SaveInAdam(NoParamOrder npo = default, Stream stream = null, string fileName = null, string contentType = null,
         Guid? guid = null, string field = null, string subFolder = "")
-        => CustomCodeHlp.SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
+        => GetService<AdamCode>().SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
 
     #endregion
 

@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Typed;
 using ToSic.Sxc.Services.DataService.Sys;
 
@@ -11,8 +12,8 @@ namespace ToSic.Sxc.Apps.Sys.AppTyped;
 /// <typeparam name="TResources">Custom class/type of the resources</typeparam>
 /// <param name="globalPaths"></param>
 /// <param name="queryBuilder"></param>
-internal class AppTyped<TSettings, TResources>(LazySvc<GlobalPaths> globalPaths, Generator<GetQueryMs<TypedQuery>, DataSourceOptionsMs> queryBuilder)
-    : AppTyped(globalPaths, queryBuilder), IAppTyped<TSettings, TResources>
+internal class AppTyped<TSettings, TResources>(Ctx<IAppForCode> app, Ctx<ICodeDataFactory> cdf, LazySvc<GlobalPaths> globalPaths, Generator<GetQueryMs<TypedQuery>, DataSourceOptionsMs> queryBuilder)
+    : AppTyped(app, cdf, globalPaths, queryBuilder), IAppTyped<TSettings, TResources>
     where TSettings : class, IModelFromData, new()
     where TResources : class, IModelFromData, new()
 {

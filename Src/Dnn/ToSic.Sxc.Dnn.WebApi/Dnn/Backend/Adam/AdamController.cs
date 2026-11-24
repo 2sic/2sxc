@@ -1,9 +1,6 @@
 ﻿using System.Web;
-using System.Web.Http.Controllers;
-using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Eav.WebApi.Sys;
-using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using RealController = ToSic.Sxc.Backend.Adam.AdamControllerReal<int>;
@@ -31,7 +28,7 @@ public class AdamController : DnnApiController, IAdamController<int>
     #endregion
 
 
-    private RealController Real => SysHlp.GetService<RealController>();
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
 
     [HttpPost]

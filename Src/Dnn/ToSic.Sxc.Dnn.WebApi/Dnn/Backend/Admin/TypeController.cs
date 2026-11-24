@@ -34,7 +34,7 @@ public class TypeController : DnnApiController, ITypeController
     #endregion
 
 
-    private RealController Real => SysHlp.GetService<RealController>();
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     /// <summary>
     /// Delete a Content-Type

@@ -24,7 +24,7 @@ public class BlockController : DnnApiController, IBlockController
     #endregion
 
 
-    private RealController Real => SysHlp.GetService<RealController>();
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     /// <inheritdoc />
     [HttpPost]

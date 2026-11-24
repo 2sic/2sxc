@@ -23,7 +23,7 @@ public class InsightsController : DnnApiController, IHasLog
     #endregion
 
 
-    private RealController Real => SysHlp.GetService<RealController>();
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     /// <summary>
     /// Single-Point-Of-Entry

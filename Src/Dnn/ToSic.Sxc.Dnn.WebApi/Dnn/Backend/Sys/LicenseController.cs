@@ -21,7 +21,7 @@ public class LicenseController : DnnApiController, ILicenseController
     #endregion
 
 
-    private RealController Real => SysHlp.GetService<RealController>();
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     /// <inheritdoc />
     [HttpPost]

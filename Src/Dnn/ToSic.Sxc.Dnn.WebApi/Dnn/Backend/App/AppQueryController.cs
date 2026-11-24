@@ -22,8 +22,8 @@ public class AppQueryController : DnnApiController, IAppQueryController, IHasLog
     #endregion
 
 
-    private RealController Real => SysHlp.GetService<RealController>();
-    private AppQueryContextResolver CtxResolver => SysHlp.GetService<AppQueryContextResolver>();
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
+    private AppQueryContextResolver CtxResolver => SysHlp.GetServiceNoExCtx<AppQueryContextResolver>();
 
 
     // Note: GET is separated from POST to solve HttpResponseException that happens when

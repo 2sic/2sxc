@@ -23,7 +23,7 @@ public class AppExtensionsController : DnnApiController, IAppExtensionsControlle
     #endregion
 
 
-    private RealController Real => SysHlp.GetService<RealController>();
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     /// <inheritdoc />
     [HttpPost]
@@ -74,26 +74,6 @@ public class AppExtensionsController : DnnApiController, IAppExtensionsControlle
     [JsonFormatter(Casing = Casing.Camel)]
     public new bool Configuration(int appId, [FromUri] string name, [FromBody] ExtensionManifest configuration)
         => Real.Configuration(appId, name, configuration);
-
-    // Replaced by DataSource System.AppExtensionDetails through query System.SysData.
-    ///// <inheritdoc />
-    //[HttpGet]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    //[JsonFormatter(Casing = Casing.Camel)]
-    //public ExtensionInspectResultDto Inspect(int appId, string name, string edition = null)
-    //    => Real.Inspect(appId, name, edition);
-    ///// <summary>
-    ///// Alias POST endpoint for front-ends posting to /appExtensions/extensions with query parameters.
-    ///// Matches plural POST behavior to avoid 405 errors if client uses POST.
-    ///// </summary>
-    ////[ActionName("extensions")]
-    //[HttpPost]
-    //[ValidateAntiForgeryToken]
-    //[SupportedModules(DnnSupportedModuleNames)]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    //[JsonFormatter(Casing = Casing.Camel)]
-    //public bool Extensions(int appId, string name, [FromBody] ExtensionManifest configuration)
-    //    => Real.Extension(appId, name, configuration);
 
     /// <inheritdoc />
     [HttpGet]

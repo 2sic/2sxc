@@ -9,8 +9,6 @@ using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Typed;
 using ToSic.Sxc.Services.DataService.Sys;
-using ToSic.Sxc.Services.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Apps.Sys.AppTyped;
 
@@ -23,15 +21,12 @@ namespace ToSic.Sxc.Apps.Sys.AppTyped;
 // - provide an instance of this on the CodeApiService
 // - use that instead
 
-internal class AppTyped(LazySvc<GlobalPaths> globalPaths, Generator<GetQueryMs<TypedQuery>, DataSourceOptionsMs> queryBuilder)
-    : ServiceWithContext(SxcLogName + ".AppTyp", connect: [globalPaths, queryBuilder]),
+internal class AppTyped(Ctx<IAppForCode> app, Ctx<ICodeDataFactory> cdf, LazySvc<GlobalPaths> globalPaths, Generator<GetQueryMs<TypedQuery>, DataSourceOptionsMs> queryBuilder)
+    : ServiceBase(SxcLogName + ".AppTyp", connect: [globalPaths, queryBuilder]),
         IAppTyped
 {
     [field: AllowNull, MaybeNull]
-    protected IAppForCode App => field
-        ??= ExCtx.GetApp()
-            ?? throw new($"Can't access {nameof(App)} - either null or can't convert");
-
+    protected IAppForCode App => field ??= app.Value;
 
     /// <inheritdoc />
     int IZoneIdentity.ZoneId => App.ZoneId;
@@ -47,7 +42,7 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, Generator<GetQueryMs<T
     /// This is important for scenarios where the App is used on a theme, where there is no execution context.
     /// </summary>
     [field: AllowNull, MaybeNull]
-    protected ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
+    protected ICodeDataFactory Cdf => field ??= cdf.Value;
 
     /// <inheritdoc />
     [field: AllowNull, MaybeNull]

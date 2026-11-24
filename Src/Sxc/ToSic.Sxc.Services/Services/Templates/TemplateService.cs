@@ -1,17 +1,18 @@
 ﻿using ToSic.Eav.LookUp;
 using ToSic.Eav.LookUp.Sources;
 using ToSic.Eav.LookUp.Sys.Engines;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Typed;
-using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Services.Template;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.Templates;
 
-internal class TemplateService(LazySvc<ILookUpEngineResolver> getLookupsLazy) : ServiceWithContext($"{SxcLogName}.LUpSvc"), ITemplateService
+internal class TemplateService(Ctx<ILookUpEngine> ctxLookup, Ctx<IBlock> ctxBlock, Ctx<ICodeDataFactory> cdf, LazySvc<ILookUpEngineResolver> getLookupsLazy)
+    : ServiceBase($"{SxcLogName}.LUpSvc"),
+        ITemplateService
 {
     #region Get Engine Default / Empty
 
@@ -24,8 +25,8 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getLookupsLazy) : 
 
         // in some cases, like when testing, the _CodeApiSvc is not available
         // then it should still work, but of course not know about the app's sources
-        var original = ((IExCtxLookUpEngine?)ExCtxOrNull)?.LookUpForDataSources
-            ?? getLookupsLazy.Value.GetLookUpEngine(ExCtxOrNull?.GetBlock()?.Context?.Module?.Id ?? 0);
+        var original = ctxLookup.ValueOptional
+            ?? getLookupsLazy.Value.GetLookUpEngine(ctxBlock.ValueOptional?.Context?.Module?.Id ?? 0);
         
         return noSources
             ? _default = new TemplateEngineTokens(original)
@@ -84,8 +85,7 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getLookupsLazy) : 
     public ILookUp CreateSource(string name, Func<string, string, string> getter)
         => new LookUpWithFunctionAndFormat(NameOrErrorIfBad(name), getter);
 
-    [field: AllowNull, MaybeNull]
-    private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
+    [field: AllowNull, MaybeNull] private ICodeDataFactory Cdf => field ??= cdf.Value;
 
     public ILookUp CreateSource(string name, ICanBeEntity item, NoParamOrder npo = default, string[]? dimensions = default) 
         => new LookUpInEntity(name, item.Entity, dimensions: dimensions ?? Cdf.Dimensions);

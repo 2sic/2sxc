@@ -19,20 +19,10 @@ public class ViewController : DnnApiController, IViewController
 
     private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
 
-    ///// <summary>
-    ///// The app data controller probably needs this for every request.
-    ///// </summary>
-    ///// <param name="controllerContext"></param>
-    //protected override void Initialize(HttpControllerContext controllerContext)
-    //{
-    //    base.Initialize(controllerContext);
-    //    new DnnSxcWebApiInitBlockContextAndShare().InitBlockSpecs(SysHlp, controllerContext.Request, Log);
-    //}
-
     #endregion
 
 
-    private RealController Real => SysHlp.GetService<RealController>();
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     /// <inheritdoc />
     [HttpGet, HttpDelete]

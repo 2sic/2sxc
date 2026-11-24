@@ -27,7 +27,7 @@ public class QueryController : DnnApiController, IQueryController
     #endregion
 
 
-    private RealController Real => SysHlp.GetService<RealController>();
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     [HttpPost]
     public QueryDefinitionDto Save([FromBody] QueryDefinitionDto data, int appId, int id) =>

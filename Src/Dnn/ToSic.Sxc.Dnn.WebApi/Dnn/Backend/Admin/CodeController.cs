@@ -18,7 +18,7 @@ public class CodeController : DnnApiController, IHasLog
 
     #endregion
 
-    private RealController Real => SysHlp.GetService<RealController>();
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     [HttpGet]
     [ValidateAntiForgeryToken]

@@ -25,7 +25,7 @@ public class HistoryController : DnnApiController, IHistoryController
 
     #endregion
 
-    private RealController Real => SysHlp.GetService<RealController>();
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     /// <inheritdoc />
     [HttpPost]

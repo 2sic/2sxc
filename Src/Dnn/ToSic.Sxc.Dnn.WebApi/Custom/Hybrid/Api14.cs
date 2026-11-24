@@ -3,6 +3,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
@@ -49,7 +50,7 @@ public abstract partial class Api14(string logSuffix) : DnnSxcCustomControllerBa
     #endregion
 
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
-    public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
+    public TService GetService<TService>() where TService : class => ExCtx.GetService<TService>();
 
 
     #region Content, Presentation, Header, App, Data
@@ -144,7 +145,7 @@ public abstract partial class Api14(string logSuffix) : DnnSxcCustomControllerBa
     /// <inheritdoc cref="IDynamicWebApi.SaveInAdam" />
     public IFile SaveInAdam(NoParamOrder npo = default, Stream stream = null, string fileName = null, string contentType = null,
         Guid? guid = null, string field = null, string subFolder = "")
-        => CustomCodeHlp.SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
+        => GetService<AdamCode>().SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
 
     #endregion
 

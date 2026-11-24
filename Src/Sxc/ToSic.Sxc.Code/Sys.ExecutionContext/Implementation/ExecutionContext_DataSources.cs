@@ -5,7 +5,7 @@ using ToSic.Sxc.Code.Sys;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
 
-public partial class ExecutionContext: IExCtxLookUpEngine
+public partial class ExecutionContext
 {
     #region DataSource and ConfigurationProvider (for DS) section
 

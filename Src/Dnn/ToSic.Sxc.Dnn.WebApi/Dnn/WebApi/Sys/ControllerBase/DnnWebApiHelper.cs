@@ -1,20 +1,17 @@
 ﻿using ToSic.Eav.Web.Http.Sys;
 using ToSic.Eav.WebApi.Sys;
-using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Integration;
-using ToSic.Sxc.Services.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
-internal class DnnWebApiHelper : ServiceWithContext, ICanGetService
+internal class DnnWebApiHelper : ServiceBase
 {
     #region Constructor & Destructor
 
     public DnnWebApiHelper(IHasLog apiController, string historyLogGroup, string firstMessage = default, bool logApiTimer = false) : base("Dnn.ApiHlp")
     {
-        var scopedLogging = GetService<Generator<HttpRequestLoggingScoped, HttpRequestLoggingScoped.Options>>();
+        var scopedLogging = GetServiceNoExCtx<Generator<HttpRequestLoggingScoped, HttpRequestLoggingScoped.Options>>();
         var requestLogging = scopedLogging.New(new() { Segment = historyLogGroup ?? EavWebApiConstants.HistoryNameWebApi, RootName = "Dnn.Api" });
         this.LinkLog(requestLogging.RootLog);
         apiController.LinkLog(requestLogging.RootLog);
@@ -35,17 +32,25 @@ internal class DnnWebApiHelper : ServiceWithContext, ICanGetService
     #region Basic Service
 
     /// <summary>
-    /// Get a service of a specified type. 
+    /// Special GetService which knows **nothing** about the context - to explicitly show that this is happening.
     /// </summary>
     /// <typeparam name="TService"></typeparam>
-    /// <returns></returns>
     /// <remarks>
-    /// This will override the base functionality to ensure that any services created will be able to get the CodeContext.
+    /// This name should be very distinct (NOT GetService())
+    /// to make it clear that this is a special case where the context is **not** used.
+    ///
+    /// In custom code base classes it should use the Execution Context, not this.
     /// </remarks>
-    public TService GetService<TService>() where TService : class
-        => ExCtxOrNull?.GetService<TService>()
-            ?? _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>(Log);
-    // Must cache it, to be really sure we use the same ServiceProvider in the same request
+    /// <returns></returns>
+    public TService GetServiceNoExCtx<TService>() where TService : class
+        => _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>(Log);
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Must cache it, to be really sure we use the same ServiceProvider in the same request
+    /// </remarks>
     private readonly LazyGet<ISysServiceProvider> _serviceProvider = new();
 
     #endregion

@@ -24,7 +24,7 @@ public class EditController : DnnApiController, IEditController
 
 
 
-    private RealController Real => SysHlp.GetService<RealController>();
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
 
     /// <inheritdoc />

@@ -32,7 +32,7 @@ public class AppDataController : DnnApiController, IAppDataController
     #endregion
 
 
-    private RealController Real => SysHlp.GetService<RealController>();
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     #region Get List / all of a certain content-type
 

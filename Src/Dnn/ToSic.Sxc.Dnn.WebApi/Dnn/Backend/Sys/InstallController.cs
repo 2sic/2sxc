@@ -21,7 +21,7 @@ public class InstallController : DnnApiController, IInstallController
     #endregion
 
 
-    private RealController Real => SysHlp.GetService<RealController>();
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     /// <inheritdoc />
     [HttpGet]
@@ -37,7 +37,7 @@ public class InstallController : DnnApiController, IInstallController
     public HttpResponseMessage RemotePackage(string packageUrl, string newName = null)
     {
         this.PreventServerTimeout600();
-        var result = Real.RemotePackage(packageUrl, SysHlp.GetService<DnnModuleFactory>().Get(ActiveModule), newName);
+        var result = Real.RemotePackage(packageUrl, SysHlp.GetServiceNoExCtx<DnnModuleFactory>().Get(ActiveModule), newName);
         return result == null
             ? Request.CreateResponse(HttpStatusCode.OK)
             : Request.CreateErrorResponse(HttpStatusCode.InternalServerError, result);

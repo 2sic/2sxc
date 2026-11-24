@@ -1,6 +1,5 @@
 ﻿using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Dnn.Integration;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
@@ -9,10 +8,10 @@ internal static class DnnSxcWebApiContextExtensions
 {
     public record ContextSupportedSpecs(bool TryBlock, bool TryApp, int AppId = -1);
 
-    public static void PublishContextBlockOnly(this ICanGetService apiHelper, HttpRequestMessage request, ILog log)
+    public static void PublishContextBlockOnly(this DnnWebApiHelper apiHelper, HttpRequestMessage request, ILog log)
         => apiHelper.PublishContext(request, new(TryBlock: true, TryApp: false), log);
 
-    public static void PublishContext(this ICanGetService apiHelper, HttpRequestMessage request, ContextSupportedSpecs specs, ILog log)
+    public static void PublishContext(this DnnWebApiHelper apiHelper, HttpRequestMessage request, ContextSupportedSpecs specs, ILog log)
     {
         // If nothing to init, exit early
         if (!specs.TryBlock && !specs.TryApp)
@@ -24,15 +23,15 @@ internal static class DnnSxcWebApiContextExtensions
         if (specs.TryBlock)
         {
             // Try to get the block from the request, and if found, share it with the current context
-            var block = apiHelper.GetService<DnnGetBlock>()
+            var block = apiHelper.GetServiceNoExCtx<DnnGetBlock>()
                 .TryGetBlockSpecsUsingModuleAndContentBlockHeaders(request);
             if (block != null)
-                apiHelper.GetService<ISxcCurrentContextService>()
+                apiHelper.GetServiceNoExCtx<ISxcCurrentContextService>()
                     .ShareBlockSpecs(block);
         }
         
         if (specs.TryApp)
-            apiHelper.GetService<ISxcCurrentContextService>()
+            apiHelper.GetServiceNoExCtx<ISxcCurrentContextService>()
                 .ShareAppStateOptimized(specs.AppId);
     }
 }       

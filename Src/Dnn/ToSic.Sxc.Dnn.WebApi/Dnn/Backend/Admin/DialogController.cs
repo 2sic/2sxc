@@ -31,7 +31,7 @@ public class DialogController : DnnApiController, IDialogController
     #endregion
 
 
-    private RealController Real => SysHlp.GetService<RealController>();
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
 
     [HttpGet]

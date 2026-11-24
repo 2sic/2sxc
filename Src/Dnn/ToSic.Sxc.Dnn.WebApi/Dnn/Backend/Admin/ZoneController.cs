@@ -22,7 +22,7 @@ public class ZoneController : DnnApiController, IZoneController, IHasLog
     #endregion
 
 
-    private RealController Real => SysHlp.GetService<RealController>();
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
 
     /// <inheritdoc />

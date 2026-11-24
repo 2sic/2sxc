@@ -29,7 +29,7 @@ public class FeatureController : DnnApiController, IFeatureController
     #endregion
 
 
-    private RealController Real => SysHlp.GetService<RealController>();
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
     
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
