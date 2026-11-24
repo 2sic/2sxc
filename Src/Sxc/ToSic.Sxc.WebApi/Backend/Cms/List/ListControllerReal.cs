@@ -71,11 +71,11 @@ public class ListControllerReal(
     }
 
 
-    public void Delete(Guid? parent, string part, int index) 
+    public void Delete(Guid? parent, string fields, int index)
     {
-        var l = Log.Fn($"parent:{parent}, fields:{part}, index:{index}");
+        var l = Log.Fn($"parent:{parent}, fields:{fields}, index:{index}");
         var fList = workFieldList.New(GetCtx());
-        ModifyList(FindOrThrow(parent), part,
+        ModifyList(FindOrThrow(parent), fields,
             (entity, fieldList, versioning) => fList.RemoveSlot(entity, fieldList, index, versioning));
         l.Done();
     }

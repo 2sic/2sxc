@@ -18,10 +18,10 @@ public interface IListController: IAppAdminWebApiController
     /// Used to be Get Module/RemoveFromList
     /// </summary>
     /// <param name="parent"></param>
-    /// <param name="part"></param>
+    /// <param name="fields"></param>
     /// <param name="index"></param>
     // UI test: Manage Content List > remove an item from the list.
-    void Delete(Guid? parent, string part, int index);
+    void Delete(Guid? parent, string fields, int index);
 
     // UI test: Replace Content dialog > select an item, or add an item to the list.
     void Replace(Guid parent, string part, int index, int entityId, bool add = false);
