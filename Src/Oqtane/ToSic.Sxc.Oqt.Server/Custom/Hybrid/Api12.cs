@@ -5,6 +5,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
@@ -32,7 +33,7 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
 
     [PrivateApi] public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 
-    internal ICodeDynamicApiHelper CodeApi => field ??= ExCtxOrNull.GetDynamicApi();
+    internal ICodeDynamicApiHelper CodeApi => field ??= CtxHlp.ExCtxOrNull!.GetDynamicApi();
 
     /// <summary>
     /// Our custom dynamic 2sxc app api controllers, depends on event OnActionExecuting to provide dependencies (without DI in constructor).
@@ -51,10 +52,6 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => CtxHlp.CodeLog;
-
-    // ReSharper disable once InconsistentNaming
-    [PrivateApi]
-    public IExecutionContext ExCtxOrNull => CtxHlp.ExCtxOrNull;
 
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public new TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
@@ -162,7 +159,8 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
         Guid? guid = null,
         string field = null,
         string subFolder = "")
-        => CtxHlp.SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
+        => GetService<AdamCode>()
+            .SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
 
     #endregion
 
@@ -180,8 +178,7 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
 
     string IGetCodePath.CreateInstancePath { get; set; }
 
-    protected CompileCodeHelper CompileCodeHlp => _compileCodeHlp ??= GetService<Generator<CompileCodeHelper, IGetCodePath>>().New(this);
-    private CompileCodeHelper _compileCodeHlp;
+    protected CompileCodeHelper CompileCodeHlp => field ??= GetService<Generator<CompileCodeHelper, IGetCodePath>>().New(this);
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
     [NonAction]

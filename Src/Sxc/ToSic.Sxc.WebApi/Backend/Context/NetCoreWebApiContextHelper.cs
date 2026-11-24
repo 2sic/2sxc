@@ -1,21 +1,20 @@
 ﻿#if NETCOREAPP
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context.Sys;
 using ToSic.Sxc.Apps.Sys;
-using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web;
-using ToSic.Sxc.WebApi.Sys;
 
 namespace ToSic.Sxc.Backend.Context;
 
-internal class NetCoreWebApiContextHelper: ServiceWithContext
+internal class NetCoreWebApiContextHelper: ServiceBase
 {
     private readonly ControllerBase _owner;
     private readonly ICanGetService _helper;
@@ -30,7 +29,7 @@ internal class NetCoreWebApiContextHelper: ServiceWithContext
 
     #region Initialize
 
-    internal new IExecutionContext? ExCtxOrNull => base.ExCtxOrNull;
+    internal IExecutionContext? ExCtxOrNull { get; private set; }
 
     public ICodeLog CodeLog => field ??= new CodeLog(Log);
 
@@ -53,16 +52,17 @@ internal class NetCoreWebApiContextHelper: ServiceWithContext
                 ParentLog = Log,
                 CompatibilityFallback = CompatibilityLevels.CompatibilityLevel12,
             });
-        ConnectToRoot(exCtx);
-
-        AdamCode = exCtx.GetService<AdamCode>();
 
         // In case SxcBlock was null, there is no instance, but we may still need the app
-        if (ExCtx.GetApp() == null! /* realistic case */)
+        if (exCtx.GetApp() == null! /* realistic case */)
         {
             Log.A("DynCode.App is null");
-            TryToAttachAppFromUrlParams(context);
+            var app = TryToAttachAppFromUrlParams(context);
+            if (app != null)
+                ((IExCtxAttachApp)exCtx).AttachApp(app);
         }
+
+        ExCtxOrNull = exCtx;
 
         // Ensure the Api knows what path it's on, in case it will
         // create instances of .cs files
@@ -72,19 +72,16 @@ internal class NetCoreWebApiContextHelper: ServiceWithContext
     }
 
 
-    private void TryToAttachAppFromUrlParams(ActionExecutingContext context)
+    private IAppForCode? TryToAttachAppFromUrlParams(ActionExecutingContext context)
     {
-        var l = Log.Fn();
+        var l = Log.Fn<IAppForCode?>();
 
         try
         {
             // Handed in from the App-API Transformer
             context.HttpContext.Items.TryGetValue(SxcWebApiConstants.HttpContextKeyForAppFolder, out var routeAppPathObj);
             if (routeAppPathObj == null)
-            {
-                l.Done("nothing to do");
-                return;
-            }
+                return l.ReturnNull("nothing to do");
             var routeAppPath = routeAppPathObj.ToString();
 
             var appId = CtxBuilder.TryFindAppFromPath(routeAppPath)
@@ -92,48 +89,22 @@ internal class NetCoreWebApiContextHelper: ServiceWithContext
                         ?? Eav.Sys.EavConstants.NullId;
 
             if (appId == Eav.Sys.EavConstants.NullId)
-            {
-                l.Done("no app detected");
-                return;
-            }
+                return l.ReturnNull("no app detected");
 
             // Since we only have the AppId, we need to load the app and attach it to the context
             l.A($"AppId: {appId}");
             var site = CtxService.Context.Site;
             var app = _helper.GetService<Generator<AppForCode, AppForCode.Options>>().New(new(site, new AppIdentityPure(site.ZoneId, appId), new()));
-            ((IExCtxAttachApp)ExCtx).AttachApp(app);
             l.Done("app initialized");
-            return;
+            return l.Return(app, "app initialized");
         }
         catch
         {
-            l.Done("error, ignore");
+            return l.ReturnNull("error, ignore");
         }
     }
 
     #endregion
-
-
-    #region Adam
-
-    public AdamCode AdamCode { get; private set; } = null!;
-
-    public Sxc.Adam.IFile SaveInAdam(NoParamOrder npo = default,
-        Stream? stream = null,
-        string? fileName = null,
-        string? contentType = null,
-        Guid? guid = null,
-        string? field = null,
-        string subFolder = "") =>
-        AdamCode.SaveInAdam(
-            stream: stream,
-            fileName: fileName,
-            contentType: contentType,
-            guid: guid,
-            field: field,
-            subFolder: subFolder);
-
-    #endregion
-
 }
+
 #endif

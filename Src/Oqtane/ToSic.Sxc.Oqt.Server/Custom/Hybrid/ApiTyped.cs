@@ -12,6 +12,7 @@ using ToSic.Sxc.Adam;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.Models;
+using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
@@ -35,7 +36,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     protected ApiTyped() : this(EavWebApiConstants.HistoryNameWebApi) { }
 
     internal ICodeTypedApiHelper CodeApi => field
-        ??= ExCtxOrNull.GetTypedApi();
+        ??= CtxHlp.ExCtxOrNull!.GetTypedApi();
 
 
     /// <summary>
@@ -57,9 +58,6 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => CtxHlp.CodeLog;
-
-    // ReSharper disable once InconsistentNaming
-    [PrivateApi] internal IExecutionContext ExCtxOrNull => CtxHlp.ExCtxOrNull;
 
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public new TService GetService<TService>() where TService : class
@@ -97,7 +95,8 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
         Guid? guid = null,
         string field = null,
         string subFolder = "")
-        => CtxHlp.SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
+        => GetService<AdamCode>()
+            .SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
 
     #endregion
 
@@ -118,7 +117,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     #region My... Stuff
 
     private CodeHelperTypedData CodeHelper => field
-        ??= new(helperSpecs: new(ExCtxOrNull, false, ((IGetCodePath)this).CreateInstancePath));
+        ??= new(helperSpecs: new(CtxHlp.ExCtxOrNull!, false, ((IGetCodePath)this).CreateInstancePath));
 
     public ITypedItem MyItem => CodeHelper.MyItem;
 
