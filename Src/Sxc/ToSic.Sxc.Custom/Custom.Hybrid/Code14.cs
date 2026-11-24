@@ -27,7 +27,7 @@ namespace Custom.Hybrid;
 [PublicApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]   // #DocsButNotForIntellisense
 public abstract class Code14()
-    : CustomCodeBase("Sxc.Code14"), IHasCodeLog, IDynamicCode, IDynamicCode14<object, ServiceKit14>, IHasCodeHelp
+    : CustomCodeBase("Sxc.Code14"), IHasCodeLog, IDynamicCode, IDynamicCode14<object, ServiceKit14>, IHasCodeHelp, ICompatibilityLevel
 {
 
     #region Constructor / Setup
@@ -42,7 +42,7 @@ public abstract class Code14()
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
     [PrivateApi]
-    public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
+    int ICompatibilityLevel.CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 
     #endregion
 

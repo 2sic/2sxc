@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Code;
 /// </remarks>
 [PrivateApi("Was public till v17")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class DynamicCode12(): CustomCodeBase("Sxc.DynCod"), IHasCodeLog, IDynamicCode, IDynamicCode12
+public abstract class DynamicCode12(): CustomCodeBase("Sxc.DynCod"), IHasCodeLog, IDynamicCode, IDynamicCode12, ICompatibilityLevel
 {
     #region Constructor / Setup
 
@@ -37,7 +37,8 @@ public abstract class DynamicCode12(): CustomCodeBase("Sxc.DynCod"), IHasCodeLog
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
-    [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
+    [PrivateApi]
+    int ICompatibilityLevel.CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 
     #endregion
 

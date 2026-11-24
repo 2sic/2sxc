@@ -23,7 +23,7 @@ namespace Custom.Hybrid;
 [PrivateApi("Deprecated, hidden in v22")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
-public abstract class Code12() : CustomCodeBase("Sxc.Code12"), IHasCodeLog, IDynamicCode, IDynamicCode12
+public abstract class Code12() : CustomCodeBase("Sxc.Code12"), IHasCodeLog, IDynamicCode, IDynamicCode12, ICompatibilityLevel
 {
     #region Constructor / Setup
 
@@ -36,7 +36,8 @@ public abstract class Code12() : CustomCodeBase("Sxc.Code12"), IHasCodeLog, IDyn
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
-    [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
+    [PrivateApi]
+    int ICompatibilityLevel.CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 
     #endregion
 

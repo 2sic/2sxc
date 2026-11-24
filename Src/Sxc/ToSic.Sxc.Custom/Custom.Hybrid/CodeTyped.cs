@@ -28,7 +28,7 @@ namespace Custom.Hybrid;
 /// Be aware of this since the APIs are very different - see [Typed Code](xref:NetCode.TypedCode.Index).
 /// </remarks>
 [PublicApi]
-public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, ITypedCode16
+public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, ITypedCode16, ICompatibilityLevel
 {
 
     #region Constructor / Setup
@@ -56,8 +56,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, ITypedCode16
         => field ??= new(helperSpecs: new(CodeRootOrError(), false, "c# code file"));
 
     [PrivateApi]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel16;
+    int ICompatibilityLevel.CompatibilityLevel => CompatibilityLevels.CompatibilityLevel16;
 
     #endregion
 

@@ -2,6 +2,7 @@
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace Custom.Dnn;
 
@@ -11,11 +12,11 @@ namespace Custom.Dnn;
 /// </summary>
 [PrivateApi("Deprecated, hidden in v22")]
 [ShowApiWhenReleased(ShowApiMode.Never)]   // #DocsButNotForIntellisense
-public abstract class Code12 : DynamicCode12, IHasDnn
+public abstract class Code12 : DynamicCode12, IHasDnn, ICompatibilityLevel
 {
     /// <inheritdoc />
     public IDnnContext Dnn => (ExCtxOrNull as IHasDnn)?.Dnn;
 
-    [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
-
+    [PrivateApi]
+    int ICompatibilityLevel.CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 }
