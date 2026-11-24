@@ -19,7 +19,6 @@ internal class DnnRazorGetCodeHelper(RazorComponentBase page, IExecutionContext 
 
     private object GetCodeCshtml(string path)
     {
-        // ReSharper disable once ConvertTypeCheckToNullCheck
         if (page is not IHasDnn)
             throw new ExceptionWithHelp(new CodeHelp
             {

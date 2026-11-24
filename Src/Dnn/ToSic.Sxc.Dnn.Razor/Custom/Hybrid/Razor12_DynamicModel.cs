@@ -8,8 +8,8 @@ partial class Razor12: ISetDynamicModel
 {
     /// <inheritdoc cref="Custom.Razor.Sys.IRazor14{TModel,TServiceKit}.DynamicModel"/>
     [PublicApi]
-    public dynamic DynamicModel => RzrHlp.DynamicModel;
+    public dynamic DynamicModel => field ??= RzrHlp.GetDynamicModel(ExCtx);
 
     [PrivateApi]
-    void ISetDynamicModel.SetDynamicModel(RenderSpecs viewData) => RzrHlp.SetDynamicModel(viewData);
+    void ISetDynamicModel.SetDynamicModel(RenderSpecs viewData) => RzrHlp.SetDynamicModel(ExCtx, viewData);
 }

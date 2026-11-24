@@ -8,7 +8,7 @@ using ToSic.Sxc.Sys.ExecutionContext;
 namespace ToSic.Sxc.Dnn.Razor;
 
 [PrivateApi]
-internal class DnnRazorHelper() : ServiceWithContext("Sxc.RzrHlp")
+internal class DnnRazorHelper() : ServiceBase("Sxc.RzrHlp")
 {
     #region Constructor / Init
 
@@ -31,7 +31,8 @@ internal class DnnRazorHelper() : ServiceWithContext("Sxc.RzrHlp")
         Page.Context = parentPage.Context;
 
         // Return if parent page is not a SexyContentWebPage
-        if (parentPage is not RazorComponentBase typedParent) return;
+        if (parentPage is not RazorComponentBase typedParent)
+            return;
 
         ParentPage = typedParent;
 
@@ -50,25 +51,25 @@ internal class DnnRazorHelper() : ServiceWithContext("Sxc.RzrHlp")
 
     #region Html Helper
 
-    internal IHtmlHelper Html => field
-        ??= ExCtx.GetService<Generator<HtmlHelper, HtmlHelperContext>>()
-            .New(new(){ Page = Page, RazorHelper = this, IsSystemAdmin = ExCtx.GetContextOfBlock()?.User.IsSystemAdmin ?? false });
-            //.Init(Page, this, ExCtx.GetContextOfBlock()?.User.IsSystemAdmin ?? false);
+    internal IHtmlHelper GetHtml(IExecutionContext exCtx) =>
+        exCtx.GetService<Generator<HtmlHelper, HtmlHelperContext>>()
+            .New(new()
+            {
+                Page = Page, RazorHelper = this, IsSystemAdmin = exCtx.GetContextOfBlock()?.User.IsSystemAdmin ?? false
+            });
 
     #endregion
 
     #region DynamicModel and Factory
 
-    private ICodeDataPoCoWrapperService CodeDataWrapper => field ??= ExCtx.GetService<ICodeDataPoCoWrapperService>();
-
     /// <inheritdoc cref="IRazor14{TModel,TServiceKit}.DynamicModel"/>
-    public object DynamicModel => _dynamicModel ??= CodeDataWrapper.FromDictionary(Page.PageData);
+    public object GetDynamicModel(ICanGetService exCtx) => _dynamicModel ??= exCtx.GetService<ICodeDataPoCoWrapperService>().FromDictionary(Page.PageData);
     private object _dynamicModel;
 
-    internal void SetDynamicModel(RenderSpecs viewData)
+    internal void SetDynamicModel(ICanGetService exCtx, RenderSpecs viewData)
     {
         var l = Log.Fn();
-        _dynamicModel = CodeDataWrapper.DynamicFromObject(viewData.Data, WrapperSettings.Dyn(children: false, realObjectsToo: false));
+        _dynamicModel = exCtx.GetService<ICodeDataPoCoWrapperService>().DynamicFromObject(viewData.Data, WrapperSettings.Dyn(children: false, realObjectsToo: false));
         l.Done();
     }
 

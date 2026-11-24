@@ -52,7 +52,6 @@ public abstract partial class RazorComponentBase : WebPageBase, IRazor, IHasCode
     [PrivateApi]
     public void ConnectToRoot(IExecutionContext exCtx)
     {
-        RzrHlp.ConnectToRoot(exCtx);
         ExCtx = exCtx;
     }
 
@@ -93,7 +92,7 @@ public abstract partial class RazorComponentBase : WebPageBase, IRazor, IHasCode
     public virtual ICodeLog Log => RzrHlp.CodeLog;
 
     /// <inheritdoc />
-    public virtual IHtmlHelper Html => RzrHlp.Html;
+    public abstract IHtmlHelper Html { get; }
 
     #endregion
 }

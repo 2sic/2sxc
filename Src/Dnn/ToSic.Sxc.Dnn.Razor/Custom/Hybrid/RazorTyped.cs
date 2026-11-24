@@ -93,7 +93,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
     public override ICodeLog Log => RzrHlp.CodeLog;
 
     /// <inheritdoc />
-    public override IHtmlHelper Html => RzrHlp.Html;
+    public override IHtmlHelper Html => field ??= RzrHlp.GetHtml(ExCtx);
     private DnnRazorGetCodeHelper RzrGetCodeHlp => field ??= new(this, ExCtx);
 
     /// <inheritdoc cref="ITypedCode16.GetCode"/>

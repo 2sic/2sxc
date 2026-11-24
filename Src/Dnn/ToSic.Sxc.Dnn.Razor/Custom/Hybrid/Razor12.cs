@@ -34,7 +34,7 @@ public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHe
     public override ICodeLog Log => RzrHlp.CodeLog;
 
     /// <inheritdoc />
-    public override IHtmlHelper Html => RzrHlp.Html;
+    public override IHtmlHelper Html => field ??= RzrHlp.GetHtml(ExCtx);
 
     #endregion
 
