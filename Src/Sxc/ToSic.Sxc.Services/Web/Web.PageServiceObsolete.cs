@@ -1,5 +1,4 @@
 ﻿using ToSic.Razor.Blade;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Web;
@@ -10,18 +9,19 @@ namespace ToSic.Sxc.Web;
 /// </summary>
 [Obsolete]
 internal class WebPageServiceObsolete(Services.IPageService pageServiceImplementation)
-    : IPageService, INeedsExecutionContext
+    : IPageService // , INeedsExecutionContext
 {
-    /// <summary>
-    /// Forward execution context to the actual implementation.
-    /// 
-    /// Fixes bug https://github.com/2sic/2sxc/issues/3424
-    /// </summary>
-    /// <param name="exCtx"></param>
-    public void ConnectToRoot(IExecutionContext exCtx)
-    {
-        (pageServiceImplementation as INeedsExecutionContext)?.ConnectToRoot(exCtx);
-    }
+    // 2026-11-24 2dm: now the deeper service will automatically pick up the relevant service, so it doesn't need to be passed in here anymore. But we keep it for now, to avoid breaking old apps.
+    ///// <summary>
+    ///// Forward execution context to the actual implementation.
+    ///// 
+    ///// Fixes bug https://github.com/2sic/2sxc/issues/3424
+    ///// </summary>
+    ///// <param name="exCtx"></param>
+    //public void ConnectToRoot(IExecutionContext exCtx)
+    //{
+    //    (pageServiceImplementation as INeedsExecutionContext)?.ConnectToRoot(exCtx);
+    //}
 
     public string SetBase(string? url = null)
     {
