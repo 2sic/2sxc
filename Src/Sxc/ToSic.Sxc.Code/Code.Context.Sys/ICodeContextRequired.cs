@@ -1,13 +1,11 @@
-﻿using ToSic.Sxc.Code.Context.Sys;
-
-namespace ToSic.Sxc.Sys.ExecutionContext;
+﻿namespace ToSic.Sxc.Code.Context.Sys;
 
 /// <summary>
 /// Interface for components that require access to the execution context.
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface INeedsBlockContext
+public interface ICodeContextRequired
 {
     /// <summary>
     /// Internal call to connect to the execution context.

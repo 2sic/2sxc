@@ -1,7 +1,6 @@
-﻿using ToSic.Sxc.Code.Context.Sys;
-using ToSic.Sxc.Services.Sys;
+﻿using ToSic.Sxc.Services.Sys;
 
-namespace ToSic.Sxc.Sys.ExecutionContext;
+namespace ToSic.Sxc.Code.Context.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICodeContext<out TModel, out TServiceKit>: ICodeContext, IHasKit<TServiceKit>

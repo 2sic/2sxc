@@ -14,6 +14,7 @@ using ToSic.Sxc.Adam.Sys.FileSystem;
 using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Context;
@@ -37,7 +38,6 @@ using ToSic.Sxc.Integration.Modules;
 using ToSic.Sxc.Render.JsContext.Sys;
 using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Sys.Integration.Installation;
 using ToSic.Sys.Boot;
 using ToSic.Sys.Capabilities.Platform;
@@ -93,7 +93,7 @@ internal static class StartUpDnnCore
         services.TryAddTransient<DnnInstallLogger>();
 
 
-        services.TryAddTransient<Sys.ExecutionContext.ExecutionContext, DnnExecutionContext>();
+        services.TryAddTransient<Sxc.Code.Context.Sys.ExecutionContext, DnnExecutionContext>();
         // New v14
         services.TryAddTransient(typeof(ExecutionContext<,>), typeof(DnnExecutionContext<,>));
 

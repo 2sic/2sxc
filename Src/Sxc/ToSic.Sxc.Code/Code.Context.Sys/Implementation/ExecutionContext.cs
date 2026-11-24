@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.AppStack;
 using ToSic.Sxc.Apps.Sys;
-using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Context;
@@ -10,7 +9,7 @@ using ToSic.Sys.Caching.PiggyBack;
 
 // ReSharper disable InheritdocInvalidUsage
 
-namespace ToSic.Sxc.Sys.ExecutionContext;
+namespace ToSic.Sxc.Code.Context.Sys;
 
 /// <summary>
 /// Base class for any dynamic code root objects. <br/>

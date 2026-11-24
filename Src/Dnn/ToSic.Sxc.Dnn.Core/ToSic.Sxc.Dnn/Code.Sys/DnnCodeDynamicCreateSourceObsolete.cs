@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Code.Context.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn.Code.Sys;
 
@@ -21,7 +20,7 @@ public class DnnCodeDynamicCreateSourceObsolete(ICodeContext dynCode)
         // Completely rewrote this, because I got rid of some old APIs in v15 on the DataFactory
         // This has never been tested but probably works, but we won't invest time to be certain.
 
-        var dataSources = ((Sxc.Sys.ExecutionContext.ExecutionContext)dynCode).DataSources;
+        var dataSources = ((Sxc.Code.Context.Sys.ExecutionContext)dynCode).DataSources;
 
         try
         {

@@ -4,14 +4,11 @@ using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Context.Sys;
-using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Data.Sys.CodeDataFactory;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services.Sys;
 
-namespace ToSic.Sxc.Sys.ExecutionContext;
+namespace ToSic.Sxc.Code.Context.Sys;
 
 public partial class ExecutionContext: IGetService
 {
@@ -45,7 +42,7 @@ public partial class ExecutionContext: IGetService
     public TService GetService<TService>() where TService : class
     {
         var newService = SpWithOverrides.Build<TService>(Log);
-        if (newService is INeedsBlockContext newWithNeeds)
+        if (newService is ICodeContextRequired newWithNeeds)
             newWithNeeds.ConnectToRoot(this);
         return newService;
     }
@@ -76,7 +73,7 @@ public partial class ExecutionContext: IGetService
                 ? SpWithOverrides.Build<TService>(Log)
                 : SpWithOverrides.Build<TService>(type, Log);
 
-            if (newService is INeedsBlockContext newWithNeeds)
+            if (newService is ICodeContextRequired newWithNeeds)
                 newWithNeeds.ConnectToRoot(this);
             return newService;
         }

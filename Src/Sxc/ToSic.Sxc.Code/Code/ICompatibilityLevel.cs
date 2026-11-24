@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Sys.ExecutionContext;
+﻿namespace ToSic.Sxc.Code;
 
 /// <summary>
 /// Carries information about what compatibility level to use. Important for components that have an older and newer API.

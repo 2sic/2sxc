@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Data.Sys.Factory;
 
-namespace ToSic.Sxc.Sys.ExecutionContext;
+namespace ToSic.Sxc.Code.Context.Sys;
 
 public partial class ExecutionContext: IWrapper<ICodeDataFactory>
 {

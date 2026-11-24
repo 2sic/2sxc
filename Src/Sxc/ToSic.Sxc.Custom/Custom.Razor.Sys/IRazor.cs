@@ -1,10 +1,10 @@
-﻿using ToSic.Sxc.Sys.ExecutionContext;
+﻿using ToSic.Sxc.Code.Context.Sys;
 
 namespace Custom.Razor.Sys;
 
 [PrivateApi("not sure where/if it goes anywhere")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IRazor: /*IHasCodeApiService,*/ INeedsBlockContext
+public interface IRazor: /*IHasCodeApiService,*/ ICodeContextRequired
 {
     /// <summary>
     /// The path to this Razor WebControl.

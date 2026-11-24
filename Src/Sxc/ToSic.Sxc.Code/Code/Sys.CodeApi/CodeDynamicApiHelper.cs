@@ -5,12 +5,12 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Sys.CodeApi;
 
@@ -151,7 +151,7 @@ internal class CodeDynamicApiHelper(ExecutionContext exCtx) : ICodeDynamicApiHel
         var typeName = instance.GetType().FullName;
 
         // if it supports all our known context properties, attach them
-        if (instance is INeedsBlockContext needsRoot)
+        if (instance is ICodeContextRequired needsRoot)
         {
             l.A($"will attach root / Kit to {typeName}");
             needsRoot.ConnectToRoot(exCtx);

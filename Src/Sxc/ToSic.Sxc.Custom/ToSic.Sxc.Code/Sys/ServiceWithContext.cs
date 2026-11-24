@@ -1,5 +1,4 @@
 ﻿using ToSic.Sxc.Code.Context.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Services.Sys;
 
@@ -11,7 +10,7 @@ namespace ToSic.Sxc.Services.Sys;
 //[ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
 public abstract class ServiceWithContext(string logName, NoParamOrder npo = default, object[]? connect = default)
-    : ServiceBase(logName, npo: npo, connect: connect), INeedsBlockContext, ICanDebug
+    : ServiceBase(logName, npo: npo, connect: connect), ICodeContextRequired, ICanDebug
 {
     /// <summary>
     /// Connect to CodeRoot and it's log

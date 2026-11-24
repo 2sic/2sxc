@@ -6,5 +6,5 @@ namespace ToSic.Sxc.Dnn.ExecutionContext.Sys;
 /// The basic DnnDynamicCode without explicitly typed model / kit
 /// </summary>
 [PrivateApi]
-internal class DnnExecutionContext(Sxc.Sys.ExecutionContext.ExecutionContext.Dependencies services)
+internal class DnnExecutionContext(Sxc.Code.Context.Sys.ExecutionContext.Dependencies services)
     : DnnExecutionContext<object, ServiceKit>(services);

@@ -3,10 +3,10 @@ using System.Text.RegularExpressions;
 using ToSic.Eav.DataSource;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Search.Sys;
@@ -54,7 +54,7 @@ public class SearchIndexing(
         if (instance is not ICustomizeSearch customizeSearch)
             return l.ReturnNull("controller does not implement ICustomizeSearch");
 
-        if (instance is INeedsBlockContext needsContext)
+        if (instance is ICodeContextRequired needsContext)
             // Typed/dynamic custom code needs the same block, app and log context as the
             // indexed occurrence, even when no page rendering request is running.
             needsContext.ConnectToRoot(executionContextFactory.New().New(new()
