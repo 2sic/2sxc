@@ -61,7 +61,7 @@ partial record ToolbarBuilder
         // Check if enabled for certain groups
         //if (ExCtx != null! /* paranoid */)
         {
-            var user = Services.ExCtx.Value.GetCmsContext().User;
+            var user = Services.ExCtx.Value.CmsContext.User;
             var overrideShow = new ToolbarConfigurationShowHelper()
                 .OverrideShowBecauseOfRoles(Configuration, user);
             enabled = overrideShow ?? enabled;

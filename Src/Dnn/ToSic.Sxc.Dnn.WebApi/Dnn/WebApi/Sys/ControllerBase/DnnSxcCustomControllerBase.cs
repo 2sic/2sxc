@@ -1,5 +1,6 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Eav.WebApi.Sys;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 
@@ -65,7 +66,7 @@ public abstract class DnnSxcCustomControllerBase() : DnnApiController, IHasLog /
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public IExecutionContext ExCtx { get; private set; }
+    public ICodeContext ExCtx { get; private set; }
 
 
 

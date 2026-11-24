@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Sys.ExecutionContext;
+﻿using ToSic.Sxc.Code.Context.Sys;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Sys.CodeRunHelpers;
 
@@ -8,7 +9,7 @@ namespace ToSic.Sxc.Code.Sys.CodeRunHelpers;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public record CompileCodeHelperSpecs(
-    IExCtxComplete ExCtx,
+    ICodeContext ExCtx,
     bool IsRazor,
     string CodeFileName
 );

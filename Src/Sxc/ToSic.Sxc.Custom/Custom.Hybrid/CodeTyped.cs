@@ -3,6 +3,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.Models;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
@@ -53,7 +54,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, ITypedCode16, ICo
 
     [field: AllowNull, MaybeNull]
     private CodeHelperTypedData CodeHelper
-        => field ??= new(helperSpecs: new((IExCtxComplete)CodeRootOrError(), false, "c# code file"));
+        => field ??= new(helperSpecs: new(CodeRootOrError(), false, "c# code file"));
 
     [PrivateApi]
     int ICompatibilityLevel.CompatibilityLevel => CompatibilityLevels.CompatibilityLevel16;
@@ -68,7 +69,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, ITypedCode16, ICo
         => _codeApi ??= CodeRootOrError(propName).GetTypedApi();
     private ICodeTypedApiHelper? _codeApi;
 
-    private IExecutionContext CodeRootOrError([CallerMemberName] string? propName = default)
+    private ICodeContext CodeRootOrError([CallerMemberName] string? propName = default)
         => ExCtxOrNull
            ?? throw new ExceptionWithHelp(new CodeHelp
                {
@@ -200,8 +201,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, ITypedCode16, ICo
 
     #region As / AsList WIP v17
 
-    [field: AllowNull, MaybeNull]
-    private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
+    private ICodeDataFactory Cdf => field ??= ExCtx.Cdf;
 
     /// <inheritdoc />
     public T As<T>(object source, NoParamOrder npo = default)

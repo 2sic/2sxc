@@ -1,6 +1,7 @@
 ﻿using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Blocks.Sys.BlockBuilder;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Render.Block.Sys;
 using ToSic.Sxc.Services;
@@ -22,7 +23,7 @@ public class RenderService(
     Generator<InTextContentBlockRenderer> inTextRenderer,
     Generator<IBlockRenderer> blockBuilderGenerator,
     LazySvc<ILogStore> logStore,
-    Ctx<IExecutionContext> exCtx)
+    Ctx<ICodeContext> exCtx)
     : ServiceBase("Sxc.RndSvc", connect: [builderSvc, simpleRendererGen, inTextRenderer, logStore, blockBuilderGenerator]),
     IRenderService
 {
@@ -47,7 +48,7 @@ public class RenderService(
         Guid? newGuid = null)
     {
         item ??= parent.Item;
-        var block = exCtx.Value.GetBlock();
+        var block = exCtx.Value.Block!;
         var simpleRenderer = simpleRendererGen.New();
         return Tag.Custom(field == null
             ? simpleRenderer.Render(block, item.Entity, data: data) // without field edit-context
@@ -78,7 +79,7 @@ public class RenderService(
         if (string.IsNullOrWhiteSpace(field))
             throw new ArgumentNullException("To render all items, you must specify a field where the items are stored.", nameof(field));
 
-        var block = exCtx.Value.GetBlock();
+        var block = exCtx.Value.Block!;
         var editService = GetEditService();
         return Tag.Custom(merge == null
             ? simpleRendererGen.New().RenderListWithContext(block, parent.Entity, field, apps, max, editService)

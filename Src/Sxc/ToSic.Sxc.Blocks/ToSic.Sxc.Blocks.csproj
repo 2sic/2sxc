@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Render.Output.Sys\" />
+    <Folder Include="Blocks\Context.Sys\" />
   </ItemGroup>
 
 </Project>

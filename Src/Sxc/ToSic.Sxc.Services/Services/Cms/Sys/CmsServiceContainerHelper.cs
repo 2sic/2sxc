@@ -1,13 +1,13 @@
 ﻿using ToSic.Razor.Blade;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Decorators;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.Cms.Sys;
 
 internal class CmsServiceContainerHelper(
-    IContextServiceProvider executionContext,
+    ICodeContextGetService ctxGetSvc,
     IField? entityField,
     object? container,
     string? classes,
@@ -18,7 +18,7 @@ internal class CmsServiceContainerHelper(
     private string? Classes { get; set; } = classes;
 
     [field: AllowNull, MaybeNull]
-    private IToolbarService Toolbar => field ??= executionContext.GetService<IToolbarService>(reuse: true);
+    private IToolbarService Toolbar => field ??= ctxGetSvc.GetService<IToolbarService>(reuse: true);
     
 
     public IHtmlTag Wrap(CmsProcessed result, bool defaultToolbar)

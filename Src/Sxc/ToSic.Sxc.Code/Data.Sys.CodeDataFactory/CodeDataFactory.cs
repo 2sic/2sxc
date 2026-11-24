@@ -4,6 +4,7 @@ using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.Data.Build.Sys;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Context.Sys.CmsContext;
 using ToSic.Sxc.Data.Sys.DynamicJacket;
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class CodeDataFactory(
     ISysServiceProvider serviceProvider,
-    Ctx<IExCtxComplete> ctxExCtx,
+    Ctx<ICodeContext> ctxExCtx,
     LazySvc<CodeDataServices> codeDataServices,
     Generator<AdamManager, AdamManager.Options> adamManager,
     LazySvc<IContextOfAppFactory> appCtxFactory,
@@ -106,7 +107,7 @@ public partial class CodeDataFactory(
             ?? [];
     
     private ISite? SiteFromContextOrFallbackOrNull => field
-        ??= (ctxExCtx.ValueOptional?.GetCmsContext() as CmsContext)?.CtxSite.Site
+        ??= (ctxExCtx.ValueOptional?.CmsContext as CmsContext)?.CtxSite.Site
             ?? _siteOrNull
             ?? null;
 

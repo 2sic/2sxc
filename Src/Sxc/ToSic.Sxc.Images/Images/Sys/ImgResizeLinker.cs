@@ -5,6 +5,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneCulture;
 using ToSic.Eav.Metadata;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images.Sys.ResizeSettings;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -52,7 +53,7 @@ public class ImgResizeLinker(
         string? format = default,
         object? aspectRatio = default,
         string? parameters = default,
-        IHasAllSettings? hasSettings = default
+        ICodeContextSettings? hasSettings = default
     )
     {
         var l = (Debug ? Log : null).Fn<string?>($"{nameof(url)}:{url}");

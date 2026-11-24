@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Sys.ExecutionContext;
+﻿using ToSic.Sxc.Code.Context.Sys;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Services.Sys;
 
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.Services.Sys;
 //[ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
 public abstract class ServiceWithContext(string logName, NoParamOrder npo = default, object[]? connect = default)
-    : ServiceBase(logName, npo: npo, connect: connect), INeedsExecutionContext, ICanDebug
+    : ServiceBase(logName, npo: npo, connect: connect), INeedsBlockContext, ICanDebug
 {
     /// <summary>
     /// Connect to CodeRoot and it's log
@@ -18,17 +19,7 @@ public abstract class ServiceWithContext(string logName, NoParamOrder npo = defa
     /// <param name="exCtx"></param>
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public virtual void ConnectToRoot(IExecutionContext exCtx)
-        => ConnectToRoot(exCtx, null);
-
-    /// <summary>
-    /// Connect to CodeRoot and a custom log
-    /// </summary>
-    /// <param name="exCtx"></param>
-    /// <param name="parentLog"></param>
-    [PrivateApi]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    public void ConnectToRoot(IExecutionContext? exCtx, ILog? parentLog)
+    public virtual void ConnectToRoot(ICodeContext exCtx)
     {
         // Avoid unnecessary reconnects
         if (_alreadyConnected)
@@ -38,7 +29,7 @@ public abstract class ServiceWithContext(string logName, NoParamOrder npo = defa
         // Remember the parent
         ExCtxOrNull = exCtx;
         // Link the logs
-        this.LinkLog(parentLog ?? exCtx?.Log);
+        this.LinkLog(exCtx?.Log);
         // report connection in log
         Log.Fn(message: "Linked to Root").Done();
     }
@@ -47,10 +38,10 @@ public abstract class ServiceWithContext(string logName, NoParamOrder npo = defa
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
 
-    protected IExecutionContext ExCtx => ExCtxOrNull
+    protected ICodeContext ExCtx => ExCtxOrNull
                                          ?? throw new($"{nameof(ExCtxOrNull)} is null - this is a bug, please report it.");
 
-    protected IExecutionContext? ExCtxOrNull { get; private set; }
+    protected ICodeContext? ExCtxOrNull { get; private set; }
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]

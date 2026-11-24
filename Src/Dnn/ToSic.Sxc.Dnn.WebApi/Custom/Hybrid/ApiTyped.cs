@@ -7,6 +7,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
@@ -144,7 +145,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     #region My... Stuff
 
     private CodeHelperTypedData CodeHelper => field
-        ??= new(helperSpecs: new((IExCtxComplete)ExCtx, false, ((IGetCodePath)this).CreateInstancePath));
+        ??= new(helperSpecs: new((ICodeContext)ExCtx, false, ((IGetCodePath)this).CreateInstancePath));
 
     /// <inheritdoc />
     public ITypedItem MyItem => CodeHelper.MyItem;

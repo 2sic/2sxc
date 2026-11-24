@@ -1,4 +1,6 @@
 ﻿using Custom.Razor.Sys;
+using System.Web.Razor.Parser.SyntaxTree;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
@@ -51,11 +53,11 @@ internal class DnnRazorHelper() : ServiceBase("Sxc.RzrHlp")
 
     #region Html Helper
 
-    internal IHtmlHelper GetHtml(IExecutionContext exCtx) =>
+    internal IHtmlHelper GetHtml(ICodeContext exCtx) =>
         exCtx.GetService<Generator<HtmlHelper, HtmlHelperContext>>()
             .New(new()
             {
-                Page = Page, RazorHelper = this, IsSystemAdmin = exCtx.GetContextOfBlock()?.User.IsSystemAdmin ?? false
+                Page = Page, RazorHelper = this, IsSystemAdmin = exCtx.Block?.Context?.User.IsSystemAdmin ?? false
             });
 
     #endregion

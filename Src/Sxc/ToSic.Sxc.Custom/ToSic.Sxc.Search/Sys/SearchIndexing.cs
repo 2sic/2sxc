@@ -54,7 +54,7 @@ public class SearchIndexing(
         if (instance is not ICustomizeSearch customizeSearch)
             return l.ReturnNull("controller does not implement ICustomizeSearch");
 
-        if (instance is INeedsExecutionContext needsContext)
+        if (instance is INeedsBlockContext needsContext)
             // Typed/dynamic custom code needs the same block, app and log context as the
             // indexed occurrence, even when no page rendering request is running.
             needsContext.ConnectToRoot(executionContextFactory.New().New(new()

@@ -117,7 +117,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     #region My... Stuff
 
     private CodeHelperTypedData CodeHelper => field
-        ??= new(helperSpecs: new((IExCtxComplete)CtxHlp.ExCtxOrNull!, false, ((IGetCodePath)this).CreateInstancePath));
+        ??= new(helperSpecs: new(CtxHlp.ExCtxOrNull!, false, ((IGetCodePath)this).CreateInstancePath));
 
     public ITypedItem MyItem => CodeHelper.MyItem;
 

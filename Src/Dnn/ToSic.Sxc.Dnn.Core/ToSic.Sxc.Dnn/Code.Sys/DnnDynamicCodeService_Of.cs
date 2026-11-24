@@ -51,15 +51,16 @@ partial class DnnDynamicCodeService
         MakeSureLogIsInHistory();
         // #ActivateEditUi seems unused, it's never read; keep till ca. mid 2027
         //ActivateEditUi();
+        var app = GetAndInitApp(ToAppIdentityOrThrow(zoneId, appId), overrideSite: null);
+        var appForCode = ((IWrapper<IAppForCode>)app).GetContents();
         var exCtx = ServicesScoped.ExCtxGenerator.New().New(new()
         {
+            AppToAttach = appForCode,
             OwnerOrNull = null,
             BlockOrNull = null,
             ParentLog = Log,
             CompatibilityFallback = CompatibilityLevels.CompatibilityLevel12,
         });
-        var app = GetAndInitApp(ToAppIdentityOrThrow(zoneId, appId), overrideSite: null);
-        ((IExCtxAttachApp)exCtx).AttachApp(((IWrapper<IAppForCode>)app).GetContents());
         var code12 = new DynamicApiStandalone(exCtx, exCtx.GetDynamicApi());
         return l.ReturnAsOk(code12);
     }

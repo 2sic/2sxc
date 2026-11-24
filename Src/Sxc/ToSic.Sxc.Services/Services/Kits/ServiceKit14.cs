@@ -1,8 +1,8 @@
 ﻿using Connect.Koi;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Services.PageShield;
 using ToSic.Sxc.Services.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Services;
 
@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Services;
 /// </remarks>
 [PublicApi]
 [method: PrivateApi("Public constructor for DI")]
-public class ServiceKit14(Ctx<IContextServiceProvider> ctxSp) : ServiceKit("Sxc.Kit14")
+public class ServiceKit14(Ctx<ICodeContextGetService> ctxGetService) : ServiceKit("Sxc.Kit14")
 {
 
     /// <summary>
@@ -28,7 +28,7 @@ public class ServiceKit14(Ctx<IContextServiceProvider> ctxSp) : ServiceKit("Sxc.
     /// <returns></returns>
     [PrivateApi]
     private TService GetKitService<TService>() where TService : class
-        => ctxSp.Value.GetService<TService>(reuse: true);
+        => ctxGetService.Value.GetService<TService>(reuse: true);
 
     /// <summary>
     /// The ADAM Service, used to retrieve files and maybe more. 

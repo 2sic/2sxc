@@ -1,4 +1,5 @@
 ﻿using Custom.Razor.Sys;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Render.Sys.Specs;
@@ -46,11 +47,11 @@ public abstract partial class RazorComponentBase : WebPageBase, IRazor, IHasCode
 
     /// <inheritdoc />
     [PrivateApi]
-    internal IExecutionContext ExCtx { get; private set; }
+    internal ICodeContext ExCtx { get; private set; }
 
     /// <inheritdoc />
     [PrivateApi]
-    public void ConnectToRoot(IExecutionContext exCtx)
+    public void ConnectToRoot(ICodeContext exCtx)
     {
         ExCtx = exCtx;
     }

@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Services.Sys;
+﻿using ToSic.Sxc.Code.Context.Sys;
+using ToSic.Sxc.Services.Sys;
 using ToSic.Sys.Utils.Types;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
@@ -16,7 +17,7 @@ public class ExecutionContextFactory(ISysServiceProvider serviceProvider)
 {
 
     /// <inheritdoc/>
-    public IExecutionContext New(ExecutionContextOptions options)
+    public ICodeContext New(ExecutionContextOptions options)
     {
         var l = Log.Fn<ExecutionContext>($"{nameof(options.Compatibility)}: {options.Compatibility}");
 

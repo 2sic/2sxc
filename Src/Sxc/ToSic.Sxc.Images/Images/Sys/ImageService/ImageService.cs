@@ -1,10 +1,11 @@
-﻿using ToSic.Sxc.Services;
+﻿using ToSic.Sxc.Code.Context.Sys;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Images.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService features, Ctx<IExecutionContext> ctxExCtx)
+internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService features, Ctx<ICodeContext> ctxExCtx)
     : ServiceBase(SxcLogName + ".ImgSvc", connect: [features, imgLinker]), IImageService
 {
     #region Constructor and Inits

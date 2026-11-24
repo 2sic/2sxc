@@ -151,7 +151,7 @@ internal class CodeDynamicApiHelper(ExecutionContext exCtx) : ICodeDynamicApiHel
         var typeName = instance.GetType().FullName;
 
         // if it supports all our known context properties, attach them
-        if (instance is INeedsExecutionContext needsRoot)
+        if (instance is INeedsBlockContext needsRoot)
         {
             l.A($"will attach root / Kit to {typeName}");
             needsRoot.ConnectToRoot(exCtx);

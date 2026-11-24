@@ -7,7 +7,7 @@ public class ExecutionContextMock : ExecutionContext
 {
     public ExecutionContextMock(Generator<AppForCode, AppForCode.Options> appGen, Dependencies services) : base(services, "Mck")
     {
-        var app = appGen.New(new(null, KnownAppsConstants.PresetIdentity.PureIdentity(), null));
+        var app = appGen.New(new(ReplaceSite: null, AppIdentity: KnownAppsConstants.PresetIdentity.PureIdentity(), DataSpecs: null));
         AttachApp(app);
     }
 }

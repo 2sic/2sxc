@@ -1,5 +1,6 @@
 ﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -10,7 +11,7 @@ using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Services.PageShield;
 
-internal class PageShield(Ctx<IExecutionContext> ctxExCtx, Ctx<IBlock> ctxBlock, IPageServiceShared pageServiceShared, IUser user, IHttpContextService httpContextService, ISysFeaturesService features)
+internal class PageShield(Ctx<ICodeContext> ctxExCtx, Ctx<IBlock> ctxBlock, IPageServiceShared pageServiceShared, IUser user, IHttpContextService httpContextService, ISysFeaturesService features)
     : ServiceBase("Sxc.OutCac", connect: [pageServiceShared, httpContextService, features]), IPageShield
 {
 

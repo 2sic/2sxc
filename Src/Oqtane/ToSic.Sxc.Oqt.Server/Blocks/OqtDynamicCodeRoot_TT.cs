@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Oqt.Server.Plumbing;
+﻿using ToSic.Sxc.Code.Context.Sys;
+using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -16,7 +17,7 @@ internal class OqtExecutionContext<TModel, TServiceKit> : ExecutionContext<TMode
         ]);
     }
 
-    public override IExecutionContext Setup(ExecutionContextOptions options)
+    public override ICodeContext Setup(ExecutionContextOptions options)
     {
         _aliasResolverLazy.Value.InitIfEmpty(options.BlockOrNull?.Context?.Site?.Id);
         return base.Setup(options);

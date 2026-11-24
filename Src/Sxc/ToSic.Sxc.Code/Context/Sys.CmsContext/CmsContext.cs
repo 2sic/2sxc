@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Context.Sys.Module;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services;
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Context.Sys.CmsContext;
 [PrivateApi("we only show the interface in the docs")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CmsContext(
-    Ctx<IExCtxComplete> ctxExCtx,
+    Ctx<ICodeContext> ctxExCtx,
     IPlatform platform,
     IContextOfSiteService ctxSvcFallback,
     LazySvc<IPage> pageLazy,

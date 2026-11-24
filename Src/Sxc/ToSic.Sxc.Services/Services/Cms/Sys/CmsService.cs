@@ -1,15 +1,15 @@
 ﻿using ToSic.Eav.Data.ContentTypes.Fields.Sys;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services.Sys.Cms;
 using ToSic.Sxc.Services.Tweaks;
 using ToSic.Sxc.Services.Tweaks.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Services.Cms.Sys;
 
-internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg, Ctx<IContextServiceProvider> ctxGetService, Ctx<ICodeDataFactory> ctxCdf)
+internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg, Ctx<ICodeContextGetService> ctxGetService, Ctx<ICodeDataFactory> ctxCdf)
     : ServiceBase($"{SxcLogName}.CmsSrv", connect: [stringWysiwyg]), ICmsService
 {
     [field: AllowNull, MaybeNull]

@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Blocks.Sys;
+﻿using ToSic.Sxc.Apps.Sys;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
@@ -9,6 +10,8 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public record ExecutionContextOptions
 {
+    public IAppForCode? AppToAttach { get; init; }
+
     /// <summary>
     /// The owning object - usually a razor file or a WebApi - providing version information for compatibility
     /// </summary>

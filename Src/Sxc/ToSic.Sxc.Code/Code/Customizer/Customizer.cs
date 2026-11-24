@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Models;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys.CmsContext;
 using ToSic.Sxc.Data.Sys.Factory;
@@ -8,7 +9,7 @@ using ToSic.Sxc.Sys.ExecutionContext;
 namespace ToSic.Sxc.Code.Customizer;
 
 /// <inheritdoc cref="ICodeCustomizer" />
-internal class Customizer(Ctx<IExCtxComplete> ctxEx): ServiceBase(SxcLogName + ".CdeCst"), ICodeCustomizer
+internal class Customizer(Ctx<ICodeContext> ctxEx): ServiceBase(SxcLogName + ".CdeCst"), ICodeCustomizer
 {
     public IAppTyped<TSettings, TResources> App<TSettings, TResources>()
         where TSettings : class, IModelFromData, new()
@@ -34,7 +35,7 @@ internal class Customizer(Ctx<IExCtxComplete> ctxEx): ServiceBase(SxcLogName + "
             return typed;
 
         // Get and cache for reuse
-        var cmsContext = (CmsContext)ctxEx.Value.GetCmsContext();
+        var cmsContext = (CmsContext)ctxEx.Value.CmsContext;
         var created = new CmsView<TSettings, TResources>(cmsContext, cmsContext.BlockInternal, false);
         _view = created;
         return created;

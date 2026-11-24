@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.Models;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Context;
@@ -16,7 +17,7 @@ namespace ToSic.Sxc.Code;
 /// </summary>
 /// <param name="exCtx"></param>
 /// <param name="apiHelper"></param>
-internal class TypedApiStandalone(IExCtxComplete exCtx, ICodeTypedApiHelper apiHelper) : ITypedApi, IHasLog
+internal class TypedApiStandalone(ICodeContext exCtx, ICodeTypedApiHelper apiHelper) : ITypedApi, IHasLog
 {
     public ILog Log => exCtx.Log!;
 
@@ -59,8 +60,7 @@ internal class TypedApiStandalone(IExCtxComplete exCtx, ICodeTypedApiHelper apiH
 
     #endregion
 
-    [field: AllowNull, MaybeNull]
-    private ICodeDataFactory Cdf => field ??= exCtx.GetCdf();
+    private ICodeDataFactory Cdf => field ??= exCtx.Cdf;
 
     public ITypedItem? AsItem(object data, NoParamOrder npo = default, bool? propsRequired = default)
         => Cdf.AsItem(data, new() { ItemIsStrict = propsRequired ?? true });

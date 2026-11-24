@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Razor.Internal;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
@@ -71,10 +72,10 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    internal IExecutionContext ExCtx => RzrHlp.ExCtxRoot!;
+    internal ICodeContext ExCtx => RzrHlp.ExCtxRoot!;
 
     [PrivateApi]
-    public void ConnectToRoot(IExecutionContext exCtx)
+    public void ConnectToRoot(ICodeContext exCtx)
         => RzrHlp.ConnectToRoot(exCtx);
 
     [RazorInject]

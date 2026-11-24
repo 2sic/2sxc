@@ -1,16 +1,16 @@
 ﻿using System.Text.RegularExpressions;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images.Sys;
 using ToSic.Sxc.Services.CmsService;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Sys.HtmlParsing;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.Cms.Sys;
 
-internal class CmsServiceStringWysiwyg(Ctx<IContextServiceProvider> ctxGetService)
+internal class CmsServiceStringWysiwyg(Ctx<ICodeContextGetService> ctxGetService)
     : ServiceBase("Cms.StrWys", connect: [])
 {
     #region Sub-Services which should come from the same Code context

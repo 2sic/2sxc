@@ -1,6 +1,7 @@
 ﻿using DotNetNuke.Abstractions;
 using ToSic.Eav.Data.Sys.ValueConverter;
 using ToSic.Sxc.Apps.Sys;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Images.Sys;
@@ -17,7 +18,7 @@ namespace ToSic.Sxc.Dnn.Services.Sys;
 [PrivateApi("This implementation shouldn't be visible")]
 internal class DnnLinkService(
     Ctx<IAppForCode> ctxApp,
-    Ctx<IHasAllSettings> ctxSettings,
+    Ctx<ICodeContextSettings> ctxSettings,
     LazySvc<IDnnContext> dnnCtx,
     ImgResizeLinker imgLinker,
     LazySvc<IValueConverter> dnnValueConverterLazy,

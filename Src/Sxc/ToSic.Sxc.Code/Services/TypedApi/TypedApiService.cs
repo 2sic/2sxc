@@ -7,6 +7,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Context;
@@ -139,7 +140,7 @@ internal class TypedApiService(ISysServiceProvider serviceProvider, LazySvc<ILog
         ActivateEditUi();
         var cmsBlock = ServicesScoped.ModAndBlockBuilder.Value.BuildBlock(pageId, moduleId);
 
-        var exCtx = (IExCtxComplete)ServicesScoped.ExCtxGenerator.New().New(new()
+        var exCtx = ServicesScoped.ExCtxGenerator.New().New(new()
         {
             OwnerOrNull = null,
             BlockOrNull = cmsBlock,
@@ -182,18 +183,17 @@ internal class TypedApiService(ISysServiceProvider serviceProvider, LazySvc<ILog
         return l.ReturnAsOk(code12);
     }
 
-    private IExCtxComplete GetNewCodeRoot(IAppForCode? appToAttach = default, IModule? moduleIfBlockUnknown = default)
+    private ICodeContext GetNewCodeRoot(IAppForCode? appToAttach = default, IModule? moduleIfBlockUnknown = default)
     {
-        var exCtx = (IExCtxComplete)ServicesScoped.ExCtxGenerator.New().New(new()
+        var exCtx = ServicesScoped.ExCtxGenerator.New().New(new()
         {
+            AppToAttach = appToAttach, /* may be null */
             OwnerOrNull = null,
             BlockOrNull = null,
             ParentLog = Log,
             CompatibilityFallback = CompatibilityLevels.CompatibilityLevel16,
             ModuleIfBlockUnknown = moduleIfBlockUnknown,
         });
-        if (appToAttach != null)
-            ((IExCtxAttachApp)exCtx).AttachApp(appToAttach);
         return exCtx;
     }
 

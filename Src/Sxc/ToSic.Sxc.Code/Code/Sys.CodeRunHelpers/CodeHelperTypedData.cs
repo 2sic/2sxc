@@ -22,7 +22,7 @@ public class CodeHelperTypedData(CompileCodeHelperSpecs helperSpecs)
     internal ContextData Data => field ??= Specs.ExCtx.GetContextData();
 
     [field: AllowNull, MaybeNull]
-    private ICodeDataFactory Cdf => field ??= Specs.ExCtx.GetCdf();
+    private ICodeDataFactory Cdf => field ??= Specs.ExCtx.Cdf;
 
     public ITypedItem MyItem => field ??= Cdf.AsItem(Data.MyItems.FirstOrDefault(), new() { ItemIsStrict = DefaultStrict });
 

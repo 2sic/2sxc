@@ -1,6 +1,7 @@
 ﻿using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Adam.Sys.Work;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.WebApi;
 using ToSic.Sys.Capabilities.Features;
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.Backend.Adam;
 /// </summary>
 [PrivateApi("Used by DynamicApiController and Hybrid.Api12_DynCode")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamCode(Ctx<IExCtxComplete> exCtx, Generator<AdamWorkUpload, AdamContext.Options> adamUpload, LazySvc<ISysFeaturesService> features, IContextOfAppService ctxSvc)
+public class AdamCode(Ctx<ICodeContext> exCtx, Generator<AdamWorkUpload, AdamContext.Options> adamUpload, LazySvc<ISysFeaturesService> features, IContextOfAppService ctxSvc)
     : ServiceBase("AdamCode", connect: [adamUpload, features])
 {
     public IFile SaveInAdam(NoParamOrder npo = default,

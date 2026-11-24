@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ToSic.Sxc.Cms.Users.Sys;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Razor.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Services;
@@ -19,13 +20,14 @@ namespace ToSic.Sxc.Web.Sys.LightSpeed;
 /// <param name="featureSvc"></param>
 /// <param name="parentLog"></param>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictionary<string, object?>? model, IExecutionContext exCtx, IFeaturesService featureSvc, ILog parentLog) : HelperBase(parentLog, "Rzr.Cache")
+public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictionary<string, object?>? model, ICodeContext exCtx, IFeaturesService featureSvc, ILog parentLog)
+    : HelperBase(parentLog, "Rzr.Cache")
 {
 
     private bool IsEnabled => _isEnabled ??= featureSvc.IsEnabled(SxcFeatures.LightSpeedOutputCachePartials.NameId);
     private bool? _isEnabled;
 
-    private string AppCacheKey => field ??= exCtx.GetApp()?.AppReader.Specs.CacheKey ?? appId.ToString();
+    private string AppCacheKey => field ??= exCtx.App?.AppReader.Specs.CacheKey ?? appId.ToString();
 
     /// <summary>
     /// Underlying cache service, taken from the execution context so it knows more about the current request.
@@ -85,8 +87,7 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
         var config = CacheSpecsConfig;
         if (config == null)
             return AttachListenerAndExit("no config");
-        var user = exCtx.GetCmsContext().User;
-        var elevation = user.GetElevation();
+        var elevation = exCtx.CmsContext.User.GetElevation();
         if (!config.ForElevation.IsEnabledFor(elevation))
             return AttachListenerAndExit($"user elevation '{elevation.ToString()}' not enabled, ignore cache.");
 

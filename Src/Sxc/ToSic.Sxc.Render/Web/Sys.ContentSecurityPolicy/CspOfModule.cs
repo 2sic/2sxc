@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.AppStack;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
@@ -7,7 +8,7 @@ using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 namespace ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class CspOfModule(Ctx<IExecutionContext> ctxExCtx, IUser user, IFeaturesService featuresService)
+public class CspOfModule(Ctx<ICodeContext> ctxExCtx, IUser user, IFeaturesService featuresService)
     : ServiceBase($"{CspConstants.LogPrefix}.ModLvl")
 {
     #region App Level CSP Providers
@@ -43,7 +44,7 @@ public class CspOfModule(Ctx<IExecutionContext> ctxExCtx, IUser user, IFeaturesS
     {
         if (!featuresService.IsEnabled(SxcFeatures.ContentSecurityPolicyTestUrl.NameId))
             return null;
-        var pageParameters = ctxExCtx.ValueOptional?.GetCmsContext()?.Page?.Parameters;
+        var pageParameters = ctxExCtx.ValueOptional?.CmsContext?.Page?.Parameters;
         if (pageParameters == null)
             return null;
         pageParameters.TryGetValue(CspConstants.CspUrlParameter, out var cspParam);

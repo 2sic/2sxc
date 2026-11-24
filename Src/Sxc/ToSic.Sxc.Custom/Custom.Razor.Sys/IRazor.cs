@@ -4,7 +4,7 @@ namespace Custom.Razor.Sys;
 
 [PrivateApi("not sure where/if it goes anywhere")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IRazor: /*IHasCodeApiService,*/ INeedsExecutionContext
+public interface IRazor: /*IHasCodeApiService,*/ INeedsBlockContext
 {
     /// <summary>
     /// The path to this Razor WebControl.

@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Services.Cache.Sys.CacheKey;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -32,7 +33,7 @@ namespace ToSic.Sxc.Services.Cache.Sys;
 /// </summary>
 /// <param name="cache"></param>
 internal class CacheService(
-    Ctx<IExecutionContext> ctxExCtx,
+    Ctx<ICodeContext> ctxExCtx,
     MemoryCacheService cache,
     IAppCacheKeyService appCacheKeyService,
     LazySvc<IAppsCatalog> appsCatalog,
@@ -43,7 +44,7 @@ internal class CacheService(
     /// <summary>
     /// AppId to use in key generation, so it won't collide with other apps.
     /// </summary>
-    private int AppId => _appId ??= ctxExCtx.ValueOptional?.GetApp().AppId ?? -1;
+    private int AppId => _appId ??= ctxExCtx.ValueOptional?.App!.AppId ?? -1;
     private int? _appId;
 
     private string? AppCacheKey => field ??= GetAppCacheKey();
@@ -80,9 +81,9 @@ internal class CacheService(
 
     private string? GetAppCacheKey()
     {
-        var app = ctxExCtx.ValueOptional?.GetApp();
-        if (app is {} appWithInternal)
-            return appWithInternal.AppReader.Specs.CacheKey;
+        var app = ctxExCtx.ValueOptional?.App;
+        if (app != null)
+            return app.AppReader.Specs.CacheKey;
 
         if (AppId <= 0)
             return null;

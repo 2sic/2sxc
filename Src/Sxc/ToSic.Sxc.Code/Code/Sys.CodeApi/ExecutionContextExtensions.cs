@@ -1,24 +1,20 @@
-﻿using ToSic.Sxc.Sys.ExecutionContext;
+﻿using ToSic.Sxc.Code.Context.Sys;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Sys.CodeApi;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public static class ExecutionContextExtensions
 {
-    public static ICodeTypedApiHelper GetTypedApi(this IExecutionContext exCtx) =>
+    public static ICodeTypedApiHelper GetTypedApi(this ICodeContext exCtx) =>
         exCtx is not ExecutionContext exCtxReal
             ? throw ExCtxWrongType()
             : exCtxReal.TypedApi;
 
-    public static ICodeDynamicApiHelper GetDynamicApi(this IExecutionContext exCtx) =>
+    public static ICodeDynamicApiHelper GetDynamicApi(this ICodeContext exCtx) =>
         exCtx is not ExecutionContext exCtxReal
             ? throw ExCtxWrongType()
             : exCtxReal.DynamicApi;
-
-    public static int GetAppId(this IExecutionContext exCtx) =>
-        exCtx is not ExecutionContext exCtxReal
-            ? throw ExCtxWrongType()
-            : exCtxReal.App.AppId;
 
     private static InvalidOperationException ExCtxWrongType() => new($"ExecutionContext must be of type {nameof(ExecutionContext)}");
 }

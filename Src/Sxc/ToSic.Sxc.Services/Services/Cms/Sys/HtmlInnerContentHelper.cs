@@ -1,11 +1,11 @@
 ﻿using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.Cms.Sys;
 
-internal class HtmlInnerContentHelper(Ctx<IContextServiceProvider> ctxGetService)
+internal class HtmlInnerContentHelper(Ctx<ICodeContextGetService> ctxGetService)
     : ServiceBase("Cms.StrWys", connect: [])
 {
     [field: AllowNull, MaybeNull]

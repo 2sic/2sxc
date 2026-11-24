@@ -71,7 +71,8 @@ public class AliasResolver(
         var l = Log.Fn<bool>($"{nameof(siteId)}:{siteId}");
 
         // This would indicate it was called improperly, because we need the shared SiteState variable to work properly
-        if (siteState == null) throw l.Ex(new ArgumentNullException(nameof(siteState)));
+        if (siteState == null)
+            throw l.Ex(new ArgumentNullException(nameof(siteState)));
 
         // Check if alias already set and if is for provided siteId (if provided), in which case we skip this
         if (siteState.Alias != null && (!siteId.HasValue || siteId.Value == siteState.Alias.SiteId))
@@ -86,7 +87,8 @@ public class AliasResolver(
 
         // For anything else we need the HttpContext, otherwise skip
         var request = httpContextAccessor?.HttpContext?.Request;
-        if (request == null) return l.ReturnFalse("request is NULL");
+        if (request == null)
+            return l.ReturnFalse("request is NULL");
 
         // Find and build Alias
         siteState.Alias = FindAlias();

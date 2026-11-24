@@ -46,7 +46,7 @@ partial class PageService
             Listeners.Activate(added);
 
         // also add to this specific module, as we need a few module-level features to activate in case...
-        ctxExCtx.ValueOptional?.GetBlock()?.BlockFeatureKeys.AddRange(added);
+        ctxExCtx.ValueOptional?.Block?.BlockFeatureKeys.AddRange(added);
 
         return l.ReturnAsOk(""); // empty string, just so it can be used as `@Kit.Page.Activate(...)` and not produce anything
     }

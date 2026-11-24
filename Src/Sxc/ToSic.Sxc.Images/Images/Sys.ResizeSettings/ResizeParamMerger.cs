@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Data.Sys.PropertyLookup;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Utils;
@@ -38,7 +39,7 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
         object? aspectRatio = null,
         string? parameters = null,
         AdvancedSettings? advanced = default,
-        IHasAllSettings? hasSettings = default
+        ICodeContextSettings? hasSettings = default
     )
     {
         var l = (Debug ? Log : null).Fn<ResizeSettings>();
@@ -91,7 +92,7 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
         return l.Return(resizeParams, "");
     }
 
-    private ICanGetByName? TryToCastSettings(object? settings, IHasAllSettings? hasSettings)
+    private ICanGetByName? TryToCastSettings(object? settings, ICodeContextSettings? hasSettings)
         => settings switch
         {
             null => null,
@@ -103,7 +104,7 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
                 : null,
         };
 
-    internal static ICanGetByName? GetImageSettingsByName(IHasAllSettings? hasSettings, string strName, bool debug, ILog log)
+    internal static ICanGetByName? GetImageSettingsByName(ICodeContextSettings? hasSettings, string strName, bool debug, ILog log)
     {
         var l = log.Fn<ICanGetByName?>($"{strName}; code root: {hasSettings != null}", enabled: debug);
         var settings = hasSettings?.AllSettings;

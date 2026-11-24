@@ -103,7 +103,7 @@ public class TokenEngine(
             ParentLog = Log,
             CompatibilityFallback = CompatibilityLevels.CompatibilityLevel9Old,
         });
-        var cdf = exCtx.GetCdf();
+        var cdf = exCtx.Cdf;
         var cultureInfo = CultureHelpers.SafeCultureInfo(cdf.Dimensions);
         var rootLookups = InitTokenReplace(exCtx.GetDynamicApi(), engineSpecs, cultureInfo);
 

@@ -1,4 +1,5 @@
 ﻿using ToSic.Razor.Blade;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Render.Output.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Services.TurnOn.Sys;
@@ -12,7 +13,7 @@ namespace ToSic.Sxc.Services.Page.Sys;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class PageService(
-    Ctx<IExecutionContext> ctxExCtx,
+    Ctx<ICodeContext> ctxExCtx,
     IPageServiceShared pageServiceShared,
     LazySvc<IContentSecurityPolicyService> cspServiceLazy,
     LazySvc<IHtmlTagsService> htmlTagsLazy,

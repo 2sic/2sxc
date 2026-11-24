@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ExecutionContext<TModel, TServiceKit>(ExecutionContext.Dependencies services, string logPrefix)
-    : ExecutionContext(services, logPrefix), IExecutionContext<TModel, TServiceKit>
+    : ExecutionContext(services, logPrefix), ICodeContext<TModel, TServiceKit>
     where TModel : class
     where TServiceKit : ServiceKit
 {

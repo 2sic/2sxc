@@ -1,10 +1,10 @@
 ﻿using Connect.Koi;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Services.OutputCache;
 using ToSic.Sxc.Services.PageShield;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Services.Sys.Cms;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Services;
 
@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Services;
 /// </remarks>
 [PublicApi]
 [method: PrivateApi("Public constructor for DI")]
-public class ServiceKit16(Ctx<IContextServiceProvider> ctxSp) : ServiceKit("Sxc.Kit16")
+public class ServiceKit16(Ctx<ICodeContextGetService> ctxGetService) : ServiceKit("Sxc.Kit16")
 {
     /// <summary>
     /// All the services provided by this kit must come from the code root, so they are properly initialized.
@@ -36,7 +36,7 @@ public class ServiceKit16(Ctx<IContextServiceProvider> ctxSp) : ServiceKit("Sxc.
     /// <returns></returns>
     [PrivateApi]
     private TService GetKitService<TService>() where TService : class
-        => ctxSp.Value.GetService<TService>(reuse: true);
+        => ctxGetService.Value.GetService<TService>(reuse: true);
 
     #region Same as v14
 

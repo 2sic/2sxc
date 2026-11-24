@@ -3,6 +3,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Context;
@@ -16,7 +17,7 @@ namespace ToSic.Sxc.Dnn.Code.Sys;
 /// </summary>
 /// <param name="exCtx"></param>
 /// <param name="apiHelper"></param>
-internal class DynamicApiStandalone(IExecutionContext exCtx, ICodeDynamicApiHelper apiHelper): IDynamicCode12
+internal class DynamicApiStandalone(ICodeContext exCtx, ICodeDynamicApiHelper apiHelper): IDynamicCode12
 {
     public ILog Log => exCtx.Log!;
 

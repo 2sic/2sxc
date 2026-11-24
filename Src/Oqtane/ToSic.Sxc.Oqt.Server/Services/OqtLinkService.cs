@@ -1,6 +1,7 @@
 ﻿using Custom.Hybrid;
 using Oqtane.Repository;
 using Oqtane.Shared;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Images.Sys;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
@@ -18,13 +19,13 @@ namespace ToSic.Sxc.Oqt.Server.Services;
 /// </summary>
 [PrivateApi]
 internal class OqtLinkService(
-    Ctx<IExCtxComplete> exCtx,
-    Ctx<IHasAllSettings> ctxSettings,
+    Ctx<ICodeContext> exCtx,
+    Ctx<ICodeContextSettings> ctxSettings,
     IPageRepository pageRepository,
     AliasResolver aliasResolver,
     ImgResizeLinker imgLinker,
     LazySvc<ILinkPaths> linkPathsLazy)
-    : LinkServiceBase(exCtx.Value.GetApp(), ctxSettings.ValueOptional, imgLinker, linkPathsLazy, connect: [pageRepository, aliasResolver])
+    : LinkServiceBase(exCtx.Value.App!, ctxSettings.ValueOptional, imgLinker, linkPathsLazy, connect: [pageRepository, aliasResolver])
 {
     public Razor12 RazorPage { get; set; }
 

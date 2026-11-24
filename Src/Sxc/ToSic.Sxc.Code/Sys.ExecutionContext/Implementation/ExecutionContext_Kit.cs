@@ -4,6 +4,7 @@ using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Data.Sys.CodeDataFactory;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services.Sys;
@@ -23,11 +24,10 @@ public partial class ExecutionContext: ICanGetService
         using (Ctx<IAppIdentity>.Use(() => App?.PureIdentity() ?? throw new ArgumentNullException(nameof(App))))
         using (Ctx<IAppForCode>.Use(() => App ?? throw new ArgumentNullException(nameof(App))))
         // 0. Settings, Block
-        using (Ctx<IHasAllSettings>.Use(this))
+        using (Ctx<ICodeContextSettings>.Use(this))
         using (Ctx<IBlock>.Use(() => Block!))
         // 1. Main / full context
-        using (Ctx<IExCtxComplete>.Use(this))
-        using (Ctx<IExecutionContext>.Use(this))
+        using (Ctx<ICodeContext>.Use(this))
         // 2. Cdf service, must be delayed
         using (Ctx<ICodeDataFactory>.Use(() => Cdf))
         // ILookUpEngine
@@ -35,7 +35,7 @@ public partial class ExecutionContext: ICanGetService
         // 3. AdamManager service for AdamService (WIP)
         using (Ctx<AdamManager>.Use(() => ((CodeDataFactory)Cdf).AdamManager))
         // 4. Service provider with overrides and `reuse:`
-        using (Ctx<IContextServiceProvider>.Use(this))
+        using (Ctx<ICodeContextGetService>.Use(this))
             return Services.ServiceProvider.GetSysServiceProvider();
     }
 
@@ -43,7 +43,7 @@ public partial class ExecutionContext: ICanGetService
     public TService GetService<TService>() where TService : class
     {
         var newService = SpWithOverrides.Build<TService>(Log);
-        if (newService is INeedsExecutionContext newWithNeeds)
+        if (newService is INeedsBlockContext newWithNeeds)
             newWithNeeds.ConnectToRoot(this);
         return newService;
     }
@@ -74,7 +74,7 @@ public partial class ExecutionContext: ICanGetService
                 ? SpWithOverrides.Build<TService>(Log)
                 : SpWithOverrides.Build<TService>(type, Log);
 
-            if (newService is INeedsExecutionContext newWithNeeds)
+            if (newService is INeedsBlockContext newWithNeeds)
                 newWithNeeds.ConnectToRoot(this);
             return newService;
         }

@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Metadata;
 using ToSic.Sxc.Adam.Sys;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Utils;
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.Images.Sys.Metadata;
 /// <summary>
 /// Small service to image metadata additional recommendations as configured.
 /// </summary>
-class ImageMetadataRecommendationsService(IFeaturesService featuresSvc, Ctx<IExecutionContext> ctxExCtx)
+class ImageMetadataRecommendationsService(IFeaturesService featuresSvc, Ctx<ICodeContext> ctxExCtx)
     : ServiceBase("Img.MdRecS", connect: [featuresSvc]),
         IImageMetadataRecommendationsService
 {

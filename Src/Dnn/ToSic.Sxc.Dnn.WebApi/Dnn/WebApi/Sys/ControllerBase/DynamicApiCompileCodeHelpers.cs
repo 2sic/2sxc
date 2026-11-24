@@ -5,6 +5,7 @@ using ToSic.Eav.Context.Sys;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Dnn.Code;
@@ -19,9 +20,9 @@ internal class DnnCustomWebApiHelper(DnnApiController ownerController, DnnWebApi
 
     #region Init
 
-    public (IExecutionContext RootExCtx, string Folder) InitExCtxWithBlockSpecOrApp(HttpControllerContext controllerContext)
+    public (ICodeContext RootExCtx, string Folder) InitExCtxWithBlockSpecOrApp(HttpControllerContext controllerContext)
     {
-        var l = Log.Fn<(IExecutionContext, string)>();
+        var l = Log.Fn<(ICodeContext, string)>();
 
         // 1. Make sure we have the block (if it exists for this request)
         var request = controllerContext.Request;
@@ -35,25 +36,22 @@ internal class DnnCustomWebApiHelper(DnnApiController ownerController, DnnWebApi
             .GetServiceNoExCtx<ApiControllerDependencies>()
             .ConnectServices(Log);
 
-        // 2.2 Build Execution Context
+        // 2.2 Check if we need to replace the App
+        // In case SxcBlock was null, there is no instance, but we may still need the app
+        // This is special in WebAPIs, so we must handle it here
+        var appToAttach = block?.AppOrNull == null
+            ? GetAppOrNullFromUrlParams(services, request, currentCtxSvc.Context, block)
+            : null;
+
+        // 2.3 Build Execution Context
         var exCtx = services.ExCtxFactory.New(new()
         {
+            AppToAttach = appToAttach,
             OwnerOrNull = ownerController,
             BlockOrNull = block,
             ParentLog = Log,
             CompatibilityFallback = CompatibilityLevels.CompatibilityLevel10,
         });
-
-        // 2.3 In case SxcBlock was null, there is no instance, but we may still need the app
-        // This is special in WebAPIs, so we must handle it here
-        var app = exCtx.GetApp();
-        if (app == null! /* Special: there are cases where it's null, even though the nullable API doesn't show it */)
-        {
-            l.A("DynCode.App is null");
-            app = GetAppOrNullFromUrlParams(services, request, currentCtxSvc.Context, block);
-            if (app != null)
-                ((IExCtxAttachApp)exCtx).AttachApp(app);
-        }
 
         // 3.1 Add some DNN objects to the request, for later logging of exceptions
         request.Properties.Add(DnnConstants.DnnContextKey, (exCtx as IHasDnn)?.Dnn);
@@ -64,17 +62,17 @@ internal class DnnCustomWebApiHelper(DnnApiController ownerController, DnnWebApi
 
         // 3.3 v16.02 - try to log more details about the current API call
         var currentPath = request.Properties.TryGetTyped(SourceCodeConstants.SharedCodeRootFullPathKeyInCache, out string p2) ? p2.AfterLast("/") : null;
-        sysHlp.WebApiLogging?.AddLogSpecs(block, app, currentPath, sysHlp.GetServiceNoExCtx<CodeInfosInScope>());
+        sysHlp.WebApiLogging?.AddLogSpecs(block, exCtx.App, currentPath, sysHlp.GetServiceNoExCtx<CodeInfosInScope>());
 
         // 4. Finally return the execution context and the path of the current class
         return l.ReturnAsOk((exCtx, path));
     }
 
 
-    private IAppForCode GetAppOrNullFromUrlParams(ApiControllerDependencies services, HttpRequestMessage request,
+    private IAppForCode? GetAppOrNullFromUrlParams(ApiControllerDependencies services, HttpRequestMessage request,
         IContextOfSite siteCtx, IBlock blockOrNull)
     {
-        var l = Log.Fn<IAppForCode>();
+        var l = Log.Fn<IAppForCode?>();
         try
         {
             var routeAppPath = services.WebApiAppFolderUtilities.New(request)

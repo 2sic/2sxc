@@ -10,8 +10,8 @@ partial class EditService
     public bool Enabled
     {
         get => _enabled
-            ??= ctxSvcProvider.ValueOptional?.GetBlock()?.Context.Permissions.IsContentAdmin
-                ?? ctxSvcProvider.ValueOptional?.GetCmsContext()?.User?.IsSiteAdmin
+            ??= ctxSvcProvider.ValueOptional?.Block?.Context.Permissions.IsContentAdmin
+                ?? ctxSvcProvider.ValueOptional?.CmsContext?.User?.IsSiteAdmin
                 ?? false;
         [PrivateApi("hide, only used for demos")]
         set => _enabled = value;

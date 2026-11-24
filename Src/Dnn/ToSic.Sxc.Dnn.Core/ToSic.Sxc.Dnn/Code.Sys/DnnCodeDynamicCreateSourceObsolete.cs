@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp.Sys.Engines;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn.Code.Sys;
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.Dnn.Code.Sys;
 /// <param name="dynCode"></param>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class DnnCodeDynamicCreateSourceObsolete(IExecutionContext dynCode)
+public class DnnCodeDynamicCreateSourceObsolete(ICodeContext dynCode)
 {
     [PrivateApi("obsolete")]
     [Obsolete("you should use the CreateSource<T> instead. Deprecated ca. v4 (but not sure), changed to error in v15.")]
@@ -25,7 +26,7 @@ public class DnnCodeDynamicCreateSourceObsolete(IExecutionContext dynCode)
         try
         {
             // try to find with assembly name, or otherwise with GlobalName / previous names
-            var app = dynCode.GetApp();
+            var app = dynCode.App!;
             var type = dataSources.Catalog.Value.FindDataSourceInfo(typeName, app.AppId)?.Type;
             configuration ??= dataSources.LookUpEngine;
             var cnf2Wip = new DataSourceOptions

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Web.Hosting;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn.Razor.Sys;
@@ -9,7 +10,7 @@ internal record HtmlHelperContext
     public required RazorComponentBase Page { get; init; }
     public required DnnRazorHelper RazorHelper { get; init; }
     public required bool IsSystemAdmin { get; init; }
-    public IExecutionContext ExCtx => Page.ExCtx;
+    public ICodeContext ExCtx => Page.ExCtx;
 }
 
 

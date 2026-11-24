@@ -1,5 +1,6 @@
 ﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Apps.Sys;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images.Sys;
@@ -12,7 +13,7 @@ namespace ToSic.Sxc.Services.Link.Sys;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class LinkServiceBase(IAppForCode ctxApp, IHasAllSettings? ctxSettings, ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy, object[]? connect = default)
+public abstract class LinkServiceBase(IAppForCode ctxApp, ICodeContextSettings? ctxSettings, ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy, object[]? connect = default)
     : ServiceBase($"{SxcLogName}.LnkHlp", connect: [..connect ?? [], linkPathsLazy, imgLinker]), ILinkService, ICanDebug
 {
     [PrivateApi]

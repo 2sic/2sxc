@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps.Sys.AppStack;
 using ToSic.Sxc.Apps.Sys;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Context;
@@ -23,11 +24,7 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 [PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.Dependencies>,
-    IExCtxComplete,
-    IExecutionContext,
-    IExecutionContextWithApp,
-    IExecutionContextWithBlock,
-    IExecutionContextWithCmsContext,
+    ICodeContext,
     IHasPiggyBack,
     IServiceWithSetup<ExecutionContextOptions>
 {
@@ -73,26 +70,33 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
         Setup(options);
     }
 
-    public virtual IExecutionContext Setup(ExecutionContextOptions options)
+    public virtual ICodeContext Setup(ExecutionContextOptions options)
     {
         this.LinkLog(options.ParentLog);
-        var cLog = Log.Fn<IExecutionContext>();
+        var l = Log.Fn<ICodeContext>();
 
         Cdf.SetCompatibilityLevel(options.Compatibility);
         ModuleIfBlockUnknown = options.ModuleIfBlockUnknown;
 
+        // Case 1: If no block is provided, we can still attach an app if it was provided
         if (options.BlockOrNull == null)
-            return cLog.Return(this, "no block");
+        {
+            if (options.AppToAttach == null)
+                return l.Return(this, "no block");
+            AttachApp(options.AppToAttach);
+            return l.Return(this, "no block, but with app");
+        }
 
+        // Case 2: If a block is provided, we can attach the app from the block, or override it with the provided app
         var block = options.BlockOrNull;
         Block = block;
 
         // Only attach App if it exists
         // For example when using the Execution Context in a module container, which doesn't have initialized data yet
-        if (block.AppIsReady)
-            AttachApp(block.App);
+        if (options.AppToAttach != null || block.AppIsReady)
+            AttachApp(options.AppToAttach ?? block.App);
 
-        return cLog.Return(this, $"AppId: {App?.AppId}, Block: {(block.ConfigurationIsReady ? block.Configuration?.BlockIdentifierOrNull?.Guid : null)}");
+        return l.Return(this, $"AppId: {App?.AppId}, Block: {(block.ConfigurationIsReady ? block.Configuration?.BlockIdentifierOrNull?.Guid : null)}");
     }
 
     /// <inheritdoc />

@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.Compilation;
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
@@ -198,7 +199,7 @@ internal class DnnRazorCompiler(
     /// <summary>
     /// Reused CodeApiService for all Razor pages.
     /// </summary>
-    private IExecutionContext _sharedCodeApiService;
+    private ICodeContext _sharedCodeApiService;
 
     #region Helpers for Rendering Sub-Components
 

@@ -2,12 +2,12 @@
 using Custom.Hybrid;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Render.Engines.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Services.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Razor;
@@ -16,7 +16,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : ServiceWithC
 {
     #region DynamicCode Attachment / Handling through ViewData
 
-    public override void ConnectToRoot(IExecutionContext exCtx)
+    public override void ConnectToRoot(ICodeContext exCtx)
     {
         base.ConnectToRoot(exCtx);
         _exCtx = exCtx;
@@ -28,7 +28,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : ServiceWithC
 
     public ICodeLog CodeLog => field ??= new CodeLog(Log);
 
-    public IExecutionContext ExCtxRoot
+    public ICodeContext ExCtxRoot
     {
         get
         {
@@ -43,7 +43,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : ServiceWithC
             // Child razor page will have _dynCode == null, so it is provided via ViewData from parent razor page.
             // changed 2025-06-23 2dm to throw if null, because I don't think it's correct
             // If I'm wrong, pls discuss.
-            if (owner.ViewData?[DynCode] is not IExecutionContext cdRt)
+            if (owner.ViewData?[DynCode] is not ICodeContext cdRt)
                 throw new InvalidOperationException(
                     "OqtRazorHelper: ExCtxRoot is null, and ViewData does not contain _dynCode. " +
                     "This means the parent razor page did not set the _dynCode in ViewData, which is required for child razor pages.");
@@ -55,7 +55,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : ServiceWithC
             return _exCtx!;
         }
     }
-    private IExecutionContext? _exCtx { get; set; }
+    private ICodeContext? _exCtx { get; set; }
 
     [return: NotNullIfNotNull(nameof(value))]
     public ViewDataDictionary<TModel>? HandleViewDataInject(ViewDataDictionary<TModel>? value)
@@ -66,7 +66,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : ServiceWithC
         return value;
     }
 
-    internal new IExecutionContext ExCtx => ExCtxOrNull ?? ExCtxRoot!;
+    internal new ICodeContext ExCtx => ExCtxOrNull ?? ExCtxRoot!;
 
     #endregion
 
@@ -90,7 +90,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : ServiceWithC
 
     [field: AllowNull, MaybeNull]
     public CodeHelperTypedData CodeHelper
-        => field ??= new(helperSpecs: new((IExCtxComplete)ExCtx, true, owner.Path));
+        => field ??= new(helperSpecs: new((ICodeContext)ExCtx, true, owner.Path));
 
     public TypedRazorModelHelper RazorModelHelper => field ??= CreateRazorHelper();
 
@@ -98,7 +98,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : ServiceWithC
         => new(() => _overridePageData ?? owner.Model, ExCtx.Log);
 
     public ITypedRazorModel MyModel => field ??= TypedRazorModelHelper.GetMyModel(
-        new((IExCtxComplete)ExCtx, true, owner.Path),
+        new((ICodeContext)ExCtx, true, owner.Path),
         _renderSpecs?.DataDic ?? owner.Model?.ToDicInvariantInsensitive()
     );
 

@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Sys.ExecutionContext;
+﻿using ToSic.Sxc.Code.Context.Sys;
+
+namespace ToSic.Sxc.Sys.ExecutionContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IExecutionContextFactory
@@ -7,5 +9,5 @@ public interface IExecutionContextFactory
     /// Creates a CodeApiService - if possible based on the parent class requesting it.
     /// </summary>
     /// <returns></returns>
-    IExecutionContext New(ExecutionContextOptions options);
+    ICodeContext New(ExecutionContextOptions options);
 }

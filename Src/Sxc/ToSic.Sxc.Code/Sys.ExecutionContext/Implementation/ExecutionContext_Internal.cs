@@ -8,10 +8,9 @@ using ToSic.Sxc.DataSources;
 namespace ToSic.Sxc.Sys.ExecutionContext;
 
 public partial class ExecutionContext
-    : IExCtxAttachApp
 {
     [PrivateApi]
-    public void AttachApp(IAppForCode app)
+    protected void AttachApp(IAppForCode app)
     {
         App = app;
 

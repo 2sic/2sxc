@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using ToSic.Eav.Apps;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Edit.Toolbar.Sys.Rules;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Sys.Html;
@@ -32,7 +33,7 @@ public partial record ToolbarBuilder(ToolbarBuilder.MyServices Services)
     public sealed record MyServices(
         LazySvc<ToolbarButtonDecoratorHelper> ToolbarButtonHelper,
         LazySvc<IAppsCatalog> AppsCatalog,
-        Ctx<IExecutionContext> ExCtx)
+        Ctx<ICodeContext> ExCtx)
         : DependenciesBase(connect: [ToolbarButtonHelper, AppsCatalog]);
 
     public ILog Log { get; } = LogFactory.Create(SxcLogName + ".TlbBld");

@@ -7,8 +7,8 @@ using ToSic.Eav.Context.Sys;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys;
-using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web;
 
@@ -29,7 +29,7 @@ internal class NetCoreWebApiContextHelper: ServiceBase
 
     #region Initialize
 
-    internal IExecutionContext? ExCtxOrNull { get; private set; }
+    internal ICodeContext? ExCtxOrNull { get; private set; }
 
     public ICodeLog CodeLog => field ??= new CodeLog(Log);
 
@@ -43,26 +43,22 @@ internal class NetCoreWebApiContextHelper: ServiceBase
     {
         // Use the ServiceProvider of the current request to build DynamicCodeRoot
         // Note that BlockOptional was already retrieved in the base class
-        var exCtx = context.HttpContext.GetSysRequestServices()
+
+        // In case SxcBlock was null, there is no instance, but we may still need the app
+        var appToAttach = BlockOptional?.AppOrNull == null
+            ? TryToGetAppFromUrlParams(context)
+            : null;
+
+        ExCtxOrNull = context.HttpContext.GetSysRequestServices()
             .Build<IExecutionContextFactory>()
             .New(new()
             {
+                AppToAttach = appToAttach,
                 OwnerOrNull = _owner,
                 BlockOrNull = BlockOptional,
                 ParentLog = Log,
                 CompatibilityFallback = CompatibilityLevels.CompatibilityLevel12,
             });
-
-        // In case SxcBlock was null, there is no instance, but we may still need the app
-        if (exCtx.GetApp() == null! /* realistic case */)
-        {
-            Log.A("DynCode.App is null");
-            var app = TryToAttachAppFromUrlParams(context);
-            if (app != null)
-                ((IExCtxAttachApp)exCtx).AttachApp(app);
-        }
-
-        ExCtxOrNull = exCtx;
 
         // Ensure the Api knows what path it's on, in case it will
         // create instances of .cs files
@@ -72,9 +68,9 @@ internal class NetCoreWebApiContextHelper: ServiceBase
     }
 
 
-    private IAppForCode? TryToAttachAppFromUrlParams(ActionExecutingContext context)
+    private IAppForCode? TryToGetAppFromUrlParams(ActionExecutingContext context)
     {
-        var l = Log.Fn<IAppForCode?>();
+        var l = Log.Fn<IAppForCode?>("App on block must be null. Try to get app from URL params.");
 
         try
         {
