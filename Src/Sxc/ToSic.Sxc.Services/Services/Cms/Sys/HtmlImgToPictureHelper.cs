@@ -1,16 +1,16 @@
 ﻿using ToSic.Sxc.Adam;
 using ToSic.Sxc.Images;
-using ToSic.Sxc.Services.Sys;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.Cms.Sys;
 
-internal class HtmlImgToPictureHelper(CmsServiceImageExtractor imageExtractor)
-    : ServiceWithContext("Cms.StrWys", connect: [imageExtractor])
+internal class HtmlImgToPictureHelper(CmsServiceImageExtractor imageExtractor, Ctx<IContextServiceProvider> ctxGetService)
+    : ServiceBase("Cms.StrWys", connect: [imageExtractor])
 {
     [field: AllowNull, MaybeNull]
     internal IImageService ImageService => field
-        ??= ExCtx.GetService<IImageService>(reuse: true);
+        ??= ctxGetService.Value.GetService<IImageService>(reuse: true);
 
 
     public IResponsivePicture ConvertImgToPicture(string originalImgTag, IFolder folder, object? defaultImageSettings)

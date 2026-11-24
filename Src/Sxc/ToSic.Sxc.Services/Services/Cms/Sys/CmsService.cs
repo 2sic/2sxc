@@ -2,7 +2,6 @@
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
-using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Services.Sys.Cms;
 using ToSic.Sxc.Services.Tweaks;
 using ToSic.Sxc.Services.Tweaks.Sys;
@@ -10,18 +9,11 @@ using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Services.Cms.Sys;
 
-internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
-    : ServiceWithContext($"{SxcLogName}.CmsSrv", connect: [stringWysiwyg]), ICmsService
+internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg, Ctx<IContextServiceProvider> ctxGetService)
+    : ServiceBase($"{SxcLogName}.CmsSrv", connect: [stringWysiwyg]), ICmsService
 {
     [field: AllowNull, MaybeNull]
-    private CmsServiceStringWysiwyg StringWysiwygGen => field
-        ??= new Func<CmsServiceStringWysiwyg>(() =>
-        {
-            var wysiwyg = stringWysiwyg.New();
-            wysiwyg.ConnectToRoot(ExCtx);
-            return wysiwyg;
-        })();
-
+    private CmsServiceStringWysiwyg StringWysiwygGen => field ??= stringWysiwyg.New();
 
     public IHtmlTag Html(
         object? thing,
@@ -37,7 +29,7 @@ internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
         var field = thing as IField;
         var l = Log.Fn<IHtmlTag>($"Field: {field?.Name}");
         // Initialize the container helper, as we'll use it a few times
-        var cntHelper = new CmsServiceContainerHelper(ExCtx, field, container, classes, toolbar, Log);
+        var cntHelper = new CmsServiceContainerHelper(ctxGetService.Value, field, container, classes, toolbar, Log);
 
         // New v17 - preprocess the tweaks if available
         // Note that we should use the field if one was found, only use the "thing" if there was no field
@@ -73,7 +65,7 @@ internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
     }
 
     [field: AllowNull, MaybeNull]
-    private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
+    private ICodeDataFactory Cdf => field ??= ((IExecutionContext)ctxGetService.Value).GetCdf();
 
 
     private IHtmlTag HtmlString(IContentType contentType, IContentTypeField fieldDef, IField field, string? value, object? imageSettings, CmsServiceContainerHelper cntHelper, bool debug)

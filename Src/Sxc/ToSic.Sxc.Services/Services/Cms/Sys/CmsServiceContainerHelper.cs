@@ -7,7 +7,7 @@ using ToSic.Sys.Utils;
 namespace ToSic.Sxc.Services.Cms.Sys;
 
 internal class CmsServiceContainerHelper(
-    IExecutionContext executionContext,
+    IContextServiceProvider executionContext,
     IField? entityField,
     object? container,
     string? classes,

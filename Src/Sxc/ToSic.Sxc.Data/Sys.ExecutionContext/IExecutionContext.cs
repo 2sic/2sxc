@@ -15,20 +15,8 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 /// The initial interface has none or few properties, so that we can pass it around without all projects being tied to each other.
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IExecutionContext: ICanGetService, IHasPiggyBack, IHasLog
+public interface IExecutionContext: IContextServiceProvider, IHasPiggyBack, IHasLog
 {
-    /// <summary>
-    /// Special GetService which can cache the found service so any other use could get the same instance.
-    /// This should ensure that an Edit service requested through Kit14 and Kit16 are both the same, etc.
-    /// </summary>
-    /// <typeparam name="TService"></typeparam>
-    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    /// <param name="reuse">if true, then a service requested multiple times will return the same instance</param>
-    /// <param name="type">rare option: type name of the service to create; probably not relevant any more today</param>
-    /// <returns></returns>
-    [PrivateApi]
-    TService GetService<TService>(NoParamOrder npo = default, bool reuse = false, Type? type = default) where TService : class;
-
     /// <summary>
     /// Get special services which data need to initialize.
     /// This is a select list, ATM just the `AdamManager`

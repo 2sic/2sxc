@@ -13,8 +13,13 @@ public partial class ExecutionContext: ICanGetService
     {
         // Some services such as the Cdf cannot be created at first,
         // as they also use the GetService to be created; so they must be delayed
+
+        // 1. Main service
         using (Ctx<IExecutionContext>.Use(this))
+        // 2. Cdf service
         using (Ctx<ICodeDataFactory>.Use(() => Cdf))
+        // 3. Service provider with overrides and `reuse:`
+        using (Ctx<IContextServiceProvider>.Use(this))
             return Services.ServiceProvider.GetSysServiceProvider();
     }
 
