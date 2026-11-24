@@ -1,6 +1,4 @@
 ﻿using ToSic.Eav.Apps.Sys.AppStack;
-using ToSic.Sxc.Data;
-using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
@@ -9,8 +7,8 @@ using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 namespace ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class CspOfModule(IUser user, IFeaturesService featuresService)
-    : ServiceWithContext($"{CspConstants.LogPrefix}.ModLvl")
+public class CspOfModule(Ctx<IExecutionContext> ctxExCtx, IUser user, IFeaturesService featuresService)
+    : ServiceBase($"{CspConstants.LogPrefix}.ModLvl")
 {
     #region App Level CSP Providers
 
@@ -45,7 +43,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
     {
         if (!featuresService.IsEnabled(SxcFeatures.ContentSecurityPolicyTestUrl.NameId))
             return null;
-        var pageParameters = ExCtxOrNull?.GetCmsContext()?.Page?.Parameters;
+        var pageParameters = ctxExCtx.ValueOptional?.GetCmsContext()?.Page?.Parameters;
         if (pageParameters == null)
             return null;
         pageParameters.TryGetValue(CspConstants.CspUrlParameter, out var cspParam);
@@ -62,7 +60,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
     /// </summary>
     private CspSettingsReader SiteCspSettings => _siteCspSettings.Get(Log, () =>
     {
-        var pageSettings = ExCtxOrNull?.AllSettings
+        var pageSettings = ctxExCtx.ValueOptional?.AllSettings
             ?.GetStack([AppStackConstants.PartSiteSystem, AppStackConstants.PartGlobalSystem, AppStackConstants.PartPresetSystem]);
         return new(pageSettings, user, UrlIsDevMode, Log);
     })!;

@@ -19,7 +19,7 @@ public partial class ExecutionContext: ICanGetService
         // Some services such as the Cdf cannot be created at first,
         // as they also use the GetService to be created; so they must be delayed
 
-        // 0. AppIdentity
+        // 0. AppIdentity - must be delayed, as it may not exist the first time this is called
         using (Ctx<IAppIdentity>.Use(() => App?.PureIdentity() ?? throw new ArgumentNullException(nameof(App))))
         using (Ctx<IAppForCode>.Use(() => App ?? throw new ArgumentNullException(nameof(App))))
         // 0. Settings, Block
@@ -28,7 +28,7 @@ public partial class ExecutionContext: ICanGetService
         // 1. Main / full context
         using (Ctx<IExCtxComplete>.Use(this))
         using (Ctx<IExecutionContext>.Use(this))
-        // 2. Cdf service
+        // 2. Cdf service, must be delayed
         using (Ctx<ICodeDataFactory>.Use(() => Cdf))
         // ILookUpEngine
         using (Ctx<ILookUpEngine>.Use(() => LookUpForDataSources))

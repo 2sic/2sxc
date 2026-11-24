@@ -54,7 +54,7 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
         CmsContext = GetService<ICmsContext>();
 
         // Make sure we get and initialize (auto-connect) the app-level CSP if that exists or is enabled
-        GetService<CspOfApp>();
+        GetService<CspOfApp>().RequiredPostSetup();
     }
 
     [PrivateApi]

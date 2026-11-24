@@ -1,6 +1,5 @@
-﻿using ToSic.Eav.Apps.Sys.AppStack;
-using ToSic.Sxc.Data;
-using ToSic.Sxc.Services.Sys;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Sys.AppStack;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
 
@@ -11,36 +10,22 @@ namespace ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 /// This is important because a module can have multiple apps in it, so it must merge the Csp Settings
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class CspOfApp : ServiceWithContext
+public class CspOfApp(
+    Ctx<IAppIdentity> ctxAppId,
+    Ctx<IHasAllSettings> ctxAllSettings,
+    IUser user,
+    CspOfModule moduleCsp)
+    : ServiceBase(CspConstants.LogPrefix + ".AppLvl", connect: [])
 {
-    public int AppId => _appId ??= ExCtx.GetBlock()?.AppId ?? 0;
+    public int AppId => _appId ??= ctxAppId.ValueOptional?.AppId ?? 0;
     private int? _appId;
 
-    #region Constructor
-
-    public CspOfApp(IUser user, CspOfModule moduleCsp) : base(CspConstants.LogPrefix + ".AppLvl", connect: [/* nothing everything is already connected */])
-    {
-        _user = user;
-        _moduleCsp = moduleCsp;
-        moduleCsp.RegisterAppCsp(this); // Attach to parent which is scoped for the entire module
-    }
-
-    private readonly IUser _user;
-    private readonly CspOfModule _moduleCsp;
+    #region Constructor / Post-Setup
 
     /// <summary>
-    /// Connect to code root, so page-parameters and settings will be available later on.
-    /// Important: page-parameters etc. are not available at this time, so don't try to get them until needed
+    /// This must be called upon creation - ATM only in the ExecutionContext
     /// </summary>
-    /// <param name="exCtx"></param>
-    public override void ConnectToRoot(IExecutionContext exCtx)
-    {
-        var l = Log.Fn();
-        base.ConnectToRoot(exCtx);
-        // Also connect upstream CspOfModule in case it's not yet connected
-        _moduleCsp.ConnectToRoot(exCtx);
-        l.Done();
-    }
+    public void RequiredPostSetup() => moduleCsp.RegisterAppCsp(this);
 
     #endregion
 
@@ -54,18 +39,18 @@ public class CspOfApp : ServiceWithContext
         var l = Log.Fn<string?>(AppId.ToString());
 
         // Get Stack
-        if (ExCtxOrNull?.AllSettings is not { } stack) 
+        if (ctxAllSettings.ValueOptional?.AllSettings is not { } stack) 
             return l.ReturnNull("no stack");
 
         // Enable this for detailed debugging
         //stack.Debug = true;
 
-        // Dynamic Stack of the App Settings
+        // Stack of the App Settings
         var appSettings = stack.GetStack([AppStackConstants.PartAppSystem]);
         l.A($"has {nameof(appSettings)}: {appSettings != null}");
 
         // CSP Settings Reader from Dynamic Entity for the App
-        var cspReader = new CspSettingsReader(appSettings, _user, _moduleCsp.UrlIsDevMode, Log);
+        var cspReader = new CspSettingsReader(appSettings, user, moduleCsp.UrlIsDevMode, Log);
         var policies = cspReader.Policies;
         return l.ReturnAndLog(policies);
     }
