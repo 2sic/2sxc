@@ -14,10 +14,3 @@ public interface INeedsExecutionContext
     [ShowApiWhenReleased(ShowApiMode.Never)] 
     void ConnectToRoot(IExecutionContext exCtx);
 }
-
-/// <summary>
-/// Temp marker interface to mark all services which get the execution context.
-/// </summary>
-[PrivateApi]
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IWillInjectExecutionContext;

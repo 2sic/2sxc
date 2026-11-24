@@ -9,7 +9,7 @@ using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Services.Cms.Sys;
 
-internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg, Ctx<IContextServiceProvider> ctxGetService)
+internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg, Ctx<IContextServiceProvider> ctxGetService, Ctx<ICodeDataFactory> ctxCdf)
     : ServiceBase($"{SxcLogName}.CmsSrv", connect: [stringWysiwyg]), ICmsService
 {
     [field: AllowNull, MaybeNull]
@@ -65,7 +65,7 @@ internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg, Ctx<
     }
 
     [field: AllowNull, MaybeNull]
-    private ICodeDataFactory Cdf => field ??= ((IExecutionContext)ctxGetService.Value).GetCdf();
+    private ICodeDataFactory Cdf => field ??= ctxCdf.Value;
 
 
     private IHtmlTag HtmlString(IContentType contentType, IContentTypeField fieldDef, IField field, string? value, object? imageSettings, CmsServiceContainerHelper cntHelper, bool debug)

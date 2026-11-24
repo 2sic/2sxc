@@ -53,7 +53,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, ITypedCode16, ICo
 
     [field: AllowNull, MaybeNull]
     private CodeHelperTypedData CodeHelper
-        => field ??= new(helperSpecs: new(CodeRootOrError(), false, "c# code file"));
+        => field ??= new(helperSpecs: new((IExCtxComplete)CodeRootOrError(), false, "c# code file"));
 
     [PrivateApi]
     int ICompatibilityLevel.CompatibilityLevel => CompatibilityLevels.CompatibilityLevel16;

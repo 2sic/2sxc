@@ -60,7 +60,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
     /// <inheritdoc cref="IHasKit{TServiceKit}.Kit"/>
     public ServiceKit16 Kit => field ??= CodeApi.ServiceKit16;
 
-    internal CodeHelperTypedData CodeHelper => field ??= new(helperSpecs: new(ExCtx, true, Path));
+    internal CodeHelperTypedData CodeHelper => field ??= new(helperSpecs: new((IExCtxComplete)ExCtx, true, Path));
 
     /// <inheritdoc cref="CodeTyped.Customize"/>
     protected ICodeCustomizer Customize => field ??= CodeApi.GetService<ICodeCustomizer>(reuse: true);
@@ -140,7 +140,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
 
     /// <inheritdoc />
     public ITypedRazorModel MyModel => new TypedRazorModel(
-        new(ExCtx, true, Path),
+        new((IExCtxComplete)ExCtx, true, Path),
         RenderSpecs?.DataDic
         ?? PageData?
             .Where(pair => pair.Key is string)

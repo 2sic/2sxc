@@ -144,7 +144,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     #region My... Stuff
 
     private CodeHelperTypedData CodeHelper => field
-        ??= new(helperSpecs: new(ExCtx, false, ((IGetCodePath)this).CreateInstancePath));
+        ??= new(helperSpecs: new((IExCtxComplete)ExCtx, false, ((IGetCodePath)this).CreateInstancePath));
 
     /// <inheritdoc />
     public ITypedItem MyItem => CodeHelper.MyItem;

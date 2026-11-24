@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Edit.Toolbar.Sys;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ToolbarButtonDecoratorHelper(IAppReaderFactory appReaders, ScopedCache<Dictionary<string, ToolbarButtonDecorator?>> cache, Ctx<IExecutionContext> exCtx)
-    : ServiceBase($"{SxcLogName}.TbdHlp", connect: [appReaders]), IWillInjectExecutionContext
+    : ServiceBase($"{SxcLogName}.TbdHlp", connect: [appReaders])
 {
     internal ToolbarButtonDecorator? GetDecorator(IAppIdentity? appIdentity, string? typeName, string? command)
     {

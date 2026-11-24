@@ -25,8 +25,7 @@ public class AppDynamic(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryBuilder<Q
     // Note: If this is ever changed to not inherit from the EavApp, make sure you correct/update the LightSpeed code as well as it checks for this base class
     : ServiceWithSetup<IAppForCode>("App.SxcApp", connect: [globalPaths, queryManager, appDynamicQueries]),
         IAppDynamic,
-        IWrapper<IAppForCode>,
-        IWillInjectExecutionContext
+        IWrapper<IAppForCode>
 {
     #region Setup Execution Context - for Cdf and data wrapping to DynamicEntity
 

@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public partial record ToolbarBuilder(ToolbarBuilder.MyServices Services)
-    : HybridHtmlString, IEnumerable<string>, IToolbarBuilder, IWillInjectExecutionContext
+    : HybridHtmlString, IEnumerable<string>, IToolbarBuilder
 {
 
     #region Constructors and Init

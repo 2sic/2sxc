@@ -90,7 +90,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : ServiceWithC
 
     [field: AllowNull, MaybeNull]
     public CodeHelperTypedData CodeHelper
-        => field ??= new(helperSpecs: new(ExCtx, true, owner.Path));
+        => field ??= new(helperSpecs: new((IExCtxComplete)ExCtx, true, owner.Path));
 
     public TypedRazorModelHelper RazorModelHelper => field ??= CreateRazorHelper();
 
@@ -98,7 +98,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : ServiceWithC
         => new(() => _overridePageData ?? owner.Model, ExCtx.Log);
 
     public ITypedRazorModel MyModel => field ??= TypedRazorModelHelper.GetMyModel(
-        new(ExCtx, true, owner.Path),
+        new((IExCtxComplete)ExCtx, true, owner.Path),
         _renderSpecs?.DataDic ?? owner.Model?.ToDicInvariantInsensitive()
     );
 

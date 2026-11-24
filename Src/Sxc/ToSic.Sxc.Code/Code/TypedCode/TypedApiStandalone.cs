@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Code;
 /// </summary>
 /// <param name="exCtx"></param>
 /// <param name="apiHelper"></param>
-internal class TypedApiStandalone(IExecutionContext exCtx, ICodeTypedApiHelper apiHelper) : ITypedApi, IHasLog
+internal class TypedApiStandalone(IExCtxComplete exCtx, ICodeTypedApiHelper apiHelper) : ITypedApi, IHasLog
 {
     public ILog Log => exCtx.Log!;
 
