@@ -59,8 +59,8 @@ public class ListController : DnnApiController, IListController
     /// Used to be Get Module/RemoveFromList
     /// </summary>
     [HttpDelete]
-    public void Delete(Guid? parent, string part, int index)
-        => Real.Delete(parent, part, index);
+    public void Delete(Guid? parent, string fields, int index)
+        => Real.Delete(parent, fields, index);
 
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
