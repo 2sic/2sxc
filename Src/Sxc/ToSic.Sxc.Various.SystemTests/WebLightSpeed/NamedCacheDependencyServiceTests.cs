@@ -1,9 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.Apps;
-using ToSic.Eav.DataSource;
-using ToSic.Eav.Metadata;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Render.Output.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Services.Cache;
@@ -21,7 +17,7 @@ public class NamedCacheDependencyServiceTests(ExecutionContext exCtx)
 
     private INamedCacheDependencyService Dependencies => exCtx.GetService<INamedCacheDependencyService>(reuse: true);
 
-    private ModuleOutputCacheService OutputCache => exCtx.GetService<ModuleOutputCacheService>(reuse: true);
+    private IModuleOutputCacheService OutputCache => exCtx.GetService<IModuleOutputCacheService>(reuse: true);
 
     private ModulesOutputService ModulesOutput => (ModulesOutputService)exCtx.GetService<IModulesOutputService>(reuse: true);
 

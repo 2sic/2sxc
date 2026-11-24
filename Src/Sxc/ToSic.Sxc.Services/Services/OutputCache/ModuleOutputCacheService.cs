@@ -1,19 +1,21 @@
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Render.Output.Sys;
-using ToSic.Sxc.Services.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Services.OutputCache;
 
-// Note 2dm 2025-06 - this doesn't seem to be in use anywhere!
+/// <summary>
+/// Implementation of the Kit.OutputCache - to configure how the resulting module HTML is cached.
+/// </summary>
+/// <param name="modulesOutputService"></param>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class ModuleOutputCacheService(IModulesOutputService modulesOutputService)
-    : ServiceWithContext("Sxc.OutCac", connect: [modulesOutputService]), IModuleOutputCacheService
+internal class ModuleOutputCacheService(Ctx<IBlock> ctxBlock, IModulesOutputService modulesOutputService)
+    : ServiceBase("Sxc.OutCac", connect: [modulesOutputService]), IModuleOutputCacheService
 {
     [PrivateApi("internal use only, external API should not know about this.")]
     public int ModuleId
     {
-        get => _moduleId ??= ExCtxOrNull?.GetBlock()?.Context?.Module?.Id ?? 0;
+        get => _moduleId ??= ctxBlock.ValueOptional?.Context?.Module?.Id ?? 0;
         set => _moduleId = value;
     }
     private int? _moduleId;
@@ -24,6 +26,7 @@ internal class ModuleOutputCacheService(IModulesOutputService modulesOutputServi
     public string Enable(bool enable = true)
         => Configure(new() { IsEnabled = enable });
 
+    /// <inheritdoc/>
     public string DependOn(string key)
     {
         if (string.IsNullOrWhiteSpace(key))
@@ -33,6 +36,7 @@ internal class ModuleOutputCacheService(IModulesOutputService modulesOutputServi
         return "";
     }
 
+    /// <inheritdoc/>
     public string Configure(OutputCacheSettings settings)
     {
         modulesOutputService.ConfigureOutputCache(ModuleId, settings);
