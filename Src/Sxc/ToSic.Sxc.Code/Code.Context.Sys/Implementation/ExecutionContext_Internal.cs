@@ -7,7 +7,7 @@ using ToSic.Sxc.DataSources;
 
 namespace ToSic.Sxc.Code.Context.Sys;
 
-public partial class ExecutionContext
+public partial class CodeContext
 {
     [PrivateApi]
     protected void AttachApp(IAppForCode app)

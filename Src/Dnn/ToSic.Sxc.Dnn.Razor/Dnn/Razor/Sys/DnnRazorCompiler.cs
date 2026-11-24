@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 // ReSharper disable once UnusedMember.Global
 internal class DnnRazorCompiler(
-    IExecutionContextFactory exCtxFactory,
+    ICodeContextFactory exCtxFactory,
     LazySvc<CodeErrorHelpService> errorHelp,
     LazySvc<SourceAnalyzer> sourceAnalyzer,
     LazySvc<IRoslynBuildManager> roslynBuildManager,

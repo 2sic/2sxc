@@ -23,7 +23,7 @@ public class CspOfApp(
     #region Constructor / Post-Setup
 
     /// <summary>
-    /// This must be called upon creation - ATM only in the ExecutionContext
+    /// This must be called upon creation - ATM only in the CodeContext
     /// </summary>
     public void RequiredPostSetup() => moduleCsp.RegisterAppCsp(this);
 

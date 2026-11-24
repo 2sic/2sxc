@@ -14,7 +14,7 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.Sys.CodeApi;
 
-internal class CodeDynamicApiHelper(ExecutionContext exCtx) : ICodeDynamicApiHelper
+internal class CodeDynamicApiHelper(CodeContext exCtx) : ICodeDynamicApiHelper
 {
     #region Common State
 

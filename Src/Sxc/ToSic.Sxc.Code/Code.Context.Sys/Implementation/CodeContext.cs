@@ -18,14 +18,14 @@ namespace ToSic.Sxc.Code.Context.Sys;
 /// Note that other DynamicCode objects like RazorComponent or ApiController reference this object for all the interface methods of <see cref="IDynamicCode"/>.
 /// </summary>
 /// <remarks>
-/// It can usually not be created directly, but through the <see cref="IExecutionContextFactory"/>.
+/// It can usually not be created directly, but through the <see cref="ICodeContextFactory"/>.
 /// </remarks>
 [PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.Dependencies>,
+public abstract partial class CodeContext : ServiceBase<CodeContext.Dependencies>,
     ICodeContext,
     IHasPiggyBack,
-    IServiceWithSetup<ExecutionContextOptions>
+    IServiceWithSetup<CodeContextOptions>
 {
     #region Constructor
 
@@ -36,7 +36,7 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
     public record Dependencies(
         ISysServiceProvider ServiceProvider,
         AppDataStackService DataStackService,
-        LazySvc<ExCtxDataSourceService> DataSources,
+        LazySvc<CodeContextDataSourceService> DataSources,
         // 2026-11-23 2dm - WIP - removed, as we want to create it from the CreateServices and ensure it's connected
         //ICodeDataFactory Cdf,
         IEditionService EditionSvc)
@@ -44,7 +44,7 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
             [/* never! serviceProvider */ DataStackService, DataSources, /*Cdf,*/ EditionSvc]);
 
     [PrivateApi]
-    protected internal ExecutionContext(Dependencies services, string logPrefix) : base(services, logPrefix + ".DynCdR")
+    protected internal CodeContext(Dependencies services, string logPrefix) : base(services, logPrefix + ".DynCdR")
     {
         // Prepare services which need to be attached to this dynamic code root
         CmsContext = GetService<ICmsContext>();
@@ -64,12 +64,12 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
     PiggyBack IHasPiggyBack.PiggyBack { get; } = new();
 
     [PrivateApi]
-    void IServiceWithSetup<ExecutionContextOptions>.Setup(ExecutionContextOptions options)
+    void IServiceWithSetup<CodeContextOptions>.Setup(CodeContextOptions options)
     {
         Setup(options);
     }
 
-    public virtual ICodeContext Setup(ExecutionContextOptions options)
+    public virtual ICodeContext Setup(CodeContextOptions options)
     {
         this.LinkLog(options.ParentLog);
         var l = Log.Fn<ICodeContext>();

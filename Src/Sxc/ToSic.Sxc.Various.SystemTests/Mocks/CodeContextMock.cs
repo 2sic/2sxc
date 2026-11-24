@@ -1,11 +1,11 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Sxc.Apps.Sys;
-using ExecutionContext = ToSic.Sxc.Code.Context.Sys.ExecutionContext;
+using ToSic.Sxc.Code.Context.Sys;
 
 namespace ToSic.Sxc.Mocks;
-public class ExecutionContextMock : ExecutionContext
+public class CodeContextMock : CodeContext
 {
-    public ExecutionContextMock(Generator<AppForCode, AppForCode.Options> appGen, Dependencies services) : base(services, "Mck")
+    public CodeContextMock(Generator<AppForCode, AppForCode.Options> appGen, Dependencies services) : base(services, "Mck")
     {
         var app = appGen.New(new(ReplaceSite: null, AppIdentity: KnownAppsConstants.PresetIdentity.PureIdentity(), DataSpecs: null));
         AttachApp(app);

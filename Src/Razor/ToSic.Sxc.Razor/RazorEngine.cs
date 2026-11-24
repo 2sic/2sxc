@@ -23,7 +23,7 @@ internal class RazorEngine(
     IAssetsExtractor assetsExtractor,
     EngineRequirementsApp engineRequirementsApp,
     LazySvc<IRazorRenderer> razorRenderer,
-    LazySvc<IExecutionContextFactory> exCtxFactory,
+    LazySvc<ICodeContextFactory> exCtxFactory,
     LazySvc<CodeErrorHelpService> errorHelp,
     LazySvc<IRenderingHelper> renderingHelper)
     : ServiceBase("Sxc.RzrEng", connect: [engineSpecsService, assetsExtractor, engineRequirementsApp, exCtxFactory, errorHelp, renderingHelper, razorRenderer]),

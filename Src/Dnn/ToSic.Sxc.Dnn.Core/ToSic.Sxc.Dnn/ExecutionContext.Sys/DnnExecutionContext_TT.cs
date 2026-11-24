@@ -6,8 +6,8 @@ using ToSic.Sxc.Services.Sys;
 namespace ToSic.Sxc.Dnn.ExecutionContext.Sys;
 
 [PrivateApi]
-internal class DnnExecutionContext<TModel, TServiceKit>(Sxc.Code.Context.Sys.ExecutionContext.Dependencies services)
-    : ExecutionContext<TModel, TServiceKit>(services, DnnConstants.LogName), IHasDnn
+internal class DnnCodeContext<TModel, TServiceKit>(Sxc.Code.Context.Sys.CodeContext.Dependencies services)
+    : CodeContext<TModel, TServiceKit>(services, DnnConstants.LogName), IHasDnn
     where TModel : class
     where TServiceKit : ServiceKit
 {

@@ -35,7 +35,7 @@ internal partial class DnnDynamicCodeService : ServiceBase<DnnDynamicCodeService
         : DependenciesBase(connect: [/* never! serviceProvider */ LogStore, ZoneFinder, AppsCatalog]);
 
     public record ScopedDependencies(
-        Generator<IExecutionContextFactory> ExCtxGenerator,
+        Generator<ICodeContextFactory> ExCtxGenerator,
         Generator<AppForCode, AppForCode.Options> AppGenerator,
         Generator<IAppDynamic, IAppForCode> AppDynGenerator,
         LazySvc<IBlockBuilder> ModAndBlockBuilder)

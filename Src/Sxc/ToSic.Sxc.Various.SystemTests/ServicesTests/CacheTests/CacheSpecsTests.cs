@@ -1,16 +1,16 @@
-﻿using ToSic.Sxc.Context.Sys;
+﻿using ToSic.Sxc.Code.Context.Sys;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.Cache.Sys.CacheKey;
 using static ToSic.Sxc.Services.Cache.Sys.CacheServiceConstants;
-using ExecutionContext = ToSic.Sxc.Code.Context.Sys.ExecutionContext;
 
 #pragma warning disable xUnit1026
 
 namespace ToSic.Sxc.ServicesTests.CacheTests;
 
 [Startup(typeof(/*StartupSxcCoreOnly*/StartupSxcWithDb))]
-public class CacheSpecsTests(ExecutionContext exCtx)
+public class CacheSpecsTests(CodeContext exCtx)
 {
     private static readonly string MainPrefix = $"{CacheKeyTests.FullDefaultPrefix.Replace("App:0", "App:-1")}Main{Sep}";
 

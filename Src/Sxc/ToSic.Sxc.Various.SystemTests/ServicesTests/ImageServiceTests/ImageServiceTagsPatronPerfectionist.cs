@@ -13,7 +13,7 @@ namespace ToSic.Sxc.ServicesTests.ImageServiceTests;
 /// Start the test with a platform-info that has WebP support
 /// </summary>
 [Startup(typeof(StartupSxcWithDbPatronPerfectionist))]
-public class ImageServiceTagsPatronPerfectionist(ExecutionContextMock exCtxMock, ITestOutputHelper output)
+public class ImageServiceTagsPatronPerfectionist(CodeContextMock exCtxMock, ITestOutputHelper output)
     : ImageServiceTagsBase(exCtxMock.GetService<IImageService>(), output), IClassFixture<DoFixtureStartup<ScenarioFullPatronsWithDb>>
 {
     protected override bool TestModeImg => false;

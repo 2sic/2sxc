@@ -11,14 +11,14 @@ namespace ToSic.Sxc.Code.Context.Sys;
 /// Note that there is currently not IHasKit[Model, Kit] - so the model is always `object` for now.
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExecutionContextFactory(ISysServiceProvider serviceProvider)
-    : ServiceBase($"{SxcLogName}.ExCtxF", connect: [/* never! serviceProvider */]), IExecutionContextFactory
+public class CodeContextFactory(ISysServiceProvider serviceProvider)
+    : ServiceBase($"{SxcLogName}.ExCtxF", connect: [/* never! serviceProvider */]), ICodeContextFactory
 {
 
     /// <inheritdoc/>
-    public ICodeContext New(ExecutionContextOptions options)
+    public ICodeContext New(CodeContextOptions options)
     {
-        var l = Log.Fn<ExecutionContext>($"{nameof(options.Compatibility)}: {options.Compatibility}");
+        var l = Log.Fn<CodeContext>($"{nameof(options.Compatibility)}: {options.Compatibility}");
 
         // New v14 case - the Razor component implements IDynamicData<model, Kit>
         // which specifies what kit version to use.
@@ -29,7 +29,7 @@ public class ExecutionContextFactory(ISysServiceProvider serviceProvider)
 
         // Default or old case - just a non-generic DnnDynamicCodeRoot
         // Also applies if previous call didn't succeed
-        executionContext ??= serviceProvider.Build<ExecutionContext>();
+        executionContext ??= serviceProvider.Build<CodeContext>();
 
         executionContext.Setup(options);
 
@@ -40,9 +40,9 @@ public class ExecutionContextFactory(ISysServiceProvider serviceProvider)
     /// Special helper for new Kit-based Razor templates in v14
     /// </summary>
     /// <returns>`null` if not applicable, otherwise the typed DynamicRoot</returns>
-    private ExecutionContext? TryBuildCodeApiServiceForDynamic(Type customType)
+    private CodeContext? TryBuildCodeApiServiceForDynamic(Type customType)
     {
-        var l = Log.Fn<ExecutionContext>();
+        var l = Log.Fn<CodeContext>();
         try
         {
             var requiredDynCode = typeof(IHasKit<>);
@@ -64,10 +64,10 @@ public class ExecutionContextFactory(ISysServiceProvider serviceProvider)
                 return null;
 
             // 2. If yes, generate a CodeApiService<TModel, TServiceKit> using the same types
-            var finalType = typeof(ExecutionContext<,>).MakeGenericType(typeof(object), kitType);
+            var finalType = typeof(CodeContext<,>).MakeGenericType(typeof(object), kitType);
 
             // 3. return that
-            var exCtx = serviceProvider.Build<ExecutionContext>(finalType);
+            var exCtx = serviceProvider.Build<CodeContext>(finalType);
             return l.ReturnAsOk(exCtx);
         }
         catch (Exception ex)

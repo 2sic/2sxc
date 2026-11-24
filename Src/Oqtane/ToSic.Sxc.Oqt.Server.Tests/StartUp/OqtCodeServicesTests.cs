@@ -43,13 +43,13 @@ public class OqtCodeServicesTests
         using var provider = CreateServices();
         using var scope = provider.CreateScope();
 
-        var context = scope.GetSysServiceProvider().GetRequiredService<IExecutionContextFactory>().New(new()
+        var context = scope.GetSysServiceProvider().GetRequiredService<ICodeContextFactory>().New(new()
         {
             OwnerOrNull = new LegacyCode(),
             ParentLog = new Log("Test.Legacy"),
         });
 
-        IsType<OqtExecutionContext>(context);
+        IsType<OqtCodeContext>(context);
     }
 
     /// <summary>
@@ -63,13 +63,13 @@ public class OqtCodeServicesTests
         using var provider = CreateServices();
         using var scope = provider.CreateScope();
 
-        var context = scope.GetSysServiceProvider().GetRequiredService<IExecutionContextFactory>().New(new()
+        var context = scope.GetSysServiceProvider().GetRequiredService<ICodeContextFactory>().New(new()
         {
             OwnerOrNull = new TypedCode(),
             ParentLog = new Log("Test.Typed"),
         });
 
-        IsType<OqtExecutionContext<object, ServiceKit16>>(context);
+        IsType<OqtCodeContext<object, ServiceKit16>>(context);
     }
 
     private static ServiceProvider CreateServices()

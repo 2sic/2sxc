@@ -38,7 +38,7 @@ internal class AppTyped(Ctx<IAppForCode> app, Ctx<ICodeDataFactory> cdf, LazySvc
     public string Name => App.AppSpecs.Name;
 
     /// <summary>
-    /// The CDF either comes from the ExecutionContext, or self-generated.
+    /// The CDF either comes from the CodeContext, or self-generated.
     /// This is important for scenarios where the App is used on a theme, where there is no execution context.
     /// </summary>
     [field: AllowNull, MaybeNull]

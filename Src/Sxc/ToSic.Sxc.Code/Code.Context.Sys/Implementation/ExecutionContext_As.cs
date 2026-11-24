@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Code.Context.Sys;
 
-public partial class ExecutionContext: IWrapper<ICodeDataFactory>
+public partial class CodeContext: IWrapper<ICodeDataFactory>
 {
     [PrivateApi] public ICodeDataFactory Cdf => field ??= GetService<ICodeDataFactory>();
 

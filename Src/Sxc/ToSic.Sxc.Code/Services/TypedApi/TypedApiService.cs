@@ -39,7 +39,7 @@ internal class TypedApiService(ISysServiceProvider serviceProvider, LazySvc<ILog
 
 
     public record ScopedDependencies(
-        Generator<IExecutionContextFactory> ExCtxGenerator,
+        Generator<ICodeContextFactory> ExCtxGenerator,
         Generator<AppForCode, AppForCode.Options> AppGenerator,
         LazySvc<IBlockBuilder> ModAndBlockBuilder,
         LazySvc<IEnvModuleBuilder> EnvModAndBlockBuilder)

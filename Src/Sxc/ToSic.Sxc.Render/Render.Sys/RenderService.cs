@@ -92,9 +92,9 @@ public class RenderService(
     {
         var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
 
-        // This service is often used from a theme/skin, in which case it doesn't have a ExecutionContext,
+        // This service is often used from a theme/skin, in which case it doesn't have a CodeContext,
         // which also means that it was not logged - which we're doing here.
-        if (exCtx is IIsUnknown)
+        if (exCtx.ValueOptional == null)
             logStore.Value.Add("render-service", Log);
 
         var moduleBlock = builderSvc.Value.BuildBlock(pageId, moduleId);

@@ -64,7 +64,7 @@ internal class CmsContext(
             module: BlockInternal?.Context?.Module
                     // If that's unknown, try to see if the execution context has an alternate module
                     // like when used on a container which is not a 2sxc module
-                    ?? (ctxExCtx.Value as ExecutionContext)?.ModuleIfBlockUnknown
+                    ?? (ctxExCtx.Value as CodeContext)?.ModuleIfBlockUnknown
                     // Fallback: just make sure don't have errors
                     ?? new ModuleUnknown(null!),
             rootBlock: BlockInternal?.RootBlock,

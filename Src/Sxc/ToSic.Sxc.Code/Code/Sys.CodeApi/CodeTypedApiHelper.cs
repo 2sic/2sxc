@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
@@ -7,7 +8,7 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.Sys.CodeApi;
 
-internal class CodeTypedApiHelper(ExecutionContext exCtx) : ICodeTypedApiHelper
+internal class CodeTypedApiHelper(CodeContext exCtx) : ICodeTypedApiHelper
 {
     #region Common State
 

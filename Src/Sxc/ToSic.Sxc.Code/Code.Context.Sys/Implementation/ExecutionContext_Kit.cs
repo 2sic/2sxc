@@ -10,7 +10,7 @@ using ToSic.Sxc.Services.Sys;
 
 namespace ToSic.Sxc.Code.Context.Sys;
 
-public partial class ExecutionContext: IGetService
+public partial class CodeContext: IGetService
 {
     private ISysServiceProvider SpWithOverrides => GetSpWithOverrides();
 
@@ -83,7 +83,7 @@ public partial class ExecutionContext: IGetService
     //{
     //    if (typeof(TService) == typeof(AdamManager))
     //        return ((CodeDataFactory)Cdf).AdamManager as TService
-    //            ?? throw new InvalidOperationException("Can't get AdamManager from ExecutionContext - it is not initialized.");
+    //            ?? throw new InvalidOperationException("Can't get AdamManager from CodeContext - it is not initialized.");
 
     //    throw new NotImplementedException();
     //}

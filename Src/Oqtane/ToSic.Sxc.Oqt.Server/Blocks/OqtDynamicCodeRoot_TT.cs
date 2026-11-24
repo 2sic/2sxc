@@ -6,17 +6,17 @@ using ToSic.Sxc.Services.Sys;
 namespace ToSic.Sxc.Oqt.Server.Blocks;
 
 [PrivateApi]
-internal class OqtExecutionContext<TModel, TServiceKit> : ExecutionContext<TModel, TServiceKit> where TServiceKit : ServiceKit where TModel : class
+internal class OqtCodeContext<TModel, TServiceKit> : CodeContext<TModel, TServiceKit> where TServiceKit : ServiceKit where TModel : class
 {
     private readonly LazySvc<AliasResolver> _aliasResolverLazy;
-    public OqtExecutionContext(Dependencies services, LazySvc<AliasResolver> aliasResolverLazy) : base(services, OqtConstants.OqtLogPrefix)
+    public OqtCodeContext(Dependencies services, LazySvc<AliasResolver> aliasResolverLazy) : base(services, OqtConstants.OqtLogPrefix)
     {
         ConnectLogs([
             _aliasResolverLazy = aliasResolverLazy
         ]);
     }
 
-    public override ICodeContext Setup(ExecutionContextOptions options)
+    public override ICodeContext Setup(CodeContextOptions options)
     {
         _aliasResolverLazy.Value.InitIfEmpty(options.BlockOrNull?.Context?.Site?.Id);
         return base.Setup(options);

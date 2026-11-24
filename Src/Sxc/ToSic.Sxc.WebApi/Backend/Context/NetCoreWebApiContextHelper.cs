@@ -50,7 +50,7 @@ internal class NetCoreWebApiContextHelper: ServiceBase
             : null;
 
         ExCtxOrNull = context.HttpContext.GetSysRequestServices()
-            .Build<IExecutionContextFactory>()
+            .Build<ICodeContextFactory>()
             .New(new()
             {
                 AppToAttach = appToAttach,

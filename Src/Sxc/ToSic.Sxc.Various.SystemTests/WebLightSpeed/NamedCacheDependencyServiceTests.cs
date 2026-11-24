@@ -1,17 +1,17 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Render.Output.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.OutputCache;
 using ToSic.Sxc.Web.Sys.LightSpeed;
 using ToSic.Sys.Caching;
-using ExecutionContext = ToSic.Sxc.Code.Context.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.WebLightSpeed;
 
 [Startup(typeof(StartupSxcWithDb))]
-public class NamedCacheDependencyServiceTests(ExecutionContext exCtx)
+public class NamedCacheDependencyServiceTests(CodeContext exCtx)
 {
     private const string DataCacheScope = "data-cache";
 

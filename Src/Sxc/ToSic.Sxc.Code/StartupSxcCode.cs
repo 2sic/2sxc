@@ -29,14 +29,14 @@ public static class StartupSxcCode
 
         services.TryAddTransient<ICodeCustomizer, Customizer>();
 
-        services.TryAddTransient<IExecutionContextFactory, ExecutionContextFactory>();
+        services.TryAddTransient<ICodeContextFactory, CodeContextFactory>();
 
         // Code / Dynamic Code
-        services.TryAddTransient<ExecutionContext.Dependencies>();
+        services.TryAddTransient<CodeContext.Dependencies>();
 
         // Code Fallbacks if not registered by the platform
-        services.TryAddTransient<ExecutionContext, ExecutionContextUnknown>();
-        services.TryAddTransient(typeof(ExecutionContext<,>), typeof(ExecutionContextUnknownObjKit<,>));
+        services.TryAddTransient<CodeContext, CodeContextUnknown>();
+        services.TryAddTransient(typeof(CodeContext<,>), typeof(CodeContextUnknownModelKit<,>));
 
         // v13 DynamicCodeService
         //services.TryAddTransient<CodeApiServiceBase.Dependencies>();
@@ -62,7 +62,7 @@ public static class StartupSxcCode
         services.TryAddTransient<ICmsContext, CmsContext>();
 
         // v15
-        services.TryAddTransient<ExCtxDataSourceService>();
+        services.TryAddTransient<CodeContextDataSourceService>();
 
         return services;
     }

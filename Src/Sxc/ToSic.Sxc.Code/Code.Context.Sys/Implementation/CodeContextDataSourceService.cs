@@ -8,12 +8,12 @@ namespace ToSic.Sxc.Code.Context.Sys;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExCtxDataSourceService(LazySvc<IDataSourcesService> dataSources, LazySvc<DataSourceCatalog> catalog)
+public class CodeContextDataSourceService(LazySvc<IDataSourcesService> dataSources, LazySvc<DataSourceCatalog> catalog)
 {
     public readonly LazySvc<IDataSourcesService> DataSources = dataSources;
     public readonly LazySvc<DataSourceCatalog> Catalog = catalog;
 
-    public ExCtxDataSourceService Setup(IAppIdentity appIdentity, Func<ILookUpEngine> getLookup)
+    public CodeContextDataSourceService Setup(IAppIdentity appIdentity, Func<ILookUpEngine> getLookup)
     {
         AppIdentity = appIdentity;
         _getLookup = getLookup;

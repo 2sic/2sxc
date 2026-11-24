@@ -33,7 +33,7 @@ public class TokenEngine(
     IAssetsExtractor assetsExtractor,
     EngineRequirementsApp engineRequirementsApp,
     IServerPaths serverPaths,
-    LazySvc<IExecutionContextFactory> exCtxFactory,
+    LazySvc<ICodeContextFactory> exCtxFactory,
     Generator<IAppDataConfigProvider> tokenEngineWithContext)
     : ServiceBase("Sxc.TokEng", connect: [engineSpecsService, assetsExtractor, engineRequirementsApp, exCtxFactory, tokenEngineWithContext]),
         IEngine // ITokenEngine

@@ -19,7 +19,6 @@ using ToSic.Sxc.Oqt.Server.Services;
 using ToSic.Sxc.Oqt.Server.Search;
 using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.Services;
-using ExecutionContext = ToSic.Sxc.Code.Context.Sys.ExecutionContext;
 using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;
@@ -66,8 +65,8 @@ partial class OqtRegisterServices
         // Views / Templates / Razor: View Builder
         services.TryAddTransient<IOqtSxcViewBuilder, OqtSxcViewBuilder>();
 
-        services.TryAddTransient<ExecutionContext, OqtExecutionContext>();
-        services.TryAddTransient(typeof(ExecutionContext<,>), typeof(OqtExecutionContext<,>));
+        services.TryAddTransient<CodeContext, OqtCodeContext>();
+        services.TryAddTransient(typeof(CodeContext<,>), typeof(OqtCodeContext<,>));
         services.TryAddTransient<IWebApiContextBuilder, OqtGetBlock>();
 
         // v13

@@ -27,7 +27,7 @@ partial class CodeDataFactory
     /// <exception cref="Exception"></exception>
     private AdamManager GetAdamManager()
     {
-        // Throw if we don't even have an ExecutionContext (like when exporting from a neutral WebAPI)
+        // Throw if we don't even have an CodeContext (like when exporting from a neutral WebAPI)
         if (ctxExCtx.ValueOptional is null)
             throw new($"Can't create App Context for {nameof(AdamManager)} in {nameof(ICodeDataFactory)} - no block, no App");
 
@@ -46,7 +46,7 @@ partial class CodeDataFactory
     public IFile File(int id)
         => AdamManager.AdamFs.GetFile(AdamAssetIdentifier.Create(id));
 
-    private ExecutionContext ExCtxReal => (ctxExCtx.Value as ExecutionContext)!;
+    private CodeContext ExCtxReal => (ctxExCtx.Value as CodeContext)!;
 
     [field: AllowNull, MaybeNull]
     private ServiceKit16 ServiceKit16 => field ??= ExCtxReal.GetKit<ServiceKit16>();

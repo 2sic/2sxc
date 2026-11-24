@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Code.Context.Sys;
 /// Options necessary to initialize a fresh execution context.
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public record ExecutionContextOptions
+public record CodeContextOptions
 {
     public IAppForCode? AppToAttach { get; init; }
 

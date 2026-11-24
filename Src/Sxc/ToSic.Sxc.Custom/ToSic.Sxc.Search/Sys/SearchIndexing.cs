@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Search.Sys;
 [PrivateApi]
 public class SearchIndexing(
     Generator<CodeCompiler> codeCompiler,
-    Generator<IExecutionContextFactory> executionContextFactory)
+    Generator<ICodeContextFactory> executionContextFactory)
     : ServiceBase("Sxc.Search", connect: [codeCompiler, executionContextFactory])
 {
     public static KeyValuePair<string, IDataStream>[] Streams(IReadOnlyDictionary<string, IDataStream> streams, string selectedStreams)

@@ -52,10 +52,10 @@ public abstract class DnnSxcCustomControllerBase() : DnnApiController, IHasLog /
     {
         SysHlp.WebApiLogging.OnInitialize(controllerContext);
         base.Initialize(controllerContext);
-        var (rootExecutionContext, folder) = CustomCodeHlp.InitExCtxWithBlockSpecOrApp(controllerContext);
+        var (rootCodeCtx, folder) = CustomCodeHlp.InitExCtxWithBlockSpecOrApp(controllerContext);
         if (this is IGetCodePath thisWithPath)
             thisWithPath.CreateInstancePath = folder;
-        ExCtx = rootExecutionContext;
+        ExCtx = rootCodeCtx;
     }
 
     #endregion

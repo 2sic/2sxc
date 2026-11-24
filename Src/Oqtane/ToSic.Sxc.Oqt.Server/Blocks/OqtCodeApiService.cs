@@ -1,11 +1,11 @@
-﻿using ToSic.Sxc.Oqt.Server.Plumbing;
+﻿using ToSic.Sxc.Code.Context.Sys;
+using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Services.Sys;
-using ExecutionContext = ToSic.Sxc.Code.Context.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks;
 
 [PrivateApi]
-internal class OqtExecutionContext(
-    ExecutionContext.Dependencies services,
+internal class OqtCodeContext(
+    CodeContext.Dependencies services,
     LazySvc<AliasResolver> aliasResolverLazy)
-    : OqtExecutionContext<object, ServiceKit>(services, aliasResolverLazy);
+    : OqtCodeContext<object, ServiceKit>(services, aliasResolverLazy);

@@ -20,7 +20,7 @@ public class CodeHelperTypedData(CompileCodeHelperSpecs helperSpecs)
     [field: AllowNull, MaybeNull]
     internal ContextData Data => field
         ??= (ContextData?)Specs.ExCtx.Block?.Data
-            ?? throw new NullReferenceException($"{nameof(ExecutionContext.Block)} isn't available");
+            ?? throw new NullReferenceException($"{nameof(CodeContext.Block)} isn't available");
 
     [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= Specs.ExCtx.Cdf;

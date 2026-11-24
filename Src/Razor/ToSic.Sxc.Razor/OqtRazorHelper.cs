@@ -34,7 +34,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : ServiceWithC
         {
             // 2026-05-23 2dm - original code, looks buggy because it would often return null, which should never happen IMHO
             //// Child razor page will have _dynCode == null, so it is provided via ViewData from parent razor page.
-            //if (_dynCode != null || owner.ViewData?[DynCode] is not IExecutionContext cdRt)
+            //if (_dynCode != null || owner.ViewData?[DynCode] is not ICodeContext cdRt)
             //    return _dynCode;
 
             if (_exCtx != null)

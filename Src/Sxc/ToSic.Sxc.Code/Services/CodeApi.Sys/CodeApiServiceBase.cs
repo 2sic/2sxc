@@ -28,7 +28,7 @@
 //        : DependenciesBase(connect: [/* never! serviceProvider */ LogStore, ZoneMapper, AppsCatalog]);
 
 //    public record ScopedDependencies(
-//        Generator<IExecutionContextFactory> ExCtxGenerator,
+//        Generator<ICodeContextFactory> ExCtxGenerator,
 //        Generator<AppForCodeShared, AppForCodeShared.Options> AppGenerator,
 //        LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder)
 //        : DependenciesBase(connect: [ExCtxGenerator, AppGenerator, ModAndBlockBuilder]);

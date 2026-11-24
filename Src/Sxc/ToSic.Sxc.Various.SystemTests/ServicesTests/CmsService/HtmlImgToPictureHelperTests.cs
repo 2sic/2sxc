@@ -4,7 +4,7 @@ using Xunit.Abstractions;
 
 namespace ToSic.Sxc.ServicesTests.CmsService;
 
-public class HtmlImgToPictureHelperTests(ExecutionContextMock exCtxMock, ITestOutputHelper output)
+public class HtmlImgToPictureHelperTests(CodeContextMock exCtxMock, ITestOutputHelper output)
     // Needs fixture to load the Primary App
     : IClassFixture<DoFixtureStartup<ScenarioBasic>>
 {

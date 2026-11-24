@@ -77,7 +77,7 @@ public class ServiceKit14(Ctx<ICodeContextGetService> ctxGetService) : ServiceKi
     /// <summary>
     /// The Edit service, same as the main Edit service
     /// </summary>
-    // Important: must share the Edit from the ExecutionContext for scenarios where Enable was set manually
+    // Important: must share the Edit from the CodeContext for scenarios where Enable was set manually
     [field: AllowNull, MaybeNull]
     public IEditService Edit => field ??= GetKitService<IEditService>();
 

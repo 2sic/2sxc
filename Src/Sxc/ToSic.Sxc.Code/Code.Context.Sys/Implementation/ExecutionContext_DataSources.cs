@@ -5,7 +5,7 @@ using ToSic.Sxc.Code.Sys;
 
 namespace ToSic.Sxc.Code.Context.Sys;
 
-public partial class ExecutionContext
+public partial class CodeContext
 {
     #region DataSource and ConfigurationProvider (for DS) section
 
@@ -22,7 +22,7 @@ public partial class ExecutionContext
 
     [PrivateApi]
     [field: AllowNull, MaybeNull]
-    public ExCtxDataSourceService DataSources => field
+    public CodeContextDataSourceService DataSources => field
         ??= Services.DataSources.Value.Setup(App!, () => LookUpForDataSources);
 
 
