@@ -1,4 +1,7 @@
-﻿using ToSic.Sxc.Adam.Sys.Manager;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.LookUp.Sys.Engines;
+using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Data.Sys.CodeDataFactory;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services.Sys;
@@ -14,11 +17,15 @@ public partial class ExecutionContext: ICanGetService
         // Some services such as the Cdf cannot be created at first,
         // as they also use the GetService to be created; so they must be delayed
 
+        // 0. AppIdentity
+        using (Ctx<IAppIdentity>.Use(() => App?.PureIdentity() ?? throw new ArgumentNullException(nameof(App))))
         // 1. Main / full context
         using (Ctx<IExCtxComplete>.Use(this))
         using (Ctx<IExecutionContext>.Use(this))
         // 2. Cdf service
         using (Ctx<ICodeDataFactory>.Use(() => Cdf))
+        // ILookUpEngine
+        using (Ctx<ILookUpEngine>.Use(() => LookUpForDataSources))
         // 3. AdamManager service for AdamService (WIP)
         using (Ctx<AdamManager>.Use(() => ((CodeDataFactory)Cdf).AdamManager))
         // 4. Service provider with overrides and `reuse:`

@@ -35,13 +35,9 @@ public class ServiceKitLight16(ISysServiceProvider serviceProvider) : ServiceBas
     public IConvertService Convert => field ??= GetService<IConvertService>();
 
     /// <inheritdoc cref="ServiceKit14.Data"/>
-    public IDataService Data => field ??= new Func<IDataService>(() =>
-    {
-        // Important: don't use Generator<IDataService> here, because it would miss the INeedsExecutionContext
-        var dss = GetService<IDataService>();
-        dss.Setup(new(_appIdentity, _getLookup));
-        return dss;
-    })();
+    public IDataService Data => field
+        ??= GetService<Generator<IDataService, IDataService.Options>>()
+            .New(new(_appIdentity, _getLookup));
 
 
     /// <inheritdoc cref="ServiceKit14.Feature"/>

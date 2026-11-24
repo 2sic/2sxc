@@ -5,8 +5,6 @@ using ToSic.Eav.DataSource.Sys.Catalog;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Eav.Services;
 using ToSic.Sxc.Services.DataService.Sys;
-using ToSic.Sxc.Services.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
 
 // TODO: MAKE PRIVATE AGAIN AFTER MOVING TO ToSic.Sxc.Custom
@@ -16,32 +14,24 @@ namespace ToSic.Sxc.Services.Data.Sys;
 [PrivateApi("hide implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class DataService(
+    Ctx<IAppIdentity> ctxAppIdentity,
+    Ctx<ILookUpEngine> ctxLookUp,
     LazySvc<IDataSourcesService> dataSources,
     LazySvc<DataSourceCatalog> catalog,
     LazySvc<IAppsCatalog> appsCatalog,
     Generator<GetQueryMs<Query>, DataSourceOptionsMs> queryBuilder,
     IUser user)
-    : ServiceWithContext("Sxc.DatSvc", connect: [user, dataSources, catalog, appsCatalog, queryBuilder]),
+    : ServiceWithSetup<IDataService.Options>("Sxc.DatSvc", connect: [user, dataSources, catalog, appsCatalog, queryBuilder]),
         IDataService
 {
-    public override void ConnectToRoot(IExecutionContext exCtx)
-    {
-        base.ConnectToRoot(exCtx);
-        Setup(new(exCtx.GetApp(), () => (exCtx as IExCtxLookUpEngine)?.LookUpForDataSources));
-    }
+    protected override IDataService.Options GetDefaultOptions() => new(null, null);
 
-    public void Setup(IDataService.Options opts)
-    {
-        _appIdentity = opts.AppIdentity ?? _appIdentity;
-        _getLookup = opts.GetLookup ?? _getLookup;
-
-    }
-    private IAppIdentity? _appIdentity;
+    private IAppIdentity? AppIdentity => field ??= MyOptions.AppIdentity ?? ctxAppIdentity.Value;
 
 
-    private DataSourceOptionsMs OptionsMs => field ??= new(_appIdentity, _getLookup);
+    private DataSourceOptionsMs OptionsMs => field ??= new(AppIdentity, GetLookup);
 
-    private Func<ILookUpEngine?>? _getLookup;
+    private Func<ILookUpEngine?>? GetLookup => field ??= MyOptions.GetLookup  ?? (() => ctxLookUp.Value);
 
 
     public IDataSource GetAppSource(NoParamOrder npo = default, object? parameters = default, object? options = default)
