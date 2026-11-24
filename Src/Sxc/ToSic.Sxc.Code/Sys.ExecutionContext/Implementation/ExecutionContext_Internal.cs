@@ -3,6 +3,7 @@ using ToSic.Eav.Data.Sys.PropertyLookup;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
 
@@ -25,6 +26,9 @@ public partial class ExecutionContext
     /// The current block - can be null if the context only knows about the App, but not about the block.
     /// </summary>
     [PrivateApi] public IBlock? Block { get; private set; }
+
+    public ContextData BlockData => (ContextData?)Block?.Data
+                                    ?? throw new NullReferenceException($"{nameof(Block)} isn't available");
 
     [field: AllowNull, MaybeNull]
     private AppDataStackService AppDss => field ??= Services.DataStackService.Init(App!.AppReader);
