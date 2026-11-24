@@ -41,7 +41,7 @@ public interface IDynamicCode12 : IDynamicCode, ICreateInstance, ICompatibilityL
     // **************************************************
 
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     TService GetService<TService>() where TService : class;
 
     /// <inheritdoc cref="IDynamicCodeDocs.App" />

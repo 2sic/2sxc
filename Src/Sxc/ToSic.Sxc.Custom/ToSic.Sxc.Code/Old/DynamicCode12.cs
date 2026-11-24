@@ -34,7 +34,7 @@ public abstract class DynamicCode12(): CustomCodeBase("Sxc.DynCod"), IHasCodeLog
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => CompileCodeHlp.CodeLog;
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
     [PrivateApi]

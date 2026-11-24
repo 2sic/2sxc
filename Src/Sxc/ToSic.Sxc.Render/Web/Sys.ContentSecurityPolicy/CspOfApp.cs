@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys.AppStack;
 using ToSic.Sxc.Code.Context.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Web.Sys.ContentSecurityPolicy;

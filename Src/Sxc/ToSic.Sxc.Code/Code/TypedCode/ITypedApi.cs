@@ -221,6 +221,6 @@ public interface ITypedApi
     IEnumerable<T> AsList<T>(object source, NoParamOrder npo = default, bool nullIfNull = default)
         where T : class, IModelFromData;
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     TService GetService<TService>() where TService : class;
 }

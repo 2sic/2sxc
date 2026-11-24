@@ -33,7 +33,7 @@ public abstract class Code12() : CustomCodeBase("Sxc.Code12"), IHasCodeLog, IDyn
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => CompileCodeHlp.CodeLog;
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
     [PrivateApi]

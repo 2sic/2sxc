@@ -49,7 +49,7 @@ public abstract partial class Api14(string logSuffix) : DnnSxcCustomControllerBa
 
     #endregion
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => ExCtx.GetService<TService>();
 
 

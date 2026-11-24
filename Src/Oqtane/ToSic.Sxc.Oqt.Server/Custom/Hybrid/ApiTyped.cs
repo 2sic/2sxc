@@ -59,7 +59,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => CtxHlp.CodeLog;
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public new TService GetService<TService>() where TService : class
         => CodeApi.GetService<TService>();
 

@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Code.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IDynamicCode: ICreateInstance, ICompatibilityLevel, IHasLog // inherit from old namespace to ensure compatibility
 {
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     TService GetService<TService>() where TService : class;
 
     /// <inheritdoc cref="IDynamicCodeDocs.App"/>

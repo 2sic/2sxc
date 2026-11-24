@@ -2,7 +2,6 @@
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Sys.CodeRunHelpers;
 
@@ -19,7 +18,9 @@ public class CodeHelperTypedData(CompileCodeHelperSpecs helperSpecs)
     public bool DefaultStrict = true;
 
     [field: AllowNull, MaybeNull]
-    internal ContextData Data => field ??= Specs.ExCtx.GetContextData();
+    internal ContextData Data => field
+        ??= (ContextData?)Specs.ExCtx.Block?.Data
+            ?? throw new NullReferenceException($"{nameof(ExecutionContext.Block)} isn't available");
 
     [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= Specs.ExCtx.Cdf;

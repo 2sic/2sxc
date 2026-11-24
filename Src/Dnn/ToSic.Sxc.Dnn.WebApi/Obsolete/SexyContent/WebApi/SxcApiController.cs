@@ -49,7 +49,7 @@ public abstract partial class SxcApiController() :
 {
     internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => ExCtx.GetService<TService>();
 
     /// <inheritdoc cref="IHasDnn.Dnn"/>

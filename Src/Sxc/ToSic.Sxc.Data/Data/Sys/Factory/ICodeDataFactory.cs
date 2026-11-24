@@ -4,15 +4,16 @@ using ToSic.Eav.Metadata;
 using ToSic.Eav.Models.Sys;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.InfoSystem;
 
 namespace ToSic.Sxc.Data.Sys.Factory;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface ICodeDataFactory: ICanGetService, IHasLog, IServiceWithSetup<ICodeDataFactory.OptionalFallbacks>
+public interface ICodeDataFactory: IGetService, IHasLog, IServiceWithSetup<ICodeDataFactory.OptionalFallbacks>
 {
     public record OptionalFallbacks(ISite Site, int? Compatibility = default, object? AdamManagerPrepared = default);
 

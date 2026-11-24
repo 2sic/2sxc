@@ -65,10 +65,10 @@ internal class DnnRazorHelper() : ServiceBase("Sxc.RzrHlp")
     #region DynamicModel and Factory
 
     /// <inheritdoc cref="IRazor14{TModel,TServiceKit}.DynamicModel"/>
-    public object GetDynamicModel(ICanGetService exCtx) => _dynamicModel ??= exCtx.GetService<ICodeDataPoCoWrapperService>().FromDictionary(Page.PageData);
+    public object GetDynamicModel(IGetService exCtx) => _dynamicModel ??= exCtx.GetService<ICodeDataPoCoWrapperService>().FromDictionary(Page.PageData);
     private object _dynamicModel;
 
-    internal void SetDynamicModel(ICanGetService exCtx, RenderSpecs viewData)
+    internal void SetDynamicModel(IGetService exCtx, RenderSpecs viewData)
     {
         var l = Log.Fn();
         _dynamicModel = exCtx.GetService<ICodeDataPoCoWrapperService>().DynamicFromObject(viewData.Data, WrapperSettings.Dyn(children: false, realObjectsToo: false));

@@ -1,9 +1,9 @@
-﻿using ToSic.Sxc.Sys.ExecutionContext;
+﻿using ToSic.Sxc.Code.Sys;
 
 namespace ToSic.Sxc.Code.Context.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface ICodeContextGetService : ICanGetService
+public interface ICodeContextGetService : IGetService
 {
     /// <summary>
     /// Special GetService which can cache the found service so any other use could get the same instance.

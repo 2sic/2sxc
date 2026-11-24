@@ -2,14 +2,15 @@
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi.Sys.ActionFilters;
 
 namespace ToSic.Sxc.WebApi.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class NetCoreControllersHelper(ControllerBase parent) : ICanGetService
+public class NetCoreControllersHelper(ControllerBase parent) : IGetService
 {
     public ControllerBase Parent { get; } = parent;
     public ILog? LogOrNull { get; } = (parent as IHasLog)?.Log;

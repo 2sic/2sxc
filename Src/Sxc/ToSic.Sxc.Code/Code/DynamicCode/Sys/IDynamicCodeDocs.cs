@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Code.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IDynamicCodeDocs
 {
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     TService GetService<TService>() where TService : class;
 
     /// <summary>

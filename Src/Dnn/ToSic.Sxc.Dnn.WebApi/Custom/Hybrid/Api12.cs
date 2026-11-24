@@ -41,7 +41,7 @@ public abstract partial class Api12(string logSuffix) : DnnSxcCustomControllerBa
 
     [PrivateApi] public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => ExCtx.GetService<TService>();
 
     #endregion

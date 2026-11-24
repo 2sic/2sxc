@@ -57,7 +57,7 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
     /// <inheritdoc cref="IDynamicCodeDocs.Data" />
     public IDataSource Data => CodeApi.Data;
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => ExCtx.GetService<TService>();
 
     /// <inheritdoc cref="IHasDnn.Dnn"/>

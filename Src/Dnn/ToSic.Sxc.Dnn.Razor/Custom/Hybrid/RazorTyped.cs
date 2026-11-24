@@ -50,7 +50,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel16;
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
     /// <inheritdoc cref="ITypedCode16.GetService{TService}(NoParamOrder, string?)"/>

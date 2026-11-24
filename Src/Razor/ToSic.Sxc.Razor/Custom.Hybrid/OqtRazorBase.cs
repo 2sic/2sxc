@@ -47,7 +47,7 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
 
     #region GetService / Logs / DevTools
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class
         => RzrHlp.ExCtxRoot.GetTypedApi().GetService<TService>();
 

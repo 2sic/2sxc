@@ -69,7 +69,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     #region Link & Edit - added to API in 2sxc 10.01; CmsContext, Resources, Settings (v12)
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => ExCtx.GetService<TService>();
 
     /// <inheritdoc cref="ITypedCode16.GetService{TService}(NoParamOrder, string?)"/>

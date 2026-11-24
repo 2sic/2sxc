@@ -17,9 +17,9 @@ namespace ToSic.Sxc.Backend.Context;
 internal class NetCoreWebApiContextHelper: ServiceBase
 {
     private readonly ControllerBase _owner;
-    private readonly ICanGetService _helper;
+    private readonly IGetService _helper;
 
-    public NetCoreWebApiContextHelper(ControllerBase owner, ICanGetService helper) : base("Oqt.ApiHlp")
+    public NetCoreWebApiContextHelper(ControllerBase owner, IGetService helper) : base("Oqt.ApiHlp")
     {
         if (owner is IHasLog ownerWithLog)
             this.LinkLog(ownerWithLog.Log);

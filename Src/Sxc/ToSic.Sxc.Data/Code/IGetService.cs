@@ -1,10 +1,11 @@
-﻿namespace ToSic.Sxc.Sys.ExecutionContext;
+﻿namespace ToSic.Sxc.Code;
 
 /// <summary>
 /// Interface to mark objects which can get a service.
+/// Mainly used for code context, code helpers and public APIs which support `GetService{T}()`
 /// </summary>
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public interface ICanGetService
+[PrivateApi, ShowApiWhenReleased(ShowApiMode.Never)]
+public interface IGetService
 {
     /// <summary>
     /// Get a service from the Dependency Injection.

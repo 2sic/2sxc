@@ -20,7 +20,7 @@ public interface ITypedCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IHas
 {
     #region Stuff basically inherited from v12/14
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     TService GetService<TService>() where TService : class;
 
     /// <inheritdoc cref="IDynamicCodeDocs.Link"/>

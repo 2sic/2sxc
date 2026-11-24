@@ -73,7 +73,7 @@ public abstract class SexyContentWebPage :
     /// </summary>
     [PrivateApi] public IBlock Block => CodeApi.Block;
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
     [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel9Old;

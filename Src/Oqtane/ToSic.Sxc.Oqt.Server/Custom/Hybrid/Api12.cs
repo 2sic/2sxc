@@ -53,7 +53,7 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => CtxHlp.CodeLog;
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public new TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
     [PrivateApi("Not yet ready")]

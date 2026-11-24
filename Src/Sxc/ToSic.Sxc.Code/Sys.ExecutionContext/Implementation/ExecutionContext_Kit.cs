@@ -4,14 +4,16 @@ using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Context.Sys;
+using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Data.Sys.CodeDataFactory;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services.Sys;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
 
-public partial class ExecutionContext: ICanGetService
+public partial class ExecutionContext: IGetService
 {
     private ISysServiceProvider SpWithOverrides => GetSpWithOverrides();
 
@@ -39,7 +41,7 @@ public partial class ExecutionContext: ICanGetService
             return Services.ServiceProvider.GetSysServiceProvider();
     }
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class
     {
         var newService = SpWithOverrides.Build<TService>(Log);

@@ -32,7 +32,7 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
     [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
 
