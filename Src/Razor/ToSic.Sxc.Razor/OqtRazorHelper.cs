@@ -16,9 +16,9 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : ServiceWithC
 {
     #region DynamicCode Attachment / Handling through ViewData
 
-    public override void ConnectToRoot(ICodeContext exCtx)
+    public override void SetupContext(ICodeContext exCtx)
     {
-        base.ConnectToRoot(exCtx);
+        base.SetupContext(exCtx);
         _exCtx = exCtx;
         owner.LinkLog(exCtx.Log);
         Log.A("OqtRazorHelper connect Log");
@@ -49,7 +49,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : ServiceWithC
                     "This means the parent razor page did not set the _dynCode in ViewData, which is required for child razor pages.");
 
             // Connect to root, which also sets the _exCtx field
-            ConnectToRoot(cdRt);
+            SetupContext(cdRt);
             Log.A( "DynCode attached from ViewData");
 
             return _exCtx!;

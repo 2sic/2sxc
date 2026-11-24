@@ -57,7 +57,7 @@ public class SearchIndexing(
         if (instance is ICodeContextRequired needsContext)
             // Typed/dynamic custom code needs the same block, app and log context as the
             // indexed occurrence, even when no page rendering request is running.
-            needsContext.ConnectToRoot(executionContextFactory.New().New(new()
+            needsContext.SetupContext(executionContextFactory.New().New(new()
             {
                 OwnerOrNull = null,
                 BlockOrNull = block,

@@ -51,9 +51,9 @@ public abstract partial class RazorComponentBase : WebPageBase, IRazor, IHasCode
 
     /// <inheritdoc />
     [PrivateApi]
-    public void ConnectToRoot(ICodeContext exCtx)
+    public void SetupContext(ICodeContext codeCtx)
     {
-        ExCtx = exCtx;
+        ExCtx = codeCtx;
     }
 
     /// <summary>

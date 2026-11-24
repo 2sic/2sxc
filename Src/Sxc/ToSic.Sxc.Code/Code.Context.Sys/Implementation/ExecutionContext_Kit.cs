@@ -43,7 +43,7 @@ public partial class CodeContext: IGetService
     {
         var newService = SpWithOverrides.Build<TService>(Log);
         if (newService is ICodeContextRequired newWithNeeds)
-            newWithNeeds.ConnectToRoot(this);
+            newWithNeeds.SetupContext(this);
         return newService;
     }
 
@@ -74,7 +74,7 @@ public partial class CodeContext: IGetService
                 : SpWithOverrides.Build<TService>(type, Log);
 
             if (newService is ICodeContextRequired newWithNeeds)
-                newWithNeeds.ConnectToRoot(this);
+                newWithNeeds.SetupContext(this);
             return newService;
         }
     }

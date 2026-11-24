@@ -10,7 +10,7 @@ public interface ICodeContextRequired
     /// <summary>
     /// Internal call to connect to the execution context.
     /// </summary>
-    /// <param name="exCtx"></param>
+    /// <param name="codeCtx"></param>
     [ShowApiWhenReleased(ShowApiMode.Never)] 
-    void ConnectToRoot(ICodeContext exCtx);
+    void SetupContext(ICodeContext codeCtx);
 }

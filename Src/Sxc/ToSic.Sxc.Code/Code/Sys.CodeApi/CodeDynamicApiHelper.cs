@@ -154,7 +154,7 @@ internal class CodeDynamicApiHelper(CodeContext exCtx) : ICodeDynamicApiHelper
         if (instance is ICodeContextRequired needsRoot)
         {
             l.A($"will attach root / Kit to {typeName}");
-            needsRoot.ConnectToRoot(exCtx);
+            needsRoot.SetupContext(exCtx);
         }
         else
             l.A($"no root / Kit for {typeName}");

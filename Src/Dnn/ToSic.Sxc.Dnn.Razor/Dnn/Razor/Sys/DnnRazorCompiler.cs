@@ -192,7 +192,7 @@ internal class DnnRazorCompiler(
             _sharedCodeApiService.PiggyBackGet(nameof(DnnRazorCompiler), () => this);
         }
 
-        webPage.ConnectToRoot(_sharedCodeApiService);
+        webPage.SetupContext(_sharedCodeApiService);
         l.Done();
     }
 

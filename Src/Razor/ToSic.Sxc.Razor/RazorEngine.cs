@@ -110,7 +110,7 @@ internal class RazorEngine(
                         CompatibilityFallback = CompatibilityLevels.CompatibilityLevel12,
                     });
 
-                    asSxc.ConnectToRoot(exCtx);
+                    asSxc.SetupContext(exCtx);
                     // Note: Don't set the purpose here anymore, it's a deprecated feature in 12+
                 }
             );

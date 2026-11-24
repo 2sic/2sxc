@@ -1,10 +1,8 @@
 ﻿using Custom.Razor.Sys;
-using System.Web.Razor.Parser.SyntaxTree;
 using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
-using ToSic.Sxc.Services.Sys;
 
 
 namespace ToSic.Sxc.Dnn.Razor;
@@ -38,9 +36,9 @@ internal class DnnRazorHelper() : ServiceBase("Sxc.RzrHlp")
 
         ParentPage = typedParent;
 
-        // Only call the Page.ConnectToRoot, as it will call-back this objects ConnectToRoot
-        // So don't call: ConnectToRoot(typedParent.ExCtx);
-        Page.ConnectToRoot(typedParent.ExCtx);
+        // Only call the `Page.SetupContext`, as it will call-back this objects SetupContext
+        // So don't call: SetupContext(typedParent.ExCtx);
+        Page.SetupContext(typedParent.ExCtx);
 
         Log.A($"{nameof(virtualPath)} for Render etc.:{virtualPath}");
     }

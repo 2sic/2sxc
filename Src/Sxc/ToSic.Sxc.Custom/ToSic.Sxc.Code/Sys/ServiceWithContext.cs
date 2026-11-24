@@ -15,10 +15,10 @@ public abstract class ServiceWithContext(string logName, NoParamOrder npo = defa
     /// <summary>
     /// Connect to CodeRoot and it's log
     /// </summary>
-    /// <param name="exCtx"></param>
+    /// <param name="codeCtx"></param>
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public virtual void ConnectToRoot(ICodeContext exCtx)
+    public virtual void SetupContext(ICodeContext codeCtx)
     {
         // Avoid unnecessary reconnects
         if (_alreadyConnected)
@@ -26,9 +26,9 @@ public abstract class ServiceWithContext(string logName, NoParamOrder npo = defa
         _alreadyConnected = true;
 
         // Remember the parent
-        ExCtxOrNull = exCtx;
+        ExCtxOrNull = codeCtx;
         // Link the logs
-        this.LinkLog(exCtx?.Log);
+        this.LinkLog(codeCtx?.Log);
         // report connection in log
         Log.Fn(message: "Linked to Root").Done();
     }
