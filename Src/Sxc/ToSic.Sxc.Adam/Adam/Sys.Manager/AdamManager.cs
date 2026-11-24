@@ -35,17 +35,17 @@ public class AdamManager(
 
     [field: AllowNull, MaybeNull] public IAdamFileSystem AdamFs => field ??= adamFsLazy.New(this);
 
+    private IContextOfApp AppContext => field ??= MyOptions.AppCtx;
+
     [field: AllowNull, MaybeNull]
     public IAppReader AppReader => field ??= AppContext.AppReaderRequired;
-
-    private IContextOfApp AppContext => field ??= MyOptions.AppCtx;
 
     [field: AllowNull, MaybeNull]
     public ISite Site => field ??= AppContext.Site;
 
     internal ICodeDataFactory Cdf => field
         ??= MyOptions.Cdf
-            ?? cdfIfNotProvided.New(new(MyOptions.AppCtx.Site, MyOptions.Compatibility, this));
+            ?? cdfIfNotProvided.New(new(AppContext.Site, MyOptions.Compatibility, this));
 
     #endregion
 

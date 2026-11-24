@@ -17,13 +17,13 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IExecutionContext: IContextServiceProvider, IHasPiggyBack, IHasLog
 {
-    /// <summary>
-    /// Get special services which data need to initialize.
-    /// This is a select list, ATM just the `AdamManager`
-    /// </summary>
-    /// <typeparam name="TService"></typeparam>
-    /// <returns></returns>
-    TService GetServiceForData<TService>() where TService : class;
+    ///// <summary>
+    ///// Get special services which data need to initialize.
+    ///// This is a select list, ATM just the `AdamManager`
+    ///// </summary>
+    ///// <typeparam name="TService"></typeparam>
+    ///// <returns></returns>
+    //TService GetServiceForData<TService>() where TService : class;
 
     ITypedStack AllSettings { get; }
     ITypedStack AllResources { get; }

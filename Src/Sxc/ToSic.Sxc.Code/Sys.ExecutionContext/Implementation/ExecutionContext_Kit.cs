@@ -19,7 +19,9 @@ public partial class ExecutionContext: ICanGetService
         using (Ctx<IExecutionContext>.Use(this))
         // 2. Cdf service
         using (Ctx<ICodeDataFactory>.Use(() => Cdf))
-        // 3. Service provider with overrides and `reuse:`
+        // 3. AdamManager service for AdamService (WIP)
+        using (Ctx<AdamManager>.Use(() => ((CodeDataFactory)Cdf).AdamManager))
+        // 4. Service provider with overrides and `reuse:`
         using (Ctx<IContextServiceProvider>.Use(this))
             return Services.ServiceProvider.GetSysServiceProvider();
     }
@@ -65,14 +67,14 @@ public partial class ExecutionContext: ICanGetService
         }
     }
 
-    public TService GetServiceForData<TService>() where TService : class
-    {
-        if (typeof(TService) == typeof(AdamManager))
-            return ((CodeDataFactory)Cdf).AdamManager as TService
-                ?? throw new InvalidOperationException("Can't get AdamManager from ExecutionContext - it is not initialized.");
+    //public TService GetServiceForData<TService>() where TService : class
+    //{
+    //    if (typeof(TService) == typeof(AdamManager))
+    //        return ((CodeDataFactory)Cdf).AdamManager as TService
+    //            ?? throw new InvalidOperationException("Can't get AdamManager from ExecutionContext - it is not initialized.");
 
-        throw new NotImplementedException();
-    }
+    //    throw new NotImplementedException();
+    //}
 
     /// <summary>
     /// A kind of cache for:
