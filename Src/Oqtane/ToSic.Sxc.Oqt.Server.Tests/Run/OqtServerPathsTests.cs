@@ -23,7 +23,7 @@ public class OqtServerPathsTests
         var files = new OqtImportExportEnvironmentTestContext.FakeFileRepository();
         files.Files.Add(new() { FileId = 23, Name = "photo.jpg", Folder = new Folder { SiteId = 7, Path = "images/", Type = storageType } });
         using var services = new ServiceCollection()
-            .AddSysCoreDi()
+            .AddSysCoreDiAllTac()
             .AddSingleton<IFileRepository>(files).AddSingleton<ITenantManager, FakeTenantManager>()
             .BuildServiceProvider();
         var hosting = new FakeWebHostEnvironment();
@@ -38,7 +38,7 @@ public class OqtServerPathsTests
     public void FullPathOfReference_PreservesReference_WhenFileDoesNotExist()
     {
         using var services = new ServiceCollection()
-            .AddSysCoreDi()
+            .AddSysCoreDiAllTac()
             .AddSingleton<IFileRepository>(new OqtImportExportEnvironmentTestContext.FakeFileRepository())
             .BuildServiceProvider();
         var sut = CreateServerPaths(services.GetSysServiceProvider(), new FakeWebHostEnvironment());
@@ -52,7 +52,7 @@ public class OqtServerPathsTests
         var files = new OqtImportExportEnvironmentTestContext.FakeFileRepository();
         files.Files.Add(new() { FileId = 23, Name = "photo.jpg", Folder = new Folder { SiteId = 7, Path = "images/", Type = "Custom" } });
         using var services = new ServiceCollection()
-            .AddSysCoreDi()
+            .AddSysCoreDiAllTac()
             .AddSingleton<IFileRepository>(files).AddSingleton<ITenantManager, FakeTenantManager>()
             .BuildServiceProvider();
         var sut = CreateServerPaths(services.GetSysServiceProvider(), new FakeWebHostEnvironment());

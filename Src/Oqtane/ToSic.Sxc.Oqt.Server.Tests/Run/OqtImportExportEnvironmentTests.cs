@@ -87,7 +87,7 @@ internal sealed class OqtImportExportEnvironmentTestContext : IDisposable
         Directory.CreateDirectory(Source);
         System.IO.File.WriteAllText(SourceFile, "imported");
         _services = new ServiceCollection()
-            .AddSysCoreDi()
+            .AddSysCoreDiAllTac()
             .AddSingleton(new OqtSiteGroup(null!, new FakeSiteGroupMemberRepository()))
             .BuildServiceProvider();
         var aliasResolver = new AliasResolver(new SiteState { Alias = new Alias { AliasId = 1, TenantId = 1, SiteId = 7 } }, null!, null!, null!, null!);
