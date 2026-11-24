@@ -21,10 +21,4 @@ public static class StartupSxcData
 
         return services;
     }
-
-
-    public static IServiceCollection AddSxcExecutionContext(this IServiceCollection services)
-    {
-        return services;
-    }
 }

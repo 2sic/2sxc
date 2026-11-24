@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Apps.Sys.AppDynamic;
 /// </remarks>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppDynamic(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryBuilder<Query>> queryManager, LazySvc<AppDynamicQueries> appDynamicQueries, Ctx<IExecutionContext> exCtx)
+public class AppDynamic(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryBuilder<Query>> queryManager, LazySvc<AppDynamicQueries> appDynamicQueries, Ctx<ICodeDataFactory> ctxCdf)
     // Note: If this is ever changed to not inherit from the EavApp, make sure you correct/update the LightSpeed code as well as it checks for this base class
     : ServiceWithSetup<IAppForCode>("App.SxcApp", connect: [globalPaths, queryManager, appDynamicQueries]),
         IAppDynamic,
@@ -30,7 +30,7 @@ public class AppDynamic(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryBuilder<Q
 {
     #region Setup Execution Context - for Cdf and data wrapping to DynamicEntity
 
-    private ICodeDataFactory Cdf => field ??= (exCtx.Value ?? throw new InvalidOperationException("ExecutionContext is not set")).GetCdf();
+    private ICodeDataFactory Cdf => field ??= ctxCdf.Value;
 
     #endregion
 

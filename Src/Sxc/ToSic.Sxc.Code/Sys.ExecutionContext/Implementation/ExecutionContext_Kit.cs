@@ -1,5 +1,6 @@
 ﻿using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Data.Sys.CodeDataFactory;
+using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services.Sys;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
@@ -10,7 +11,10 @@ public partial class ExecutionContext: ICanGetService
 
     private ISysServiceProvider GetSpWithOverrides()
     {
+        // Some services such as the Cdf cannot be created at first,
+        // as they also use the GetService to be created; so they must be delayed
         using (Ctx<IExecutionContext>.Use(this))
+        using (Ctx<ICodeDataFactory>.Use(() => Cdf))
             return Services.ServiceProvider.GetSysServiceProvider();
     }
 
