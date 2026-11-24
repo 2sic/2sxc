@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Adam.Sys.Manager;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Data.Sys.CodeDataFactory;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services.Sys;
@@ -19,6 +20,9 @@ public partial class ExecutionContext: ICanGetService
 
         // 0. AppIdentity
         using (Ctx<IAppIdentity>.Use(() => App?.PureIdentity() ?? throw new ArgumentNullException(nameof(App))))
+        using (Ctx<IAppForCode>.Use(() => App ?? throw new ArgumentNullException(nameof(App))))
+        // 0. Settings
+        using (Ctx<IHasAllSettings>.Use(this))
         // 1. Main / full context
         using (Ctx<IExCtxComplete>.Use(this))
         using (Ctx<IExecutionContext>.Use(this))

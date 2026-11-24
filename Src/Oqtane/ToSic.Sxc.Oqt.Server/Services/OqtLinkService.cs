@@ -1,7 +1,6 @@
 ﻿using Custom.Hybrid;
 using Oqtane.Repository;
 using Oqtane.Shared;
-using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Images.Sys;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
@@ -19,22 +18,17 @@ namespace ToSic.Sxc.Oqt.Server.Services;
 /// </summary>
 [PrivateApi]
 internal class OqtLinkService(
+    Ctx<IExCtxComplete> exCtx,
+    Ctx<IHasAllSettings> ctxSettings,
     IPageRepository pageRepository,
     AliasResolver aliasResolver,
     ImgResizeLinker imgLinker,
     LazySvc<ILinkPaths> linkPathsLazy)
-    : LinkServiceBase(imgLinker, linkPathsLazy, connect: [pageRepository, aliasResolver])
+    : LinkServiceBase(exCtx.Value.GetApp(), ctxSettings.ValueOptional, imgLinker, linkPathsLazy, connect: [pageRepository, aliasResolver])
 {
     public Razor12 RazorPage { get; set; }
-    private IContextOfModule _moduleContext;
 
     private new OqtLinkPaths LinkPaths => (OqtLinkPaths) base.LinkPaths;
-
-    public override void ConnectToRoot(IExecutionContext exCtx)
-    {
-        base.ConnectToRoot(exCtx);
-        _moduleContext = exCtx.GetContextOfBlock();
-    }
 
     protected override string ToApi(string api, string parameters = null) => ApiNavigateUrl(api, parameters);
 
@@ -60,7 +54,7 @@ internal class OqtLinkService(
     // Prepare Page link.
     private string PageNavigateUrl(int? pageId, string parameters, bool absoluteUrl = true)
     {
-        var currentPageId = _moduleContext?.Page?.Id;
+        var currentPageId = exCtx.Value?.Block?.Context?.Page?.Id;
 
         if ((pageId ?? currentPageId) == null)
             throw new($"Error, PageId is unknown, pageId: {pageId}, currentPageId: {currentPageId} .");

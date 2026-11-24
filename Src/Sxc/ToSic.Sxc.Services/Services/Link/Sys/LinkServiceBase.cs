@@ -1,8 +1,8 @@
 ﻿using ToSic.Razor.Blade;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images.Sys;
-using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Sys.Integration.Paths;
 using ToSic.Sxc.Web.Sys.Url;
@@ -12,16 +12,15 @@ namespace ToSic.Sxc.Services.Link.Sys;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy, object[]? connect = default)
-    : ServiceWithContext($"{SxcLogName}.LnkHlp", connect: [..connect ?? [], linkPathsLazy, imgLinker]), ILinkService
+public abstract class LinkServiceBase(IAppForCode ctxApp, IHasAllSettings? ctxSettings, ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy, object[]? connect = default)
+    : ServiceBase($"{SxcLogName}.LnkHlp", connect: [..connect ?? [], linkPathsLazy, imgLinker]), ILinkService, ICanDebug
 {
     [PrivateApi]
     protected ILinkPaths LinkPaths => linkPathsLazy.Value;
 
     [PrivateApi]
     [field: AllowNull, MaybeNull]
-    protected string AppFolder => field
-        ??= ExCtx.GetApp().AppSpecs.Folder;
+    protected string AppFolder => field ??= ctxApp.AppSpecs.Folder;
 
 
     /// <inheritdoc />
@@ -49,13 +48,13 @@ public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPa
             : ToApi(api, strParams);
         l.A($"url:{url}");
 
-        var processed = ExpandUrlIfNecessary(type, url);
+        var processed = ExpandUrlIfNecessary(LinkPaths, type, url);
         l.A($"expandUrl:{processed}, t:{type}");
 
         return l.ReturnAsOk(Tags.SafeUrl(processed).ToString());
     }
 
-    private string? ExpandUrlIfNecessary(string? type, string? url)
+    private static string? ExpandUrlIfNecessary(ILinkPaths linkPaths, string? type, string? url)
     {
         if (url == null)
             return null;
@@ -69,11 +68,11 @@ public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPa
         {
             case "full":
                 if (!parts.IsAbsolute)
-                    parts.ReplaceRoot(LinkPaths.GetCurrentRequestUrl());
+                    parts.ReplaceRoot(linkPaths.GetCurrentRequestUrl());
                 return parts.ToLink("full");
             case "//":
                 if (!parts.IsAbsolute)
-                    parts.ReplaceRoot(LinkPaths.GetCurrentRequestUrl());
+                    parts.ReplaceRoot(linkPaths.GetCurrentRequestUrl());
                 return parts.ToLink("//");
             case "/": // note: "/" isn't officially supported
                 return parts.ToLink("/");
@@ -98,7 +97,7 @@ public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPa
 
 
     /// <inheritdoc />
-    public virtual string Base()
+    public string Base()
     {
         // helper to generate a base path which is also valid on home (special DNN behaviour)
         const string randomxyz = "this-should-never-exist-in-the-url";
@@ -129,25 +128,25 @@ public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPa
 
         // If the url should be expanded to have a full root or something, do this first
         url ??= field?.Parent.Url(field.Name);
-        var expandedUrl = ExpandUrlIfNecessary(type, url);
+        var expandedUrl = ExpandUrlIfNecessary(LinkPaths, type, url);
 
         // Get the image-url(s) as needed
         // Note that srcset is false, so it won't generate a bunch of sources, just one - which is how the API works
         // Anybody that wants a srcset must use the new IImageService for that
         var imageUrl = imgLinker.ImageUrl(url: expandedUrl, settings: settings, field: field, factor: factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
             scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: strParams,
-            executionContext: ExCtxOrNull);
+            hasSettings: ctxSettings);
 
         return imageUrl;
     }
 
     /// <inheritdoc />
-    public override bool Debug
+    public bool Debug
     {
-        get => base.Debug;
+        get => field;
         set
         {
-            base.Debug = value;
+            field = value;
             imgLinker.Debug = value;
         }
     }
@@ -162,7 +161,7 @@ public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPa
         // combine api with query string
         return string.IsNullOrEmpty(queryString)
             ? api
-            : api?.IndexOf("?") > 0
+            : api?.IndexOf("?", StringComparison.InvariantCultureIgnoreCase) > 0
                 ? $"{api}&{queryString}"
                 : $"{api}?{queryString}";
     }

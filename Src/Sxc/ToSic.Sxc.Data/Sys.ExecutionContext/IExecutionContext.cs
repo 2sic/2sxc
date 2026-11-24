@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 /// The initial interface has none or few properties, so that we can pass it around without all projects being tied to each other.
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IExecutionContext: IContextServiceProvider, IHasPiggyBack, IHasLog
+public interface IExecutionContext: IContextServiceProvider, IHasAllSettings, IHasPiggyBack, IHasLog
 {
     ///// <summary>
     ///// Get special services which data need to initialize.
@@ -25,6 +25,10 @@ public interface IExecutionContext: IContextServiceProvider, IHasPiggyBack, IHas
     ///// <returns></returns>
     //TService GetServiceForData<TService>() where TService : class;
 
-    ITypedStack AllSettings { get; }
     ITypedStack AllResources { get; }
+}
+
+public interface IHasAllSettings
+{
+    ITypedStack AllSettings { get; }
 }

@@ -1,4 +1,6 @@
-﻿using ToSic.Sxc.Images.Sys;
+﻿using ToSic.Sxc.Apps.Sys;
+using ToSic.Sxc.Images.Sys;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Sys.Integration.Paths;
 using ToSic.Sys.Utils;
 
@@ -7,9 +9,9 @@ namespace ToSic.Sxc.Services.Link.Sys;
 [PrivateApi("for testing / un-implemented use")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 #pragma warning disable CS9113 // Parameter is unread.
-internal class LinkServiceUnknown(ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy, WarnUseOfUnknown<LinkServiceUnknown> _)
+internal class LinkServiceUnknown(Ctx<IAppForCode> ctxApp, Ctx<IHasAllSettings> ctxSettings, ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy, WarnUseOfUnknown<LinkServiceUnknown> _)
 #pragma warning restore CS9113 // Parameter is unread.
-    : LinkServiceBase(imgLinker, linkPathsLazy), IIsUnknown
+    : LinkServiceBase(ctxApp.Value, ctxSettings.ValueOptional, imgLinker, linkPathsLazy), IIsUnknown
 {
     public const string DefDomain = "unknown.2sxc.org";
     public const string DefProtocol = "https";

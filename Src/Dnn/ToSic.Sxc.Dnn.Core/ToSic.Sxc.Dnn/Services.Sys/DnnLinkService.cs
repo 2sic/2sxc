@@ -1,10 +1,12 @@
 ﻿using DotNetNuke.Abstractions;
 using ToSic.Eav.Data.Sys.ValueConverter;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Images.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Link.Sys;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Sys.Integration.Paths;
 
 namespace ToSic.Sxc.Dnn.Services.Sys;
@@ -14,13 +16,16 @@ namespace ToSic.Sxc.Dnn.Services.Sys;
 /// </summary>
 [PrivateApi("This implementation shouldn't be visible")]
 internal class DnnLinkService(
+    Ctx<IAppForCode> ctxApp,
+    Ctx<IHasAllSettings> ctxSettings,
+    LazySvc<IDnnContext> dnnCtx,
     ImgResizeLinker imgLinker,
     LazySvc<IValueConverter> dnnValueConverterLazy,
     LazySvc<ILinkPaths> linkPathsLazy,
     LazySvc<INavigationManager> navigationManager)
-    : LinkServiceBase(imgLinker, linkPathsLazy, connect: [dnnValueConverterLazy, navigationManager])
+    : LinkServiceBase(ctxApp.Value, ctxSettings.ValueOptional, imgLinker, linkPathsLazy, connect: [dnnValueConverterLazy, navigationManager])
 {
-    [PrivateApi] private IDnnContext Dnn => field ??= ExCtx.GetService<IDnnContext>();
+    [PrivateApi] private IDnnContext Dnn => field ??= dnnCtx.Value;
     [PrivateApi] private DnnValueConverter DnnValueConverter => field ??= dnnValueConverterLazy.Value as DnnValueConverter;
 
     protected override string ToApi(string api, string parameters = null) 
@@ -31,7 +36,8 @@ internal class DnnLinkService(
         if (pageId.HasValue)
         {
             var url = DnnValueConverter.ResolvePageLink(pageId.Value, language, parameters);
-            if (!string.IsNullOrEmpty(url)) return url;
+            if (!string.IsNullOrEmpty(url))
+                return url;
         }
             
         var currentPageUrl = parameters == null
