@@ -22,7 +22,7 @@ public class RenderService(
     Generator<InTextContentBlockRenderer> inTextRenderer,
     Generator<IBlockRenderer> blockBuilderGenerator,
     LazySvc<ILogStore> logStore,
-    IInjectExcCtx exCtx)
+    Ctx<IExecutionContext> exCtx)
     : ServiceBase("Sxc.RndSvc", connect: [builderSvc, simpleRendererGen, inTextRenderer, logStore, blockBuilderGenerator]),
     IRenderService
 {
@@ -47,7 +47,7 @@ public class RenderService(
         Guid? newGuid = null)
     {
         item ??= parent.Item;
-        var block = exCtx.GetBlock();
+        var block = exCtx.Value.GetBlock();
         var simpleRenderer = simpleRendererGen.New();
         return Tag.Custom(field == null
             ? simpleRenderer.Render(block, item.Entity, data: data) // without field edit-context
@@ -78,7 +78,7 @@ public class RenderService(
         if (string.IsNullOrWhiteSpace(field))
             throw new ArgumentNullException("To render all items, you must specify a field where the items are stored.", nameof(field));
 
-        var block = exCtx.GetBlock();
+        var block = exCtx.Value.GetBlock();
         var editService = GetEditService();
         return Tag.Custom(merge == null
             ? simpleRendererGen.New().RenderListWithContext(block, parent.Entity, field, apps, max, editService)
@@ -110,5 +110,5 @@ public class RenderService(
     /// create edit-object which is necessary for context attributes
     /// We need a new one for each parent
     /// </summary>
-    private IEditService GetEditService() => exCtx.GetService<IEditService>(reuse: true);
+    private IEditService GetEditService() => exCtx.Value.GetService<IEditService>(reuse: true);
 }

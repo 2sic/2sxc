@@ -9,13 +9,13 @@ namespace ToSic.Sxc.Edit.Toolbar.Sys;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ToolbarButtonDecoratorHelper(IAppReaderFactory appReaders, ScopedCache<Dictionary<string, ToolbarButtonDecorator?>> cache, IInjectExcCtx exCtx)
+public class ToolbarButtonDecoratorHelper(IAppReaderFactory appReaders, ScopedCache<Dictionary<string, ToolbarButtonDecorator?>> cache, Ctx<IExecutionContext> exCtx)
     : ServiceBase($"{SxcLogName}.TbdHlp", connect: [appReaders]), IWillInjectExecutionContext
 {
     internal ToolbarButtonDecorator? GetDecorator(IAppIdentity? appIdentity, string? typeName, string? command)
     {
         // If no special context was given, use the main one from the current context
-        appIdentity ??= exCtx.GetApp().PureIdentity();
+        appIdentity ??= exCtx.Value.GetApp().PureIdentity();
 
         if (typeName.IsEmpty() || command.IsEmpty())
             return null;

@@ -32,7 +32,7 @@ public partial record ToolbarBuilder(ToolbarBuilder.MyServices Services)
     public sealed record MyServices(
         LazySvc<ToolbarButtonDecoratorHelper> ToolbarButtonHelper,
         LazySvc<IAppsCatalog> AppsCatalog,
-        IInjectExcCtx ExCtx)
+        Ctx<IExecutionContext> ExCtx)
         : DependenciesBase(connect: [ToolbarButtonHelper, AppsCatalog]);
 
     public ILog Log { get; } = LogFactory.Create(SxcLogName + ".TlbBld");

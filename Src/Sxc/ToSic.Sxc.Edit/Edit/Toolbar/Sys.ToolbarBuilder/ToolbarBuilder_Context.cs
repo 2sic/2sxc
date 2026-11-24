@@ -60,7 +60,7 @@ partial record ToolbarBuilder : IToolbarBuilderInternal
         // If we're not forcing the context "true" then check cases where it's not needed
         if (!context.EqualsInsensitive(true.ToString()))
             // If we're still on the same app, and we didn't force the context, return null
-            if (Services.ExCtx.GetApp().AppId /*CurrentAppIdentity?.AppId*/ == identity.AppId)
+            if (Services.ExCtx.Value.GetApp().AppId /*CurrentAppIdentity?.AppId*/ == identity.AppId)
             {
                 // ensure we're not in a global context where the current-context is already special
                 var globalAppId = appsCatalog.GetPrimaryAppOfAppId(appId, Log);

@@ -24,7 +24,6 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 [PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.Dependencies>,
-    IInjectExcCtx,
     IExecutionContext,
     IExecutionContextWithApp,
     IExecutionContextWithBlock,

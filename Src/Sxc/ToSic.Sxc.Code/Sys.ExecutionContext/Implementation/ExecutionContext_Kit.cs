@@ -10,7 +10,7 @@ public partial class ExecutionContext: ICanGetService
 
     private ISysServiceProvider GetSpWithOverrides()
     {
-        using (OverrideService<IInjectExcCtx>.Use(this))
+        using (Ctx<IExecutionContext>.Use(this))
             return Services.ServiceProvider.GetSysServiceProvider();
     }
 
