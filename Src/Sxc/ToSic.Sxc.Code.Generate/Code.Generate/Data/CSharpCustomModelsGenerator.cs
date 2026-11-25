@@ -4,6 +4,9 @@ using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Code.Generate.Data;
 
+// IMPORTANT: DON'T RENAME THIS CLASS
+// The exact name is stored in configurations
+
 /// <summary>
 /// Experimental
 /// Generator for C# Custom Model classes that inherit from CustomModel instead of CustomItem.
@@ -12,44 +15,34 @@ namespace ToSic.Sxc.Code.Generate.Data;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CSharpCustomModelsGenerator(IUser user, IAppReaderFactory appReadFac)
-    : CSharpModelsGeneratorBase(user, appReadFac, SxcLogName + ".CMdGen") // IFileGenerator is inherited from base
+    : ServiceBase(SxcLogName + ".CMdGen"), IFileGenerator
 {
     #region Information for the interface
 
-    public override string Description => "Generates light-weight C# Custom Model Classes for the AppCode/Data folder";
-
-    public override string DescriptionHtml => $"The {Name} will generate <code>[TypeName]Model.Generated.cs</code> files in the <code>AppCode/Data</code> folder.";
-
-    protected override string GeneratedSetName => "C# Custom Model Classes";
+    public FileGeneratorSpecs GeneratorSpecs => field ??= new(this)
+    {
+        Description = "Generates light-weight C# Custom Model Classes for the AppCode/Data folder",
+        DescriptionHtml = $"The {GetType().Name} will generate <code>[TypeName]Model.Generated.cs</code> files in the <code>AppCode/Data</code> folder.",
+        OutputLanguage = "CSharp",
+        OutputType = "DataModel"
+    };
 
     #endregion
 
-    protected internal override CSharpCodeSpecs BuildDerivedSpecs(IFileGeneratorSpecs parameters)
-        => BuildCustomModelSpecs(parameters);
-
-    /// <summary>
-    /// Build CustomModel-specific specs with CustomModel inheritance and naming conventions
-    /// </summary>
-    private CSharpCodeSpecs BuildCustomModelSpecs(IFileGeneratorSpecs parameters)
+    public IGeneratedFileSet[] Generate(GenerateFileSetSpecs specs)
     {
-        var codeSpecs = base.BuildSpecs(parameters);
-
-        codeSpecs = codeSpecs with
+        var appReader = appReadFac.Get(specs.AppId);
+        var buildSpecs = new CSharpCodeSpecs
         {
-            //DataClassGeneratedSuffix = modelSuffix, // Custom suffix for model classes
+            AppName = appReader.Specs.Name,
             DataInherits = "Custom.Data.CustomModel", // Inherit from CustomModel instead of CustomItem
-            FileGeneratedSuffix = ".Generated" // Suffix is handled in class name
+            FileGeneratedSuffix = ".Generated", // Suffix is handled in class name
+            ExportedContentTypes = CSharpModelSpecsContentTypeHelper.GetSelectedContentTypes(appReader, specs.ContentTypes),
+            SetSpecs = specs,
         };
-        return codeSpecs;
+
+        var fragmentGenerator = new CSharpCustomModelGenerator(GeneratorSpecs, Log);
+        return new CSharpDataFileGenerator(Log).Generate(GeneratorSpecs, buildSpecs, user, "C# Custom Model Classes", fragmentGenerator);
     }
 
-    protected override IGeneratedFile? CreateFileGenerator(IContentType type, string baseName)
-    {
-        // Empty the list of override methods and property names
-        // since the model-generator doesn't add any overrides
-        // because the base class doesn't have any own methods or properties.
-        CodeGenHelper.OverrideMethods = [];
-        CodeGenHelper.OverridePropertyNames = [];
-        return new CSharpCustomModelGenerator(this, type, baseName).PrepareFile();
-    }
 }

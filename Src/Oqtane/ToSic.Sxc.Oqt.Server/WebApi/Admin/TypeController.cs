@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.WebApi.Admin.Sys;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using RealController = ToSic.Sxc.Backend.Admin.TypeControllerReal;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
+using RealController = ToSic.Eav.WebApi.Admin.Sys.TypeControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 
@@ -20,19 +24,15 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
 
+[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class TypeController() : OqtStatefulControllerBase(RealController.LogSuffix), ITypeController
+public class TypeController : ControllerBase, IHasLog, ITypeController
 {
-    private RealController Real => GetService<RealController>();
+    /// <inheritdoc />
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
 
-    // Replaced by DataSource System.ContentTypes through query System.SysData.
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[Authorize(Roles = RoleNames.Admin)]
-    //public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
-    //    => Real.List(appId, scope, withStatistics);
-
-
+    private RealController Real => this.GetApiService<RealController>();
     
     [HttpDelete]
     [ValidateAntiForgeryToken]
@@ -61,26 +61,17 @@ public class TypeController() : OqtStatefulControllerBase(RealController.LogSuff
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public IActionResult Json(int appId, string name)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        CtxHlp.SetupResponseMaker();
-        return Real.Json(appId, name);
-    }
+        => Real.Json(appId, name).ToHttpResponse();
 
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public ImportResultDto Import(int zoneId, int appId) => Real.Import(new(Request), zoneId, appId);
+    public ImportResult Import(int zoneId, int appId) => Real.Import(new(Request), zoneId, appId);
 
 
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public IActionResult JsonBundleExport(int appId, Guid exportConfiguration, int indentation = 0)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        CtxHlp.SetupResponseMaker();
-        return Real.JsonBundleExport(appId, exportConfiguration, indentation);
-    }
-
+        => Real.JsonBundleExport(appId, exportConfiguration, indentation).ToHttpResponse();
 }

@@ -1,11 +1,12 @@
-﻿using ToSic.Razor.Blade;
+﻿using ToSic.Eav.Apps;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Sys.Assets;
 
 namespace ToSic.Sxc.Context.Sys.CmsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class CmsViewFolder(CmsView cmsView, IApp app, bool shared) : AppAssetFolder
+internal class CmsViewFolder(CmsView cmsView, IAppPaths app, bool shared) : AppAssetFolder
 {
     [field: AllowNull, MaybeNull]
     public override string Path => field ??= FigureOutPath(shared ? app.RelativePathShared : app.RelativePath).ToSystemPath();

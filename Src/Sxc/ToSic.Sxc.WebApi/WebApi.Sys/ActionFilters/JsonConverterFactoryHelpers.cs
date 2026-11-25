@@ -6,7 +6,7 @@ namespace ToSic.Sxc.WebApi.Sys.ActionFilters;
 internal class JsonConverterFactoryHelpers
 {
     internal static TFormatter CreateNewFormatterFactory<TFormatter>(
-        IServiceProvider sp,
+        ISysServiceProvider sp,
         JsonFormatterAttribute? jsonFormatterAttribute,
         Func<Casing> getFallbackCasing,
         Func<JsonSerializerOptions, TFormatter> factory)
@@ -30,7 +30,7 @@ internal class JsonConverterFactoryHelpers
     /// <param name="serviceProvider">The service provider used to resolve the factory and its dependencies.</param>
     /// <returns>An instance of <see cref="ToSic.Eav.WebApi.Sys.Helpers"/> if the entity format is <see langword="null"/> or <see
     /// cref="ToSic.Eav.WebApi.Sys.Helpers"/>; otherwise, <see langword="null"/>.</returns>
-    public static EavJsonConverterFactory? NewEavJsonConverterFactoryOrNull(EntityFormat? entityFormat, IServiceProvider serviceProvider) =>
+    public static EavJsonConverterFactory? NewEavJsonConverterFactoryOrNull(EntityFormat? entityFormat, ISysServiceProvider serviceProvider) =>
         entityFormat switch
         {
             // Build the factory from the request-scoped service provider

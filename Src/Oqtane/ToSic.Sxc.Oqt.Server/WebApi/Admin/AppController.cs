@@ -1,11 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Eav.Apps.ImportExport.Sys;
+using ToSic.Eav.Context;
 using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
-using RealController = ToSic.Sxc.Backend.Admin.AppControllerReal;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
+using RealController = ToSic.Eav.WebApi.Admin.Sys.AppControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)] can't be used, because it forces the security
@@ -18,10 +22,15 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
+[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppController() : OqtStatefulControllerBase(RealController.LogSuffix), IAppController
+public class AppController : ControllerBase, IHasLog, IAppController
 {
-    private RealController Real => GetService<RealController>();
+    /// <inheritdoc />
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+
+    private RealController Real => this.GetApiService<RealController>();
 
     /// <inheritdoc />
     [HttpDelete]
@@ -35,15 +44,6 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
     public void App(int zoneId, string name, int? inheritAppId = null) => Real.App(zoneId, name, inheritAppId);
-
-    // Replaced by DataSource System.AppStatistics through query System.SysData.
-    // Use app/auto/query/System.SysData/Default with SysDataSource=System.AppStatistics.
-    ///// <inheritdoc />
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[Authorize(Roles = RoleNames.Admin)]
-    //public AppExportInfoDto Statistics(int zoneId, int appId)
-    //    => Real.Statistics(zoneId, appId);
 
     /// <inheritdoc />
     [HttpGet]
@@ -77,8 +77,8 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
     [HttpPost]
     [Authorize(Roles = RoleNames.Host)]
     [ValidateAntiForgeryToken]
-    public Task<ImportResultDto> Reset(int zoneId, int appId, bool withPortalFiles = false) 
-        => Real.Reset(zoneId, appId, CtxHlp.BlockOptional.Context.Site.DefaultCultureCode, withPortalFiles);
+    public Task<ImportResult> Reset(int zoneId, int appId, bool withPortalFiles = false) 
+        => Real.Reset(zoneId, appId, this.GetApiService<ISite>().DefaultCultureCode, withPortalFiles);
 
 
 
@@ -86,7 +86,7 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public ImportResultDto Import(int zoneId)
+    public ImportResult Import(int zoneId)
     {
         // Ensure that Hot Reload is not enabled or try to disable it.
         HotReloadEnabledCheck.Check();
@@ -98,7 +98,7 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public ImportResultDto InstallPendingApps(int zoneId, [FromBody] IEnumerable<PendingAppDto> pendingApps)
+    public ImportResult InstallPendingApps(int zoneId, [FromBody] IEnumerable<PendingAppRaw> pendingApps)
     {
         // Ensure that Hot Reload is not enabled or try to disable it.
         HotReloadEnabledCheck.Check();

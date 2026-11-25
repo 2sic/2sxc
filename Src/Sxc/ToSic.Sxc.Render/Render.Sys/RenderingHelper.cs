@@ -30,7 +30,7 @@ internal class RenderingHelper(ILinkPaths linkPaths, LazySvc<IEnvironmentLogger>
 
     public const string DefaultVisitorError = "Error Showing Content - please login as admin for details.";
 
-    protected IContextOfBlock Context = null!;
+    protected IContextOfModule Context = null!;
     protected IBlock Block = null!;
     protected string AppRootPath = null!;
 

@@ -3,20 +3,18 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Sys;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Services.Sys;
 
 namespace ToSic.Sxc.Services;
 
 [PrivateApi("hide implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class AdamService(): ServiceWithContext("Svc.AdamSv"), IAdamService
+internal class AdamService(Ctx<AdamManager> ctxAdamManager): ServiceBase("Svc.AdamSv"), IAdamService
 {
     // Note: before 2025-06-19 it was doing a lot of nullable checks and use the ExcCtxOrNull
     // but since I believe the AdamService is only for Razor etc. it should really never be used this way
     // so 2dm is changing to force non-null since it's the only plausible setup for now...
     [field: AllowNull, MaybeNull]
-    private AdamManager AdamManagerWithContext => field
-        ??= ExCtx.GetServiceForData<AdamManager>();
+    private AdamManager AdamManagerWithContext => field ??= ctxAdamManager.Value;
 
     /// <inheritdoc />
     public IFile? File(int id)

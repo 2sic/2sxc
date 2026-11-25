@@ -1,57 +1,59 @@
-﻿using System.Web;
-using ToSic.Eav.Web.Sys;
+﻿using ToSic.Eav.Web.Http.Sys;
 using ToSic.Eav.WebApi.Sys;
-using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Code.Sys.CodeRunHelpers;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Integration;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
-internal class DnnWebApiHelper : CodeHelperBase
+internal class DnnWebApiHelper : ServiceBase
 {
     #region Constructor & Destructor
 
-    public DnnWebApiHelper(IHasLog apiController, string historyLogGroup, string firstMessage = default) : base("Dnn.ApiHlp")
+    public DnnWebApiHelper(IHasLog apiController, string historyLogGroup, string firstMessage = default, bool logApiTimer = false) : base("Dnn.ApiHlp")
     {
-        var requestLogging = GetService<Generator<HttpRequestLoggingScoped, HttpRequestLoggingScoped.Opts>>()
-                .New(new() { Segment = historyLogGroup ?? EavWebApiConstants.HistoryNameWebApi, RootName = "Dnn.Api" });
+        var scopedLogging = GetServiceNoExCtx<Generator<HttpRequestLoggingScoped, HttpRequestLoggingScoped.Options>>();
+        var requestLogging = scopedLogging.New(new() { Segment = historyLogGroup ?? EavWebApiConstants.HistoryNameWebApi, RootName = "Dnn.Api" });
         this.LinkLog(requestLogging.RootLog);
         apiController.LinkLog(requestLogging.RootLog);
-        WebApiLogging = new(requestLogging, firstMessage: firstMessage);
+        if (logApiTimer)
+            WebApiLogging = new(requestLogging, firstMessage: firstMessage);
     }
-
-    public void OnDispose()
-        => WebApiLogging.OnDispose();
 
     #endregion
 
     #region Logging
 
-    public DnnWebApiLogging WebApiLogging { get; }
+    internal DnnWebApiLogging WebApiLogging { get; }
+
+    public void EndRequestTimer() => WebApiLogging?.OnDispose();
 
     #endregion
 
     #region Basic Service
 
     /// <summary>
-    /// Get a service of a specified type. 
+    /// Special GetService which knows **nothing** about the context - to explicitly show that this is happening.
     /// </summary>
     /// <typeparam name="TService"></typeparam>
-    /// <returns></returns>
     /// <remarks>
-    /// This will override the base functionality to ensure that any services created will be able to get the CodeContext.
+    /// This name should be very distinct (NOT GetService())
+    /// to make it clear that this is a special case where the context is **not** used.
+    ///
+    /// In custom code base classes it should use the Execution Context, not this.
     /// </remarks>
-    public TService GetService<TService>() where TService : class
-        => ExCtxOrNull?.GetService<TService>()
-            ?? _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>(Log);
-    // Must cache it, to be really sure we use the same ServiceProvider in the same request
-    private readonly LazyGet<IServiceProvider> _serviceProvider = new();
+    /// <returns></returns>
+    public TService GetServiceNoExCtx<TService>() where TService : class
+        => _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>(Log);
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Must cache it, to be really sure we use the same ServiceProvider in the same request
+    /// </remarks>
+    private readonly LazyGet<ISysServiceProvider> _serviceProvider = new();
 
     #endregion
 
-    public IBlock? GetBlockAndContext(HttpRequestMessage request) 
-        => _blcCtx.Get(() => GetService<DnnGetBlock>().TryGetBlockSpecsUsingModuleAndContentBlockHeaders(request));
-    private readonly LazyGet<IBlock?> _blcCtx = new();
-
-
+    public ICodeLog CodeLog => field ??= new CodeLog(Log);
 }

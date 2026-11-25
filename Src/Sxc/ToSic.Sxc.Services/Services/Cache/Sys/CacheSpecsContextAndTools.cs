@@ -2,12 +2,13 @@
 using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Context;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Cms.Users.Sys;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Services.Cache.Sys.CacheKey;
 using ToSic.Sxc.Services.Cache.Sys.VaryBy;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Caching.Policies;
 using ToSic.Sys.Users;
 using ToSic.Sys.Utils;
@@ -26,7 +27,7 @@ internal record CacheSpecsContextAndTools : HelperRecordBase
     //internal required CacheKeySpecs KeySpecs { get; init; }
 
     [field: AllowNull, MaybeNull]
-    internal required IExecutionContext ExCtx
+    internal required ICodeContext ExCtx
     {
         get => field ?? throw new NullReferenceException($"{nameof(CacheSpecs)}.{nameof(ExCtx)} should never be null at runtime, only during unit tests. Avoid test on aspects which need this.");
         init;
@@ -46,27 +47,15 @@ internal record CacheSpecsContextAndTools : HelperRecordBase
     #region Retrieved / Calculated values for Re-Use
 
     [field: AllowNull, MaybeNull]
-    private ICmsContext Context => field ??= ExCtx.GetCmsContext();
+    private ICmsContext Context => field ??= ExCtx.CmsContext;
 
-    //[field: AllowNull, MaybeNull]
-    //public ICmsUser User => field ??= ExCtx.GetCmsContext().User;
-
-    //[field: AllowNull, MaybeNull]
-    //public ICmsModule Module => field ??= ExCtx.GetCmsContext().Module;
-
-    //[field: AllowNull, MaybeNull]
-    //public ICmsPage Page => field ??= ExCtx.GetCmsContext().Page;
-
-    //[field: AllowNull, MaybeNull]
-    //public ICmsCulture Culture => field ??= ExCtx.GetCmsContext().Culture;
-
-    public UserElevation UserElevation => _userElevation ??= Context.User.GetElevation(); // ?? UserElevation.Unknown;
+    public UserElevation UserElevation => _userElevation ??= Context.User.GetElevation();
     private UserElevation? _userElevation;
 
-    private ISite? Site => field ??= ExCtx.GetContextOfBlock()?.Site;
+    private ISite? Site => field ??= ExCtx.Block?.Context?.Site;
 
     [field: AllowNull, MaybeNull]
-    private IAppReader AppReader => field ??= ExCtx.GetState<IAppReader>();
+    private IAppReader AppReader => field ??= ExCtx.App!.AppReader;
 
     #endregion
 

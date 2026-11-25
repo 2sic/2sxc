@@ -1,10 +1,12 @@
-﻿namespace ToSic.Eav.WebApi.PublicApi;
+﻿using ToSic.Eav.WebApi.Admin.Sys;
+
+namespace ToSic.Eav.WebApi.PublicApi;
 
 /// <summary>
 /// Contract for WebApi controllers supporting ADAM calls
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IAdamController<in TId>
+public interface IAdamController<in TId>: IAppAdminWebApiController
 {
     /// <summary>
     /// POST or PUT Upload a file to ADAM

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Routing;
 using System.Reflection;
 using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Context.Sys;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Code.Sys.HotBuild;
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 internal class AppApiControllerManager : IHasLog
 {
     public AppApiControllerManager(ApplicationPartManager partManager, ILogStore logStore, Generator<Compiler> compiler, IWebApiContextBuilder webApiContextBuilder, IEditionService editionSvc,
-        AppCodeLoader appCodeLoader, AppApiFileSystemWatcher appApiFileSystemWatcher, IContextBuilderService ctxBuilder)
+        AppCodeLoader appCodeLoader, AppApiFileSystemWatcher appApiFileSystemWatcher, IWebApiAppContextBuilderService ctxBuilder)
     {
         _partManager = partManager;
         _compiler = compiler;
@@ -38,7 +39,7 @@ internal class AppApiControllerManager : IHasLog
     private readonly IWebApiContextBuilder _webApiContextBuilder;
     private readonly IEditionService _editionSvc;
     private readonly AppCodeLoader _appCodeLoader;
-    private readonly IContextBuilderService _ctxBuilder;
+    private readonly IWebApiAppContextBuilderService _ctxBuilder;
 
     public ILog Log { get; }
 

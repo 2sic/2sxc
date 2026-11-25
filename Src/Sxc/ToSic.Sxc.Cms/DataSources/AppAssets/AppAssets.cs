@@ -1,7 +1,5 @@
 ﻿using System.Collections.Immutable;
-using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
-
 using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.DataSource.Sys.Errors;
 using ToSic.Eav.DataSource.VisualQuery;
@@ -48,8 +46,6 @@ namespace ToSic.Sxc.DataSources;
 [PublicApi]
 public class AppAssets: CustomDataSource
 {
-    private readonly AppAssetsDataSourceProvider _appAssetsSource;
-
     private const string StreamFiles = "Files";
     private const string StreamFolders = "Folders";
     private const string StreamAll = "All";
@@ -75,11 +71,10 @@ public class AppAssets: CustomDataSource
     [Configuration(Fallback = false)]
     public bool SearchSubfolders => Configuration.GetThis(false);
 
-    private AppAssetsGetSpecs Specs => new()
+    private AppAssetsDataSourceProvider.Options Specs => new()
     {
         RootFolder = RootFolder,
         FileFilter = FileFilter,
-        //SearchSubfolders = SearchSubfolders
     };
 
     #endregion
@@ -87,32 +82,31 @@ public class AppAssets: CustomDataSource
     #region Constructor
 
     [PrivateApi]
-    public AppAssets(Dependencies services, AppAssetsDataSourceProvider appAssetsSource) : base(services, "CDS.AppFiles", connect: [appAssetsSource])
+    public AppAssets(Dependencies services, Generator<AppAssetsDataSourceProvider, AppAssetsDataSourceProvider.Options> appAssetsSource) : base(services, "CDS.AppFiles", connect: [appAssetsSource])
     {
         _appAssetsSource = appAssetsSource;
 
-        ProvideOutRaw(GetFiles, options: FilesOptions);
-        ProvideOutRaw(GetFolders, name: StreamFolders, options: FoldersOptions);
+        ProvideOutRaw(GetFiles, options: () => new()
+        {
+            AppId = AppId,
+            IdSeed = -1,
+            Relationships = _relationships,
+        });
+        ProvideOutRaw(GetFolders, name: StreamFolders, options: () => new()
+        {
+            AppId = AppId,
+            IdSeed = -100001,
+            Relationships = _relationships,
+        });
         ProvideOut(() => Out[DataSourceConstants.StreamDefaultName].List, StreamFiles);
         ProvideOut(GetAll, StreamAll);
     }
+
+    private readonly Generator<AppAssetsDataSourceProvider, AppAssetsDataSourceProvider.Options> _appAssetsSource;
+
     #endregion
 
     private readonly LazyLookup<object, IEntity> _relationships = new();
-
-    private DataFactoryOptions FilesOptions() => new()
-    {
-        AppId = AppId,
-        IdSeed = -1,
-        Relationships = _relationships,
-    };
-
-    private DataFactoryOptions FoldersOptions() => new()
-    {
-        AppId = AppId,
-        IdSeed = -100001,
-        Relationships = _relationships,
-    };
 
     private ResultOrError<IEnumerable<FileModelRaw>> GetFiles()
     {
@@ -176,8 +170,8 @@ public class AppAssets: CustomDataSource
             ZoneId = Specs.ZoneId == int.MinValue ? ZoneId : Specs.ZoneId,
         };
 
-        _appAssetsSource.Configure(specs);
-        var (folders, files) = _appAssetsSource.GetAll();
+        var provider = _appAssetsSource.New(specs);
+        var (folders, files) = provider.GetAll();
 
         var rawFolders = folders.ToImmutableOpt();
         var rawFiles = files.ToImmutableOpt();

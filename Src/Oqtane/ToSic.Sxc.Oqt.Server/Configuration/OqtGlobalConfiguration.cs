@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Sxc.Oqt.Server.Context;
+using ToSic.Sxc.Web;
 using ToSic.Sys.Configuration;
 using ToSic.Sys.Utils;
 
@@ -51,7 +52,7 @@ internal class OqtGlobalConfiguration(IHttpContextAccessor httpContextAccessor) 
     private string TryResolveTenantConnectionString()
     {
         // Only resolve tenant when a request scope is present; otherwise use the base/fallback value.
-        var requestServices = httpContextAccessor?.HttpContext?.RequestServices;
+        var requestServices = httpContextAccessor?.HttpContext?.GetSysRequestServices();
         if (requestServices == null)
             return null;
 

@@ -1,18 +1,14 @@
 ﻿using ToSic.Eav.Apps.Sys.State;
-using ToSic.Eav.WebApi.Sys.Cms;
-using ToSic.Sxc.Blocks.Sys.Views;
-using ToSic.Sxc.Cms.Publishing.Sys;
+using ToSic.Eav.Data.ListSlots.Sys;
+using ToSic.Eav.Data.Publishing.Sys;
 
 namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ListActivitySave(
-    AppWorkQuick<WorkFieldList> workFieldList,
-    LazySvc<IPagePublishing> publishing,
-    IContextCompleteService ctxService
-    ) : ServiceBase("Api.CntGrpRl", connect: [workFieldList, ctxService, publishing])
+public class ListActivitySave(AppWorkChain<WorkListSlots> workFieldList, LazySvc<IDataPublishingService> publishing)
+    : ServiceWithSetup<IAppWorkContext>("Api.CntGrpRl", connect: [workFieldList, publishing])
 {
-    public bool ItemList(Guid parent, List<EntityInListDto>? list,  string part)
+    public bool ItemList(Guid parent, List<ListSlotContentsInfo>? list,  string[] fields)
     {
         var l = Log.Fn<bool>($"list for:{parent}, items:{list?.Count}");
         if (list == null)
@@ -21,20 +17,18 @@ public class ListActivitySave(
         if (!list.Any())
             return l.ReturnTrue();
 
-        var context = ctxService.BlockContextRequired();
-        publishing.Value.DoInsidePublishing(context, _ =>
+        publishing.Value.DoInsidePublishing(options =>
         {
-            var entity = context.AppReaderRequired.GetDraftOrPublished(parent);
+            var entity = MyOptions.AppReader.GetDraftOrPublished(parent);
             var sequence = list
                 .Select(i => i.Index)
                 .ToArray();
-            var fields = part == ViewParts.ContentLower
-                ? ViewParts.ContentPair
-                : [part ?? throw new ArgumentException(@"Part name cannot be null", nameof(part))];
-            workFieldList.New(context.AppReaderRequired)
-                .FieldListReorder(entity!, fields, sequence, context.Publishing.ForceDraft);
+            workFieldList.New(MyOptions)
+                .ReorderSlots(entity!, fields, sequence, options.ForceDraft);
         });
 
         return l.ReturnTrue();
     }
+
+
 }

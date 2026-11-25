@@ -1,19 +1,19 @@
-﻿using ToSic.Eav.Apps.Sys;
+﻿using ToSic.Eav.Apps.Assets.Sys;
+using ToSic.Eav.Apps.ImportExport.Sys;
+using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.Apps.Views.Sys;
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Eav.ImportExport.Integration;
-using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys.Xml;
+using ToSic.Eav.Models;
 using ToSic.Eav.Persistence.Sys.Logging;
-using ToSic.Eav.Serialization.Sys;
+using ToSic.Eav.Serialization;
 using ToSic.Eav.WebApi.Sys.Helpers.Validation;
-using ToSic.Eav.WebApi.Sys.ImportExport;
-using ToSic.Sxc.Apps.Sys;
-using ToSic.Sxc.Apps.Sys.Paths;
-using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.Views;
@@ -23,22 +23,21 @@ public class ViewsExportImport(
     AppWorkQuick<WorkEntitySave> workEntSave,
     IServerPaths serverPaths,
     IEnvironmentLogger envLogger,
-    LazySvc<JsonSerializer> jsonSerializerLazy,
+    Generator<IJsonDataReader, IJsonDataReader.Options> jsonReader,
+    LazySvc<IJsonDataWriter> jsonWriter,
     ISite site,
     AppIconHelpers appIconHelpers,
     Generator<ImpExpHelpers> impExpHelpers,
-    IResponseMaker responseMaker,
     Generator<QueryDefinitionFactory> qDefBuilder)
     : ServiceBase("Bck.Views",
         connect:
         [
-            workEntSave, serverPaths, envLogger, jsonSerializerLazy, appIconHelpers, impExpHelpers, responseMaker,
-            qDefBuilder, site
+            workEntSave, serverPaths, envLogger, jsonReader, jsonWriter, appIconHelpers, impExpHelpers, qDefBuilder, site
         ])
 {
-    public THttpResponseType DownloadViewAsJson(int appId, int viewId)
+    public FileResult DownloadViewAsJson(int appId, int viewId)
     {
-        var logCall = Log.Fn<THttpResponseType>($"{appId}, {viewId}");
+        var l = Log.Fn<FileResult>($"{appId}, {viewId}");
         var (appReader, appPaths) = impExpHelpers.New().GetReaderAndPathsAfterZoneSwitchPermissionCheck(site.ToAppIdentity(appId));
         var bundle = new BundleEntityWithAssets
         {
@@ -46,7 +45,7 @@ public class ViewsExportImport(
         };
 
         // Attach files
-        var view = new View(bundle.Entity!, [site.CurrentCultureCode], qDefBuilder);
+        var view = new View().Setup(new(bundle.Entity!, [site.CurrentCultureCode]));
 
         if (!string.IsNullOrEmpty(view.Path))
         {
@@ -59,12 +58,20 @@ public class ViewsExportImport(
             }
         }
 
-        var serializer = jsonSerializerLazy.Value.SetApp(appReader);
-        var serialized = serializer.Serialize(bundle, 0);
+        var serialized = jsonWriter.Value.Serialize(bundle, 0);
 
-        return logCall.ReturnAsOk(responseMaker.File(serialized,
-            ("View" + "." + bundle.Entity.GetBestTitle() + ImpExpConstants.Extension(ImpExpConstants.Files.json))
-            .RemoveNonFilenameCharacters()));
+        var result = new FileResult
+        {
+            FileName = ("View" + "." + bundle.Entity.GetBestTitle() +
+                        ImpExpConstants.Extension(ImpExpConstants.Files.json))
+                .RemoveNonFilenameCharacters(),
+            ContentType = MimeTypeConstants.Json,
+            FileBytes = System.Text.Encoding.UTF8.GetBytes(serialized)
+        };
+        return l.Return(result);
+        //return logCall.ReturnAsOk(responseMaker.File(serialized,
+        //    ("View" + "." + bundle.Entity.GetBestTitle() + ImpExpConstants.Extension(ImpExpConstants.Files.json))
+        //    .RemoveNonFilenameCharacters()));
     }
 
     private BundleEntityWithAssets TryAddAsset(BundleEntityWithAssets bundle, string webPath, string relativePath)
@@ -83,21 +90,21 @@ public class ViewsExportImport(
 
         
 
-    public ImportResultDto ImportView(int zoneId, int appId, List<FileUploadDto> files, string defaultLanguage)
+    public ImportResult ImportView(int zoneId, int appId, List<FileUploadDto> files, string defaultLanguage)
     {
-        var l = Log.Fn<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
+        var l = Log.Fn<ImportResult>($"{zoneId}, {appId}, {defaultLanguage}");
 
         try
         {
             // 0.1 Check permissions, get the app, 
-            var (appRead, appPaths) = impExpHelpers.New().GetReaderAndPathsAfterZoneSwitchPermissionCheck(site.ToAppIdentity(appId));
+            var (appReader, appPaths) = impExpHelpers.New().GetReaderAndPathsAfterZoneSwitchPermissionCheck(site.ToAppIdentity(appId));
 
             // 0.2 Verify it's json etc.
             if (files.Any(file => !Json.IsValidJson(file.Contents)))
                 throw new ArgumentException("a file is not json");
 
             // 1. create the views
-            var serializer = jsonSerializerLazy.Value.SetApp(appRead);
+            var serializer = jsonReader.New(new(appReader));
 
             var bundles = files
                 .Select(f => serializer.DeserializeEntityWithAssets(f.Contents))
@@ -113,7 +120,7 @@ public class ViewsExportImport(
 
             // 2. Import the views
             // todo: construction of this should go into init
-            workEntSave.New(appRead).Import(bundles.Select(v => v.Entity).ToList());
+            workEntSave.New(appReader).Import(bundles.Select(v => v.Entity).ToList());
 
             // 3. Import the attachments
             var assets = bundles.SelectMany(b => b.Assets);

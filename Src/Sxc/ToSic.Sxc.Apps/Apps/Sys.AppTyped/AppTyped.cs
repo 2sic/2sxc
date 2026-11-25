@@ -1,15 +1,14 @@
 ﻿using ToSic.Eav.Apps.AppReader.Sys;
-using ToSic.Eav.DataSource.Query.Sys;
+using ToSic.Eav.Apps.Assets.Sys;
+using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.Sys.Assets;
-using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Typed;
-using ToSic.Sxc.Services.Sys;
-using ToSic.Sxc.Services.Sys.DataService;
-using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sxc.Services.DataService.Sys;
 
 namespace ToSic.Sxc.Apps.Sys.AppTyped;
 
@@ -22,15 +21,12 @@ namespace ToSic.Sxc.Apps.Sys.AppTyped;
 // - provide an instance of this on the CodeApiService
 // - use that instead
 
-internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager<TypedQuery>> queryManager)
-    : ServiceWithContext(SxcLogName + ".AppTyp", connect: [globalPaths, queryManager]),
+internal class AppTyped(Ctx<IAppForCode> app, Ctx<ICodeDataFactory> cdf, LazySvc<GlobalPaths> globalPaths, Generator<GetQueryMs<TypedQuery>, DataSourceOptionsMs> queryBuilder)
+    : ServiceBase(SxcLogName + ".AppTyp", connect: [globalPaths, queryBuilder]),
         IAppTyped
 {
     [field: AllowNull, MaybeNull]
-    protected App App => field
-        ??= ExCtx.GetApp() as App
-            ?? throw new($"Can't access {nameof(App)} - either null or can't convert");
-
+    protected IAppForCode App => field ??= app.Value;
 
     /// <inheritdoc />
     int IZoneIdentity.ZoneId => App.ZoneId;
@@ -39,41 +35,41 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager<T
     int IAppIdentityLight.AppId => App.AppId;
 
     /// <inheritdoc />
-    public string Name => App.Name;
+    public string Name => App.AppSpecs.Name;
 
     /// <summary>
-    /// The CDF either comes from the ExecutionContext, or self-generated.
+    /// The CDF either comes from the CodeContext, or self-generated.
     /// This is important for scenarios where the App is used on a theme, where there is no execution context.
     /// </summary>
     [field: AllowNull, MaybeNull]
-    protected ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
+    protected ICodeDataFactory Cdf => field ??= cdf.Value;
 
     /// <inheritdoc />
     [field: AllowNull, MaybeNull]
-    public IAppDataTyped Data => field ??= App
-        .BuildDataForTyped<AppDataTyped, AppDataTyped>()
+    public IAppDataTyped Data => field ??= App.DataService
+        .BuildData<AppDataTyped, AppDataTyped>(this.PureIdentity())
         .Setup(Cdf);
 
     /// <inheritdoc />
     public ITypedQuery? GetQuery(string? name = default, NoParamOrder npo = default, IDataSourceLinkable? attach = default, object? parameters = default)
     {
-        var opts = new DataSourceOptionsMs(this, () => App.AppDataConfig.LookUpEngine);
-        var queryMicroService = new GetQueryMs<TypedQuery>(queryManager, opts, Log);
+        var opts = new DataSourceOptionsMs(this, () => App.DataService.LookUpEngine);
+        var queryMicroService = queryBuilder.New(opts);
         var query = queryMicroService.GetQuery(name, npo, attach, parameters);
         query?.Setup(Cdf);
         return query;
     }
 
     /// <inheritdoc />
-    public IAppConfiguration Configuration => App.Configuration;
+    public IAppConfiguration Configuration => App.AppSpecs.Configuration;
 
     /// <inheritdoc />
-    ITypedItem IAppTyped.Settings => _settings.Get(() => App.AppSettings.NullOrGetWith(appS => MakeTyped(appS, propsRequired: true))!)!;
-    private readonly LazyGet<ITypedItem> _settings = new();
+    ITypedItem IAppTyped.Settings => _settings.Get(() => App.SettingsEntity.NullOrGetWith(appS => MakeTyped(appS, propsRequired: true)))!;
+    private readonly LazyGet<ITypedItem?> _settings = new();
 
     /// <inheritdoc />
-    ITypedItem IAppTyped.Resources => _resources.Get(() => App.AppResources.NullOrGetWith(appR => MakeTyped(appR, propsRequired: true))!)!;
-    private readonly LazyGet<ITypedItem> _resources = new();
+    ITypedItem IAppTyped.Resources => _resources.Get(() => App.ResourcesEntity.NullOrGetWith(appR => MakeTyped(appR, propsRequired: true)))!;
+    private readonly LazyGet<ITypedItem?> _resources = new();
     
     private ITypedItem MakeTyped(ICanBeEntity contents, bool propsRequired)
     {
@@ -87,9 +83,9 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager<T
 
     /// <inheritdoc />
     public IFolder FolderAdvanced(NoParamOrder npo = default, string? location = default)
-        => new AppAssetFolderMain(App.AppPathsForTyped, App.Folder, AppAssetsHelpers.DetermineShared(location) ?? App.AppReaderForTyped.IsShared());
+        => new AppAssetFolderMain(App.AppPaths, App.AppSpecs.Folder, AppAssetsHelpers.DetermineShared(location) ?? App.AppReader.IsShared());
 
     /// <inheritdoc />
     public IFile Thumbnail => field
-        ??= new AppAssetThumbnail(App.AppReaderForTyped, App.AppPathsForTyped, globalPaths);
+        ??= new AppAssetThumbnail(App.AppReader, App.AppPaths, globalPaths);
 }

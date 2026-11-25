@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ToSic.Eav.WebApi.Sys.Cms;
+using ToSic.Eav.Ui.Edit.Sys;
+using ToSic.Eav.Ui.Edit.Sys.Load;
+using ToSic.Eav.Ui.Edit.Sys.Load.Links;
 using ToSic.Eav.WebApi.Sys.Dto;
 using ToSic.Eav.WebApi.Sys.Routing;
 using ToSic.Sxc.Backend.Cms;
@@ -33,13 +35,13 @@ namespace IntegrationSamples.SxcEdit01.Controllers
         /// <inheritdoc />
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
+        public Task<LinkInfoDto> LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
             => Real.LinkInfo(link, appId, contentType, guid, field);
 
         /// <inheritdoc />
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        public bool Publish(int id)
+        public Task<bool> Publish(int id)
             => Real.Publish(id);
     }
 }

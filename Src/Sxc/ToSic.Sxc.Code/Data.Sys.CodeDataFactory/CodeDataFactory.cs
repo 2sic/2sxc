@@ -4,13 +4,12 @@ using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.Data.Build.Sys;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Context.Sys.CmsContext;
 using ToSic.Sxc.Data.Sys.DynamicJacket;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Wrappers;
-using ToSic.Sxc.Services.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.InfoSystem;
 
 namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
@@ -19,43 +18,40 @@ namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class CodeDataFactory(
-    IServiceProvider serviceProvider,
+    ISysServiceProvider serviceProvider,
+    Ctx<ICodeContext> ctxExCtx,
     LazySvc<CodeDataServices> codeDataServices,
-    LazySvc<AdamManager> adamManager,
+    Generator<AdamManager, AdamManager.Options> adamManager,
     LazySvc<IContextOfAppFactory> appCtxFactory,
     LazySvc<DataAssembler> dataBuilderLazy,
     Generator<ContentTypeAssembler, DataAssemblerOptions> contentTypeAssembler,
     LazySvc<ICodeDataPoCoWrapperService> codeDataWrapper,
     Generator<CodeJsonWrapper> wrapJsonGenerator,
     LazySvc<CodeInfoService> codeInfoSvc,
-    LazySvc<IZoneMapper> zoneMapper)
-    : ServiceWithContext("Sxc.AsConv",
+    LazySvc<ICultureStateSvc> zoneMapper)
+    : ServiceBase("Sxc.AsConv",
         connect: [/* never: serviceProvider */codeDataServices, adamManager, appCtxFactory, dataBuilderLazy, contentTypeAssembler, codeDataWrapper, wrapJsonGenerator, codeInfoSvc, zoneMapper]),
         ICodeDataFactory
 {
+    
+
     public CodeInfoService CodeInfo => codeInfoSvc.Value;
 
-    public void SetFallbacks(ISite site, int? compatibility = default, object? adamManagerPrepared = default)
+    public void Setup(ICodeDataFactory.OptionalFallbacks fallbacks)
     {
-        _siteOrNull = site;
-        _compatibilityLevel = compatibility ?? _compatibilityLevel;
+        _siteOrNull = fallbacks.Site;
+        _compatibilityLevel = fallbacks.Compatibility ?? _compatibilityLevel;
 
         // Handle Adam Manager - passed in as an object so that the Type doesn't have to exist at top level definition
         // but if we get it, we must really make sure it's the correct type
-        if (adamManagerPrepared is null)
+        if (fallbacks.AdamManagerPrepared is null)
             return;
-        if (adamManagerPrepared is AdamManager adamManagerTyped)
+        if (fallbacks.AdamManagerPrepared is AdamManager adamManagerTyped)
             AdamManager = adamManagerTyped;
         else
             throw new($"The {nameof(adamManager)} must be of type {nameof(AdamManager)}");
     }
     private ISite? _siteOrNull;
-
-    [field: AllowNull, MaybeNull]
-    private ISite SiteFromContextOrFallback => field 
-        ??= (ExCtxOrNull?.GetCmsContext() as CmsContext)?.CtxSite.Site
-            ?? _siteOrNull
-            ?? throw new("Tried getting site from context or fallback, neither returned anything useful. ");
 
     #region Compatibility Level
 
@@ -76,16 +72,15 @@ public partial class CodeDataFactory(
     /// List of dimensions for value lookup, incl. priorities etc. and null-trailing.
     /// lower case safe guaranteed. 
     /// </summary>
-    // If we don't have an ExecutionContext, try to generate the language codes and compatibility
+    // If we don't have an CodeContext, try to generate the language codes and compatibility
     // There are cases where these were supplied using SetFallbacks, but in some cases none of this is known
     [field: AllowNull, MaybeNull]
-    public string?[] Dimensions => field ??=
-        // note: can't use SiteFromContextOrFallback.SafeLanguagePriorityCodes() because it will error during testing
-        (ExCtxOrNull?.GetCmsContext() as CmsContext)?.CtxSite.Site.SafeLanguagePriorityCodes()
-        ?? _siteOrNull.SafeLanguagePriorityCodes();
+    public string?[] Dimensions => field
+        ??= SiteFromContextOrFallbackOrNull.SafeLanguagePriorityCodes();
+         
 
 
-    public IBlock? BlockOrNull => ExCtxOrNull?.GetBlock();
+    public IBlock? BlockOrNull => ctxExCtx.ValueOptional?.Block;
 
     #endregion
 
@@ -103,10 +98,18 @@ public partial class CodeDataFactory(
     [field: AllowNull, MaybeNull]
     public List<string> SiteCultures => field
         ??= zoneMapper.Value
-                .CulturesEnabledWithState(SiteFromContextOrFallback)?
+                .CulturesEnabledWithState(
+                    SiteFromContextOrFallbackOrNull
+                    ?? throw new("Tried getting site from context or fallback, neither returned anything useful. "))
                 .Select(c => c.Code.ToLowerInvariant())
                 .ToList()
             ?? [];
+    
+    private ISite? SiteFromContextOrFallbackOrNull => field
+        ??= (ctxExCtx.ValueOptional?.CmsContext as CmsContext)?.CtxSite.Site
+            ?? _siteOrNull
+            ?? null;
+
 
     /// <summary>
     /// Special service provider for Data objects. Use with caution and as little as possible!
@@ -116,6 +119,7 @@ public partial class CodeDataFactory(
     /// <typeparam name="TService"></typeparam>
     /// <returns></returns>
     public TService GetService<TService>() where TService : class
-        => ExCtxOrNull?.GetService<TService>() ?? serviceProvider.Build<TService>();
+        => ctxExCtx.ValueOptional?.GetService<TService>()
+           ?? serviceProvider.Build<TService>();
     
 }

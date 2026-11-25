@@ -1,15 +1,38 @@
-﻿using ToSic.Eav.WebApi.Sys.Cms;
+﻿using System.Web.Http.Controllers;
+using ToSic.Eav.WebApi.Sys;
+using ToSic.Sxc.Backend.Cms;
 using ToSic.Sxc.Dnn.WebApi.Sys;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using RealController = ToSic.Sxc.Backend.Cms.ListControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Cms;
 
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [SupportedModules(DnnSupportedModuleNames)]
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ListController() : DnnSxcControllerBase(RealController.LogSuffix), IListController
+public class ListController : DnnApiController, IListController
 {
-    private RealController Real => SysHlp.GetService<RealController>();
+    #region WebApi Composition Infrastructure
+
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}");
+
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
+
+    /// <summary>
+    /// The app data controller probably needs this for every request.
+    /// </summary>
+    /// <param name="controllerContext"></param>
+    protected override void Initialize(HttpControllerContext controllerContext)
+    {
+        base.Initialize(controllerContext);
+        SysHlp.PublishContextBlockOnly(Request, Log);
+    }
+
+    #endregion
+
+
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -19,7 +42,7 @@ public class ListController() : DnnSxcControllerBase(RealController.LogSuffix), 
 
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public ReplacementListDto ReplaceOptions(Guid parent, string part, int index, string? contentType = null)
+    public ListSlotSwapInfo ReplaceOptions(Guid parent, string part, int index, string? contentType = null)
         => Real.ReplaceOptions(parent, part, index, contentType);
 
     /// <inheritdoc />
@@ -36,24 +59,24 @@ public class ListController() : DnnSxcControllerBase(RealController.LogSuffix), 
     /// Used to be Get Module/RemoveFromList
     /// </summary>
     [HttpDelete]
-    public void Delete(Guid? parent, string part, int index)
-        => Real.Delete(parent, part, index);
+    public void Delete(Guid? parent, string fields, int index)
+        => Real.Delete(parent, fields, index);
 
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public List<EntityInListDto> Items(Guid parent, string part)
+    public List<ListSlotContentsInfo> Items(Guid parent, string part)
         => Real.Items(parent, part);
 
 
     // TODO: part should be handed in with all the relevant names! atm it's "content" in the content-block scenario
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public bool Items([FromUri] Guid parent, List<EntityInListDto> list, [FromUri] string part)
+    public bool Items([FromUri] Guid parent, List<ListSlotContentsInfo> list, [FromUri] string part)
         => Real.Items(parent, list, part);
 
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public List<EntityInListDto> ContentBlockHeader(Guid parent)
+    public List<ListSlotContentsInfo> ContentBlockHeader(Guid parent)
         => Real.ContentBlockHeader(parent);
 
 }

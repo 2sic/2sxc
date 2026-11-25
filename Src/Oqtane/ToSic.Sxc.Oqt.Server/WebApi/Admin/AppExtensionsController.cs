@@ -2,12 +2,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.Apps.Sys.Extensions;
-using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.WebApi.Sys.ImportExport;
+using ToSic.Sxc.Apps.Extensions.Sys.Preflight;
 using ToSic.Sxc.Backend.Admin;
-using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 using RealController = ToSic.Sxc.Backend.Admin.AppExtensionsControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
@@ -17,18 +17,15 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
+[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppExtensionsController() : OqtStatefulControllerBase(RealController.LogSuffix), IAppExtensionsController
+public class AppExtensionsController : ControllerBase, IHasLog, IAppExtensionsController
 {
-    private RealController Real => GetService<RealController>();
+    /// <inheritdoc />
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
 
-    // Replaced by DataSource System.AppExtensions through query System.SysData.
-    ///// <inheritdoc />
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[Authorize(Roles = RoleNames.Admin)]
-    //public ExtensionsResultDto Extensions(int appId)
-    //    => Real.Extensions(appId);
+    private RealController Real => this.GetApiService<RealController>();
 
     /// <inheritdoc />
     [HttpPost]
@@ -78,22 +75,6 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
     [Authorize(Roles = RoleNames.Admin)]
     public bool Configuration(int appId, string name, [FromBody] ExtensionManifest configuration)
         => Real.Configuration(appId, name, configuration);
-
-    // Replaced by DataSource System.AppExtensionDetails through query System.SysData.
-    ///// <inheritdoc />
-    //[HttpGet]
-    //[Authorize(Roles = RoleNames.Admin)]
-    //public ExtensionInspectResultDto Inspect(int appId, string name, string edition = null)
-    //    => Real.Inspect(appId, name, edition);
-    ///// <summary>
-    ///// Alias POST endpoint for front-ends posting to /appExtensions/extensions with query parameters.
-    ///// Matches DNN plural POST behavior to avoid 405 errors if client uses POST instead of PUT.
-    ///// </summary>
-    //[HttpPost("extensions")]
-    //[ValidateAntiForgeryToken]
-    //[Authorize(Roles = RoleNames.Admin)]
-    //public bool ExtensionsPostAlias(int appId, string name, [FromBody] ExtensionManifest configuration)
-    //    => Real.Extension(appId, name, configuration);
 
     /// <inheritdoc />
     [HttpGet]

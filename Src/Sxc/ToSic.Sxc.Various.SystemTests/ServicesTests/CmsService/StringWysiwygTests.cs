@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 namespace ToSic.Sxc.ServicesTests.CmsService;
 
 public class StringWysiwygTests(
-    ExecutionContextMock executionContext,
+    CodeContextMock codeCtx,
     ContentTypesFromCodeManager ctDefFactory,
     DataForCmsServiceTests dataForCmsTests,
     ICodeDataFactory cdf,
@@ -28,7 +28,7 @@ public class StringWysiwygTests(
     public void ImageTagOnlyHasSameResultAsHtmlImgToPictureHelper(ImgConversionTest conversion)
     {
         // Must get service through codeApiSvc, because the class is internal & it needs to have a parent CodeApiService for sub-dependencies
-        var parser = executionContext.GetService<CmsServiceStringWysiwyg>();
+        var parser = codeCtx.GetService<CmsServiceStringWysiwyg>();
 
         var ctWithHtmlField = ctDefFactory.CreateTac<MockHtmlContentType>();
 

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 using RealController = ToSic.Sxc.Backend.Admin.CodeControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
@@ -12,10 +13,15 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
 [ValidateAntiForgeryToken]
+[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class CodeController() : OqtControllerBase(false, RealController.LogSuffix)
+public class CodeController : ControllerBase, IHasLog
 {
-    private RealController Real => GetService<RealController>();
+    /// <inheritdoc />
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+
+    private RealController Real => this.GetApiService<RealController>();
 
     [HttpGet]
     [Authorize(Roles = RoleNames.Admin)]
@@ -26,11 +32,4 @@ public class CodeController() : OqtControllerBase(false, RealController.LogSuffi
     [Authorize(Roles = RoleNames.Host)]
     public RichResult GenerateDataModels(int appId, string generator, string edition = null, int configurationId = 0)
         => Real.GenerateDataModels(appId, edition, generator: generator, configurationId: configurationId);
-
-    // #MigrateSimpleDataToSysDataAccess
-    //[HttpGet]
-    //[JsonFormatter]
-    //[Authorize(Roles = RoleNames.Host)]
-    //public EditionsDto GetEditions(int appId)
-    //    => Real.GetEditions(appId);
 }

@@ -1,8 +1,8 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
-using ToSic.Eav.WebApi.Sys.Context;
+using ToSic.Eav.Apps.Views.Sys;
+using ToSic.Eav.Ui.Context.Sys.Dto;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Dnn.Pages;
 
 namespace ToSic.Sxc.Dnn.Backend.Context;
@@ -41,10 +41,10 @@ internal static class DnnContextDtoExtensions
             CultureCode = page.CultureCode,
             Visible = page.IsVisible,
             Title = page.Title,
-            Portal = new(page.PortalID),
+            Portal = new() { Id = page.PortalID },
         };
 
-    internal static ViewDto Init(this IView view, ICollection<BlockConfiguration> blocks, List<ModuleWithContent> modules)
+    internal static ViewDto ToViewDto(this IView view, ICollection<BlockConfiguration> blocks, List<ModuleWithContent> modules)
         => new()
         {
             Id = view.Entity.EntityId,

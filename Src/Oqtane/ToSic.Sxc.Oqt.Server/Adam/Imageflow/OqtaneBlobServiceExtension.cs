@@ -10,7 +10,7 @@ public static class ImageflowExtensions
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddImageflowExtensions(this IServiceCollection services)
     {
-        services.AddSingleton<IBlobProvider>((container) => new OqtaneBlobService(container));
+        services.AddSingleton<IBlobProvider>(sp => new OqtaneBlobService(sp.GetSysServiceProvider()));
         services.AddSingleton<ImageflowRewriteMiddleware>();
         services.AddSingleton<IPreregisterImageFlowMiddleware, PreregisterImageFlowMiddleware>(); // query string rewriting middleware
 

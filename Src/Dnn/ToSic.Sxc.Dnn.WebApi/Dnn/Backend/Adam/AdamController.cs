@@ -1,6 +1,8 @@
 ﻿using System.Web;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using RealController = ToSic.Sxc.Backend.Adam.AdamControllerReal<int>;
 
 namespace ToSic.Sxc.Dnn.Backend;
@@ -10,38 +12,64 @@ namespace ToSic.Sxc.Dnn.Backend;
 /// Should check for security at each standard call - to see if the current user may do this
 /// Then we can reduce security access level to anonymous, because each method will do the security check
 /// </summary>
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [SupportedModules(DnnSupportedModuleNames)]
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]    // use view, all methods must re-check permissions
 [ValidateAntiForgeryToken]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamController() : DnnSxcControllerBase("Adam"), IAdamController<int>
+public class AdamController : DnnApiController, IAdamController<int>
 {
-    private RealController Real => SysHlp.GetService<RealController>();
+    #region WebApi Composition Infrastructure
+
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}");
+
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
+
+    #endregion
+
+
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
+
 
     [HttpPost]
     [HttpPut]
-    public object Upload(int appId, string contentType, Guid guid, string field, [FromUri] string subFolder = "", bool usePortalRoot = false) 
-        => Real.Upload(new(Request, HttpContext.Current.Request), appId, contentType, guid, field, subFolder, usePortalRoot);
+    public object Upload(int appId, string contentType, Guid guid, string field, [FromUri] string subFolder = "", bool usePortalRoot = false)
+    {
+        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
+        return Real.Upload(new(Request, HttpContext.Current.Request), appId, contentType, guid, field, subFolder,
+            usePortalRoot);
+    }
 
     // Note: #AdamItemDto - as of now, we must use object because System.Io.Text.Json will otherwise not convert the object correctly :(
 
     [HttpGet]
     public IEnumerable</*AdamItemDto*/object> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
-        => Real.Items(appId, contentType, guid, field, subfolder, usePortalRoot);
+    {
+        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
+        return Real.Items(appId, contentType, guid, field, subfolder, usePortalRoot);
+    }
 
 
     [HttpPost]
     public IEnumerable</*AdamItemDto*/object> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
-        => Real.Folder(appId, contentType, guid, field, subfolder, newFolder, usePortalRoot);
+    {
+        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
+        return Real.Folder(appId, contentType, guid, field, subfolder, newFolder, usePortalRoot);
+    }
 
 
     [HttpGet]
     public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot)
-        => Real.Delete(appId, contentType, guid, field, subfolder, isFolder, id, usePortalRoot);
+    {
+        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
+        return Real.Delete(appId, contentType, guid, field, subfolder, isFolder, id, usePortalRoot);
+    }
 
 
     [HttpGet]
     public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot)
-        => Real.Rename(appId, contentType, guid, field, subfolder, isFolder, id, newName, usePortalRoot);
-
+    {
+        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
+        return Real.Rename(appId, contentType, guid, field, subfolder, isFolder, id, newName, usePortalRoot);
+    }
 }

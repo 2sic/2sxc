@@ -25,13 +25,14 @@ namespace ToSic.Sxc.Oqt.Server.Installation;
 /// WARNING: Careful when renaming / moving, the name is listed in the ModuleInfo.cs in the Client.
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class SxcManager(
+public partial class SxcManager(
     ISqlRepository sql,
     IDBContextDependencies dbContextDependencies,
     IServiceScopeFactory serviceScopeFactory,
     IWebHostEnvironment environment,
     //IConfigManager configManager,
-    ILogger<SxcManager> logger) : MigratableModuleBase, IInstallable
+    ILogger<SxcManager> logger,
+    SiteState siteState) : MigratableModuleBase, IInstallable
 {
     private const string MigrationPrefix = "ToSic.Sxc.";
     private const string MigrationTable = "__EFMigrationsHistory";
@@ -102,7 +103,7 @@ public class SxcManager(
         using var scope = serviceScopeFactory.CreateScope();
 
         // Set the current tenant context for the upgrade
-        scope.ServiceProvider.GetRequiredService<ITenantManager>()
+        scope.GetSysServiceProvider().GetRequiredService<ITenantManager>()
             .SetTenant(tenant.TenantId);
 
         switch (version.Replace(".", "-"))

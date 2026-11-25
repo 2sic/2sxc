@@ -1,8 +1,8 @@
 using System.IO.Compression;
 using System.Text.Json;
 using ToSic.Eav.Apps.Sys.Extensions;
-using ToSic.Eav.Apps.Sys.FileSystemState;
-using ToSic.Eav.WebApi.Sys.ImportExport;
+using ToSic.Eav.Apps.Sys.Work;
+using ToSic.Eav.ImportExport.Sys.Bundle;
 using Xunit.DependencyInjection;
 using static Tests.ToSic.ToSxc.WebApi.Extensions.FolderConstantsTac;
 using static ToSic.Sxc.ImportExport.Package.Sys.PackageIndexFile;
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.WebApi.Tests.Extensions;
 [Startup(typeof(StartupExtensionsTests))]
 public class ExportExtensionTests(
     LazySvc<IAppReaderFactory> appReadersLazy,
-    LazySvc<ContentExportApi> contentExportLazy,
+    AppWorkQuick<ExportBundlePrepare> contentExportLazy,
     ExtensionManifestService manifestService)
 {
     #region Basic Export Tests

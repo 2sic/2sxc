@@ -30,9 +30,9 @@ partial class OqtRegisterServices
         services.TryAddTransient<IModuleFactory, OqtModule>(); // new v22
         services.TryAddTransient<OqtContextOfBlockFactory>();
 
-        // TODO: @STV - this could cause a bug - maybe better not to mix this? OqtSite transient?
-        services.TryAddTransient<IZoneCultureResolver, OqtSite>();
-        //services.TryAddTransient<IZoneCultureResolver>(x => x.GetRequiredService<ISite>()); // eventual alternative to line above
+        // Culture lookups must use the initialized site of this execution scope,
+        // including background indexing where no request can initialize another OqtSite.
+        services.TryAddTransient<IZoneCultureResolver>(sp => sp.GetRequiredService<ISite>());
 
         services.TryAddScoped<OqtSecurity>();
         services.TryAddScoped<IJsApiService, OqtJsApiService>();

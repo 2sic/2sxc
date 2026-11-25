@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Render.Engines.Token.Sys;
 [method: PrivateApi]
 internal partial class LookUpForTokenTemplate(
     string name,
-    IDynamicEntity dynEntity,
+    IDynamicEntity? dynEntity,
     CultureInfo cultureInfo,
     int repeaterIndex = -1,
     int repeaterTotal = -1)
@@ -62,7 +62,7 @@ internal partial class LookUpForTokenTemplate(
 
         // If we have a delimiter in the key, then we must check for sub-properties
         if (key.Contains(':'))
-            return TryGetSubProperty(key);
+            return TryGetSubProperty(dynEntity, key);
 
         // If it's a repeater token for list index or something, get that first (or null)
         // Otherwise just get the normal value
@@ -80,7 +80,7 @@ internal partial class LookUpForTokenTemplate(
         };
     }
 
-    private string TryGetSubProperty(string strPropertyName)
+    private string TryGetSubProperty(IDynamicEntity validEntity, string strPropertyName)
     {
         // dynamic valueObject;
         var propertyMatch = Regex.Match(strPropertyName, "([a-z]+):([a-z]+)", RegexOptions.IgnoreCase);
@@ -92,8 +92,8 @@ internal partial class LookUpForTokenTemplate(
 
         // Find the sub-object on the Presentation item
         var subEntity = subSource.EqualsInsensitive(ViewParts.Presentation)
-            ? dynEntity.Presentation as IDynamicEntity
-            : dynEntity.Get(subSource) as IDynamicEntity;
+            ? validEntity.Presentation as IDynamicEntity
+            : validEntity.Get(subSource) as IDynamicEntity;
 
         if (subEntity == null)
             return "";
@@ -103,11 +103,11 @@ internal partial class LookUpForTokenTemplate(
         return subLookup.GetProperty(subProp, "") ?? "";
     }
 
+    /// <inheritdoc/>
     public string Get(string key, string strFormat)
         => GetProperty(key, strFormat) ?? "";
 
     /// <inheritdoc/>
-    public virtual string Get(string key)
-        => Get(key, "") ?? "";
-
+    public string Get(string key)
+        => Get(key, "") ?? ""! /* paranoid */;
 }

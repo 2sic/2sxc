@@ -1,9 +1,10 @@
 ﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Views.Sys;
 using ToSic.Eav.DataSource;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys.Problems;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Context.Sys;
-using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks.Sys;
 
@@ -33,7 +34,7 @@ public record BlockSpecs : IBlock
     /// <summary>
     /// The context we're running in, with tenant, container etc.
     /// </summary>
-    public required IContextOfBlock Context { get; init; }
+    public required IContextOfModule Context { get; init; }
 
     /// <summary>
     /// The view which will be used to render this block
@@ -52,13 +53,15 @@ public record BlockSpecs : IBlock
     public bool ConfigurationIsReady => _configuration != null;
 
     /// <inheritdoc />
-    public IApp App => AppOrNull ?? throw new($"App (and Data) are missing and can't be accessed. Code running early on must first check for {nameof(AppIsReady)} or use {nameof(AppOrNull)}");
-    
+    //public IApp App => AppOrNull ?? throw new($"App (and Data) are missing and can't be accessed. Code running early on must first check for {nameof(AppIsReady)} or use {nameof(AppOrNull)}");
+    public IAppForCode App => AppOrNull ?? throw new($"App (and Data) are missing and can't be accessed. Code running early on must first check for {nameof(AppIsReady)} or use {nameof(AppOrNull)}");
     /// <inheritdoc />
     public bool AppIsReady => AppOrNull != null;
 
-    /// <inheritdoc />
-    public IApp? AppOrNull { get; init; }
+    ///// <inheritdoc />
+    //public IApp? AppOrNull { get; init; }
+
+    public IAppForCode? AppOrNull { get; init; }
 
     /// <inheritdoc />
     public IDataSource Data

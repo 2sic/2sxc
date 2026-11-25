@@ -6,10 +6,8 @@ namespace ToSic.Sxc.Adam.Sys.FileSystem;
 /// WIP 
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IAdamFileSystem: IHasLog
+public interface IAdamFileSystem: IHasLog, IServiceWithSetup<AdamManager>
 {
-    void Init(AdamManager adamManager);
-
     #region FileSystem Settings
 
     int MaxUploadKb();

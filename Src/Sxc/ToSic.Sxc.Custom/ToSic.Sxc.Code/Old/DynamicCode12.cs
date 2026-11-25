@@ -7,7 +7,7 @@ using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Sys.ExecutionContext;
+
 
 namespace ToSic.Sxc.Code;
 
@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Code;
 /// </remarks>
 [PrivateApi("Was public till v17")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class DynamicCode12(): CustomCodeBase("Sxc.DynCod"), IHasCodeLog, IDynamicCode, IDynamicCode12
+public abstract class DynamicCode12(): CustomCodeBase("Sxc.DynCod"), IHasCodeLog, IDynamicCode, IDynamicCode12, ICompatibilityLevel
 {
     #region Constructor / Setup
 
@@ -34,10 +34,11 @@ public abstract class DynamicCode12(): CustomCodeBase("Sxc.DynCod"), IHasCodeLog
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => CompileCodeHlp.CodeLog;
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
-    [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
+    [PrivateApi]
+    int ICompatibilityLevel.CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 
     #endregion
 
@@ -64,7 +65,7 @@ public abstract class DynamicCode12(): CustomCodeBase("Sxc.DynCod"), IHasCodeLog
     #region App / Data / Content / Header
 
     /// <inheritdoc cref="IDynamicCodeDocs.App" />
-    public IApp App => CodeApi.App;
+    public IAppDynamic App => CodeApi.App;
 
     /// <inheritdoc cref="IDynamicCodeDocs.Data" />
     public IDataSource Data => CodeApi.Data;
@@ -94,7 +95,7 @@ public abstract class DynamicCode12(): CustomCodeBase("Sxc.DynCod"), IHasCodeLog
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance(string, NoParamOrder, string, string, bool)" />
     public dynamic? CreateInstance(string virtualPath, NoParamOrder npo = default, string? name = null, string? relativePath = null, bool throwOnError = true) =>
-        CompileCodeHlp.CreateInstance(virtualPath, npo, name, relativePath, throwOnError);
+        CompileCodeHlp.CreateInstance(CodeApi, virtualPath, npo, name, relativePath, throwOnError);
 
     #endregion
 

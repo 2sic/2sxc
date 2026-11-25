@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Backend.Views;
+﻿using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.WebApi.Admin.Sys;
 
 namespace ToSic.Sxc.Backend.Admin;
 
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Backend.Admin;
 /// Instead, each method must have all attributes, or do additional security checking.
 /// Security checking is possible, because the cookie still contains user information
 /// </remarks>
-public interface IViewController
+public interface IViewController: IAppAdminWebApiController
 {
     // Replaced by DataSource System.Views through query System.SysData.
     //IEnumerable<ViewDetailsDto> All(int appId);
@@ -46,9 +47,5 @@ public interface IViewController
     /// New in 2sxc 11.07
     /// </remarks>
     /// <returns></returns>
-    ImportResultDto Import(int zoneId, int appId);
-
-    // Replaced by DataSource System.ViewUsage through query System.SysData.
-    //IEnumerable<ViewDto> Usage(int appId, Guid guid);
-
+    ImportResult Import(int zoneId, int appId);
 }

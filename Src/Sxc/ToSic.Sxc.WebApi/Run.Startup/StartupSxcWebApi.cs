@@ -1,29 +1,44 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Apps.Inspect.Sys;
+using ToSic.Eav.Apps.Inspect.Sys.WebApi;
+using ToSic.Eav.Apps.Install.Sys;
+using ToSic.Eav.DataFormats.EavLight.Sys;
+using ToSic.Eav.DataSource.DataProviders;
 using ToSic.Eav.Sys.Insights;
-using ToSic.Eav.WebApi.Sys.Admin;
-using ToSic.Eav.WebApi.Sys.App.Details;
-using ToSic.Eav.WebApi.Sys.ImportExport;
+using ToSic.Eav.Ui.Context.Sys;
+using ToSic.Eav.Ui.Edit.Sys;
+using ToSic.Eav.Ui.Edit.Sys.Load.Links;
+using ToSic.Eav.Ui.Edit.Sys.Load.Prefetch;
+using ToSic.Eav.Ui.Edit.Sys.Load.Settings;
+using ToSic.Eav.Ui.Edit.Sys.Save;
+using ToSic.Eav.WebApi.Admin.Sys;
+using ToSic.Sxc.Apps.Extensions.Sys;
+using ToSic.Sxc.Apps.Extensions.Sys.Export;
+using ToSic.Sxc.Apps.Extensions.Sys.Inspect;
+using ToSic.Sxc.Apps.Extensions.Sys.Install;
+using ToSic.Sxc.Apps.ImportExport.Sys;
 using ToSic.Sxc.Apps.Sys.DataSources;
 using ToSic.Sxc.Apps.Sys.EditAssets;
+using ToSic.Sxc.Backend;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.Admin.AppFiles;
 using ToSic.Sxc.Backend.Admin.Query;
 using ToSic.Sxc.Backend.App;
-using ToSic.Sxc.Backend.AppStack;
 using ToSic.Sxc.Backend.Cms;
 using ToSic.Sxc.Backend.Cms.Load.Activities;
 using ToSic.Sxc.Backend.Cms.Load.Settings;
 using ToSic.Sxc.Backend.ContentBlocks;
 using ToSic.Sxc.Backend.Context;
-using ToSic.Sxc.Backend.ImportExport;
 using ToSic.Sxc.Backend.InPage;
 using ToSic.Sxc.Backend.SaveHelpers;
 using ToSic.Sxc.Backend.Sys;
 using ToSic.Sxc.Backend.Usage;
 using ToSic.Sxc.Backend.Views;
+using ToSic.Sxc.Data.Sys.Convert;
 using ToSic.Sxc.Render.StaticAssets.Sys;
+using ToSic.Sxc.Ui.Context.Sys;
 using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 using ToSic.Sys.Context;
 
@@ -56,14 +71,6 @@ public static class StartupSxcWebApi
         //services.TryAddTransient<EntityBackend>();
 
         services.TryAddTransient<EditLoadBackend>();
-        services.TryAddTransient<EditLoadActivityAddContentTypes>();
-        services.TryAddTransient<EditLoadActivityAddNecessaryInputTypes>();
-        services.TryAddTransient<EditLoadActivityAddContext>();
-        services.TryAddTransient<EditLoadActivityAddRequiredFeatures>();
-        services.TryAddTransient<EditLoadActivityAddPrefetch>();
-        services.TryAddTransient<EditLoadActivitySettingsHelper>();
-        services.TryAddTransient<EditLoadActivityCleanupRequest>();
-        services.TryAddTransient<EditLoadActivityConvertRequest>();
 
 
         services.TryAddTransient<EditSaveBackend>();
@@ -75,27 +82,22 @@ public static class StartupSxcWebApi
         // Internal API helpers
         services.TryAddTransient<AppContent>();
         services.TryAddTransient<SxcPagePublishing>();
-        services.TryAddTransient<ExportApp>();
-        services.TryAddTransient<ExportAppInfo>();
-        // App import services moved to EAV WebApi in v22.
+
+       // App import services moved to EAV WebApi in v22.
         services.TryAddTransient<ImportContent>();
         services.TryAddTransient<ExportContent>();
-        services.TryAddTransient<AppStateSyncSave>();   // new separate in v21.06
-        services.TryAddTransient<AppStateSyncRestore>();
-        services.TryAddTransient<AppStackBackend>();
         services.TryAddTransient<ViewsExportImport>();
 
         // Small WebApi Helpers
         services.TryAddTransient<ContentGroupList>();
+        services.AddTransient<IEditLoadIdentifierProvider, EditIdentifierProviderContentGroupIndexToId>();
+        services.AddTransient<IEditLoadIdentifierProvider, EditIdentifierProviderContentGroupModeDetection>();
+
 
         // js context / UI
-        services.TryAddTransient<IUiContextBuilder, UiContextBuilderUnknown>();
-        services.TryAddTransient<UiContextBuilderBase.Dependencies>();
-            
-        // Helpers
-        services.TryAddTransient<ImpExpHelpers>();
-        services.TryAddTransient<ExportHelper>();
-
+        services.TryAddTransient<SxcUiContextPartsService>();  // v22 - default implementation, for re-implementations
+        services.TryAddTransient<IUiContextPartsService, SxcUiContextPartsService>();
+        
         // Adam shared code across the APIs
         services.TryAddTransient<AdamCode>();
 
@@ -110,10 +112,9 @@ public static class StartupSxcWebApi
         services.TryAddTransient<TypeControllerReal>();
         services.TryAddTransient<ViewControllerReal>();
         services.TryAddTransient<AppDataControllerReal>();
-        services.TryAddTransient<AppQueryControllerReal>();
-        services.TryAddTransient<CacheControllerReal>();
+        services.TryAddTransient<AppQueryContextResolver>();
+        services.TryAddTransient<WorkQueryDeleteIfUnused>();
         services.TryAddTransient<EditControllerReal>();
-        services.TryAddTransient<HistoryControllerReal>();
         services.TryAddTransient<ListControllerReal>();
         services.TryAddTransient<InstallControllerReal>();
         services.TryAddTransient<BlockControllerReal>();
@@ -122,11 +123,8 @@ public static class StartupSxcWebApi
 
         services.TryAddTransient<AssetTemplates>();
 
-        // Odata v21
-        services.TryAddTransient<AppQueryODataHelper>();
-
-        // SaveData PreSave
-        services.TryAddTransient<DataValidatorContentTypeDataStore>();
+        // #OutputCacheControllerSeemsUnused2026-11-21 Probably delete ca. 2027-Q1
+        //services.TryAddTransient<CacheControllerReal>();
 
         // Separate list Activities into isolated classes v22
         services.TryAddTransient<ListActivityReplaceOptions>();
@@ -135,19 +133,50 @@ public static class StartupSxcWebApi
         services.TryAddTransient<ListActivitySave>();
         services.TryAddTransient<ListActivityGetBlockHeader>();
 
-        services.TryAddTransient<IContextBuilderService, ContextBuilderService>();
+        services.TryAddTransient<PermissionCheckAction>(); // new v22
+        services.TryAddTransient<PublishWebApi>();  // new v22
+        services.TryAddTransient<WorkViewsGetDetailed>();
 
         // v22 moved here from Sxc.Blocks
         services.AddContextProviders();
+
+        // v22 moved here from Sxc.Web The top version should be deprecated soon, so we just use DataToDictionary or an Interface instead
+        //services.TryAddTransient<IConvertToEavLight, ConvertToEavLightWithCmsInfo>();
+        // New v22 - making it an add-on processor
+        services.AddTransient<IConvertEntityToEavLightExtraProcessor, ConvertToEavLightWithCmsInfo>();
+
+        services.TryAddTransient<InstallSettingsSvc>();
 
         services.AddLoadSettingsProviders();
 
         services.AddSxcInsights();
 
+        services.AddSxcEditLoadPrefetch();
+
         services.AddFallbacks();
 
         return services;
     }
+
+    /// <summary>
+    /// This will add keyed data-source providers.
+    /// Some may be replaced by platform implementations
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    /// <remarks>
+    /// All calls in here MUST use TryAddTransient, and never without the Try
+    /// </remarks>
+    public static IServiceCollection AddSxcWorkDataSourceProviders(this IServiceCollection services)
+    {
+        // Original in case it needs to inherited
+        services.TryAddTransient<SxcAppStatisticsProvider>();
+        // for augmenting with view data
+        services.TryAddKeyedTransient<IRawDataProviderWithCtx, SxcAppStatisticsProvider>(AppStatisticsProvider.NameId);
+
+        return services;
+    }
+
 
 
     public static IServiceCollection AddContextProviders(this IServiceCollection services)
@@ -156,6 +185,7 @@ public static class StartupSxcWebApi
         services.TryAddScoped<ISxcCurrentContextService, SxcCurrentContextService>();
         services.TryAddScoped<IContextService>(x => x.GetRequiredService<ISxcCurrentContextService>());
         services.TryAddScoped<IContextOfSiteService>(x => x.GetRequiredService<ISxcCurrentContextService>());
+        services.TryAddScoped<IContextOfAppService>(x => x.GetRequiredService<ISxcCurrentContextService>());
         services.TryAddScoped<IContextCompleteService>(x => x.GetRequiredService<ISxcCurrentContextService>());
 
         return services;
@@ -163,20 +193,25 @@ public static class StartupSxcWebApi
 
     public static IServiceCollection AddLoadSettingsProviders(this IServiceCollection services)
     {
+
         services.AddTransient<ILoadSettingsProvider, LoadSettingsForGpsDefaults>();
-        services.AddTransient<ILoadSettingsProvider, LoadSettingsForContentType>();
         services.AddTransient<ILoadSettingsProvider, LoadSettingsApiKeys>();
         services.AddTransient<ILoadSettingsProvider, LoadSettingsForWysiwygDefaults>(); // new v21
-        services.AddTransient<ILoadSettingsContentTypesProvider, LoadSettingsForPickerSources>();
         return services;
     }
+
+    public static IServiceCollection AddSxcEditLoadPrefetch(this IServiceCollection services)
+    {
+        services.TryAddKeyedTransient<IEditLoadPrefetchProvider, EditLoadPrefetchProviderAdam>(EditLoadPrefetchProviderAdam.NameId);
+        return services;
+    }
+
 
     public static IServiceCollection AddAdamWebApi<TFolder, TFile>(this IServiceCollection services)
     {
         // Adam Controllers etc.
-        services.TryAddTransient(typeof(HyperlinkBackend));
+        services.TryAddTransient<ILinkResolver, SxcLinkResolver>();
         services.TryAddTransient(typeof(AdamItemDtoMaker<,>));
-        services.TryAddTransient(typeof(AdamItemDtoMaker<,>.Dependencies));
 
         // Default `int` implementation, the platform must specify a different type before this if it needs another identity type
         services.TryAddTransient<IAdamItemDtoMaker, AdamItemDtoMaker<TFolder, TFile>>();

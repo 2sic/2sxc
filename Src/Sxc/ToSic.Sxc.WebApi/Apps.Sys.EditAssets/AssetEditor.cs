@@ -1,13 +1,14 @@
 ﻿using System.Text.RegularExpressions;
+using ToSic.Eav.Apps.Assets.Sys;
 using ToSic.Eav.Apps.Sys.Paths;
-using ToSic.Sxc.Blocks.Sys.Views;
+using ToSic.Eav.Apps.Views.Sys;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Apps.Sys.EditAssets;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AssetEditor(
-    AppWorkChain<WorkViews> workViews,
+    AppWorkChain<WorkViewsGet> workViews,
     IUser user,
     LazySvc<AppFolderInitializer> appFolderInitializer,
     ISite site,

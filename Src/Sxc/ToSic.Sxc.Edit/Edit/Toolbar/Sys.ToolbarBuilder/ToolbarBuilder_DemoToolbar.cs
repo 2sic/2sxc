@@ -2,7 +2,6 @@
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Edit.Toolbar.Sys.Rules;
-using ToSic.Sxc.Sys.ExecutionContext;
 using static ToSic.Sxc.Edit.Toolbar.Sys.Rules.ToolbarRuleToolbar;
 
 namespace ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
@@ -52,7 +51,7 @@ partial record ToolbarBuilder
 
         var tlb = this with { Rules = rules };
         var keyOrMessage = Configuration?.DemoMessage;
-        var allResources = ExCtx.GetDataStack<ITypedStack>(ExecutionContextStateNames.AllResources);
+        var allResources = Services.ExCtx.Value.AllResources;
         var message = keyOrMessage == null
             ? allResources.Get<string>($"{AppStackConstants.RootNameResources}.Toolbar.IsDemoSubItem")
             : keyOrMessage.StartsWith($"{AppStackConstants.RootNameResources}.")

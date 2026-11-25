@@ -1,6 +1,8 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.PortableExecutable;
 using ToSic.Sxc.Razor;
 
 namespace ToSic.Sxc.Oqt.Razor;
@@ -56,6 +58,43 @@ public class RazorReferencePathOptimizerTests
     }
 
     [Fact]
+    public void PreferCompileReferences_SkipsNativeDlls_WhenMixedWithManagedAssemblies()
+    {
+        var managedPath = typeof(RazorReferencePathOptimizerTests).Assembly.Location;
+        var nativePath = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllBytes(nativePath, NativePeImage(managedPath));
+
+            var result = RazorReferencePathOptimizer.PreferCompileReferences([nativePath, managedPath]);
+
+            Equal([managedPath], result);
+        }
+        finally
+        {
+            File.Delete(nativePath);
+        }
+    }
+
+    [Fact]
+    public void PreferCompileReferences_KeepsInvalidPeFiles_ForCompilerDiagnostics()
+    {
+        var invalidPath = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllText(invalidPath, "not a PE image");
+
+            var result = RazorReferencePathOptimizer.PreferCompileReferences([invalidPath]);
+
+            Equal([invalidPath], result);
+        }
+        finally
+        {
+            File.Delete(invalidPath);
+        }
+    }
+
+    [Fact]
     public void PreferCompileReferences_SkipsMissingPaths()
     {
         // Arrange
@@ -97,6 +136,20 @@ public class RazorReferencePathOptimizerTests
 
         // Assert
         Equal([systemRuntimeRefPath, xmlReaderWriterRefPath], result);
+    }
+
+    private static byte[] NativePeImage(string managedPath)
+    {
+        var image = File.ReadAllBytes(managedPath);
+        using var reader = new PEReader(new MemoryStream(image));
+
+        // The CLR directory is the penultimate 8-byte data directory in a managed PE header.
+        // Removing it gives us a native PE fixture without a platform-specific binary dependency.
+        const int dataDirectorySize = 8;
+        var clrDirectoryOffset = reader.PEHeaders.PEHeaderStartOffset
+                                 + reader.PEHeaders.CoffHeader.SizeOfOptionalHeader - 2 * dataDirectorySize;
+        Array.Clear(image, clrDirectoryOffset, dataDirectorySize);
+        return image;
     }
 
     private static Func<string, AssemblyName?> AssemblyNames(params (string Path, AssemblyName AssemblyName)[] assemblies)

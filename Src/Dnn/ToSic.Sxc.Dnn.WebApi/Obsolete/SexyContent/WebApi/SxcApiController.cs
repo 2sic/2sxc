@@ -3,20 +3,21 @@ using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
-using ToSic.Sxc.Compatibility.Sxc;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Dnn.Code;
+using ToSic.Sxc.Dnn.Code.Sys;
+using ToSic.Sxc.Dnn.Razor;
+using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
-using ToSic.Sxc.Sys.ExecutionContext;
-using IApp = ToSic.Sxc.Apps.IApp;
+using ToSic.Sxc.Services;
+
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
 // ReSharper disable InheritdocInvalidUsage
@@ -48,8 +49,8 @@ public abstract partial class SxcApiController() :
 {
     internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
-    public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
+    public TService GetService<TService>() where TService : class => ExCtx.GetService<TService>();
 
     /// <inheritdoc cref="IHasDnn.Dnn"/>
     public IDnnContext Dnn => (ExCtx as IHasDnn)?.Dnn;
@@ -57,18 +58,19 @@ public abstract partial class SxcApiController() :
     [Obsolete]
     [PrivateApi]
     public SxcHelper Sxc => field
-        ??= new(CodeApi?.Block?.Context?.Permissions.IsContentAdmin ?? false, SysHlp.GetService<IConvertToEavLight> ());
+        ??= new(CodeApi?.Block?.Context?.Permissions.IsContentAdmin ?? false, ExCtx.GetService<IConvertToEavLight> ());
 
-    /// <summary>
-    /// Old API - probably never used, but we shouldn't remove it as we could break some existing code out there
-    /// </summary>
-    [PrivateApi]
-    public IBlock? Block => SysHlp.GetBlockAndContext(Request);
+    // 2026-11-20 2dm v22.02 - removing this, truly believe it was never used
+    ///// <summary>
+    ///// Old API - probably never used, but we shouldn't remove it as we could break some existing code out there
+    ///// </summary>
+    //[PrivateApi]
+    //public IBlock? Block => field ??= SysHlp.GetBlockFromRequest(Request);
 
     [PrivateApi] public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel9Old;
 
     /// <inheritdoc cref="IDynamicCodeDocs.App" />
-    public IApp App => CodeApi.App;
+    public IAppDynamic App => CodeApi.App;
 
     /// <inheritdoc cref="IDynamicCodeDocs.Data" />
     public IDataSource Data => /*(IBlockDataSource)*/CodeApi.Data;
@@ -126,7 +128,7 @@ public abstract partial class SxcApiController() :
     [Obsolete]
     [PrivateApi]
     public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
-        => new DnnExecutionContextCreateSourceObsolete(ExCtx).CreateSource(typeName, inSource, configurationProvider);
+        => new DnnCodeDynamicCreateSourceObsolete(ExCtx).CreateSource(typeName, inSource, configurationProvider);
 
     /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataSource, ILookUpEngine)" />
     public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
@@ -172,7 +174,7 @@ public abstract partial class SxcApiController() :
     /// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
     public IFile SaveInAdam(NoParamOrder npo = default, Stream stream = null, string fileName = null, string contentType = null,
         Guid? guid = null, string field = null, string subFolder = "")
-        => CustomCodeHlp.SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
+        => GetService<AdamCode>().SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
 
     #endregion
 
@@ -180,11 +182,11 @@ public abstract partial class SxcApiController() :
 
     string IGetCodePath.CreateInstancePath { get; set; }
 
-    private CompileCodeHelper CompileCodeHlp => field ??= GetService<CompileCodeHelper>().Init(this);
+    private CompileCodeHelper CompileCodeHlp => field ??= GetService<Generator<CompileCodeHelper, IGetCodePath>>().New(this);
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
     public dynamic CreateInstance(string virtualPath, NoParamOrder npo = default, string name = null, string relativePath = null, bool throwOnError = true)
-        => CompileCodeHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
+        => CompileCodeHlp.CreateInstance(CodeApi, virtualPath: virtualPath, name: name, throwOnError: throwOnError);
 
     #endregion
 

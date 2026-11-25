@@ -1,10 +1,11 @@
 ﻿using ToSic.Sxc.Dnn.Services;
 using ToSic.Sys.Code.InfoSystem;
 using DotNetNuke.Abstractions.Logging;
+using ToSic.Sxc.Dnn.Services.Sys;
 
-
-// ReSharper disable once CheckNamespace
+#pragma warning disable IDE0130
 namespace ToSic.Sxc.Services;
+#pragma warning restore IDE0130
 
 /// <summary>
 /// Obsolete, use <see cref="ISystemLogService"/> instead

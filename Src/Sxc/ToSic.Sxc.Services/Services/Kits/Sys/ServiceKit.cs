@@ -14,18 +14,4 @@
 // 2025-05-11 re-enabled, since it shouldn't matter anymore with the new setup
 // 2026-09-18 2dm re-disabled
 //[ShowApiWhenReleased(ShowApiMode.Never)]
-public class ServiceKit(string logName = "Sxc.Kit") : ServiceWithContext(logName)
-{
-
-    /// <summary>
-    /// All the services provided by this kit must come from the code root, so they are properly initialized.
-    ///
-    /// Will first try to use the GetService method to ensure that changes in the Kit (like 16/14) still return
-    /// the identical sub-services.
-    /// </summary>
-    /// <typeparam name="TService"></typeparam>
-    /// <returns></returns>
-    [PrivateApi]
-    protected TService GetKitService<TService>() where TService : class
-        => ExCtx.GetService<TService>(reuse: true);
-}
+public class ServiceKit(string logName = "Sxc.Kit") : ServiceBase(logName);

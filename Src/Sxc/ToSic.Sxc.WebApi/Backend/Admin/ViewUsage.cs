@@ -2,6 +2,7 @@ using ToSic.Eav.Data.ContentTypes;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
+using ToSic.Eav.Ui.Context.Sys.Dto;
 using ToSic.Sxc.Backend.Usage;
 // ReSharper disable UnusedMember.Global
 
@@ -16,23 +17,29 @@ namespace ToSic.Sxc.Backend.Admin;
     Audience = Audience.System,
     DataConfidentiality = DataConfidentiality.Confidential,
     UiHint = "Blocks which use a view")]
-public class ViewUsage : CustomDataSource
+public class ViewUsage(
+    CustomDataSource.Dependencies services,
+    LazySvc<UsageBackend> usage,
+    IViewUsageDataProvider provider,
+    IContextOfSiteService context)
+    : CustomDataSource(services, "Sxc.ViewUsage", connect: [usage, provider, context])
 {
     [Configuration]
     public Guid ViewGuid => Configuration.GetThis(Guid.Empty);
 
-    public ViewUsage(Dependencies services, LazySvc<UsageBackend> usage, IViewUsageDataProvider provider, IContextOfSiteService context)
-        : base(services, "Sxc.ViewUsage", connect: [usage, provider, context])
-        => ProvideOutRaw(() => Get(usage, provider, context.Context.Site));
+    protected override IEnumerable<IRawData> GetDefault()
+    {
+        var viewInfo = usage.Value.ViewUsage(appId: AppId, guid: ViewGuid);
+        var viewDtoList = provider.Build(viewInfo.Views, viewInfo.BlockConfigs, context.Context.Site.Id);
+        return viewDtoList
+            .Select(vDto => new ViewUsageRaw(vDto));
+    }
 
-    private IEnumerable<ViewUsageRaw> Get(LazySvc<UsageBackend> usage, IViewUsageDataProvider provider, ISite site)
-        => usage.Value.ViewUsage(
-                appId: AppId,
-                guid: ViewGuid,
-                finalBuilder: (views, blocks) => provider.Build(views, blocks, site.Id))
-            .Select(view => new ViewUsageRaw(view));
-
-    [ContentType(Name = "ViewUsage", Guid = "0a095e44-7f00-4d36-8425-274c7ee7277a", Scope = "System")]
+    // ReSharper disable UnusedMember.Local
+    [ContentType(
+        Name = "ViewUsage",
+        Guid = "96878b31-db9f-4e32-9b5d-28c883abfec7",
+        Scope = "System")]
     private sealed class ViewUsageRaw(ViewDto view) : IRawEntityAutoConvert
     {
         public int Id => view.Id;
@@ -45,4 +52,5 @@ public class ViewUsage : CustomDataSource
         [ContentTypeField(Type = ValueTypes.Object)]
         public IEnumerable<ContentBlockDto> Blocks => view.Blocks;
     }
+    // ReSharper restore UnusedMember.Local
 }

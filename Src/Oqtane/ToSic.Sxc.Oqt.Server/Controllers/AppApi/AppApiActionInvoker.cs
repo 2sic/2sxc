@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 
@@ -24,7 +25,7 @@ internal class AppApiActionInvoker : IHasLog
 
     public async Task Invoke(ActionContext actionContext)
     {
-        var actionInvokerFactory = actionContext.HttpContext.RequestServices.GetRequiredService<IActionInvokerFactory>();
+        var actionInvokerFactory = actionContext.HttpContext.GetSysRequestServices().GetRequiredService<IActionInvokerFactory>();
 
         var actionInvoker = actionInvokerFactory.CreateInvoker(actionContext);
 

@@ -1,6 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Render.Sys;
 
 namespace ToSic.Sxc.Render.JsContext.Sys;
@@ -96,14 +97,14 @@ public class ContentBlockDto : EntityDto
 
         // App properties
         var app = block.AppOrNull;
-        AppName = app?.Name ?? "";
-        AppUrl = app?.Path ?? "" + "/";
-        AppSharedUrl = app?.PathShared ?? "" + "/";
-        AppSettingsId = app?.Settings?.Entity?.Attributes?.Count > 0
-            ? app?.Settings?.EntityId
+        AppName = app?.AppSpecs.Name ?? "";
+        AppUrl = app?.AppPaths.Path ?? "" + "/";
+        AppSharedUrl = app?.AppPaths.PathShared ?? "" + "/";
+        AppSettingsId = app?.SettingsEntity?.Attributes?.Count > 0
+            ? app?.SettingsEntity?.EntityId
             : null;    // the real id (if entity exists), 0 (if entity missing, but type has fields), or null (if not available)
-        AppResourcesId = app?.Resources?.Entity?.Attributes?.Count > 0
-            ? app?.Resources?.EntityId
+        AppResourcesId = app?.ResourcesEntity?.Attributes?.Count > 0
+            ? app?.ResourcesEntity?.EntityId
             : null;  // the real id (if entity exists), 0 (if entity missing, but type has fields), or null (if not available)
 
         // View properties
@@ -120,9 +121,9 @@ public class ContentBlockDto : EntityDto
         ContentTypeName = view?.ContentType ?? "";
 
         // Query properties
-        var query = view?.Query;
-        QueryId = query?.Id; // will be null if not defined
-        QueryName = query?.Title;
+        var query = view?.GetQueryEntity();
+        QueryId = query?.EntityId; // will be null if not defined
+        QueryName = query?.GetBestTitle();
 
         try
         {
@@ -151,7 +152,7 @@ public class ContentBlockDto : EntityDto
         }
 
         IsList = configuration?.View?.UseForList ?? false;
-        SupportsAjax = block.IsContentApp || (app?.Configuration?.EnableAjax ?? false);
+        SupportsAjax = block.IsContentApp || (app?.AppSpecs.Configuration?.EnableAjax ?? false);
 
         RenderMs = statistics?.RenderMs ?? -1;
         RenderLightspeed = statistics?.UseLightSpeed ?? false;

@@ -110,8 +110,9 @@ public class DnnRouteRegistration : IServiceRouteMapper
         #endregion
 
         // v21 - app cache/Lightspeed
-        AddBasic("2sxc-app-cache-auto", $"{AppRoots.AppAuto}/{RouteTokens.ControllerAndAction}", [typeof(CacheController).Namespace]);
-        AddBasic("2sxc-app-cache-name", $"{AppRoots.AppNamed}/{RouteTokens.ControllerAndAction}", [typeof(CacheController).Namespace]);
+        // #OutputCacheControllerSeemsUnused2026-11-21 Probably delete ca. 2027-Q1
+        //AddBasic("2sxc-app-cache-auto", $"{AppRoots.AppAuto}/{RouteTokens.ControllerAndAction}", [typeof(CacheController).Namespace]);
+        //AddBasic("2sxc-app-cache-name", $"{AppRoots.AppNamed}/{RouteTokens.ControllerAndAction}", [typeof(CacheController).Namespace]);
 
         // DNN: System calls to dnn - this is just for module delete
         AddBasic("dnn", $"dnn/{RouteTokens.ControllerAndAction}", [typeof(ModuleController).Namespace]);

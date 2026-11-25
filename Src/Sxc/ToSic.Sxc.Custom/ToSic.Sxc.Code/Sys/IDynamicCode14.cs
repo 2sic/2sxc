@@ -5,7 +5,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
+
 using IFolder = ToSic.Sxc.Adam.IFolder;
 // Disable warnings that properties should be marked as new
 // Because we need them here as additional definition because of Razor problems with inherited interfaces
@@ -41,11 +41,11 @@ public interface IDynamicCode14<out TModel, out TServiceKit> : /*ICompatibleToCo
     // **************************************************
 
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     TService GetService<TService>() where TService : class;
 
     /// <inheritdoc cref="IDynamicCodeDocs.App" />
-    IApp App { get; }
+    IAppDynamic App { get; }
 
     /// <inheritdoc cref="IDynamicCodeDocs.Data" />
     IDataSource Data { get; }

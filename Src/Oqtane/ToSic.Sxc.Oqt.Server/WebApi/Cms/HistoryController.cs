@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.Persistence.Versions;
-using ToSic.Eav.WebApi.Sys.Cms;
+using ToSic.Eav.Ui.Edit.Sys;
+using ToSic.Eav.Ui.History.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using RealController = ToSic.Sxc.Backend.Cms.HistoryControllerReal;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
+using RealController = ToSic.Eav.Ui.History.Sys.HistoryControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 
@@ -17,18 +18,15 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Cms}")]
 [PrivateApi]
 [ValidateAntiForgeryToken]
+[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class HistoryController() : OqtStatefulControllerBase(RealController.LogSuffix), IHistoryController
+public class HistoryController : ControllerBase, IHasLog, IHistoryController
 {
-    private RealController Real => GetService<RealController>();
+    /// <inheritdoc />
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
 
-    // Replaced by DataSource System.ItemHistory through query System.SysData.
-    ///// <inheritdoc />
-    //[HttpPost]
-    ////[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    //[Authorize(Roles = RoleNames.Admin)]
-    //public List<ItemHistory> Get(int appId, [FromBody] ItemIdentifier item)
-    //    => Real.Get(appId, item);
+    private RealController Real => this.GetApiService<RealController>();
 
 
     /// <inheritdoc />

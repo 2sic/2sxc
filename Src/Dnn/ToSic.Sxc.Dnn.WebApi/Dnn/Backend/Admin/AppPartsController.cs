@@ -1,17 +1,31 @@
 ﻿using System.Web;
-using ToSic.Eav.WebApi.Sys.Admin;
+using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.WebApi.Admin.Sys;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Eav.WebApi.Sys.Dto;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Dnn.WebApi.Sys;
-using RealController = ToSic.Sxc.Backend.Admin.AppPartsControllerReal;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
+using RealController = ToSic.Eav.WebApi.Admin.Sys.AppPartsControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)] can't be used, because it forces the security
 // token, which fails in the cases where the url is called using get, which should result in a download
 
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppPartsController() : DnnSxcControllerRoot(RealController.LogSuffix), IAppPartsController
+public class AppPartsController: DnnApiController, IAppPartsController
 {
-    private RealController Real => SysHlp.GetService<RealController>();
+    #region WebApi Composition Infrastructure
+
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}");
+
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
+
+    #endregion
+
+
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     /// <inheritdoc />
     [HttpGet]
@@ -25,19 +39,17 @@ public class AppPartsController() : DnnSxcControllerRoot(RealController.LogSuffi
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public HttpResponseMessage Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        using (this.InitializedResponseMaker())
-            return Real.Export(zoneId: zoneId, appId: appId, contentTypeIdsString: contentTypeIdsString,
-                entityIdsString: entityIdsString, templateIdsString: templateIdsString);
-    }
+        => Real
+            .Export(zoneId: zoneId, appId: appId, contentTypeIdsString: contentTypeIdsString,
+                entityIdsString: entityIdsString, templateIdsString: templateIdsString)
+            .ToHttpResponse();
 
 
     /// <inheritdoc />
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public ImportResultDto Import(int zoneId, int appId)
+    public ImportResult Import(int zoneId, int appId)
     {
         this.PreventServerTimeout600();
         return Real.Import(uploadInfo: new(Request, HttpContext.Current.Request), zoneId: zoneId, appId: appId);

@@ -2,7 +2,7 @@
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
@@ -12,10 +12,11 @@ using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys.Compatibility;
 using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Sys.ExecutionContext;
 
-// ReSharper disable once CheckNamespace
+
+#pragma warning disable IDE0130
 namespace Custom.Hybrid;
+#pragma warning restore IDE0130
 
 /// <summary>
 /// This is the base class for all custom API Controllers. <br/>
@@ -40,8 +41,8 @@ public abstract partial class Api12(string logSuffix) : DnnSxcCustomControllerBa
 
     [PrivateApi] public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
-    public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
+    public TService GetService<TService>() where TService : class => ExCtx.GetService<TService>();
 
     #endregion
 
@@ -54,7 +55,7 @@ public abstract partial class Api12(string logSuffix) : DnnSxcCustomControllerBa
     public dynamic Header => CodeApi.Header;
 
     /// <inheritdoc cref="IDynamicCodeDocs.App" />
-    public IApp App => CodeApi.App;
+    public IAppDynamic App => CodeApi.App;
 
     /// <inheritdoc cref="IDynamicCodeDocs.Data" />
     public IDataSource Data => CodeApi.Data;
@@ -137,7 +138,7 @@ public abstract partial class Api12(string logSuffix) : DnnSxcCustomControllerBa
     /// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
     public IFile SaveInAdam(NoParamOrder npo = default, Stream stream = null, string fileName = null, string contentType = null,
         Guid? guid = null, string field = null, string subFolder = "")
-        => CustomCodeHlp.SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
+        => GetService<AdamCode>().SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
 
     #endregion
 
@@ -145,11 +146,11 @@ public abstract partial class Api12(string logSuffix) : DnnSxcCustomControllerBa
 
     string IGetCodePath.CreateInstancePath { get; set; }
 
-    private CompileCodeHelper CompileCodeHlp => field ??= GetService<CompileCodeHelper>().Init(this);
+    private CompileCodeHelper CompileCodeHlp => field ??= GetService<Generator<CompileCodeHelper, IGetCodePath>>().New(this);
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
     public dynamic CreateInstance(string virtualPath, NoParamOrder npo = default, string name = null, string relativePath = null, bool throwOnError = true)
-        => CompileCodeHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
+        => CompileCodeHlp.CreateInstance(CodeApi, virtualPath: virtualPath, name: name, throwOnError: throwOnError);
 
     #endregion
 

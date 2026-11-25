@@ -1,16 +1,16 @@
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.OutputCache;
 using ToSic.Sxc.Web.Sys.LightSpeed;
 using ToSic.Sys.Caching;
-using ExecutionContext = ToSic.Sxc.Sys.ExecutionContext.ExecutionContext;
 
 namespace ToSic.Sxc.WebLightSpeed;
 
 [Startup(typeof(StartupSxcWithDbWithoutLightSpeed))]
-public class OutputCacheManagementServiceWithoutLightSpeedTests(ExecutionContext exCtx)
+public class OutputCacheManagementServiceWithoutLightSpeedTests(CodeContext exCtx)
 {
-    public class LightSpeedTestCase(ExecutionContext exCtx, string key)
+    public class LightSpeedTestCase(CodeContext exCtx, string key)
     {
         public int CurrentAppId = 7;
 

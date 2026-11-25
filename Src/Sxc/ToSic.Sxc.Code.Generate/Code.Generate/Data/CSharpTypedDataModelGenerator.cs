@@ -2,43 +2,41 @@
 
 namespace ToSic.Sxc.Code.Generate.Data;
 
-internal class CSharpTypedDataModelGenerator(CSharpTypedDataModelsGenerator generator, IContentType type, string baseName) 
-    : CSharpModelGeneratorBase(generator, type, baseName, generator.Log, "Gen.DtaCls")
+internal class CSharpTypedDataModelGenerator(FileGeneratorSpecs generatorSpecs, ILog parentLog) : HelperBase(parentLog, "Gen.DtaCls"), ICSharpCodeFragmentGenerator
 {
     #region Overrides
 
-    protected override string ClassSuffix => Specs.Suffix ?? "";
-
-    protected override string GenerateFileIntroComment(string userName) =>
+    public string GenerateFileIntroComment(CSharpFileSpecs fileSpecs) =>
         $$"""
           // DO NOT MODIFY THIS FILE - IT IS AUTO-GENERATED
           // See also: https://go.2sxc.org/copilot-data
-          // To extend it, create a "{{ClassName}}.cs" with this contents:
+          // To extend it, create a "{{fileSpecs.ClassName}}.cs" with this contents:
           /*
-          namespace {{Generator.Specs.DataNamespace}}
+          namespace {{fileSpecs.FileSetSpecs.DataNamespace}}
           {
-            public partial class {{ClassName}}
+            public partial class {{fileSpecs.ClassName}}
             {
               // Add your own properties and methods here
             }
           }
           */
 
-          {{CSharpGeneratorHelper.GeneratorHeader(Generator, Specs, userName)}}
+          {{CSharpGeneratorHelper.GeneratorHeader(generatorSpecs, fileSpecs.FileSetSpecs, fileSpecs.UserName)}}
           
           """;
 
-    protected override string GenerateMainClassComment(string? firstPropertyName)
+    public string GenerateMainClassComment(CSharpFileSpecs fileSpecs, string? firstPropertyName)
     {
-        var remarks = GenerateCommonScopeRemarks();
-        return CodeGenHelper.CodeComment(Specs.TabsClass,
+        var remarks = fileSpecs.Type.GenerateCommonScopeRemarks();
+        var setCodeGenHelper = new CSharpGeneratorHelper(fileSpecs.FileSetSpecs, Log);
+        return setCodeGenHelper.CodeComment(fileSpecs.FileSetSpecs.TabsClass,
                    $"""
-                    This is a generated class for {ClassName} {GetScopeDescription()}
+                    This is a generated class for {fileSpecs.ClassName} {fileSpecs.Type.GetScopeDescription()}
                     To extend/modify it, see instructions above.
                     """)
-               + CodeGenHelper.XmlComment(Specs.TabsClass, summary:
+               + setCodeGenHelper.XmlComment(fileSpecs.FileSetSpecs.TabsClass, summary:
                    $"""
-                    {ClassName} data. <br/>
+                    {fileSpecs.ClassName} data. <br/>
                     Re-generate whenever you change the ContentType. <br/>
                     <br/>
                     Default properties such as `.Title` or `.Id` are provided in the base class. <br/>
@@ -49,10 +47,10 @@ internal class CSharpTypedDataModelGenerator(CSharpTypedDataModelsGenerator gene
                    remarks: remarks);
     }
 
-    protected override string GenerateAutoGenClassComment() =>
-        CodeGenHelper.XmlComment(Specs.TabsClass,
+    public string GenerateAutoGenClassComment(CSharpFileSpecs fileSpecs) =>
+        new CSharpGeneratorHelper(fileSpecs.FileSetSpecs, Log).XmlComment(fileSpecs.FileSetSpecs.TabsClass,
             summary:
-            $"Auto-Generated *base* class for '{ClassName}' in scope '{Type.Scope}'. " +
+            $"Auto-Generated *base* class for '{fileSpecs.ClassName}' in scope '{fileSpecs.Type.Scope}'. " +
             $"It uses special names to avoid accidental use.");
 
     #endregion

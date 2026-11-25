@@ -1,5 +1,6 @@
-﻿using ToSic.Sxc.Apps.Sys.Work;
-using ToSic.Sxc.Blocks.Sys.Views;
+﻿using ToSic.Eav.Apps.Views.Sys;
+using ToSic.Sxc.Apps.Sys.Work;
+using ToSic.Eav.Apps.Views.Sys;
 using ToSic.Sxc.Context.Sys;
 
 namespace ToSic.Sxc.Blocks.Sys;
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.Blocks.Sys;
 /// </summary>
 internal class BlockViewLoader(ILog parentLog) : HelperBase(parentLog, "Blk.ViewLd")
 {
-    internal IView? PickView(BlockSpecs block, IView? configView, WorkViews views)
+    internal IView? PickView(BlockSpecs block, IView? configView, WorkAppViewSwitch views)
     {
         // #1 skip on ContentApp (Url-View-Switching is not a feature there) or if not relevant or not yet initialized
         if (block.IsContentApp || !block.AppIsReady)
@@ -22,7 +23,7 @@ internal class BlockViewLoader(ILog parentLog) : HelperBase(parentLog, "Blk.View
     }
 
 
-    private IView? TryGetViewBasedOnUrlParams(IContextOfBlock context, WorkViews views)
+    private IView? TryGetViewBasedOnUrlParams(IContextOfModule context, WorkAppViewSwitch views)
     {
         var l = Log.Fn<IView>("template override - check");
 

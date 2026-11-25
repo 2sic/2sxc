@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
-using ToSic.Sxc.Web.Sys.Http;
+using ToSic.Eav.Web.Http.Sys;
+using ToSic.Sxc.Oqt.Server.Context;
 
 namespace ToSic.Sxc.Oqt.Server.Plumbing;
 
@@ -14,14 +15,25 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing;
 /// Note that it's probably not yet complete. As of now, it only provides ?x=y&a=b stuff,
 /// but if Blazor has any cute-url system like x/y/a/b this would probably not work yet
 /// </remarks>
-internal class HttpBlazor(IHttpContextAccessor contextAccessor, NavigationManager navigationManager) : HttpAbstractionBase, IHttp
+internal class HttpBlazor(IHttpContextAccessor contextAccessor, NavigationManager navigationManager) : IHttp
 {
-    public override HttpContext Current => contextAccessor?.HttpContext!;
+    /// <inheritdoc />
+    public HttpContext Current => contextAccessor?.HttpContext!;
 
-    public override NameValueCollection QueryStringParams
+    /// <inheritdoc />
+    public HttpRequest Request => Current?.Request!;
+
+    /// <inheritdoc />
+    public NameValueCollection QueryStringParams
     {
         get
         {
+            // Indexing has no navigation URL and must not inherit a caller's query.
+            // Only the explicit background scope takes this path; requestless interactive
+            // Blazor still uses its initialized NavigationManager below.
+            if (OqtBackgroundTenantScope.TenantId.HasValue)
+                return [];
+
             // caching is disabled because in Blazor Interactive the query string parameters are changed after the page is created
             //if (_queryStringValues != null) return _queryStringValues;
 
@@ -50,7 +62,6 @@ internal class HttpBlazor(IHttpContextAccessor contextAccessor, NavigationManage
         }
     }
 
-    //private NameValueCollection _queryStringValues;
 
     private NameValueCollection FilterOutOqtaneParams(NameValueCollection original)
     {
@@ -59,5 +70,6 @@ internal class HttpBlazor(IHttpContextAccessor contextAccessor, NavigationManage
         return original;
     }
 
-    //public override IDictionary<object, object> Items => Current.Items;
+    /// <inheritdoc />
+    public string? GetCookie(string cookieName) => Request?.Cookies[cookieName];
 }

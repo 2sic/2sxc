@@ -1,11 +1,12 @@
 ﻿using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.ImportExport.Sys.Bundle;
 using ToSic.Eav.Persistence.File;
 using ToSic.Eav.Persistence.Sys.Logging;
 using ToSic.Eav.Security.Files;
 using ToSic.Eav.Sys;
-using ToSic.Eav.WebApi.Sys.ImportExport;
+using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Eav.WebApi.Sys.Security;
-using ToSic.Sxc.Backend.ImportExport;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Backend.Admin;
@@ -15,22 +16,22 @@ public class DataControllerReal(
     ISite site,
     IAppPathsMicroSvc appPathSvc,
     IAppReaderFactory appReaders,
-    LazySvc<IContextOfSiteService> ctxSvc,
-    LazySvc<ContentExportApi> contentExportLazy,
+    AppWorkQuick<ExportBundleFile> bundleFile,
+    AppWorkQuick<ExportBundleSave> contentExportLazy,
     Generator<ImportContent> importContent,
     LazySvc<IUser> userLazy,
     AppWorkQuick<WorkEntityRecycle> recycle)
     : ServiceBase("Api.DtaCtlRl",
-        connect: [site, appPathSvc, appReaders, ctxSvc, contentExportLazy, importContent, userLazy, recycle])
+        connect: [site, appPathSvc, appReaders, bundleFile, contentExportLazy, importContent, userLazy, recycle])
 {
     public const string LogSuffix = "DataCtrl";
 
-    public THttpResponseType BundleExport(int appId, Guid exportConfiguration, int indentation)
-        => contentExportLazy.Value.Init(appId).JsonBundleExport(userLazy.Value, exportConfiguration, indentation);
+    public FileResult BundleExport(int appId, Guid exportConfiguration, int indentation)
+        => bundleFile.New(appId).JsonBundleExport(userLazy.Value, exportConfiguration, indentation);
 
-    public ImportResultDto BundleImport(HttpUploadedFile uploadInfo, int zoneId, int appId)
+    public ImportResult BundleImport(HttpUploadedFile uploadInfo, int zoneId, int appId)
     {
-        var l = Log.Fn<ImportResultDto>();
+        var l = Log.Fn<ImportResult>();
 
         SecurityHelpers.ThrowIfNotSiteAdmin(userLazy.Value, l);
 
@@ -44,13 +45,13 @@ public class DataControllerReal(
             streams.Add(new() { Name = fileName, Stream = stream! });
         }
         var result = importContent.New()
-            .ImportJsonFiles(zoneId, appId, streams, ctxSvc.Value.Context.Site.DefaultCultureCode);
+            .ImportJsonFiles(zoneId, appId, streams, site.DefaultCultureCode);
 
         return l.ReturnAsOk(result);
     }
 
     public bool BundleSave(int appId, Guid exportConfiguration, int indentation = 0)
-        => contentExportLazy.Value.Init(appId).BundleSave(userLazy.Value, exportConfiguration, indentation);
+        => contentExportLazy.New(appId).BundleSave(userLazy.Value, exportConfiguration, indentation);
 
     public bool BundleRestore(string fileName, int zoneId, int appId)
     {
@@ -68,7 +69,7 @@ public class DataControllerReal(
             return l.ReturnFalse($"File not found: {filePath}");
 
         var result = importContent.New()
-            .ImportJsonFiles(zoneId, appId, [new() { Name = fileName, Stream = new FileStream(filePath, FileMode.Open, FileAccess.Read) }], ctxSvc.Value.Context.Site.DefaultCultureCode);
+            .ImportJsonFiles(zoneId, appId, [new() { Name = fileName, Stream = new FileStream(filePath, FileMode.Open, FileAccess.Read) }], site.DefaultCultureCode);
 
         var message = string.Join(", ", result.Messages.Select(m => m.Text));
 

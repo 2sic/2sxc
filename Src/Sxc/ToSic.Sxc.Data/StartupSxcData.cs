@@ -21,7 +21,4 @@ public static class StartupSxcData
 
         return services;
     }
-
-
-        
 }

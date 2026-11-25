@@ -1,7 +1,9 @@
-﻿using System.Web;
-using ToSic.Eav.WebApi.Sys.Admin.Query;
-using ToSic.Eav.WebApi.Sys.Dto;
+﻿using ToSic.Eav.DataSources.Query.Dev.Sys;
+using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.WebApi.Admin.Sys;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using RealController = ToSic.Sxc.Backend.Admin.Query.QueryControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
@@ -11,45 +13,51 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 /// </summary>
 [SupportedModules(DnnSupportedModuleNames)]
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-[DnnLogExceptions]
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [ValidateAntiForgeryToken]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class QueryController() : DnnSxcControllerBase(RealController.LogSuffix, RealController.LogGroup,
-    firstMessage: $"Query: {HttpContext.Current?.Request.Url.AbsoluteUri.After("/query/")}"), IQueryController
+public class QueryController : DnnApiController, IQueryController
 {
-    private RealController Real => SysHlp.GetService<RealController>();
+    #region WebApi Composition Infrastructure
 
-    // Replaced by DataSource System.QueryDefinition through query System.SysData.
-    //[HttpGet]
-    //public QueryDefinitionDto Get(int appId, int? id = null) =>
-    //    Real.Get(appId, id);
+    public ILog Log => field ??= LogFactory.Create("Api." + RealController.LogSuffix);
 
-    // Replaced by DataSource System.DataSources through query System.SysData.
-    //[HttpGet]
-    //public IEnumerable<DataSourceDto> DataSources(int zoneId, int appId) =>
-    //    Real.DataSources(new(zoneId, appId));
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi + RealController.LogGroup);
+
+    #endregion
+
+
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     [HttpPost]
     public QueryDefinitionDto Save([FromBody] QueryDefinitionDto data, int appId, int id) =>
         Real.Save(data, appId, id);
 
     [HttpGet]
-    public QueryRunDto RunDev(int appId, int id, int top = 0) =>
-        Real.RunDev(appId, id, top);
+    public QueryRunDto RunDev(int appId, int id, int top = 0)
+    {
+        // The block is required, so that queries can resolve things such as Module.Id etc.
+        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
+        return Real.RunDev(appId, id, top);
+    }
 
     [HttpGet]
-    public QueryRunDto DebugStream(int appId, int id, string from, string @out, int top = 25)  =>
-        Real.DebugStream(appId, id, @from, @out, top);
+    public QueryRunDto DebugStream(int appId, int id, string from, string @out, int top = 25)
+    {
+        // The block is required, so that queries can resolve things such as Module.Id etc.
+        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
+        return Real.DebugStream(appId, id, from, @out, top);
+    }
 
     [HttpGet]
-    public void Clone(int appId, int id) =>
-        Real.Clone(appId, id);
+    public void Clone(int appId, int id)
+        => Real.Clone(appId, id);
 
     [HttpDelete]
-    public bool Delete(int appId, int id) =>
-        Real.DeleteIfUnused(appId, id);
+    public bool Delete(int appId, int id)
+        => Real.DeleteIfUnused(appId, id);
 
     [HttpPost]
-    public bool Import(EntityImportDto args) =>
-        Real.Import(args);
+    public bool Import(DataFileImportOptions args)
+        => Real.Import(args);
 }

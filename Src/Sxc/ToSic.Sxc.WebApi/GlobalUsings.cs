@@ -8,7 +8,6 @@ global using ToSic.Eav.Apps;
 global using ToSic.Eav.Apps.Sys.Work;
 global using ToSic.Eav.Context;
 global using ToSic.Eav.Data;
-global using ToSic.Eav.WebApi.Sys.Context;
 global using ToSic.Eav.WebApi.Sys.Dto;
 global using ToSic.Eav.WebApi.Sys.Helpers.Http;
 global using ToSic.Sys.Coding;

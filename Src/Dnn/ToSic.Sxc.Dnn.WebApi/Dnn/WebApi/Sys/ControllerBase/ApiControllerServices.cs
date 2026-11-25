@@ -1,5 +1,7 @@
-﻿using ToSic.Sxc.Dnn.Integration;
-using ToSic.Sxc.Sys.ExecutionContext;
+﻿using ToSic.Sxc.Apps.Sys;
+using ToSic.Sxc.Code.Context.Sys;
+using ToSic.Sxc.Dnn.Integration;
+
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
@@ -10,7 +12,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys;
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public record ApiControllerDependencies(
-    IExecutionContextFactory ExCtxFactory,
+    ICodeContextFactory ExCtxFactory,
     Generator<DnnWebApiAppFolderUtilities, HttpRequestMessage> WebApiAppFolderUtilities,
-    LazySvc<Apps.App> AppOverrideLazy)
+    Generator<AppForCode, AppForCode.Options> AppOverrideLazy)
     : DependenciesBase(connect: [ExCtxFactory, WebApiAppFolderUtilities, AppOverrideLazy]);

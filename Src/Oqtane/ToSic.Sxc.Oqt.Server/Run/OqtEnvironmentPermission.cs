@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 using Oqtane.Security;
 using Oqtane.Shared;
-using System.Security.Claims;
 using ToSic.Eav.Environment.Sys.Permissions;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys;
@@ -36,7 +36,7 @@ internal class OqtEnvironmentPermission(
     /// </summary>
     private ClaimsPrincipal ClaimsPrincipal => httpContextAccessor.HttpContext?.User;
 
-    private IModule Module => field ??= (MyOptions?.ContextOfSiteOrBlock as IContextOfBlock)?.Module;
+    private IModule Module => field ??= (MyOptions?.ContextOfSiteOrBlock as IContextOfModule)?.Module;
 
     public bool VerifyConditionOfEnvironment(string condition)
     {

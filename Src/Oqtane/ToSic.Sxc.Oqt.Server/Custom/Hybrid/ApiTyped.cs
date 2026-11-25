@@ -12,11 +12,12 @@ using ToSic.Sxc.Adam;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.Models;
+using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Services.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
+
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
@@ -35,7 +36,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     protected ApiTyped() : this(EavWebApiConstants.HistoryNameWebApi) { }
 
     internal ICodeTypedApiHelper CodeApi => field
-        ??= ExCtxOrNull.GetTypedApi();
+        ??= CtxHlp.ExCtxOrNull!.GetTypedApi();
 
 
     /// <summary>
@@ -58,10 +59,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => CtxHlp.CodeLog;
 
-    // ReSharper disable once InconsistentNaming
-    [PrivateApi] internal IExecutionContext ExCtxOrNull => CtxHlp.ExCtxOrNull;
-
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public new TService GetService<TService>() where TService : class
         => CodeApi.GetService<TService>();
 
@@ -97,7 +95,8 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
         Guid? guid = null,
         string field = null,
         string subFolder = "")
-        => CtxHlp.SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
+        => GetService<AdamCode>()
+            .SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
 
     #endregion
 
@@ -118,7 +117,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     #region My... Stuff
 
     private CodeHelperTypedData CodeHelper => field
-        ??= new(helperSpecs: new(ExCtxOrNull, false, ((IGetCodePath)this).CreateInstancePath));
+        ??= new(helperSpecs: new(CtxHlp.ExCtxOrNull!, false, ((IGetCodePath)this).CreateInstancePath));
 
     public ITypedItem MyItem => CodeHelper.MyItem;
 
@@ -166,12 +165,12 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     public ITypedRazorModel MyModel => throw new("MyModel isn't meant to work in WebApi"); // v20 CodeHelper.MyModel;
 
-    private CompileCodeHelper CompileCodeHlp => field ??= GetService<CompileCodeHelper>().Init(this);
+    private CompileCodeHelper CompileCodeHlp => field ??= GetService<Generator<CompileCodeHelper, IGetCodePath>>().New(this);
 
     /// <inheritdoc cref="ITypedCode16.GetCode"/>
     [PrivateApi("Hidden, as not supported any more going forward")]
     public dynamic GetCode(string path, NoParamOrder npo = default, string className = default)
-        => CompileCodeHlp.CreateInstance(path /*relativePath: (this as IGetCodePath).CreateInstancePath*/, name: className);
+        => CompileCodeHlp.CreateInstance(CtxHlp.ExCtxOrNull!.GetDynamicApi(), path /*relativePath: (this as IGetCodePath).CreateInstancePath*/, name: className);
 
     #region MyContext & UniqueKey
 

@@ -4,12 +4,15 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using System.Net;
-using ToSic.Eav.WebApi.Sys.Helpers.Http;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 
-// TODO: @STV - PLS EXPLAIN what this does / what it's for
+/// <summary>
+/// Builds the MVC action context for a dynamically compiled app API controller.
+/// Finds candidate actions in the app's assembly, lets MVC select the action using its constraints,
+/// and supplies query-string values for action parameters that have no route value.
+/// </summary>
 internal class AppApiActionContext : IHasLog
 {
     public AppApiActionContext(ILogStore logStore)
@@ -29,9 +32,10 @@ internal class AppApiActionContext : IHasLog
 
         var routeData = new RouteData(values);
 
-        var actionDescriptorCollectionProvider = context.RequestServices.GetRequiredService<IActionDescriptorCollectionProvider>();
+        var sp = context.GetSysRequestServices();
+        var actionDescriptorCollectionProvider = sp.GetRequiredService<IActionDescriptorCollectionProvider>();
 
-        var actionSelector = context.RequestServices.GetRequiredService<IActionSelector>();
+        var actionSelector = sp.GetRequiredService<IActionSelector>();
 
         var routeContext = new RouteContext(context)
         {
@@ -60,7 +64,7 @@ internal class AppApiActionContext : IHasLog
             ? $"ok, have candidates: {candidates.Count}"
             : $"error, missing candidates: {candidates.Count}, can't find right method for action: {values["action"]} on controller: {values["controller"]}.");
 
-        if (candidates.Count == 0) throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, $"Can't find right method for action: {values["action"]} on controller: {values["controllerTypeName"]}.", "Not Found");
+        if (candidates.Count == 0) throw new KeyNotFoundException($"Can't find right method for action: {values["action"]} on controller: {values["controllerTypeName"]}.");
 
         Log.A($"actionDescriptor SelectBestCandidate");
         var actionDescriptor = actionSelector.SelectBestCandidate(routeContext, candidates);

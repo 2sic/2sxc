@@ -1,24 +1,23 @@
 ﻿using ToSic.Sxc.Adam.Sys;
+using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Adam.Sys.Work;
 
 namespace ToSic.Sxc.Backend.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamControllerReal<TIdentifier>(
-    Generator<AdamWorkUpload, AdamWorkOptions> adamUpload,
-    Generator<AdamWorkGet, AdamWorkOptions> adamWorkGet,
-    Generator<AdamWorkFolderCreate, AdamWorkOptions> adamFolders,
-    Generator<AdamWorkDelete, AdamWorkOptions> adamDelete,
-    Generator<AdamWorkRename, AdamWorkOptions> adamRename,
+    Generator<AdamContext, AdamContext.Options> adamContextGen,
+    Generator<AdamWorkUpload, AdamContext> adamUpload,
+    Generator<AdamWorkGet, AdamContext> adamWorkGet,
+    Generator<AdamWorkFolderCreate, AdamContext> adamFolders,
+    Generator<AdamWorkDelete, AdamContext> adamDelete,
+    Generator<AdamWorkRename, AdamContext> adamRename,
     Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> dtoMaker,
-    ISxcCurrentContextService ctxService)
-    : ServiceBase("Api.Adam", connect: [adamUpload, adamWorkGet, adamFolders, adamDelete, adamRename])
+    IContextOfAppService ctxService
+    )
+    : ServiceBase("Api.Adam", connect: [adamContextGen, adamUpload, adamWorkGet, adamFolders, adamDelete, adamRename])
 {
-    // TODO: @2dm change to not changing the state
-    private IContextOfApp ShareAppStateOptimized(int appId)
-    {
-        return ctxService.ShareAppStateOptimized(appId);
-    }
+    public const string LogSuffix = "Adam";
     
     public AdamItemDto Upload(HttpUploadedFile uploadInfo, int appId, string contentType, Guid guid, string field, string subFolder = "", bool usePortalRoot = false)
     {
@@ -27,7 +26,7 @@ public class AdamControllerReal<TIdentifier>(
         try
         {
             // 1. Set the global context
-            var context = ShareAppStateOptimized(appId);
+            var context = ctxService.AppContextRequired();
             
             // Check if the request contains multipart/form-data.
             if (!uploadInfo.IsMultipart())
@@ -40,25 +39,23 @@ public class AdamControllerReal<TIdentifier>(
             if (stream == null!)
                 return l.ReturnAsError(new("File Stream is empty"));
 
-            var uploader = adamUpload.New(new()
-            {
-                AppId = appId,
-                Context = context,
-                ContentType = contentType,
-                ItemGuid = guid,
-                Field = field,
-                UsePortalRoot = usePortalRoot,
-            });//.Value.Setup(appId, contentType, guid, field, usePortalRoot);
-            var file = uploader.UploadOneNew(stream, subFolder, fileName);
+            var adamContext = adamContextGen.New(new(
+                Context: context,
+                ContentType: contentType,
+                FieldName: field,
+                EntityGuid: guid,
+                UsePortalRoot: usePortalRoot));
 
-            var dtoMake = dtoMaker.New(new() { AdamContext = uploader.AdamContext, });
+            var file = adamUpload.New(adamContext).UploadOneNew(stream, subFolder, fileName);
+
+            var dtoMake = dtoMaker.New(new() { AdamContext = adamContext, });
             return dtoMake.Create(file);
         }
-        catch (HttpExceptionAbstraction he)
-        {
-            // Our abstraction places an extra message in the value, not sure if this is right, but that's how it is. 
-            return l.ReturnAsError(new(he.Message + "\n" + he.Value));
-        }
+        //catch (Exception he)
+        //{
+        //    // Our abstraction places an extra message in the value, not sure if this is right, but that's how it is. 
+        //    return l.ReturnAsError(new(he.Message + "\n" + he.Value));
+        //}
         catch (Exception e)
         {
             return l.ReturnAsError(new(e.Message + "\n" + e.Message));
@@ -73,24 +70,22 @@ public class AdamControllerReal<TIdentifier>(
         var l = Log.Fn<IEnumerable<AdamItemDto>>($"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
 
         // 1. Set the global context
-        var context = ShareAppStateOptimized(appId);
+        var context = ctxService.AppContextRequired();
 
-        var adamGet = adamWorkGet.New(new()
-        {
-            AppId = appId,
-            Context = context,
-            ContentType = contentType,
-            ItemGuid = guid,
-            Field = field,
-            UsePortalRoot = usePortalRoot,
-        });
-        var results = adamGet.ItemsInField(subfolder);
+        var adamContext = adamContextGen.New(new(
+            Context: context,
+            ContentType: contentType,
+            FieldName: field,
+            EntityGuid: guid,
+            UsePortalRoot: usePortalRoot));
+
+        var results = adamWorkGet.New(adamContext).ItemsInField(subfolder);
 
         if (results == null)
             return l.ReturnAsError([], "got empty object, user probably restricted");
 
         var dto = dtoMaker
-            .New(new() { AdamContext = adamGet.AdamContext })
+            .New(new() { AdamContext = adamContext })
             .Convert(results);
 
         return l.ReturnAsOk(dto);
@@ -101,35 +96,24 @@ public class AdamControllerReal<TIdentifier>(
         var l = Log.Fn<IEnumerable<object>>();
 
         // 1. Set the global context
-        var context = ShareAppStateOptimized(appId);
+        var context = ctxService.AppContextRequired();
 
-        adamFolders.New(new()
-            {
-                AppId = appId,
-                Context = context,
-                ContentType = contentType,
-                ItemGuid = guid,
-                Field = field,
-                UsePortalRoot = usePortalRoot,
-            })
-            .Create(subfolder, newFolder);
+        var adamContext = adamContextGen.New(new(
+            Context: context,
+            ContentType: contentType,
+            FieldName: field,
+            EntityGuid: guid,
+            UsePortalRoot: usePortalRoot));
 
-        var adamGet = adamWorkGet.New(new()
-        {
-            AppId = appId,
-            Context = context,
-            ContentType = contentType,
-            ItemGuid = guid,
-            Field = field,
-            UsePortalRoot = usePortalRoot,
-        });
-        var folder = adamGet.ItemsInField(subfolder);
+        adamFolders.New(adamContext).Create(subfolder, newFolder);
+
+        var folder = adamWorkGet.New(adamContext).ItemsInField(subfolder);
 
         if (folder == null)
             return l.ReturnAsError([], "got empty object, user probably restricted");
 
         var dto = dtoMaker
-            .New(new() { AdamContext = adamGet.AdamContext })
+            .New(new() { AdamContext = adamContext })
             .Convert(folder);
         return l.ReturnAsOk(dto);
     }
@@ -137,33 +121,31 @@ public class AdamControllerReal<TIdentifier>(
     public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, TIdentifier id, bool usePortalRoot)
     {
         // 1. Set the global context
-        var context = ShareAppStateOptimized(appId);
+        var context = ctxService.AppContextRequired();
 
-        return adamDelete.New(new()
-        {
-            AppId = appId,
-            Context = context,
-            ContentType = contentType,
-            ItemGuid = guid,
-            Field = field,
-            UsePortalRoot = usePortalRoot,
-        }).Delete(subfolder, isFolder, AdamAssetIdentifier.Create(id),  AdamAssetIdentifier.Create(id));
+        var adamContext = adamContextGen.New(new(
+            Context: context,
+            ContentType: contentType,
+            FieldName: field,
+            EntityGuid: guid,
+            UsePortalRoot: usePortalRoot));
+        return adamDelete.New(adamContext)
+            .Delete(subfolder, isFolder, AdamAssetIdentifier.Create(id), AdamAssetIdentifier.Create(id));
     }
 
     public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder,
         TIdentifier id, string newName, bool usePortalRoot)
     {
         // 1. Set the global context
-        var context = ShareAppStateOptimized(appId);
+        var context = ctxService.AppContextRequired();
 
-        return adamRename.New(new()
-            {
-                AppId = appId,
-                Context = context,
-                ContentType = contentType,
-                ItemGuid = guid,
-                Field = field,
-                UsePortalRoot = usePortalRoot,
-            }).Rename(subfolder, isFolder, AdamAssetIdentifier.Create(id), AdamAssetIdentifier.Create(id), newName);
+        var adamContext = adamContextGen.New(new(
+            Context: context,
+            ContentType: contentType,
+            FieldName: field,
+            EntityGuid: guid,
+            UsePortalRoot: usePortalRoot));
+        return adamRename.New(adamContext)
+            .Rename(subfolder, isFolder, AdamAssetIdentifier.Create(id), AdamAssetIdentifier.Create(id), newName);
     }
 }

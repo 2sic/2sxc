@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.WebApi.Sys.ApiExplorer;
+using ToSic.Eav.Apps.Inspect.Sys.WebApi;
 using ToSic.Sxc.Backend.Usage;
 using ToSic.Sxc.Oqt.Server.Pages;
 using ToSic.Sxc.Oqt.Server.WebApi;

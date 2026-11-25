@@ -1,7 +1,6 @@
 ﻿using System.Text.Json;
 using ToSic.Eav.Serialization.Sys.Json;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 using Attribute = ToSic.Razor.Markup.Attribute;
 
@@ -21,7 +20,7 @@ partial record ToolbarBuilder
     protected override string ToHtmlString()
     {
         // Get edit, but don't exit if null, as the Render (later on) will add comments if Edit is null
-        var editSvc = ExCtx.GetService<IEditService>(reuse: true);
+        var editSvc = Services.ExCtx.Value.GetService<IEditService>(reuse: true);
 
         // As the config can change before render, put `this` into a variable first
         var finalToolbar = this;
@@ -31,7 +30,7 @@ partial record ToolbarBuilder
         // since in this case it may not be activated
         if (showNonAdmin)
         {
-            ExCtx.GetService<IPageService>(reuse: true)
+            Services.ExCtx.Value.GetService<IPageService>(reuse: true)
                 .Activate(SxcPageFeatures.ToolbarsInternal.NameId);
 
             finalToolbar = this with { Configuration = Configuration with { ShowForce = true } };
@@ -59,9 +58,9 @@ partial record ToolbarBuilder
         enabled = enabled || showNonAdmins;
 
         // Check if enabled for certain groups
-        if (ExCtx != null! /* paranoid */)
+        //if (ExCtx != null! /* paranoid */)
         {
-            var user = ExCtx.GetCmsContext().User;
+            var user = Services.ExCtx.Value.CmsContext.User;
             var overrideShow = new ToolbarConfigurationShowHelper()
                 .OverrideShowBecauseOfRoles(Configuration, user);
             enabled = overrideShow ?? enabled;

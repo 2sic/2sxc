@@ -1,6 +1,8 @@
 ﻿using System.Web.Http.Controllers;
+using ToSic.Eav.WebApi.Sys;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
+
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
@@ -21,37 +23,50 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys;
 [DnnLogExceptions]
 // Can't hide in Intellisense, because that would hide it for all derived classes too
 // [ShowApiWhenReleased(ShowApiMode.Never)]
-[method: PrivateApi]
-public abstract class DnnSxcCustomControllerBase(string logSuffix, string insightsGroup = default)
-    : DnnSxcControllerRoot(logSuffix, insightsGroup)
+public abstract class DnnSxcCustomControllerBase() : DnnApiController, IHasLog // DnnSxcControllerRoot
 {
     #region Constructor & DI / Setup
 
-    /// <summary>
-    /// Empty constructor is important for inheriting classes
-    /// </summary>
     [PrivateApi]
-    protected DnnSxcCustomControllerBase() : this("DynApi") { }
+    protected DnnSxcCustomControllerBase(string logSuffix, string insightsGroup = default): this()
+    {
+        Log = LogFactory.Create("Api." + logSuffix);
+        SysHlp = new(this, insightsGroup ?? EavWebApiConstants.HistoryNameWebApi, null, logApiTimer: true);
+
+    }
+
+    /// <summary>
+    /// Special helper to move all Razor logic into a separate class.
+    /// For architecture of Composition over Inheritance.
+    /// </summary>
+    internal DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi, logApiTimer: true);
+
+    /// <inheritdoc />
+    [PrivateApi]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    public ILog Log => field ??= LogFactory.Create("Api.DynApi"); // if accessed before created, use to-do name
+
 
     [PrivateApi]
     protected override void Initialize(HttpControllerContext controllerContext)
     {
+        SysHlp.WebApiLogging.OnInitialize(controllerContext);
         base.Initialize(controllerContext);
-        var (rootExecutionContext, folder) = CustomCodeHlp.InitExCtxWithBlockSpecOrApp(controllerContext);
+        var (rootCodeCtx, folder) = CustomCodeHlp.InitExCtxWithBlockSpecOrApp(controllerContext);
         if (this is IGetCodePath thisWithPath)
             thisWithPath.CreateInstancePath = folder;
-        ExCtx = rootExecutionContext;
+        ExCtx = rootCodeCtx;
     }
 
     #endregion
 
     #region Internal / Plumbing / Obsolete
 
-    internal DnnCustomWebApiHelper CustomCodeHlp => field ??= new(this, SysHlp);
+    internal DnnCustomWebApiHelper CustomCodeHlp => field ??= new DnnCustomWebApiHelper(this, SysHlp).LinkLog(Log);
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public IExecutionContext ExCtx { get; private set; }
+    public ICodeContext ExCtx { get; private set; }
 
 
 
@@ -63,7 +78,14 @@ public abstract class DnnSxcCustomControllerBase(string logSuffix, string insigh
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     // ReSharper disable once UnassignedGetOnlyAutoProperty
-    protected virtual string HistoryLogName { get; }
+    protected virtual string HistoryLogGroup => EavWebApiConstants.HistoryNameWebApi;
+
+
+    protected override void Dispose(bool disposing)
+    {
+        SysHlp.EndRequestTimer();
+        base.Dispose(disposing);
+    }
 
     #endregion
 

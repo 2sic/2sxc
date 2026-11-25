@@ -1,15 +1,16 @@
-﻿using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Cms.Publishing.Sys;
+﻿using ToSic.Eav.Data.Publishing.Sys;
+using ToSic.Eav.Ui.Edit.Sys;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class SxcPagePublishing(AppWorkChain<ContentGroupList> contentGroupList, IPagePublishing pagePublishing, IAppsCatalog appsCatalog)
-    : ServiceWithSetup<IAppWorkContext>("Sxc.PgPubl", connect: [contentGroupList, pagePublishing, appsCatalog])
+public class SxcPagePublishing(AppWorkChain<ContentGroupList> contentGroupList, IDataPublishingService pagePublishing)
+    : ServiceWithSetup<IAppWorkContext>("Sxc.PgPubl", connect: [contentGroupList, pagePublishing])
 {
 
-    internal Dictionary<Guid, int> SaveInPagePublishing(
+    internal async Task<Dictionary<Guid, int>> SaveInPagePublishing(
         IContextOfApp context,
         IBlock? blockOrNull,
         int appId,
@@ -27,31 +28,34 @@ public class SxcPagePublishing(AppWorkChain<ContentGroupList> contentGroupList, 
         // list of saved IDs
         Dictionary<Guid, int>? postSaveIds = null;
 
-        // The internal call which will be used further down
-        var appIdentity = appsCatalog.AppIdentity(appId);
-        var groupList = contentGroupList.New(MyOptions);
-
-
         // use dnn versioning if partOfPage
         if (partOfPage)
         {
             l.A("partOfPage - save with publishing");
-            pagePublishing.DoInsidePublishing(context, _ => postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft));
+            pagePublishing.DoInsidePublishing(options =>
+            {
+                postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, options.ForceDraft || forceDraft)
+                    .GetAwaiter()
+                    .GetResult();
+            });
         }
         else
         {
             l.A("partOfPage false, save without publishing");
-            postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft);
+            postSaveIds = await SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft);
         }
 
         var logIds = l.Try(() => string.Join(",", postSaveIds!.Select(psi => $"{psi.Key}({psi.Value})")));
         return l.Return(postSaveIds!, $"post save IDs: {logIds}");
 
-        Dictionary<Guid, int> SaveAndSaveGroupsInnerCall(Func<bool, Dictionary<Guid, int>> call, bool forceSaveAsDraft)
+        async Task<Dictionary<Guid, int>> SaveAndSaveGroupsInnerCall(Func<bool, Dictionary<Guid, int>> call, bool forceSaveAsDraft)
         {
+            // The internal call which will be used further down
+            var groupList = contentGroupList.New(MyOptions);
+
             var ids = call.Invoke(forceSaveAsDraft);
             // now assign all content-groups as needed
-            groupList.IfChangesAffectListUpdateIt(blockOrNull, items, ids);
+            await groupList.IfChangesAffectListUpdateIt(blockOrNull, items, ids);
             return ids;
         }
     }

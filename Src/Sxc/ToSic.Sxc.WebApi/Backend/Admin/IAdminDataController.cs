@@ -1,7 +1,9 @@
 ﻿
+using ToSic.Eav.ImportExport.Sys;
+
 namespace ToSic.Sxc.Backend.Admin;
 
-public interface IAdminDataController
+public interface IAdminDataController: IHasLog
 {
     /// <summary>
     /// Bundle Export
@@ -11,7 +13,7 @@ public interface IAdminDataController
     /// <summary>
     /// Bundle Import
     /// </summary>
-    ImportResultDto BundleImport(int zoneId, int appId);
+    ImportResult BundleImport(int zoneId, int appId);
 
     /// <summary>
     /// Bundle Save
@@ -22,14 +24,6 @@ public interface IAdminDataController
     /// Bundle Restore
     /// </summary>
     bool BundleRestore(string fileName, int zoneId, int appId);
-
-    ///// <summary>
-    ///// Return all history entries, which can be recycled
-    ///// </summary>
-    ///// <param name="appId"></param>
-    ///// <returns></returns>
-    ///// <exception cref="NotImplementedException"></exception>
-    //public IReadOnlyList<RecycleBinItem> GetRecycleBin(int appId);
 
     /// <summary>
     /// Recycle a specific item

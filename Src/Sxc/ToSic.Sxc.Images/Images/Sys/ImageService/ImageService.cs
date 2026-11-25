@@ -1,24 +1,23 @@
-﻿using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Sys;
+﻿using ToSic.Sxc.Code.Context.Sys;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Images.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService features)
-    : ServiceWithContext(SxcLogName + ".ImgSvc", connect: [features, imgLinker]), IImageService
+internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService features, Ctx<ICodeContext> ctxExCtx)
+    : ServiceBase(SxcLogName + ".ImgSvc", connect: [features, imgLinker]), IImageService
 {
     #region Constructor and Inits
 
     internal ImgResizeLinker ImgLinker { get; } = imgLinker;
     internal IFeaturesService Features { get; } = features;
 
-    internal IEditService? EditOrNull => ExCtx.GetService<IEditService>(reuse: true);
+    internal IEditService Edit => ctxExCtx.Value.GetService<IEditService>(reuse: true);
 
-    internal IToolbarService? ToolbarOrNull => _toolbarSvc.Get(() => ExCtx.GetService<IToolbarService>(reuse: true));
-    private readonly LazyGet<IToolbarService?> _toolbarSvc = new();
+    internal IToolbarService Toolbar => field ??= ctxExCtx.Value.GetService<IToolbarService>(reuse: true);
 
     [field: AllowNull, MaybeNull]
-    private IPageService PageService => field ??= ExCtx.GetService<IPageService>(reuse: true);
+    private IPageService PageService => field ??= ctxExCtx.Value.GetService<IPageService>(reuse: true);
 
     #endregion
 
@@ -96,7 +95,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
     }
 
     /// <inheritdoc />
-    public override bool Debug
+    public bool Debug
     {
         get;
         set

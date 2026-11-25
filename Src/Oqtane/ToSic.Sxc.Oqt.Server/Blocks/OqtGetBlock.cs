@@ -1,4 +1,5 @@
 ﻿using Oqtane.Repository;
+using ToSic.Eav.Context.Sys;
 using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Blocks.Sys;
@@ -28,8 +29,9 @@ internal class OqtGetBlock(
             return currentContextServiceToInit;
         _alreadyTriedToLoad = true;
 
-        var block = InitializeBlock();
-        currentContextServiceToInit.ShareBlockSpecs(block);
+        // Requests without ModuleId/PageId have no block, same as in Dnn
+        if (InitializeBlock() is { } block)
+            currentContextServiceToInit.ShareBlockSpecs(block);
         return currentContextServiceToInit;
     }
     private bool _alreadyTriedToLoad;

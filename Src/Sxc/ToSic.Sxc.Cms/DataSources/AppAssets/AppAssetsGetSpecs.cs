@@ -3,16 +3,3 @@ using ToSic.Sys.Work;
 
 namespace ToSic.Sxc.DataSources;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public record AppAssetsGetSpecs: IWorkSpecs
-{
-    public int AppId { get; init; } = int.MinValue;
-
-    public int ZoneId { get; init; } = int.MinValue;
-
-    [Configuration(Fallback = "/")]
-    public string? RootFolder { get; init; } = null;
-
-    [Configuration(Fallback = "*.*")]
-    public string? FileFilter { get; init; } = null;
-}

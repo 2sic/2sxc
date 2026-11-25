@@ -1,8 +1,10 @@
-﻿using ToSic.Eav.WebApi.Sys.Admin.Features;
+﻿using ToSic.Eav.WebApi.Admin.Sys;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Eav.WebApi.Sys.Licenses;
 using ToSic.Sxc.Dnn.WebApi.Sys;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using ToSic.Sys.Capabilities.Features;
-using RealController = ToSic.Eav.WebApi.Sys.Admin.Features.FeatureControllerReal;
+using RealController = ToSic.Eav.WebApi.Admin.Sys.FeatureControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
@@ -12,14 +14,22 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 /// <remarks>
 /// Added in 2sxc 10
 /// </remarks>
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [SupportedModules(DnnSupportedModuleNames)]
 [ValidateAntiForgeryToken]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class FeatureController() : DnnSxcControllerRoot(RealController.LogSuffix), IFeatureController
+public class FeatureController : DnnApiController, IFeatureController
 {
-    private RealController Real => SysHlp.GetService<RealController>();
+    #region WebApi Composition Infrastructure
 
-    // Implemented by the existing DataSource System.FeatureStates through query System.SysData.
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}");
+
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
+
+    #endregion
+
+
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
     
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]

@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Data.Sys.PropertyLookup;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Utils;
 using static ToSic.Sxc.Images.Sys.ImageConstants;
 using static ToSic.Sxc.Sys.Plumbing.ParseObject;
@@ -38,7 +38,7 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
         object? aspectRatio = null,
         string? parameters = null,
         AdvancedSettings? advanced = default,
-        IExecutionContext? executionContext = default
+        ICodeContextSettings? hasSettings = default
     )
     {
         var l = (Debug ? Log : null).Fn<ResizeSettings>();
@@ -70,7 +70,7 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
             ), $"Is {nameof(ResizeSettings)}, will clone/init");
 
         // Check if the settings is the expected type or null/other type
-        var settingsOrNull = TryToCastSettings(settings, executionContext);
+        var settingsOrNull = TryToCastSettings(settings, hasSettings);
         l.A($"Has Settings: {settingsOrNull != null}; type: {settings?.GetType().FullName}");
 
         var formatValue = ResizeParams.FormatOrNull(KeepBestString(format, settingsOrNull?.Get(FormatField)));
@@ -91,11 +91,11 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
         return l.Return(resizeParams, "");
     }
 
-    private ICanGetByName? TryToCastSettings(object? settings, IExecutionContext? exCtxOrNull)
+    private ICanGetByName? TryToCastSettings(object? settings, ICodeContextSettings? hasSettings)
         => settings switch
         {
             null => null,
-            string name => GetImageSettingsByName(exCtxOrNull, name, Debug, Log),
+            string name => GetImageSettingsByName(hasSettings, name, Debug, Log),
             ICanGetByName getSettings => getSettings,
             IEnumerable<ICanGetByName> settingsList => settingsList.FirstOrDefault(),
             _ => settings.IsAnonymous()
@@ -103,10 +103,10 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
                 : null,
         };
 
-    internal static ICanGetByName? GetImageSettingsByName(IExecutionContext? exCtxOrNull, string strName, bool debug, ILog log)
+    internal static ICanGetByName? GetImageSettingsByName(ICodeContextSettings? hasSettings, string strName, bool debug, ILog log)
     {
-        var l = log.Fn<ICanGetByName?>($"{strName}; code root: {exCtxOrNull != null}", enabled: debug);
-        var settings = exCtxOrNull?.GetDataStack<ITypedStack>(ExecutionContextStateNames.AllSettings);
+        var l = log.Fn<ICanGetByName?>($"{strName}; code root: {hasSettings != null}", enabled: debug);
+        var settings = hasSettings?.AllSettings;
         var imageSettings = settings?.Get($"Settings.Images.{strName}");
         // imageSettings is a ListTypedItems<ITyped> because it's a child-list of entities
         var result = (imageSettings as IEnumerable<ITyped>)?.FirstOrDefault();

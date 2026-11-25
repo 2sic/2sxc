@@ -56,4 +56,4 @@ namespace Custom.Data;
 [PublicApi]
 // 2026-08-05 2dm disabled for now
 //[ModelSpecs(ContentType = "*")]
-public class CustomModel: ModelFromItem;
+public class CustomModel: ModelFromItem, ICustomModel;

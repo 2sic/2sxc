@@ -3,6 +3,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.Models;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
@@ -11,7 +12,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
+
 using ToSic.Sys.Code.Help;
 using ToSic.Sys.Exceptions;
 
@@ -28,7 +29,7 @@ namespace Custom.Hybrid;
 /// Be aware of this since the APIs are very different - see [Typed Code](xref:NetCode.TypedCode.Index).
 /// </remarks>
 [PublicApi]
-public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, ITypedCode16
+public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, ITypedCode16, ICompatibilityLevel
 {
 
     #region Constructor / Setup
@@ -42,7 +43,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, ITypedCode16
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => CompileCodeHlp.CodeLog;
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class
         => CodeApi().GetService<TService>();
 
@@ -52,12 +53,11 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, ITypedCode16
         => AppCodeGetNamedServiceHelper.GetService<TService>(owner: this, CodeHelper.Specs, typeName);
 
     [field: AllowNull, MaybeNull]
-    private TypedCode16Helper CodeHelper
-        => field ??= new(helperSpecs: new(CodeRootOrError(), false, "c# code file"), getRazorModel: () => null, getModelDic: () => null);
+    private CodeHelperTypedData CodeHelper
+        => field ??= new(helperSpecs: new(CodeRootOrError(), false, "c# code file"));
 
     [PrivateApi]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel16;
+    int ICompatibilityLevel.CompatibilityLevel => CompatibilityLevels.CompatibilityLevel16;
 
     #endregion
 
@@ -69,7 +69,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, ITypedCode16
         => _codeApi ??= CodeRootOrError(propName).GetTypedApi();
     private ICodeTypedApiHelper? _codeApi;
 
-    private IExecutionContext CodeRootOrError([CallerMemberName] string? propName = default)
+    private ICodeContext CodeRootOrError([CallerMemberName] string? propName = default)
         => ExCtxOrNull
            ?? throw new ExceptionWithHelp(new CodeHelp
                {
@@ -111,7 +111,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, ITypedCode16
     /// <inheritdoc cref="ITypedCode16.GetCode"/>
     [PrivateApi("Hidden, as not supported any more going forward")]
     public dynamic? GetCode(string path, NoParamOrder npo = default, string? className = default)
-        => CompileCodeHlp.GetCode(path: path, className: className);
+        => CompileCodeHlp.GetCode(ExCtxOrNull!.GetDynamicApi(), path: path, className: className);
 
 
     #endregion
@@ -177,7 +177,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, ITypedCode16
 
     #endregion
 
-    public ITypedRazorModel MyModel => CodeHelper.MyModel;
+    public ITypedRazorModel MyModel => new TypedRazorModel(CodeHelper.Specs, null);
 
     #region MyContext & UniqueKey
 
@@ -201,8 +201,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, ITypedCode16
 
     #region As / AsList WIP v17
 
-    [field: AllowNull, MaybeNull]
-    private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
+    private ICodeDataFactory Cdf => field ??= ExCtx.Cdf;
 
     /// <inheritdoc />
     public T As<T>(object source, NoParamOrder npo = default)

@@ -8,6 +8,7 @@ using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Data.Sys.Factory;
@@ -16,7 +17,7 @@ using ToSic.Sxc.Render.Engines.Sys;
 using ToSic.Sxc.Render.Output.Sys;
 using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
-using ToSic.Sxc.Sys.ExecutionContext;
+
 using ToSic.Sys.Utils.Culture;
 
 namespace ToSic.Sxc.Render.Engines.Token.Sys;
@@ -32,7 +33,7 @@ public class TokenEngine(
     IAssetsExtractor assetsExtractor,
     EngineRequirementsApp engineRequirementsApp,
     IServerPaths serverPaths,
-    LazySvc<IExecutionContextFactory> exCtxFactory,
+    LazySvc<ICodeContextFactory> exCtxFactory,
     Generator<IAppDataConfigProvider> tokenEngineWithContext)
     : ServiceBase("Sxc.TokEng", connect: [engineSpecsService, assetsExtractor, engineRequirementsApp, exCtxFactory, tokenEngineWithContext]),
         IEngine // ITokenEngine
@@ -103,7 +104,7 @@ public class TokenEngine(
             ParentLog = Log,
             CompatibilityFallback = CompatibilityLevels.CompatibilityLevel9Old,
         });
-        var cdf = exCtx.GetCdf();
+        var cdf = exCtx.Cdf;
         var cultureInfo = CultureHelpers.SafeCultureInfo(cdf.Dimensions);
         var rootLookups = InitTokenReplace(exCtx.GetDynamicApi(), engineSpecs, cultureInfo);
 
@@ -117,9 +118,10 @@ public class TokenEngine(
     private LookUpEngine InitTokenReplace(ICodeDynamicApiHelper codeApiHelper, EngineSpecs engineSpecs, CultureInfo cultureInfo)
     {
         var specs = new SxcAppDataConfigSpecs { BlockForLookupOrNull = engineSpecs.Block };
-        var appDataConfig = tokenEngineWithContext.New().GetDataConfiguration((engineSpecs.App as SxcAppBase)!, specs);
+        var appDataConfig = tokenEngineWithContext.New().GetDataConfiguration(engineSpecs.App, specs);
 
-        return new(appDataConfig.LookUpEngine, Log, sources: [
+        return new(appDataConfig.LookUpEngine, Log, sources:
+        [
             new LookUpForTokenTemplate(ViewParts.ListContentLower, codeApiHelper.Header, cultureInfo),
             new LookUpForTokenTemplate(ViewParts.ContentLower, codeApiHelper.Content, cultureInfo),
         ]);

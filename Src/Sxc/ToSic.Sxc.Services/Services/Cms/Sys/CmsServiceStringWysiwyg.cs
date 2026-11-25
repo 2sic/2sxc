@@ -1,28 +1,28 @@
 ﻿using System.Text.RegularExpressions;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images.Sys;
 using ToSic.Sxc.Services.CmsService;
-using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Sys.HtmlParsing;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.Cms.Sys;
 
-internal class CmsServiceStringWysiwyg()
-    : ServiceWithContext("Cms.StrWys", connect: [])
+internal class CmsServiceStringWysiwyg(Ctx<ICodeContextGetService> ctxGetService)
+    : ServiceBase("Cms.StrWys", connect: [])
 {
     #region Sub-Services which should come from the same Code context
 
     [field: AllowNull, MaybeNull]
-    private IPageService PageService => field ??= ExCtx.GetService<IPageService>(reuse: true);
+    private IPageService PageService => field ??= ctxGetService.Value.GetService<IPageService>(reuse: true);
 
     [field: AllowNull, MaybeNull]
-    private HtmlImgToPictureHelper HtmlImgToPictureHelper => field ??= ExCtx.GetService<HtmlImgToPictureHelper>();
+    private HtmlImgToPictureHelper HtmlImgToPictureHelper => field ??= ctxGetService.Value.GetService<HtmlImgToPictureHelper>();
 
     [field: AllowNull, MaybeNull]
-    private HtmlInnerContentHelper HtmlInnerContentHelper => field ??= ExCtx.GetService<HtmlInnerContentHelper>();
+    private HtmlInnerContentHelper HtmlInnerContentHelper => field ??= ctxGetService.Value.GetService<HtmlInnerContentHelper>();
 
     #endregion
 
@@ -35,10 +35,12 @@ internal class CmsServiceStringWysiwyg()
         ContentType = contentType;
         Folder = folder;
         FieldDef = fieldDef;
-        Debug = debug;
+        _debug = debug;
         ImageSettings = imageSettings;
         return l.ReturnAsOk(this);
     }
+
+    private bool _debug;
 
     /// <summary>FYI: is never allowed to be null.</summary>
     protected IField Field = null!;
@@ -72,7 +74,7 @@ internal class CmsServiceStringWysiwyg()
         html = HtmlInnerContentHelper.ProcessInnerContent(html, ContentType, FieldDef, Field);
 
         // prepare classes to add
-        var classes = WysiwygConstants.WysiwygContainerClass + (Debug ? $" {WysiwygConstants.WysiwygDebugClass}" : "");
+        var classes = WysiwygConstants.WysiwygContainerClass + (_debug ? $" {WysiwygConstants.WysiwygDebugClass}" : "");
 
         // 3. Check Responsive Images
         // extract img tags from html using regex case insensitive

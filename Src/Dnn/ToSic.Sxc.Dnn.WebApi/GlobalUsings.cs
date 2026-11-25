@@ -17,3 +17,5 @@ global using ToSic.Sxc.WebApi;
 global using ToSic.Sys;
 global using ToSic.Sys.Utils;
 global using static ToSic.Sxc.Dnn.DnnConstants;
+global using static ToSic.Sxc.Dnn.WebApi.Sys.DnnWebApiConstants;
+global using IAppDynamic = ToSic.Sxc.Apps.IApp;

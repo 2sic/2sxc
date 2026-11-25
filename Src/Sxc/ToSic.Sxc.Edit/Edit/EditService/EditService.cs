@@ -1,29 +1,14 @@
 ﻿using ToSic.Razor.Markup;
-using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Sys.Html;
 
 namespace ToSic.Sxc.Edit.EditService;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal partial class EditService(IJsonService jsonService)
-    : ServiceWithContext("Sxc.Edit", connect: [jsonService]), IEditService, IEditServiceSetup
+internal partial class EditService(Ctx<ICodeContext> ctxSvcProvider, IJsonService jsonService)
+    : ServiceBase("Sxc.Edit", connect: [jsonService]), IEditService
 {
-    public override void ConnectToRoot(IExecutionContext exCtx)
-    {
-        base.ConnectToRoot(exCtx);
-        ((IEditServiceSetup)this).SetBlock(exCtx, exCtx.GetBlock());
-    }
-
-    IEditService IEditServiceSetup.SetBlock(IExecutionContext? exCtxOrNull, IBlock block)
-    {
-        var user = exCtxOrNull?.GetCmsContext()?.User;
-        Enabled = block?.Context.Permissions.IsContentAdmin ?? (user?.IsSiteAdmin ?? false);
-        return this;
-    }
-
     #region Field-helper
 
     /// <inheritdoc/>

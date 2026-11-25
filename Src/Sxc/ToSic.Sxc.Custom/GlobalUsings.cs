@@ -12,3 +12,4 @@ global using ToSic.Sys.Logging;
 global using ToSic.Sys.Services;
 global using ToSic.Sys.Wrappers;
 global using static ToSic.Sxc.Sys.SxcLogging;
+global using IAppDynamic = ToSic.Sxc.Apps.IApp;

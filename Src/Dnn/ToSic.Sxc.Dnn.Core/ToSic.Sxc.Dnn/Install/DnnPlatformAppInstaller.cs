@@ -1,0 +1,60 @@
+﻿using DotNetNuke.Entities.Modules;
+using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Install.Sys;
+using ToSic.Eav.Apps.Sys.Work;
+using ToSic.Eav.Apps.Views.Sys;
+using ToSic.Sxc.Apps.Sys.Work;
+using ToSic.Sxc.Context.Sys;
+using ToSic.Sxc.WebApi.Sys.ExternalLinks;
+using ToSic.Sys.Wrappers;
+
+namespace ToSic.Sxc.Dnn.Install;
+
+internal class DnnPlatformAppInstaller(
+    IContextCompleteService context,
+    LazySvc<IAppsCatalog> appsCatalog,
+    AppWorkQuick<WorkViewsGet> workViews,
+    LazySvc<ExternalLinksService> remoteRouterLazy)
+    : ServiceBase("Dnn.AppIns", connect: [context, workViews, appsCatalog, remoteRouterLazy]), IPlatformAppInstaller
+{
+    public string GetAutoInstallPackagesUiUrl(bool forContentApp)
+    {
+        var l = Log.Fn<string>();
+        var site = context.BlockContextRequired().Site;
+        var module = context.BlockContextRequired().Module;
+        var moduleInfo = (module as IWrapper<ModuleInfo>)?.GetContents();
+        // 2026-10-18 2dm - reworking DnnSite to have a factory, the portal check seems useless.
+        // var portal = (site as DnnSiteFactory)?.GetContents();
+        if (moduleInfo == null/* || portal == null*/)
+            throw l.Done(new ArgumentException("missing portal/module"));
+
+        // new: check if it should allow this
+        // it should only be allowed, if the current situation is either
+        // Content - and no views exist (even invisible ones)
+        // App - and no apps exist - this is already checked on client side, so I won't include a check here
+        if (forContentApp)
+            try
+            {
+                var primaryAppId = appsCatalog.Value.DefaultAppIdentity(site.ZoneId);
+                // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
+                var contentViews = workViews.New(primaryAppId).AllViews;
+                if (contentViews.Any())
+                    return null;
+            }
+            catch
+            {
+                /* ignore */
+            }
+
+        var gettingStartedSrc = remoteRouterLazy.Value.LinkToDestination(
+            ExternalSxcDestinations.AutoConfigure,
+            site,
+            module.Id,
+            appSpecsOrNull: null,
+            forContentApp
+        );
+
+        // Set src to iframe
+        return l.ReturnAsOk(gettingStartedSrc);
+    }
+}

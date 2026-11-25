@@ -11,43 +11,24 @@ namespace ToSic.Sxc.DataSources;
 /// Must be overriden in each platform.
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamDataSourceProvider<TFolderId, TFileId>(AdamDataSourceProvider<TFolderId, TFileId>.Dependencies services)
-    : ServiceBase<AdamDataSourceProvider<TFolderId, TFileId>.Dependencies>(services, $"{SxcLogName}.AdamDs")
+public class AdamDataSourceProvider<TFolderId, TFileId>(Generator<AdamContext, AdamContext.Options> adamContext, IContextOfAppFactory appCtxFactory)
+    : ServiceBase($"{SxcLogName}.AdamDs", connect: [adamContext, appCtxFactory])
 {
-    private IContextOfApp _context = null!;
-
-    public record Dependencies(LazySvc<AdamContext> AdamContext, IContextOfAppFactory AppCtxFactory)
-        : DependenciesBase(connect: [AdamContext, AppCtxFactory]);
-
-    public AdamDataSourceProvider<TFolderId, TFileId> Configure(NoParamOrder npo = default, int appId = default)
+    public Func<IEntity, IEnumerable<AdamItemDataRaw>> GetInternal(int appId)
     {
-        var l = Log.Fn<AdamDataSourceProvider<TFolderId, TFileId>>($"a:{appId}");
-
-        // 2026-10-20 2dm: Believe that the AppId should always have a valid value, so no magic find-it-yourself
-        // Turned this off for now, keep till early 2027 then clean up.
-        // If something does explode, try to ensure that the calling path sets a proper AppId _before_ calling this
-        //_context = appId > 0
-        //    ? Services.CtxService.GetExistingAppOrSet(appId)
-        //    : Services.CtxService.AppNameRouteBlock(null);
-
-        _context = Services.AppCtxFactory.Create(appId);
-        return l.Return(this);
+        var context = appCtxFactory.Create(appId);
+        return entity => GetAdamListOfItems(context, entity);
     }
 
-
-    public Func<IEntity, IEnumerable<AdamItemDataRaw>> GetInternal()
-        => GetAdamListOfItems;
-
-    private IEnumerable<AdamItemDataRaw> GetAdamListOfItems(IEntity entity)
+    private IEnumerable<AdamItemDataRaw> GetAdamListOfItems(IContextOfApp context, IEntity entity)
     {
         var l = Log.Fn<IEnumerable<AdamItemDataRaw>>();
 
         // TODO: this is just tmp code to get some data...
-        Services.AdamContext.Value
-            .Init(_context, entity.Type.Name, string.Empty, entity.EntityGuid, false);
+        var adamCtx = adamContext.New(new(context, entity.Type.Name, string.Empty, entity.EntityGuid, false));
 
         // get root and at the same time auto-create the core folder in case it's missing (important)
-        var root = Services.AdamContext.Value.AdamRoot.RootFolder(false);
+        var root = adamCtx.AdamRoot.RootFolder(false);
 
         // if no root exists then quit now
         if (root == null)

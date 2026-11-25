@@ -1,7 +1,8 @@
 ﻿using System.Web.Hosting;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Dnn.Code;
-using ToSic.Sxc.Sys.ExecutionContext;
+
 using ToSic.Sys.Code.Help;
 using ToSic.Sys.Exceptions;
 
@@ -12,14 +13,13 @@ namespace ToSic.Sxc.Dnn.Razor.Sys;
 /// This is old functionality, so it's separated out.
 /// </summary>
 [PrivateApi]
-internal class DnnRazorGetCodeHelper(RazorComponentBase page, IExecutionContext exCtx)
+internal class DnnRazorGetCodeHelper(RazorComponentBase page, ICodeContext exCtx)
     : HelperBase((page as IHasLog)?.Log, "Sxc.RzrHlp")
 {
     #region Create Instance
 
     private object GetCodeCshtml(string path)
     {
-        // ReSharper disable once ConvertTypeCheckToNullCheck
         if (page is not IHasDnn)
             throw new ExceptionWithHelp(new CodeHelp
             {
@@ -105,7 +105,7 @@ internal class DnnRazorGetCodeHelper(RazorComponentBase page, IExecutionContext 
     /// <param name="path"></param>
     /// <param name="overrideRootExCtx">Insert another code Root, ATM a patch for Oqtane Razor</param>
     /// <returns></returns>
-    private string? ResolvePathIfAbsoluteToApp(string? path, IExecutionContext? overrideRootExCtx = default)
+    private string? ResolvePathIfAbsoluteToApp(string? path, ICodeContext? overrideRootExCtx = default)
     {
         var l = Log.Fn<string>(path);
         if (path == null || (!path.StartsWith("/") && !path.StartsWith("\\")))

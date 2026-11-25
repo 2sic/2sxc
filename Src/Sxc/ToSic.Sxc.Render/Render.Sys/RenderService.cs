@@ -1,11 +1,10 @@
 ﻿using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Blocks.Sys.BlockBuilder;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Render.Block.Sys;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 
 namespace ToSic.Sxc.Render.Sys;
@@ -17,27 +16,16 @@ namespace ToSic.Sxc.Render.Sys;
 /// </summary>
 [PrivateApi("Hide Implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class RenderService(RenderService.Dependencies services) : ServiceWithContext("Sxc.RndSvc", connect: [services]),
+public class RenderService(
+    LazySvc<IBlockBuilder> builderSvc,
+    Generator<SimpleRenderer> simpleRendererGen,
+    Generator<InTextContentBlockRenderer> inTextRenderer,
+    Generator<IBlockRenderer> blockBuilderGenerator,
+    LazySvc<ILogStore> logStore,
+    Ctx<ICodeContext> exCtx)
+    : ServiceBase("Sxc.RndSvc", connect: [builderSvc, simpleRendererGen, inTextRenderer, logStore, blockBuilderGenerator]),
     IRenderService
 {
-    #region Constructor & ConnectToRoot
-
-    public record Dependencies(
-        Generator<IEditService> EditGenerator,
-        LazySvc<IModuleAndBlockBuilder> Builder,
-        Generator<SimpleRenderer> SimpleRenderer,
-        Generator<InTextContentBlockRenderer> InTextRenderer,
-        Generator<IBlockRenderer> BlockBuilderGenerator,
-        LazySvc<ILogStore> LogStore)
-        : DependenciesBase(connect: [EditGenerator, Builder, SimpleRenderer, InTextRenderer, LogStore, BlockBuilderGenerator]);
-
-    // ReSharper disable once InconsistentNaming
-
-    #endregion
-
-    //#endregion
-
-
     /// <summary>
     /// Render one content block
     /// This is accessed through DynamicEntity.Render()
@@ -59,8 +47,8 @@ public class RenderService(RenderService.Dependencies services) : ServiceWithCon
         Guid? newGuid = null)
     {
         item ??= parent.Item;
-        var block = ExCtx.GetBlock();
-        var simpleRenderer = services.SimpleRenderer.New();
+        var block = exCtx.Value.Block!;
+        var simpleRenderer = simpleRendererGen.New();
         return Tag.Custom(field == null
             ? simpleRenderer.Render(block, item.Entity, data: data) // without field edit-context
             : simpleRenderer.RenderWithEditContext(block, parent, item, field, newGuid, GetEditService(), data)); // with field-edit-context data-list-context
@@ -90,29 +78,29 @@ public class RenderService(RenderService.Dependencies services) : ServiceWithCon
         if (string.IsNullOrWhiteSpace(field))
             throw new ArgumentNullException("To render all items, you must specify a field where the items are stored.", nameof(field));
 
-        var block = ExCtx.GetBlock();
+        var block = exCtx.Value.Block!;
         var editService = GetEditService();
         return Tag.Custom(merge == null
-            ? services.SimpleRenderer.New().RenderListWithContext(block, parent.Entity, field, apps, max, editService)
-            : services.InTextRenderer.New().RenderMerge(block, parent.Entity, field, merge, editService)
+            ? simpleRendererGen.New().RenderListWithContext(block, parent.Entity, field, apps, max, editService)
+            : inTextRenderer.New().RenderMerge(block, parent.Entity, field, merge, editService)
         );
     }
 
 
     /// <inheritdoc />
-    public virtual IRenderResult Module(int pageId, int moduleId, NoParamOrder npo = default, object? data = null)
+    public IRenderResult Module(int pageId, int moduleId, NoParamOrder npo = default, object? data = null)
     {
         var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
 
-        // This service is often used from a theme/skin, in which case it doesn't have a ExecutionContext,
+        // This service is often used from a theme/skin, in which case it doesn't have a CodeContext,
         // which also means that it was not logged - which we're doing here.
-        if (ExCtxOrNull == null)
-            services.LogStore.Value.Add("render-service", Log);
+        if (exCtx.ValueOptional == null)
+            logStore.Value.Add("render-service", Log);
 
-        var moduleBlock = services.Builder.Value.BuildBlock(pageId, moduleId);
+        var moduleBlock = builderSvc.Value.BuildBlock(pageId, moduleId);
 
         moduleBlock.BlockFeatureKeys.Add(SxcPageFeatures.JsApiOnModule.NameId);
-        var builder = services.BlockBuilderGenerator.New().Setup(moduleBlock);
+        var builder = blockBuilderGenerator.New().Setup(moduleBlock);
         var result = builder.Run(true, specs: new() { Data = data });
 
         return l.ReturnAsOk(result);
@@ -122,5 +110,5 @@ public class RenderService(RenderService.Dependencies services) : ServiceWithCon
     /// create edit-object which is necessary for context attributes
     /// We need a new one for each parent
     /// </summary>
-    private IEditService GetEditService() => ExCtx.GetService<IEditService>(reuse: true);
+    private IEditService GetEditService() => exCtx.Value.GetService<IEditService>(reuse: true);
 }

@@ -23,15 +23,15 @@ internal class ContextOfBlockFactory(LazySvc<BlockPublishingSettingsService> pag
 
     #region Factory work
 
-    public IContextOfBlock Create(ISite site, IPage page, IModule module)
+    public IContextOfModule Create(ISite site, IPage page, IModule module)
     {
-        var l = Log.Fn<IContextOfBlock>();
+        var l = Log.Fn<IContextOfModule>();
         // Get app identity from module
         var identifier = module.BlockIdentifier;
         var appCtx = (ContextOfApp)appCtxFactory.Create(identifier);
 
 
-        var ctx = new ContextOfBlock(site, appCtx.User, page, module, appCtx.AppReaderOrNull, pageServiceShared)
+        var ctx = new ContextOfModule(site, appCtx.User, page, module, appCtx.AppReaderOrNull, pageServiceShared)
         {
             InternalMachinery = appCtx.InternalMachinery,
             SettingsStackSvc = appCtx.SettingsStackSvc,
@@ -41,12 +41,12 @@ internal class ContextOfBlockFactory(LazySvc<BlockPublishingSettingsService> pag
         return l.Return(ctx);
     }
 
-    public IContextOfBlock Update(IContextOfBlock contextOfBlock, IAppIdentity appIdentity)
+    public IContextOfModule Update(IContextOfModule contextOfModule, IAppIdentity appIdentity)
     {
-        var l = Log.Fn<IContextOfBlock>();
+        var l = Log.Fn<IContextOfModule>();
 
         var appCtx = (ContextOfApp)appCtxFactory.Create(appIdentity);
-        var ctx = new ContextOfBlock(contextOfBlock.Site, contextOfBlock.User, contextOfBlock.Page, contextOfBlock.Module, appCtx.AppReaderOrNull, contextOfBlock.PageServiceShared)
+        var ctx = new ContextOfModule(contextOfModule.Site, contextOfModule.User, contextOfModule.Page, contextOfModule.Module, appCtx.AppReaderOrNull, contextOfModule.PageServiceShared)
         {
             InternalMachinery = appCtx.InternalMachinery,
             SettingsStackSvc = appCtx.SettingsStackSvc,

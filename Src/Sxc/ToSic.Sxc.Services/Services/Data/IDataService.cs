@@ -1,0 +1,119 @@
+﻿
+using ToSic.Eav.Apps;
+using ToSic.Eav.DataSource;
+using ToSic.Eav.LookUp.Sys.Engines;
+
+namespace ToSic.Sxc.Services;
+
+/// <summary>
+/// Services on [`Kit.Data`](xref:ToSic.Sxc.Services.ServiceKit16.Data) to create DataSources in Razor.
+/// </summary>
+/// <remarks>
+/// Can also be used in external code such as Skins using Dependency Injection.
+/// New in v16.00
+/// </remarks>
+[PublicApi]
+public interface IDataService: IServiceWithSetup<IDataService.Options>
+{
+    public record Options(IAppIdentity? AppIdentity, Func<ILookUpEngine?>? GetLookup);
+
+    #region CreateDataSource - new in v15 - make sure it's copied in identical form to IDynamicCode, ...
+
+    /// <summary>
+    /// Get the App DataSource containing the App Data.
+    /// The `Default` stream of this source has the data the current user is allowed to see.
+    /// So public users won't get draft data.
+    /// </summary>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="parameters">Parameters to use - as anonymous object like `new { Count = 7, Filter = 3 }`</param>
+    /// <param name="options">Options how to build/construct the DataSource. </param>
+    /// <returns></returns>
+    [PublicApi]
+    IDataSource GetAppSource(NoParamOrder npo = default, object? parameters = default, object? options = default);
+
+    /// <summary>
+    /// Create a DataSource object using it's type.
+    /// This is the new, preferred way to get DataSources in v15.06+.
+    /// </summary>
+    /// <typeparam name="T">The type of DataSource, usually from [](xref:ToSic.Eav.DataSources) or [](xref:ToSic.Sxc.DataSources)</typeparam>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="attach">Link to one or more other DataSources / streams to attach upon creation.</param>
+    /// <param name="parameters">Parameters to use - as anonymous object like `new { Count = 7, Filter = 3 }`</param>
+    /// <param name="options">Options how to build/construct the DataSource. </param>
+    /// <remarks>new v16.00</remarks>
+    [PublicApi]
+    T GetSource<T>(NoParamOrder npo = default,
+        IDataSourceLinkable? attach = default,
+        object? parameters = default,
+        object? options = default
+    ) where T : IDataSource;
+
+    /// <summary>
+    /// Create a DataSource object using it's name.
+    /// This is only meant for dynamically compiled DataSources which are part of the current App - a new feature in v15.10+.
+    /// For any other DataSources, use the overload which specifies the type. 
+    /// </summary>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="name">The name of the DataSource type, which matches the file name and class in the `/DataSources/` folder.</param>
+    /// <param name="attach">Link to one or more other DataSources / streams to attach upon creation.</param>
+    /// <param name="parameters">Parameters to use - as anonymous object like `new { Count = 7, Filter = 3 }`</param>
+    /// <param name="options">Options how to build/construct the DataSource. </param>
+    /// <param name="debug">Determines if exceptions should be shown. Default is only for Developers.</param>
+    /// <remarks>new v16.00</remarks>
+    [PublicApi]
+    IDataSource GetSource(NoParamOrder npo = default,
+        string? name = default,
+        IDataSourceLinkable? attach = default,
+        object? parameters = default,
+        object? options = default,
+        bool? debug = default
+    );
+
+    /// <summary>
+    /// Get a Query from the current App.
+    /// </summary>
+    /// <param name="name">Name of the query</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="attach">Attach in-stream to the query (not yet implemented)</param>
+    /// <param name="parameters">Parameters to use - as anonymous object like `new { Count = 7, Filter = 3 }`</param>
+    /// <returns></returns>
+    /// <remarks>New 16.01</remarks>
+    [PublicApi]
+    IDataSource? GetQuery(
+        string? name = default,
+        NoParamOrder npo = default,
+        IDataSourceLinkable? attach = default,
+        object? parameters = default
+    );
+
+    #endregion
+
+    /// <summary>
+    /// Create a connection-link of a data source or stream.
+    /// Mainly used for linking to a source with another name.
+    /// </summary>
+    /// <param name="source">The source (stream or data source)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="inName">What In-Stream it should connect to. Optional, default is "Default"</param>
+    /// <param name="outName">What Out-stream it should use from the source. Optional, default is "Default" (rarely changed).</param>
+    /// <returns></returns>
+    /// <remarks>
+    /// Introduced in v21.04, previous API (rarely used) has not worked for a while.
+    /// </remarks>
+    IDataSourceLink CreateLink(IDataSourceLinkable source,
+        NoParamOrder npo = default,
+        string? inName = default,
+        string? outName = default
+    );
+
+    /// <summary>
+    /// Merge many links to usually attach to a new data source.
+    /// Use this when you want to attach more than one source to a new DataSource.
+    /// </summary>
+    /// <param name="sources">One or more sources. Make sure they specify different In names - usually using <see cref="CreateLink"/>.</param>
+    /// <returns></returns>
+    /// <remarks>
+    /// Introduced in v21.04, previous API (rarely used) has not worked for a while.
+    /// </remarks>
+    IDataSourceLink CombineLinks(params IDataSourceLinkable[] sources);
+}

@@ -11,7 +11,6 @@ using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.DataSources.Sys;
 using ToSic.Sxc.Integration.Modules;
 using ToSic.Sxc.LookUp.Sys;
-using ToSic.Sys.Context;
 
 #pragma warning disable IDE0130
 namespace ToSic.Sxc.Run.Startup;
@@ -26,13 +25,15 @@ public static class StartupSxcBlocks
         services.TryAddTransient<BlockOfModule>();
         services.TryAddTransient<BlockOfEntity>();
         services.TryAddTransient<BlockGeneratorHelpers>();
+        services.TryAddTransient<IBlockBuilder, BlockBuilder>();
 
-        services.TryAddTransient<BlockEditorSelector>();
-
-        // Block Editors
-        services.TryAddTransient<BlockEditorForEntity>();
-        services.TryAddTransient<BlockEditorForModule>();
-        services.TryAddTransient<BlockEditorBase.Dependencies>();
+        // Block Editors - updated v22
+        services.TryAddTransient<BlockSavePicker>();
+        services.TryAddTransient<BlockUpdateTitle>();
+        services.TryAddTransient<BlockUpdateApp>();
+        services.TryAddTransient<BlockUpdateTemplate>();
+        services.TryAddTransient<BlockPublishAction>();
+        services.TryAddTransient<BlockUpdaterEntity>();
 
         // Block functionality
         services.TryAddTransient<BlockDataSourceFactory>();
@@ -44,19 +45,14 @@ public static class StartupSxcBlocks
         services.TryAddTransient<IContextOfAppFactory, ContextOfAppFactory>(); // new v22 WIP
         services.TryAddTransient<IContextOfBlockFactory, ContextOfBlockFactory>(); // new v22 WIP
 
-        // moved to WebApi
-        //// v22.01 2dm 2026-10-20 - only one service left, as we're trying to clean state sharing...
-        //services.TryAddScoped<ISxcCurrentContextService, SxcCurrentContextService>();
-        //services.TryAddScoped<IContextService>(x => x.GetRequiredService<ISxcCurrentContextService>());
-        //services.TryAddScoped<IContextOfSiteService>(x => x.GetRequiredService<ISxcCurrentContextService>());
-        //services.TryAddScoped<IContextCompleteService>(x => x.GetRequiredService<ISxcCurrentContextService>());
-
         // Integration stuff - must be implemented by each platform
         services.TryAddTransient<IPlatformModuleUpdater, BasicModuleUpdater>();
 
         // Work
         services.TryAddTransient<WorkBlocks>();
-        services.TryAddTransient<WorkBlocksMod>();
+        services.TryAddTransient<WorkBlocksCreate>();
+        services.TryAddTransient<WorkBlocksUpdate>();
+        services.TryAddTransient<WorkBlocksAddSlot>();
         services.TryAddTransient<WorkBlockViewsGet>();
 
         services.AddSxcBlocksFallbacks();
@@ -67,7 +63,7 @@ public static class StartupSxcBlocks
     public static IServiceCollection AddSxcBlocksFallbacks(this IServiceCollection services)
     {
 
-        services.TryAddTransient<IModuleAndBlockBuilder, ModuleAndBlockBuilderUnknown>();
+        services.TryAddTransient<IEnvModuleBuilder, ModuleBuilderUnknown>();
 
         // This is more of a fallback, in DNN it's pre-registered so it won't use this
         services.TryAddTransient<ILookUpEngineResolver, LookUpEngineResolver>();

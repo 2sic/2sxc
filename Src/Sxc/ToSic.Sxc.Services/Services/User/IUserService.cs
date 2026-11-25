@@ -1,5 +1,4 @@
 ﻿using ToSic.Sxc.Cms.Users;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Services;
@@ -11,7 +10,7 @@ namespace ToSic.Sxc.Services;
 /// History: Released in 19.02 after being internal since 15.03.
 /// </remarks>
 [PublicApi]
-public interface IUserService: INeedsExecutionContext
+public interface IUserService
 {
     /// <summary>
     /// Get current user.

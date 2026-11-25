@@ -1,7 +1,6 @@
-﻿#if NETFRAMEWORK
-
-// ReSharper disable once CheckNamespace
+﻿#pragma warning disable IDE0130
 namespace ToSic.SexyContent.ContentBlocks;
+#pragma warning restore IDE0130
 
 /// <summary>
 /// Deprecated since v13, announced for removal in v15, removed in v20.
@@ -19,5 +18,3 @@ public static class Render
     public static string All(object context, object noParamOrder = default, string field = null, string merge = null)
         => throw new(ToSic.Sxc.Blocks.Render.GenerateMessage("ToSic.SexyContent.ContentBlocks.All()"));
 }
-
-#endif

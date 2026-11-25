@@ -1,0 +1,144 @@
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Collections;
+using System.Diagnostics;
+using System.Web;
+using ToSic.Sys.Logging;
+
+namespace ToSic.Sxc.Dnn;
+
+/// <summary>
+/// This is a temporary helper for Dnn 7+ to help with dependency injection which is
+/// patched unto Dnn.
+/// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public static class DnnStaticDi
+{
+    private static Func<ISysServiceProvider> _getGlobalDnnServiceProvider;
+
+    public static void StaticDiReady(Func<ISysServiceProvider> spFunc = null) 
+        => _getGlobalDnnServiceProvider = spFunc ?? throw new("Can't start Static DI for old Dnn, because the ServiceCollection is null.");
+
+    /// <summary>
+    /// This is a special internal resolver for static objects
+    /// Should only be used with extreme caution, as downstream objects
+    /// May need more scope-specific stuff, why may be missing
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    [PrivateApi]
+    [Obsolete("Avoid using at all cost - only DNN and test-code may use this!")]
+    public static T StaticBuild<T>(ILog parentLog = null)
+        => GetPageScopedServiceProvider().Build<T>(parentLog);
+
+    /// <summary>
+    /// Dictionary key for keeping the Scoped Injection Service Provider in the Http-Context
+    /// </summary>
+    /// <remarks>
+    /// In v13 we changed key to one used in DNN9 DI instead old one "eav-scoped-serviceprovider"
+    /// </remarks>
+    private static readonly Type ServiceScopeKey = typeof(IServiceScope);
+
+    /// <summary>Create an owned scope; the caller must dispose it when the operation finishes.</summary>
+    internal static IServiceScope CreateGlobalScope()
+        => GetGlobalServiceProvider().CreateScope();
+
+    public static ISysServiceProvider GetGlobalScopedServiceProvider()
+        => CreateGlobalScope().GetSysServiceProvider();
+
+    [PrivateApi("Very internal, to use at startup, so singletons are not lost")]
+    private static ISysServiceProvider GetGlobalServiceProvider()
+        => Sp.Get(() =>
+        {
+            var serviceProvider = _getGlobalDnnServiceProvider?.Invoke() ?? throw new("can't access global DNN service provider");
+            // Connect pre-DI MEL events to DNN's logger factory before scoped services are built.
+            LogFactory.Bind(serviceProvider);
+            return serviceProvider;
+        });
+    private static readonly LazyGet<ISysServiceProvider> Sp = new();
+
+    [PrivateApi("This is just a temporary solution - shouldn't be used long term")]
+    public static ISysServiceProvider GetPageScopedServiceProvider()
+    {
+        // Because 2sxc runs inside DNN as a webforms project and not asp.net core mvc, we have
+        // to make sure the service-provider object is disposed correctly. If we don't do this,
+        // connections to the database are kept open, and this leads to errors like "SQL timeout:
+        // "All pooled connections were in use". https://github.com/2sic/2sxc/issues/1200
+        // Work-around for issue https://github.com/2sic/2sxc/issues/1200
+        // Scope service-provider based on request
+        var httpCtx = HttpContext.Current;
+        if (httpCtx == null)
+            return CreateGlobalScope().GetSysServiceProvider();
+
+        DnnRequestLogCorrelation.Ensure(httpCtx.Items,
+            completed => httpCtx.AddOnRequestCompleted(context => completed(context.Items)));
+
+        // This only runs in Dnn 7.4.2 - Dnn 9.3, because Dnn 9.4 provides this in the http context
+        // As 2sxc v22 is only DNN 10+, this should actually never run
+        if (!httpCtx.Items.Contains(ServiceScopeKey))
+        {
+            httpCtx.Items[ServiceScopeKey] = CreateGlobalScope();
+
+            // Make sure service provider is disposed after request finishes
+            httpCtx.AddOnRequestCompleted(context => ((IDisposable)context.Items[ServiceScopeKey])?.Dispose());
+        }
+
+        return httpCtx.Items[ServiceScopeKey] is IServiceScope scope
+            ? scope.GetSysServiceProvider()
+            : null;
+    }
+
+    [PrivateApi]
+    public static ISysServiceProvider CreateModuleScopedServiceProvider()
+    {
+        var pageSp = GetPageScopedServiceProvider();
+        var moduleSp = pageSp.CreateScope().GetSysServiceProvider();
+
+        // In the module scope, we initialize the scoped PageScope Accessor and give it the parent scope
+        // This is necessary for it to be able to give page-scoped objects
+        moduleSp.Build<PageScopeAccessor>().InitPageOfModule(pageSp);
+        return moduleSp;
+    }
+}
+
+internal static class DnnRequestLogCorrelation
+{
+    private static readonly object OwnedActivityKey = typeof(DnnRequestLogCorrelation);
+
+    internal static Activity Ensure(IDictionary items, Action<Action<IDictionary>> addOnRequestCompleted)
+    {
+        // Multiple modules can initialize logging in parallel for the same request.
+        lock (items.SyncRoot)
+        {
+            if (items[OwnedActivityKey] is Activity owned)
+            {
+                // Request Items cross sibling execution contexts, but Activity.Current does not.
+                if (Activity.Current == null)
+                    Activity.Current = owned;
+                return owned;
+            }
+            // ASP.NET Core already starts a request Activity; classic DNN needs this fallback for equivalent correlation.
+            // Never replace or later stop an Activity owned by DNN or another integration.
+            if (Activity.Current != null)
+                return null;
+
+            var activity = new Activity("ToSic.Dnn.Request").SetIdFormat(ActivityIdFormat.W3C).Start();
+            items[OwnedActivityKey] = activity;
+            addOnRequestCompleted(Complete);
+            return activity;
+        }
+    }
+
+    internal static void Complete(IDictionary items)
+    {
+        // Remove under the request lock, then stop outside it so completion can only happen once.
+        Activity owned;
+        lock (items.SyncRoot)
+        {
+            if (items[OwnedActivityKey] is not Activity activity)
+                return;
+            items.Remove(OwnedActivityKey);
+            owned = activity;
+        }
+        owned.Stop();
+    }
+}

@@ -6,7 +6,7 @@ using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Sys.ExecutionContext;
+
 using ToSic.Sys.Code.Help;
 
 namespace ToSic.Sxc.Dnn;
@@ -41,7 +41,7 @@ public abstract partial class RazorComponent : RazorComponentBase,
     public override ICodeLog Log => RzrHlp.CodeLog;
 
     /// <inheritdoc />
-    public override IHtmlHelper Html => RzrHlp.Html;
+    public override IHtmlHelper Html => field ??= RzrHlp.GetHtml(ExCtx);
 
     #endregion
 
@@ -53,13 +53,13 @@ public abstract partial class RazorComponent : RazorComponentBase,
     /// <inheritdoc cref="IDynamicCodeDocs.Edit" />
     public IEditService Edit => CodeApi.Edit;
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
     [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel10;
 
     /// <inheritdoc />
-    public new IApp App => CodeApi.App;
+    public new IAppDynamic App => CodeApi.App;
 
     #endregion
 

@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Web.Http.Controllers;
+using ToSic.Eav.Context.Sys;
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys.Routing;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
@@ -21,7 +22,7 @@ public partial class DnnAppApiControllerService(
     LazySvc<DnnGetBlock> getBlock,
     LazySvc<CodeErrorHelpService> codeErrorSvc,
     LazySvc<ISxcCurrentContextService> currentCtxSvc,
-    LazySvc<IContextBuilderService> ctxBuilder,
+    LazySvc<IWebApiAppContextBuilderService> ctxBuilder,
     MemoryCacheService cacheSvc)
     : ServiceBase("Dnn.ApiSSv", connect: [dnnApiFolderUtils, apiCompilerLazy, getBlock, codeErrorSvc, currentCtxSvc, ctxBuilder, cacheSvc])
 {
@@ -67,7 +68,7 @@ public partial class DnnAppApiControllerService(
             {
                 // Note: Had to trim last slash, because it was added in the get-call, but causes trouble here
                 // must ensure it's improved and done the same way in Oqtane!!!
-                spec = new(blockOrNull.AppId, edition: edition.TrimLastSlash(), blockOrNull.AppOrNull?.Name);
+                spec = new(blockOrNull.AppId, edition: edition.TrimLastSlash(), blockOrNull.AppOrNull?.AppSpecs.Name);
                 l.A($"{nameof(spec)} from Block: {spec}");
             }
             // 4.2. If we don't have a block, we can try to get the AppId and name from the path; will throw if not found

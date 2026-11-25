@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Views.Sys;
 using ToSic.Eav.DataSource.Query.Sys;
 using ToSic.Eav.Models;
 using ToSic.Sxc.Blocks.Sys.Views;
@@ -18,20 +19,17 @@ public record BlockConfiguration: ModelFromEntityFull, IAppIdentity
 
     public IBlockIdentifier? BlockIdentifierOrNull { get; set; }
 
-    private readonly Generator<QueryDefinitionFactory> _qDefBuilder;
-
     public BlockConfiguration(IEntity? entity, IAppIdentity appIdentity, IEntity? previewViewEntity, Generator<QueryDefinitionFactory> qDefBuilder, string languageCode, ILog parentLog):
-        base(entity!)
+        base(entity!, [languageCode])
     {
         parentLog.SubLogOrNull("Blk.Config").A("Entity is " + (entity == null ? "" : "not") + " null");
-        LookupLanguages = [languageCode];
-        _qDefBuilder = qDefBuilder;
         ZoneId = appIdentity.ZoneId;
         AppId = appIdentity.AppId;
         PreviewViewEntity = previewViewEntity;
     }
-        
-    internal BlockConfiguration WarnIfMissingData() =>
+    
+    // 2026-11-13 2dm: I believe this will never run, because it's only used once after the null check already happened...
+    internal BlockConfiguration ThrowIfMissingData() =>
         Entity != null
             ? this
             : throw new("BlockConfiguration entity is null. " +
@@ -68,7 +66,7 @@ public record BlockConfiguration: ModelFromEntityFull, IAppIdentity
                                  .FirstOrDefault();
             return field = viewEntity == null
                 ? null
-                : new View(viewEntity, LookupLanguages, _qDefBuilder);
+                : new View().Setup(new(viewEntity, LookupLanguages));
         }
     }
 
@@ -83,10 +81,12 @@ public record BlockConfiguration: ModelFromEntityFull, IAppIdentity
     {
         get
         {
+            if (field!= null)
+                return field;
             if (Entity == null!)
-                return [null];
+                return field = [null];
             var list = Entity.Children(ViewParts.Content).ToListOpt();
-            return list.Count > 0
+            return field = list.Count > 0
                 ? list
                 : [null];
         }
@@ -99,14 +99,14 @@ public record BlockConfiguration: ModelFromEntityFull, IAppIdentity
 
     public IList<IEntity?> HeaderPresentation => Entity?.Children(ViewParts.ListPresentation).ToListOpt() ?? [];
 
-    public IList<IEntity> this[string type] =>
+    public IList<IEntity> GetPart(string type) =>
         type.ToLowerInvariant() switch
         {
             ViewParts.ContentLower => Content,
             ViewParts.PresentationLower => Presentation,
             ViewParts.ListContentLower => Header,
             ViewParts.ListPresentationLower => HeaderPresentation,
-            _ => throw new("Type " + type + " not allowed")
+            _ => throw new($"Type {type} not allowed")
         };
 
     #endregion

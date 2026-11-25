@@ -1,11 +1,10 @@
 ﻿using ToSic.Eav.Apps.Sys.Permissions;
-using ToSic.Eav.Data.Processing;
-using ToSic.Eav.WebApi.Sys.Entities;
-using ToSic.Sxc.Backend.Cms.Load.Activities;
-using ToSic.Sxc.Backend.SaveHelpers;
+using ToSic.Eav.Ui.Edit.Sys;
+using ToSic.Eav.Ui.Edit.Sys.Load.Activities;
+using ToSic.Eav.Ui.Edit.Sys.Load.Prefetch;
+using ToSic.Eav.Ui.Edit.Sys.Save;
 using ToSic.Sys.HookUp;
 using ToSic.Sys.Security.Permissions;
-
 
 namespace ToSic.Sxc.Backend.Cms;
 
@@ -13,11 +12,11 @@ namespace ToSic.Sxc.Backend.Cms;
 public class EditLoadBackend(
     AppWorkContextService workCtxSvc,
     EditLoadActionGetForEditing actGetForEditing,
-    ISxcCurrentContextService ctxService,
+    IContextOfAppService ctxService,
     Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> typesPermissions,
     LazySvc<DataValidatorContentTypeDataStore> valContentTypeDataStore,
 
-    EditLoadActivityCleanupRequest actCleanupRequest,
+    EditLoadIdentifierProviders actCleanupRequest,
     EditLoadActivityConvertRequest actConvertRequest,
     EditLoadActivityAddContentTypes actAddContentTypes,
     EditLoadActivityAddNecessaryInputTypes actAddNecessaryInputTypes,
@@ -42,7 +41,7 @@ public class EditLoadBackend(
     {
         var l = Log.Fn<EditLoadDto>($"load many a#{appId}, items⋮{items.Count}");
 
-        var appContext = ctxService.ShareAppStateOptimized(appId);
+        var appContext = ctxService.AppContextRequired();
 
         // Note 2026-02-26 2dm - changed this to use from context, should be identical, but maybe it's not? keep an eye on this till 2026-Q2
         var appReader = appContext.AppReaderRequired;
@@ -76,7 +75,7 @@ public class EditLoadBackend(
             ContentTypes = usedContentTypes,
         });
         if (permCheck.EnsureAll(GrantSets.WriteSomething) is { Allowed: false } pcResult)
-            throw HttpException.PermissionDenied(pcResult.ErrorMessage);
+            throw l.Ex(new PermissionDeniedException(pcResult.ErrorMessage!));
 
         // load items - similar
         var showDrafts = permCheck.EnsureAnyReadDraft().Allowed;
@@ -104,7 +103,7 @@ public class EditLoadBackend(
         // important, this code is shared/duplicated in the EntitiesController.GetManyForEditing
         if (list.Any(set => set.Entity != null))
             if (permCheck.EnsureAll(GrantSets.ReadSomething) is { Allowed: false } pcResult2)
-                throw l.Ex(HttpException.PermissionDenied(pcResult2.ErrorMessage));
+                throw l.Ex(new PermissionDeniedException(pcResult2.ErrorMessage!));
 
 
         var usedTypes = UsedTypes(actContext, list);

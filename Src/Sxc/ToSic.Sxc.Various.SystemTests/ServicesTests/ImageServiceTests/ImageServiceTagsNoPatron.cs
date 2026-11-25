@@ -13,8 +13,8 @@ namespace ToSic.Sxc.ServicesTests.ImageServiceTests;
 /// <summary>
 /// Run tests with Patrons not enabled.
 /// </summary>
-[Startup(typeof(StartupMockExecutionContextNoPatron))]
-public class ImageServiceTagsNoPatron(ExecutionContextMock exCtxMock, ITestOutputHelper output, IPlatformInfo platform, ILicenseService licenseSvc, IFeaturesService features)
+[Startup(typeof(StartupMockCodeContextNoPatron))]
+public class ImageServiceTagsNoPatron(CodeContextMock exCtxMock, ITestOutputHelper output, IPlatformInfo platform, ILicenseService licenseSvc, IFeaturesService features)
     : ImageServiceTagsBase(exCtxMock.GetService<IImageService>(), output, new ScenarioBasic()),
         IClassFixture<DoFixtureStartup<ScenarioBasic>>
 {

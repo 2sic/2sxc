@@ -1,6 +1,5 @@
-﻿using ToSic.Eav.Apps.Sys.Permissions;
-using ToSic.Sxc.Apps.Sys.Ui;
-using ToSic.Sxc.Blocks.Sys;
+﻿using ToSic.Eav.Apps.Inspect.Sys.UiDto;
+using ToSic.Eav.Apps.Views.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockEditor;
 using ToSic.Sxc.Blocks.Sys.Work;
 using ToSic.Sys.Security.Permissions;
@@ -9,58 +8,40 @@ namespace ToSic.Sxc.Backend.InPage;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppViewPickerBackend(
-    Generator<MultiPermissionsApp, MultiPermissionsApp.Options> multiPermissionsApp,
+    PermissionCheckAction permCheckAction,
     IContextCompleteService ctxService,
-    LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
-    AppWorkChain<WorkBlockViewsGet> workBlockViews,
-    AppWorkContextService appWorkCtxService,
-    LazySvc<WorkEntityPublish> workPublish,
-    LazySvc<WorkViewsContentTypes> workViewsContentTypes)
-    : ServiceBase("Bck.ViwApp", connect: [multiPermissionsApp, ctxService, blockEditorSelectorLazy, workBlockViews, appWorkCtxService, workPublish, workViewsContentTypes])
+    Generator<BlockUpdateTemplate> blockUpdateTemplate,
+    AppWorkQuick<WorkBlockViewsGet> workBlockViews,
+    AppWorkQuick<WorkViewsContentTypes> workViewsContentTypes)
+    : ServiceBase("Bck.ViwApp", connect: [permCheckAction, ctxService, blockUpdateTemplate, workBlockViews, workViewsContentTypes])
 {
-    public void SetAppId(int? appId)
-        => blockEditorSelectorLazy.Value
-            .GetEditor(ctxService.BlockRequired())
-            .SetAppId(appId);
-    
-    private IBlock Block => ctxService.BlockRequired();
-    private IAppWorkContext AppCtx => field ??= appWorkCtxService.ContextNew(Block.Context.AppReaderRequired);
-
     public IEnumerable<TemplateUiInfo> Templates()
     {
-        var block = Block;
+        var block = ctxService.BlockRequired();
         return block.AppOrNull == null
             ? []
-            : workBlockViews.New(AppCtx)
+            : workBlockViews.New(block.Context.AppReaderRequired)
                 .GetCompatibleViews(block);
     }
 
     public IEnumerable<ContentTypeUiInfo> ContentTypes()
     {
-        var block = Block;
-        return block.AppOrNull == null
+        var block = ctxService.BlockRequired();
+        return block.AppOrNull is not {} app
             ? []
-            : workViewsContentTypes.Value.GetContentTypesWithStatus(
-                AppCtx,
-                block.App.Path ?? "",
-                block.App.PathShared ?? ""
+            : workViewsContentTypes.New(block.Context.AppReaderRequired).GetContentTypesWithStatus(
+                app.AppPaths.Path ?? "",
+                app.AppPaths.PathShared ?? ""
             );
     }
 
-    public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
+    public async Task<Guid?> SaveTemplateId(int templateId, bool forceCreateContentGroup)
     {
         var l = Log.Fn<Guid?>($"{templateId}, {forceCreateContentGroup}");
-        multiPermissionsApp.ThrowIfNotAllowedInApp(Block.Context, GrantSets.WriteSomething);
-        var result = blockEditorSelectorLazy.Value.GetEditor(Block)
-            .SaveTemplateId(templateId, forceCreateContentGroup);
-        return l.ReturnAsOk(result);
-    }
-
-    public bool Publish(int id)
-    {
-        var l = Log.Fn<bool>($"{id}");
-        multiPermissionsApp.ThrowIfNotAllowedInApp(Block.Context, GrantSets.WritePublished);
-        workPublish.Value.Publish(AppCtx, [id]);
-        return l.ReturnTrue("ok");
+        var block = ctxService.BlockRequired();
+        await permCheckAction.Handle(new(), new((block.Context, GrantSets.WriteSomething)));
+        var result = await blockUpdateTemplate.New()
+            .Handle(new(), new(new(block, templateId, forceCreateContentGroup)));
+        return l.Return(result.Data);
     }
 }

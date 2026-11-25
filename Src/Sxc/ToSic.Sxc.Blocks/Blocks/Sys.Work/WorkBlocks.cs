@@ -7,13 +7,12 @@ using ToSic.Sxc.Blocks.Sys.Views;
 namespace ToSic.Sxc.Blocks.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDefinitionFactory> qDefBuilder, AppWorkChain<WorkEntities> workEntities)
-    : ServiceWithSetup<IAppWorkContext>("SxS.Blocks", connect: [cultureResolver, qDefBuilder, workEntities])
+public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDefinitionFactory> qDefBuilder, AppDataChain<WorkEntities> workEntities)
+    : ServiceWithSetup<IAppDataContext>("SxS.Blocks", connect: [cultureResolver, qDefBuilder, workEntities])
 {
-    public const string BlockTypeName = "2SexyContent-ContentGroup";
 
     private IImmutableList<IEntity> GetContentGroups()
-        => workEntities.New(MyOptions).Get(BlockTypeName).ToImmutableOpt();
+        => workEntities.New(MyOptions).Get(AppConstants.ContentGroupTypeName).ToImmutableOpt();
 
     public ICollection<BlockConfiguration> AllWithView()
     {
@@ -44,7 +43,7 @@ public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDef
         var found = groupEntity != null;
         return l.Return(found
                 ? new BlockConfiguration(groupEntity, MyOptions, null, qDefBuilder, cultureResolver.CurrentCultureCode, Log)
-                    .WarnIfMissingData()
+                    .ThrowIfMissingData()
                 : new(null, MyOptions, null, qDefBuilder, cultureResolver.CurrentCultureCode, Log)
                 {
                     DataIsMissing = true

@@ -5,7 +5,7 @@
 /// It's usually provided in a <see cref="IGeneratedFileSet"/>, which contains additional specs.
 /// </summary>
 [WorkInProgressApi("still being standardized")]
-public class GeneratedFile: IGeneratedFile
+public record GeneratedFile: IGeneratedFile
 {
     /// <inheritdoc />
     public required string FileName { get; init; }

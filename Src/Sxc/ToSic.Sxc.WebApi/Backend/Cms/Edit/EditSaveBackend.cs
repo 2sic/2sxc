@@ -1,9 +1,10 @@
 ﻿using ToSic.Eav.Data.Build.Sys;
 using ToSic.Eav.Data.Processing;
-using ToSic.Eav.ImportExport.Json.Sys;
-using ToSic.Eav.Serialization.Sys;
+using ToSic.Eav.Data.Values.Sys;
+using ToSic.Eav.Serialization;
 using ToSic.Eav.Services;
-using ToSic.Eav.WebApi.Sys.Cms;
+using ToSic.Eav.Ui.Edit.Sys;
+using ToSic.Eav.Ui.Edit.Sys.Save;
 using ToSic.Sxc.Backend.SaveHelpers;
 using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Utils;
@@ -14,15 +15,16 @@ namespace ToSic.Sxc.Backend.Cms;
 public class EditSaveBackend(
     AppWorkContextService appCtxSvc,
     AppWorkChain<SxcPagePublishing> pagePublishing,
-    AppWorkChain<WorkEntities> workEntities,
-    ISxcCurrentContextService ctxService,
-    JsonSerializer jsonSerializer,
+    AppDataChain<WorkEntities> workEntities,
+    IContextCompleteService ctxService,
+    Generator<IJsonDataReader, IJsonDataReader.Options> jsonReaderGen,
     SaveSecurity saveSecurity,
-    SaveEntities saveBackendHelper,
+    AppWorkChain<SaveHelperSaveBundles> saveBackendHelper,
+    AppDataChain<SaveHelperGetFinalIds> helpGetFinalIds,
     IDataSourcesService dataSourcesService,
     LazySvc<DataValidatorContentTypeDataStore> valContentTypeDataStore,
     DataAssembler dataAssembler)
-    : ServiceBase("Cms.SaveBk", connect: [appCtxSvc, pagePublishing, workEntities, ctxService, jsonSerializer, saveSecurity, saveBackendHelper, dataSourcesService, dataAssembler, valContentTypeDataStore])
+    : ServiceBase("Cms.SaveBk", connect: [appCtxSvc, pagePublishing, workEntities, ctxService, jsonReaderGen, saveSecurity, saveBackendHelper, helpGetFinalIds, dataSourcesService, dataAssembler, valContentTypeDataStore])
 {
     public async Task<Dictionary<Guid, int>> Save(int appId, EditSaveDto package, bool partOfPage)
     {
@@ -30,7 +32,7 @@ public class EditSaveBackend(
 
         // The context should be from the block if there is one, because it affects saving/publishing
         // Basically it can result in things being saved draft or titles being updated
-        var context = ctxService.ShareAppStateOptimized(appId);
+        var appCtx = ctxService.AppContextRequired();
 
 
         // perform some basic validation checks
@@ -48,18 +50,13 @@ public class EditSaveBackend(
         //}
 
         // new API WIP
-        var appCtxNew = appCtxSvc.ContextNew(appId);
-        var appEntities = workEntities.New(appCtxNew);
-        //var appCtx = appEntities.AppWorkCtx;
-
-        var ser = jsonSerializer.SetApp(appCtxNew.AppReader);
-        // Since we're importing directly into this app, we would prefer local content-types
-        ser.PreferLocalAppTypes = true;
+        var appWorkCtx = appCtxSvc.ContextNew(appId);
+        var appEntities = workEntities.New(appWorkCtx);
 
         #region check if it's an update, and do more security checks then - shared with EntitiesController.Save
 
         // basic permission checks
-        var permCheck = saveSecurity.DoPreSaveSecurityCheck(context, package.Items);
+        var permCheck = saveSecurity.DoPreSaveSecurityCheck(appCtx, package.Items);
 
         var foundItems = package.Items
             .Where(i => i.Entity.Id != 0 || i.Entity.Guid != Guid.Empty)
@@ -68,7 +65,7 @@ public class EditSaveBackend(
                     : appEntities.Get(i.Entity.Id) // otherwise id
             );
         if (foundItems.Any(i => i != null) && permCheck.EnsureAll(GrantSets.UpdateSomething) is { Allowed: false } pcResult)
-            throw HttpException.PermissionDenied(pcResult.ErrorMessage);
+            throw new PermissionDeniedException(pcResult.ErrorMessage);
 
         #endregion
 
@@ -79,6 +76,8 @@ public class EditSaveBackend(
 
         l.A($"items to process: {itemsToProcess.Count} of {package.Items.Count}");
 
+        // Since we're importing directly into this app, we would prefer local content-types
+        var ser = jsonReaderGen.New(new(appWorkCtx.AppReader) { PreferLocalAppTypes = true });
         var saveValidator = new SaveDataValidator(Log);
         var updateValidator = new SaveDataUpdateValidator(Log);
         var items = await Task.WhenAll(itemsToProcess
@@ -99,7 +98,7 @@ public class EditSaveBackend(
                 if (procException != null)
                     throw procException;
 
-                ent = returnEntity ?? throw HttpException.BadRequest($"Failed to process entity on index {index}");
+                ent = returnEntity ?? throw new Exception($"Failed to process entity on index {index}");
 
                 // If update check everything is ok, and if the ID needs to be reset
                 var validatorResult = updateValidator.IfUpdateValidateAndCorrectIds(appEntities, index, ent);
@@ -110,7 +109,7 @@ public class EditSaveBackend(
                 ent = dataAssembler.Entity.CreateFrom(ent,
                     id: validatorResult.ResetId,
                     isPublished: package.IsPublished, // the published state is only in the header, not per entity, so we need to set it here
-                    owner: ent.Owner.NullIfNoValue() ?? context.User.IdentityToken
+                    owner: ent.Owner.NullIfNoValue() ?? appCtx.User.IdentityToken
                 );
 
                 // new in 11.01
@@ -156,26 +155,38 @@ public class EditSaveBackend(
         if (isUniqueValidationException != null)
             throw isUniqueValidationException;
 
-        var result = pagePublishing.New(options: appCtxNew)
+        // only save entities that are
+        // a. not in a group
+        // b. in a group where the slot isn't marked as empty
+        var entitiesToSave = itemsWithoutProcessor
+            .Where(e => !e.Header.IsContentBlockMode || !e.Header.IsEmpty)
+            .ToList();
+
+        var result = await pagePublishing.New(appWorkCtx)
             .SaveInPagePublishing(
-                context: context,
+                context: appCtx,
                 blockOrNull: ctxService.BlockOrNull,
                 appId: appId,
                 items: itemsWithoutProcessor,
                 partOfPage: partOfPage,
-                internalSaveMethod: forceSaveAsDraft => DoSave(appEntities, itemsWithoutProcessor, package.DraftShouldBranch || forceSaveAsDraft),
+                internalSaveMethod: forceSaveAsDraft =>
+                {
+                    var trulyForce = package.DraftShouldBranch || forceSaveAsDraft;
+                    saveBackendHelper.New(appWorkCtx).UpdateGuidAndPublishedAndSaveMany(appWorkCtx, entitiesToSave, trulyForce);
+                    return helpGetFinalIds.New(appWorkCtx).GenerateIdList(entitiesToSave);
+                },
                 permCheck: permCheck
             );
 
-        var itemsWithProcessor = items
+        var itemsHavingProcessors = items
             .Where(i => i.Processor != null)
             .ToList();
 
-        if (!itemsWithProcessor.Any())
+        if (itemsHavingProcessors.SafeNone())
             return l.Return(result, $"returning: {result.Count}, no {DataProcessingEvents.PostSave}");
 
-        l.A($"Will run processors for {itemsWithProcessor.Count} items");
-        foreach (var item in itemsWithProcessor)
+        l.A($"Will run processors for {itemsHavingProcessors.Count} items");
+        foreach (var item in itemsHavingProcessors)
         {
             try
             {
@@ -191,16 +202,4 @@ public class EditSaveBackend(
     }
 
 
-    private Dictionary<Guid, int> DoSave(WorkEntities workAppEntities, List<BundleWithHeader<IEntity>> items, bool forceSaveAsDraft)
-    {
-        // only save entities that are
-        // a. not in a group
-        // b. in a group where the slot isn't marked as empty
-        var entitiesToSave = items
-            .Where(e => !e.Header.IsContentBlockMode || !e.Header.IsEmpty)
-            .ToList();
-
-        saveBackendHelper.UpdateGuidAndPublishedAndSaveMany(workAppEntities.MyOptions, entitiesToSave, forceSaveAsDraft);
-        return saveBackendHelper.GenerateIdList(workAppEntities, items);
-    }
 }

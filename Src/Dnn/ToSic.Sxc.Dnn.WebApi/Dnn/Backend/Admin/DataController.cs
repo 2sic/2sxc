@@ -1,8 +1,11 @@
 ﻿using System.Web;
-using ToSic.Eav.WebApi.Sys.Dto;
+using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.WebApi.Sys;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Dnn.WebApi.Sys;
-
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
+using RealController = ToSic.Sxc.Backend.Admin.DataControllerReal;
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
 /// <summary>
@@ -17,27 +20,31 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 /// Instead, each method must have all attributes, or do additional security checking.
 /// Security checking is possible, because the cookie still contains user information
 /// </remarks>
-[DnnLogExceptions]
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class DataController() : DnnSxcControllerBase(DataControllerReal.LogSuffix), IAdminDataController
+public class DataController : DnnApiController, IAdminDataController
 {
-    private DataControllerReal Real => SysHlp.GetService<DataControllerReal>();
+    #region WebApi Composition Infrastructure
+
+    public ILog Log => field ??= LogFactory.Create("Api." + RealController.LogSuffix);
+
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
+
+    #endregion
+
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     /// <inheritdoc />
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public HttpResponseMessage BundleExport(int appId, Guid exportConfiguration, int indentation = 0)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        using (this.InitializedResponseMaker())
-            return Real.BundleExport(appId, exportConfiguration, indentation);
-    }
+        => Real.BundleExport(appId, exportConfiguration, indentation).ToHttpResponse();
 
     /// <inheritdoc />
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public ImportResultDto BundleImport(int zoneId, int appId)
+    public ImportResult BundleImport(int zoneId, int appId)
     {
         this.PreventServerTimeout600();
         return Real.BundleImport(new(Request, HttpContext.Current.Request), zoneId, appId);
@@ -54,12 +61,6 @@ public class DataController() : DnnSxcControllerBase(DataControllerReal.LogSuffi
     [AllowAnonymous] // will do security check internally
     public bool BundleRestore(string fileName, int zoneId, int appId)
         => Real.BundleRestore(fileName, zoneId, appId);
-
-    ///// <inheritdoc />
-    //[HttpGet]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    //public IReadOnlyList<WorkEntityRecycleBin.RecycleBinItem> GetRecycleBin(int appId)
-    //    => Real.GetRecycleBin(appId);
 
 
     /// <inheritdoc />

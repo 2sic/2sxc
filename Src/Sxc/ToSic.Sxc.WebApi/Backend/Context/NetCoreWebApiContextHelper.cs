@@ -1,21 +1,25 @@
 ﻿#if NETCOREAPP
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.Apps.Sys;
-using ToSic.Sxc.Backend.Adam;
+using ToSic.Eav.Context.Sys;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys;
-using ToSic.Sxc.Code.Sys.CodeRunHelpers;
-using ToSic.Sxc.Sys.ExecutionContext;
-using IApp = ToSic.Sxc.Apps.IApp;
+
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Backend.Context;
-internal class NetCoreWebApiContextHelper: CodeHelperBase
+
+internal class NetCoreWebApiContextHelper: ServiceBase
 {
     private readonly ControllerBase _owner;
-    private readonly ICanGetService _helper;
+    private readonly IGetService _helper;
 
-    public NetCoreWebApiContextHelper(ControllerBase owner, ICanGetService helper) : base("Oqt.ApiHlp")
+    public NetCoreWebApiContextHelper(ControllerBase owner, IGetService helper) : base("Oqt.ApiHlp")
     {
         if (owner is IHasLog ownerWithLog)
             this.LinkLog(ownerWithLog.Log);
@@ -25,55 +29,36 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
 
     #region Initialize
 
-    internal new IExecutionContext? ExCtxOrNull => base.ExCtxOrNull;
+    internal ICodeContext? ExCtxOrNull { get; private set; }
 
-    /// <summary>
-    /// This will make sure that any services requiring the context can get it.
-    /// It must usually be called from the base class which expects to use this.
-    /// </summary>
-    public void InitializeBlockContext(ActionExecutingContext context)
-    {
-        if (_blockContextInitialized)
-            return;
-        _blockContextInitialized = true;
-        var getBlock = _helper.GetService<IWebApiContextBuilder>();
-        CtxService = getBlock.PrepareContextResolverForApiRequest();
-        CtxBuilder = _helper.GetService<IContextBuilderService>();
-        BlockOptional = CtxService.BlockOrNull;
-    }
+    public ICodeLog CodeLog => field ??= new CodeLog(Log);
 
-    private bool _blockContextInitialized;
-
-    private IContextCompleteService CtxService { get; set; } = null!;
-    private IContextBuilderService CtxBuilder { get; set; } = null!;
-    internal IBlock? BlockOptional { get; private set; }
+    private IContextCompleteService CtxService =>
+        field ??= _helper.GetService<IWebApiContextBuilder>().PrepareContextResolverForApiRequest();
+    private IWebApiAppContextBuilderService CtxBuilder => field ??= _helper.GetService<IWebApiAppContextBuilderService>();
+    internal IBlock? BlockOptional => _blockOptional.Get(() => CtxService.BlockOrNull);
+    private readonly LazyGet<IBlock?> _blockOptional = new();
 
     public void OnActionExecutingEnd(ActionExecutingContext context)
     {
-        // base.OnActionExecuting(context);
-        InitializeBlockContext(context);
-
         // Use the ServiceProvider of the current request to build DynamicCodeRoot
         // Note that BlockOptional was already retrieved in the base class
-        var exCtx = context.HttpContext.RequestServices
-            .Build<IExecutionContextFactory>()
+
+        // In case SxcBlock was null, there is no instance, but we may still need the app
+        var appToAttach = BlockOptional?.AppOrNull == null
+            ? TryToGetAppFromUrlParams(context)
+            : null;
+
+        ExCtxOrNull = context.HttpContext.GetSysRequestServices()
+            .Build<ICodeContextFactory>()
             .New(new()
             {
+                AppToAttach = appToAttach,
                 OwnerOrNull = _owner,
                 BlockOrNull = BlockOptional,
                 ParentLog = Log,
                 CompatibilityFallback = CompatibilityLevels.CompatibilityLevel12,
             });
-        ConnectToRoot(exCtx);
-
-        AdamCode = exCtx.GetService<AdamCode>();
-
-        // In case SxcBlock was null, there is no instance, but we may still need the app
-        if (ExCtx.GetApp() == null! /* realistic case */)
-        {
-            Log.A("DynCode.App is null");
-            TryToAttachAppFromUrlParams(context);
-        }
 
         // Ensure the Api knows what path it's on, in case it will
         // create instances of .cs files
@@ -83,19 +68,16 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
     }
 
 
-    private void TryToAttachAppFromUrlParams(ActionExecutingContext context)
+    private IAppForCode? TryToGetAppFromUrlParams(ActionExecutingContext context)
     {
-        var l = Log.Fn();
+        var l = Log.Fn<IAppForCode?>("App on block must be null. Try to get app from URL params.");
 
         try
         {
             // Handed in from the App-API Transformer
             context.HttpContext.Items.TryGetValue(SxcWebApiConstants.HttpContextKeyForAppFolder, out var routeAppPathObj);
             if (routeAppPathObj == null)
-            {
-                l.Done("nothing to do");
-                return;
-            }
+                return l.ReturnNull("nothing to do");
             var routeAppPath = routeAppPathObj.ToString();
 
             var appId = CtxBuilder.TryFindAppFromPath(routeAppPath)
@@ -103,67 +85,22 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
                         ?? Eav.Sys.EavConstants.NullId;
 
             if (appId == Eav.Sys.EavConstants.NullId)
-            {
-                l.Done("no app detected");
-                return;
-            }
+                return l.ReturnNull("no app detected");
 
-            // Look up if page publishing is enabled - if module context is not available, always false
+            // Since we only have the AppId, we need to load the app and attach it to the context
             l.A($"AppId: {appId}");
-            var app = LoadAppOnly(appId, CtxService.Context.Site);
-            ((IExCtxAttachApp)ExCtx).AttachApp(app);
+            var site = CtxService.Context.Site;
+            var app = _helper.GetService<Generator<AppForCode, AppForCode.Options>>().New(new(site, new AppIdentityPure(site.ZoneId, appId), new()));
             l.Done("app initialized");
-            return;
+            return l.Return(app, "app initialized");
         }
         catch
         {
-            l.Done("error, ignore");
+            return l.ReturnNull("error, ignore");
         }
     }
 
-    /// <summary>
-    /// Only load the app in case we don't have a module context
-    /// </summary>
-    /// <param name="appId"></param>
-    /// <param name="site"></param>
-    /// <returns></returns>
-    private IApp LoadAppOnly(int appId, ISite site)
-    {
-        var l = Log.Fn<IApp>($"{appId}");
-        var app = _helper.GetService<Apps.App>();
-        app.Init(site, new AppIdentityPure(site.ZoneId, appId), new());
-        return l.Return(app);
-    }
-
-
     #endregion
-
-    #region Context Maker
-
-    public void SetupResponseMaker() => _helper.GetService<IResponseMaker>().Init(_owner);
-
-    #endregion
-
-    #region Adam
-
-    public AdamCode AdamCode { get; private set; } = null!;
-
-    public Sxc.Adam.IFile SaveInAdam(NoParamOrder npo = default,
-        Stream? stream = null,
-        string? fileName = null,
-        string? contentType = null,
-        Guid? guid = null,
-        string? field = null,
-        string subFolder = "") =>
-        AdamCode.SaveInAdam(
-            stream: stream,
-            fileName: fileName,
-            contentType: contentType,
-            guid: guid,
-            field: field,
-            subFolder: subFolder);
-
-    #endregion
-
 }
+
 #endif

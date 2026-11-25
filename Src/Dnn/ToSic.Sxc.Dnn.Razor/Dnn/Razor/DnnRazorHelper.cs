@@ -1,14 +1,14 @@
 ﻿using Custom.Razor.Sys;
-using ToSic.Sxc.Code.Sys.CodeRunHelpers;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
-using ToSic.Sxc.Sys.ExecutionContext;
+
 
 namespace ToSic.Sxc.Dnn.Razor;
 
 [PrivateApi]
-internal class DnnRazorHelper() : CodeHelperBase("Sxc.RzrHlp")
+internal class DnnRazorHelper() : ServiceBase("Sxc.RzrHlp")
 {
     #region Constructor / Init
 
@@ -31,13 +31,14 @@ internal class DnnRazorHelper() : CodeHelperBase("Sxc.RzrHlp")
         Page.Context = parentPage.Context;
 
         // Return if parent page is not a SexyContentWebPage
-        if (parentPage is not RazorComponentBase typedParent) return;
+        if (parentPage is not RazorComponentBase typedParent)
+            return;
 
         ParentPage = typedParent;
 
-        // Only call the Page.ConnectToRoot, as it will call-back this objects ConnectToRoot
-        // So don't call: ConnectToRoot(typedParent.ExCtx);
-        Page.ConnectToRoot(typedParent.ExCtx);
+        // Only call the `Page.SetupContext`, as it will call-back this objects SetupContext
+        // So don't call: SetupContext(typedParent.ExCtx);
+        Page.SetupContext(typedParent.ExCtx);
 
         Log.A($"{nameof(virtualPath)} for Render etc.:{virtualPath}");
     }
@@ -46,27 +47,29 @@ internal class DnnRazorHelper() : CodeHelperBase("Sxc.RzrHlp")
 
     #endregion
 
+    public ICodeLog CodeLog => field ??= new CodeLog(Log);
+
     #region Html Helper
 
-    internal IHtmlHelper Html => field
-        ??= ExCtx.GetService<Generator<HtmlHelper, HtmlHelperContext>>()
-            .New(new(){ Page = Page, RazorHelper = this, IsSystemAdmin = ExCtx.GetContextOfBlock()?.User.IsSystemAdmin ?? false });
-            //.Init(Page, this, ExCtx.GetContextOfBlock()?.User.IsSystemAdmin ?? false);
+    internal IHtmlHelper GetHtml(ICodeContext exCtx) =>
+        exCtx.GetService<Generator<HtmlHelper, HtmlHelperContext>>()
+            .New(new()
+            {
+                Page = Page, RazorHelper = this, IsSystemAdmin = exCtx.Block?.Context?.User.IsSystemAdmin ?? false
+            });
 
     #endregion
 
     #region DynamicModel and Factory
 
-    private ICodeDataPoCoWrapperService CodeDataWrapper => field ??= ExCtx.GetService<ICodeDataPoCoWrapperService>();
-
     /// <inheritdoc cref="IRazor14{TModel,TServiceKit}.DynamicModel"/>
-    public object DynamicModel => _dynamicModel ??= CodeDataWrapper.FromDictionary(Page.PageData);
+    public object GetDynamicModel(IGetService exCtx) => _dynamicModel ??= exCtx.GetService<ICodeDataPoCoWrapperService>().FromDictionary(Page.PageData);
     private object _dynamicModel;
 
-    internal void SetDynamicModel(RenderSpecs viewData)
+    internal void SetDynamicModel(IGetService exCtx, RenderSpecs viewData)
     {
         var l = Log.Fn();
-        _dynamicModel = CodeDataWrapper.DynamicFromObject(viewData.Data, WrapperSettings.Dyn(children: false, realObjectsToo: false));
+        _dynamicModel = exCtx.GetService<ICodeDataPoCoWrapperService>().DynamicFromObject(viewData.Data, WrapperSettings.Dyn(children: false, realObjectsToo: false));
         l.Done();
     }
 

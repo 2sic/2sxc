@@ -22,7 +22,7 @@ internal static class ToolbarBuilderExtensions
         // Create clone with all rules
         var clone = original with
         {
-            Rules = original.Rules.Concat(newRules).ToList(),
+            Rules = [.. original.Rules, .. newRules],
         };
 
 

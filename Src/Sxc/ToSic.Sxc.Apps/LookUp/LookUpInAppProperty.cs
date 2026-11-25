@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.LookUp;
 using ToSic.Eav.LookUp.Sources;
-using ToSic.Sxc.Data;
-using IApp = ToSic.Sxc.Apps.IApp;
+using ToSic.Sxc.Apps.Sys;
 
 namespace ToSic.Sxc.LookUp;
 
@@ -10,7 +9,7 @@ namespace ToSic.Sxc.LookUp;
 /// </summary>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class LookUpInAppProperty(string name, IApp app) : LookUpBase(name, "LookUp in App Properties - mainly path")
+public class LookUpInAppProperty(string name, IAppForCode app, string?[]? dimensions) : LookUpBase(name, "LookUp in App Properties - mainly path")
 {
     #region Internal stuff to be able to supply sub-properties
 
@@ -18,11 +17,10 @@ public class LookUpInAppProperty(string name, IApp app) : LookUpBase(name, "Look
     {
         get
         {
-            if (field != null || app.Settings == null)
+            if (field != null || app.SettingsEntity is not {} entity)
                 return field;
-            var dynEnt = app.Settings as IDynamicEntity;
             // ReSharper disable once StringLiteralTypo
-            return field = new LookUpInEntity("appsettings", dynEnt?.Entity, dynEnt?.Cdf.Dimensions);
+            return field = new LookUpInEntity("appsettings", entity, dimensions);
         }
     }
 
@@ -30,10 +28,10 @@ public class LookUpInAppProperty(string name, IApp app) : LookUpBase(name, "Look
     {
         get
         {
-            if (field != null || app.Resources == null)
+            if (field != null || app.ResourcesEntity is not {} entity)
                 return field;
-            var dynEnt = app.Resources as IDynamicEntity;
-            return field = new LookUpInEntity("appresources", dynEnt?.Entity, dynEnt?.Cdf.Dimensions);
+            // ReSharper disable once StringLiteralTypo
+            return field = new LookUpInEntity("appresources", entity, dimensions);
         }
     }
 
@@ -46,9 +44,10 @@ public class LookUpInAppProperty(string name, IApp app) : LookUpBase(name, "Look
         switch (key)
         {
             case "path":
-                return app.Path;
+                return app.AppPaths.Path;
+            // ReSharper disable once StringLiteralTypo
             case "physicalpath":
-                return app.PhysicalPath;
+                return app.AppPaths.PhysicalPath;
             // Maybe someday: also retrieve metadata like Folder, Name, Version
         }
 

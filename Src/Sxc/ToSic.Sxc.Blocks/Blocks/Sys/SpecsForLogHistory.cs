@@ -1,5 +1,6 @@
 ﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sys.Utils;
 using static System.StringComparer;
 
@@ -8,7 +9,7 @@ namespace ToSic.Sxc.Blocks.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class SpecsForLogHistory
 {
-    public IDictionary<string, string> BuildSpecsForLogHistory(IBlock block, IApp? app = default, string? entry = default, bool addView = true)
+    public IDictionary<string, string> BuildSpecsForLogHistory(IBlock block, IAppForCode? app = default, string? entry = default, bool addView = true)
     {
         try
         {
@@ -81,8 +82,8 @@ public class SpecsForLogHistory
             {
                 var appId = app.AppId.ToString();
                 specs.Add(nameof(app.AppId), appId);
-                specs.Add("AppPath", app.Path);
-                specs.Add("AppName", app.Name);
+                specs.Add("AppPath", app.AppPaths.Path);
+                specs.Add("AppName", app.AppSpecs.Name);
             }
 
             if (bestTitle != null)

@@ -2,7 +2,7 @@
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Sys.Configuration;
-using ToSic.Sxc.Sys.ExecutionContext;
+
 
 namespace ToSic.Sxc.Dnn.Razor.Sys;
 internal class HtmlHelperErrorHelper(
@@ -40,7 +40,7 @@ internal class HtmlHelperErrorHelper(
         // Note that if anything breaks here, it will just use the normal error - but for what breaks in here
         // Note that if withHelp already has help, it won't be extended anymore
         exWithHelp = codeErrService.Value.AddHelpIfKnownError(exWithHelp, MyOptions.Page);
-        var block = MyOptions.ExCtx.GetBlock();
+        var block = MyOptions.ExCtx.Block!;
         var renderHelper = renderingHelperGenerator.New().Init(block);
         var nice = renderHelper.DesignErrorMessage([exWithHelp], true);
         MyOptions.RazorHelper.Add(exWithHelp);

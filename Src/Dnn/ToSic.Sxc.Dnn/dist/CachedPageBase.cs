@@ -30,8 +30,8 @@ public class CachedPageBase(
     /// Get the service provider only once - ideally in Dnn9.4 we will get it from Dnn
     /// If we would get it multiple times, there are edge cases where it could be different each time! #2614
     /// </summary>
-    private IServiceProvider ServiceProvider => _serviceProvider.Get(Log, DnnStaticDi.CreateModuleScopedServiceProvider);
-    private readonly LazyGetAndLog<IServiceProvider> _serviceProvider = new();
+    private ISysServiceProvider ServiceProvider => _serviceProvider.Get(Log, DnnStaticDi.CreateModuleScopedServiceProvider);
+    private readonly LazyGetAndLog<ISysServiceProvider> _serviceProvider = new();
     private TService GetService<TService>() => ServiceProvider.Build<TService>(Log);
 
     #endregion

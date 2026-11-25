@@ -1,22 +1,24 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Custom.Hybrid;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Render.Engines.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
-using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sxc.Services.Sys;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Razor;
 
-internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : CodeHelperBase("Oqt.RzrHlp"), ISetDynamicModel
+internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : ServiceWithContext("Oqt.RzrHlp"), ISetDynamicModel
 {
     #region DynamicCode Attachment / Handling through ViewData
 
-    public override void ConnectToRoot(IExecutionContext exCtx)
+    public override void SetupContext(ICodeContext exCtx)
     {
-        base.ConnectToRoot(exCtx);
+        base.SetupContext(exCtx);
         _exCtx = exCtx;
         owner.LinkLog(exCtx.Log);
         Log.A("OqtRazorHelper connect Log");
@@ -24,13 +26,15 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : CodeHelperBa
 
     private const string DynCode = "_dynCode";
 
-    public IExecutionContext ExCtxRoot
+    public ICodeLog CodeLog => field ??= new CodeLog(Log);
+
+    public ICodeContext ExCtxRoot
     {
         get
         {
             // 2026-05-23 2dm - original code, looks buggy because it would often return null, which should never happen IMHO
             //// Child razor page will have _dynCode == null, so it is provided via ViewData from parent razor page.
-            //if (_dynCode != null || owner.ViewData?[DynCode] is not IExecutionContext cdRt)
+            //if (_dynCode != null || owner.ViewData?[DynCode] is not ICodeContext cdRt)
             //    return _dynCode;
 
             if (_exCtx != null)
@@ -39,19 +43,19 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : CodeHelperBa
             // Child razor page will have _dynCode == null, so it is provided via ViewData from parent razor page.
             // changed 2025-06-23 2dm to throw if null, because I don't think it's correct
             // If I'm wrong, pls discuss.
-            if (owner.ViewData?[DynCode] is not IExecutionContext cdRt)
+            if (owner.ViewData?[DynCode] is not ICodeContext cdRt)
                 throw new InvalidOperationException(
                     "OqtRazorHelper: ExCtxRoot is null, and ViewData does not contain _dynCode. " +
                     "This means the parent razor page did not set the _dynCode in ViewData, which is required for child razor pages.");
 
             // Connect to root, which also sets the _exCtx field
-            ConnectToRoot(cdRt);
+            SetupContext(cdRt);
             Log.A( "DynCode attached from ViewData");
 
             return _exCtx!;
         }
     }
-    private IExecutionContext? _exCtx { get; set; }
+    private ICodeContext? _exCtx { get; set; }
 
     [return: NotNullIfNotNull(nameof(value))]
     public ViewDataDictionary<TModel>? HandleViewDataInject(ViewDataDictionary<TModel>? value)
@@ -62,7 +66,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : CodeHelperBa
         return value;
     }
 
-    internal new IExecutionContext ExCtx => ExCtxOrNull ?? ExCtxRoot!;
+    internal new ICodeContext ExCtx => ExCtxOrNull ?? ExCtxRoot!;
 
     #endregion
 
@@ -85,45 +89,19 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : CodeHelperBa
     }
 
     [field: AllowNull, MaybeNull]
-    public TypedCode16Helper CodeHelper
-        => field ??= CreateCodeHelper();
+    public CodeHelperTypedData CodeHelper
+        => field ??= new(helperSpecs: new((ICodeContext)ExCtx, true, owner.Path));
 
-    private TypedCode16Helper CreateCodeHelper()
-        => new(
-            helperSpecs: new(ExCtx, true, owner.Path),
-            getRazorModel: () => _overridePageData ?? owner.Model,
-            getModelDic: () => (_renderSpecs?.DataDic ?? owner.Model?.ToDicInvariantInsensitive())!
-        );
+    public TypedRazorModelHelper RazorModelHelper => field ??= CreateRazorHelper();
+
+    private TypedRazorModelHelper CreateRazorHelper()
+        => new(() => _overridePageData ?? owner.Model, ExCtx.Log);
+
+    public ITypedRazorModel MyModel => field ??= TypedRazorModelHelper.GetMyModel(
+        new((ICodeContext)ExCtx, true, owner.Path),
+        _renderSpecs?.DataDic ?? owner.Model?.ToDicInvariantInsensitive()
+    );
 
     #endregion
 
-    // #DropOqtaneGetCodeV22
-    
-    //#region GetCode / Create Instance
-
-    //protected override string GetCodeNormalizePath(string virtualPath)
-    //{
-    //    var directory = Path.GetDirectoryName(owner.Path)
-    //                    ?? throw new("Current directory seems to be null");
-    //    return Path.Combine(directory, virtualPath);
-    //}
-
-    ///// <summary>
-    ///// Cshtml CreateInstance - just throw error, as not supported in Oqtane
-    ///// </summary>
-    ///// <exception cref="NotSupportedException"></exception>
-    //protected override object GetCodeCshtml(string path) =>
-    //    throw new NotSupportedException(
-    //        "CreateInstance with .cshtml files is not supported in Oqtane. Use a .cs file instead.");
-
-
-    //protected override string GetCodeFullPathForExistsCheck(string path)
-    //{
-    //    var l = Log.Fn<string>(path);
-    //    var pathFinder = ExCtx.GetService<IServerPaths>();
-    //    var fullPath = pathFinder.FullAppPath(path);
-    //    return l.ReturnAndLog(fullPath);
-    //}
-
-    //#endregion
 }

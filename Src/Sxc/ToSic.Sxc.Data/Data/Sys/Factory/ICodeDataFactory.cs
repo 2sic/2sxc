@@ -4,16 +4,19 @@ using ToSic.Eav.Metadata;
 using ToSic.Eav.Models.Sys;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.InfoSystem;
 
 namespace ToSic.Sxc.Data.Sys.Factory;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface ICodeDataFactory: ICanGetService, IHasLog
+public interface ICodeDataFactory: IGetService, IHasLog, IServiceWithSetup<ICodeDataFactory.OptionalFallbacks>
 {
+    public record OptionalFallbacks(ISite Site, int? Compatibility = default, object? AdamManagerPrepared = default);
+
     /// <remarks>
     /// never null
     /// </remarks>>
@@ -61,13 +64,13 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// </remarks>
     List<string> SiteCultures { get; }
 
-    bool Debug { get; set; }
+    //bool Debug { get; set; }
 
     /// <summary>
     /// List of dimensions for value lookup, incl. priorities etc. and null-trailing.
     /// lower case safe guaranteed. 
     /// </summary>
-    // If we don't have an ExecutionContext, try to generate the language codes and compatibility
+    // If we don't have an CodeContext, try to generate the language codes and compatibility
     // There are cases where these were supplied using SetFallbacks, but in some cases none of this is known
     string?[] Dimensions { get; }
 
@@ -116,7 +119,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     IEnumerable<ITypedItem> EntitiesToItems(IEnumerable<IEntity> entities, ModelSettings settings);
     IEnumerable<ITypedItem> AsItems(object list, ModelSettings settings, NoParamOrder npo = default, IEnumerable<ITypedItem>? fallback = default);
     void SetCompatibilityLevel(int compatibilityLevel);
-    void SetFallbacks(ISite site, int? compatibility = default, /*AdamManager*/ object? adamManagerPrepared = default);
+    
     object? Json2Jacket(string json, string? fallback = default);
     ITypedStack AsStack(object[] parts);
 

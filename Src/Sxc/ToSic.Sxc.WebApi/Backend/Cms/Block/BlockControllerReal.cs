@@ -1,18 +1,22 @@
-﻿using ToSic.Eav.Sys;
-using ToSic.Sxc.Apps.Sys.Ui;
+// using ToSic.Eav.Apps.Inspect.Sys.UiDto; // Legacy block-option endpoints.
+using ToSic.Eav.Sys;
 using ToSic.Sxc.Backend.ContentBlocks;
 using ToSic.Sxc.Backend.InPage;
+using ToSic.Sxc.Blocks.Sys.BlockEditor;
+using ToSic.Sys.HookUp;
 
 namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockControllerReal(
-    LazySvc<IContextOfSiteService> ctxSvc,
+    // LazySvc<IContextOfSiteService> ctxSvc, // Legacy Apps endpoint dependency.
     LazySvc<ContentBlockBackend> blockBackend,
     LazySvc<AppViewPickerBackend> viewsBackend,
-    LazySvc<WorkApps> workApps)
-    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [ctxSvc, blockBackend, viewsBackend, workApps]),
-        IBlockController
+    LazySvc<PublishWebApi> publish,
+    // LazySvc<WorkApps> workApps, // Legacy Apps endpoint dependency.
+    LazySvc<IContextCompleteService> ctxService,
+    Generator<BlockUpdateApp> blockUpdateApp)
+    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [blockBackend, viewsBackend, publish, ctxService, blockUpdateApp])
 {
     public const string LogSuffix = "Block";
 
@@ -44,37 +48,40 @@ public class BlockControllerReal(
     /// </summary>
     /// <param name="appId"></param>
 
-    public void App(int? appId)
-        => viewsBackend.Value.SetAppId(appId);
+    public Task App(int? appId)
+        => blockUpdateApp.New().Handle(new(), (ctxService.Value.BlockRequired(), appId).ToPackage());
 
-    /// <summary>
-    /// used to be GET Module/GetSelectableApps
-    /// </summary>
-    /// <param name="apps"></param>
-    /// <returns></returns>
-    public IEnumerable<AppUiInfo> Apps(string? apps = null)
-    {
-        // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
-        var site = ctxSvc.Value.Context.Site;
-        return [.. workApps.Value.GetSelectableApps(site, apps)];
-    }
+    // Legacy block-option endpoints, replaced by System.BlockConfigOptions.
+    // Keep these commented until we have confirmed that no external clients still depend on them.
+    //
+    // /// <summary>
+    // /// used to be GET Module/GetSelectableApps
+    // /// </summary>
+    // /// <param name="apps"></param>
+    // /// <returns></returns>
+    // public IEnumerable<AppUiInfo> Apps(string? apps = null)
+    // {
+    //     // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
+    //     var site = ctxSvc.Value.Context.Site;
+    //     return [.. workApps.Value.GetSelectableApps(site, apps)];
+    // }
 
-    #endregion
+    // #endregion
 
-    #region Types
+    // #region Types
 
-    /// <inheritdoc />
-    public IEnumerable<ContentTypeUiInfo> ContentTypes() => viewsBackend.Value.ContentTypes();
+    // /// <inheritdoc />
+    // public IEnumerable<ContentTypeUiInfo> ContentTypes() => viewsBackend.Value.ContentTypes();
 
     #endregion
 
     #region Templates
 
-    /// <summary>
-    /// used to be GET Module/GetSelectableTemplates
-    /// </summary>
-    /// <returns></returns>
-    public IEnumerable<TemplateUiInfo> Templates() => viewsBackend.Value.Templates();
+    // /// <summary>
+    // /// used to be GET Module/GetSelectableTemplates
+    // /// </summary>
+    // /// <returns></returns>
+    // public IEnumerable<TemplateUiInfo> Templates() => viewsBackend.Value.Templates();
 
     /// <summary>
     /// Used in InPage.js
@@ -83,7 +90,7 @@ public class BlockControllerReal(
     /// <param name="templateId"></param>
     /// <param name="forceCreateContentGroup"></param>
     /// <returns></returns>
-    public Guid? Template(int templateId, bool forceCreateContentGroup)
+    public Task<Guid?> Template(int templateId, bool forceCreateContentGroup)
         => viewsBackend.Value
             .SaveTemplateId(templateId, forceCreateContentGroup);
 
@@ -101,8 +108,7 @@ public class BlockControllerReal(
 
     private string _moduleRoot = null!;
 
-
     /// <inheritdoc />
-    public bool Publish(string part, int index)
-        => Backend.PublishPart(part, index);
+    public Task<bool> Publish(string part, int index)
+        => publish.Value.PublishPart(ctxService.Value.BlockRequired(), part, index);
 }

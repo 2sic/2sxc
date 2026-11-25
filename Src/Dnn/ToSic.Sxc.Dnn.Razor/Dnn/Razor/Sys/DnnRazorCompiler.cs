@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.Compilation;
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
@@ -11,7 +12,7 @@ using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Compile.Sys;
 using ToSic.Sxc.Render.Engines.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
-using ToSic.Sxc.Sys.ExecutionContext;
+
 using ToSic.Sys.Caching.PiggyBack;
 using ToSic.Sys.Exceptions;
 using ToSic.Sys.Utils.Types;
@@ -34,7 +35,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 // ReSharper disable once UnusedMember.Global
 internal class DnnRazorCompiler(
-    IExecutionContextFactory exCtxFactory,
+    ICodeContextFactory exCtxFactory,
     LazySvc<CodeErrorHelpService> errorHelp,
     LazySvc<SourceAnalyzer> sourceAnalyzer,
     LazySvc<IRoslynBuildManager> roslynBuildManager,
@@ -191,14 +192,14 @@ internal class DnnRazorCompiler(
             _sharedCodeApiService.PiggyBackGet(nameof(DnnRazorCompiler), () => this);
         }
 
-        webPage.ConnectToRoot(_sharedCodeApiService);
+        webPage.SetupContext(_sharedCodeApiService);
         l.Done();
     }
 
     /// <summary>
     /// Reused CodeApiService for all Razor pages.
     /// </summary>
-    private IExecutionContext _sharedCodeApiService;
+    private ICodeContext _sharedCodeApiService;
 
     #region Helpers for Rendering Sub-Components
 

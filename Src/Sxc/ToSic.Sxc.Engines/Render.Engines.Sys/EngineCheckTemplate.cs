@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys.Permissions;
+using ToSic.Eav.Apps.Views.Sys;
 using ToSic.Eav.Context;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Render.Issues.Sys;
@@ -59,7 +60,7 @@ public class EngineCheckTemplate(LazySvc<PermissionCheckFactory> permCheckFactor
 
         if (!templatePermissions.UserMay(GrantSets.ReadSomething).Allowed)
             // TODO: maybe create an exception which inherits from UnauthorizedAccess - in case this improves behavior / HTTP response
-            throw new RenderingException(ErrorHelpNotAuthorized, new UnauthorizedAccessException(
+            throw new RenderingException(ErrorHelpNotAuthorized, new PermissionDeniedException(
                 $"{ErrorHelpNotAuthorized.UiMessage} See {ErrorHelpNotAuthorized.LinkCode}"));
     }
 

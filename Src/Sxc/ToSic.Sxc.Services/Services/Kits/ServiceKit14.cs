@@ -1,5 +1,6 @@
 ﻿using Connect.Koi;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Services.PageShield;
 using ToSic.Sxc.Services.Sys;
 
@@ -14,8 +15,21 @@ namespace ToSic.Sxc.Services;
 /// </remarks>
 [PublicApi]
 [method: PrivateApi("Public constructor for DI")]
-public class ServiceKit14() : ServiceKit("Sxc.Kit14")
+public class ServiceKit14(Ctx<ICodeContextGetService> ctxGetService) : ServiceKit("Sxc.Kit14")
 {
+
+    /// <summary>
+    /// All the services provided by this kit must come from the code root, so they are properly initialized.
+    ///
+    /// Will first try to use the GetService method to ensure that changes in the Kit (like 16/14) still return
+    /// the identical sub-services.
+    /// </summary>
+    /// <typeparam name="TService"></typeparam>
+    /// <returns></returns>
+    [PrivateApi]
+    private TService GetKitService<TService>() where TService : class
+        => ctxGetService.Value.GetService<TService>(reuse: true);
+
     /// <summary>
     /// The ADAM Service, used to retrieve files and maybe more. 
     /// </summary>
@@ -63,7 +77,7 @@ public class ServiceKit14() : ServiceKit("Sxc.Kit14")
     /// <summary>
     /// The Edit service, same as the main Edit service
     /// </summary>
-    // Important: must share the Edit from the ExecutionContext for scenarios where Enable was set manually
+    // Important: must share the Edit from the CodeContext for scenarios where Enable was set manually
     [field: AllowNull, MaybeNull]
     public IEditService Edit => field ??= GetKitService<IEditService>();
 

@@ -1,7 +1,7 @@
-using ToSic.Eav.WebApi.Sys.Context;
+using ToSic.Eav.Ui.Context.Sys.Dto;
 using ToSic.Sxc.Backend.Usage;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Blocks.Sys.Views;
+using ToSic.Eav.Apps.Views.Sys;
 using ToSic.Sxc.Dnn.Backend.Context;
 using ToSic.Sxc.Dnn.Pages;
 
@@ -12,6 +12,7 @@ public class DnnViewUsageDataProvider() : ServiceBase("Dnn.ViewUse"), IViewUsage
     public IEnumerable<ViewDto> Build(ICollection<IView> views, ICollection<BlockConfiguration> blocks, int siteId)
     {
         var modules = new DnnPages(Log).AllModulesWithContent(siteId);
-        return views.Select(view => view.Init(blocks, modules));
+        return views.Select(view => view.ToViewDto(blocks, modules));
     }
+
 }

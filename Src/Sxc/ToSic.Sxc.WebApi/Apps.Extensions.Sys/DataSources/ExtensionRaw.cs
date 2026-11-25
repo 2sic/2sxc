@@ -1,0 +1,25 @@
+using System.Text.Json.Serialization;
+using ToSic.Eav.Apps.Sys.Extensions;
+using ToSic.Eav.Data.ContentTypes;
+using ToSic.Eav.Data.Raw;
+
+namespace ToSic.Sxc.Apps.Extensions.Sys;
+
+[ShowApiWhenReleased(ShowApiMode.Never)]
+[ContentType(Name = "AppExtension", Guid = "7bad6d11-4287-4d48-9307-69cd2bf4891a", Scope = "System")]
+public class ExtensionRaw : IRawEntityAutoConvert
+{
+    [ContentTypeTitle]
+    [JsonPropertyName("folder")]
+    public required string Folder { get; init; }
+
+    [JsonPropertyName("edition")]
+    public required string Edition { get; init; } = "";
+
+    [JsonPropertyName("configuration")]
+    [ContentTypeField(Type = ValueTypes.Object)]
+    public required ExtensionManifest Configuration { get; init; }
+
+    [JsonPropertyName("icon")]
+    public string Icon { get; init; } = "";
+}

@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi.Sys.Cms;
+using ToSic.Eav.Ui.Edit.Sys;
+using ToSic.Eav.Ui.Edit.Sys.Load;
+using ToSic.Eav.Ui.Edit.Sys.Load.Links;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 using RealController = ToSic.Sxc.Backend.Cms.EditControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
@@ -15,10 +18,16 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 [ValidateAntiForgeryToken]
 
 [ApiController]
+[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class EditController() : OqtStatefulControllerBase(RealController.LogSuffix), IEditController
+[OqtPrepareBlockContext]
+public class EditController : ControllerBase, IHasLog, IEditController
 {
-    private RealController Real => GetService<RealController>();
+    /// <inheritdoc />
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+
+    private RealController Real => this.GetApiService<RealController>();
 
 
     [HttpPost]
@@ -38,13 +47,13 @@ public class EditController() : OqtStatefulControllerBase(RealController.LogSuff
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
     //[Authorize(Roles = RoleNames.Everyone)] commented because of http403 issue
     // TODO: 2DM please check permissions
-    public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
+    public Task<LinkInfoDto> LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
         => Real.LinkInfo(link, appId, contentType, guid, field);
 
     /// <inheritdoc />
     [HttpPost]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool Publish(int id)
+    public Task<bool> Publish(int id)
         => Real.Publish(id);
 }

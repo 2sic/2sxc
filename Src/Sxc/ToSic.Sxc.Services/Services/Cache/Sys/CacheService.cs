@@ -1,11 +1,9 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Paths;
-using ToSic.Sxc.Apps.Sys;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Services.Cache.Sys.CacheKey;
-using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.Configuration;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Caching;
 using ToSic.Sys.Capabilities.Features;
 
@@ -34,17 +32,18 @@ namespace ToSic.Sxc.Services.Cache.Sys;
 /// </summary>
 /// <param name="cache"></param>
 internal class CacheService(
+    Ctx<ICodeContext> ctxExCtx,
     MemoryCacheService cache,
     IAppCacheKeyService appCacheKeyService,
     LazySvc<IAppsCatalog> appsCatalog,
     Generator<IAppPathsMicroSvc> appPathsLazy,
     ISysFeaturesService features
-    ) : ServiceWithContext($"{SxcLogName}.CchSvc", connect: [cache, appCacheKeyService, appsCatalog]), ICacheService
+    ) : ServiceBase($"{SxcLogName}.CchSvc", connect: [cache, appCacheKeyService, appsCatalog]), ICacheService
 {
     /// <summary>
     /// AppId to use in key generation, so it won't collide with other apps.
     /// </summary>
-    private int AppId => _appId ??= ExCtxOrNull?.GetApp().AppId ?? -1;
+    private int AppId => _appId ??= ctxExCtx.ValueOptional?.App!.AppId ?? -1;
     private int? _appId;
 
     private string? AppCacheKey => field ??= GetAppCacheKey();
@@ -67,7 +66,7 @@ internal class CacheService(
             CacheSpecsContextAndTools = new(Log)
             {
                 AppPathsLazy = appPathsLazy,
-                ExCtx = ExCtx,
+                ExCtx = ctxExCtx.ValueOptional!,
                 BasePolicyMaker = cache.NewPolicyMaker(),
                 BaseKeyParts = keySpecs,
             },
@@ -81,9 +80,9 @@ internal class CacheService(
 
     private string? GetAppCacheKey()
     {
-        var app = ExCtxOrNull?.GetApp();
-        if (app is IAppWithInternal appWithInternal)
-            return appWithInternal.AppReader.Specs.CacheKey;
+        var app = ctxExCtx.ValueOptional?.App;
+        if (app != null)
+            return app.AppReader.Specs.CacheKey;
 
         if (AppId <= 0)
             return null;

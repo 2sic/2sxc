@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Http;
 namespace ToSic.Sxc.Services.HttpCtx;
 
 #if NETFRAMEWORK
-internal class HttpContextService(): ServiceWithContext("Sxc.HttpCx"), IHttpContextService
+internal class HttpContextService(): ServiceBase("Sxc.HttpCx"), IHttpContextService
 #else
-internal class HttpContextService(IHttpContextAccessor httpContextAccessor): ServiceWithContext("Sxc.HttpCx", connect: [httpContextAccessor]), IHttpContextService
+internal class HttpContextService(IHttpContextAccessor httpContextAccessor): ServiceBase("Sxc.HttpCx", connect: [httpContextAccessor]), IHttpContextService
 #endif
 {
     public void Redirect301(string url) => Redirect(url, 301);

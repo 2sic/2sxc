@@ -3,13 +3,13 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.ServicesTests.ImageServiceTests;
 
-[Startup(typeof(StartupMockExecutionContext))]
-public class ImageServiceAttributes(ExecutionContextMock executionContext)
+[Startup(typeof(StartupMockCodeContext))]
+public class ImageServiceAttributes(CodeContextMock codeCtx)
     // Needs fixture to load the Primary App
     : IClassFixture<DoFixtureStartup<ScenarioBasic>>
 {
     //[field: AllowNull, MaybeNull]
-    private IImageService ImgSvc => field ??= executionContext.GetService<IImageService>(reuse: true);
+    private IImageService ImgSvc => field ??= codeCtx.GetService<IImageService>(reuse: true);
 
     /// <summary>
     /// 

@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.WebApi.Sys.Cms;
+﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys.Work;
 
 namespace ToSic.Sxc.Backend.Cms;
@@ -8,20 +8,19 @@ namespace ToSic.Sxc.Backend.Cms;
 /// This is unusual, because if it's empty, we must retrieve the definition of the expected content-type from the view definition.
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ListActivityGetBlockHeader(AppWorkChain<WorkBlocks> appBlocks)
-    : ServiceWithSetup<IAppWorkContext>("Api.CntGrpRl", connect: [appBlocks])
+public class ListActivityGetBlockHeader(AppDataChain<WorkBlocks> appBlocks)
+    : ServiceWithSetup<IAppDataContext>("Api.CntGrpRl", connect: [appBlocks])
 {
-    public List<EntityInListDto> ContentBlockHeader(Guid parent)
+    public List<ListSlotContentsInfo> ContentBlockHeader(Guid parent)
     {
-        var l = Log.Fn<List<EntityInListDto>>($"header for:{parent}");
-        //var appCtx = appBlocks.CtxSvc.ContextPlus(ctxService.BlockContextRequired().AppReaderRequired);
+        var l = Log.Fn<List<ListSlotContentsInfo>>($"header for:{parent}");
         var cg = appBlocks.New(MyOptions).GetBlockConfig(parent);
 
         // new in v11 - this call might be run on a non-content-block, in which case we return null
         var ent = (cg as ICanBeEntity)?.Entity;
         if (ent == null!)
             return l.Return([],"No entity found");
-        if (ent.Type.Name != WorkBlocks.BlockTypeName)
+        if (ent.Type.Name != AppConstants.ContentGroupTypeName)
             return l.Return([],"Entity type mismatch");
 
         var header = cg.Header.FirstOrDefault();

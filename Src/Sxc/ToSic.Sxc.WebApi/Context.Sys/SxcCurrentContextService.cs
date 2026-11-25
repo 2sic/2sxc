@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Apps.Sys.Permissions;
+using ToSic.Eav.Apps.Views.Sys;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.DataSources.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.Configuration;
@@ -128,7 +128,7 @@ internal class SxcCurrentContextService(
         var blockSpecs = block as BlockSpecs
                          ?? throw new NullReferenceException($"Block is not a {nameof(BlockSpecs)}, cannot update.");
 
-        var origCtx = blockSpecs.Context as ContextOfBlock
+        var origCtx = blockSpecs.Context as ContextOfModule
                       ?? throw new NullReferenceException("Context is not Block or App, cannot update.");
         
         var updatedPerms = draftService.Value.UserPermissions(origCtx.Permissions);

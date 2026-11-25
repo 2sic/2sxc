@@ -1,6 +1,7 @@
 ﻿using Custom.Razor.Sys;
 using Microsoft.AspNetCore.Mvc.Razor;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Render.Engines.Sys;
@@ -8,7 +9,7 @@ using ToSic.Sxc.Render.Output.Sys;
 using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
-using ToSic.Sxc.Sys.ExecutionContext;
+
 
 namespace ToSic.Sxc.Razor;
 
@@ -22,7 +23,7 @@ internal class RazorEngine(
     IAssetsExtractor assetsExtractor,
     EngineRequirementsApp engineRequirementsApp,
     LazySvc<IRazorRenderer> razorRenderer,
-    LazySvc<IExecutionContextFactory> exCtxFactory,
+    LazySvc<ICodeContextFactory> exCtxFactory,
     LazySvc<CodeErrorHelpService> errorHelp,
     LazySvc<IRenderingHelper> renderingHelper)
     : ServiceBase("Sxc.RzrEng", connect: [engineSpecsService, assetsExtractor, engineRequirementsApp, exCtxFactory, errorHelp, renderingHelper, razorRenderer]),
@@ -109,7 +110,7 @@ internal class RazorEngine(
                         CompatibilityFallback = CompatibilityLevels.CompatibilityLevel12,
                     });
 
-                    asSxc.ConnectToRoot(exCtx);
+                    asSxc.SetupContext(exCtx);
                     // Note: Don't set the purpose here anymore, it's a deprecated feature in 12+
                 }
             );

@@ -18,3 +18,4 @@ global using ToSic.Sxc.Services;
 global using ToSic.Sxc.Web;
 global using ToSic.Sys;
 global using ToSic.Sys.Utils;
+global using IAppDynamic = ToSic.Sxc.Apps.IApp;

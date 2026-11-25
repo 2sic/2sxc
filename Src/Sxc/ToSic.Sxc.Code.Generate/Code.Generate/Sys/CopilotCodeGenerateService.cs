@@ -12,13 +12,13 @@ public class CopilotCodeGenerateService(
     IAppReaderFactory appReaders)
     : ServiceBase(SxcLogName + ".AutoGen.Run", connect: [fileSaver, generators, appReaders])
 {
-    public Result GenerateDataModels(int appId, string? edition, string generatorName, int configurationId = 0)
+    public Result GenerateDataModelSet(int appId, string? edition, string generatorName, int configurationId = 0)
     {
         var l = Log.Fn<Result>($"{nameof(appId)}:{appId};{nameof(edition)}:{edition};{nameof(generatorName)}:{generatorName};{nameof(configurationId)}:{configurationId}", timer: true);
 
         try
         {
-            var specs = new FileGeneratorSpecs
+            var specs = new GenerateFileSetSpecs
             {
                 AppId = appId,
                 Edition = edition ?? ""
@@ -79,16 +79,16 @@ public class CopilotCodeGenerateService(
         return l.Return(errors, $"errors:{errors.Count}");
     }
 
-    private void GenerateAndSave(IFileGenerator generator, IFileGeneratorSpecs specs)
+    private void GenerateAndSave(IFileGenerator generator, GenerateFileSetSpecs specs)
     {
         (generator as IHasLog)?.LinkLog(Log);
         fileSaver.GenerateAndSaveFiles(generator, specs);
     }
 
     private IFileGenerator? FindGenerator(string generatorName)
-        => generators.Value.FirstOrDefault(g => g.Name.EqualsInsensitive(generatorName));
+        => generators.Value.FirstOrDefault(g => g.GeneratorSpecs.Name.EqualsInsensitive(generatorName));
 
-    internal static FileGeneratorSpecs BuildFileGeneratorSpecs(IDataCopilotConfiguration configuration, FileGeneratorSpecs baseSpecs)
+    internal static GenerateFileSetSpecs BuildFileGeneratorSpecs(IDataCopilotConfiguration configuration, GenerateFileSetSpecs baseSpecs)
         => baseSpecs with
         {
             Configuration = $"{configuration.Id} {configuration.CodeGenerator}",
@@ -110,5 +110,5 @@ public class CopilotCodeGenerateService(
     internal record Job(
         int ConfigurationId,
         string GeneratorName,
-        FileGeneratorSpecs Specs);
+        GenerateFileSetSpecs Specs);
 }

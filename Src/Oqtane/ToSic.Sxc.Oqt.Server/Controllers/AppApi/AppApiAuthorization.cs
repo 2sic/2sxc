@@ -3,15 +3,15 @@ using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 
-// TODO: @STV - PLS EXPLAIN what this does / what it's for
-/**
-     * This is adjusted version of Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.
-     * For reference, original AuthorizationMiddleware class is commented on the bottom of this file.
-     * Our version is made because endpoint metadata is provided from our custom ActionContext.
-     */
+/// <summary>
+/// Applies ASP.NET Core authorization before invoking a dynamically selected app API action.
+/// Oqtane routes app API requests to <see cref="AppApiMiddleware"/>. The selected action's
+/// descriptor provides its authorization policies and anonymous-access metadata.
+/// </summary>
 internal class AppApiAuthorization: IHasLog
 {
     public AppApiAuthorization(ILogStore logStore)
@@ -52,7 +52,8 @@ internal class AppApiAuthorization: IHasLog
 
         var context = actionContext.HttpContext;
 
-        var policyProvider = context.RequestServices.GetRequiredService<IAuthorizationPolicyProvider>();
+        var sp = context.GetSysRequestServices();
+        var policyProvider = sp.GetRequiredService<IAuthorizationPolicyProvider>();
 
         // Code bellow is copy from Invoke in AuthorizationMiddleware.
 
@@ -79,7 +80,7 @@ internal class AppApiAuthorization: IHasLog
         }
 
         // Policy evaluator has transient lifetime so it fetched from request services instead of injecting in constructor
-        var policyEvaluator = context.RequestServices.GetRequiredService<IPolicyEvaluator>();
+        var policyEvaluator = sp.GetRequiredService<IPolicyEvaluator>();
 
         var authenticateResult = await policyEvaluator.AuthenticateAsync(policy, context);
 
@@ -107,7 +108,7 @@ internal class AppApiAuthorization: IHasLog
 
         var authorizeResult = await policyEvaluator.AuthorizeAsync(policy, authenticateResult, context, resource);
         var authorizationMiddlewareResultHandler =
-            context.RequestServices.GetRequiredService<IAuthorizationMiddlewareResultHandler>();
+            sp.GetRequiredService<IAuthorizationMiddlewareResultHandler>();
 
         await authorizationMiddlewareResultHandler.HandleAsync(_next, context, policy, authorizeResult);
     }

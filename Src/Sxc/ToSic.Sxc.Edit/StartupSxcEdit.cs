@@ -18,7 +18,7 @@ public static class StartupSxcEdit
 
         // v14 Toolbar Builder
         services.TryAddTransient<IToolbarBuilder, ToolbarBuilder>();
-        services.TryAddTransient<ToolbarBuilder.Dependencies>();
+        services.TryAddTransient<ToolbarBuilder.MyServices>();
         services.TryAddTransient<ToolbarButtonDecoratorHelper>();
 
         return services;

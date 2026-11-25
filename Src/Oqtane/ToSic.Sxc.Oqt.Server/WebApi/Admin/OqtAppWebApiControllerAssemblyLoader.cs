@@ -1,8 +1,9 @@
 using System.Reflection;
 using Oqtane.Shared;
+using ToSic.Eav.Apps.Inspect.Sys.WebApi;
 using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Context.Sys;
 using ToSic.Eav.Environment.Sys.ServerPaths;
-using ToSic.Eav.WebApi.Sys.ApiExplorer;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Server.Code.Sys;
@@ -21,7 +22,7 @@ internal class OqtAppWebApiControllerAssemblyLoader(
     Generator<Compiler> compiler,
     SiteState siteState,
     AliasResolver aliasResolver,
-    IContextBuilderService ctxBuilder,
+    IWebApiAppContextBuilderService ctxBuilder,
     IContextCompleteService ctxService,
     IEditionService editionSvc,
     IServerPaths serverPaths)
@@ -45,7 +46,7 @@ internal class OqtAppWebApiControllerAssemblyLoader(
         var runtimeKey = blockOrNull?.Context.AppReaderRequired?.Specs.CacheKey;
         var spec = new HotBuildSpec(blockOrNull?.AppId ?? KnownAppsConstants.AppIdEmpty,
             edition: edition,
-            appName: blockOrNull?.AppOrNull?.Name,
+            appName: blockOrNull?.AppOrNull?.AppSpecs.Name,
             appCacheKey: runtimeKey);
 
         Log.A($"Controller path from root: {pathFromRoot}");

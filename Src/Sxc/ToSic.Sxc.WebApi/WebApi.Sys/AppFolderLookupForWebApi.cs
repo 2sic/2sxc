@@ -1,8 +1,10 @@
-﻿namespace ToSic.Sxc.WebApi.Sys;
+﻿using ToSic.Eav.Context.Sys;
+
+namespace ToSic.Sxc.WebApi.Sys;
 
 public static class IContextServiceExtensions
 {
-    public static string FindAppFolderFromScopeOrThrow(this IContextCompleteService ctxService, IContextBuilderService ctxBuilder)
+    public static string FindAppFolderFromScopeOrThrow(this IContextCompleteService ctxService, IWebApiAppContextBuilderService ctxBuilder)
         =>
             (ctxBuilder.TryFindAppFromUrlIds()
              ?? ctxService.BlockContextOrNull()

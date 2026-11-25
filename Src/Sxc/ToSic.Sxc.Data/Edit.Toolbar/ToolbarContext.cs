@@ -10,12 +10,10 @@ internal class ToolbarContext: IAppIdentity
     internal const string CtxApp = "context:appId";
     internal const int NotInitialized = -7007;
 
-    internal ToolbarContext(IAppIdentity parent): this(parent.ZoneId, parent.AppId) { }
-
-    public ToolbarContext(int zoneId, int appId)
+    internal ToolbarContext(IAppIdentity parent)
     {
-        ZoneId = zoneId;
-        AppId = appId;
+        ZoneId = parent.ZoneId;
+        AppId = parent.AppId;
     }
 
     internal ToolbarContext(string custom)

@@ -1,7 +1,7 @@
 ﻿using ToSic.Razor.Blade;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Render.Output.Sys;
 using ToSic.Sxc.Render.Sys;
-using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Services.TurnOn.Sys;
 using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
@@ -12,13 +12,14 @@ namespace ToSic.Sxc.Services.Page.Sys;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class PageService(
+    Ctx<ICodeContext> ctxExCtx,
     IPageServiceShared pageServiceShared,
     LazySvc<IContentSecurityPolicyService> cspServiceLazy,
     LazySvc<IHtmlTagsService> htmlTagsLazy,
     LazySvc<ITurnOnService> turnOn,
     LazySvc<IModulesOutputService> moduleService,
     LazySvc<IFeaturesService> featuresSvc)
-    : ServiceWithContext("2sxc.PgeSrv",
+    : ServiceBase("2sxc.PgeSrv",
             connect: [cspServiceLazy, htmlTagsLazy, moduleService, turnOn, pageServiceShared, featuresSvc]),
         IPageService // Important: Write with namespace, because it's easy to confuse with IPageService it supports
 {

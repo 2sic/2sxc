@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ToSic.Sxc.WebApi.Sys.ActionFilters;
 /// <summary>
-/// TODO: @STV pls document what this is for
+/// Converts exceptions from Oqtane controller actions into HTTP 400 responses,
+/// using the exception as the response value.
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -16,16 +17,17 @@ public class HttpResponseExceptionFilter : IActionFilter, IOrderedFilter
 
     public void OnActionExecuted(ActionExecutedContext context)
     {
-        if (context.Exception is HttpExceptionAbstraction exception)
-        {
-            context.Result = new ObjectResult(exception.Status)
-            {
-                StatusCode = exception.Status,
-                Value = exception.Message,
-            };
-            context.ExceptionHandled = true;
-        }
-        else if (context.Exception is { } anyException)
+        //if (context.Exception is Exception exception)
+        //{
+        //    context.Result = new ObjectResult(500)
+        //    {
+        //        StatusCode = 500,
+        //        Value = exception.Message,
+        //    };
+        //    context.ExceptionHandled = true;
+        //}
+        //else 
+        if (context.Exception is { } anyException)
         {
             context.Result = new ObjectResult(500)
             {

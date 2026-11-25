@@ -13,10 +13,10 @@ public interface IAppTyped: IAppIdentity
 {
     #region Properties basically from Eav.Apps.IApp
 
-    /// <inheritdoc cref="IApp.Name"/>
+    /// <inheritdoc cref="IAppDynamic.Name"/>
     string Name { get; }
 
-    /// <inheritdoc cref="IApp.Data"/>
+    /// <inheritdoc cref="IAppDynamic.Data"/>
     IAppDataTyped Data { get; }
 
     #endregion
@@ -37,7 +37,7 @@ public interface IAppTyped: IAppIdentity
     );
 
 
-    /// <inheritdoc cref="IApp.Configuration"/>
+    /// <inheritdoc cref="IAppDynamic.Configuration"/>
     IAppConfiguration Configuration { get; }
 
     /// <summary>

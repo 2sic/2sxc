@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Sxc.Backend.Admin;
+using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using RealController = ToSic.Sxc.Backend.Admin.DialogControllerReal;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
+using RealController = ToSic.Eav.WebApi.Admin.Sys.DialogControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 
@@ -22,13 +23,21 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 
 [ApiController]
 
+[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class DialogController() : OqtStatefulControllerBase(RealController.LogSuffix), IDialogController
+public class DialogController : ControllerBase, IHasLog, IDialogController
 {
-    private RealController Real => GetService<RealController>();
+    /// <inheritdoc />
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+
+    private RealController Real => this.GetApiService<RealController>();
 
 
     [HttpGet]
-    public DialogContextStandaloneDto Settings(int appId) => Real.Settings(appId);
-        
+    public DialogContextStandaloneDto Settings(int appId)
+    {
+        this.PrepareRequestBlock();
+        return Real.Settings(appId);
+    }
 }

@@ -43,7 +43,7 @@ partial class CodeDataFactory
 
 
     #region Publishing
-    private IAppReader AppReader => field ??= ExCtx.GetState<IAppReader>();
+    private IAppReader AppReader => field ??= ctxExCtx.Value.App!.AppReader;
 
     public IEntity? GetDraft(IEntity entity) => AppReader.GetDraft(entity);
 

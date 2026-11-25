@@ -6,11 +6,17 @@ namespace ToSic.Sxc.Edit.EditService;
 partial class EditService
 {
     /// <inheritdoc />
-    public bool Enabled { 
-        get; 
+    public bool Enabled
+    {
+        get => _enabled
+            ??= ctxSvcProvider.ValueOptional?.Block?.Context.Permissions.IsContentAdmin
+                ?? ctxSvcProvider.ValueOptional?.CmsContext?.User?.IsSiteAdmin
+                ?? false;
         [PrivateApi("hide, only used for demos")]
-        set;
+        set => _enabled = value;
     }
+
+    private bool? _enabled;
 
     #region Scripts and CSS includes
 
@@ -20,21 +26,26 @@ partial class EditService
     {
         var l = Log.Fn<string>();
 
-        var ps = ExCtx.GetService<IPageService>(reuse: true);
+        var ps = ctxSvcProvider.Value.GetService<IPageService>(reuse: true);
         if (ps == null! /* paranoid */)
             return l.ReturnNull("page service not found");
 
-        if (js == true || api == true || forms == true) ps.Activate(SxcPageFeatures.JsCore.NameId);
+        if (js == true || api == true || forms == true)
+            ps.Activate(SxcPageFeatures.JsCore.NameId);
 
         // only update the values if true, otherwise leave untouched
         // Must activate the "public" one JsCms, not internal, so feature-tests will run
-        if (api == true || forms == true) ps.Activate(SxcPageFeatures.JsCms.NameId);
+        if (api == true || forms == true)
+            ps.Activate(SxcPageFeatures.JsCms.NameId);
 
-        if (styles == true) ps.Activate(SxcPageFeatures.Toolbars.NameId);
+        if (styles == true)
+            ps.Activate(SxcPageFeatures.Toolbars.NameId);
 
-        if (context == true) ps.Activate(SxcPageFeatures.ContextModule.NameId);
+        if (context == true)
+            ps.Activate(SxcPageFeatures.ContextModule.NameId);
 
-        if (autoToolbar == true) ps.Activate(SxcPageFeatures.ToolbarsAuto.NameId);
+        if (autoToolbar == true)
+            ps.Activate(SxcPageFeatures.ToolbarsAuto.NameId);
 
         return l.ReturnNull("ok");
     }

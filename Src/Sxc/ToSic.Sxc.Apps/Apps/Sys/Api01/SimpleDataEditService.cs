@@ -31,7 +31,8 @@ namespace ToSic.Sxc.Apps.Sys.Api01;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class SimpleDataEditService(
     DataAssembler dataAssembler,
-    IZoneMapper zoneMapper,
+    LazySvc<ISiteOfZoneSvc> zoneSiteSvc,
+    ICultureStateSvc cultureStateSvc,
     Generator<IContextOfSiteService> ctxSvc,
     AppWorkContextService appWorkCtxSvc,
     AppWorkChain<WorkEntitySave> entSave,
@@ -39,7 +40,7 @@ public partial class SimpleDataEditService(
     AppWorkChain<WorkEntityDelete> entDelete,
     LazySvc<IValueConverter> valueConverter,
     LazySvc<PermissionCheckFactory> permCheckFactory
-) : ServiceWithSetup<SimpleDataEditService.Options>("Dta.Simple", connect: [appWorkCtxSvc, entSave, entUpdate, entDelete, zoneMapper, dataAssembler, ctxSvc, permCheckFactory, valueConverter])
+) : ServiceWithSetup<SimpleDataEditService.Options>("Dta.Simple", connect: [appWorkCtxSvc,  entSave, entUpdate, entDelete, zoneSiteSvc, cultureStateSvc, dataAssembler, ctxSvc, permCheckFactory, valueConverter])
 {
     /// <summary>
     /// 
@@ -60,7 +61,7 @@ public partial class SimpleDataEditService(
             .Map(tempCtx => tempCtx.Context.Site.ZoneId == MyOptions.ZoneId
                 ? tempCtx.Context
                 // when zoneId is not that same as in current context, we need to set right site for provided zoneId
-                : new ContextOfSite(zoneMapper.SiteOfZone(MyOptions.ZoneId), tempCtx.Context.User)
+                : new ContextOfSite(zoneSiteSvc.Value.SiteOfZone(MyOptions.ZoneId), tempCtx.Context.User)
             );
 
     private string DefaultLanguageCode => field ??= GetDefaultLanguage();
@@ -69,11 +70,11 @@ public partial class SimpleDataEditService(
     {
         var zoneId = MyOptions.ZoneId;
         var l = Log.Fn<string>($"{zoneId}");
-        var site = zoneMapper.SiteOfZone(zoneId);
+        var site = zoneSiteSvc.Value.SiteOfZone(zoneId);
         if (site == null! /* paranoid */)
             return l.Return("", "site is null");
 
-        var usesLanguages = zoneMapper.CulturesEnabledWithState(site).Any();
+        var usesLanguages = cultureStateSvc.CulturesEnabledWithState(site).Any();
         return l.Return(usesLanguages ? site.DefaultCultureCode : "", $"ok, usesLanguages:{usesLanguages}");
     }
         

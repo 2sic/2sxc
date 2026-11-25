@@ -1,7 +1,8 @@
-﻿using ToSic.Eav.Apps.Sys;
+﻿using ToSic.Eav.Apps.Assets.Sys;
+using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Sxc.Apps.Sys;
-using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Render.Issues.Sys;
 
@@ -28,7 +29,8 @@ public class EngineSpecsService(
         // Do various pre-checks and path variations
         var view = block.View!;
         var appReader = block.Context.AppReaderRequired;
-        var appPathRootInInstallation = block.App.PathSwitch(view.IsShared, PathTypes.PhysRelative);
+        var app = block.App;
+        var appPathRootInInstallation = app.AppPaths.PathSwitch(view.IsShared, PathTypes.PhysRelative);
         var (polymorphPathOrNull, edition) = enginePolymorphism
             .PolymorphTryToSwitchPath(appPathRootInInstallation, view, appReader);
 
@@ -51,12 +53,12 @@ public class EngineSpecsService(
         // check access permissions - before initializing or running data-code in the template
         engineCheckTemplate.ThrowIfViewPermissionsDenyAccess(view, block.Context);
 
-        var appCacheKey = appCacheKeyService.AppCacheKey(block.App);
+        var appCacheKey = appCacheKeyService.AppCacheKey(app);
 
         // All ok, set properties
         var engineSpecs = new EngineSpecs
         {
-            App = block.App,
+            App = app,
             Block = block,
             DataSource = block.Data,
             Edition = edition,

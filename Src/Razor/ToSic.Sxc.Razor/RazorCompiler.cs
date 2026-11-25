@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
-using ToSic.Sxc.Apps;
+using ToSic.Eav.Apps;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Sys;
@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Razor;
 internal class RazorCompiler(
     ApplicationPartManager applicationPartManager,
     IRazorViewEngine viewEngine,
-    IServiceProvider serviceProvider,
+    ISysServiceProvider serviceProvider,
     IHttpContextAccessor httpContextAccessor,
     IActionContextAccessor actionContextAccessor,
     LazySvc<AppCodeLoader> appCodeLoader,
@@ -27,7 +27,7 @@ internal class RazorCompiler(
             applicationPartManager, viewEngine, /* never! serviceProvider,*/ httpContextAccessor, actionContextAccessor, appCodeLoader, assemblyResolver, sourceAnalyzer
         ]), IRazorCompiler
 {
-    public async Task<(IView view, ActionContext context)> CompileView(string partialName, Action<RazorView> configure, IApp app, HotBuildSpec spec)
+    public async Task<(IView view, ActionContext context)> CompileView(string partialName, Action<RazorView> configure, IAppPaths app, HotBuildSpec spec)
     {
         var l = Log.Fn<(IView view, ActionContext context)>($"partialName:{partialName},appCodePath:{app}");
         var actionContext = actionContextAccessor.ActionContext ?? NewActionContext();
@@ -39,7 +39,7 @@ internal class RazorCompiler(
     }
 
     private static bool _executedAlready;
-    private async Task<IView> FindViewAsync(ActionContext actionContext, string partialName, IApp app, HotBuildSpec spec)
+    private async Task<IView> FindViewAsync(ActionContext actionContext, string partialName, IAppPaths app, HotBuildSpec spec)
     {
         var l = Log.Fn<IView>($"partialName:{partialName}");
         var searchedLocations = new List<string>();
@@ -133,7 +133,7 @@ internal class RazorCompiler(
         return l.ReturnAsOk(new(httpContext, new(), new()));
     }
 
-    private bool AddAppCodeAssembly(string partialName, IApp app, HotBuildSpec spec)
+    private bool AddAppCodeAssembly(string partialName, IAppPaths app, HotBuildSpec spec)
     {
         var log = Log.Fn<bool>($"{nameof(partialName)}:{partialName}; {nameof(app.RelativePath)}:{app.RelativePath}; {spec}", timer: true);
 
@@ -177,7 +177,7 @@ internal class RazorCompiler(
         return log.ReturnFalse("no assembly");
     }
 
-    private static string AppRelativePathWithEdition(IApp app, HotBuildSpec spec)
+    private static string AppRelativePathWithEdition(IAppPaths app, HotBuildSpec spec)
         => spec.Edition.HasValue()
             ? Path.Combine(app.RelativePath, spec.Edition)
             : app.RelativePath;

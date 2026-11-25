@@ -1,11 +1,10 @@
 ﻿using DotNetNuke.Entities.Modules;
 using System.Web.UI;
-using ToSic.Eav.Web.Sys;
+using ToSic.Eav.Web.Http.Sys;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Dnn.Features;
 using ToSic.Sxc.Dnn.Install;
-using ToSic.Sxc.Dnn.Services;
+using ToSic.Sxc.Dnn.Services.Sys;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Render.Block.Sys;
 using ToSic.Sxc.Render.Sys;
@@ -34,7 +33,7 @@ public partial class View : PortalModuleBase, IActionable
     /// Get the service provider only once - ideally in Dnn9.4 we will get it from Dnn
     /// If we would get it multiple times, there are edge cases where it could be different each time! #2614
     /// </summary>
-    private IServiceProvider ServiceProvider => field ??= DnnStaticDi.CreateModuleScopedServiceProvider();
+    private ISysServiceProvider ServiceProvider => field ??= DnnStaticDi.CreateModuleScopedServiceProvider();
 
     private TService GetService<TService>() => ServiceProvider.Build<TService>(Log);
 
@@ -44,7 +43,12 @@ public partial class View : PortalModuleBase, IActionable
     /// Block needs to self-initialize when first requested, because it's used in the Actions-Menu builder
     /// which runs before page-load
     /// </summary>
-    private IBlock Block => _blockGetOnce.Get(Log, () => GetService<IModuleAndBlockBuilder>().BuildBlock(ModuleConfiguration, null), timer: true);
+    private IBlock Block => _blockGetOnce.Get(Log, timer: true, generator: ()
+        =>
+    {
+        var ctx = GetService<DnnModuleContextFactory>().InitDnnSiteModuleAndBlockContext(ModuleConfiguration);
+        return GetService<BlockOfModule>().GetBlockOfModule(ctx);
+    });
     private readonly LazyGetAndLog<IBlock> _blockGetOnce = new();
 
     private IBlockRenderer BlockRenderer => field ??= GetService<IBlockRenderer>().Setup(Block);
@@ -59,7 +63,7 @@ public partial class View : PortalModuleBase, IActionable
     /// - delay creating until first use to really just track our time when needed.
     /// </remarks>
     private HttpRequestLoggingScoped RequestLogging => field
-        ??= ServiceProvider.Build<Generator<HttpRequestLoggingScoped, HttpRequestLoggingScoped.Opts>>()
+        ??= ServiceProvider.Build<Generator<HttpRequestLoggingScoped, HttpRequestLoggingScoped.Options>>()
             .New(new() { Segment = "module", RootName = "Sxc.View" });
 
     // The request root decides Legacy or MEL for the complete module log family.

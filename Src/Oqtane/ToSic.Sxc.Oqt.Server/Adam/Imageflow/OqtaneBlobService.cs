@@ -8,7 +8,7 @@ using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 
-internal class OqtaneBlobService(IServiceProvider serviceProvider) : IBlobProvider
+internal class OqtaneBlobService(ISysServiceProvider serviceProvider) : IBlobProvider
 {
     private const string Prefix = "/";
     private const string AdamPath = "/adam/";
@@ -39,16 +39,16 @@ internal class OqtaneBlobService(IServiceProvider serviceProvider) : IBlobProvid
             // We need new scope on each request to avoid sharing the same instance of services.
             using var scope = serviceProvider.CreateScope();
 
-            var webHostEnvironment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
+            var webHostEnvironment = scope.GetSysServiceProvider().GetRequiredService<IWebHostEnvironment>();
             if (ExistUnderWebRootPath(webHostEnvironment, virtualPath, out var webRootFilePath)) 
                 return BlobData(webRootFilePath);
 
             // Get alias.
-            var aliasResolver = scope.ServiceProvider.GetRequiredService<AliasResolver>();
+            var aliasResolver = scope.GetSysServiceProvider().GetRequiredService<AliasResolver>();
             var alias = aliasResolver.Alias;
 
             // Build physicalPath.
-            var fileHelper = scope.ServiceProvider.GetService<OqtAssetsFileHelper>(); // this service sometimes was not working when was lazy and not scoped
+            var fileHelper = scope.GetSysServiceProvider().GetService<OqtAssetsFileHelper>(); // this service sometimes was not working when was lazy and not scoped
             var physicalPath = fileHelper.GetFilePath(webHostEnvironment.ContentRootPath, alias, route, appName, filePath);
 
             try

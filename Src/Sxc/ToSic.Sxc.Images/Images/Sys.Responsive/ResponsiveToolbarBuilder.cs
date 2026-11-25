@@ -35,7 +35,7 @@ internal class ResponsiveToolbarBuilder(ILog parentLog) : HelperBase(parentLog, 
         var isInSameEntity = AdamSecurity.PathIsInItemAdam(target.FieldOrNull.Parent.Guid, "", src);
 
         // Construct the toolbar; in edge cases the toolbar service could be missing
-        var imgTlb = imgService.ToolbarOrNull?.Empty().Settings(
+        var imgTlb = imgService.Toolbar.Empty().Settings(
             hover: "right-middle",
             // Delay show of toolbar if it's a shared image, as it shouldn't be used much
             ui: isInSameEntity ? null : "delayShow=1000"

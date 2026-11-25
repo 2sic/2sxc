@@ -1,9 +1,10 @@
-﻿using ToSic.Sxc.Apps.Sys.Ui;
+// using ToSic.Eav.Apps.Inspect.Sys.UiDto; // Legacy block-option endpoints.
+using ToSic.Eav.WebApi.Admin.Sys;
 using ToSic.Sxc.Backend.InPage;
 
 namespace ToSic.Sxc.Backend.Cms;
 
-public interface IBlockController
+public interface IBlockController: IAppAdminWebApiController
 {
     /// <summary>
     /// used to be GET Module/GenerateContentBlock
@@ -20,26 +21,29 @@ public interface IBlockController
     /// </summary>
     /// <param name="appId"></param>
     /*new*/
-    void App(int? appId);
+    Task App(int? appId);
 
-    /// <summary>
-    /// used to be GET Module/GetSelectableApps
-    /// </summary>
-    /// <param name="apps"></param>
-    /// <returns></returns>
-    IEnumerable<AppUiInfo> Apps(string? apps = null);
-
-    /// <summary>
-    /// used to be GET Module/GetSelectableContentTypes
-    /// </summary>
-    /// <returns></returns>
-    IEnumerable<ContentTypeUiInfo> ContentTypes();
-
-    /// <summary>
-    /// used to be GET Module/GetSelectableTemplates
-    /// </summary>
-    /// <returns></returns>
-    IEnumerable<TemplateUiInfo> Templates();
+    // Legacy block-option endpoints, replaced by System.BlockConfigOptions.
+    // Keep these commented until we have confirmed that no external clients still depend on them.
+    //
+    // /// <summary>
+    // /// used to be GET Module/GetSelectableApps
+    // /// </summary>
+    // /// <param name="apps"></param>
+    // /// <returns></returns>
+    // IEnumerable<AppUiInfo> Apps(string? apps = null);
+    //
+    // /// <summary>
+    // /// used to be GET Module/GetSelectableContentTypes
+    // /// </summary>
+    // /// <returns></returns>
+    // IEnumerable<ContentTypeUiInfo> ContentTypes();
+    //
+    // /// <summary>
+    // /// used to be GET Module/GetSelectableTemplates
+    // /// </summary>
+    // /// <returns></returns>
+    // IEnumerable<TemplateUiInfo> Templates();
 
     /// <summary>
     /// Used in InPage.js
@@ -48,7 +52,7 @@ public interface IBlockController
     /// <param name="templateId"></param>
     /// <param name="forceCreateContentGroup"></param>
     /// <returns></returns>
-    Guid? Template(int templateId, bool forceCreateContentGroup);
+    Task<Guid?> Template(int templateId, bool forceCreateContentGroup);
 
     /// <summary>
     /// used to be GET Module/RenderTemplate
@@ -62,5 +66,5 @@ public interface IBlockController
     /// <summary>
     /// Used to be GET Module/Publish
     /// </summary>
-    bool Publish(string part, int index);
+    Task<bool> Publish(string part, int index);
 }

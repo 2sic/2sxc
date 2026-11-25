@@ -1,8 +1,9 @@
 ﻿using Custom.Razor.Sys;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Render.Sys.Specs;
-using ToSic.Sxc.Sys.ExecutionContext;
+
 using IHasLog = ToSic.Sys.Logging.IHasLog;
 using ILog = ToSic.Sys.Logging.ILog;
 
@@ -46,14 +47,13 @@ public abstract partial class RazorComponentBase : WebPageBase, IRazor, IHasCode
 
     /// <inheritdoc />
     [PrivateApi]
-    internal IExecutionContext ExCtx { get; private set; }
+    internal ICodeContext ExCtx { get; private set; }
 
     /// <inheritdoc />
     [PrivateApi]
-    public void ConnectToRoot(IExecutionContext exCtx)
+    public void SetupContext(ICodeContext codeCtx)
     {
-        RzrHlp.ConnectToRoot(exCtx);
-        ExCtx = exCtx;
+        ExCtx = codeCtx;
     }
 
     /// <summary>
@@ -93,7 +93,7 @@ public abstract partial class RazorComponentBase : WebPageBase, IRazor, IHasCode
     public virtual ICodeLog Log => RzrHlp.CodeLog;
 
     /// <inheritdoc />
-    public virtual IHtmlHelper Html => RzrHlp.Html;
+    public abstract IHtmlHelper Html { get; }
 
     #endregion
 }

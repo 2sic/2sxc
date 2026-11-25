@@ -1,10 +1,12 @@
 ﻿using System.Web;
+using ToSic.Eav.Apps.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys;
-using ToSic.Eav.WebApi.Sys.Admin;
-using ToSic.Eav.WebApi.Sys.Dto;
+using ToSic.Eav.WebApi.Admin.Sys;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Dnn.WebApi.Sys;
-using RealController = ToSic.Sxc.Backend.Admin.AppControllerReal;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
+using RealController = ToSic.Eav.WebApi.Admin.Sys.AppControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
@@ -12,11 +14,20 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 // token, which fails in the cases where the url is called using get, which should result in a download
 // [ValidateAntiForgeryToken] because the exports are called by the browser directly (new tab) 
 // we can't set this globally (only needed for imports)
-[DnnLogExceptions]
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), IAppController
+public class AppController : DnnApiController, IAppController
 {
-    private RealController Real => SysHlp.GetService<RealController>();
+    #region WebApi Composition Infrastructure
+
+    public ILog Log => field ??= LogFactory.Create("Api." + RealController.LogSuffix);
+
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
+
+    #endregion
+
+
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     /// <inheritdoc />
     [HttpDelete]
@@ -35,13 +46,6 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public void App(int zoneId, string name, int? inheritAppId = null) => Real.App(zoneId, name, inheritAppId);
-
-    // Replaced by DataSource System.AppStatistics through query System.SysData.
-    ///// <inheritdoc />
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    //public AppExportInfoDto Statistics(int zoneId, int appId) => Real.Statistics(zoneId, appId);
 
 
     /// <inheritdoc />
@@ -75,7 +79,7 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [HttpPost]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public Task<ImportResultDto> Reset(int zoneId, int appId, bool withPortalFiles = false)
+    public Task<ImportResult> Reset(int zoneId, int appId, bool withPortalFiles = false)
     {
         this.PreventServerTimeout600();
         return Real.Reset(zoneId, appId, PortalSettings.DefaultLanguage, withPortalFiles);
@@ -85,7 +89,7 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [HttpPost]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public ImportResultDto Import(int zoneId)
+    public ImportResult Import(int zoneId)
     {
         this.PreventServerTimeout600();
         return Real.Import(new(Request, HttpContext.Current.Request), zoneId, HttpContext.Current.Request["Name"]);
@@ -96,7 +100,7 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [HttpPost]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppDto> pendingApps)
+    public ImportResult InstallPendingApps(int zoneId, IEnumerable<PendingAppRaw> pendingApps)
     {
         this.PreventServerTimeout600();
         return Real.InstallPendingApps(zoneId, pendingApps);

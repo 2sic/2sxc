@@ -1,11 +1,13 @@
 using System.Reflection;
+using ToSic.Eav.Apps.Inspect.Sys.WebApi;
+using ToSic.Eav.Apps.Inspect.Sys.WebApi.Models;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
-partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControllerDependency
+partial class AppFilesControllerReal : IAppExplorerControllerDependency
 {
     /// <summary>
     /// Get all api controller files from AppCode for all editions

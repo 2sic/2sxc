@@ -1,16 +1,16 @@
 ﻿using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Services.Sys;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.Cms.Sys;
 
-internal class HtmlInnerContentHelper()
-    : ServiceWithContext("Cms.StrWys", connect: [])
+internal class HtmlInnerContentHelper(Ctx<ICodeContextGetService> ctxGetService)
+    : ServiceBase("Cms.StrWys", connect: [])
 {
     [field: AllowNull, MaybeNull]
     private IRenderService RenderService => field
-        ??= ExCtx.GetService<IRenderService>(reuse: true);
+        ??= ctxGetService.Value.GetService<IRenderService>(reuse: true);
 
     public string ProcessInnerContent(string html, IContentType contentType, IContentTypeField fieldDef, IField field)
     {

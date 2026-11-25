@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Metadata;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Data;
 
 
@@ -13,23 +14,9 @@ namespace ToSic.Sxc.Apps;
 public interface IApp: 
     IAppPaths,
     IAppIdentity,
-    IHasMetadata
-// #TryToDropOldIApp: 2025-05-14 2dm v20 try to remove this for now
-//#if NETFRAMEWORK
-//        , SexyContent.Interfaces.IApp // inherits from old namespace for compatibility
-//#endif
+    IHasMetadata,
+    IServiceWithSetup<IAppForCode>
 {
-
-    #region Experimental / new
-
-    // #DropAppConfigurationProvider
-    // [ShowApiWhenReleased(ShowApiMode.Never)]
-    // [Obsolete("Don't use any more?? note: 2025-06 2dm not sure if this is really deprecated, used to say: use NameId instead, will be removed ca. v14")]
-    //ILookUpEngine ConfigurationProvider { get; }
-
-    #endregion
-
-
     /// <summary>
     /// App Name
     /// </summary>
@@ -61,6 +48,7 @@ public interface IApp:
     /// Configuration object with information about the App.
     /// This contains things like app version, path etc.
     /// </summary>
+    /// <remarks>If the underlying AppConfiguration is `null`, it would use default values</remarks>
     IAppConfiguration Configuration { get; }
 
     /// <summary>
@@ -119,33 +107,9 @@ public interface IApp:
     // Important: Repeat definition of base interface for docs and because of Razor-Interface-Inheritance-Problems
     new string PhysicalPathShared { get; }
 
-    ///// <summary>
-    ///// Path relative to the website root.
-    ///// In DNN this is usually the same as the url-path.
-    ///// In Oqtane it's very different. 
-    ///// </summary>
-    ///// <remarks>
-    ///// * Made public v15.06 but existed previously
-    ///// </remarks>
-    //[PrivateApi("not public, not sure if we should surface this")]
-    //new string RelativePath { get; }
-
-    ///// <summary>
-    ///// Path of the shared App relative to the website root.
-    ///// In DNN this is usually the same as the url-path.
-    ///// In Oqtane it's very different. 
-    ///// </summary>
-    ///// <remarks>
-    ///// * Made public v15.06 but existed previously
-    ///// </remarks>
-    //[PrivateApi("not public, not sure if we should surface this")]
-    //new string RelativePathShared { get; }
-
     /// <summary>
     /// The thumbnail path for the current app. 
     /// </summary>
     /// <returns>path + app-icon.png if there is an icon there. </returns>
     string? Thumbnail { get; }
-
-
 }

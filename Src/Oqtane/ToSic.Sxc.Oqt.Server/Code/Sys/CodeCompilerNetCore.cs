@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Sys;
 
 [PrivateApi]
 internal class CodeCompilerNetCore(
-    IServiceProvider serviceProvider,
+    ISysServiceProvider serviceProvider,
     LazySvc<IServerPaths> serverPaths,
     Generator<Compiler> compiler)
     : CodeCompiler(serviceProvider, connect: [serverPaths, compiler])

@@ -55,7 +55,7 @@ public class CodeControllerReal(
     {
         var l = Log.Fn<RichResult>($"{nameof(appId)}:{appId};{nameof(edition)}:{edition}", timer: true);
 
-        var result = codeGenerate.GenerateDataModels(appId, edition, generator, configurationId);
+        var result = codeGenerate.GenerateDataModelSet(appId, edition, generator, configurationId);
         return l.Return(new RichResult
             {
                 Ok = result.Ok,

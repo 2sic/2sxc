@@ -65,6 +65,7 @@ public class OqtStartup : IServerStartup
             .AddSxcRazor()                  // this is the .net core Razor compiler
             .AddAdamWebApi<int, int>()      // This is used to enable ADAM WebAPIs
             .AddSxcWebApi()                 // This adds all the standard backend services for WebAPIs to work
+            .AddSxcWorkDataSourceProviders()
             .AddSxcCustom()                 // Anything around custom code
             .AddSxcCode()
             .AddSxcCodeHotBuild()
@@ -102,7 +103,7 @@ public class OqtStartup : IServerStartup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        var serviceProvider = app.ApplicationServices;
+        var serviceProvider = app.ApplicationServices.GetRequiredService<ISysServiceProvider>();
         LogFactory.Bind(serviceProvider);
 
         var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
@@ -131,9 +132,6 @@ public class OqtStartup : IServerStartup
 
         // Clean the App_Data/2sxc.bin folder
         serviceProvider.Build<Util>().CleanTempAssemblyFolder();
-
-        //if (env.IsDevelopment())
-        //    app.UsePageResponseRewriteMiddleware();
 
         // Configure Sxc endpoints and dialogs
         app.UseEndpoints(endpoints =>

@@ -8,16 +8,15 @@ namespace ToSic.Sxc.Edit.Toolbar.Sys;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ToolbarButtonDecoratorHelper(IAppReaderFactory appReaders, ScopedCache<Dictionary<string, ToolbarButtonDecorator?>> cache) : ServiceBase($"{SxcLogName}.TbdHlp", connect: [appReaders])
+public class ToolbarButtonDecoratorHelper(IAppReaderFactory appReaders, ScopedCache<Dictionary<string, ToolbarButtonDecorator?>> cache, Ctx<IAppIdentity> exCtx)
+    : ServiceBase($"{SxcLogName}.TbdHlp", connect: [appReaders])
 {
-    public IAppIdentity? MainAppIdentity { get; set; }
-
     internal ToolbarButtonDecorator? GetDecorator(IAppIdentity? appIdentity, string? typeName, string? command)
     {
         // If no special context was given, use the main one from the current context
-        appIdentity ??= MainAppIdentity;
+        appIdentity ??= exCtx.Value;
 
-        if (appIdentity == null || !typeName.HasValue() || !command.HasValue())
+        if (typeName.IsEmpty() || command.IsEmpty())
             return null;
 
         var cacheKey = $"{appIdentity.Show()}/{typeName}/{command}";

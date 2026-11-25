@@ -1,8 +1,11 @@
 ﻿using System.Web;
-using ToSic.Eav.WebApi.Sys.Admin;
-using ToSic.Eav.WebApi.Sys.Dto;
+using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.WebApi.Admin.Sys;
+using ToSic.Eav.WebApi.Sys;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Dnn.WebApi.Sys;
-using RealController = ToSic.Sxc.Backend.Admin.TypeControllerReal;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
+using RealController = ToSic.Eav.WebApi.Admin.Sys.TypeControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
@@ -18,19 +21,20 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 /// Instead, each method must have all attributes, or do additional security checking.
 /// Security checking is possible, because the cookie still contains user information
 /// </remarks>
-[DnnLogExceptions]
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), ITypeController
+public class TypeController : DnnApiController, ITypeController
 {
-    private RealController Real => SysHlp.GetService<RealController>();
+    #region WebApi Composition Infrastructure
 
-    // Replaced by DataSource System.ContentTypes through query System.SysData.
-    ///// <summary>Get a list of all content-types.</summary>
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    //public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
-    //    => Real.List(appId, scope, withStatistics);
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}");
+
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
+
+    #endregion
+
+
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     /// <summary>
     /// Delete a Content-Type
@@ -102,11 +106,7 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public HttpResponseMessage Json(int appId, string name)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        using (this.InitializedResponseMaker())
-            return Real.Json(appId, name);
-    }
+        => Real.Json(appId, name).ToHttpResponse();
 
 
     /// <summary>
@@ -119,7 +119,7 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public ImportResultDto Import(int zoneId, int appId)
+    public ImportResult Import(int zoneId, int appId)
     {
         this.PreventServerTimeout600();
         return Real.Import(new(Request, HttpContext.Current.Request), zoneId, appId);
@@ -134,10 +134,5 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public HttpResponseMessage JsonBundleExport(int appId, Guid exportConfiguration, int indentation = 0)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        using (this.InitializedResponseMaker())
-            return Real.JsonBundleExport(appId, exportConfiguration, indentation);
-    }
-
+        => Real.JsonBundleExport(appId, exportConfiguration, indentation).ToHttpResponse();
 }

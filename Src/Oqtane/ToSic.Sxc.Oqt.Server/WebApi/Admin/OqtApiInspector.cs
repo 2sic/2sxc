@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Reflection;
-using ToSic.Eav.WebApi.Sys.ApiExplorer;
+using ToSic.Eav.Apps.Inspect.Sys.WebApi;
+using ToSic.Eav.Apps.Inspect.Sys.WebApi.Dto;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;

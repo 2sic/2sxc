@@ -1,13 +1,13 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Permissions;
-using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.Adam.Sys.Security;
 using ToSic.Sxc.Adam.Sys.Storage;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sys.Capabilities.Features;
+using ToSic.Sys.Security.Permissions;
 using static ToSic.Sys.Capabilities.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Adam.Sys.Manager;
@@ -20,26 +20,37 @@ namespace ToSic.Sxc.Adam.Sys.Manager;
 /// It's abstract, because there will be a typed implementation inheriting this
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamContext(AdamContext.Dependencies services)
-    : ServiceBase<AdamContext.Dependencies>(services, "Adm.Ctx")
+public class AdamContext(
+    Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> typesPermissions,
+    Generator<IAdamSecurityCheckService, AdamContext> adamSecGen,
+    LazySvc<ISysFeaturesService> featuresSvc,
+    Generator<AdamManager, AdamManager.Options> adamManagerLazy,
+    Generator<AdamStorageOfSite> siteStorageGen,
+    Generator<AdamStorageOfField> fieldStorageGen)
+    : ServiceWithSetup<AdamContext.Options>("Adm.Ctx", connect: [typesPermissions, adamSecGen, featuresSvc, adamManagerLazy, siteStorageGen, fieldStorageGen])
 {
     #region Constructor and DI
 
-    public record Dependencies(
-        Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> TypesPermissions,
-        Generator<IAdamSecurityCheckService> AdamSecurityGenerator,
-        LazySvc<ISysFeaturesService> FeaturesSvc,
-        LazySvc<AdamManager> AdamManagerLazy,
-        Generator<AdamStorageOfSite> SiteStorageGen,
-        Generator<AdamStorageOfField> FieldStorageGen)
-        : DependenciesBase(connect: [TypesPermissions, AdamSecurityGenerator, FeaturesSvc, AdamManagerLazy, SiteStorageGen, FieldStorageGen]);
+    public record Options(
+        IContextOfApp Context,
+        string ContentType,
+        string FieldName,
+        Guid EntityGuid,
+        bool UsePortalRoot);
 
-    public IAdamSecurityCheckService Security { get; private set; } = null!;
-    public MultiPermissionsTypes Permissions { get; private set; } = null!;
+    public IAdamSecurityCheckService Security => field ??= adamSecGen.New(this);
 
-    public AdamManager AdamManager => Services.AdamManagerLazy.Value;
+    public MultiPermissionsTypes Permissions => field ??= typesPermissions.New(new()
+    {
+        SiteContext = MyOptions.Context, App = MyOptions.Context.AppReaderRequired,
+        ContentTypes = [MyOptions.ContentType]
+    });
 
-    public AdamStorage AdamRoot { get; private set; } = null!;
+    public AdamManager AdamManager => field ??= adamManagerLazy.New(new(MyOptions.Context, CompatibilityLevels.CompatibilityLevel10));
+
+    public AdamStorage AdamRoot => field ??= MyOptions.UsePortalRoot
+        ? siteStorageGen.New().Init(AdamManager)
+        : fieldStorageGen.New().InitItemAndField(MyOptions.EntityGuid, MyOptions.FieldName).Init(AdamManager);
 
     public IAppReader AppReader => AdamManager.AppReader;
 
@@ -50,50 +61,39 @@ public class AdamContext(AdamContext.Dependencies services)
     /// <summary>
     /// Initializes the object and performs all the initial security checks
     /// </summary>
-    public AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot)
+    public override void Setup(Options options)
     {
-        var l = Log.Fn<AdamContext>($"app: {context.AppReaderRequired.Show()}, field:{fieldName}, guid:{entityGuid}, usePortalRoot: {usePortalRoot}");
-        AdamManager.Init(context, CompatibilityLevels.CompatibilityLevel10);
-        AdamRoot = usePortalRoot
-            ? Services.SiteStorageGen.New()
-            : Services.FieldStorageGen.New().InitItemAndField(entityGuid, fieldName);
-        AdamRoot.Init(AdamManager);
+        base.Setup(options);
+        var (context, contentType, fieldName, entityGuid, usePortalRoot) = options;
+        var l = Log.Fn($"app: {context.AppReaderRequired.Show()}, field:{fieldName}, guid:{entityGuid}, usePortalRoot: {usePortalRoot}");
 
-        Context = context;
-
-        Permissions = Services.TypesPermissions.New(new()
-                { SiteContext = context, App = context.AppReaderRequired, ContentTypes = [contentType] })
-            ;
         // only do checks on field/guid if it's actually accessing that, if it's on the portal root, don't.
-        UseSiteRoot = usePortalRoot;
         if (!usePortalRoot)
         {
             ItemFieldName = fieldName;
             ItemGuid = entityGuid;
         }
 
-        Security = Services.AdamSecurityGenerator.New().Init(this, usePortalRoot);
-
         if (Security.MustThrowIfAccessingRootButNotAllowed(usePortalRoot, out var exception))
             throw exception;
 
         l.A("check if feature enabled");
-        var sysFeatures = Services.FeaturesSvc.Value;
-        if (Security.UserIsRestricted && !sysFeatures.IsEnabled(FeaturesForRestrictedUsers))
+        if (Security.UserIsRestricted && !featuresSvc.Value.IsEnabled(FeaturesForRestrictedUsers))
         {
-            var msg = sysFeatures.MsgMissingSome(FeaturesForRestrictedUsers);
-            throw HttpException.PermissionDenied(
-                $"low-permission users may not access this - {msg}");
+            var msg = featuresSvc.Value.MsgMissingSome(FeaturesForRestrictedUsers);
+            throw l.Ex(new PermissionDeniedException($"low-permission users may not access this - {msg}"));
 
         }
 
         if (string.IsNullOrEmpty(contentType) || string.IsNullOrEmpty(fieldName))
-            return l.Return(this);
+        {
+            l.Done();
+            return;
+        }
 
-        Attribute = AttributeDefinition(context.AppReaderRequired, contentType, fieldName);
         if (Security.FieldDoesNotSupportFiles(out var exp))
             throw exp;
-        return l.Return(this);
+        l.Done();
     }
 
     #endregion
@@ -102,7 +102,7 @@ public class AdamContext(AdamContext.Dependencies services)
     /// Determines if the files come from the root (shared files).
     /// Is false, if they come from the item specific ADAM folder.
     /// </summary>
-    public bool UseSiteRoot;
+    public bool UseSiteRoot => MyOptions.UsePortalRoot;
 
     /// <summary>
     /// The field this state is for. Will be null/empty if UsePortalRoot is true
@@ -114,9 +114,10 @@ public class AdamContext(AdamContext.Dependencies services)
     /// </summary>
     public Guid ItemGuid;
 
-    internal IContentTypeField? Attribute;
+    internal IContentTypeField? Attribute => _attribute.Get(() => AttributeDefinition(MyOptions));
+    private readonly LazyGet<IContentTypeField?> _attribute = new();
 
-    public IContextOfApp Context { get; private set; } = null!;
+    public IContextOfApp Context => field ??= MyOptions.Context;
 
     public readonly Guid[] FeaturesForRestrictedUsers =
     [
@@ -128,10 +129,10 @@ public class AdamContext(AdamContext.Dependencies services)
     /// <summary>
     /// try to find fieldDef definition - for later extra security checks
     /// </summary>
-    private static IContentTypeField? AttributeDefinition(IAppReadContentTypes appReadContentTypes, string contentType, string fieldName)
+    private static IContentTypeField? AttributeDefinition(Options options)
     {
-        var type = appReadContentTypes.GetContentType(contentType);
-        return type[fieldName];
+        var type = options.Context.AppReaderRequired.GetContentType(options.ContentType);
+        return type[options.FieldName];
     }
 
 }

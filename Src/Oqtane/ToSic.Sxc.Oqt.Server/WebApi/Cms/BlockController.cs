@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Sxc.Apps.Sys.Ui;
+// using ToSic.Eav.Apps.Inspect.Sys.UiDto; // Legacy block-option endpoints.
 using ToSic.Sxc.Backend.Cms;
 using ToSic.Sxc.Backend.InPage;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 using RealController = ToSic.Sxc.Backend.Cms.BlockControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
@@ -18,10 +19,16 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 [ValidateAntiForgeryToken]
 [ApiController]
 // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
+[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class BlockController() : OqtStatefulControllerBase(RealController.LogSuffix), IBlockController
+[OqtPrepareBlockContext]
+public class BlockController : ControllerBase, IHasLog, IBlockController
 {
-    private RealController Real => GetService<RealController>();
+    /// <inheritdoc />
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+
+    private RealController Real => this.GetApiService<RealController>();
 
 
 
@@ -43,26 +50,29 @@ public class BlockController() : OqtStatefulControllerBase(RealController.LogSuf
     [HttpPost]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public void App(int? appId) => Real.App(appId);
+    public Task App(int? appId) => Real.App(appId);
 
-    /// <inheritdoc />
-    [HttpGet]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    [Authorize(Roles = RoleNames.Admin)]
-    public IEnumerable<AppUiInfo> Apps(string apps = null) => Real.Apps(apps);
-
-
-    /// <inheritdoc />
-    [HttpGet]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    [Authorize(Roles = RoleNames.Admin)]
-    public IEnumerable<ContentTypeUiInfo> ContentTypes() => Real.ContentTypes();
-
-    /// <inheritdoc />
-    [HttpGet]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    [Authorize(Roles = RoleNames.Admin)]
-    public IEnumerable<TemplateUiInfo> Templates() => Real.Templates();
+    // Legacy block-option endpoints, replaced by System.BlockConfigOptions.
+    // Keep these commented until we have confirmed that no external clients still depend on them.
+    //
+    // /// <inheritdoc />
+    // [HttpGet]
+    // //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    // [Authorize(Roles = RoleNames.Admin)]
+    // public IEnumerable<AppUiInfo> Apps(string apps = null) => Real.Apps(apps);
+    //
+    //
+    // /// <inheritdoc />
+    // [HttpGet]
+    // //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    // [Authorize(Roles = RoleNames.Admin)]
+    // public IEnumerable<ContentTypeUiInfo> ContentTypes() => Real.ContentTypes();
+    //
+    // /// <inheritdoc />
+    // [HttpGet]
+    // //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    // [Authorize(Roles = RoleNames.Admin)]
+    // public IEnumerable<TemplateUiInfo> Templates() => Real.Templates();
 
     /// <inheritdoc />
     [HttpPost]
@@ -70,7 +80,7 @@ public class BlockController() : OqtStatefulControllerBase(RealController.LogSuf
     //[Authorize(Roles = RoleNames.Registered)]
     [Authorize(Roles = RoleNames.Admin)]
     // TODO: 2DM please check permissions
-    public Guid? Template(int templateId, bool forceCreateContentGroup) => Real.Template(templateId, forceCreateContentGroup);
+    public Task<Guid?> Template(int templateId, bool forceCreateContentGroup) => Real.Template(templateId, forceCreateContentGroup);
 
 
     /// <inheritdoc />
@@ -83,6 +93,6 @@ public class BlockController() : OqtStatefulControllerBase(RealController.LogSuf
     [HttpPost]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool Publish(string part, int index) => Real.Publish(part, index);
+    public Task<bool> Publish(string part, int index) => Real.Publish(part, index);
 
 }

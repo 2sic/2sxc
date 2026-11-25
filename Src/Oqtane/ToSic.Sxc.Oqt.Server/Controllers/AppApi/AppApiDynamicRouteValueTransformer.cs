@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Oqtane.Models;
 using Oqtane.Repository;
 using System.Net;
+using ToSic.Eav.Context.Sys;
 using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.Backend;
 using ToSic.Sxc.Backend.Context;
@@ -15,6 +16,7 @@ using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi.Sys;
 using ToSic.Sys.Utils;
 
@@ -67,13 +69,12 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
             }
             else
             {
-                var serviceProvider = httpContext.RequestServices;
+                var serviceProvider = httpContext.GetSysRequestServices();
                 // this transient dependency is not provided as usual constructor provided lazy/generator dependency (from root service provider)
                 // but as a transient dependency from the request service provider
                 var aliasResolver = serviceProvider.Build<AliasResolver>();
                 alias = aliasResolver.Alias
-                        ?? throw new HttpExceptionAbstraction(HttpStatusCode.NotFound,
-                            $"Error: missing required 'alias' route value.", "Not Found");
+                        ?? throw new KeyNotFoundException("Error: missing required 'alias' route value.");
             }
 
             var contentSiteId = _oqtSiteGroup.GetPrimaryLocalizationSiteId(alias.SiteId);
@@ -83,35 +84,33 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
 
             // Ensure required route values: alias, appFolder, controller, action.
             if (!values.ContainsKey("appFolder"))
-                throw new HttpExceptionAbstraction(HttpStatusCode.NotFound,
-                    $"Error: missing required 'appFolder' route value.", "Not Found");
+                throw new KeyNotFoundException("Error: missing required 'appFolder' route value.");
             var appFolder = (string) values["appFolder"];
             if (appFolder == OqtWebApiConstants.Auto)
             {
                 // before trying to get the AppFolder, we must init the ICmsContext as this will
                 // this transient dependencies are not provided as usual constructor provided lazy/generator dependencies (from root service provider)
                 // but as a transient dependencies from the request service provider
-                var blockInitializer = httpContext.RequestServices.Build<IWebApiContextBuilder>();
+                var serviceProvider = httpContext.GetSysRequestServices();
+                var blockInitializer = serviceProvider.Build<IWebApiContextBuilder>();
                 blockInitializer.PrepareContextResolverForApiRequest();
                 // Note 2026-10-18 2dm: #NoLookupSideEffects
                 // the next line used to have a side effect of sharing the found app-context
                 // ...but it should already be handled in the previous PrepareContextResolverForApiRequest() call
                 // This has been removed; it may break something, in which case sharing must be added explicitly
-                var builder = httpContext.RequestServices.Build<IContextBuilderService>();
-                var ctxSvc = httpContext.RequestServices.Build<IContextCompleteService>();
+                var builder = serviceProvider.Build<IWebApiAppContextBuilderService>();
+                var ctxSvc = serviceProvider.Build<IContextCompleteService>();
                 appFolder = ctxSvc.FindAppFolderFromScopeOrThrow(builder);
                 // Compilation needs the resolved app folder, not the original "auto" route value.
                 values["appFolder"] = appFolder;
             }
 
             if (!values.ContainsKey("controller"))
-                throw new HttpExceptionAbstraction(HttpStatusCode.NotFound,
-                    $"Error: missing required 'controller' route value.", "Not Found");
+                throw new KeyNotFoundException("Error: missing required 'controller' route value.");
             var controller = (string) values["controller"];
 
             if (!values.ContainsKey("action"))
-                throw new HttpExceptionAbstraction(HttpStatusCode.NotFound,
-                    $"Error: missing required 'action' route value.", "Not Found");
+                throw new KeyNotFoundException("Error: missing required 'action' route value.");
             var action = (string) values["action"];
 
             l.A(

@@ -39,7 +39,6 @@ public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> bui
         var l = Log.Fn<LookUpEngine>($"{nameof(moduleId)}:{moduleId}");
         var sources = AddHttpAndDiSources([]);
         var luEngine = new LookUpEngine(Log, sources: sources);
-        //AddHttpAndDiSources(/*luEngine,*/ []).DoIfNotNull(luEngine.Add);
         return l.Return(luEngine);
     }
 
@@ -85,7 +84,6 @@ public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> bui
 
         // Prepare additions to return
         var additions = builtInSources.Value
-            //.Where(lu => !existingList.HasSource(lu.Name))
             .Where(lu => !sources.HasSource(lu.Name))
             .ToList();
 

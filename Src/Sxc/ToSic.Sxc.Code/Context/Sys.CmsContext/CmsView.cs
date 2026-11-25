@@ -1,12 +1,13 @@
-﻿using ToSic.Eav.Metadata;
+﻿using ToSic.Eav.Apps.Assets.Sys;
+using ToSic.Eav.Apps.Views.Sys;
+using ToSic.Eav.Metadata;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Apps.Sys.Assets;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
-using ToSic.Sxc.Sys.ExecutionContext;
+
 
 // ReSharper disable ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
 
@@ -37,26 +38,23 @@ internal class CmsView(CmsContext cmsContext, IBlock block) : CmsContextPartBase
 
     [PrivateApi]
     private IFolder FolderAdvanced(NoParamOrder npo = default, string? location = default)
-        => new CmsViewFolder(this, block.App, AppAssetsHelpers.DetermineShared(location) ?? _view.IsShared);
-
-    [field: AllowNull, MaybeNull]
-    private ICodeDataFactory Cdf => field ??= CmsContext.ExCtx.GetCdf();
+        => new CmsViewFolder(this, block.App.AppPaths, AppAssetsHelpers.DetermineShared(location) ?? _view.IsShared);
 
     /// <summary>
     /// Note: this is an explicit implementation, so in Dynamic Razor it won't work. This is by design.
     /// </summary>
-    ITypedItem? ICmsView.Settings => _settings.Get(() => Cdf.AsItem(_view.Settings, new() { ItemIsStrict = true }));
+    ITypedItem? ICmsView.Settings => _settings.Get(() => CmsContext.Cdf.AsItem(_view.Settings, new() { ItemIsStrict = true }));
     private readonly LazyGet<ITypedItem?> _settings = new();
 
     /// <summary>
     /// Note: this is an explicit implementation, so in Dynamic Razor it won't work. This is by design.
     /// </summary>
-    ITypedItem? ICmsView.Resources => _resources.Get(() => Cdf.AsItem(_view.Resources, new() { ItemIsStrict = true }));
+    ITypedItem? ICmsView.Resources => _resources.Get(() => CmsContext.Cdf.AsItem(_view.Resources, new() { ItemIsStrict = true }));
     private readonly LazyGet<ITypedItem?> _resources = new();
 
     /// <inheritdoc />
     [PrivateApi("Hidden in 16.04, because we want people to use the Folder. Can't remove it though, because there are many apps that already published this.")]
-    public string Path => field ??= FigureOutPath(block.App.Path);
+    public string Path => field ??= FigureOutPath(block.App.AppPaths.Path);
 
     /// <summary>
     /// Figure out the path to the view based on a root path.

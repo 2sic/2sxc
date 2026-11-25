@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 
@@ -20,26 +23,27 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
 
+[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class DataController() : OqtStatefulControllerBase(DataControllerReal.LogSuffix), IAdminDataController
+public class DataController : ControllerBase, IHasLog, IAdminDataController
 {
-    private DataControllerReal Real => GetService<DataControllerReal>();
+    /// <inheritdoc />
+    public ILog Log => field ??= LogFactory.Create($"Api.{DataControllerReal.LogSuffix}", null, GetType().Name);
+
+    private DataControllerReal Real => this.GetApiService<DataControllerReal>();
 
     /// <inheritdoc />
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public IActionResult BundleExport(int appId, Guid exportConfiguration, int indentation = 0)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        CtxHlp.SetupResponseMaker();
-        return Real.BundleExport(appId, exportConfiguration, indentation);
-    }
+        => Real.BundleExport(appId, exportConfiguration, indentation).ToHttpResponse();
 
     /// <inheritdoc />
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public ImportResultDto BundleImport(int zoneId, int appId)
+    public ImportResult BundleImport(int zoneId, int appId)
         => Real.BundleImport(new(Request), zoneId, appId);
 
     /// <inheritdoc />
@@ -53,12 +57,6 @@ public class DataController() : OqtStatefulControllerBase(DataControllerReal.Log
     [AllowAnonymous] // will do security check internally
     public bool BundleRestore(string fileName, int zoneId, int appId)
         => Real.BundleRestore(fileName, zoneId, appId);
-
-    ///// <inheritdoc />
-    //[HttpGet]
-    //[Authorize(Roles = RoleNames.Host)]
-    //public IReadOnlyList<WorkEntityRecycleBin.RecycleBinItem> GetRecycleBin(int appId)
-    //    => Real.GetRecycleBin(appId);
 
     /// <inheritdoc />
     [HttpPost]

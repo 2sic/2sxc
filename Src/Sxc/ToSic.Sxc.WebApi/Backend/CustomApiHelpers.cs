@@ -44,9 +44,8 @@ public class CustomApiHelpers
                 ? Path.GetFileName(virtualPath)
                 : null;
             if (string.IsNullOrWhiteSpace(fileDownloadName))
-                throw new HttpExceptionAbstraction(HttpStatusCode.NotFound,
-                    $"Can't force download without a {nameof(fileDownloadName)} or a real {nameof(virtualPath)}",
-                    "Not Found");
+                throw new KeyNotFoundException(
+                    $"Not Found: Can't force download without a {nameof(fileDownloadName)} or a real {nameof(virtualPath)}");
         }
 
         return fileDownloadName!;

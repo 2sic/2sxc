@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Reflection.PortableExecutable;
 
 namespace ToSic.Sxc.Razor;
 
@@ -27,12 +28,13 @@ namespace ToSic.Sxc.Razor;
 ///
 /// Policy:
 /// - Ignore empty and missing paths. Roslyn MetadataReference requires an existing physical DLL.
+/// - Ignore native PE files without managed metadata; they cannot be compilation references.
 /// - Group readable assemblies by assembly identity: name, culture, public key token.
 /// - Keep the highest assembly version for duplicate identities.
 /// - If duplicate identities have the same version, prefer reference-assembly paths (/refs or /ref).
 ///   Reference assemblies are the intended input for compilation, while root files are usually runtime
 ///   implementation assemblies.
-/// - Preserve unreadable/non-assembly paths individually instead of collapsing them by file name.
+/// - Preserve other unreadable paths individually so the compiler can report invalid references.
 /// - When a /refs System.Runtime.dll is available, remove System.Private.* implementation assemblies.
 ///   The System.Private.* assemblies belong to runtime execution, not compile references, and mixing
 ///   them with the facade/reference assembly set causes noisy framework-type conflicts.
@@ -65,6 +67,7 @@ internal static class RazorReferencePathOptimizer
         var entries = referencePaths
             .Where(path => !string.IsNullOrWhiteSpace(path) && pathExists(path))
             .Select((path, index) => Create(path, index, getAssemblyName))
+            .OfType<ReferencePathEntry>()
             .ToList();
 
         // If the /refs reference assembly set is present, keep that compile-time view of the framework.
@@ -93,16 +96,31 @@ internal static class RazorReferencePathOptimizer
             .AsReadOnly();
     }
 
-    private static ReferencePathEntry Create(string path, int index, Func<string, AssemblyName?> getAssemblyName)
+    private static ReferencePathEntry? Create(string path, int index, Func<string, AssemblyName?> getAssemblyName)
     {
         var assemblyName = SafeGetAssemblyName(path, getAssemblyName);
+        if (assemblyName == null && IsNativeAssembly(path))
+            return null;
 
-        // If the file is not a readable .NET assembly, keep it as its own path-keyed entry.
-        // This is conservative: we do not want a helper meant for framework DLL conflicts to remove
-        // custom references we do not fully understand.
+        // Keep other unreadable references so the compiler can report the original problem.
         return assemblyName == null
             ? new(path, index, $"path:{path}", "", NoVersion, false)
             : new(path, index, AssemblyKey(assemblyName), assemblyName.Name ?? "", assemblyName.Version ?? NoVersion, IsReferenceAssemblyPath(path));
+    }
+
+    private static bool IsNativeAssembly(string path)
+    {
+        try
+        {
+            using var stream = File.OpenRead(path);
+            using var reader = new PEReader(stream);
+            return !reader.HasMetadata;
+        }
+        catch
+        {
+            // An unreadable or invalid PE file must still reach the compiler's diagnostics.
+            return false;
+        }
     }
 
     private static AssemblyName? SafeGetAssemblyName(string path, Func<string, AssemblyName?> getAssemblyName)

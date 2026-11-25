@@ -17,3 +17,4 @@ global using ToSic.Sys.Services;
 global using ToSic.Sys.Performance;
 global using ToSic.Sys.Utils;
 global using static ToSic.Sxc.Sys.SxcLogging;
+global using IAppDynamic = ToSic.Sxc.Apps.IApp;

@@ -9,9 +9,8 @@ using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Sys.ExecutionContext;
-using ToSic.Sys.Code.Help;
 
+using ToSic.Sys.Code.Help;
 
 namespace Custom.Hybrid;
 
@@ -28,7 +27,7 @@ namespace Custom.Hybrid;
 [PublicApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]   // #DocsButNotForIntellisense
 public abstract class Code14()
-    : CustomCodeBase("Sxc.Code14"), IHasCodeLog, IDynamicCode, IDynamicCode14<object, ServiceKit14>, IHasCodeHelp
+    : CustomCodeBase("Sxc.Code14"), IHasCodeLog, IDynamicCode, IDynamicCode14<object, ServiceKit14>, IHasCodeHelp, ICompatibilityLevel
 {
 
     #region Constructor / Setup
@@ -39,14 +38,11 @@ public abstract class Code14()
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => CompileCodeHlp.CodeLog;
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
     [PrivateApi]
-    public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
-
-    [field: AllowNull, MaybeNull]
-    private CodeHelperV14 CodeHelper => field ??= new(new(ExCtx, false, "c# code file"));
+    int ICompatibilityLevel.CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 
     #endregion
 
@@ -63,7 +59,7 @@ public abstract class Code14()
 
     [PrivateApi("Not yet ready")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public IDevTools DevTools => CodeHelper.DevTools;
+    public IDevTools DevTools => new DevTools("c# code file", CompileCodeHlp.Log);
 
     #endregion
 
@@ -75,7 +71,7 @@ public abstract class Code14()
     #region App / Data / Content / Header
 
     /// <inheritdoc cref="IDynamicCodeDocs.App" />
-    public IApp App => CodeApi.App;
+    public IAppDynamic App => CodeApi.App;
 
     /// <inheritdoc cref="IDynamicCodeDocs.Data" />
     public IDataSource Data => CodeApi.Data;
@@ -107,13 +103,13 @@ public abstract class Code14()
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance" />
     public dynamic? CreateInstance(string virtualPath, NoParamOrder npo = default, string? name = null, string? relativePath = null, bool throwOnError = true) =>
-        CompileCodeHlp.CreateInstance(virtualPath: virtualPath, name: name, relativePath: relativePath, throwOnError: throwOnError);
+        CompileCodeHlp.CreateInstance(CodeApi, virtualPath: virtualPath, name: name, relativePath: relativePath, throwOnError: throwOnError);
 
     /// <inheritdoc cref="ITypedCode16.GetCode"/>
     [PrivateApi("added in 16.05, but not sure if it should be public")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public dynamic? GetCode(string path, NoParamOrder npo = default, string? className = default)
-        => CompileCodeHlp.GetCode(path: path, className: className);
+        => CompileCodeHlp.GetCode(CodeApi, path: path, className: className);
 
     #endregion
 

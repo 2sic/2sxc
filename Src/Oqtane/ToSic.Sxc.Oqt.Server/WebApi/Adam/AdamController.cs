@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 using RealController = ToSic.Sxc.Backend.Adam.AdamControllerReal<int>;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Adam;
@@ -22,10 +23,16 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam;
 [Route(OqtWebApiConstants.AppRootNoLanguage + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
 [Route(OqtWebApiConstants.AppRootPathOrLang + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
 [Route(OqtWebApiConstants.AppRootPathAndLang + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
+[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamController() : OqtStatefulControllerBase("Adam"), IAdamController<int>
+[OqtPrepareBlockContext]
+public class AdamController : ControllerBase, IHasLog, IAdamController<int>
 {
-    private RealController Real => GetService<RealController>();
+    /// <inheritdoc />
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+
+    private RealController Real => this.GetApiService<RealController>();
 
     // Note: #AdamItemDto - as of now, we must use object because System.Io.Text.Json will otherwise not convert the object correctly :(
 

@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using ToSic.Sxc.Data.Sys;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Sys.HtmlParsing;
@@ -28,7 +27,7 @@ internal class WebResourceProcessor(IFeaturesService features, string? cdnSource
 
     #endregion
 
-    public PageFeatureFromSettings? Process(string key, DynamicEntity webRes)
+    public PageFeatureFromSettings? Process(string key, IEntity webRes)
     {
         var l = Log.Fn<PageFeatureFromSettings>(key);
 

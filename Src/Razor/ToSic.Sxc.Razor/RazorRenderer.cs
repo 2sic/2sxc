@@ -19,7 +19,7 @@ internal class RazorRenderer(
     public async Task<string> RenderToStringAsync<TModel>(EngineSpecs engineSpecs, TModel model, Action<RazorView> configure)
     {
         var templatePath = engineSpecs.TemplatePath;
-        var app = engineSpecs.App;
+        var app = engineSpecs.App.AppPaths;
         var hotBuildSpec = engineSpecs.ToHotBuildSpec();
         var l = Log.Fn<string>($"{nameof(templatePath)}: '{templatePath}'; {nameof(app.PhysicalPath)}: '{app.PhysicalPath}'; {hotBuildSpec}");
 

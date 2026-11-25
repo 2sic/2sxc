@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys.Options;
+using ToSic.Eav.WebApi.Admin.Sys;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using RealController = ToSic.Eav.WebApi.Sys.Admin.EntityControllerReal;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
+using RealController = ToSic.Eav.WebApi.Admin.Sys.EntityControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 
@@ -26,19 +30,15 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
+[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class EntityController() : OqtStatefulControllerBase(RealController.LogSuffix), IEntityController
+public class EntityController : ControllerBase, IHasLog, IEntityController
 {
-    private RealController Real => GetService<RealController>();
+    /// <inheritdoc />
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
 
-
-    /// <inheritdoc/>
-    // 2rb: replaced by EntitiesAdmin datasource
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    ////[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    //[Authorize(Roles = RoleNames.Admin)]
-    //public IEnumerable<Dictionary<string, object>> List(int appId, string contentType) => Real.List(appId, contentType);
+    private RealController Real => this.GetApiService<RealController>();
 
 
     /// <inheritdoc/>
@@ -52,19 +52,18 @@ public class EntityController() : OqtStatefulControllerBase(RealController.LogSu
         [FromQuery] Guid? guid = null,
         [FromQuery] bool force = false,
         [FromQuery] int? parentId = null,
-        [FromQuery] string parentField = null) =>
+        [FromQuery] string parentField = null)
+    {
+        this.PrepareRequestBlock();
         Real.Delete(contentType, appId, id, guid, force, parentId, parentField);
+    }
 
 
     /// <inheritdoc/>
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public IActionResult Json(int appId, int id, string prefix, bool withMetadata)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        CtxHlp.SetupResponseMaker();
-        return Real.Json(appId, id, prefix, withMetadata);
-    }
+        => Real.Json(appId, id, prefix, withMetadata).ToHttpResponse();
 
 
     /// <inheritdoc/>
@@ -79,12 +78,8 @@ public class EntityController() : OqtStatefulControllerBase(RealController.LogSu
         ExportResourceReferenceMode resourcesReferences,
         ExportLanguageResolution languageReferences, 
         string selectedIds = null)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        CtxHlp.SetupResponseMaker();
-        return Real.Download(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
-            languageReferences, selectedIds);
-    }
+        => Real.Download(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
+            languageReferences, selectedIds).ToHttpResponse();
 
 
     /// <inheritdoc/>
@@ -92,7 +87,7 @@ public class EntityController() : OqtStatefulControllerBase(RealController.LogSu
     [ValidateAntiForgeryToken]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public ContentImportResultDto XmlPreview(ContentImportArgsDto args) => Real.XmlPreview(args);
+    public ContentImportResult XmlPreview(ContentFileImportOptions args) => Real.XmlPreview(args);
 
 
     /// <inheritdoc/>
@@ -100,7 +95,7 @@ public class EntityController() : OqtStatefulControllerBase(RealController.LogSu
     [ValidateAntiForgeryToken]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public ContentImportResultDto XmlUpload(ContentImportArgsDto args) => Real.XmlUpload(args);
+    public ContentImportResult XmlUpload(ContentFileImportOptions args) => Real.XmlUpload(args);
 
 
     /// <inheritdoc/>
@@ -108,10 +103,5 @@ public class EntityController() : OqtStatefulControllerBase(RealController.LogSu
     [ValidateAntiForgeryToken]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool Upload(EntityImportDto args) => Real.Upload(args);
-
-
-    //// New feature in 11.03 - Usage Statistics
-    //// not final yet, so no [HttpGet]
-    //public dynamic Usage(int appId, Guid guid) => Real.Usage(appId, guid);
+    public bool Upload(DataFileImportOptions args) => Real.Upload(args);
 }

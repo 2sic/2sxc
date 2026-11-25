@@ -1,27 +1,23 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.Apps;
-using ToSic.Eav.DataSource;
-using ToSic.Eav.Metadata;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Render.Output.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.OutputCache;
 using ToSic.Sxc.Web.Sys.LightSpeed;
 using ToSic.Sys.Caching;
-using ExecutionContext = ToSic.Sxc.Sys.ExecutionContext.ExecutionContext;
 
 namespace ToSic.Sxc.WebLightSpeed;
 
 [Startup(typeof(StartupSxcWithDb))]
-public class NamedCacheDependencyServiceTests(ExecutionContext exCtx)
+public class NamedCacheDependencyServiceTests(CodeContext exCtx)
 {
     private const string DataCacheScope = "data-cache";
 
     private INamedCacheDependencyService Dependencies => exCtx.GetService<INamedCacheDependencyService>(reuse: true);
 
-    private ModuleOutputCacheService OutputCache => exCtx.GetService<ModuleOutputCacheService>(reuse: true);
+    private IModuleOutputCacheService OutputCache => exCtx.GetService<IModuleOutputCacheService>(reuse: true);
 
     private ModulesOutputService ModulesOutput => (ModulesOutputService)exCtx.GetService<IModulesOutputService>(reuse: true);
 
@@ -130,26 +126,26 @@ public class StartupSxcWithDbWithoutLightSpeed : StartupSxcWithDb
     }
 }
 
-internal class TestApp(int appId) : IApp
-{
-    public int AppId => appId;
-    public int ZoneId => 0;
-    public string Name => "Test App";
-    public string Folder => "TestApp";
-    public string NameId => "test-app";
-    public string AppGuid => NameId;
-    public IAppData Data => null!;
-    public IAppConfiguration Configuration => null!;
-    public dynamic? Settings => null;
-    public dynamic? Resources => null;
-    public IDictionary<string, IQuery> Query { get; } = new Dictionary<string, IQuery>();
-    public IQuery GetQuery(string name) => throw new NotSupportedException();
-    public string Path => "/test-app";
-    public string PhysicalPath => @"c:\test-app";
-    public string PathShared => "/test-app-shared";
-    public string PhysicalPathShared => @"c:\test-app-shared";
-    public string RelativePath => "test-app";
-    public string RelativePathShared => "test-app-shared";
-    public string? Thumbnail => null;
-    public IMetadata Metadata => null!;
-}
+//internal class TestApp(int appId) : IApp
+//{
+//    public int AppId => appId;
+//    public int ZoneId => 0;
+//    public string Name => "Test App";
+//    public string Folder => "TestApp";
+//    public string NameId => "test-app";
+//    public string AppGuid => NameId;
+//    public IAppData Data => null!;
+//    public IAppConfiguration Configuration => null!;
+//    public dynamic? Settings => null;
+//    public dynamic? Resources => null;
+//    public IDictionary<string, IQuery> Query { get; } = new Dictionary<string, IQuery>();
+//    public IQuery GetQuery(string name) => throw new NotSupportedException();
+//    public string Path => "/test-app";
+//    public string PhysicalPath => @"c:\test-app";
+//    public string PathShared => "/test-app-shared";
+//    public string PhysicalPathShared => @"c:\test-app-shared";
+//    public string RelativePath => "test-app";
+//    public string RelativePathShared => "test-app-shared";
+//    public string? Thumbnail => null;
+//    public IMetadata Metadata => null!;
+//}

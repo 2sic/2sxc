@@ -1,8 +1,7 @@
 ﻿using System.Collections;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Sys;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Edit.Toolbar.Sys.Rules;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Sys.Html;
 
 namespace ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
@@ -11,48 +10,32 @@ namespace ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
 /// INTERNAL: Toolbar Builder implementation.
 /// </summary>
 /// <remarks>
-/// We cannot make this internal :(
+/// We cannot make this internal!
 /// Reason is that as soon as we run something like `Kit.Toolbar.Empty(Content)` in a razor file,
 /// the result is dynamic - so the compiler evaluates the final object at runtime.
 /// If the ToolbarBuilder is internal, things start to fail.
 /// like AsTag() will fail, saying that RawHtmlString doesn't have that
 /// So for now :( it must remain public.
+///
+/// Record: it's implemented as a `record` since we will clone it whenever a button is added or a rule is updated.
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, IToolbarBuilder, INeedsExecutionContext
+public partial record ToolbarBuilder(ToolbarBuilder.MyServices Services)
+    : HybridHtmlString, IEnumerable<string>, IToolbarBuilder
 {
 
     #region Constructors and Init
 
-    public record Dependencies(
+    /// <summary>
+    /// Special case of child services; grouped together to make cloning the main object easier.
+    /// </summary>
+    public sealed record MyServices(
         LazySvc<ToolbarButtonDecoratorHelper> ToolbarButtonHelper,
-        LazySvc<IAppsCatalog> AppsCatalog)
+        LazySvc<IAppsCatalog> AppsCatalog,
+        Ctx<ICodeContext> ExCtx)
         : DependenciesBase(connect: [ToolbarButtonHelper, AppsCatalog]);
 
-    /// <summary>
-    /// Public constructor for DI
-    /// </summary>
-    /// <param name="services"></param>
-    public ToolbarBuilder(Dependencies services) =>
-        Services = services.ConnectServices(Log);
-
-    protected Dependencies Services { get; init; }
-
     public ILog Log { get; } = LogFactory.Create(SxcLogName + ".TlbBld");
-    
-
-    public void ConnectToRoot(IExecutionContext? exCtx)
-    {
-        if (exCtx == null)
-            return;
-        ExCtx = exCtx;
-        CurrentAppIdentity = exCtx.GetApp().PureIdentity();
-        Services.ToolbarButtonHelper.Value.MainAppIdentity = CurrentAppIdentity;
-    }
-
-    private IAppIdentity? CurrentAppIdentity { get; set; }
-
-    private IExecutionContext ExCtx { get; set; } = null!;
 
     #endregion
 

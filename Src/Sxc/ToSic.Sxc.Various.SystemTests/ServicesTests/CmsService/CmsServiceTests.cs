@@ -1,14 +1,14 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services.Sys.Cms;
-using ExecutionContext = ToSic.Sxc.Sys.ExecutionContext.ExecutionContext;
 
 namespace ToSic.Sxc.ServicesTests.CmsService;
 
-public class CmsServiceTests(ICodeDataFactory cdf, ExecutionContext exCtx, /*ICmsService cmsService,*/ DataForCmsServiceTests dataForCmsTests, ContentTypesFromCodeManager ctDefFactory)
+public class CmsServiceTests(ICodeDataFactory cdf, CodeContext exCtx, /*ICmsService cmsService,*/ DataForCmsServiceTests dataForCmsTests, ContentTypesFromCodeManager ctDefFactory)
     : IClassFixture<DoFixtureStartup<ScenarioFullPatronsWithDb>>
 {
 #if NETCOREAPP

@@ -48,7 +48,7 @@
     var log = new LogAdapter(new Log("My.Log"));
 
     // Get the App execution context since our code here doesn't have it
-    var dynCodeSvc = ServiceProvider.Build<IDynamicCodeService>();
+    var dynCodeSvc = ServiceProvider.GetSysServiceProvider().Build<IDynamicCodeService>();
     var dynCode = dynCodeSvc.OfApp(appIdentity);
 
     var entityWithAdam = dynCode.App.Data.List.GetOne(IntegrationConstants.ItemWithImagesId);

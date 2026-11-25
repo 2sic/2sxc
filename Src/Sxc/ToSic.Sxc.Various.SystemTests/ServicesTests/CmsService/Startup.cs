@@ -1,3 +1,3 @@
 ﻿namespace ToSic.Sxc.ServicesTests.CmsService;
 
-public class Startup : StartupMockExecutionContext;
+public class Startup : StartupMockCodeContext;

@@ -1,10 +1,13 @@
-﻿using ToSic.Eav.ImportExport.Sys.Options;
-using ToSic.Eav.WebApi.Sys.Admin;
-using ToSic.Eav.WebApi.Sys.Dto;
-using ToSic.Eav.WebApi.Sys.Helpers.Http;
+﻿using System.Web.Http.Controllers;
+using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.ImportExport.Sys.Options;
+using ToSic.Eav.WebApi.Admin.Sys;
+using ToSic.Eav.WebApi.Sys;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Dnn.WebApi.Sys;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using Guid = System.Guid;
-using RealController = ToSic.Eav.WebApi.Sys.Admin.EntityControllerReal;
+using RealController = ToSic.Eav.WebApi.Admin.Sys.EntityControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
@@ -20,19 +23,20 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 /// Instead, each method must have all attributes, or do additional security checking.
 /// Security checking is possible, because the cookie still contains user information
 /// </remarks>
-[DnnLogExceptions]
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class EntityController() : DnnSxcControllerBase(RealController.LogSuffix), IEntityController
+public class EntityController : DnnApiController, IEntityController
 {
-    private RealController Real => SysHlp.GetService<RealController>();
+    #region WebApi Composition Infrastructure
 
-    /// <inheritdoc/>
-    // 2rb: replaced by EntitiesAdmin datasource
-    //[HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    //public IEnumerable<Dictionary<string, object>> List(int appId, string contentType)
-    //    => Real.List(appId, contentType);
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}");
+
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
+
+    #endregion
+
+
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
 
     /// <inheritdoc/>
@@ -40,7 +44,10 @@ public class EntityController() : DnnSxcControllerBase(RealController.LogSuffix)
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     public void Delete(string contentType, int appId, int? id = null, Guid? guid = null, bool force = false, int? parentId = null, string parentField = null)
-        => Real.Delete(contentType, appId, id, guid, force, parentId, parentField);
+    {
+        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
+        Real.Delete(contentType, appId, id, guid, force, parentId, parentField);
+    }
 
 
     /// <inheritdoc/>
@@ -48,9 +55,8 @@ public class EntityController() : DnnSxcControllerBase(RealController.LogSuffix)
     [AllowAnonymous] // will do security check internally
     public HttpResponseMessage Json(int appId, int id, string prefix, bool withMetadata)
     {
-        // Make sure the Scoped ResponseMaker has this controller context
-        using (this.InitializedResponseMaker())
-            return Real.Json(appId, id, prefix, withMetadata);
+        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
+        return Real.Json(appId, id, prefix, withMetadata).ToHttpResponse();
     }
 
 
@@ -67,10 +73,9 @@ public class EntityController() : DnnSxcControllerBase(RealController.LogSuffix)
         ExportLanguageResolution languageReferences, 
         string selectedIds = null)
     {
-        // Make sure the Scoped ResponseMaker has this controller context
-        using (this.InitializedResponseMaker())
-            return Real.Download(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
-                languageReferences, selectedIds);
+        SysHlp.PublishContext(Request, new(TryBlock: true, TryApp: true, AppId: appId), Log);
+        return Real.Download(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
+            languageReferences, selectedIds).ToHttpResponse();
     }
 
 
@@ -78,27 +83,31 @@ public class EntityController() : DnnSxcControllerBase(RealController.LogSuffix)
     [HttpPost]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public ContentImportResultDto XmlPreview(ContentImportArgsDto args)
-        => Real.XmlPreview(args);
+    public ContentImportResult XmlPreview(ContentFileImportOptions args)
+    {
+        SysHlp.PublishContextBlockOnly(Request, Log);
+        return Real.XmlPreview(args);
+    }
 
 
     /// <inheritdoc/>
     [HttpPost]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public ContentImportResultDto XmlUpload(ContentImportArgsDto args)
-        => Real.XmlUpload(args);
+    public ContentImportResult XmlUpload(ContentFileImportOptions args)
+    {
+        SysHlp.PublishContextBlockOnly(Request, Log);
+        return Real.XmlUpload(args);
+    }
 
 
     /// <inheritdoc/>
     [HttpPost]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public bool Upload(EntityImportDto args)
-        => Real.Upload(args);
-
-
-    ///// <inheritdoc/>
-    //// not final yet, so no [HttpGet]
-    //public dynamic Usage(int appId, Guid guid) => Real.Usage(appId, guid);
+    public bool Upload(DataFileImportOptions args)
+    {
+        SysHlp.PublishContextBlockOnly(Request, Log);
+        return Real.Upload(args);
+    }
 }

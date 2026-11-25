@@ -1,0 +1,83 @@
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.Query.Sys;
+using ToSic.Eav.DataSource.Sys.Catalog;
+using ToSic.Eav.LookUp.Sys.Engines;
+using ToSic.Eav.Services;
+using ToSic.Sxc.Services.DataService.Sys;
+using ToSic.Sys.Users;
+
+// TODO: MAKE PRIVATE AGAIN AFTER MOVING TO ToSic.Sxc.Custom
+
+namespace ToSic.Sxc.Services.Data.Sys;
+
+[PrivateApi("hide implementation")]
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public partial class DataService(
+    Ctx<IAppIdentity> ctxAppIdentity,
+    Ctx<ILookUpEngine> ctxLookUp,
+    LazySvc<IDataSourcesService> dataSources,
+    LazySvc<DataSourceCatalog> catalog,
+    LazySvc<IAppsCatalog> appsCatalog,
+    Generator<GetQueryMs<Query>, DataSourceOptionsMs> queryBuilder,
+    IUser user)
+    : ServiceWithSetup<IDataService.Options>("Sxc.DatSvc", connect: [user, dataSources, catalog, appsCatalog, queryBuilder]),
+        IDataService
+{
+    protected override IDataService.Options GetDefaultOptions() => new(null, null);
+
+    private IAppIdentity? AppIdentity => field ??= MyOptions.AppIdentity ?? ctxAppIdentity.Value;
+
+
+    private DataSourceOptionsMs OptionsMs => field ??= new(AppIdentity, GetLookup);
+
+    private Func<ILookUpEngine?>? GetLookup => field ??= MyOptions.GetLookup  ?? (() => ctxLookUp.Value);
+
+
+    public IDataSource GetAppSource(NoParamOrder npo = default, object? parameters = default, object? options = default)
+    {
+        var l = Log.Fn<IDataSource>($"{nameof(options)}: {options}");
+        var fullOptions = OptionsMs.SafeOptions(parameters, options: options, identityRequired: true);
+        var appSource = dataSources.Value.CreateDefault(fullOptions);
+        return l.Return(appSource);
+    }
+
+
+    #region GetQuery
+
+    public IDataSource? GetQuery(string? name = default,
+        NoParamOrder npo = default,
+        IDataSourceLinkable? attach = default,
+        object? parameters = default)
+        => queryBuilder.New(OptionsMs).GetQuery(name, npo, attach, parameters);
+
+    #endregion
+
+    #region Linking
+
+    public IDataSourceLink CreateLink(IDataSourceLinkable source,
+        NoParamOrder npo = default,
+        string? inName = default,
+        string? outName = default
+    )
+    {
+        var link = source.GetLink();
+        return inName != default || outName != default
+            ? link.WithRename(outName: outName, inName: inName)
+            : link;
+    }
+
+    public IDataSourceLink CombineLinks(params IDataSourceLinkable[] sources)
+    {
+        if (sources.Length == 0)
+            throw new ArgumentException(@"At least one source must be provided", nameof(sources));
+
+        var first = sources[0].GetLink();
+        return sources.Length == 1
+            ? first
+            : first.WithMore(sources.Skip(1).ToArray());
+    }
+
+    #endregion
+
+}

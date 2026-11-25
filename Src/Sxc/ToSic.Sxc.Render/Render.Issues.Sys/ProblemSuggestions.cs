@@ -1,4 +1,5 @@
 ﻿using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Problems;
 using ToSic.Sys.Code.Help;
@@ -38,22 +39,22 @@ internal class ProblemSuggestions
         }
 
 
-        if (errorCode == null || block?.AppOrNull == null)
+        if (errorCode == null || block?.AppOrNull is not {} app)
             return suggestions;
 
         // Special suggestion for Blog v6.0.0/1
-        AddWarning1601(block.App, "Blog", Blog6NameId, new(6, 0, 0), suggestions, "app-blog-upgrade601");
-        AddWarning1601(block.App, "Blog", Blog6NameId, new(6, 0, 1), suggestions, "app-blog-upgrade601");
+        AddWarning1601(app, "Blog", Blog6NameId, new(6, 0, 0), suggestions, "app-blog-upgrade601");
+        AddWarning1601(app, "Blog", Blog6NameId, new(6, 0, 1), suggestions, "app-blog-upgrade601");
 
         // Special Suggestions for Mobius 5.7.0
-        AddWarning1601(block.App, "Mobius", Mobius5NameId, new(5, 7, 0), suggestions, "app-mobius-upgrade570");
+        AddWarning1601(app, "Mobius", Mobius5NameId, new(5, 7, 0), suggestions, "app-mobius-upgrade570");
 
         return suggestions;
     }
 
-    private static void AddWarning1601(IApp app, string appName, string nameId, Version version, List<ProblemReport> suggestions, string shortLink)
+    private static void AddWarning1601(IAppForCode app, string appName, string nameId, Version version, List<ProblemReport> suggestions, string shortLink)
     {
-        if (app.NameId != nameId || app.Configuration.Version.CompareTo(version) != 0)
+        if (app.AppSpecs.NameId != nameId || app.AppSpecs.Configuration.Version.CompareTo(version) != 0)
             return;
         suggestions.Add(new()
         {

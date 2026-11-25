@@ -1,21 +1,19 @@
-﻿using ToSic.Eav.Metadata.Sys;
-using ToSic.Sxc.Apps.Sys;
-using ToSic.Sxc.Apps.Sys.Paths;
-using ToSic.Sxc.Apps.Sys.Ui;
-using ToSic.Sxc.Apps.Sys.Work;
-using ToSic.Sxc.Blocks.Sys.Views;
+﻿using ToSic.Eav.Apps.Assets.Sys;
+using ToSic.Eav.Apps.Inspect.Sys.UiDto;
+using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.Metadata.Sys;
+using ToSic.Eav.Apps.Views.Sys;
 
 // note: not sure if the final namespace should be Sxc.Apps or Sxc.Views
 namespace ToSic.Sxc.Blocks.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class WorkBlockViewsGet(AppWorkChain<WorkViews> workViews, LazySvc<AppIconHelpers> appIconHelpers)
-    : ServiceWithSetup<IAppWorkContext>("Cms.ViewRd", connect: [workViews, appIconHelpers])
+public class WorkBlockViewsGet(AppDataChain<WorkViewsGet> workViews, LazySvc<AppIconHelpers> appIconHelpers)
+    : ServiceWithSetup<IAppDataContext>("Cms.ViewRd", connect: [workViews, appIconHelpers])
 {
     [field: AllowNull, MaybeNull]
     public List<IView> GetAll => field
-        ??= workViews.New(MyOptions)
-            .GetAll()
+        ??= workViews.New(MyOptions).AllViews
             .ToList();
 
     internal IEnumerable<TemplateUiInfo> GetCompatibleViews(IBlock block)
@@ -45,7 +43,7 @@ public class WorkBlockViewsGet(AppWorkChain<WorkViews> workViews, LazySvc<AppIco
                 Name = t.Name,
                 ContentTypeStaticName = t.ContentType,
                 IsHidden = t.IsHidden,
-                Thumbnail = block.AppOrNull == null ? null : thumbnailHelper.IconPathOrNull(block.App, t, PathTypes.Link),
+                Thumbnail = block.AppOrNull is not {} app ? null : thumbnailHelper.IconPathOrNull(app.AppPaths, t, PathTypes.Link),
                 IsDefault = t.Metadata.HasType(KnownDecorators.IsDefaultDecorator),
             })
             .ToList();

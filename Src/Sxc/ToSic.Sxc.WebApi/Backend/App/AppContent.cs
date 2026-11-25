@@ -3,15 +3,15 @@ using System.Text.Json.Nodes;
 using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.Apps.Sys.State;
+using ToSic.Eav.Context.Sys;
+using ToSic.Eav.Data.ListSlots.Sys;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Metadata.Targets;
 using ToSic.Eav.WebApi.Sys.App;
-using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sxc.Apps.Sys.Api01;
-using ToSic.Sxc.Data.Sys.Convert;
 using ToSic.Sys.OData;
 using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Utils;
@@ -21,19 +21,17 @@ namespace ToSic.Sxc.Backend.App;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppContent(
-    EntityApi api,
     LazySvc<IConvertToEavLight> entToDicLazy,
     IContextCompleteService ctxService,
-    IContextBuilderService ctxBuilder,
-    Generator<MultiPermissionsTypes, MultiPermissionsTypes.Options> typesPermissions,
+    IWebApiAppContextBuilderService ctxBuilder,
+    AppWorkQuick<WorkTypePermissions> typePermissions,
     Generator<MultiPermissionsItems, MultiPermissionsItems.Options> itemsPermissions,
-    AppWorkQuick<WorkFieldList> workFieldList,
+    AppWorkQuick<WorkListSlots> workFieldList,
+    AppWorkQuick<WorkEntities> workEntities,
+    AppWorkQuick<WorkEntityDelete> entDelete,
     Generator<SimpleDataEditService, SimpleDataEditService.Options> dataControllerLazy)
     : ServiceWithSetup<AppContent.Options>("Sxc.ApiApC",
-        connect:
-        [
-            workFieldList, api, entToDicLazy, ctxService, ctxBuilder, typesPermissions, itemsPermissions, dataControllerLazy
-        ])
+        connect: [workFieldList, entToDicLazy, ctxService, ctxBuilder, typePermissions, itemsPermissions, workEntities, entDelete, dataControllerLazy])
 {
     #region Constructor / DI
 
@@ -53,21 +51,20 @@ public class AppContent(
 
     #region Get Items
 
-    public IEnumerable<IDictionary<string, object>> GetItems(string contentType, string? appPath = default, Uri? fullRequest = null)
+    public IEnumerable<IDictionary<string, object?>> GetItems(string contentType, string? appPath = default, Uri? fullRequest = null)
     {
-        var l = Log.Fn<IEnumerable<IDictionary<string, object>>>($"get entities type:{contentType}, path:{appPath}");
+        var l = Log.Fn<IEnumerable<IDictionary<string, object?>>>($"get entities type:{contentType}, path:{appPath}");
 
         // verify that read-access to these content-types is permitted
-        //var permCheck = ThrowIfNotAllowedInType(contentType, GrantSets.ReadSomething, AppReader);
+        var includeDrafts = typePermissions.New(AppReader).GetDraftPermissionAndThrowIfNotAllowed(contentType, GrantSets.ReadSomething);
 
-        //var includeDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
-        
-        var preparedApi = api.InitOrThrowBasedOnGrants(Context, AppReader, contentType, GrantSets.ReadSomething);
-        var result = preparedApi
-            .GetEntities(AppReader, contentType, /*includeDrafts,*/ fullRequest)
-            .ToListOpt();
+        var list = workEntities.New(AppReader, includeDrafts).Get(contentType, fullRequest: fullRequest);
+        var conv = InitEavAndSerializer(AppReader.AppId, includeDrafts, fullRequest);
+
+        var result = conv.Convert(list).ToListOpt();
         return l.Return(result, "found: " + result.Count);
     }
+
 
 
     #endregion
@@ -79,7 +76,7 @@ public class AppContent(
     /// ...then process/finish
     /// </summary>
     /// <returns></returns>
-    public IDictionary<string, object> GetOne(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string? appPath, Uri? uri = null)
+    public IDictionary<string, object?> GetOne(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string? appPath, Uri? uri = null)
     {
         Log.A($"get and serialize after security check type:{contentType}, path:{appPath}");
 
@@ -104,7 +101,7 @@ public class AppContent(
     /// </summary>
     private SimpleDataEditService DataController => field ??= dataControllerLazy.New(new(AppReader.ZoneId, AppReader.AppId, false));
 
-    public IDictionary<string, object> CreateOrUpdate(string contentType, Dictionary<string, object?> newContentItem, int? id = null, string? appPath = null)
+    public IDictionary<string, object?> CreateOrUpdate(string contentType, Dictionary<string, object?> newContentItem, int? id = null, string? appPath = null)
     {
         Log.A($"create or update type:{contentType}, id:{id}, path:{appPath}");
 
@@ -117,7 +114,7 @@ public class AppContent(
             : AppReader.List.GetOrThrow(contentType, id.Value);
 
         if (itm == null)
-            ThrowIfNotAllowedInType(contentType, GrantSets.CreateSomething, AppReader);
+            typePermissions.New(AppReader).ThrowIfNotAllowed(contentType, GrantSets.CreateSomething);
         else
             ThrowIfNotAllowedInItem(itm, GrantSets.WriteSomething, AppReader);
 
@@ -182,7 +179,7 @@ public class AppContent(
         var field = (string)parentRelationship[ParentRelField]!;
         var fields = new[] { field };
 
-        workFieldList.New(AppReader).FieldListAdd(parentEntity, fields, index, ids, asDraft: false, forceAddToEnd: false);
+        workFieldList.New(AppReader).AddSlot(parentEntity, fields, index, ids, asDraft: false, forceAddToEnd: false);
 
         return l.ReturnTrue($"new ParentRelationship p:{parentGuid},f:{field},i:{index}");
     }
@@ -234,8 +231,9 @@ public class AppContent(
         // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
         var ser = entToDicLazy.Value;
         ser.WithGuid = true;
-        var converter = (ConvertToEavLightWithCmsInfo)ser;
-        converter.WithEdit = userMayEdit;
+        var converter = ser;
+        // 2026-11-11 2dm - dropped this, believe it's not used anymore; keep for reference till ca. 2027-07 #DropWithEdit
+        //converter.WithEdit = userMayEdit;
         if (uri is not null)
             converter.AddSelectFields([.. SystemQueryOptionsParser.Parse(uri).Select]);
 
@@ -255,10 +253,10 @@ public class AppContent(
         if (contentType == "any")
             throw l.Done(new Exception("type any not allowed with id-only, requires guid"));
 
-        var entityApi = api.Init(AppReader.AppId);
+        var entityApi = entDelete.New(AppReader);
         var itm = AppReader.List.GetOrThrow(contentType, id);
         ThrowIfNotAllowedInItem(itm, [Grants.Delete], AppReader);
-        entityApi.Delete(itm.Type.Name, id);
+        entityApi.Delete(id, contentType: itm.Type.Name);
         l.Done();
     }
 
@@ -267,12 +265,12 @@ public class AppContent(
         var l = Log.Fn($"guid:{guid}, type:{contentType}, path:{appPathForLogOnly}");
         // Note: if app-path specified, use that app, otherwise use from context - probably automatic based on headers?
 
-        var entityApi = api.Init(AppReader.AppId);
+        var entityApi = entDelete.New(AppReader);
         var itm = AppReader.List.GetOrThrow(contentType == "any" ? null : contentType, guid);
 
         ThrowIfNotAllowedInItem(itm, [Grants.Delete], AppReader);
 
-        entityApi.Delete(itm.Type.Name, guid);
+        entityApi.Delete([itm.EntityGuid], contentType: itm.Type.Name);
         l.Done();
     }
 
@@ -281,20 +279,14 @@ public class AppContent(
 
     #region Permission Checks
 
-    private void ThrowIfNotAllowedInType(string contentType, List<Grants> requiredGrants, IAppIdentity appIdentity)
-    {
-        var permCheck = typesPermissions.New(new() { SiteContext = Context, App = appIdentity, ContentTypes = [contentType] });
-        if (permCheck.EnsureAll(requiredGrants) is { Allowed: false } result)
-            throw HttpException.PermissionDenied(result.ErrorMessage);
-    }
-
+    // TODO: consider creating something like WorkTypePermissions for items, so we can reuse this in multiple places
     private MultiPermissionsItems ThrowIfNotAllowedInItem(IEntity itm, List<Grants> requiredGrants, IAppIdentity appIdentity)
     {
         if (itm == null)
             throw new ArgumentNullException(nameof(itm), @"Item must not be null to check it's security.");
         var permCheck = itemsPermissions.New(new() { SiteContext = Context, App = appIdentity, Entities = [itm] });
         if (permCheck.EnsureAll(requiredGrants) is { Allowed: false } result)
-            throw HttpException.PermissionDenied(result.ErrorMessage);
+            throw new PermissionDeniedException(result.ErrorMessage!);
         return permCheck;
     }
 

@@ -1,5 +1,4 @@
 ﻿using System.Runtime.CompilerServices;
-
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Cms.Data;
@@ -7,7 +6,6 @@ using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Typed;
 using ToSic.Sxc.Edit.Toolbar;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code;
 
@@ -22,7 +20,7 @@ internal class TypedRazorModel(CompileCodeHelperSpecs helperSpecs, IDictionary<s
 {
     private readonly IDictionary<string, object?> _paramsDictionary = paramsDictionary?.ToInvariant()
                                                                       ?? new Dictionary<string, object?>();
-    private readonly TypedConverter _converter = new(helperSpecs.ExCtx.GetCdf());
+    private readonly TypedConverter _converter = new(helperSpecs.ExCtx.Cdf);
 
     #region Check if parameters were supplied
 

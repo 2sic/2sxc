@@ -21,7 +21,7 @@ public abstract class AdamFileSystemBase : ServiceBase, IAdamFileSystem
     protected readonly AdamFileSystemHelpers FsHelpers;
     protected readonly IAdamPaths AdamPaths;
 
-    public void Init(AdamManager adamManager)
+    public void Setup(AdamManager adamManager)
     {
         var l = Log.Fn();
         AdamManager = adamManager;

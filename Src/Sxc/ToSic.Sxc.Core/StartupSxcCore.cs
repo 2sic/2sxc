@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Sxc.Sys.Configuration;
-using ToSic.Sxc.Sys.Integration;
 using ToSic.Sxc.Sys.Integration.Installation;
 using ToSic.Sxc.Sys.Integration.Paths;
 using ToSic.Sys.Boot;
@@ -16,9 +15,6 @@ public static class StartupSxcCore
     public static IServiceCollection AddSxcCore(this IServiceCollection services)
     {
         services.TryAddScoped<ILinkPaths, LinkPaths>();
-
-        // Configuration Provider WIP
-        services.TryAddTransient<SxcImportExportEnvironmentBase.Dependencies>();
 
         // Sxc StartUp Routines - MUST be AddTransient, not TryAddTransient so many start-ups can be registered
         // Add StartUp Registration of FeaturesCatalog

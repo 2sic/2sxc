@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Sys;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Apps.Sys.Work;
 using ToSic.Sxc.Blocks.Sys.Work;
@@ -12,15 +11,12 @@ namespace ToSic.Sxc.Blocks.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockGeneratorHelpers(
     AppWorkContextService appCtxSvc, 
-    AppWorkChain<WorkViews> workViews,
+    AppWorkChain<WorkAppViewSwitch> workViews,
     AppWorkChain<WorkBlocks> appBlocks,
     LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
-    LazySvc<App> appLazy
-)
-    : ServiceBase("Eav.BlGenH", connect: [bdsFactoryLazy, appLazy, workViews, appBlocks])
+    Generator<AppForCode, AppForCode.Options> appForCodeGen)
+    : ServiceBase("Eav.BlGenH", connect: [bdsFactoryLazy, appForCodeGen, workViews, appBlocks])
 {
-    internal LazySvc<App> AppLazy { get; } = appLazy;
-
     public BlockSpecs CompleteInit(BlockSpecs currentSpecs, IBlock? parentOrNull, IBlockIdentifier blockIdentifier, int blockId)
     {
         var l = Log.Fn<BlockSpecs>();
@@ -66,8 +62,7 @@ public class BlockGeneratorHelpers(
             return l.Return(specs, $"DataIsMissing a:{specs.AppId}, container:{specs.ParentId}, content-group:{config.Id}");
 
         // Get App for this block
-        var app = AppLazy.Value;
-        app.Init(specs.Context.Site, specs.PureIdentity(), new SxcAppDataConfigSpecs { BlockForLookupOrNull = specs });
+        var app = appForCodeGen.New(new(specs.Context.Site, specs.PureIdentity(), new SxcAppDataConfigSpecs { BlockForLookupOrNull = specs }));
         specs = specs with
         {
             AppOrNull = app,

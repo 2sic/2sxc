@@ -1,7 +1,8 @@
 ﻿using System.Runtime.CompilerServices;
 
-// ReSharper disable once CheckNamespace
+#pragma warning disable IDE0130
 namespace ToSic.Sxc.Dnn;
+#pragma warning restore IDE0130
 
 /// <summary>
 /// Deprecated since v13, announced for removal in v15, removed in v20.

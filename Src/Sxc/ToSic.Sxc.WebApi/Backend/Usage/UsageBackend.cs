@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.Permissions;
+using ToSic.Eav.Apps.Views.Sys;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Blocks.Sys.Work;
@@ -10,20 +11,20 @@ namespace ToSic.Sxc.Backend.Usage;
 public class UsageBackend(
     AppWorkContextService appCtxSvc,
     AppWorkChain<WorkBlocks> appBlocks,
-    AppWorkChain<WorkViews> workViews,
+    AppWorkChain<WorkViewsGet> workViews,
     Generator<MultiPermissionsApp, MultiPermissionsApp.Options> appPermissions,
-    ISxcCurrentContextService ctxService)
-    : ServiceBase("Bck.Usage", connect: [appCtxSvc, appPermissions, ctxService, workViews, appBlocks])
+    IContextOfAppFactory appContextFactory)
+    : ServiceBase("Bck.Usage", connect: [appCtxSvc, appPermissions, appContextFactory, workViews, appBlocks])
 {
-    public IEnumerable<ViewDto> ViewUsage(int appId, Guid guid, Func<ICollection<IView>, ICollection<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
+    public (ICollection<IView> Views, ICollection<BlockConfiguration> BlockConfigs) ViewUsage(int appId, Guid guid)
     {
-        var l = Log.Fn<IEnumerable<ViewDto>>($"{appId}, {guid}");
-        var context = ctxService.ShareAppStateOptimized(appId);
+        var l = Log.Fn<(ICollection<IView>, ICollection<BlockConfiguration>)>($"{appId}, {guid}");
+        var context = appContextFactory.Create(appId);
 
         // extra security to only allow zone change if host user
         var permCheck = appPermissions.New(new() { SiteContext = context, App = context.AppReaderRequired });
         if (permCheck.EnsureAll(GrantSets.ReadSomething) is { Allowed: false } pcResult)
-            throw HttpException.PermissionDenied(pcResult.ErrorMessage);
+            throw new PermissionDeniedException(pcResult.ErrorMessage); // HttpException.PermissionDenied(pcResult.ErrorMessage);
 
         var appWorkCtxPlus = appCtxSvc.ContextNew(appId);
         var appViews = workViews.New(appWorkCtxPlus);
@@ -32,10 +33,6 @@ public class UsageBackend(
 
         var blocks = appBlocks.New(appWorkCtxPlus).AllWithView();
 
-        l.A($"Found {blocks.Count} content blocks");
-
-        var result = finalBuilder(views, blocks);
-
-        return l.ReturnAsOk(result);
+        return l.Return((views, blocks), $"Found {blocks.Count} content blocks");
     }
 }

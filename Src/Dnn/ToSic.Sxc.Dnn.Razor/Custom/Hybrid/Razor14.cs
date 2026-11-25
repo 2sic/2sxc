@@ -3,7 +3,7 @@ using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Dnn.Razor.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
+
 using ToSic.Sys.Code.Help;
 
 // ReSharper disable once CheckNamespace
@@ -32,7 +32,7 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
     [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
 
@@ -45,7 +45,7 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
     public override ICodeLog Log => RzrHlp.CodeLog;
 
     /// <inheritdoc />
-    public override IHtmlHelper Html => RzrHlp.Html;
+    public override IHtmlHelper Html => field ??= RzrHlp.GetHtml(ExCtx);
 
     #endregion
 

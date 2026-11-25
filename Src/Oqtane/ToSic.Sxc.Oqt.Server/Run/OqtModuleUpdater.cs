@@ -3,9 +3,9 @@ using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Work;
+using ToSic.Eav.Apps.Views.Sys;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Sxc.Apps.Sys.Work;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context;
@@ -16,11 +16,11 @@ using ToSic.Sxc.Oqt.Shared;
 namespace ToSic.Sxc.Oqt.Server.Run;
 
 // TODO: @STV - this looks very similar to the Dnn implementation
-// Probably best to make a base class and de-duplicate.
+// Probably best to make a shared-elements class and de-duplicate.
 internal class OqtModuleUpdater(
     SettingsHelper settingsHelper,
     IPageModuleRepository pageModuleRepository,
-    AppWorkQuick<WorkViews> workViews,
+    AppWorkQuick<WorkViewsGet> workViews,
     LazySvc<IAppsCatalog> appsCatalog,
     ISite site)
     : ServiceBase($"{OqtConstants.OqtLogPrefix}.MapA2I",
@@ -46,7 +46,7 @@ internal class OqtModuleUpdater(
         if (appId.HasValue)
         {
             var appIdentity = new AppIdentity(site.ZoneId, appId.Value);
-            var templateGuid = workViews.New(appIdentity).GetAll()
+            var templateGuid = workViews.New(appIdentity).AllViews
                 .FirstOrDefault(t => !t.IsHidden)?.Guid;
             if (templateGuid.HasValue) SetPreview(instance.Id, templateGuid.Value);
         }

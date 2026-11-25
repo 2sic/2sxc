@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.Admin;
-using ToSic.Sxc.Backend.Views;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 using RealController = ToSic.Sxc.Backend.Admin.ViewControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
@@ -15,10 +17,15 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
+[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ViewController : OqtStatefulControllerBase, IViewController
+public class ViewController : ControllerBase, IHasLog, IViewController
 {
-    public ViewController(LazySvc<Pages.Pages> pages) : base(RealController.LogSuffix)
+    /// <inheritdoc />
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+
+    public ViewController(LazySvc<Pages.Pages> pages)
     {
         this.ConnectLogs([
             _pages = pages
@@ -26,16 +33,8 @@ public class ViewController : OqtStatefulControllerBase, IViewController
     }
     private readonly LazySvc<Pages.Pages> _pages;
 
-    private RealController Real => GetService<RealController>();
-
-    // Replaced by DataSource System.Views through query System.SysData.
-    ///// <inheritdoc />
-    //[HttpGet]
-    ////[SupportedModules("2sxc,2sxc-app")]
-    //[ValidateAntiForgeryToken]
-    //[Authorize(Roles = RoleNames.Admin)]
-    //public IEnumerable<ViewDetailsDto> All(int appId) => Real.All(appId);
-
+    private RealController Real => this.GetApiService<RealController>();
+    
     /// <inheritdoc />
     [HttpGet, HttpDelete]
     //[SupportedModules("2sxc,2sxc-app")]
@@ -47,30 +46,12 @@ public class ViewController : OqtStatefulControllerBase, IViewController
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public IActionResult Json(int appId, int viewId)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        CtxHlp.SetupResponseMaker();
-        return Real.Json(appId, viewId);
-    }
+        => Real.Json(appId, viewId).ToHttpResponse();
 
     /// <inheritdoc />
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public ImportResultDto Import(int zoneId, int appId) => Real.Import(new(Request), zoneId, appId);
-
-    // Replaced by DataSource System.ViewUsage through query System.SysData.
-    ///// <inheritdoc />
-    //[HttpGet]
-    ////[SupportedModules("2sxc,2sxc-app")]
-    //[ValidateAntiForgeryToken]
-    //[Authorize(Roles = RoleNames.Admin)]
-    //public IEnumerable<ViewDto> Usage(int appId, Guid guid) => Real.UsagePreparations((views, blocks) =>
-    //{
-    //    var allMods = _pages.Value.AllModulesWithContent(Real.SiteId);
-    //    Log.A($"Found {allMods.Count} modules");
-    //    return views.Select(vwb => _pages.Value.ViewDtoBuilder(vwb, blocks, allMods));
-    //}).Usage(appId, guid);
-
+    public ImportResult Import(int zoneId, int appId) => Real.Import(new(Request), zoneId, appId);
 
 }

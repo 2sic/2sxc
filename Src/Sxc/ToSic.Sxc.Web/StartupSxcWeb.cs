@@ -2,16 +2,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.Sys.Permissions;
-using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.LookUp;
-using ToSic.Sxc.Apps.Sys.Installation;
 using ToSic.Sxc.Apps.Sys.Permissions;
-using ToSic.Sxc.Context.Sys;
-using ToSic.Sxc.Data.Sys.Convert;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Render.Polymorphism.Sys;
 using ToSic.Sxc.Web.Sys.EditUi;
-using ToSic.Sxc.Web.Sys.Http;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Run.Startup;
@@ -33,11 +28,6 @@ public static class StartupSxcWeb
         services.AddTransient<ILookUp, TicksLookUp>();
 #endif
 
-        // The top version should be deprecated soon, so we just use DataToDictionary or an Interface instead
-        services.TryAddTransient<ConvertToEavLight, ConvertToEavLightWithCmsInfo>(); // this is needed for all the EAV uses of conversion
-        services.TryAddTransient<ConvertToEavLightWithCmsInfo>(); // WIP, not public, should use interface instead
-        services.TryAddTransient<IConvertToEavLight, ConvertToEavLightWithCmsInfo>();
-
         // Polymorphism - changed to keyed in v22
         services.AddKeyedTransient<IPolymorphismResolver, PolymorphismKoi>(PolymorphismKoi.ResolverNameId);
         services.AddKeyedTransient<IPolymorphismResolver, PolymorphismPermissions>(PolymorphismPermissions.ResolverNameId);
@@ -45,19 +35,9 @@ public static class StartupSxcWeb
         // Koi, mainly so tests don't fail
         services.TryAddTransient<ICssFrameworkDetector, CssFrameworkDetectorUnknown>();
 
-
-        // WIP - add net-core specific stuff
-        services.AddNetVariations();
-
         // Add possibly missing fallback services
         // This must always be at the end here so it doesn't accidentally replace something we actually need
         services.AddKoi();
-
-
-        // basic environment, pages, modules etc.
-        // Note that it's not really part of .Web, but we want it to be quite late so we don't need
-        // to move up dependencies which it has.
-        services.TryAddTransient<IPlatformAppInstaller, PlatformAppInstallerUnknown>();
 
         // v22
         services.TryAddTransient<IDraftOverrideService, DraftOverrideFromCookieService>();
@@ -74,15 +54,6 @@ public static class StartupSxcWeb
         return services;
     }
 
-    public static IServiceCollection AddNetVariations(this IServiceCollection services)
-    {
-#if NETFRAMEWORK
-        // WebForms implementations
-        services.TryAddScoped<IHttp, HttpHybrid>();
-#else
-        services.TryAddTransient<IHttp, HttpHybrid>();
-#endif
-        return services;
-    }
+
 
 }

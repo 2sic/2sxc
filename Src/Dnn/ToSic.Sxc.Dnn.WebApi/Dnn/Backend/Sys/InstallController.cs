@@ -1,36 +1,33 @@
-﻿using ToSic.Eav.WebApi.Sys.Install;
-using ToSic.Sxc.Context;
+﻿using System.Net;
+using ToSic.Eav.WebApi.Sys;
+using ToSic.Eav.WebApi.Sys.Install;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.WebApi.Sys;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using RealController = ToSic.Sxc.Backend.Sys.InstallControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Sys;
 
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class InstallController()
-    : DnnSxcControllerRoot(RealController.LogSuffix), IInstallController
+public class InstallController : DnnApiController, IInstallController
 {
-    private RealController Real => SysHlp.GetService<RealController>();
+    #region WebApi Composition Infrastructure
 
-    /// <summary>
-    /// Make sure that these requests don't land in the normal api-log.
-    /// Otherwise, each log-access would re-number what item we're looking at
-    /// </summary>
-    protected override string HistoryLogGroup => "web-api.install";
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}");
 
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi + ".install");
+
+    #endregion
+
+
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     /// <inheritdoc />
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
     public bool Resume()
         => Real.Resume();
-
-    // Replaced by DataSource System.AppInstallation through query System.SysData.
-    ///// <inheritdoc />
-    //[HttpGet]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    //public InstallAppsDto InstallSettings(bool isContentApp)
-    //    => Real.InstallSettings(isContentApp, ((DnnModule)SysHlp.GetService<IModule>()).Init(Request.FindModuleInfo()));
 
 
     /// <inheritdoc />
@@ -40,8 +37,9 @@ public class InstallController()
     public HttpResponseMessage RemotePackage(string packageUrl, string newName = null)
     {
         this.PreventServerTimeout600();
-        // Make sure the Scoped ResponseMaker has this controller context
-        using (this.InitializedResponseMaker())
-            return Real.RemotePackage(packageUrl, SysHlp.GetService<DnnModuleFactory>().Get(ActiveModule), newName);
+        var result = Real.RemotePackage(packageUrl, SysHlp.GetServiceNoExCtx<DnnModuleFactory>().Get(ActiveModule), newName);
+        return result == null
+            ? Request.CreateResponse(HttpStatusCode.OK)
+            : Request.CreateErrorResponse(HttpStatusCode.InternalServerError, result);
     }
 }

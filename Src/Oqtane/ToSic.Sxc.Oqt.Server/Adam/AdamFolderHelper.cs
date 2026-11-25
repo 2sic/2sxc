@@ -8,7 +8,7 @@ internal static class AdamFolderHelper
 {
     public static Folder NewVirtualFolder(int siteId, int? parentId, string path, string folder)
     {
-        return new()
+        var newFolder = new Folder
         {
             SiteId = siteId,
             ParentId = parentId,
@@ -16,7 +16,6 @@ internal static class AdamFolderHelper
             Path = path.EnsureOqtaneFolderFormat(),
             Order = 1,
             IsSystem = false,
-            Type = FolderTypes.Private,
             PermissionList = [
                 new(PermissionNames.Browse, RoleNames.Everyone, true),
                 new(PermissionNames.View, RoleNames.Everyone, true),
@@ -25,5 +24,7 @@ internal static class AdamFolderHelper
                 new(PermissionNames.Edit, RoleNames.Admin, true)
             ]
         };
+        OqtFolderStorage.SetPrivateStorage(newFolder);
+        return newFolder;
     }
 }

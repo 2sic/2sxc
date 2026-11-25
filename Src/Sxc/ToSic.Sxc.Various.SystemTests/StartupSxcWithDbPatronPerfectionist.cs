@@ -4,7 +4,7 @@ using ToSic.Testing.Shared.Platforms;
 
 namespace ToSic.Sxc;
 
-public class StartupSxcWithDbPatronPerfectionist : StartupMockExecutionContext
+public class StartupSxcWithDbPatronPerfectionist : StartupMockCodeContext
 {
     public override void ConfigureServices(IServiceCollection services) =>
         base.ConfigureServices(

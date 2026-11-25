@@ -75,6 +75,10 @@ partial class CodeDataFactory: IModelFactory
                 forTypedItem.Setup(asItem, this);
                 return newT;
 
+            case IModelSetup<ModelEntityWithLanguagesOption> forEntitySetup when item is ICanBeEntity canBeEntity:
+                forEntitySetup.Setup(new(canBeEntity.Entity, Dimensions));
+                return newT;
+
             case IModelSetup<IEntity> forEntitySetup when item is ICanBeEntity canBeEntity:
                 forEntitySetup.Setup(canBeEntity.Entity);
                 return newT;

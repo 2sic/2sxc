@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Oqt.Server.Context;
 
@@ -19,7 +20,12 @@ internal sealed class OqtAppCacheKeyService(IHttpContextAccessor httpContextAcce
 
     private int GetTenantIdOrThrow()
     {
-        var requestServices = httpContextAccessor?.HttpContext?.RequestServices;
+        // A batch may run under an HTTP request belonging to another tenant. Its explicit
+        // background identity must win because the shared app cache spans DI scopes.
+        if (OqtBackgroundTenantScope.TenantId is { } backgroundTenantId)
+            return backgroundTenantId;
+
+        var requestServices = httpContextAccessor?.HttpContext?.GetSysRequestServices();
         var context = requestServices?.GetService<IOqtTenantContext>()?.Get();
         return context?.TenantId
                ?? throw new InvalidOperationException("Tenant not found");

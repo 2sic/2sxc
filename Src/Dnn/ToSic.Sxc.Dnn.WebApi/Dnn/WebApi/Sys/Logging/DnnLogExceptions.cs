@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Web.Http.Filters;
+﻿using System.Web.Http.Filters;
 using ToSic.Sxc.Dnn.Run;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys;
@@ -29,8 +28,7 @@ public class DnnLogExceptions : ExceptionFilterAttribute
                 DnnLogging.LogToDnn("2sxc-Api", "Auto-Log Exception", logEntry.Log, dnnContext, force: true);
             }
             else
-                DnnLogging.LogToDnn("2sxc-Api",
-                    "exception, but no additional internal log to add, EavLog doesn't exist", force: true);
+                DnnLogging.LogToDnn("2sxc-Api", "exception, but no additional internal log to add, EavLog doesn't exist", force: true);
         }
         catch
         {
@@ -39,15 +37,13 @@ public class DnnLogExceptions : ExceptionFilterAttribute
 
         // special manual exception maker, because otherwise IIS at runtime removes all messages
         // without this, debug-infos like what entity is causing the problem will not be shown to the client
-        context.Response = context.Request.CreateErrorResponse(HttpStatusCode.BadRequest,
-            "Bad Request",
-            context.Exception);
+        context.Response = ExceptionTranslation.ExceptionToResponse(context);
+
+        // Transfer possibly missing properties to headers, so that the client can access them
         var httpError = (HttpError)((ObjectContent<HttpError>)context.Response.Content).Value;
         if (!httpError.ContainsKey("ExceptionType"))
-            httpError.Add("ExceptionType", exception.GetType().FullName);
+            httpError["ExceptionType"] = exception.GetType().FullName;
         if (!httpError.ContainsKey("ExceptionMessage"))
-            httpError.Add("ExceptionMessage", exception.Message);
+            httpError["ExceptionMessage"] = exception.Message;
     }
-
-
 }

@@ -1,7 +1,4 @@
-﻿using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
-using static ToSic.Sxc.Web.Sys.WebResources.WebResourceConstants;
+﻿using static ToSic.Sxc.Web.Sys.WebResources.WebResourceConstants;
 
 namespace ToSic.Sxc.Services.Page.Sys;
 
@@ -33,7 +30,7 @@ partial class PageService
         // This must happen in the IPageService which is per-module
         // The PageServiceShared cannot do this, because it doesn't have the WebResources which vary by module
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        if (WebResources is not null /* paranoid */) // important: DynamicEntity null-compare isn't quite right, **do not** use `!=`
+        if (ctxExCtx.Value.AllSettings is not null /* paranoid */) // important: DynamicEntity null-compare isn't quite right, **do not** use `!=`
             keys = AddResourcesFromSettings(keys);
 
         // 2. If any keys are left, they are probably preconfigured keys, so add them now
@@ -48,7 +45,7 @@ partial class PageService
             Listeners.Activate(added);
 
         // also add to this specific module, as we need a few module-level features to activate in case...
-        ExCtxOrNull?.GetBlock()?.BlockFeatureKeys.AddRange(added);
+        ctxExCtx.ValueOptional?.Block?.BlockFeatureKeys.AddRange(added);
 
         return l.ReturnAsOk(""); // empty string, just so it can be used as `@Kit.Page.Activate(...)` and not produce anything
     }
@@ -68,17 +65,20 @@ partial class PageService
     {
         var l = Log.Fn<string[]>();
         var keysToRemove = new List<string>();
+
         var processor = new WebResourceProcessor(featuresSvc.Value, _overrideCdnSource ?? CdnSource, Log);
         foreach (var key in keys)
         {
             l.A($"Key: {key}");
-            if (WebResources.Get(key) is not DynamicEntity webRes) // special problem: DynamicEntity null-compare isn't quite right, don't! use ==
+            //var temp = WebResourcesTyped.Child($"Settings.{WebResourcesNode}.{key}");
+            if (ctxExCtx.Value.AllSettings.Get($"Settings.{WebResourcesNode}.{key}") is not ICanBeEntity webRes)
+            //if (WebResources.Get(key) is not DynamicEntity webRes) // special problem: DynamicEntity null-compare isn't quite right, don't! use ==
                 continue;
 
             // Found - make sure we remove the key, no matter what decisions are made below
             keysToRemove.Add(key);
 
-            var pageFeature = processor.Process(key, webRes);
+            var pageFeature = processor.Process(key, webRes.Entity);
             if (pageFeature == null)
                 continue;
 
@@ -91,7 +91,7 @@ partial class PageService
         }
 
         // drop keys which were already taken care of
-        keys = keys.Where(k => !keysToRemove.Contains(k)).ToArray();
+        keys = [.. keys.Where(k => !keysToRemove.Contains(k))];
         return l.Return(keys);
     }
 
@@ -100,14 +100,8 @@ partial class PageService
     /// </summary>
     public List<string> FeatureKeysAdded { get; } = [];
 
-    //public bool HasFeature(string featureKey)
-    //    => FeatureKeysAdded.Any(f => f.EqualsInsensitive(featureKey));
 
-
-    private string? CdnSource => _cdnSource.Get(() => WebResources.Get<string>(CdnSourcePublicField));
+    private string? CdnSource => _cdnSource.Get(() => ctxExCtx.Value.AllSettings.Get<string>($"Settings.{WebResourcesNode}.{CdnSourcePublicField}"));
     private readonly LazyGet<string?> _cdnSource = new();
 
-    private DynamicEntity WebResources => field
-        ??= (DynamicEntity)ExCtx.GetDataStack<IDynamicStack>(ExecutionContextStateNames.Settings).Get(WebResourcesNode)!;
-    
 }

@@ -1,9 +1,9 @@
-﻿using ToSic.Sxc.Adam.Sys.Work;
+﻿using ToSic.Sxc.Adam.Sys.Manager;
 
 namespace ToSic.Sxc.Backend.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IAdamPrefetchHelper : /*IAdamWork,*/ IServiceWithSetup<AdamWorkOptions>, IHasOptions<AdamWorkOptions>
+public interface IAdamPrefetchHelper : /*IAdamWork,*/ IServiceWithSetup<AdamContext.Options>, IHasOptions<AdamContext.Options>
 {
     /// <summary>
     /// Get a DTO list of items in a field

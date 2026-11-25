@@ -1,13 +1,12 @@
 ﻿using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Services.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Sys;
 
 [PrivateApi]
 // #NoEditorBrowsableBecauseOfInheritance
 //[ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class CustomCodeBase : ServiceWithContext, ICompatibilityLevel
+public abstract class CustomCodeBase : ServiceWithContext //, ICompatibilityLevel
 {
     #region Constructor / Setup
 
@@ -24,12 +23,8 @@ public abstract class CustomCodeBase : ServiceWithContext, ICompatibilityLevel
     [ShowApiWhenReleased(ShowApiMode.Never)]
     [field: AllowNull, MaybeNull]
     protected internal CompileCodeHelper CompileCodeHlp => field
-        ??= ExCtx.GetService<CompileCodeHelper>().Init(this as IGetCodePath ?? throw new($"Can't cast to {nameof(IGetCodePath)}, but inheriting classes must implement it."));
-
-
-    [PrivateApi]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    public abstract int CompatibilityLevel { get; }
+        ??= ExCtx.GetService<Generator<CompileCodeHelper, IGetCodePath>>().New(this as IGetCodePath ?? throw new($"Can't cast to {nameof(IGetCodePath)}, but inheriting classes must implement it."));
 
     #endregion
+
 }

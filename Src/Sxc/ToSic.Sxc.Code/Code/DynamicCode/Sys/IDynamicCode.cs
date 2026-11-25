@@ -1,10 +1,9 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp.Sys.Engines;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Sys.ExecutionContext;
+
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
 namespace ToSic.Sxc.Code.Sys;
@@ -19,11 +18,11 @@ namespace ToSic.Sxc.Code.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IDynamicCode: ICreateInstance, ICompatibilityLevel, IHasLog // inherit from old namespace to ensure compatibility
 {
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     TService GetService<TService>() where TService : class;
 
     /// <inheritdoc cref="IDynamicCodeDocs.App"/>
-    IApp App { get; }
+    IAppDynamic App { get; }
 
     /// <inheritdoc cref="IDynamicCodeDocs.Data"/>
     IDataSource Data { get; }

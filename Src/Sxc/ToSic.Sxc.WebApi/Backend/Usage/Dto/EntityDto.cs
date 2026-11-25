@@ -1,7 +1,9 @@
 ﻿namespace ToSic.Sxc.Backend.Usage.Dto;
 
-public class EntityDto: IdentifierDto
+public record EntityDto : IIdentifierDto
 {
+    public int Id { get; init; }
+    public Guid Guid { get; init; }
     public string? Title;
     public ContentTypeDto Type;
 

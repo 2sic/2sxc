@@ -1,10 +1,10 @@
 ﻿namespace ToSic.Sxc.Code.Generate.Sys;
 
 /// <summary>
-/// WIP - should contain a list of code-files and additional specs
+/// Contains a list of code-files and additional specs
 /// </summary>
 [WorkInProgressApi("still being standardized")]
-public class GeneratedFileSet : IGeneratedFileSet
+public record GeneratedFileSet : IGeneratedFileSet
 {
     /// <inheritdoc />
     public required string Name { get; init; }
@@ -20,4 +20,14 @@ public class GeneratedFileSet : IGeneratedFileSet
 
     /// <inheritdoc />
     public required IReadOnlyCollection<IGeneratedFile> Files { get; init; }
+
+    public static GeneratedFileSet FromSpecs(FileGeneratorSpecs specs, string name, IReadOnlyCollection<IGeneratedFile> files) =>
+        new()
+        {
+            Name = name,
+            Description = specs.Description,
+            Generator = $"{specs.Name} v{specs.Version}",
+            Path = GenerateConstants.PathToAppCode,
+            Files = files
+        };
 }

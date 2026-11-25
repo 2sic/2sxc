@@ -6,15 +6,15 @@ using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Compatibility.RazorPermissions;
-using ToSic.Sxc.Compatibility.Sxc;
 using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
+using ToSic.Sxc.Dnn.Code.Sys;
+using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Sys.ExecutionContext;
+
 using ToSic.Sys.Code.Help;
-using IApp = ToSic.Sxc.Apps.IApp;
 
 
 // ReSharper disable InheritdocInvalidUsage
@@ -42,7 +42,7 @@ public abstract class SexyContentWebPage :
     public override ICodeLog Log => RzrHlp.CodeLog;
 
     /// <inheritdoc />
-    public override IHtmlHelper Html => RzrHlp.Html;
+    public override IHtmlHelper Html => field ??= RzrHlp.GetHtml(ExCtx);
 
     #endregion
 
@@ -73,13 +73,13 @@ public abstract class SexyContentWebPage :
     /// </summary>
     [PrivateApi] public IBlock Block => CodeApi.Block;
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
     [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel9Old;
 
     /// <inheritdoc />
-    public new IApp App => CodeApi.App;
+    public new IAppDynamic App => CodeApi.App;
 
     #region Data - with old interface #DataInAddWontWork
 
@@ -176,7 +176,7 @@ public abstract class SexyContentWebPage :
     /// <inheritdoc />
     [Obsolete]
     public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
-        => new DnnExecutionContextCreateSourceObsolete(ExCtx).CreateSource(typeName, inSource, configurationProvider);
+        => new DnnCodeDynamicCreateSourceObsolete(ExCtx).CreateSource(typeName, inSource, configurationProvider);
 
     /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataSource, ILookUpEngine)" />
     [Obsolete("this is the old implementation with ILookUp Engine, don't think it was ever used publicly because people couldn't create these engines")]

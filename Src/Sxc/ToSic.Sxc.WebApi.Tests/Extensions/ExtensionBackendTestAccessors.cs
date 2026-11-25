@@ -1,5 +1,7 @@
 using ToSic.Eav.Apps.Sys.Extensions;
 using ToSic.Eav.Apps.Sys.FileSystemState;
+using ToSic.Sxc.Apps.Extensions.Sys;
+using ToSic.Sxc.Apps.Extensions.Sys.Install;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.App;
 
@@ -8,7 +10,7 @@ namespace ToSic.Sxc.WebApi.Tests.Extensions;
 
 internal static class ExtensionBackendTestAccessors
 {
-    public static List<ExtensionDto> GetExtensionsTac(this ExtensionReaderBackend reader, int appId)
+    public static List<ExtensionRaw> GetExtensionsTac(this ExtensionReaderBackend reader, int appId)
         => reader.GetExtensions(appId: appId);
 
     public static bool SaveExtensionTac(this ExtensionWriterBackend writer, int zoneId, int appId, string name, ExtensionManifest manifest)

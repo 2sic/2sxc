@@ -35,6 +35,7 @@ namespace IntegrationSamples.SxcEdit01
                 .AddImplementations()
                 .AddAdamWebApi<string, string>()
                 .AddSxcWebApi()
+                .AddSxcWorkDataSourceProviders()
                 .AddSxcCore()
                 .AddEav();
         }

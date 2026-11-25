@@ -1,34 +1,32 @@
-﻿using ToSic.Eav.Apps.Sys.Permissions;
+﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Views.Sys;
+using ToSic.Eav.Data.Publishing.Sys;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Backend.InPage;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Blocks.Sys.BlockEditor;
 using ToSic.Sxc.Blocks.Sys.Work;
-using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sxc.Render.Block.Sys;
 using ToSic.Sxc.Render.StaticAssets.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Sys.Url;
-using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.ContentBlocks;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentBlockBackend(
-    AppWorkChain<WorkViews> workViews,
-    Generator<MultiPermissionsApp, MultiPermissionsApp.Options> multiPermissionsApp,
-    IPagePublishing publishing,
-    AppWorkChain<WorkBlocksMod> workBlocksMod,
+    AppWorkChain<WorkViewsGet> workViews,
+    IDataPublishingService publishing,
+    AppWorkQuick<WorkBlocksCreate> workBlocksCreate,
+    AppWorkQuick<WorkBlocksAddSlot> workBlocksAddSlot,
     ISxcCurrentContextService ctxService,
     LazySvc<IAssetsExtractor> optimizerLazy,
-    LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
     AppWorkContextService appCtxSvc,
     Generator<BlockOfEntity> entityBlockGenerator,
     Generator<IBlockRenderer> blockBuilderGenerator)
     : ServiceBase("Bck.FldLst",
-        connect: [workViews, multiPermissionsApp, publishing, workBlocksMod, ctxService, optimizerLazy, blockEditorSelectorLazy, appCtxSvc, entityBlockGenerator, blockBuilderGenerator])
+        connect: [workViews, publishing, workBlocksCreate, workBlocksAddSlot, ctxService, optimizerLazy, appCtxSvc, entityBlockGenerator, blockBuilderGenerator])
 {
 
     private const bool DebugDetails = true;
@@ -36,8 +34,7 @@ public class ContentBlockBackend(
     public IRenderResult NewBlockAndRender(int parentId, string field, int index, string app = "", Guid? guid = null)
     {
         var block = ctxService.BlockRequired();
-        var appWorkCtxDb = appCtxSvc.ContextNew(block.App);
-        var entityId = workBlocksMod.New(appWorkCtxDb).NewBlockReference(parentId, field, index, app, guid);
+        var entityId = workBlocksCreate.New(block.PureIdentity()).NewBlockReference(parentId, field, index, app, guid);
 
         // now return a rendered instance
         var newContentBlock = entityBlockGenerator.New().GetBlockOfEntity(block, null, entityId);
@@ -47,26 +44,18 @@ public class ContentBlockBackend(
 
     public void AddItem(int? index = null)
     {
-        Log.A($"add order:{index}");
+        var l = Log.Fn($"add order:{index}");
 
         var block = ctxService.BlockRequired();
-        var appWorCtxDb = appCtxSvc.ContextNew(block.App);
 
         // use dnn versioning - this is always part of page
-        publishing.DoInsidePublishing(block.Context, _ 
-            => workBlocksMod.New(appWorCtxDb).AddEmptyItem(block.Configuration, index, block.Context.Publishing.ForceDraft));
+        publishing.DoInsidePublishing(options => workBlocksAddSlot
+            .New(block.PureIdentity())
+            .AddEmptyItem(block.Configuration, index, options.ForceDraft));
+
+        l.Done();
     }
 
-        
-    public bool PublishPart(string part, int index)
-    {
-        Log.A($"try to publish #{index} on '{part}'");
-        var block = ctxService.BlockRequired();
-        multiPermissionsApp.ThrowIfNotAllowedInApp(block.Context, GrantSets.WritePublished);
-        return blockEditorSelectorLazy.Value
-            .GetEditor(block)
-            .Publish(part, index);
-    }
 
     public AjaxRenderDto RenderForAjax(int templateId, string lang, string root, string edition)
     {

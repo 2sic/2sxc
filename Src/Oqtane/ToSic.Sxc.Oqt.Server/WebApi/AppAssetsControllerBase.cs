@@ -1,15 +1,19 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Eav.Context.Sys;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi.Sys;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi;
 
+[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class AppAssetsControllerBase : OqtControllerBase
+public abstract class AppAssetsControllerBase : ControllerBase, IHasLog
 {
     private string Route { get; }
 
@@ -18,7 +22,7 @@ public abstract class AppAssetsControllerBase : OqtControllerBase
     public record Dependencies(
         IWebHostEnvironment HostingEnvironment,
         LazySvc<IContextCompleteService> SxcContextSvc,
-        LazySvc<IContextBuilderService> CtxBuilder,
+        LazySvc<IWebApiAppContextBuilderService> CtxBuilder,
         SiteState SiteState,
         LazySvc<OqtAssetsFileHelper> FileHelper)
         : DependenciesBase(connect: [HostingEnvironment, SxcContextSvc, CtxBuilder, SiteState, FileHelper]);
@@ -26,13 +30,17 @@ public abstract class AppAssetsControllerBase : OqtControllerBase
     #endregion
 
 
-    protected AppAssetsControllerBase(Dependencies services, string route, string logSuffix): base(false, logSuffix)
+    protected AppAssetsControllerBase(Dependencies services, string route, string logSuffix)
     {
+        Log = LogFactory.Create($"Api.{logSuffix}", null, GetType().Name);
         Deps = services.ConnectServices(Log);
         Route = route;
     }
 
-    private Dependencies Deps;
+    /// <inheritdoc />
+    public ILog Log { get; }
+
+    private readonly Dependencies Deps;
 
     [HttpGet("{*filePath}")]
     public IActionResult GetFile([FromRoute] string appName, [FromRoute] string filePath)

@@ -1,20 +1,16 @@
 ﻿using ToSic.Eav.Apps.Sys.State;
-using ToSic.Sxc.Blocks.Sys.Views;
-using ToSic.Sxc.Cms.Publishing.Sys;
-using ToSic.Sys.Utils;
+using ToSic.Eav.Data.ListSlots.Sys;
+using ToSic.Eav.Data.Publishing.Sys;
 
 namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ListActivityReplace(
-    AppWorkQuick<WorkFieldList> workFieldList,
-    Generator<IPagePublishing> publishing,
-    IContextCompleteService ctxService
-) : ServiceBase("Act.LsRpOp", connect: [workFieldList, ctxService, publishing])
+public class ListActivityReplace(AppWorkChain<WorkListSlots> workFieldList, Generator<IDataPublishingService> publishing)
+    : ServiceWithSetup<IAppWorkContext>("Act.LsRpOp", connect: [workFieldList, publishing])
 {
     public record Options(
         Guid Guid,
-        string Part,
+        string[] Fields,
         int Index,
         int EntityId,
         bool Add
@@ -25,39 +21,34 @@ public class ListActivityReplace(
         var l = Log.Fn($"options:{options}");
 
         // use dnn versioning - this is always part of page
-        var context = ctxService.BlockContextRequired();
-        publishing.New().DoInsidePublishing(context, _ => InternalSave(context, options));
+        publishing.New().DoInsidePublishing(opts => InternalSave(options, opts.ForceDraft));
 
         l.Done();
     }
 
-    private void InternalSave(IContextOfBlock context, Options options)
+    private bool InternalSave(Options options, bool forceDraft)
     {
-        var (guid, part, index, entityId, add) = options;
-        var isContentPair = ViewParts.ContentLower.EqualsInsensitive(part);
-        var l = Log.Fn($"target:{guid}, {nameof(part)}:{part}, {nameof(isContentPair)}: {isContentPair}, {nameof(index)}:{index}, {nameof(entityId)}:{entityId}");
+        var (guid, fields, index, entityId, add) = options;
+        var l = Log.Fn<bool>($"target:{guid}, {nameof(index)}:{index}, {nameof(entityId)}:{entityId}");
 
-        var entity = context.AppReaderRequired.GetDraftOrPublished(guid)
+        var entity = MyOptions.AppReader.GetDraftOrPublished(guid)
                      ?? throw l.Done(new Exception($"Can't find item '{guid}'"));
 
         // Make sure we have the correct casing for the field names
-        part = entity.Type[part]!.Name;
+        fields = [.. fields.Select(f => entity.Type[f]!.Name)];
 
-        var fList = workFieldList.New(context.AppReaderRequired);
+        var fList = workFieldList.New(MyOptions);
 
-        var forceDraft = context.Publishing.ForceDraft;
         if (add)
         {
-            var fields = isContentPair
-                ? ViewParts.ContentPair
-                : [part];
-            var values = isContentPair
+            var values = fields.Length > 1
                 ? [entityId, null]
                 : new int?[] { entityId };
-            fList.FieldListAdd(entity, fields, index, values, forceDraft, false);
+            fList.AddSlot(entity, fields, index, values, forceDraft, false);
         }
         else
-            fList.FieldListReplaceIfModified(entity, [part], index, [entityId], forceDraft);
-        l.Done();
+            fList.ReplaceSlot(entity, [fields.First()], index, [entityId], forceDraft);
+
+        return l.ReturnTrue();
     }
 }

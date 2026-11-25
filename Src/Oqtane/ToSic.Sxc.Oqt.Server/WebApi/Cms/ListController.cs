@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi.Sys.Cms;
+using ToSic.Sxc.Backend.Cms;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.WebApi.Sys.ActionFilters;
 using RealController = ToSic.Sxc.Backend.Cms.ListControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
@@ -15,10 +16,16 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 [ValidateAntiForgeryToken]
 //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
 [Authorize(Roles = RoleNames.Admin)]
+[OqtLogWebApi, OqtInitializeAlias, NoContentForEmptyAction]
+[SystemTextJsonFormatter, ServiceFilter(typeof(OptionalBodyFilter)), ServiceFilter(typeof(HttpResponseExceptionFilter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ListController() : OqtStatefulControllerBase(RealController.LogSuffix), IListController
+[OqtPrepareBlockContext]
+public class ListController : ControllerBase, IHasLog, IListController
 {
-    private RealController Real => GetService<RealController>();
+    /// <inheritdoc />
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}", null, GetType().Name);
+
+    private RealController Real => this.GetApiService<RealController>();
 
     [HttpPost]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -30,7 +37,7 @@ public class ListController() : OqtStatefulControllerBase(RealController.LogSuff
     [HttpGet]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public ReplacementListDto ReplaceOptions(Guid parent, string part, int index, string? contentType = null)
+    public ListSlotSwapInfo ReplaceOptions(Guid parent, string part, int index, string? contentType = null)
         => Real.ReplaceOptions(parent, part, index, contentType);
 
     /// <inheritdoc />
@@ -52,7 +59,7 @@ public class ListController() : OqtStatefulControllerBase(RealController.LogSuff
     [HttpGet]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public List<EntityInListDto> Items(Guid parent, string part)
+    public List<ListSlotContentsInfo> Items(Guid parent, string part)
         => Real.Items(parent, part);
 
 
@@ -60,13 +67,13 @@ public class ListController() : OqtStatefulControllerBase(RealController.LogSuff
     [HttpPost]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool Items([FromQuery] Guid parent, List<EntityInListDto> list, [FromQuery] string part)
+    public bool Items([FromQuery] Guid parent, List<ListSlotContentsInfo> list, [FromQuery] string part)
         => Real.Items(parent, list, part);
 
     [HttpGet]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public List<EntityInListDto> ContentBlockHeader(Guid parent)
+    public List<ListSlotContentsInfo> ContentBlockHeader(Guid parent)
         => Real.ContentBlockHeader(parent);
 
 }

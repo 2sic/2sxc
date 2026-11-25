@@ -1,35 +1,35 @@
-﻿using ToSic.Eav.WebApi.Sys.Helpers.Http;
+﻿using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Adam.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamWorkFolderCreate(AdamWorkBase.Dependencies services)
-    : AdamWorkBase(services, "Adm.TrnFld")
+public class AdamWorkFolderCreate() : ServiceWithSetup<AdamContext>("Adm.TrnFld")
 {
     public bool Create(string parentSubfolder, string newFolder)
     {
         var l = Log.Fn<bool>($"get folders for subfolder:{parentSubfolder}, new:{newFolder}");
-        if (AdamContext.Security.UserIsRestricted && !AdamContext.Security.FieldPermissionOk(GrantSets.ReadSomething))
+        var adamCtx = MyOptions;
+        if (adamCtx.Security.UserIsRestricted && !adamCtx.Security.FieldPermissionOk(GrantSets.ReadSomething))
             return l.ReturnFalse();
 
         // get root and at the same time auto-create the core folder in case it's missing (important)
-        var folder = AdamContext.AdamRoot.RootFolder();
+        var folder = adamCtx.AdamRoot.RootFolder();
 
         // try to see if we can get into the subfolder - will throw error if missing
         if (!string.IsNullOrEmpty(parentSubfolder))
-            folder = AdamContext.AdamRoot.Folder(parentSubfolder, false);
+            folder = adamCtx.AdamRoot.Folder(parentSubfolder, false);
 
         // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
-        if (AdamContext.UseSiteRoot && !AdamContext.Security.CanEditFolder(folder))
-            throw HttpException.PermissionDenied("can't create new folder - permission denied");
+        if (adamCtx.UseSiteRoot && !adamCtx.Security.CanEditFolder(folder))
+            throw l.Ex(new PermissionDeniedException("can't create new folder - permission denied"));
 
         var newFolderPath = string.IsNullOrEmpty(parentSubfolder)
             ? newFolder
             : Path.Combine(parentSubfolder, newFolder).Replace("\\", "/");
 
         // now access the subfolder, creating it if missing (which is what we want
-        AdamContext.AdamRoot.Folder(newFolderPath, true);
+        adamCtx.AdamRoot.Folder(newFolderPath, true);
 
         return l.ReturnTrue();
     }

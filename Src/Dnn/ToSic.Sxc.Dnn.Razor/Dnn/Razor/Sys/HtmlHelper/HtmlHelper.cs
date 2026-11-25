@@ -3,7 +3,7 @@ using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Render.Output.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
-using ToSic.Sxc.Sys.ExecutionContext;
+
 using ToSic.Sxc.Web.Sys.LightSpeed;
 using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Users;
@@ -49,7 +49,7 @@ internal class HtmlHelper(LazySvc<IFeaturesService> featureSvc, IModulesOutputSe
         // Do it like this, to avoid multiple conversions of the same data
         var renderSpecs = new RenderSpecs { Data = data };
 
-        var cacheHelper = new RazorPartialCachingHelper(MyOptions.ExCtx.GetAppId(), fullOptions.CacheKey, renderSpecs.DataDic, MyOptions.ExCtx, featureSvc.Value, Log);
+        var cacheHelper = new RazorPartialCachingHelper(MyOptions.ExCtx.App!.AppId, fullOptions.CacheKey, renderSpecs.DataDic, MyOptions.ExCtx, featureSvc.Value, Log);
 
         var cached = cacheHelper.TryGetFromCache();
         if (cached != null)
@@ -158,7 +158,7 @@ internal class HtmlHelper(LazySvc<IFeaturesService> featureSvc, IModulesOutputSe
             var pathResult = PathCasingValidator.IsPathOkForLinux(fullOptions);
             if (!pathResult.IsOk)
             {
-                var modId = MyOptions.ExCtx.GetCmsContext().Module.Id;
+                var modId = MyOptions.ExCtx.CmsContext.Module.Id;
                 modulesOutputService.AddHint(modId, new()
                 {
                     ForUserElevation = UserElevation.ContentAdmin,

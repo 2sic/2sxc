@@ -2,23 +2,22 @@
 using Microsoft.AspNetCore.Mvc.Razor.Internal;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Render.Engines.Sys;
 using ToSic.Sxc.Razor;
 using ToSic.Sxc.Render.Sys.Specs;
-using ToSic.Sxc.Sys.ExecutionContext;
 using IHasLog = ToSic.Sys.Logging.IHasLog;
 using ILog = ToSic.Sys.Logging.ILog;
-using Logging_IHasLog = ToSic.Sys.Logging.IHasLog;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
 
 [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>, IHasCodeLog, Logging_IHasLog, ISetDynamicModel, IGetCodePath
+public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>, IHasCodeLog, IHasLog, ISetDynamicModel, IGetCodePath
 {
     #region Constructor / DI / SysHelp
 
@@ -30,7 +29,6 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
     {
         CompatibilityLevel = compatibilityLevel;
         RzrHlp = new(this);
-        //Log.Rename(logName);
     }
 
     [PrivateApi] public int CompatibilityLevel { get; }
@@ -47,7 +45,7 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
 
     #region GetService / Logs / DevTools
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class
         => RzrHlp.ExCtxRoot.GetTypedApi().GetService<TService>();
 
@@ -72,11 +70,11 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    internal IExecutionContext ExCtx => RzrHlp.ExCtxRoot!;
+    internal ICodeContext ExCtx => RzrHlp.ExCtxRoot!;
 
     [PrivateApi]
-    public void ConnectToRoot(IExecutionContext exCtx)
-        => RzrHlp.ConnectToRoot(exCtx);
+    public void SetupContext(ICodeContext exCtx)
+        => RzrHlp.SetupContext(exCtx);
 
     [RazorInject]
     [PrivateApi]

@@ -1,15 +1,15 @@
 ﻿using ToSic.Eav.Models;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code.Context.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys.CmsContext;
 using ToSic.Sxc.Data.Sys.Factory;
-using ToSic.Sxc.Services.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
+
 
 namespace ToSic.Sxc.Code.Customizer;
 
 /// <inheritdoc cref="ICodeCustomizer" />
-internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCustomizer
+internal class Customizer(Ctx<ICodeContext> ctxEx): ServiceBase(SxcLogName + ".CdeCst"), ICodeCustomizer
 {
     public IAppTyped<TSettings, TResources> App<TSettings, TResources>()
         where TSettings : class, IModelFromData, new()
@@ -20,7 +20,7 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
             return typed;
 
         // Get and cache for next time
-        var created = ExCtx.GetService<IAppTyped<TSettings, TResources>>(reuse: true);
+        var created = ctxEx.Value.GetService<IAppTyped<TSettings, TResources>>(reuse: true);
         _app = created;
         return created;
     }
@@ -35,7 +35,7 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
             return typed;
 
         // Get and cache for reuse
-        var cmsContext = (CmsContext)ExCtx.GetCmsContext();
+        var cmsContext = (CmsContext)ctxEx.Value.CmsContext;
         var created = new CmsView<TSettings, TResources>(cmsContext, cmsContext.BlockInternal, false);
         _view = created;
         return created;
@@ -43,8 +43,7 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
 
     private ICmsView? _view;
 
-    [field: AllowNull, MaybeNull]
-    private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
+    [field: AllowNull, MaybeNull] private ICodeDataFactory Cdf => field ??= ctxEx.Value.Cdf;
 
     public TCustomType? MyItem<TCustomType>()
         where TCustomType : class, IModelFromData, new()
@@ -53,7 +52,7 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
         if (_myItem is TCustomType typed)
             return typed;
 
-        var firstEntity = ExCtx.GetContextData()?.MyItems.FirstOrDefault();
+        var firstEntity = ctxEx.Value.BlockData.MyItems.FirstOrDefault();
         var created = Cdf.AsCustom<TCustomType>(firstEntity);
         _myItem = created;
         return created;
@@ -68,7 +67,7 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
             return typed;
         
         // Get and cache for reuse
-        var items = ExCtx.GetContextData()?.MyItems ?? [];
+        var items = ctxEx.Value.BlockData.MyItems ?? [];
         var created = Cdf.AsCustomList<TCustomType>(items, default, nullIfNull: false);
         _myItems = created;
         return created;
@@ -83,7 +82,7 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
             return typed;
 
         // Get and cache for reuse
-        var header = ExCtx.GetContextData()?.MyHeaders.FirstOrDefault();
+        var header = ctxEx.Value.BlockData.MyHeaders.FirstOrDefault();
         var created = Cdf.AsCustom<TCustomType>(header);
         _myHeader = created;
         return created;

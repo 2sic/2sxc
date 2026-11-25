@@ -4,7 +4,7 @@ namespace ToSic.Sxc.Code.Generate.Data;
 
 internal class GenDataProperties
 {
-    internal static List<GeneratePropertyBase> Generators(CSharpGeneratorHelper helper)
+    internal static List<ICodeGenProperty> Generators(CSharpGeneratorHelper helper)
     {
         return
         [

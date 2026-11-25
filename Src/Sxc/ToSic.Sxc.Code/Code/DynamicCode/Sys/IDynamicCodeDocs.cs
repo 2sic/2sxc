@@ -1,10 +1,9 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp.Sys.Engines;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Sys.ExecutionContext;
+
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
 namespace ToSic.Sxc.Code.Sys;
@@ -17,14 +16,14 @@ namespace ToSic.Sxc.Code.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IDynamicCodeDocs
 {
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     TService GetService<TService>() where TService : class;
 
     /// <summary>
-    /// A fully prepared <see cref="IApp"/> object letting you access all the data and queries in the current app. 
+    /// A fully prepared <see cref="IAppDynamic"/> object letting you access all the data and queries in the current app. 
     /// </summary>
     /// <returns>The current app</returns>
-    IApp App { get; }
+    IAppDynamic App { get; }
 
     /// <summary>
     /// The data prepared for the current Code. Usually user data which was manually added to the instance, but can also be a query.

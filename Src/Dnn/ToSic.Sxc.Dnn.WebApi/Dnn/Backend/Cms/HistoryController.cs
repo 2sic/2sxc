@@ -1,7 +1,9 @@
-﻿using ToSic.Eav.WebApi.Sys.Cms;
-using ToSic.Eav.WebApi.Sys.Dto;
+﻿using ToSic.Eav.Ui.Edit.Sys;
+using ToSic.Eav.Ui.History.Sys;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys;
-using RealController = ToSic.Sxc.Backend.Cms.HistoryControllerReal;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
+using RealController = ToSic.Eav.Ui.History.Sys.HistoryControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Cms;
 
@@ -9,19 +11,21 @@ namespace ToSic.Sxc.Dnn.Backend.Cms;
 /// Controller for history of entities
 /// </summary>
 [PrivateApi]
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [SupportedModules(DnnSupportedModuleNames)]
 [ValidateAntiForgeryToken]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class HistoryController() : DnnSxcControllerBase(RealController.LogSuffix), IHistoryController
+public class HistoryController : DnnApiController, IHistoryController
 {
-    private RealController Real => SysHlp.GetService<RealController>();
+    #region WebApi Composition Infrastructure
 
-    // Replaced by DataSource System.ItemHistory through query System.SysData.
-    ///// <inheritdoc />
-    //[HttpPost]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    //public List<ItemHistory> Get(int appId, [FromBody] ItemIdentifier item)
-    //    => Real.Get(appId, item);
+    public ILog Log => field ??= LogFactory.Create("Api." + RealController.LogSuffix);
+
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
+
+    #endregion
+
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     /// <inheritdoc />
     [HttpPost]

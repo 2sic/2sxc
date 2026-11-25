@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace ToSic.Sxc.WebApi.Sys.ActionFilters;
 /// <summary>
-/// TODO: @STV pls document what this is for
+/// Marks the first body-bound parameter whose value is null and has no declared default
+/// as skipped in model state. Oqtane attaches the filter through its controller base.
 /// </summary>
 /// <remarks>
 /// inspired by https://github.com/pranavkm/OptionalBodyBinding

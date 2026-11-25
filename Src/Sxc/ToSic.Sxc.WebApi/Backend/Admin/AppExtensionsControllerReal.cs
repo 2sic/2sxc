@@ -1,30 +1,24 @@
 using ToSic.Eav.Apps.Sys.Extensions;
-using ToSic.Eav.Apps.Sys.FileSystemState;
-using ToSic.Eav.WebApi.Sys.ImportExport;
-using ToSic.Sxc.Backend.App;
+using ToSic.Eav.ImportExport.Sys;
+using ToSic.Sxc.Apps.Extensions.Sys;
+using ToSic.Sxc.Apps.Extensions.Sys.Export;
+using ToSic.Sxc.Apps.Extensions.Sys.Inspect;
+using ToSic.Sxc.Apps.Extensions.Sys.Install;
+using ToSic.Sxc.Apps.Extensions.Sys.Preflight;
 
 namespace ToSic.Sxc.Backend.Admin;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppExtensionsControllerReal(
-    LazySvc<ExtensionReaderBackend> readerLazy,
     LazySvc<ExtensionWriterBackend> writerLazy,
     LazySvc<ExtensionInstallBackend> zipLazy,
     LazySvc<ExtensionInspectBackend> inspectorLazy,
     LazySvc<ExtensionDeleteBackend> deleteLazy,
     LazySvc<ExtensionExportService> exportExtensionLazy,
     LazySvc<ExtensionDownloadBackend> downloadLazy)
-    : ServiceBase("Api.ExtsRl", connect: [readerLazy, writerLazy, zipLazy, inspectorLazy, deleteLazy, exportExtensionLazy, downloadLazy])
+    : ServiceBase("Api.ExtsRl", connect: [writerLazy, zipLazy, inspectorLazy, deleteLazy, exportExtensionLazy, downloadLazy])
 {
     public const string LogSuffix = "ApiExts";
-
-    /// <summary>
-    /// Get all App Extensions and their configuration (if any).
-    /// </summary>
-    /// <param name="appId">App identifier</param>
-    /// <returns>Installed extensions</returns>
-    public ICollection<ExtensionDto> Extensions(int appId)
-        => readerLazy.Value.GetExtensions(appId);
 
     /// <summary>
     /// Preflight install of an extension zip to report current state and options.
@@ -103,15 +97,6 @@ public class AppExtensionsControllerReal(
     }
 
     /// <summary>
-    /// Inspect endpoint
-    /// </summary>
-    /// <param name="appId">App identifier</param>
-    /// <param name="name">Extension folder name</param>
-    /// <param name="edition">Optional edition name</param>
-    public ExtensionInspectResultDto Inspect(int appId, string name, string? edition = null)
-        => inspectorLazy.Value.Inspect(appId, name, edition);
-
-    /// <summary>
     /// Create or replace the configuration of a specific App Extension.
     /// </summary>
     /// <param name="appId">App identifier</param>
@@ -127,7 +112,7 @@ public class AppExtensionsControllerReal(
     /// <param name="appId">App identifier</param>
     /// <param name="name">Extension folder name</param>
     /// <returns>HTTP response containing the file data.</returns>
-    public FileToUploadToClient Download(int appId, string name)
+    public FileResult Download(int appId, string name)
         => exportExtensionLazy.Value.Export(appId, name);
 
     /// <summary>

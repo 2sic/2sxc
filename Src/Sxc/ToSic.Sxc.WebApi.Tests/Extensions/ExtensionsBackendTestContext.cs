@@ -3,6 +3,9 @@ using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Apps.Sys.Extensions;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Services;
+using ToSic.Sxc.Apps.Extensions.Sys;
+using ToSic.Sxc.Apps.Extensions.Sys.Inspect;
+using ToSic.Sxc.Apps.Extensions.Sys.Install;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
@@ -43,7 +46,7 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
         IJsonService jsonSvc,
         IGlobalConfiguration globalConfiguration,
         ExtensionManifestService manifestService,
-        LazySvc<ExtensionInspectBackend> inspectorLazy,
+        LazySvc<ExtensionInspectBackend> inspectorLazyX,
         IDataSourceGenerator<AppEditions> appEditions,
         LazySvc<AppCachePurger> appCachePurgerLazy,
         ExtensionsTestAppJsonConfigurationService appJsonService)
@@ -55,7 +58,7 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
 
         var site = MockSiteTestHelpers.CreateSite(tempRoot);
         var appPathSvc = new MockAppPathsMicroSvc(tempRoot);
-        inspectorLazy.Inject(new ExtensionInspectBackend(appReadersLazy, site, appPathSvc));
+        var inspectorLazy = new LazySvcInjectable<ExtensionInspectBackend>(new(appReadersLazy, site, appPathSvc));
 
         var reader = new ExtensionReaderBackend(appReadersLazy, site, appPathSvc, jsonLazy, manifestService, appEditions);
         var writer = new ExtensionWriterBackend(appReadersLazy, site, appPathSvc);

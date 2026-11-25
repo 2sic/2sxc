@@ -23,7 +23,7 @@ public sealed class BlockOfEntity(BlockGeneratorHelpers helpers, LazySvc<AppFind
 
         // Get the content-block definition if we only have the ID
         // The block ID. Is usually negative to mark inner-content-blocks
-        blockEntity ??= parentBlock.App.Data.List.GetOne(Math.Abs(contentBlockId))!;
+        blockEntity ??= parentBlock.App.AppReader.List.GetOne(Math.Abs(contentBlockId))!;
 
         var (isContentApp, blockIdentifier) = LoadBlockDefinition(appFinderLazy, parentBlock.ZoneId, blockEntity);
         var ctx = contextOfBlockFactoryLazy.Value.Update(parentBlock.Context, blockIdentifier);

@@ -1,6 +1,8 @@
-﻿using ToSic.Eav.WebApi.Sys.Admin;
+﻿using ToSic.Eav.WebApi.Admin.Sys;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Sys;
-using RealController = ToSic.Eav.WebApi.Sys.Admin.FieldControllerReal;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
+using RealController = ToSic.Eav.WebApi.Admin.Sys.FieldControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
@@ -8,12 +10,22 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 /// Web API Controller for Content-Type structures, fields etc.
 /// </summary>
 [SupportedModules(DnnSupportedModuleNames)]
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [ValidateAntiForgeryToken]
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class FieldController() : DnnSxcControllerBase(RealController.LogSuffix), IFieldController
+public class FieldController : DnnApiController, IFieldController
 {
-    private RealController Real => SysHlp.GetService<RealController>();
+    #region WebApi Composition Infrastructure
+
+    public ILog Log => field ??= LogFactory.Create("Api." + RealController.LogSuffix);
+
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
+
+    #endregion
+
+
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     #region Fields - Get, Reorder, Data-Types (for dropdown), etc.
 

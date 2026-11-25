@@ -4,9 +4,8 @@ using System.Configuration;
 using ToSic.Eav;
 using ToSic.Eav.Run.Startup;
 using ToSic.Razor.StartUp;
-using ToSic.Sxc.Backend;
-using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Dnn.Compatibility;
 using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.Dnn.Startup;
 using ToSic.Sxc.Run.Startup;
@@ -46,6 +45,7 @@ public static class DnnDi
         l.A("Will start with ADAM and 2sxc parts");
         services
             .AddAdamWebApi<int, int>()
+            .AddSxcWorkDataSourceProviders()
             .AddSxcWebApi();
 
         l.A("Will start with 2sxc Code / Engines etc.");

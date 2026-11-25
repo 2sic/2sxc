@@ -4,13 +4,11 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Dnn.Razor.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.Help;
-using IApp = ToSic.Sxc.Apps.IApp;
 
-
-// ReSharper disable once CheckNamespace
+#pragma warning disable IDE0130
 namespace Custom.Hybrid;
+#pragma warning restore IDE0130
 
 /// <summary>
 /// The base class for Hybrid Razor-Components in 2sxc 12 <br/>
@@ -35,7 +33,7 @@ public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHe
     public override ICodeLog Log => RzrHlp.CodeLog;
 
     /// <inheritdoc />
-    public override IHtmlHelper Html => RzrHlp.Html;
+    public override IHtmlHelper Html => field ??= RzrHlp.GetHtml(ExCtx);
 
     #endregion
 
@@ -48,13 +46,13 @@ public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHe
     /// <inheritdoc cref="IDynamicCodeDocs.Edit" />
     public IEditService Edit => CodeApi.Edit;
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
     [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 
     /// <inheritdoc />
-    public new IApp App => CodeApi.App;
+    public new IAppDynamic App => CodeApi.App;
 
     /// <inheritdoc />
     public IDataSource Data => CodeApi.Data;

@@ -1,8 +1,6 @@
-﻿using ToSic.Eav.Models;
+﻿using ToSic.Eav.Apps.Views.Sys;
+using ToSic.Eav.Models;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Blocks.Sys.Views;
-using ToSic.Sxc.Data.Sys.Factory;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Context.Sys.CmsContext;
 
@@ -26,12 +24,12 @@ internal class CmsView<TSettings, TResources>(CmsContext cmsContext, IBlock bloc
 {
     private readonly IView _view = block.View!;
 
-    [field: AllowNull, MaybeNull]
-    private ICodeDataFactory Cdf => field ??= CmsContext.ExCtx.GetCdf();
 
-    public TSettings? Settings => _settings.Get(() => Cdf.AsCustom<TSettings>(Cdf.AsItem(_view.Settings, new() { ItemIsStrict = settingsPropsRequired })));
+    public TSettings? Settings => _settings.Get(()
+        => CmsContext.Cdf.AsCustom<TSettings>(CmsContext.Cdf.AsItem(_view.Settings, new() { ItemIsStrict = settingsPropsRequired })));
     private readonly LazyGet<TSettings?> _settings = new();
 
-    public TResources? Resources => _resources.Get(() => Cdf.AsCustom<TResources>(_view.Resources));
+    public TResources? Resources => _resources.Get(()
+        => CmsContext.Cdf.AsCustom<TResources>(_view.Resources));
     private readonly LazyGet<TResources?> _resources = new();
 }

@@ -1,5 +1,6 @@
-﻿// ReSharper disable once CheckNamespace
+﻿#pragma warning disable IDE0130
 namespace ToSic.Sxc.Services;
+#pragma warning restore IDE0130
 
 /// <summary>
 /// Obsolete, use <see cref="ISystemLogService"/> instead.

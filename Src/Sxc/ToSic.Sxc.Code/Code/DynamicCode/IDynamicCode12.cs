@@ -1,11 +1,10 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp.Sys.Engines;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Sys.ExecutionContext;
+
 using IFolder = ToSic.Sxc.Adam.IFolder;
 // Disable warnings that properties should be marked as new
 // Because we need them here as additional definition because of Razor problems with inherited interfaces
@@ -22,9 +21,9 @@ namespace ToSic.Sxc.Code;
 /// Important for dynamic code files like Razor or WebApi. Note that there are many overloads to ensure that AsDynamic and AsEntity "just work" even if you give them the original data.
 /// </summary>
 /// <remarks>
-/// This interface is only used by developers who use the <see cref="IDynamicCodeService"/> to retrieve the object which helps them access things such as the App.
+/// This interface is only used by developers who use the [IDynamicCodeService](xref:ToSic.Sxc.Services.IDynamicCodeService) to retrieve the object which helps them access things such as the App.
 /// </remarks>
-[PublicApi]
+[DeprecatedApi("Slowly being deprecated in v23, as it should be replaced with Typed APIs", "v23", "TBD")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IDynamicCode12 : IDynamicCode, ICreateInstance, ICompatibilityLevel, IHasLog
 {
@@ -42,11 +41,11 @@ public interface IDynamicCode12 : IDynamicCode, ICreateInstance, ICompatibilityL
     // **************************************************
 
 
-    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="IGetService.GetService{TService}"/>
     TService GetService<TService>() where TService : class;
 
     /// <inheritdoc cref="IDynamicCodeDocs.App" />
-    IApp App { get; }
+    IAppDynamic App { get; }
 
     /// <inheritdoc cref="IDynamicCodeDocs.Data" />
     IDataSource Data { get; }

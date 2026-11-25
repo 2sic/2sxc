@@ -8,11 +8,8 @@ namespace ToSic.Sxc.Data;
 /// Enhanced in v17.07 to fully support `ITypedItem`, before it only supported `ITyped`.
 /// </remarks>
 [PublicApi]
-public interface ITypedStack: ITypedItem, ICanDebug
+public interface ITypedStack : ITypedItem, ICanDebug
 {
-    ///// <inheritdoc cref="ITypITypedRelationshipsDocsld"/>
-    //ITypedItem Child(string name, NoParamOrder npo = default, bool? required = default);
-
-    ///// <inheritdoc cref="ITypedRelationshipsDocs.Children"/>
-    //IEnumerable<ITypedItem> Children(string field = default, NoParamOrder npo = default, string type = default, bool? required = default);
+    [PrivateApi("Internal use only, not meant for public consumption")]
+    ITypedStack GetStack(string[] names);
 }

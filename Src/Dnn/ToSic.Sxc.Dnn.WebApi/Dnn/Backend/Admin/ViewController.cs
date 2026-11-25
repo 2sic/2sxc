@@ -1,25 +1,28 @@
 ﻿using System.Web;
-using ToSic.Eav.WebApi.Sys.Dto;
+using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.WebApi.Sys;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Dnn.WebApi.Sys;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 using RealController = ToSic.Sxc.Backend.Admin.ViewControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
-[DnnLogExceptions]
+[DnnLogWebApi, DnnLogExceptions, ConfigureJsonOnlyResponse] // #CompositionOverInheritance
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ViewController() : DnnSxcControllerBase(RealController.LogSuffix), IViewController
+public class ViewController : DnnApiController, IViewController
 {
-    private RealController Real => SysHlp.GetService<RealController>();
+    #region WebApi Composition Infrastructure
 
-    // Replaced by DataSource System.Views through query System.SysData.
-    ///// <inheritdoc />
-    //[HttpGet]
-    //[SupportedModules(DnnSupportedModuleNames)]
-    //[ValidateAntiForgeryToken]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    //public IEnumerable<ViewDetailsDto> All(int appId)
-    //    => Real.All(appId);
+    public ILog Log => field ??= LogFactory.Create($"Api.{RealController.LogSuffix}");
+
+    private DnnWebApiHelper SysHlp => field ??= new(this, EavWebApiConstants.HistoryNameWebApi);
+
+    #endregion
+
+
+    private RealController Real => SysHlp.GetServiceNoExCtx<RealController>();
 
     /// <inheritdoc />
     [HttpGet, HttpDelete]
@@ -33,34 +36,15 @@ public class ViewController() : DnnSxcControllerBase(RealController.LogSuffix), 
     [HttpGet]
     [AllowAnonymous] // will do security check internally
     public HttpResponseMessage Json(int appId, int viewId)
-    {
-        // Make sure the Scoped ResponseMaker has this controller context
-        using (this.InitializedResponseMaker())
-            return Real.Json(appId, viewId);
-    }
+        => Real.Json(appId, viewId).ToHttpResponse();
 
     /// <inheritdoc />
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public ImportResultDto Import(int zoneId, int appId)
+    public ImportResult Import(int zoneId, int appId)
     {
         this.PreventServerTimeout600();
         return Real.Import(new(Request, HttpContext.Current.Request), zoneId, appId);
     }
-
-    // Replaced by DataSource System.ViewUsage through query System.SysData.
-    ///// <inheritdoc />
-    //[HttpGet]
-    //[SupportedModules(DnnSupportedModuleNames)]
-    //[ValidateAntiForgeryToken]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    //public IEnumerable<ViewDto> Usage(int appId, Guid guid)
-    //    => Real.UsagePreparations((views, blocks) =>
-    //        {
-    //            var allMods = new DnnPages(Log).AllModulesWithContent(PortalSettings.PortalId);
-    //            Log.A($"Found {allMods.Count} modules");
-    //            return views.Select(vwb => vwb.Init(blocks, allMods));
-    //        })
-    //        .Usage(appId, guid);
 }
