@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Code.Context.Sys;
 
 public partial class CodeContext: IGetService
 {
-    private ISysServiceProvider SpWithOverrides => GetSpWithOverrides();
+    private ISysServiceProvider SpWithOverrides => field ??= GetSpWithOverrides();
 
     private ISysServiceProvider GetSpWithOverrides()
     {
