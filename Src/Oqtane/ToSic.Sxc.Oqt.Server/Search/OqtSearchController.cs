@@ -4,6 +4,7 @@ using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Context;
+using ToSic.Eav.Context.Sys.ZoneCulture;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context;
@@ -46,10 +47,15 @@ internal class OqtSearchController(
             ((OqtSite)site).Init(oqtSite);
             var module = ((OqtModule)moduleGenerator.New()).Init(pageModule.Module);
             var identity = module.BlockIdentifier;
-            if (identity.AppId is AppConstants.AppIdNotFound or EavConstants.NullId or KnownAppsConstants.AppIdEmpty)
+            if (identity == null || identity.AppId is AppConstants.AppIdNotFound or EavConstants.NullId or KnownAppsConstants.AppIdEmpty)
                 return l.Return([], "module has no app");
 
-            appsCache.Value.Load(identity.PureIdentity(), site.DefaultCultureCode);
+            // Note: the using-overload is probably net necessary in Oqtane, as the Site seems to be injectable
+            // which doesn't work in DNN
+            // probably an early access also doesn't matter - we can probably remove this
+            // I assume it's just here because DNN had it - discuss TODO: @STV
+            //using (Ctx<IZoneCultureResolver>.Use(new ZoneCultureInfo(site.DefaultCultureCode, site.DefaultCultureCode)))
+            appsCache.Value.Get(identity.PureIdentity());
             var context = contextFactory.Create(pageModule.PageId, module);
             var block = blockGenerator.New().GetBlockOfModule(context);
             if (!block.ViewIsReady || block.View.SearchIndexingDisabled)

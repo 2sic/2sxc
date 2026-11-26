@@ -3,6 +3,7 @@ using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Context;
+using ToSic.Eav.Context.Sys.ZoneCulture;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp.Sys.Engines;
@@ -54,13 +55,16 @@ internal class SearchController(
         DnnSite = ctxOfModFac.Value.CreateFromModuleAndShare(DnnModule, Log);
 
         // New Context because Portal-Settings.Current is null
-        var appId = module.BlockIdentifier.AppId;
-        if (appId is AppConstants.AppIdNotFound or EavConstants.NullId)
+        var identity = module.BlockIdentifier;
+        if (identity == null || identity.AppId is AppConstants.AppIdNotFound or EavConstants.NullId or KnownAppsConstants.AppIdEmpty)
             return l.ReturnAsOk("no app id");
 
-        // Ensure cache builds up with correct primary language
-        // In case it's not loaded yet
-        appsCache.Value.Load(module.BlockIdentifier.PureIdentity(), DnnSite.DefaultCultureCode);
+        // Ensure cache builds up with correct primary language in case it's not loaded yet.
+        // We must access the cache early on with the injected culture,
+        // to ensure that the loading from DB uses the correct culture for the primary language.
+        var injectCulture = new ZoneCultureInfo(DnnSite.DefaultCultureCode, DnnSite.DefaultCultureCode);
+        using (Ctx<IZoneCultureResolver>.Use(injectCulture))
+            appsCache.Value.Get(identity.PureIdentity());
 
         var modCtx = ctxOfModFac.Value.InitDnnSiteModuleAndBlockContext(DnnModule);
         Block = moduleAndBlockBuilder.Value.GetBlockOfModule(modCtx);
