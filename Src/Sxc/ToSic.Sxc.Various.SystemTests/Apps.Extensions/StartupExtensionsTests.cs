@@ -37,8 +37,8 @@ public class StartupExtensionsTests : StartupTestsEavDataBuild
         services.AddSingleton<IAppJsonConfigurationService>(sp => sp.GetRequiredService<ExtensionsTestAppJsonConfigurationService>());
         services.AddSingleton<IAppsCatalog, ExtensionsTestAppsCatalog>();
 
-        AppsCacheSwitch.PreferredKey = "Mock";
-        services.TryAddKeyedSingleton<IAppsCache, AppsCache>(AppsCacheSwitch.PreferredKey);
+        AppsCacheSelector.PreferredKey = "Mock";
+        services.TryAddKeyedSingleton<IAppsCache, AppsCacheInMemory>(AppsCacheSelector.PreferredKey);
         //services.AddSingleton<AppsCacheSwitch, ExtensionsTestAppsCacheSwitch>();
         services.AddEavAppsCache();
         //services.AddTransient<IAppCachePurge, AppCachePurge>();
@@ -222,16 +222,16 @@ internal sealed class ExtensionsTestAppsCatalog : IAppsCatalog
         => Guid.NewGuid().ToString();
 }
 
-internal sealed class ExtensionsTestAppsCacheSwitch : AppsCacheSwitch
-{
-    public ExtensionsTestAppsCacheSwitch() : base(null!, null!, null!)
-    {
-        var field = typeof(AppsCacheSwitch).GetField("_value", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        var getOnce = field?.GetValue(this);
-        var resetMethod = getOnce?.GetType().GetMethod("Reset", [typeof(IAppsCache/*Switchable*/)]);
-        resetMethod?.Invoke(getOnce, [new ExtensionsTestAppsCacheSwitchable()]);
-    }
-}
+//internal sealed class ExtensionsTestAppsCacheSwitch : AppsCacheSwitch
+//{
+//    public ExtensionsTestAppsCacheSwitch() : base(null!, null!)
+//    {
+//        var field = typeof(AppsCacheSwitch).GetField("_value", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+//        var getOnce = field?.GetValue(this);
+//        var resetMethod = getOnce?.GetType().GetMethod("Reset", [typeof(IAppsCache/*Switchable*/)]);
+//        resetMethod?.Invoke(getOnce, [new ExtensionsTestAppsCacheSwitchable()]);
+//    }
+//}
 
 internal sealed class ExtensionsTestAppsCacheSwitchable : IAppsCache //Switchable
 {

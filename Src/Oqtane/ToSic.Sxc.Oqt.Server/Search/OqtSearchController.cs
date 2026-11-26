@@ -6,7 +6,6 @@ using ToSic.Eav.Apps.Sys.Loaders;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Context;
 using ToSic.Eav.Sys;
-using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys;
@@ -21,7 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.Search;
 internal class OqtSearchController(
     ISite site,
     ISiteRepository sites,
-    AppsCacheSwitch appsCache,
+    IAppsCacheSelector appsCache,
     LazySvc<IAppLoaderTools> appLoaderTools,
     Generator<IModule> moduleGenerator,
     OqtContextOfBlockFactory contextFactory,

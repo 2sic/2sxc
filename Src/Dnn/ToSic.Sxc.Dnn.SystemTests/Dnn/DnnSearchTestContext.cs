@@ -113,7 +113,7 @@ public sealed class DnnSearchProbe : MarshalByRefObject
         services.AddSingleton(new Mock<IEditionService>(MockBehavior.Strict).Object);
         services.AddTransient(typeof(LazySvc<>));
         services.AddTransient(typeof(Generator<>));
-        services.AddTransient<AppsCacheSwitch>();
+        services.AddTransient<IAppsCacheSelector, AppsCacheSelector>();
         services.AddTransient<DnnCultureResolver>();
         services.AddTransient<DnnSiteFactory>();
         services.AddScoped<DnnSiteShareWip>();

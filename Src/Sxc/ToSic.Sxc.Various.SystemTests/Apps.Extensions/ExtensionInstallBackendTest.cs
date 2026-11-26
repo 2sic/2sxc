@@ -755,7 +755,7 @@ public class ExtensionInstallBackendTest(
 
         // TODO: @STV
         // 2dm moved this 2026-11-26 from the WebApi project to here
-        // now this breaks, reason unknown. pls fix ;)
+        // now this breaks, but only in .net 4.8 reason unknown. pls fix ;)
         var ok = ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: "long-path.zip");
 
         True(ok);

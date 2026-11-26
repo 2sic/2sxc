@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Dnn.Search;
 /// DNN context and documents stay here; search preparation is shared with Oqtane.
 /// </remarks>
 internal class SearchController(
-    AppsCacheSwitch appsCache,
+    IAppsCacheSelector appsCache,
     LazySvc<IAppLoaderTools> appLoaderTools,
     LazySvc<ToSic.Sxc.Search.Sys.SearchIndexing> searchIndexing,
     LazySvc<DnnModuleContextFactory> ctxOfModFac,
