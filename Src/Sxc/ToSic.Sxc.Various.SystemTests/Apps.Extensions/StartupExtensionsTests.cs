@@ -38,7 +38,7 @@ public class StartupExtensionsTests : StartupTestsEavDataBuild
         services.AddSingleton<IAppsCatalog, ExtensionsTestAppsCatalog>();
 
         AppsCacheSelector.PreferredKey = "Mock";
-        services.TryAddKeyedSingleton<IAppsCache, AppsCacheInMemory>(AppsCacheSelector.PreferredKey);
+        services.TryAddKeyedSingleton<IAppsCacheManager, AppsCacheManager>(AppsCacheSelector.PreferredKey);
         //services.AddSingleton<AppsCacheSwitch, ExtensionsTestAppsCacheSwitch>();
         services.AddEavAppsCache();
         //services.AddTransient<IAppCachePurge, AppCachePurge>();
