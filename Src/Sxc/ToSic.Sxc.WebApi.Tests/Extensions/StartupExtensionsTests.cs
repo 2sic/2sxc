@@ -23,6 +23,7 @@ public class StartupExtensionsTests : StartupTestsEavDataBuild
     public override void ConfigureServices(IServiceCollection services)
     {
         base.ConfigureServices(services);
+        services.AddAppWorkContext();
         services.AddDataSourceSystem();
         services.AddContextFallbacks();
 
