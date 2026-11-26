@@ -70,6 +70,15 @@ public sealed partial class CmsBlock : DataSourceBase, IDataSourceLinkable
     private readonly Dependencies _services;
     #endregion
 
+    /// <summary>
+    /// Special link which when connecting will connect all the names incl. the old header name 
+    /// </summary>
+    /// <remarks>
+    /// 2026-11-26 2dm: this has been here for a long time, I'm not 100% sure for what.
+    /// My guess is that the CmsBlock is passed through PassThrough data sources, which needs to get the full list of links?
+    /// But that may also happen automatically, so I'm not sure if we need this.
+    /// </remarks>
+    /// <returns></returns>
     IDataSourceLink IDataSourceLinkable.GetLink() => _link
         ??= BreachExtensions.CreateEmptyLink(this)
             .WithAnotherStream(name: ViewParts.StreamHeader)
@@ -85,12 +94,12 @@ public sealed partial class CmsBlock : DataSourceBase, IDataSourceLinkable
         if (!blockSpecsAndErrors.IsOk)
             return blockSpecsAndErrors.ErrorsSafe();
 
-        var parts = blockSpecsAndErrors.Result;
-        return GetStream(parts.View,
-            parts.BlockConfiguration.Content,
-            parts.View.ContentItem,
-            parts.BlockConfiguration.Presentation,
-            parts.View.PresentationItem,
+        var (blockConfig, view) = blockSpecsAndErrors.Result;
+        return GetStream(view,
+            blockConfig.Content,
+            view.ContentItem,
+            blockConfig.Presentation,
+            view.PresentationItem,
             false
         );
     }
@@ -102,14 +111,13 @@ public sealed partial class CmsBlock : DataSourceBase, IDataSourceLinkable
         if (!blockSpecsAndErrors.IsOk)
             return blockSpecsAndErrors.ErrorsSafe();
 
-        var parts = blockSpecsAndErrors.Result;
-
-
-        return GetStream(parts.View,
-            parts.BlockConfiguration.Header,
-            parts.View.HeaderItem,
-            parts.BlockConfiguration.HeaderPresentation,
-            parts.View.HeaderPresentationItem,
+        var (blockConfig, view) = blockSpecsAndErrors.Result;
+        
+        return GetStream(view,
+            blockConfig.Header,
+            view.HeaderItem,
+            blockConfig.HeaderPresentation,
+            view.HeaderPresentationItem,
             true
         );
     }

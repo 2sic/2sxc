@@ -28,7 +28,6 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
         var initialSource = dsFactory.CreateDefault(options);
         var blockDataSource = dsFactory.Create<CmsBlock>(options with { Attach = initialSource });
 
-        blockDataSource.OverrideView = view;
         blockDataSource.UseSxcInstanceContentGroup = true;
 
         // If the Template has a Data-Pipeline, use an empty upstream to attach later, else use the ModuleDataSource created above

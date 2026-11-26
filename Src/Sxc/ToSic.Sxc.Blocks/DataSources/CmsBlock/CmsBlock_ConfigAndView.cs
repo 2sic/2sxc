@@ -2,28 +2,29 @@
 using ToSic.Eav.Apps.Views.Sys;
 using ToSic.Eav.DataSource.Sys.Errors;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Blocks.Sys.Views;
 
 namespace ToSic.Sxc.DataSources;
 
 partial class CmsBlock
 {
     private ResultOrError<(BlockConfiguration BlockConfiguration, IView View)> ConfigAndViewOrErrors
-        => field ??= new Func<ResultOrError<(BlockConfiguration BlockConfiguration, IView View)>>(() =>
-        {
-            var config = LoadBlockConfiguration();
-            if (!config.IsOk)
-                return new ResultOrError<(BlockConfiguration BlockConfiguration, IView view)>(false, default,
-                    config.ErrorsSafe());
+        => field ??= GetConfigViewOrErrors();
 
-            var view = OverrideView ?? config.Result.View;
-            if (view == null)
-                return new ResultOrError<(BlockConfiguration BlockConfiguration, IView view)>(false, default,
-                    Error.Create(title: "CmsBlock View Missing",
-                        message: "Cannot find View configuration of current CmsBlock"));
-            // all ok 
-            return new ResultOrError<(BlockConfiguration BlockConfiguration, IView view)>(true, (config.Result, view));
-        })();
+    private ResultOrError<(BlockConfiguration BlockConfiguration, IView View)> GetConfigViewOrErrors()
+    {
+        var config = LoadBlockConfiguration();
+        if (!config.IsOk)
+            return new ResultOrError<(BlockConfiguration BlockConfiguration, IView view)>(false, default,
+                config.ErrorsSafe());
+
+        var view = config.Result.View;
+        if (view == null)
+            return new ResultOrError<(BlockConfiguration BlockConfiguration, IView view)>(false, default,
+                Error.Create(title: "CmsBlock View Missing",
+                    message: "Cannot find View configuration of current CmsBlock"));
+        // all ok 
+        return new ResultOrError<(BlockConfiguration BlockConfiguration, IView view)>(true, (config.Result, view));
+    }
 
     private ResultOrError<BlockConfiguration> LoadBlockConfiguration()
     {
@@ -46,13 +47,4 @@ partial class CmsBlock
         var blockConfig = _services.AppBlocks.New(ctx).GetOrGeneratePreviewConfig(blockId);
         return l.Return(new(true, blockConfig), "ok");
     }
-
-
-    /// <summary>
-    /// This allows external settings to override the view given by the configuration. This is used to temporarily use an alternate view.
-    /// For example, when previewing a different template. 
-    /// </summary>
-    public IView? OverrideView { get; set; }
-
-
 }
