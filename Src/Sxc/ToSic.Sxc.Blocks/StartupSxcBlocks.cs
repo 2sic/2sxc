@@ -37,7 +37,6 @@ public static class StartupSxcBlocks
 
         // Block functionality
         services.TryAddTransient<BlockDataSourceFactory>();
-        services.TryAddTransient<DataSources.CmsBlock.Dependencies>(); // new v15
 
         services.TryAddTransient<IAppDataConfigProvider, SxcAppDataConfigProvider>(); // new v17
 

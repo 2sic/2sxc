@@ -33,8 +33,24 @@ namespace ToSic.Sxc.DataSources;
     ConfigurationType = "7c2b2bc2-68c6-4bc3-ba18-6e6b5176ba02",
     In = [DataSourceConstants.StreamDefaultName],
     HelpLink = "https://docs.2sxc.org/api/dot-net/ToSic.Sxc.DataSources.CmsBlock.html")]
-public sealed partial class CmsBlock : DataSourceBase, IDataSourceLinkable
+public sealed partial class CmsBlock(
+    DataSourceBase.Dependencies parentServices,
+    LazySvc<IModuleFactory> moduleLazy,
+    LazySvc<IDataSourcesService> dataSourceFactory,
+    AppWorkQuick<WorkBlocks> appBlocks)
+    : DataSourceBase(parentServices, $"SDS.CmsBks", callSetup: true, connect: [moduleLazy, dataSourceFactory, appBlocks]), IDataSourceLinkable
 {
+    #region Constructor / Setup (called back)
+
+    protected override void SetupProvideOut()
+    {
+        ProvideOut(GetContent);
+        ProvideOut(GetHeader, ViewParts.StreamHeader);
+        ProvideOut(GetHeader, ViewParts.StreamHeaderOld);
+    }
+
+    #endregion
+
     /// <summary>
     /// The instance-id of the CmsBlock (2sxc instance, DNN ModId). <br/>
     /// It's named Instance-Id to be more neutral as we're opening it to other platforms
@@ -49,26 +65,6 @@ public sealed partial class CmsBlock : DataSourceBase, IDataSourceLinkable
         set;
     }
 
-    #region Constructor
-
-    public new record Dependencies(
-        DataSourceBase.Dependencies ParentServices,
-        LazySvc<IModuleFactory> ModuleLazy,
-        LazySvc<IDataSourcesService> DataSourceFactory,
-        LazySvc<AppWorkContextService> AppCtxSvc,
-        AppWorkChain<WorkBlocks> AppBlocks)
-        : DependenciesBase(connect: [ModuleLazy, DataSourceFactory, AppCtxSvc, AppBlocks]);
-
-    public CmsBlock(Dependencies services): base(services.ParentServices, $"SDS.CmsBks", connect: [services])
-    {
-        _services = services;
-
-        ProvideOut(GetContent);
-        ProvideOut(GetHeader, ViewParts.StreamHeader);
-        ProvideOut(GetHeader, ViewParts.StreamHeaderOld);
-    }
-    private readonly Dependencies _services;
-    #endregion
 
     /// <summary>
     /// Special link which when connecting will connect all the names incl. the old header name 
