@@ -9,8 +9,8 @@ using ToSic.Sxc.Blocks.Sys.Views;
 namespace ToSic.Sxc.DataSources.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFactory, Generator<Query, Query.Options> queryGen)
-    : ServiceBase("Sxc.BDsFct", connect: [dataSourceFactory, queryGen])
+public class BlockDataSourceFactory(ISysServiceProvider sp)
+    : ServiceBase("Sxc.BDsFct")
 {
 
     internal IDataSource GetContextDataSourceFromView(BlockSpecs block, ILookUpEngine? configLookUp)
@@ -22,7 +22,12 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
         l.A("Will get Default data source - injecting block into the context, so it can be picked up");
         using (Ctx<IBlock>.Use(block))
         {
-            var dsFactory = dataSourceFactory.Value;
+            // Get a fresh service provider, which respects the using
+            var scopedSp = sp.GetSysServiceProvider();
+
+            // Create a DS Factory from this and create the DS
+            var dsFactory = scopedSp.Build<IDataSourcesService>();
+            
             var options = new DataSourceOptions
             {
                 AppIdentityOrReader = block.PureIdentity(),
@@ -53,7 +58,7 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
                     return l.ReturnAsOk(contextDataSource);
 
                 l.A("Generate query");
-                var query = queryGen.New(new(block.App.PureIdentity(), queryEntity, configLookUp));
+                var query = scopedSp.Build<Generator<Query, Query.Options>>().New(new(block.App.PureIdentity(), queryEntity, configLookUp));
                 l.A("attaching");
                 contextDataSource.SetOut(query);
             }
