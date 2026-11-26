@@ -37,9 +37,10 @@ internal partial class DnnDynamicCodeService : ServiceBase<DnnDynamicCodeService
     public record ScopedDependencies(
         Generator<ICodeContextFactory> ExCtxGenerator,
         Generator<AppForCode, AppForCode.Options> AppGenerator,
+        LazySvc<IContextOfAppFactory> ContextOfAppFactory,
         Generator<IAppDynamic, IAppForCode> AppDynGenerator,
         LazySvc<IBlockBuilder> ModAndBlockBuilder)
-        : DependenciesBase(connect: [ExCtxGenerator, AppGenerator, AppDynGenerator, ModAndBlockBuilder]);
+        : DependenciesBase(connect: [ExCtxGenerator, AppGenerator, ContextOfAppFactory, AppDynGenerator, ModAndBlockBuilder]);
 
 
     #endregion
@@ -88,7 +89,8 @@ internal partial class DnnDynamicCodeService : ServiceBase<DnnDynamicCodeService
         var appGen = ServicesScoped.AppGenerator;
 
         var l = Log.Fn<IAppDynamic>($"{appIdentity.Show()}, site:{overrideSite != null}, showDrafts: {showDrafts}");
-        var app = appGen.New(new(overrideSite, appIdentity, new() { ShowDrafts = showDrafts }));
+        var appContext = ServicesScoped.ContextOfAppFactory.Value.Create(appIdentity);
+        var app = appGen.New(new(overrideSite, appIdentity, new() { ShowDrafts = showDrafts, ContextOfSiteOrMore = appContext }));
         var dynApp = ServicesScoped.AppDynGenerator.New(app);
         return l.Return(dynApp);
     }

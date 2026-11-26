@@ -39,7 +39,8 @@ public sealed partial class CmsBlock(
     LazySvc<IModuleFactory> moduleFactory,
     LazySvc<IDataSourcesService> dataSourceFactory,
     AppWorkQuick<WorkBlocks> workBlocks)
-    : DataSourceBase(services, $"SDS.CmsBks", callSetup: true, connect: [moduleFactory, dataSourceFactory, workBlocks]), IDataSourceLinkable
+    : DataSourceBase(services, $"SDS.CmsBks", callSetup: true, connect: [moduleFactory, dataSourceFactory, workBlocks]),
+        IDataSourceLinkable
 {
     #region Constructor / Setup (called back)
 
@@ -57,7 +58,7 @@ public sealed partial class CmsBlock(
     /// It's named Instance-Id to be more neutral as we're opening it to other platforms
     /// </summary>
     [Configuration(Field = BlockInstanceConstants.FieldInstanceId,
-        Fallback = $"[{BlockInstanceConstants.InstanceLookupName}:{BlockInstanceConstants.ModuleIdKey}]")]
+        Fallback = $"[{BlockInstanceConstants.ModuleLookupName}:{BlockInstanceConstants.ModuleIdKey}]")]
     public int? ModuleId
     {
         get => field ?? (int.TryParse(Configuration.GetThis(), out var listId)

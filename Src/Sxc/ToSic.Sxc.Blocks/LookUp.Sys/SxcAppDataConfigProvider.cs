@@ -23,13 +23,12 @@ internal class SxcAppDataConfigProvider(LazySvc<ILookUpEngineResolver> getEngine
 {
     public IAppDataConfiguration GetDataConfiguration(IAppForCode appForLookup, AppDataConfigSpecs specs)
     {
-        var block = (specs as SxcAppDataConfigSpecs)?.BlockForLookupOrNull;
-        var lookup = GetLookupEngineForContext(block?.Context, appForLookup, block);
+        var lookup = GetLookupEngineForContext(specs.ContextOfSiteOrMore, appForLookup);
         return new AppDataConfiguration(lookup, specs.ShowDrafts);
     }
 
 
-    private LookUpEngine GetLookupEngineForContext(IContextOfSite? context, IAppForCode? appForLookup, IBlock? blockForLookupOrNull)
+    private LookUpEngine GetLookupEngineForContext(IContextOfSite? context, IAppForCode? appForLookup)
     {
         var maybeModuleId = (context as IContextOfModule)?.Module.Id;
         var l = Log.Fn<LookUpEngine>($"module: {maybeModuleId}, app: {appForLookup?.AppId} ..., ...");
@@ -46,20 +45,13 @@ internal class SxcAppDataConfigProvider(LazySvc<ILookUpEngineResolver> getEngine
             newSources.Add(new LookUpInAppProperty("app", appForLookup, context?.Site.SafeLanguagePriorityCodes()));
 
         // add module if it was not already added previously
-        if (!existSources.HasSource(BlockInstanceConstants.InstanceLookupName))
+        if (!existSources.HasSource(BlockInstanceConstants.ModuleLookupName))
         {
-            var modulePropertyAccess = new LookUpInDictionary(BlockInstanceConstants.InstanceLookupName, new Dictionary<string, string>
+            var modulePropertyAccess = new LookUpInDictionary(BlockInstanceConstants.ModuleLookupName, new Dictionary<string, string>
             {
                 [BlockInstanceConstants.ModuleIdKey] = modId.ToString(CultureInfo.InvariantCulture),
             });
             newSources.Add(modulePropertyAccess);
-        }
-
-        // provide the current SxcInstance to the children where necessary
-        if (!existSources.HasSource(LookUpConstants.InstanceContext) && blockForLookupOrNull != null)
-        {
-            var blockBuilderLookUp = new LookUpCmsBlock(LookUpConstants.InstanceContext, blockForLookupOrNull);
-            newSources.Add(blockBuilderLookUp);
         }
 
         // Provide the settings & resources stack lookup

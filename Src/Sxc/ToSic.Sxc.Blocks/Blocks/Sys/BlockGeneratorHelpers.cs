@@ -62,10 +62,10 @@ public class BlockGeneratorHelpers(
             return l.Return(specs, $"DataIsMissing a:{specs.AppId}, container:{specs.ParentId}, content-group:{config.Id}");
 
         // Get App for this block
-        var app = appForCodeGen.New(new(specs.Context.Site, specs.PureIdentity(), new SxcAppDataConfigSpecs { BlockForLookupOrNull = specs }));
+        var appForCode = appForCodeGen.New(new(specs.Context.Site, specs.PureIdentity(), new() { ContextOfSiteOrMore = specs.Context }));
         specs = specs with
         {
-            AppOrNull = app,
+            AppOrNull = appForCode,
         };
         l.A("App created");
 

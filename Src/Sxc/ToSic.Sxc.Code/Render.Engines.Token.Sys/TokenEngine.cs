@@ -117,7 +117,7 @@ public class TokenEngine(
 
     private LookUpEngine InitTokenReplace(ICodeDynamicApiHelper codeApiHelper, EngineSpecs engineSpecs, CultureInfo cultureInfo)
     {
-        var specs = new SxcAppDataConfigSpecs { BlockForLookupOrNull = engineSpecs.Block };
+        var specs = new AppDataConfigSpecs { ContextOfSiteOrMore = engineSpecs.Block?.Context };
         var appDataConfig = tokenEngineWithContext.New().GetDataConfiguration(engineSpecs.App, specs);
 
         return new(appDataConfig.LookUpEngine, Log, sources:

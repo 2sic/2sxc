@@ -42,7 +42,7 @@ public class QueryControllerReal(
     private ILookUpEngine LookUpEngineWithBlockRequired()
     {
         var block = ctxSvc.BlockRequired();
-        var specs = new SxcAppDataConfigSpecs { BlockForLookupOrNull = block };
+        var specs = new AppDataConfigSpecs { ContextOfSiteOrMore = block.Context };
         var lookUps = tokenEngineWithContext.New()
             .GetDataConfiguration(block.App, specs)
             .LookUpEngine;

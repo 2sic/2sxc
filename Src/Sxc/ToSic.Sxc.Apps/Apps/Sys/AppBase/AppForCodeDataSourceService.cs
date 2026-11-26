@@ -25,7 +25,7 @@ public class AppForCodeDataSourceService(IDataSourcesService dsFactory, IAppData
 
     private IAppDataConfiguration AppDataConfig => field ??= new Func<IAppDataConfiguration>(() =>
     {
-        var configSpecs = MyOptions.DataConfigSpecs ?? new AppDataConfigSpecs();
+        var configSpecs = MyOptions.DataConfigSpecs ?? new AppDataConfigSpecs() { ContextOfSiteOrMore = null };
         var config = dataConfigProvider.GetDataConfiguration(MyOptions.App, configSpecs);
 
         // needed to initialize data - must always happen a bit later because the show-draft info isn't available when creating the first App-object.

@@ -85,7 +85,7 @@ internal class DnnCustomWebApiHelper(DnnApiController ownerController, DnnWebApi
             
             // Look up if page publishing is enabled - if module context is not available, always false
             l.A($"AppId: {appReader.AppId}");
-            var app = services.AppOverrideLazy.New(new(siteCtx.Site, appReader.PureIdentity(), new()));
+            var app = services.AppOverrideLazy.New(new(siteCtx.Site, appReader.PureIdentity(), new() { ContextOfSiteOrMore = appCtx }));
             return l.Return(app, $"found #{app.AppId}");
         }
         catch

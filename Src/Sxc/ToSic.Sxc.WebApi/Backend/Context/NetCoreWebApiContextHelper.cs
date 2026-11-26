@@ -80,7 +80,8 @@ internal class NetCoreWebApiContextHelper: ServiceBase
                 return l.ReturnNull("nothing to do");
             var routeAppPath = routeAppPathObj.ToString();
 
-            var appId = CtxBuilder.TryFindAppFromPath(routeAppPath)
+            var appCtx = CtxBuilder.TryFindAppFromPath(routeAppPath);
+            var appId = appCtx
                             ?.AppReaderRequired.AppId
                         ?? Eav.Sys.EavConstants.NullId;
 
@@ -90,7 +91,7 @@ internal class NetCoreWebApiContextHelper: ServiceBase
             // Since we only have the AppId, we need to load the app and attach it to the context
             l.A($"AppId: {appId}");
             var site = CtxService.Context.Site;
-            var app = _helper.GetService<Generator<AppForCode, AppForCode.Options>>().New(new(site, new AppIdentityPure(site.ZoneId, appId), new()));
+            var app = _helper.GetService<Generator<AppForCode, AppForCode.Options>>().New(new(site, new AppIdentityPure(site.ZoneId, appId), new() { ContextOfSiteOrMore = appCtx }));
             l.Done("app initialized");
             return l.Return(app, "app initialized");
         }

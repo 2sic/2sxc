@@ -41,9 +41,10 @@ internal class TypedApiService(ISysServiceProvider serviceProvider, LazySvc<ILog
     public record ScopedDependencies(
         Generator<ICodeContextFactory> ExCtxGenerator,
         Generator<AppForCode, AppForCode.Options> AppGenerator,
+        LazySvc<IContextOfAppFactory> ContextOfAppFactory,
         LazySvc<IBlockBuilder> ModAndBlockBuilder,
         LazySvc<IEnvModuleBuilder> EnvModAndBlockBuilder)
-        : DependenciesBase(connect: [ExCtxGenerator, AppGenerator, ModAndBlockBuilder, EnvModAndBlockBuilder]);
+        : DependenciesBase(connect: [ExCtxGenerator, AppGenerator, ContextOfAppFactory, ModAndBlockBuilder, EnvModAndBlockBuilder]);
 
     #endregion
 
@@ -74,7 +75,8 @@ internal class TypedApiService(ISysServiceProvider serviceProvider, LazySvc<ILog
     {
         var appGen = ServicesScoped.AppGenerator;
         var l = Log.Fn<IAppForCode>($"{appIdentity.Show()}, site:{overrideSite != null}, showDrafts: {showDrafts}");
-        var app = appGen.New(new(overrideSite, appIdentity, new() { ShowDrafts = showDrafts }));
+        var appCtx = ServicesScoped.ContextOfAppFactory.Value.Create(appIdentity);
+        var app = appGen.New(new(overrideSite, appIdentity, new() { ShowDrafts = showDrafts, ContextOfSiteOrMore = appCtx }));
         return l.Return(app);
     }
 
