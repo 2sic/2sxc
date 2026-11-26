@@ -5,16 +5,13 @@ namespace ToSic.Sxc.Context;
 /// <summary>
 /// A unit / block within the CMS. Contains all necessary identification to pass around.
 /// </summary>
-[PrivateApi]
-[ShowApiWhenReleased(ShowApiMode.Never)]
+[PrivateApi, ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IModule
 {
-    //[PrivateApi("Workaround till we have DI to inject the current container")]
-    //[ShowApiWhenReleased(ShowApiMode.Never)]
-    //void Init(int id);
-
+    /// <summary>
+    /// Module Id as used in the CMS.
+    /// </summary>
     int Id { get; }
-
 
     /// <summary>
     /// Determines if this is the primary App (the content-app) as opposed to any additional app
@@ -29,9 +26,4 @@ public interface IModule
     [PrivateApi("still experimental")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     IBlockIdentifier? BlockIdentifier { get; }
-}
-
-public interface IModuleFactory
-{
-    public IModule Get(int moduleId);
 }
