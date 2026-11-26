@@ -1,11 +1,9 @@
 using ToSic.Eav.Apps.Sys.Extensions;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Context;
-using ToSic.Eav.DataSource;
 using ToSic.Eav.Services;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Services;
-using ToSic.Sys.Utils;
 using AppEditionsDataSource = ToSic.Sxc.DataSources.AppEditions;
 
 namespace ToSic.Sxc.Apps.Extensions.Sys;
@@ -27,13 +25,12 @@ public class ExtensionReaderBackend(
         var l = Log.Fn<List<ExtensionRaw>>($"a#{appId}");
         var appReader = appReadersLazy.Value.Get(appId);
         var appPaths = appPathSvc.Get(appReader, site);
-        var editionNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-        {
-            string.Empty
-        };
-
-        foreach (var edition in AvailableEditionNames(appId))
-            editionNames.Add(edition);
+        HashSet<string> editionNames =
+        [
+            with(StringComparer.OrdinalIgnoreCase),
+            string.Empty,
+            .. AvailableEditionNames(appId)
+        ];
 
         var availableEditions = editionNames
             .OrderBy(name => name.IsEmpty() ? 0 : 1)

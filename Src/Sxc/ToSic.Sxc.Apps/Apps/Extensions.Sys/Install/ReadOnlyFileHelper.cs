@@ -1,5 +1,3 @@
-using ToSic.Sys.Utils;
-
 namespace ToSic.Sxc.Apps.Extensions.Sys.Install;
 
 /// <summary>

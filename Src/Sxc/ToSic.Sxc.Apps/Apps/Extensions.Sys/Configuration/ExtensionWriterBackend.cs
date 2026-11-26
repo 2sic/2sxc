@@ -4,7 +4,6 @@ using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Context;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Apps.Extensions.Sys.Inspect;
-using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Apps.Extensions.Sys;
 
