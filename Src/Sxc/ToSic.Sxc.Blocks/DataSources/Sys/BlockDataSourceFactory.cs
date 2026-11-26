@@ -16,48 +16,51 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
     internal IDataSource GetContextDataSourceFromView(BlockSpecs block, ILookUpEngine? configLookUp)
     {
         var view = block.View;
-        var l = Log.Fn<IDataSource>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.Permissions.IsContentAdmin}, view:{view?.Name}");
+        var blockCtx = block.Context;
+        var l = Log.Fn<IDataSource>($"mid:{blockCtx.Module.Id}, userMayEdit:{blockCtx.Permissions.IsContentAdmin}, view:{view?.Name}");
 
-        l.A("Will get Default data source");
-        var dsFactory = dataSourceFactory.Value;
-        var options = new DataSourceOptions
+        l.A("Will get Default data source - injecting block into the context, so it can be picked up");
+        using (Ctx<IBlock>.Use(block))
         {
-            AppIdentityOrReader = block.PureIdentity(),
-            LookUp = configLookUp,
-        };
-        var initialSource = dsFactory.CreateDefault(options);
-        var blockDataSource = dsFactory.Create<CmsBlock>(options with { Attach = initialSource });
+            var dsFactory = dataSourceFactory.Value;
+            var options = new DataSourceOptions
+            {
+                AppIdentityOrReader = block.PureIdentity(),
+                LookUp = configLookUp,
+            };
+            var initialSource = dsFactory.CreateDefault(options);
+            var blockDataSource = dsFactory.Create<CmsBlock>(options with { Attach = initialSource });
 
-        blockDataSource.UseSxcInstanceContentGroup = true;
+            // If the Template has a Data-Pipeline, use an empty upstream to attach later, else use the ModuleDataSource created above
+            var queryEntity = view?.GetQueryEntity();
+            var viewDataSourceUpstream = queryEntity == null
+                ? blockDataSource
+                : null;
+            l.A($"use query upstream:{viewDataSourceUpstream != null}");
 
-        // If the Template has a Data-Pipeline, use an empty upstream to attach later, else use the ModuleDataSource created above
-        var queryEntity = view?.GetQueryEntity();
-        var viewDataSourceUpstream = queryEntity == null
-            ? blockDataSource
-            : null;
-        l.A($"use query upstream:{viewDataSourceUpstream != null}");
+            l.A($"Will get ModuleDataSource, aka {nameof(ContextData)}");
+            var contextDataSource =
+                dsFactory.Create<ContextData>(options: options with { Attach = viewDataSourceUpstream });
+            contextDataSource.SetBlock(blockDataSource);
 
-        l.A($"Will get ModuleDataSource, aka {nameof(ContextData)}");
-        var contextDataSource = dsFactory.Create<ContextData>(options: options with { Attach = viewDataSourceUpstream });
-        contextDataSource.SetBlock(blockDataSource);
+            // Take Publish-Properties from the View-Template
+            if (view != null)
+            {
+                l.A($"use query from  view, query#{queryEntity?.EntityId}");
 
-        // Take Publish-Properties from the View-Template
-        if (view != null)
-        {
-            l.A($"use query from  view, query#{queryEntity?.EntityId}");
+                // Append Streams of the Data-Query (this doesn't require a change of the viewDataSource itself)
+                if (queryEntity == null)
+                    return l.ReturnAsOk(contextDataSource);
 
-            // Append Streams of the Data-Query (this doesn't require a change of the viewDataSource itself)
-            if (queryEntity == null)
-                return l.ReturnAsOk(contextDataSource);
+                l.A("Generate query");
+                var query = queryGen.New(new(block.App.PureIdentity(), queryEntity, configLookUp));
+                l.A("attaching");
+                contextDataSource.SetOut(query);
+            }
+            else
+                l.A("no template override");
 
-            l.A("Generate query");
-            var query = queryGen.New(new(block.App.PureIdentity(), queryEntity, configLookUp));
-            l.A("attaching");
-            contextDataSource.SetOut(query);
+            return l.ReturnAsOk(contextDataSource);
         }
-        else
-            l.A("no template override");
-
-        return l.ReturnAsOk(contextDataSource);
     }
 }

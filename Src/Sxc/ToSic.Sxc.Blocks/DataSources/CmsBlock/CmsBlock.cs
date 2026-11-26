@@ -34,11 +34,12 @@ namespace ToSic.Sxc.DataSources;
     In = [DataSourceConstants.StreamDefaultName],
     HelpLink = "https://docs.2sxc.org/api/dot-net/ToSic.Sxc.DataSources.CmsBlock.html")]
 public sealed partial class CmsBlock(
-    DataSourceBase.Dependencies parentServices,
-    LazySvc<IModuleFactory> moduleLazy,
+    DataSourceBase.Dependencies services,
+    Ctx<IBlock> blockCtx,
+    LazySvc<IModuleFactory> moduleFactory,
     LazySvc<IDataSourcesService> dataSourceFactory,
-    AppWorkQuick<WorkBlocks> appBlocks)
-    : DataSourceBase(parentServices, $"SDS.CmsBks", callSetup: true, connect: [moduleLazy, dataSourceFactory, appBlocks]), IDataSourceLinkable
+    AppWorkQuick<WorkBlocks> workBlocks)
+    : DataSourceBase(services, $"SDS.CmsBks", callSetup: true, connect: [moduleFactory, dataSourceFactory, workBlocks]), IDataSourceLinkable
 {
     #region Constructor / Setup (called back)
 

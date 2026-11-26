@@ -7,48 +7,59 @@ namespace ToSic.Sxc.DataSources;
 
 partial class CmsBlock
 {
-    internal bool UseSxcInstanceContentGroup = false;
-
     private record ConfigAndView(BlockConfiguration BlockConfiguration, IView View);
 
-    private ResultOrError<ConfigAndView> ConfigAndViewOrErrors
-        => field ??= GetConfigViewOrErrors();
+    private ResultOrError<ConfigAndView> ConfigAndViewOrErrors => field
+        ??= LoadConfigAndViewOrErrors();
 
-    private ResultOrError<ConfigAndView> GetConfigViewOrErrors()
+    /// <summary>
+    /// Load configuration and view information.
+    /// </summary>
+    /// <returns></returns>
+    private ResultOrError<ConfigAndView> LoadConfigAndViewOrErrors()
     {
-        var config = LoadBlockConfiguration(UseSxcInstanceContentGroup);
+        var config = LoadBlockConfiguration();
         if (!config.IsOk)
             return new(false, default, config.ErrorsSafe());
 
         var view = config.Result.View;
-        if (view == null)
-            return new(false, default, Error.Create(title: "CmsBlock View Missing",
-                message: "Cannot find View configuration of current CmsBlock"));
-        // all ok 
-        return new(true, new(config.Result, view));
+        return view == null
+            // problem, no view
+            ? new(false, default, Error.Create(title: "CmsBlock View Missing",
+                message: "Cannot find View configuration of current CmsBlock"))
+            // all ok 
+            : new(true, new(config.Result, view));
     }
 
-    private ResultOrError<BlockConfiguration> LoadBlockConfiguration(bool useSxcInstanceContentGroup)
+    /// <summary>
+    /// Load block configuration - from context or from module definition.
+    /// </summary>
+    /// <returns></returns>
+    private ResultOrError<BlockConfiguration> LoadBlockConfiguration()
     {
         var l = Log.Fn<ResultOrError<BlockConfiguration>>();
-        if (useSxcInstanceContentGroup)
-        {
-            var block = new CmsBlockInstanceFinder().GetFromConfiguration(Configuration);
-            return l.Return(new(true, block.Configuration),
-                "need content-group, will use from Sxc Instance ContentGroup");
-        }
 
-        // If we don't have a context, then look it up based on the InstanceId
+        // Case 1: Check if the context injected a block specs
+        if (blockCtx.ValueOptional is { } block)
+            return l.Return(new(true, block.Configuration),"will use from ContentGroup from context");
+
+        // Case 2: If we don't have a context, then look it up based on the Module Information
         l.A("need content-group, will construct as cannot use context");
-        Configuration.Parse();
-        if (!ModuleId.HasValue)
-            return l.Return(new(false, null,
-                Error.Create(title: $"{nameof(CmsBlock)} cannot find Block Configuration",
-                    message: $"Neither InstanceContext nor {nameof(ModuleId)} found")), "Error, no module-id");
+        if (ModuleId is not { } mid)
+            return l.Return(new(false, null, Error.Create(
+                    title: $"{nameof(CmsBlock)} cannot find Block Configuration",
+                    message: $"Neither InstanceContext nor {nameof(ModuleId)} found")),
+                message: "Error, no module-id");
 
-        var container = moduleLazy.Value.Get(ModuleId.Value);
-        var blockId = container.BlockIdentifier!; // todo: unclear if this could really ever be null, must wait for Oqtane module factory to complete
-        var blockConfig = appBlocks.New(this.PureIdentity()).GetOrGeneratePreviewConfig(blockId);
+        // Find block identifier
+        // todo: API says BlockIdentifier could be null,
+        // but it's unclear if this could really ever be null.
+        // We must wait for Oqtane module factory to complete, then we can clean up the API and remove the "!"
+        var blockId = moduleFactory.Value.Get(mid).BlockIdentifier!;
+
+        // Generate config based on the block identifier
+        var blockConfig = workBlocks.New(this.PureIdentity())
+            .GetOrGeneratePreviewConfig(blockId);
         return l.Return(new(true, blockConfig), "ok");
     }
 }

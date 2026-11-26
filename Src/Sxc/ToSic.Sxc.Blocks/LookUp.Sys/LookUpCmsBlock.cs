@@ -13,10 +13,8 @@ namespace ToSic.Sxc.LookUp.Sys;
 /// The class constructor, can optionally take a dictionary to reference with, otherwise creates a new one
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class LookUpCmsBlock(string name, IBlock block) : LookUpInDictionary(name, new Dictionary<string, string>
+internal class LookUpCmsBlock(string name, IBlock block)
+    : LookUpInDictionary(name, new Dictionary<string, string>
     {
         { QueryConstants.ParamsShowDraftsKey, block.Context.Permissions.IsContentAdmin.ToString() }
-    }, "LookUp in Cms Block - mainly to check if it should show drafts")
-{
-    public IBlock Block = block;
-}
+    }, "LookUp in Cms Block - mainly to check if it should show drafts");
