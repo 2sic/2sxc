@@ -2,7 +2,6 @@
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Caching;
-using ToSic.Eav.Apps.Sys.Loaders;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
@@ -27,7 +26,6 @@ namespace ToSic.Sxc.Dnn.Search;
 /// </remarks>
 internal class SearchController(
     IAppsCacheSelector appsCache,
-    LazySvc<IAppLoaderTools> appLoaderTools,
     LazySvc<ToSic.Sxc.Search.Sys.SearchIndexing> searchIndexing,
     LazySvc<DnnModuleContextFactory> ctxOfModFac,
     LazySvc<BlockOfModule> moduleAndBlockBuilder,
@@ -35,7 +33,7 @@ internal class SearchController(
     LazySvc<ILogStore> logStore,
     IEditionService editionSvc)
     : ServiceBase("DNN.Search",
-        connect: [appsCache, appLoaderTools, searchIndexing, ctxOfModFac, dnnLookUpEngineResolver, moduleAndBlockBuilder, logStore, editionSvc])
+        connect: [appsCache, searchIndexing, ctxOfModFac, dnnLookUpEngineResolver, moduleAndBlockBuilder, logStore, editionSvc])
 {
     /// <summary>
     /// Initialize all values which are needed - or return a text with the info why we must stop.
@@ -62,7 +60,7 @@ internal class SearchController(
 
         // Ensure cache builds up with correct primary language
         // In case it's not loaded yet
-        appsCache.Value.Load(module.BlockIdentifier.PureIdentity(), DnnSite.DefaultCultureCode, appLoaderTools.Value);
+        appsCache.Value.Load(module.BlockIdentifier.PureIdentity(), DnnSite.DefaultCultureCode);
 
         var modCtx = ctxOfModFac.Value.InitDnnSiteModuleAndBlockContext(DnnModule);
         Block = moduleAndBlockBuilder.Value.GetBlockOfModule(modCtx);

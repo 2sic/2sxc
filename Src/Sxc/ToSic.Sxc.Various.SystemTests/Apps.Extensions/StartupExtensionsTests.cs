@@ -237,13 +237,13 @@ internal sealed class ExtensionsTestAppsCacheSwitchable : IAppsCache //Switchabl
 {
     public void Purge(IAppIdentity app) { }
     public void PurgeZones() { }
-    public IAppStateCache Get(IAppIdentity app, IAppLoaderTools tools) => null!;
-    IReadOnlyDictionary<int, Zone> IAppsCache.Zones(IZoneLoader tools) => new Dictionary<int, Zone>();
-    int IAppsCache.ZoneIdOfApp(int appId, IZoneLoader tools) => 1;
+    public IAppStateCache Get(IAppIdentity app) => null!;
+    IReadOnlyDictionary<int, Zone> IAppsCache.Zones() => new Dictionary<int, Zone>();
+    int IAppsCache.ZoneIdOfApp(int appId) => 1;
     public bool Has(IAppIdentity app) => false;
-    void IAppsCache.Update(IAppIdentity app, IEnumerable<int> entities, ILog log, IAppLoaderTools tools) { }
+    void IAppsCache.Update(IAppIdentity app, IEnumerable<int> entities, ILog log) { }
     public void Add(IAppStateCache appState) { }
-    public void Load(IAppIdentity app, string primaryLanguage, IAppLoaderTools tools) { }
+    public void Load(IAppIdentity app, string primaryLanguage) { }
     public bool IsViable() => true;
     public int Priority { get; } = 0;
     public string NameId { get; } = "Fake";
