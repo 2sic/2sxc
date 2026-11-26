@@ -26,7 +26,7 @@ public class ExtensionsBackendTests(
     ExtensionManifestService manifestService,
     LazySvc<ExtensionInspectBackend> inspectorLazy,
     IDataSourceGenerator<AppEditions> appEditions,
-    LazySvc<AppCachePurger> appCachePurgerLazy,
+    LazySvc<IAppCachePurge> appCachePurgerLazy,
     ExtensionsTestAppJsonConfigurationService appJsonService)
 {
     #region Constants

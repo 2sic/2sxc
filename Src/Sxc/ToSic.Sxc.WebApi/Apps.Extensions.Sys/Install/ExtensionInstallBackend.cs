@@ -21,8 +21,8 @@ public class ExtensionInstallBackend(
     ExtensionManifestService manifestService,
     LazySvc<ExtensionInspectBackend> inspectorLazy,
     IDataSourceGenerator<DataSources.AppEditions> appEditions,
-    LazySvc<AppCachePurger> appCachePurgerLazy)
-    : ServiceBase("Bck.ExtZip", connect: [appReadersLazy, site, appPathSvc, globalConfiguration, manifestService, inspectorLazy, appEditions, appCachePurgerLazy])
+    LazySvc<IAppCachePurge> appCachePurger)
+    : ServiceBase("Bck.ExtZip", connect: [appReadersLazy, site, appPathSvc, globalConfiguration, manifestService, inspectorLazy, appEditions, appCachePurger])
 {
     private ReadOnlyFileHelper ReadOnlyHelper => field ??= new(Log);
     private ExtensionValidationHelper Validation => field ??= new(manifestService, Log);
@@ -84,7 +84,7 @@ public class ExtensionInstallBackend(
                 }
 
                 // app-state refresh should happen on every install
-                appCachePurgerLazy.Value.Purge(zoneId, appId);
+                appCachePurger.Value.Purge(new AppIdentity(zoneId, appId));
 
                 installed.Add(folderName);
             }

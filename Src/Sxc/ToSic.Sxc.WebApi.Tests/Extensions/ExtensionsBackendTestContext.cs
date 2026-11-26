@@ -48,7 +48,7 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
         ExtensionManifestService manifestService,
         LazySvc<ExtensionInspectBackend> inspectorLazyX,
         IDataSourceGenerator<AppEditions> appEditions,
-        LazySvc<AppCachePurger> appCachePurgerLazy,
+        LazySvc<IAppCachePurge> appCachePurgerLazy,
         ExtensionsTestAppJsonConfigurationService appJsonService)
     {
         var tempRoot = Path.Combine(Path.GetTempPath(), "2sxc-ext-tests", Guid.NewGuid().ToString("N"));

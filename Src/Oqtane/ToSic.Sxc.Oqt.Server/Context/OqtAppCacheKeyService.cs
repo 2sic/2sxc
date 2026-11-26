@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Sxc.Web;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Oqt.Server.Context;
 
@@ -10,6 +11,10 @@ internal sealed class OqtAppCacheKeyService(IHttpContextAccessor httpContextAcce
 {
     public string AppCacheKey(IAppIdentity appIdentity)
     {
+        // Short-Circuit if we already have a runtime key
+        if (appIdentity is IAppStateCache { CacheKey: { } runtimeKey } && runtimeKey.HasValue())
+            return runtimeKey;
+
         if (appIdentity.AppId == KnownAppsConstants.PresetAppId
             || appIdentity.AppId == KnownAppsConstants.GlobalPresetAppId)
             return $"t{KnownAppsConstants.PresetTenantId:D2}-z{KnownAppsConstants.PresetZoneId:D3}-a{appIdentity.AppId:D5}";

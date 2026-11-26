@@ -36,7 +36,7 @@ public class StartupExtensionsTests : StartupTestsEavDataBuild
         services.AddSingleton<IAppJsonConfigurationService>(sp => sp.GetRequiredService<ExtensionsTestAppJsonConfigurationService>());
         services.AddSingleton<IAppsCatalog, ExtensionsTestAppsCatalog>();
         services.AddSingleton<AppsCacheSwitch, ExtensionsTestAppsCacheSwitch>();
-        services.AddTransient<AppCachePurger>();
+        services.AddTransient<IAppCachePurge, AppCachePurge>();
         services.AddTransient<ExtensionManifestService>();
         services.AddTransient<AppEditions>();
     }
@@ -219,22 +219,22 @@ internal sealed class ExtensionsTestAppsCatalog : IAppsCatalog
 
 internal sealed class ExtensionsTestAppsCacheSwitch : AppsCacheSwitch
 {
-    public ExtensionsTestAppsCacheSwitch() : base(null!, null!, null!, null!)
+    public ExtensionsTestAppsCacheSwitch() : base(null!, null!, null!)
     {
         var field = typeof(AppsCacheSwitch).GetField("_value", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
         var getOnce = field?.GetValue(this);
-        var resetMethod = getOnce?.GetType().GetMethod("Reset", [typeof(IAppsCacheSwitchable)]);
+        var resetMethod = getOnce?.GetType().GetMethod("Reset", [typeof(IAppsCache/*Switchable*/)]);
         resetMethod?.Invoke(getOnce, [new ExtensionsTestAppsCacheSwitchable()]);
     }
 }
 
-internal sealed class ExtensionsTestAppsCacheSwitchable : IAppsCacheSwitchable
+internal sealed class ExtensionsTestAppsCacheSwitchable : IAppsCache //Switchable
 {
     public void Purge(IAppIdentity app) { }
     public void PurgeZones() { }
     public IAppStateCache Get(IAppIdentity app, IAppLoaderTools tools) => null!;
-    IReadOnlyDictionary<int, Zone> IAppsCache.Zones(IAppLoaderTools tools) => new Dictionary<int, Zone>();
-    int IAppsCache.ZoneIdOfApp(int appId, IAppLoaderTools tools) => 1;
+    IReadOnlyDictionary<int, Zone> IAppsCache.Zones(IZoneLoader tools) => new Dictionary<int, Zone>();
+    int IAppsCache.ZoneIdOfApp(int appId, IZoneLoader tools) => 1;
     public bool Has(IAppIdentity app) => false;
     void IAppsCache.Update(IAppIdentity app, IEnumerable<int> entities, ILog log, IAppLoaderTools tools) { }
     public void Add(IAppStateCache appState) { }

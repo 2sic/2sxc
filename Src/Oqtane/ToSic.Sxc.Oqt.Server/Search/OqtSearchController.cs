@@ -2,13 +2,14 @@ using Oqtane.Models;
 using Oqtane.Repository;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Caching;
+using ToSic.Eav.Apps.Sys.Loaders;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Context;
 using ToSic.Eav.Sys;
-using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Apps.Sys;
-using ToSic.Sxc.Context.Sys;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Render.Polymorphism.Sys;
 using ToSic.Sxc.Search;
@@ -21,6 +22,7 @@ internal class OqtSearchController(
     ISite site,
     ISiteRepository sites,
     AppsCacheSwitch appsCache,
+    LazySvc<IAppLoaderTools> appLoaderTools,
     Generator<IModule> moduleGenerator,
     OqtContextOfBlockFactory contextFactory,
     Generator<BlockOfModule> blockGenerator,
@@ -29,7 +31,7 @@ internal class OqtSearchController(
     LazySvc<IAppPathsMicroSvc> appPaths,
     ISxcCurrentContextService currentContext,
     LazySvc<ILogStore> logStore)
-    : ServiceBase("Oqt.Search", connect: [site, appsCache, moduleGenerator, blockGenerator, indexing, editionService, appPaths, logStore])
+    : ServiceBase("Oqt.Search", connect: [site, appsCache, appLoaderTools, moduleGenerator, blockGenerator, indexing, editionService, appPaths, logStore])
 {
     public List<SearchContent> GetSearchContents(PageModule pageModule, DateTime lastIndexedOn)
     {
@@ -50,7 +52,7 @@ internal class OqtSearchController(
             if (identity.AppId is AppConstants.AppIdNotFound or EavConstants.NullId or KnownAppsConstants.AppIdEmpty)
                 return l.Return([], "module has no app");
 
-            appsCache.Value.Load(identity.PureIdentity(), site.DefaultCultureCode, appsCache.AppLoaderTools);
+            appsCache.Value.Load(identity.PureIdentity(), site.DefaultCultureCode, appLoaderTools.Value);
             var context = contextFactory.Create(pageModule.PageId, module);
             var block = blockGenerator.New().GetBlockOfModule(context);
             if (!block.ViewIsReady || block.View.SearchIndexingDisabled)

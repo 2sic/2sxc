@@ -17,8 +17,8 @@ public class ExtensionDeleteBackend(
     ExtensionManifestService manifestService,
     LazySvc<ExtensionInspectBackend> inspectorLazy,
     AppWorkQuick<WorkEntityDelete> entDelete,
-    LazySvc<AppCachePurger> appCachePurgerLazy)
-    : ServiceBase("Bck.ExtDel", connect: [appReadersLazy, site, appPathSvc, manifestService, inspectorLazy, entDelete, appCachePurgerLazy])
+    LazySvc<IAppCachePurge> appCachePurger)
+    : ServiceBase("Bck.ExtDel", connect: [appReadersLazy, site, appPathSvc, manifestService, inspectorLazy, entDelete, appCachePurger])
 {
     private ReadOnlyFileHelper ReadOnlyHelper => field ??= new(Log);
 
@@ -67,7 +67,7 @@ public class ExtensionDeleteBackend(
         DeleteFiles(appPaths.PhysicalPath, editionSegment, name);
 
         // app-state refresh should happen on every uninstall
-        appCachePurgerLazy.Value.Purge(appReader.ZoneId, appId);
+        appCachePurger.Value.Purge(new AppIdentity(appReader.ZoneId, appId));
 
         return l.ReturnTrue("deleted");
     }

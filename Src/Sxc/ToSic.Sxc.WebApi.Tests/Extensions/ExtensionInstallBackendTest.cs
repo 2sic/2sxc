@@ -29,7 +29,7 @@ public class ExtensionInstallBackendTest(
     ExtensionManifestService manifestService,
     LazySvc<ExtensionInspectBackend> inspectorLazy,
     IDataSourceGenerator<AppEditions> appEditions,
-    LazySvc<AppCachePurger> appCachePurgerLazy,
+    LazySvc<IAppCachePurge> appCachePurgerLazy,
     ExtensionsTestAppJsonConfigurationService appJsonService)
 {
     private const int TestZoneId = 1;
