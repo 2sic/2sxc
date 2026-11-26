@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Text;
 using System.Text.Json;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Apps.Sys.Caching;
@@ -36,8 +37,12 @@ public class StartupExtensionsTests : StartupTestsEavDataBuild
         services.AddSingleton<ExtensionsTestAppJsonConfigurationService>();
         services.AddSingleton<IAppJsonConfigurationService>(sp => sp.GetRequiredService<ExtensionsTestAppJsonConfigurationService>());
         services.AddSingleton<IAppsCatalog, ExtensionsTestAppsCatalog>();
-        services.AddSingleton<AppsCacheSwitch, ExtensionsTestAppsCacheSwitch>();
-        services.AddTransient<IAppCachePurge, AppCachePurge>();
+
+        AppsCacheSwitch.PreferredKey = "Mock";
+        services.TryAddKeyedSingleton<IAppsCache, AppsCache>(AppsCacheSwitch.PreferredKey);
+        //services.AddSingleton<AppsCacheSwitch, ExtensionsTestAppsCacheSwitch>();
+        services.AddEavAppsCache();
+        //services.AddTransient<IAppCachePurge, AppCachePurge>();
         services.AddTransient<ExtensionManifestService>();
         services.AddTransient<AppEditions>();
     }
