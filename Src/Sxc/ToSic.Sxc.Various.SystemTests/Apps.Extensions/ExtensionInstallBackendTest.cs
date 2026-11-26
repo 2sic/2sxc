@@ -90,12 +90,12 @@ public class ExtensionInstallBackendTest(
         var ok = ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: $"{extensionName}.zip");
 
         // Assert
-        Assert.True(ok);
+        True(ok);
 
         var result = ctx.Reader.GetExtensionsTac(TestAppId);
-        Assert.Contains(result, e => e.Folder == extensionName);
+        Contains(result, e => e.Folder == extensionName);
         var cfg = result.First(e => e.Folder == extensionName).Configuration;
-        Assert.NotNull(cfg);
+        NotNull(cfg);
     }
 
     [Fact]
@@ -152,7 +152,7 @@ public class ExtensionInstallBackendTest(
         ms.Position = 0;
 
         // Act
-        Assert.Throws<InvalidOperationException>(() =>
+        Throws<InvalidOperationException>(() =>
             ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: $"{extensionName}.zip"));
     }
 
@@ -227,12 +227,12 @@ public class ExtensionInstallBackendTest(
         var ok1 = ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms1, overwrite: false, originalZipFileName: $"{extensionName}.zip");
 
         // Assert - First install succeeds
-        Assert.True(ok1);
+        True(ok1);
 
         // Act - Try installing again without overwrite should fail
         using var ms2 = new MemoryStream(ms1.ToArray());
         ms2.Position = 0;
-        Assert.Throws<InvalidOperationException>(() =>
+        Throws<InvalidOperationException>(() =>
             ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms2, overwrite: false, originalZipFileName: $"{extensionName}.zip"));
 
         // Act - With overwrite should succeed
@@ -241,7 +241,7 @@ public class ExtensionInstallBackendTest(
         var ok3 = ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms3, overwrite: true, originalZipFileName: $"{extensionName}.zip");
 
         // Assert - Third install with overwrite succeeds
-        Assert.True(ok3);
+        True(ok3);
     }
 
     // Additional tests covering validation and lock/hash failure modes
@@ -262,7 +262,7 @@ public class ExtensionInstallBackendTest(
         }
         ms.Position = 0;
 
-        Assert.Throws<InvalidOperationException>(() =>
+        Throws<InvalidOperationException>(() =>
             ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: "missing-extensions.zip"));
     }
 
@@ -291,7 +291,7 @@ public class ExtensionInstallBackendTest(
         }
         ms.Position = 0;
 
-        Assert.Throws<InvalidOperationException>(() =>
+        Throws<InvalidOperationException>(() =>
             ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: "no-lock.zip"));
     }
 
@@ -322,7 +322,7 @@ public class ExtensionInstallBackendTest(
         }
         ms.Position = 0;
 
-        Assert.Throws<InvalidOperationException>(() =>
+        Throws<InvalidOperationException>(() =>
             ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: "invalid-json.zip"));
     }
 
@@ -360,7 +360,7 @@ public class ExtensionInstallBackendTest(
         }
         ms.Position = 0;
 
-        Assert.Throws<InvalidOperationException>(() =>
+        Throws<InvalidOperationException>(() =>
             ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: "missing-file.zip"));
     }
 
@@ -399,7 +399,7 @@ public class ExtensionInstallBackendTest(
         }
         ms.Position = 0;
 
-        Assert.Throws<InvalidOperationException>(() =>
+        Throws<InvalidOperationException>(() =>
             ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: "extra-file.zip"));
     }
 
@@ -444,7 +444,7 @@ public class ExtensionInstallBackendTest(
         }
         ms.Position = 0;
 
-        Assert.Throws<InvalidOperationException>(() =>
+        Throws<InvalidOperationException>(() =>
             ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: "bad-hash.zip"));
     }
 
@@ -498,9 +498,9 @@ public class ExtensionInstallBackendTest(
         ms.Position = 0;
 
         var ok = ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: "with-appcode.zip");
-        Assert.True(ok);
+        True(ok);
         var result = ctx.Reader.GetExtensionsTac(TestAppId);
-        Assert.Contains(result, e => e.Folder == folder);
+        Contains(result, e => e.Folder == folder);
     }
 
     [Fact]
@@ -550,11 +550,11 @@ public class ExtensionInstallBackendTest(
         ms.Position = 0;
 
         var ok = ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: "multi.zip");
-        Assert.True(ok);
+        True(ok);
 
         var result = ctx.Reader.GetExtensionsTac(TestAppId);
-        Assert.Contains(result, e => e.Folder == a);
-        Assert.Contains(result, e => e.Folder == b);
+        Contains(result, e => e.Folder == a);
+        Contains(result, e => e.Folder == b);
     }
 
     [Fact]
@@ -598,12 +598,12 @@ public class ExtensionInstallBackendTest(
         }
         ms.Position = 0;
 
-        Assert.Throws<InvalidOperationException>(() =>
+        Throws<InvalidOperationException>(() =>
             ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: "multi-invalid.zip"));
 
         var result = ctx.Reader.GetExtensionsTac(TestAppId);
-        Assert.DoesNotContain(result, e => e.Folder == good);
-        Assert.DoesNotContain(result, e => e.Folder == bad);
+        DoesNotContain(result, e => e.Folder == good);
+        DoesNotContain(result, e => e.Folder == bad);
     }
 
     [Fact]
@@ -638,11 +638,11 @@ public class ExtensionInstallBackendTest(
         ms.Position = 0;
 
         var ok = ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: "lockfile.zip");
-        Assert.True(ok);
+        True(ok);
 
         var lockPath = Path.Combine(ctx.TempRoot, AppExtensionsFolder, folder, DataFolderProtected, LockFileName);
-        Assert.True(File.Exists(lockPath));
-        Assert.True(File.GetAttributes(lockPath).HasFlag(FileAttributes.ReadOnly));
+        True(File.Exists(lockPath));
+        True(File.GetAttributes(lockPath).HasFlag(FileAttributes.ReadOnly));
     }
 
     [Fact]
@@ -682,16 +682,16 @@ public class ExtensionInstallBackendTest(
 
         var first = MakeZip("console.log('v1');");
         var ok1 = ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: first, overwrite: false, originalZipFileName: "replace-v1.zip");
-        Assert.True(ok1);
+        True(ok1);
 
         var filePath = Path.Combine(ctx.TempRoot, AppExtensionsFolder, folder, "dist", "main.js");
-        Assert.True(File.Exists(filePath));
-        Assert.Equal("console.log('v1');", File.ReadAllText(filePath));
+        True(File.Exists(filePath));
+        Equal("console.log('v1');", File.ReadAllText(filePath));
 
         var second = MakeZip("console.log('v2');");
         var ok2 = ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: second, overwrite: true, originalZipFileName: "replace-v2.zip");
-        Assert.True(ok2);
-        Assert.Equal("console.log('v2');", File.ReadAllText(filePath));
+        True(ok2);
+        Equal("console.log('v2');", File.ReadAllText(filePath));
     }
 
     [Fact]
@@ -751,13 +751,16 @@ public class ExtensionInstallBackendTest(
         }
         ms.Position = 0;
 
-        Assert.True(Path.GetFullPath(expectedTargetPath).Length >= 260);
+        True(Path.GetFullPath(expectedTargetPath).Length >= 260);
 
+        // TODO: @STV
+        // 2dm moved this 2026-11-26 from the WebApi project to here
+        // now this breaks, reason unknown. pls fix ;)
         var ok = ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: "long-path.zip");
 
-        Assert.True(ok);
-        Assert.True(File.Exists(PathForDiskAccess(expectedTargetPath)));
-        Assert.Equal(jsContent, File.ReadAllText(PathForDiskAccess(expectedTargetPath)));
+        True(ok);
+        True(File.Exists(PathForDiskAccess(expectedTargetPath)));
+        Equal(jsContent, File.ReadAllText(PathForDiskAccess(expectedTargetPath)));
     }
 
     private static string PathForDiskAccess(string path)

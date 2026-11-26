@@ -4,7 +4,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys.Extensions;
 using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.ImportExport.Sys.Bundle;
-using Xunit.DependencyInjection;
 using static Tests.ToSic.ToSxc.WebApi.Extensions.FolderConstantsTac;
 using static ToSic.Sxc.ImportExport.Package.Sys.PackageIndexFile;
 using static ToSic.Sxc.ImportExport.Package.Sys.PackageInstallFile;
@@ -35,10 +34,10 @@ public class ExportExtensionTests(
         
         var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
-        Assert.NotNull(result);
-        Assert.NotEmpty(result.FileBytes);
-        Assert.Contains(result.ContentType, new[] { "application/zip", "application/octet-stream" });
-        Assert.Contains($"app-extension-{extName}-v{version}.zip", result.FileName);
+        NotNull(result);
+        NotEmpty(result.FileBytes);
+        Contains(result.ContentType, new[] { "application/zip", "application/octet-stream" });
+        Contains($"app-extension-{extName}-v{version}.zip", result.FileName);
     }
 
     [Fact]
@@ -53,7 +52,7 @@ public class ExportExtensionTests(
         
         using var zipStream = new MemoryStream(result.FileBytes);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
-        Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"/{DataFolderProtected}/{AppExtensionJsonFile}", StringComparison.OrdinalIgnoreCase));
+        Contains(zip.Entries, e => e.FullName.EndsWith($"/{DataFolderProtected}/{AppExtensionJsonFile}", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]
@@ -68,7 +67,7 @@ public class ExportExtensionTests(
         
         using var zipStream = new MemoryStream(result.FileBytes);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
-        Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"/{DataFolderProtected}/{LockFileName}", StringComparison.OrdinalIgnoreCase));
+        Contains(zip.Entries, e => e.FullName.EndsWith($"/{DataFolderProtected}/{LockFileName}", StringComparison.OrdinalIgnoreCase));
     }
 
     #endregion
@@ -119,19 +118,19 @@ public class ExportExtensionTests(
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
 
         // Verify files from all 3 extensions are present
-        Assert.Contains(zip.Entries, e => e.FullName.Equals($"{AppExtensionsFolder}/{extName}/dist/primary.txt", StringComparison.OrdinalIgnoreCase));
-        Assert.Contains(zip.Entries, e => e.FullName.Equals($"{AppExtensionsFolder}/bundle-a/dist/a.txt", StringComparison.OrdinalIgnoreCase));
-        Assert.Contains(zip.Entries, e => e.FullName.Equals($"{AppExtensionsFolder}/bundle-b/dist/b.txt", StringComparison.OrdinalIgnoreCase));
+        Contains(zip.Entries, e => e.FullName.Equals($"{AppExtensionsFolder}/{extName}/dist/primary.txt", StringComparison.OrdinalIgnoreCase));
+        Contains(zip.Entries, e => e.FullName.Equals($"{AppExtensionsFolder}/bundle-a/dist/a.txt", StringComparison.OrdinalIgnoreCase));
+        Contains(zip.Entries, e => e.FullName.Equals($"{AppExtensionsFolder}/bundle-b/dist/b.txt", StringComparison.OrdinalIgnoreCase));
 
         // Verify extension.json exists for each
-        Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"{AppExtensionsFolder}/{extName}/{DataFolderProtected}/{AppExtensionJsonFile}", StringComparison.OrdinalIgnoreCase));
-        Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"{AppExtensionsFolder}/bundle-a/{DataFolderProtected}/{AppExtensionJsonFile}", StringComparison.OrdinalIgnoreCase));
-        Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"{AppExtensionsFolder}/bundle-b/{DataFolderProtected}/{AppExtensionJsonFile}", StringComparison.OrdinalIgnoreCase));
+        Contains(zip.Entries, e => e.FullName.EndsWith($"{AppExtensionsFolder}/{extName}/{DataFolderProtected}/{AppExtensionJsonFile}", StringComparison.OrdinalIgnoreCase));
+        Contains(zip.Entries, e => e.FullName.EndsWith($"{AppExtensionsFolder}/bundle-a/{DataFolderProtected}/{AppExtensionJsonFile}", StringComparison.OrdinalIgnoreCase));
+        Contains(zip.Entries, e => e.FullName.EndsWith($"{AppExtensionsFolder}/bundle-b/{DataFolderProtected}/{AppExtensionJsonFile}", StringComparison.OrdinalIgnoreCase));
 
         // Verify lock file exists for each
-        Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"{AppExtensionsFolder}/{extName}/{DataFolderProtected}/{LockFileName}", StringComparison.OrdinalIgnoreCase));
-        Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"{AppExtensionsFolder}/bundle-a/{DataFolderProtected}/{LockFileName}", StringComparison.OrdinalIgnoreCase));
-        Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"{AppExtensionsFolder}/bundle-b/{DataFolderProtected}/{LockFileName}", StringComparison.OrdinalIgnoreCase));
+        Contains(zip.Entries, e => e.FullName.EndsWith($"{AppExtensionsFolder}/{extName}/{DataFolderProtected}/{LockFileName}", StringComparison.OrdinalIgnoreCase));
+        Contains(zip.Entries, e => e.FullName.EndsWith($"{AppExtensionsFolder}/bundle-a/{DataFolderProtected}/{LockFileName}", StringComparison.OrdinalIgnoreCase));
+        Contains(zip.Entries, e => e.FullName.EndsWith($"{AppExtensionsFolder}/bundle-b/{DataFolderProtected}/{LockFileName}", StringComparison.OrdinalIgnoreCase));
 
         // Verify installed lock json preserved
         var bundleBLockEntry = zip.Entries.Single(e => e.FullName.EndsWith($"{AppExtensionsFolder}/bundle-b/{DataFolderProtected}/{LockFileName}", StringComparison.OrdinalIgnoreCase));
@@ -139,20 +138,20 @@ public class ExportExtensionTests(
         using (var reader = new StreamReader(lockStream))
         {
             var lockText = reader.ReadToEnd();
-            Assert.Contains("\"version\": \"3.0.0\"", lockText);
-            Assert.Contains("\"files\": []", lockText);
+            Contains("\"version\": \"3.0.0\"", lockText);
+            Contains("\"files\": []", lockText);
         }
 
         // Verify package-install.json lists all extensions
         var package = GetJsonFileFromZip(zip, FileName);
-        Assert.True(package.ContainsKey("extensions"));
+        True(package.ContainsKey("extensions"));
         var exts = package.GetElement("extensions");
-        Assert.Equal(JsonValueKind.Array, exts.ValueKind);
+        Equal(JsonValueKind.Array, exts.ValueKind);
         var names = exts.EnumerateArray().Select(e => e.GetProperty("name").GetString()).ToList();
-        Assert.Contains(extName, names);
-        Assert.Contains("bundle-a", names);
-        Assert.Contains("bundle-b", names);
-        Assert.Equal(3, names.Count);
+        Contains(extName, names);
+        Contains("bundle-a", names);
+        Contains("bundle-b", names);
+        Equal(3, names.Count);
     }
 
     [Fact]
@@ -186,19 +185,19 @@ public class ExportExtensionTests(
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
 
         // Present bundled extension should be included
-        Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"{AppExtensionsFolder}/bundle-a/{DataFolderProtected}/{AppExtensionJsonFile}", StringComparison.OrdinalIgnoreCase));
+        Contains(zip.Entries, e => e.FullName.EndsWith($"{AppExtensionsFolder}/bundle-a/{DataFolderProtected}/{AppExtensionJsonFile}", StringComparison.OrdinalIgnoreCase));
 
         // Missing bundled extension should not appear anywhere
-        Assert.DoesNotContain(zip.Entries, e => e.FullName.Contains($"{AppExtensionsFolder}/text-ext2/", StringComparison.OrdinalIgnoreCase));
+        DoesNotContain(zip.Entries, e => e.FullName.Contains($"{AppExtensionsFolder}/text-ext2/", StringComparison.OrdinalIgnoreCase));
 
         // package-install.json should only list primary + existing bundled
         var package = GetJsonFileFromZip(zip, FileName);
         var exts = package.GetElement("extensions");
         var names = exts.EnumerateArray().Select(e => e.GetProperty("name").GetString()).ToList();
-        Assert.Contains(extName, names);
-        Assert.Contains("bundle-a", names);
-        Assert.DoesNotContain("text-ext2", names);
-        Assert.Equal(2, names.Count);
+        Contains(extName, names);
+        Contains("bundle-a", names);
+        DoesNotContain("text-ext2", names);
+        Equal(2, names.Count);
     }
 
     #endregion
@@ -210,7 +209,7 @@ public class ExportExtensionTests(
     {
         using var ctx = CreateContext();
         
-        Assert.Throws<DirectoryNotFoundException>(() =>
+        Throws<DirectoryNotFoundException>(() =>
             ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: "nonexistent"));
     }
 
@@ -223,7 +222,7 @@ public class ExportExtensionTests(
         var extDir = Path.Combine(ctx.TempRoot, AppExtensionsFolder, extName);
         Directory.CreateDirectory(extDir);
         
-        Assert.Throws<FileNotFoundException>(() =>
+        Throws<FileNotFoundException>(() =>
             ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName));
     }
 
@@ -244,8 +243,8 @@ public class ExportExtensionTests(
         using var zipStream = new MemoryStream(result.FileBytes);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
         var config = GetJsonFileFromZip(zip, $"/{DataFolderProtected}/{AppExtensionJsonFile}");
-        Assert.True(config.ContainsKey("isInstalled"));
-        Assert.True(config.GetBool("isInstalled"));
+        True(config.ContainsKey("isInstalled"));
+        True(config.GetBool("isInstalled"));
     }
 
     [Fact]
@@ -261,8 +260,8 @@ public class ExportExtensionTests(
         using var zipStream = new MemoryStream(result.FileBytes);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
         var config = GetJsonFileFromZip(zip, $"/{DataFolderProtected}/{AppExtensionJsonFile}");
-        Assert.True(config.ContainsKey("isInstalled"));
-        Assert.True(config.GetBool("isInstalled"));
+        True(config.ContainsKey("isInstalled"));
+        True(config.GetBool("isInstalled"));
     }
 
     [Fact]
@@ -280,11 +279,11 @@ public class ExportExtensionTests(
         var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
         var afterExportContent = File.ReadAllText(originalPath);
-        Assert.Equal(originalContent, afterExportContent);
+        Equal(originalContent, afterExportContent);
         
         var originalConfig = JsonSerializer.Deserialize<Dictionary<string, object>>(originalContent);
-        Assert.NotNull(originalConfig);
-        Assert.False(originalConfig.GetBool("isInstalled"));
+        NotNull(originalConfig);
+        False(originalConfig.GetBool("isInstalled"));
     }
 
     #endregion
@@ -307,8 +306,8 @@ public class ExportExtensionTests(
         using var zipStream = new MemoryStream(result.FileBytes);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
         
-        Assert.Contains(zip.Entries, e => e.FullName.Contains($"AppCode/Extensions/{extName}/Helper.cs", StringComparison.InvariantCultureIgnoreCase));
-        Assert.Contains(zip.Entries, e => e.FullName.Contains($"AppCode/Extensions/{extName}/Service.cs", StringComparison.InvariantCultureIgnoreCase));
+        Contains(zip.Entries, e => e.FullName.Contains($"AppCode/Extensions/{extName}/Helper.cs", StringComparison.InvariantCultureIgnoreCase));
+        Contains(zip.Entries, e => e.FullName.Contains($"AppCode/Extensions/{extName}/Service.cs", StringComparison.InvariantCultureIgnoreCase));
     }
 
     [Fact]
@@ -325,7 +324,7 @@ public class ExportExtensionTests(
         using var zipStream = new MemoryStream(result.FileBytes);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
         
-        Assert.DoesNotContain(zip.Entries, e => e.FullName.Contains("AppCode/"));
+        DoesNotContain(zip.Entries, e => e.FullName.Contains("AppCode/"));
     }
 
     [Fact]
@@ -341,7 +340,7 @@ public class ExportExtensionTests(
         using var zipStream = new MemoryStream(result.FileBytes);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
         
-        Assert.DoesNotContain(zip.Entries, e => e.FullName.Contains("AppCode/"));
+        DoesNotContain(zip.Entries, e => e.FullName.Contains("AppCode/"));
     }
 
     #endregion
@@ -363,8 +362,8 @@ public class ExportExtensionTests(
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
         
         var lockData = GetJsonFileFromZip(zip, $"/{DataFolderProtected}/{LockFileName}");
-        Assert.True(lockData.ContainsKey("version"));
-        Assert.Equal(version, lockData.GetString("version"));
+        True(lockData.ContainsKey("version"));
+        Equal(version, lockData.GetString("version"));
     }
 
     [Fact]
@@ -384,10 +383,10 @@ public class ExportExtensionTests(
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
 
         var lockData = GetJsonFileFromZip(zip, $"/{DataFolderProtected}/{LockFileName}");
-        Assert.True(lockData.ContainsKey("files"));
+        True(lockData.ContainsKey("files"));
         var filesElem = lockData.GetElement("files");
-        Assert.True(filesElem.ValueKind == JsonValueKind.Array);
-        Assert.True(filesElem.GetArrayLength() > 0);
+        True(filesElem.ValueKind == JsonValueKind.Array);
+        True(filesElem.GetArrayLength() > 0);
     }
 
     [Fact]
@@ -408,16 +407,16 @@ public class ExportExtensionTests(
         using var reader = new StreamReader(lockStream);
         var lockJson = reader.ReadToEnd();
         
-        Assert.Contains("\"file\":", lockJson);
-        Assert.Contains("\"hash\":", lockJson);
+        Contains("\"file\":", lockJson);
+        Contains("\"hash\":", lockJson);
         
         var lockData = JsonSerializer.Deserialize<Dictionary<string, object>>(lockJson);
         var filesElem = lockData!.GetElement("files");
         var firstFile = filesElem[0];
         var hash = firstFile.GetProperty("hash").GetString();
-        Assert.NotNull(hash);
-        Assert.Equal(64, hash.Length);
-        Assert.Matches("^[a-f0-9]{64}$", hash);
+        NotNull(hash);
+        Equal(64, hash.Length);
+        Matches("^[a-f0-9]{64}$", hash);
     }
 
     #endregion
@@ -440,8 +439,8 @@ public class ExportExtensionTests(
         using var zipStream = new MemoryStream(result.FileBytes);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
         
-        Assert.Contains(zip.Entries, e => e.FullName.Contains("/dist/script.js"));
-        Assert.Contains(zip.Entries, e => e.FullName.Contains("/dist/styles.css"));
+        Contains(zip.Entries, e => e.FullName.Contains("/dist/script.js"));
+        Contains(zip.Entries, e => e.FullName.Contains("/dist/styles.css"));
     }
 
     [Fact]
@@ -459,7 +458,7 @@ public class ExportExtensionTests(
         var relativePath = Path.Combine("dist", longFolder, longFolder, longFolder, "long-path.txt");
         var physicalPath = ctx.CreateExtensionFile(extName, relativePath, "long path file");
 
-        Assert.True(physicalPath.Length >= 260, $"Test path must exceed legacy Windows MAX_PATH. Actual length: {physicalPath.Length}");
+        True(physicalPath.Length >= 260, $"Test path must exceed legacy Windows MAX_PATH. Actual length: {physicalPath.Length}");
 
         var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
 
@@ -467,7 +466,7 @@ public class ExportExtensionTests(
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
 
         var expectedZipPath = $"{AppExtensionsFolder}/{extName}/{relativePath.Replace("\\", "/")}";
-        Assert.Contains(zip.Entries, e => e.FullName.Equals(expectedZipPath, StringComparison.OrdinalIgnoreCase));
+        Contains(zip.Entries, e => e.FullName.Equals(expectedZipPath, StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]
@@ -487,7 +486,7 @@ public class ExportExtensionTests(
         {
             if (!entry.FullName.Equals(FileName, StringComparison.OrdinalIgnoreCase)
                 && !entry.FullName.StartsWith(DataFolderProtected))
-                Assert.StartsWith($"{AppExtensionsFolder}/", entry.FullName);
+                StartsWith($"{AppExtensionsFolder}/", entry.FullName);
         }
     }
 

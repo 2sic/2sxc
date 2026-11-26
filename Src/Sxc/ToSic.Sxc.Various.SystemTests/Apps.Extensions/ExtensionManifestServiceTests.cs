@@ -1,7 +1,6 @@
 using System.Text;
 using System.Text.Json;
 using ToSic.Eav.Apps.Sys.Extensions;
-using ToSic.Eav.Apps.Sys.FileSystemState;
 using static Tests.ToSic.ToSxc.WebApi.Extensions.FolderConstantsTac;
 
 // ReSharper disable once CheckNamespace
@@ -59,14 +58,14 @@ public class ExtensionManifestServiceTests : IDisposable
         var manifest = _service.LoadManifestTac(new FileInfo(manifestPath));
         
         // Assert - should not throw when serializing
-        Assert.NotNull(manifest);
+        NotNull(manifest);
         var exception = Record.Exception(() =>
         {
             var serialized = JsonSerializer.Serialize(manifest, new JsonSerializerOptions { WriteIndented = true });
-            Assert.NotEmpty(serialized);
+            NotEmpty(serialized);
         });
         
-        Assert.Null(exception);
+        Null(exception);
     }
 
     [Fact]
@@ -114,15 +113,15 @@ public class ExtensionManifestServiceTests : IDisposable
         var manifest = _service.LoadManifestTac(new FileInfo(manifestPath));
         
         // Assert
-        Assert.NotNull(manifest);
-        Assert.Equal("string-wysiwyg", manifest.Name);
-        Assert.Equal("2.5.1", manifest.Version);
-        Assert.True(manifest.EditionsSupported);
+        NotNull(manifest);
+        Equal("string-wysiwyg", manifest.Name);
+        Equal("2.5.1", manifest.Version);
+        True(manifest.EditionsSupported);
         
         // Verify JsonElements can be accessed and re-serialized
         var serialized = JsonSerializer.Serialize(manifest);
-        Assert.Contains("string-wysiwyg", serialized);
-        Assert.Contains("2.5.1", serialized);
+        Contains("string-wysiwyg", serialized);
+        Contains("2.5.1", serialized);
     }
 
     [Fact]
@@ -146,16 +145,16 @@ public class ExtensionManifestServiceTests : IDisposable
         var manifest2 = _service.LoadManifestTac(new FileInfo(manifestPath));
         
         // Assert - both should serialize independently without errors
-        Assert.NotNull(manifest1);
-        Assert.NotNull(manifest2);
+        NotNull(manifest1);
+        NotNull(manifest2);
         
         var json1 = JsonSerializer.Serialize(manifest1);
         var json2 = JsonSerializer.Serialize(manifest2);
         
-        Assert.NotEmpty(json1);
-        Assert.NotEmpty(json2);
-        Assert.Contains("string-test", json1);
-        Assert.Contains("string-test", json2);
+        NotEmpty(json1);
+        NotEmpty(json2);
+        Contains("string-test", json1);
+        Contains("string-test", json2);
     }
 
     [Fact]
@@ -177,9 +176,9 @@ public class ExtensionManifestServiceTests : IDisposable
         var manifest = _service.LoadManifestTac(new FileInfo(manifestPath));
         
         // Assert - should handle undefined/missing JsonElements
-        Assert.NotNull(manifest);
+        NotNull(manifest);
         var serialized = JsonSerializer.Serialize(manifest);
-        Assert.NotEmpty(serialized);
+        NotEmpty(serialized);
     }
 
     #endregion
@@ -206,10 +205,10 @@ public class ExtensionManifestServiceTests : IDisposable
         var result = _service.LoadManifestTac(new FileInfo(manifestPath));
 
         // Assert
-        Assert.NotNull(result);
-        Assert.Equal("string-font-icon", result.Name);
-        Assert.Equal("1.2.3", result.Version);
-        Assert.True(result.EditionsSupported);
+        NotNull(result);
+        Equal("string-font-icon", result.Name);
+        Equal("1.2.3", result.Version);
+        True(result.EditionsSupported);
     }
 
     [Fact]
@@ -227,7 +226,7 @@ public class ExtensionManifestServiceTests : IDisposable
         var result = _service.LoadManifestTac(new FileInfo(manifestPath));
 
         // Assert
-        Assert.Null(result);
+        Null(result);
     }
 
     [Fact]
@@ -245,7 +244,7 @@ public class ExtensionManifestServiceTests : IDisposable
         var result = _service.LoadManifestTac(new FileInfo(manifestPath));
 
         // Assert
-        Assert.Null(result);
+        Null(result);
     }
 
     #endregion

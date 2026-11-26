@@ -1,5 +1,4 @@
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Apps.Sys.Extensions;
 using ToSic.Eav.Services;
@@ -9,7 +8,6 @@ using ToSic.Sxc.Apps.Extensions.Sys.Inspect;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
 using ToSic.Sys.Configuration;
-using Xunit.DependencyInjection;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
@@ -59,29 +57,29 @@ public class ExtensionsBackendTests(
         var saved = ctx.Writer.SaveExtensionTac(zoneId: TestZoneId, appId: TestAppId, name: extensionName, manifest: manifest);
 
         // Assert
-        Assert.True(saved);
+        True(saved);
 
         // Create another extension folder without a config file for comparison
         var barFolder = Path.Combine(ctx.TempRoot, FolderConstants.AppExtensionsFolder, "bar");
         Directory.CreateDirectory(barFolder);
 
         var result = ctx.Reader.GetExtensionsTac(TestAppId);
-        Assert.NotNull(result);
-        Assert.NotNull(result);
+        NotNull(result);
+        NotNull(result);
 
         var foo = result.FirstOrDefault(e => e.Folder == extensionName);
-        Assert.NotNull(foo);
-        Assert.NotNull(foo.Configuration);
-        Assert.Empty(foo.Icon);
+        NotNull(foo);
+        NotNull(foo.Configuration);
+        Empty(foo.Icon);
 
         var expectedJson = ExtensionManifestSerializer.Serialize(manifest);
         var actualJson = ctx.JsonSvc.ToJson(foo.Configuration);
-        Assert.Equal(expectedJson, actualJson);
+        Equal(expectedJson, actualJson);
 
         var bar = result.FirstOrDefault(e => e.Folder == "bar");
-        Assert.NotNull(bar);
-        Assert.NotNull(bar.Configuration);
-        Assert.Empty(bar.Icon);
+        NotNull(bar);
+        NotNull(bar.Configuration);
+        Empty(bar.Icon);
     }
 
     [Fact]
@@ -102,18 +100,18 @@ public class ExtensionsBackendTests(
         };
 
         var saved = ctx.Writer.SaveExtensionTac(zoneId: TestZoneId, appId: TestAppId, name: folder, manifest: manifest);
-        Assert.True(saved);
+        True(saved);
 
         var result = ctx.Reader.GetExtensionsTac(TestAppId);
-        Assert.NotNull(result);
+        NotNull(result);
         var item = result.FirstOrDefault(e => e.Folder == folder);
-        Assert.NotNull(item);
-        Assert.NotNull(item.Configuration);
-        Assert.Empty(item.Icon);
+        NotNull(item);
+        NotNull(item.Configuration);
+        Empty(item.Icon);
 
         var expected = ExtensionManifestSerializer.Serialize(manifest);
         var actual = ctx.JsonSvc.ToJson(item.Configuration);
-        Assert.Equal(expected, actual);
+        Equal(expected, actual);
     }
 
     #endregion
