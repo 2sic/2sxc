@@ -3,6 +3,7 @@ using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Render.Polymorphism.Sys;
 using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 using ToSic.Sys.Caching.PiggyBack;
@@ -25,6 +26,7 @@ namespace ToSic.Sxc.Code.Context.Sys;
 public abstract partial class CodeContext : ServiceBase<CodeContext.Dependencies>,
     ICodeContext,
     IHasPiggyBack,
+    //IWrapper<ICodeDataFactory>, probably not needed any more
     IServiceWithSetup<CodeContextOptions>
 {
     #region Constructor
@@ -52,6 +54,19 @@ public abstract partial class CodeContext : ServiceBase<CodeContext.Dependencies
         // Make sure we get and initialize (auto-connect) the app-level CSP if that exists or is enabled
         GetService<CspOfApp>().RequiredPostSetup();
     }
+
+    [PrivateApi]
+    protected void AttachApp(IAppForCode app) => App = app;
+
+    // Todo: this is used 1x - probably where it's used it would already be available in other form
+    // It's used in CodeDynamicApiHelper and I'm trying to replace it with the View.Edition
+    // Keep this for a bit, then remove once verified.
+    //internal string? EditionForHotBuild => _editionForHotBuild.Get(() => Block == null
+    //    ? null
+    //    : App == null
+    //        ? null
+    //        : Services.EditionSvc.Edition(Block.View, App.AppReader));
+    //private readonly LazyGet<string?> _editionForHotBuild = new();
 
     [PrivateApi]
     public ICmsContext CmsContext { get; }
@@ -97,6 +112,13 @@ public abstract partial class CodeContext : ServiceBase<CodeContext.Dependencies
 
         return l.Return(this, $"AppId: {App?.AppId}, Block: {(block.ConfigurationIsReady ? block.Configuration?.BlockIdentifierOrNull?.Guid : null)}");
     }
+
+
+    [PrivateApi] public ICodeDataFactory Cdf => field ??= GetService<ICodeDataFactory>();
+
+    // 2026-11-27 probably not needed any more
+    //ICodeDataFactory IWrapper<ICodeDataFactory>.GetContents()
+    //    => Cdf;
 
     /// <inheritdoc />
     public IAppForCode? App { get; private set; }

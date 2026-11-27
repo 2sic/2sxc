@@ -142,7 +142,7 @@ internal class CodeDynamicApiHelper(CodeContext exCtx) : ICodeDynamicApiHelper
 
         // Compile
         var runtimeKey = exCtx.App!.AppReader.Specs.CacheKey;
-        var spec = new HotBuildSpec(App.AppId, exCtx.EditionForHotBuild, exCtx.App.AppSpecs.Name, runtimeKey);
+        var spec = new HotBuildSpec(App.AppId, exCtx.Block!.View.Edition, /*exCtx.EditionForHotBuild, */exCtx.App.AppSpecs.Name, runtimeKey);
         var instance = CodeCompilerLazy.InstantiateClass(virtualPath, spec, className: name, relativePath: relativePath, throwOnError: throwOnError);
 
         if (instance == null)

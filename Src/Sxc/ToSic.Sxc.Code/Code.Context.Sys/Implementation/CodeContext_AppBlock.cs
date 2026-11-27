@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.AppStack;
 using ToSic.Eav.Data.Sys.PropertyLookup;
-using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
@@ -9,17 +8,6 @@ namespace ToSic.Sxc.Code.Context.Sys;
 
 public partial class CodeContext
 {
-    [PrivateApi]
-    protected void AttachApp(IAppForCode app)
-    {
-        App = app;
-
-        EditionForHotBuild = Block == null
-            ? null
-            : Services.EditionSvc.Edition(Block.View, App.AppReader);
-    }
-
-    internal string? EditionForHotBuild;
 
     /// <summary>
     /// The current block - can be null if the context only knows about the App, but not about the block.
