@@ -39,7 +39,7 @@ public sealed partial class CmsBlock(
     LazySvc<IModuleFactory> moduleFactory,
     LazySvc<IDataSourcesService> dataSourceFactory,
     AppWorkQuick<WorkBlocks> workBlocks)
-    : DataSourceBase(services, $"SDS.CmsBks", callSetup: true, connect: [moduleFactory, dataSourceFactory, workBlocks]),
+    : DataSourceBase(services: services, callSetup: true, logName: "SDS.CmsBks", connect: [moduleFactory, dataSourceFactory, workBlocks]),
         IDataSourceLinkable
 {
     #region Constructor / Setup (called back)
